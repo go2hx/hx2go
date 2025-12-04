@@ -1,0 +1,11 @@
+-cp source
+-m Main
+# haxelib git hxparse https://github.com/Simn/hxparse
+# haxelib git haxeparser https://github.com/vshaxe/haxe-hxparser/
+-lib hxparse
+-lib haxeparser
+-D no-inline
+--dce full
+-D no-macro-cache
+--hl dump.hl
+--cmd hl dump.hl

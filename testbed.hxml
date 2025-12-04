@@ -1,0 +1,3 @@
+-cp testbed
+-m Test
+-D dump=record

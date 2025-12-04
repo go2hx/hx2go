@@ -1,0 +1,4 @@
+dump
+*.hl
+*.txt
+.DS_Store

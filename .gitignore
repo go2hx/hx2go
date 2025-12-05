@@ -1,4 +1,6 @@
-dump
+dump/*
 *.hl
 *.txt
+export/*
+*.js
 .DS_Store

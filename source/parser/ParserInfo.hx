@@ -1,4 +1,6 @@
 package parser;
 
 @:structInit
-class ParserInfo {}
+class ParserInfo {
+    public var modules:Array<Module> = [];
+}

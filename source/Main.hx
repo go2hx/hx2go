@@ -1,10 +1,22 @@
+import haxe.macro.Expr.ExprDef;
+import haxe.macro.Compiler as HaxeCompiler;
 import sys.io.File;
+import Context.ContextOptions;
 
-function main() {
-   #if dump_expr
-   new parser.dump.ExprParser().parse(File.getContent("dump.txt").split("\n"));
-   #else
-   final cl = new parser.dump.RecordParser(File.getContent("dump/AfterDce/cross/Test.dump")).run();
-   trace(new haxe.macro.Printer().printExpr(cl.cl_ordered_statics[0].cf_expr));
-   #end
+class Main {
+   public static function main() {
+      final context:Context = {options: loadContextOptions()};
+      context.run();
+   }
+
+   static function loadContextOptions():ContextOptions {
+      final runGoDefine = HaxeCompiler.getDefine("run-go") != null;
+      final mainDefine = HaxeCompiler.getDefine("hx2go-main") ?? "";
+      if (mainDefine == "")
+         throw "mainDefine not defined from -D hx2go-main";
+      return {
+         runAfterCompilation: runGoDefine,
+         entryPoint: mainDefine,
+      };
+   }
 }

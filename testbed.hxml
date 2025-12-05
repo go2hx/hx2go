@@ -1,3 +1,5 @@
 -cp testbed
 -m Test
--D dump=record
+-D run-go
+--dce no
+extraParams.hxml

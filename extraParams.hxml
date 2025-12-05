@@ -1,0 +1,8 @@
+--macro go._internal.MacroPlatformConfig.init()
+--macro go._internal.MacroAfterBuild.init()
+#-D dump-dependencies
+-D dump-dependencies
+-D no-compilation
+-D dump=record
+-D hx2go
+-cp std

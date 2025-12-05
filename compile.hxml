@@ -4,8 +4,10 @@
 # haxelib git haxeparser https://github.com/vshaxe/haxe-hxparser/
 -lib hxparse
 -lib haxeparser
--D no-inline
 --dce full
--D no-macro-cache
---hl dump.hl
---cmd hl dump.hl
+#-lib hxnodejs
+#--js compile.js
+#--cmd node compile.js
+--interp
+#-hl compile.c
+#--cmd hl compile.hl

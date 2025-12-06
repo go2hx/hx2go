@@ -28,10 +28,15 @@ typedef ContextResults = Array<ContextFile>;
 @:structInit
 class Context {
     
-    public var options: ContextOptions ;
+    public var options: ContextOptions;
     
-    private var _parser: IParser = new parser.dump.Dump();
+    private var _parser: IParser = null;
     private var _cache: Map<String, Module> = [];
+
+    public function new(options: ContextOptions) {
+        this.options = options;
+        this._parser = new parser.dump.Dump(this);
+    }
 
     /**
      * Gets the module cached inside the context.
@@ -42,18 +47,33 @@ class Context {
         return _cache[path];
     }
 
-    
+    /**
+     * Get the cache
+     * @return the cache of modules
+     */
+    public inline function getCache(): Map<String, Module> {
+        return _cache;
+    }
+
+    /**
+     * Runs the hx2go transpiler.
+     * @return A virtual filesystem of all the results including path, content and module.
+     */
     public function run(): ContextResults {
-        final info = _parser.run("");
-        for (module in info.modules) {
+        _parser.run("");
+
+        for (module in _cache.iterator()) {
             if (module.path == options.entryPoint)
                 module.mainBool = true;
             module.run();
         }
+
         if (options.runAfterCompilation) {
             // Sys.command("go mod init hx2go");
             Sys.command("go run ./export/");
         }
+
         return null;
     }
+
 }

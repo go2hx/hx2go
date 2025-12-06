@@ -12,41 +12,73 @@ using StringTools;
 
 typedef RecordSection = Map<String, Dynamic>;
 
+enum RecordEntryKind {
+    RUnknown;
+    RAbstract;
+    RClass;
+}
+/**
+ * Shared across both Class and Abstract
+ */
 @:structInit
-class RecordClass {
-    public var _path:String;
-    public var cl_path: Null<String> = null;
-    public var cl_module: Null<String> = null;
-    public var cl_pos: Null<Position> = null;
-    public var cl_name_pos: Null<Position> = null;
-    public var cl_private: Bool = false;
-    public var cl_doc: Null<String> = null;
-    public var cl_meta: Array<String> = [];
-    public var cl_flags: Array<String> = [];
-    public var cl_params: Array<Dynamic> = [];
-    public var cl_kind: Null<String> = null;
-    public var cl_super: Null<String> = null;
-    public var cl_implements: Array<String> = [];
-    public var cl_array_access: Null<String> = null;
-    public var cl_init: Null<String> = null;
-    public var cl_constructor: Null<String> = null;
-    public var cl_ordered_fields: Array<RecordClassField> = [];
-    public var cl_ordered_statics: Array<RecordClassField> = [];
+class RecordEntry {
+    public var record_kind: RecordEntryKind = RUnknown;
+    public var record_debug_path: String;
+    public var path: Null<String>;
+    public var module: Null<String>;
+    public var pos: Null<Position> = null;
+    public var name_pos: Null<Position> = null;
+    public var _private: Bool = false;
+    public var doc: Null<String> = null;
+    public var meta: Array<String> = [];
+    public var params: Array<Dynamic> = [];
+    // specialised variants
+    public function toClass(): RecordClass return cast (this, RecordClass);
+    public function toAbstract(): RecordAbstract return cast (this, RecordAbstract);
+}
+
+@:structInit
+class RecordClass extends RecordEntry {
+    public var flags: Array<String> = [];
+    public var kind: Null<String> = null;
+    public var _super: Null<String> = null;
+    public var _implements: Array<String> = [];
+    public var array_access: Null<String> = null;
+    public var init: Null<String> = null;
+    public var constructor: Null<String> = null;
+    public var ordered_fields: Array<RecordClassField> = [];
+    public var ordered_statics: Array<RecordClassField> = [];
+}
+
+@:structInit
+class RecordAbstract extends RecordEntry {
+    public var ops: Array<Dynamic> = [];
+    public var unops: Array<Dynamic> = [];
+    public var impl: Null<String> = null;
+    public var _this: Null<String> = null;
+    public var from: Array<String> = [];
+    public var to: Array<String> = [];
+    public var from_field: Array<Dynamic> = [];
+    public var to_field: Array<Dynamic> = [];
+    public var array: Array<Dynamic> = [];
+    public var read: Null<String> = null;
+    public var write: Null<String> = null;
+    public var _default: Null<String> = null;
 }
 
 @:structInit
 class RecordClassField {
-    public var cf_name: Null<String> = null;
-    public var cf_doc: Null<String> = null;
-    public var cf_type: Dynamic = null;
-    public var cf_pos: Null<Position> = null;
-    public var cf_name_pos: Null<Position> = null;
-    public var cf_meta: Array<String> = [];
-    public var cf_kind: Null<String> = null;
-    public var cf_params: Array<Dynamic> = [];
-    public var cf_expr: Expr = null;
-    public var cf_flags: Array<String> = [];
-    public var cf_overloads: Array<RecordClassField> = [];
+    public var name: Null<String> = null;
+    public var doc: Null<String> = null;
+    public var type: Dynamic = null;
+    public var pos: Null<Position> = null;
+    public var name_pos: Null<Position> = null;
+    public var meta: Array<String> = [];
+    public var kind: Null<String> = null;
+    public var params: Array<Dynamic> = [];
+    public var expr: HaxeExpr = null;
+    public var flags: Array<String> = [];
+    public var overloads: Array<RecordClassField> = [];
 }
  /**
  * Creates a new parser for record dump output (``-D dump=record``)
@@ -56,8 +88,17 @@ class RecordClassField {
 @:structInit
 class RecordParser {
 
-    private var _input: String;
-    private var _path: String;
+    final remapConcrete = [
+        "implements" => "_implements",
+        "private" => "_private",
+        "this" => "_this",
+        "default" => "_default",
+        "super" => "_super",
+        "modules" => "module" // a_modules and cl_module -> module
+    ];
+
+    private var input: String;
+    private var dbg_path: String;
 
     /**
      * Parses a block with key-value constructions.
@@ -66,7 +107,8 @@ class RecordParser {
      */
     public function parseBlock(input: String): RecordSection {
         var result: RecordSection = [];
-        result["_path"] = _path;
+        result["hx2go_record_debug_path"] = dbg_path;
+
         var lines: Array<String> = input.split("\n");
         var line: Int = 0;
 
@@ -90,6 +132,7 @@ class RecordParser {
             var key = parts[0].trim();
             var value = parts.slice(1).join("=").trim();
 
+            var startLine = line;
             var output: Dynamic = switch(0) {
                 case _ if (key.endsWith("_meta")):
                     value
@@ -109,6 +152,11 @@ class RecordParser {
                     line = result.lastLine;
                     result.value;
 
+                case _ if (key.endsWith("_params")):
+                    var result = parseList(lines, line, value);
+                    line = result.lastLine;
+                    result.value;
+
                 case _ if (key.endsWith("_doc")):
                     var result = parseDoc(lines, line, value);
                     line = result.lastLine;
@@ -118,6 +166,11 @@ class RecordParser {
                     var result = parseList(lines, line, value);
                     line = result.lastLine;
                     result.value.map(item -> mapConcrete(item, RecordClassField));
+
+                case _ if (key == "cl_constructor"):
+                    var result = parseField(lines, line, value);
+                    line = result.lastLine;
+                    result.value;
 
                 case _ if (value == "true" || value == "false"):
                     value == "true";
@@ -130,10 +183,15 @@ class RecordParser {
                 case _:
                     parseString(lines, line, value);
             }
-            result.set(key, output);
-            line++;
-        }
 
+            result.set(key, output);
+            if (line == startLine) {
+                line++;
+            }
+        }
+        // TODO remove
+        //if (result.exists("cl_path") && result["cl_path"] == "Fmt")
+        //    trace(result);
         return result;
     }
 
@@ -156,12 +214,14 @@ class RecordParser {
      * @return Position
      */
     public function parsePosition(lines: Array<String>, entryLine: Int, value: String): Position {
-        var file = value.substring(0, value.indexOf(":"));
-        var posRange = value.substring(value.indexOf(":") + 1, value.length).split("-");
+        var last = value.lastIndexOf(":");
+        var file = value.substring(0, last);
+        var posRange = value.substring(last + 1).trim().split("-");
+
         return {
             file: file,
-            min: Std.parseInt(posRange[0]),
-            max: Std.parseInt(posRange[1])
+            min: Std.parseInt(posRange[0].trim()),
+            max: Std.parseInt(posRange[1].trim())
         };
     }
 
@@ -191,7 +251,6 @@ class RecordParser {
         var line = entryLine;
         var depth = 0;
         var currentItem: Array<String> = [];
-        var skipToNextLine = false;
 
         if (value.startsWith("[")) {
             depth = 1;
@@ -205,13 +264,7 @@ class RecordParser {
 
         while (line < lines.length) {
             var currentLine = lines[line];
-            if (skipToNextLine) {
-                skipToNextLine = false;
-                line++;
-                continue;
-            }
 
-            var itemComplete = false;
             for (i in 0...currentLine.length) {
                 var char = currentLine.charAt(i);
 
@@ -222,11 +275,9 @@ class RecordParser {
                     case "}":
                         depth--;
                         if (depth == 1) {
-                            currentItem.push(currentLine);
+                            currentItem.push(currentLine.substring(0, i + 1));
                             items.push(parseBlock(currentItem.join("\n")));
                             currentItem = [];
-                            itemComplete = true;
-                            break;
                         }
 
                     case "]":
@@ -240,7 +291,7 @@ class RecordParser {
                 }
             }
 
-            if (depth > 1 && !itemComplete) {
+            if (depth > 1) {
                 currentItem.push(currentLine);
             }
 
@@ -257,49 +308,110 @@ class RecordParser {
      * @param value The value of the entry point (from the key = value format)
      * @return String
      */
-    public function parseMultilineString(lines: Array<String>, entryLine: Int, value: String, semicolonNoIndent: Bool = false): { value: Array<String>, lastLine: Int } {
-        // semicolonNoIndent is used to check if the semicolon has no indentation before it, if it does, it is not considered the end of the multiline string.
-        var indentLevel = 0;
-        for (i in 0...lines[entryLine].length) {
-            if (lines[entryLine].charAt(i) == " ") indentLevel++;
-            else break;
+    public function parseMultilineString(lines: Array<String>, entryLine: Int, value: String, ?end: Array<String>): { value: Array<String>, lastLine: Int } {
+        if (end == null) {
+            end = [";"];
         }
 
-        lines[entryLine] = lines[entryLine].substring(lines[entryLine].indexOf("=") + 1).trim();
+        if (isTerminator(lines[entryLine].trim(), false, end)) {
+            return { value: [value], lastLine: entryLine };
+        }
 
-        var outLines = [];
-        for (i in entryLine...lines.length) {
-            var currentLine: String = lines[i];
-            var currentIndent = 0;
-            for (j in 0...currentLine.length) {
-                if (currentLine.charAt(j) == " ") currentIndent++;
-                else break;
+        var result: Array<String> = [];
+        result.push(value);
+
+        var line = entryLine + 1;
+        while (line < lines.length) {
+            var currentLine = lines[line];
+            if (isTerminator(currentLine.trim(), true, end)) {
+                return { value: result, lastLine: line };
             }
 
-            outLines.push(currentLine);
+            result.push(currentLine);
+            line++;
+        }
 
-            if (currentLine.trim().endsWith(";") && (semicolonNoIndent || currentIndent == 0)) {
-                if (i + 1 < lines.length) {
-                    var nextLine = lines[i + 1];
-                    var nextIndent = 0;
-                    for (j in 0...nextLine.length) {
-                        if (nextLine.charAt(j) == " ") nextIndent++;
-                        else break;
-                    }
+        return { value: result, lastLine: line };
+    }
 
-                    if (nextIndent == indentLevel && nextLine.indexOf("=") != -1 && !nextLine.contains("{") && !nextLine.contains("[")) {
-                        break;
+    /**
+     * Parses a field block
+     * @param lines List of lines
+     * @param entryLine the entry point where the field begins
+     * @param value The value of the entry point (from the key = value format)
+     * @return RecordSection
+     */
+    public function parseField(lines: Array<String>, entryLine: Int, value: String): { value: RecordSection, lastLine: Int } {
+        if (value == "None") {
+            return { value: null, lastLine: entryLine };
+        }
+
+        var blockLines: Array<String> = [];
+        var depth = 0;
+        var line = entryLine;
+
+        if (value.contains("{")) {
+            depth = 1;
+            var startIdx = value.indexOf("{");
+            var remaining = value.substring(startIdx + 1).trim();
+            if (remaining.length > 0) {
+                blockLines.push(remaining);
+            }
+            line++;
+        } else {
+            return { value: null, lastLine: entryLine };
+        }
+
+        while (line < lines.length && depth > 0) {
+            var currentLine = lines[line];
+
+            for (i in 0...currentLine.length) {
+                var char = currentLine.charAt(i);
+                if (char == "{") {
+                    depth++;
+                } else if (char == "}") {
+                    depth--;
+                    if (depth == 0) {
+                        var beforeBrace = currentLine.substring(0, i);
+                        if (beforeBrace.trim().length > 0) {
+                            blockLines.push(beforeBrace);
+                        }
+                        return {
+                            value: parseBlock(blockLines.join("\n")),
+                            lastLine: line
+                        };
                     }
-                } else {
-                    break;
                 }
             }
+
+            if (depth > 0) {
+                blockLines.push(currentLine);
+            }
+            line++;
         }
 
         return {
-            value: outLines,
-            lastLine: entryLine + outLines.length - 1
+            value: parseBlock(blockLines.join("\n")),
+            lastLine: line
         };
+    }
+
+    /**
+     * Checks if a line is a terminator
+     * @param line The line to check
+     * @param trim Whether to trim the line before checking
+     * @param end List of possible terminators
+     * @return Bool
+     */
+    public function isTerminator(line: String, exact: Bool, end: Array<String>): Bool {
+        for (terminator in end) {
+            if (exact) {
+                if (line == terminator) return true;
+            } else {
+                if (line.endsWith(terminator)) return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -310,7 +422,7 @@ class RecordParser {
      * @return String
      */
     public function parseDoc(lines: Array<String>, entryLine: Int, value: String): { value: String, lastLine: Int } {
-        var result = parseMultilineString(lines, entryLine, value, true);
+        var result = parseMultilineString(lines, entryLine, value);
         return {
             value: result.value.join("\n"),
             lastLine: result.lastLine
@@ -324,17 +436,17 @@ class RecordParser {
      * @param value The value of the entry point (from the key = value format)
      * @return Haxe Expression
      */
-    public function parseExpr(lines: Array<String>, entryLine: Int, value: String): { value: Expr, lastLine: Int } {
+    public function parseExpr(lines: Array<String>, entryLine: Int, value: String): { value: HaxeExpr, lastLine: Int } {
         if (value == "None") {
             return {
-                value: macro @:noneExpr() {},
+                value: null,
                 lastLine: entryLine
             };
         }
-        
+
         var result = parseMultilineString(lines, entryLine, value);
         return {
-            value: new ExprParser(_path).parse(result.value),
+            value: new ExprParser(dbg_path).parse(result.value),
             lastLine: result.lastLine
         };
     }
@@ -346,13 +458,23 @@ class RecordParser {
      * @return Instance of the class type (T)
      */
     public function mapConcrete<T>(map: RecordSection, concrete: Class<T>): T {
+        // var inst = Type.createEmptyInstance(concrete);
+        // for (field in Reflect.fields(inst)) {
+        //     if (!map.exists(field)) {
+        //         continue;
+        //     }
+
+        //     Reflect.setField(inst, field, map.get(field));
+        // }
+
         var inst = Type.createEmptyInstance(concrete);
-        for (field in Reflect.fields(inst)) {
-            if (!map.exists(field)) {
-                continue;
+        for (key in map.keys()) {
+            var field = key.split("_").slice(1).join("_");
+            if (remapConcrete.exists(field)) {
+                field = remapConcrete.get(field);
             }
 
-            Reflect.setField(inst, field, map.get(field));
+            if (Reflect.hasField(inst, field)) Reflect.setField(inst, field, map.get(key));
         }
 
         return inst;
@@ -362,11 +484,28 @@ class RecordParser {
      * Run the record parser on the given input.
      * @return RecordClass
      */
-    public function run(): RecordClass {
-        return mapConcrete(
-            parseBlock(_input),
-            RecordClass
-        );
+    public function run(): RecordEntry {
+        var block = parseBlock(input);
+        // trace(haxe.Json.stringify(block, null, "  "));
+
+        var recordKind: RecordEntryKind = null;
+        var concrete: RecordEntry = switch (0) {
+            case _ if (block.exists("cl_path")):
+                recordKind = RClass;
+                mapConcrete(block, RecordClass);
+
+            case _ if (block.exists("a_path")):
+                recordKind = RAbstract;
+                mapConcrete(block, RecordAbstract);
+
+            case _:
+                recordKind = RUnknown;
+                mapConcrete(block, RecordEntry);
+        }
+        // TODO remove
+        // trace(concrete.module, concrete.path);
+        concrete.record_kind = recordKind;
+        return concrete;
     }
 
 }

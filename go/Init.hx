@@ -1,11 +1,10 @@
-package go._internal;
+package go;
 #if macro
-import haxe.macro.Compiler;
 import haxe.macro.PlatformConfig;
-
-class MacroPlatformConfig {
-	public static function init() {
-		var whatever = {
+import haxe.macro.Compiler;
+class Init {
+    public static function init() {
+        var whatever = {
 			pack: [],
 			name: "Dynamic"
 		}
@@ -14,7 +13,7 @@ class MacroPlatformConfig {
 			sys: true,
 			capturePolicy: None,
 			padNulls: true,
-			addFinalReturn: false,
+			addFinalReturn: true,
 			overloadFunctions: true,
 			reservedTypePaths: [],
 			supportsFunctionEquality: true,
@@ -33,12 +32,12 @@ class MacroPlatformConfig {
 				baseThrow: whatever,
 			},
 			scoping: {
-				scope: FunctionScope,
+				scope: BlockScope,
 				flags: [],
 			},
 			supportsAtomics: true
 		}
 		Compiler.setPlatformConfiguration(newConfig);
-	}
+    }
 }
 #end

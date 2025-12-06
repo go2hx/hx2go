@@ -22,5 +22,6 @@ extern class Fmt {
 class Test {
     public static function main() {
         Fmt.println("hello"); // fmt.Println("hello");
+        // haxe.ds.Vector.fromArrayCopy([]);
     }
 }

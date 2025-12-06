@@ -10,43 +10,46 @@ import sys.FileSystem;
 
 class Dump implements IParser {
 
-    public function new() {
-     
+    private var _context: Context;
+
+    public function new(context: Context) {
+        _context = context;
     }
     
-    public function run(path:String): ParserInfo {
+    public function run(path: String): Void {
         // hardset for now, might need to have path show local path where cli was started
         path = "dump/AfterDce/cross/";
         // trace(path);
         final filePaths = parseFolder(path);
         final records = [];
         for (filePath in filePaths) {
-            final parser:RecordParser = {_path: filePath, _input: File.getContent(filePath)};
-            final record:RecordClass = parser.run();
+            final parser:RecordParser = {dbg_path: filePath, input: File.getContent(filePath)};
+            final record = parser.run();
             records.push(record);
         }
-        final modules:Array<Module> = [];
+      
         for (record in records) {
-            var foundModule = null;
-            for (module in modules) {
-                if (module.path == record.cl_module) {
-                    foundModule = module;
-                    break;
-                }
+            if (record?.module == null) {
+                trace("module should not be null");
+                continue;
             }
-            if (foundModule == null) {
-                foundModule = {
-                    path: record.cl_module,
+
+            final cache = _context.getCache();
+            final def = RecordTools.recordToHaxeTypeDefinition(record);
+            if (!cache.exists(record.module)) {
+                var module: Module = {
+                    path: record.module,
                     translator: {}, 
                     transformer: {},
+                    context: _context,
                 };
-                modules.push(foundModule);
+                cache.set(record.module, module);
+                module.addDef(def);
+            }else{
+                // module already exists, add a new def to it
+                cache.get(record.module).addDef(def);
             }
-            foundModule.addDef(DefTranslator.run(record));
         }
-        return {
-            modules: modules,
-        };
     }
 
     public function parseFolder(path:String):Array<String> {

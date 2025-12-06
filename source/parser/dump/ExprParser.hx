@@ -1,25 +1,27 @@
 package parser.dump;
 
+import HaxeExpr.SpecialExprDef;
+import HaxeExpr.HaxeExprDef;
+import HaxeExpr.SpecialExprDef;
 import haxe.iterators.StringIterator;
 import haxe.macro.ComplexTypeTools;
-import haxe.macro.Expr;
-import haxe.macro.Expr.ExprDef;
 import haxe.macro.Type;
+import HaxeExpr;
 
 @:structInit
 class ExprParser {
-    public var typeMaps:Map<ExprDef, Type> = [];
     var lines:Array<String> = [];
     var lineIndex:Int = 0;
     var stringIndex:Int = 0;
     var lastHeader:Header = null;
-    var _path:String = "";
+    var dbg_path:String = "";
+    var nonImpl: Array<String> = [];
 
-    public function new(path) {
-        _path = path;
+    public function new(dbg_path) {
+        this.dbg_path = dbg_path;
     }
 
-    public function parse(lines:Array<String>):Expr {
+    public function parse(lines:Array<String>):HaxeExpr {
         // invalid expr
         if (lines.length == 0 || StringTools.contains(lines[0], "cf_expr = None;"))
             return null;
@@ -66,8 +68,9 @@ class ExprParser {
         }
         return -1;
     }
-    function headerToExpr(header:Header):Expr {
-        return {expr: switch header.def {
+    function headerToExpr(header:Header):HaxeExpr {
+        var specialDef:SpecialExprDef = null;
+        final def:HaxeExprDef = switch header.def {
             case BLOCK:
                 EBlock(header.headers.map(header -> headerToExpr(header)));
             case CALL:
@@ -93,18 +96,68 @@ class ExprParser {
                         // space + "", end ""
                         EConst(CString(header.dataLines[0].substring(2, len)));
                     default:
-                        throw "Const subType not implemented: " + header.subType;
+                        trace("Const subType not implemented: |" + header.subType + "|");
+                        EConst(CString('#UNKNOWN_DEFTYPE(${header.defType}'));
                 }
             case META:
-                headerToExpr(header.headers[0]).expr;
+                return headerToExpr(header.headers[0]);
+            case ARG:
+                // TODO add arg info
+                specialDef = Arg("");
+                null;
+            case RETURN:
+                EReturn(headerToExpr(header.headers[0]));
+            case BINOP:
+                // TODO op not implemented
+                EBinop(OpAdd, headerToExpr(header.headers[0]), headerToExpr(header.headers[1]));
+            case FINSTANCE:
+                specialDef = FInstance(header.dataLines[1].split(":")[0]);
+                null;
+            case UNOP:
+                // TODO unop, and postFix, not implemented
+                EUnop(OpIncrement, false, headerToExpr(header.headers[0]));
+            case ARRAY:
+                specialDef = DArray;
+                null;
+            case NEW:
+                // TODO
+                ENew(null, []);
+            case OBJDECL:
+                EObjectDecl([]);
+            case VAR:
+                EVars([]);
+            case WHILE:
+                EWhile(headerToExpr(header.headers[0]), headerToExpr(header.headers[1]), false);
+            case LOCAL:
+                specialDef = Local;
+                null;
+            case PARENTHESIS:
+                EParenthesis(headerToExpr(header.headers[0]));
             default:
-                trace("TODO cover all cases of headerToExpr");
-                (macro @:todo() {}).expr;
-                //throw "not implemented expr: " + header.def;
-        }, pos: null};
+                // throw "not implemented expr: " + header.def;
+                if (!nonImpl.contains(header.def)) nonImpl.push(header.def);
+                EBlock([]);
+        };
+        return {
+            t: header.defType,
+            def: def,
+            specialDef: specialDef,
+            remapTo: null,
+        };
     }
-    function exprToValueString(expr:Expr):String {
-        return switch expr.expr {
+    function exprToValueString(expr:HaxeExpr):String {
+        if (expr.specialDef != null)
+            switch expr.specialDef {
+                case FStatic(_, field):
+                    field;
+                case FInstance(inst):
+                    inst;
+                default:
+                    throw "exprToValueString specialDef not covered: " + expr.specialDef;
+            }
+        if (expr.def == null)
+            return "#NULL(expr.def)";
+        return switch expr.def {
             case EConst(CIdent(s)):
                 s;
             case EConst(CInt(v, _)):
@@ -188,27 +241,11 @@ class ExprParser {
         //trace("REMOVED");
         final removedLines = lines.splice(lineIndex + 1, end - lineIndex  - 1);
     }
-
-    function stringToComplexType(s:String):ComplexType {
-        // TODO, parsing type information likely not required
-        return null;
-        s = '(_ : $s)';
-        final input = byte.ByteData.ofString(s);
-        final parser = new haxeparser.HaxeParser(input, s);
-        final expr = parser.expr().expr;
-        final t:ComplexType = switch expr {
-            case EParenthesis({pos: _, expr: ECheckType(_, t)}):
-                t;
-            default:
-                throw "invalid expr: " + expr;
-        }
-        return t;
-    }
 }
 
 @:structInit
 class Header {
-    public var def:ExprDef;
+    public var def:ExprDefHeader;
     public var defType = "";
     public var subType = "";
     public var startIndex:Int = 0;
@@ -223,7 +260,7 @@ class Header {
 }
 
 
-enum abstract ExprDef(String) to String {
+enum abstract ExprDefHeader(String) to String {
     var FUNCTION = "Function";
     var BLOCK = "Block";
     var CALL = "Call";
@@ -256,6 +293,8 @@ enum abstract ExprDef(String) to String {
     var CASE = "Case";
     var ENUMPARAMETER = "EnumParameter";
     var FENUM = "FEnum";
+    var ARRAYDECL = "ArrayDecl";
+    var OBJDECL = "ObjectDecl";
     @:from
     static function fromString(s:String) {
         return switch s {
@@ -289,6 +328,8 @@ enum abstract ExprDef(String) to String {
             case CASE: CASE;
             case ENUMPARAMETER: ENUMPARAMETER;
             case FENUM: FENUM;
+            case ARRAYDECL: ARRAYDECL;
+            case OBJDECL: OBJDECL;
             default:
                 throw "ExprDef not found: " + s;
         }

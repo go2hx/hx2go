@@ -12,6 +12,8 @@ class Main {
    static function loadContextOptions():ContextOptions {
       final runGoDefine = HaxeCompiler.getDefine("run-go") != null;
       final mainDefine = HaxeCompiler.getDefine("hx2go-main") ?? "";
+      final outputDefine = HaxeCompiler.getDefine("output");
+      trace(outputDefine);
       if (mainDefine == "")
          throw "mainDefine not defined from -D hx2go-main";
       return {

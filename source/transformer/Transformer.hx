@@ -1,5 +1,8 @@
 package transformer;
 
+import HaxeExpr;
+import HaxeExpr.HaxeTypeDefinition;
+import HaxeExpr.HaxeTypeDefinition;
 import haxe.macro.Expr.TypeDefinition;
 import haxe.macro.Expr;
 import transformer.exprs.*;
@@ -10,27 +13,36 @@ import transformer.exprs.*;
  */
 @:structInit
 class Transformer {
-    public function transformExpr(e:Expr) {
-        return switch e.expr {
-            case ETry(e, catches):
-                Try.transformTry(e, catches);
+    public var module:Module = null;
+    public var def:HaxeTypeDefinition = null;
+    public function transformExpr(e:HaxeExpr) {
+        if (e.def == null)
+            return;
+        switch e.def {
+            case ETry(_, _):
+                Try.transformTry(this, e);
+            case EField(_, _, _):
+                FieldAccess.transformFieldAccess(this, e);
             default:
-                e;
+                HaxeExprTools.iter(e, transformExpr);
         }
     }
-    public function transformDef(def:TypeDefinition) {
+    public function transformDef(def:HaxeTypeDefinition) {
         if (def.fields == null)
             return;
         for (field in def.fields) {
             switch field.kind {
-                case FVar(t, e) if (e != null):
-                    field.kind = FVar(t, transformExpr(e));
-                case FFun(f) if (f.expr != null):
-                    f.expr = transformExpr(f.expr);
-                case FProp(get, set, t, e) if (e != null):
-                    field.kind = FProp(get,set, t, transformExpr(e));
+                case FFun(_):
+                    if (field?.expr?.def == null)
+                        field.expr = {
+                            t: null,
+                            specialDef: null,
+                            def: EBlock([]),
+                        };
                 default:
             }
+            if (field.expr != null)
+                transformExpr(field.expr);
         }
     }
 }

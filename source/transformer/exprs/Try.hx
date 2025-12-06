@@ -1,7 +1,8 @@
 package transformer.exprs;
 
-import haxe.macro.Expr;
+import HaxeExpr;
+import transformer.Transformer;
 
-function transformTry(e:Expr, catches:Array<Catch>):Expr {
-    return macro @:todo("try") null;
+function transformTry(t:Transformer, e:HaxeExpr) {
+    // TODO
 }

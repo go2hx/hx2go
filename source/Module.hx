@@ -1,32 +1,57 @@
 import sys.io.File;
 import sys.FileSystem;
 import haxe.io.Path;
-import haxe.macro.Expr.TypeDefinition;
+import HaxeExpr.HaxeTypeDefinition;
 import transformer.Transformer;
 import translator.Translator;
+
 
 @:structInit
 class Module {
     public var mainBool:Bool = false;
     public var path:String;
-    public var goImports: Array<String> = [];
-    public var defs:Array<TypeDefinition> = [];
+    public var defs:Array<HaxeTypeDefinition> = [];
     public var transformer:Transformer;
     public var translator:Translator;
+    public var context:Context;
 
-    /**
-     * Adds an import to the go output, duplicates are removed.
-     * @param imp The stdlib name or package URL
-     */
-    public function addGoImport(imp: String): Void {
-        if (!goImports.contains(imp)) {
-            return;
+    public function resolveLocalDef(module:Module, name:String) {
+        for (def in module.defs) {
+                switch def.kind {
+                case TDClass:
+                    if (def.name == name)
+                    return def;
+                default:
+            }
         }
-        
-        goImports.push(imp);
+        throw "not resolving def: " + name;
     }
 
-    public function addDef(def:TypeDefinition) {
+     public function resolveGlobalDef(module:Module, name:String) {
+        for (def in module.defs) {
+                switch def.kind {
+                case TDClass:
+                    if (def.name == name)
+                    return def;
+                default:
+            }
+        }
+        throw "not resolving def: " + name;
+    }
+
+    public function resolveClass(pack:Array<String>, name:String):HaxeTypeDefinition {
+        var resolveModule = pack.join(".") + (pack.length > 0 ? "." : "") + name;
+        // local
+        if (pack.length == 0) {
+            return resolveLocalDef(this, name);
+        }else{
+            // global
+            final module = context.getModule(resolveModule);
+            return resolveGlobalDef(module, resolveModule);
+        }
+    }
+
+    public function addDef(def:HaxeTypeDefinition) {
         defs.push(def);
     }
     /**
@@ -35,6 +60,7 @@ class Module {
     public function run() {
         if (path == null)
             return; // TODO should not be allowed
+        transformer.module = this;
         //trace(path, defs.length);
 
         final paths = path.split(".");
@@ -50,16 +76,17 @@ class Module {
             final importPath = paths.join("/");
             File.saveContent("export/main.go", 'package main\nimport "hx2go/export/$importPath"\nfunc main() {\n' + lastPathLowercase + ".Main()\n}");
         }
-        final packageString = "package " + paths.join("/") + "\n";
+        var prefixString = "package " + paths.join("/") + "\n";
         for (def in defs) {
             if (def == null)
                 continue;
+            transformer.def = def;
             // transformer pass
             transformer.transformDef(def);
             // translate
-            final content = packageString + translator.translateDef(def);
-
-            File.saveContent(dir + "/" + untitle(def.name) + ".go", content);
+            var content = translator.translateDef(def);
+            // imports
+            File.saveContent(dir + "/" + untitle(def.name) + ".go", prefixString + content);
         }
     }
 

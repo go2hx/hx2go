@@ -2,4 +2,5 @@
 -m Test
 -D run-go
 --dce no
+--custom-target go=export
 extraParams.hxml

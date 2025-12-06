@@ -1,7 +1,8 @@
 package translator.exprs;
 
-import haxe.macro.Expr;
+import HaxeExpr;
+import translator.Translator;
 
-function translateCall(e:Expr, params:Array<Expr>) {
-    return "_ = true\n";
+function translateCall(t:Translator, e:HaxeExpr, params:Array<HaxeExpr>) {
+    return (e.remapTo ?? t.translateExpr(e)) + "(" + params.map(param -> t.translateExpr(param)).join(", ") + ")";
 }

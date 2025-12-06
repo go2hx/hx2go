@@ -1,5 +1,5 @@
 package parser;
 
 interface IParser {
-    public function run(path:String): ParserInfo;
+    public function run(path:String): Void;
 }

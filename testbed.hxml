@@ -1,6 +1,9 @@
 -cp testbed
 -m Test
--D run-go
 --dce no
---custom-target go=export
 extraParams.hxml
+# sets to run the Go code after
+-D run-go
+-D build-go
+# set the output directory
+--custom-target go=export

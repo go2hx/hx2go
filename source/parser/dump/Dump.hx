@@ -18,7 +18,7 @@ class Dump implements IParser {
     
     public function run(path: String): Void {
         // hardset for now, might need to have path show local path where cli was started
-        path = "dump/AfterDce/cross/";
+        path = "dump/AfterDce/go/";
         // trace(path);
         final filePaths = parseFolder(path);
         final records = [];

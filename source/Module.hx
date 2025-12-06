@@ -67,14 +67,14 @@ class Module {
         final lastPath = paths[paths.length - 1];
         paths[paths.length - 1] = lastPath.charAt(0).toLowerCase() + lastPath.substr(1);
         final lastPathLowercase = paths[paths.length - 1];
-        final dir = "export/" + paths.join("/");
+        final dir = context.options.output + "/" + paths.join("/");
         if (!FileSystem.exists(dir))
             FileSystem.createDirectory(dir);
 
         if (mainBool) {
             // create entry point
             final importPath = paths.join("/");
-            File.saveContent("export/main.go", 'package main\nimport "hx2go/export/$importPath"\nfunc main() {\n' + lastPathLowercase + ".Main()\n}");
+            File.saveContent(context.options.output + "/main.go", 'package main\nimport "hx2go/$importPath"\nfunc main() {\n' + lastPathLowercase + ".Main()\n}");
         }
         var prefixString = "package " + paths.join("/") + "\n";
         for (def in defs) {

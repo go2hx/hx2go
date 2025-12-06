@@ -1,19 +1,29 @@
 package;
 
+import sys.FileSystem;
 import sys.io.File;
 import parser.IParser;
 
 @:structInit
 class ContextOptions {
     @:opt_name("run")
-    @:opt_desc("Will run the executable after compilation.")
+    @:opt_desc("Run the executable after compilation.")
     @:opt_type("Bool")
     public var runAfterCompilation: Bool = false;
+
+    @:opt_name("build")
+    @:opt_desc("Build the executable after compilation.")
+    @:opt_type("Bool")
+    public var buildAfterCompilation: Bool = false;
 
     @:opt_name("main")
     @:opt_desc("The entry point of your Haxe program.")
     @:opt_type("String")
     public var entryPoint: String = "Main";
+    @:opt_name("output")
+    @:opt_desc("Output location of the Go code")
+    @:opt_type("String")
+    public var output: String = "export";
 }
 
 @:structInit
@@ -67,11 +77,22 @@ class Context {
                 module.mainBool = true;
             module.run();
         }
-
-        if (options.runAfterCompilation) {
-            // Sys.command("go mod init hx2go");
-            Sys.command("go run ./export/");
+        // get current location
+        final cwd = Sys.getCwd();
+        // go to output directory
+        Sys.setCwd(options.output);
+        // create go.mod
+        if (!FileSystem.exists("go.mod"))
+            Sys.command("go mod init hx2go");
+        trace(options.buildAfterCompilation);
+        if (options.buildAfterCompilation) {
+            Sys.command('go build .');
         }
+        if (options.runAfterCompilation) {
+            Sys.command('go run .');
+        }
+        // revert back cwd
+        Sys.setCwd(cwd);
 
         return null;
     }

@@ -19,9 +19,24 @@ extern class Fmt {
 // cache = []
 //
 // go.Fmt
+@:dce(ignore)
+@:analyzer(ignore)
 class Test {
     public static function main() {
         var x = 10, y = 12;
-        Fmt.println("hello", 20 + x);
+        x = 15;
+        x++;
+
+        while (x == 2) {
+            Fmt.println("A");
+        }
+
+        if( x == 16 ) {
+            Fmt.println("hello", 20 + x);
+        }else if (x == 20) {
+            Fmt.println("hello", 20 + x);
+        }else if (x == 10) {
+            Fmt.println("kkk");
+        }
     }
 }

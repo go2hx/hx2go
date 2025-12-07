@@ -3,6 +3,8 @@ package parser.dump;
 import HaxeExpr.SpecialExprDef;
 import HaxeExpr.HaxeExprDef;
 import HaxeExpr.SpecialExprDef;
+import haxe.macro.Expr.Unop;
+import haxe.macro.Expr.Binop;
 import haxe.iterators.StringIterator;
 import haxe.macro.ComplexTypeTools;
 import haxe.macro.Type;
@@ -13,9 +15,10 @@ class ExprParser {
     var lines:Array<String> = [];
     var lineIndex:Int = 0;
     var stringIndex:Int = 0;
-    var lastHeader:Header = null;
+    var lastObject:Object = null;
     var debug_path:String = "";
     var nonImpl: Array<String> = [];
+    var objectMap:Map<Int, Object> = [];
 
     public function new(debug_path) {
         this.debug_path = debug_path;
@@ -26,28 +29,29 @@ class ExprParser {
         if (lines.length == 0 || StringTools.contains(lines[0], "cf_expr = None;"))
             return null;
         this.lines = lines;
-        var headerMap:Map<Int, Header> = [];
-        var firstHeader:Header = null;
-        // discard first header for example: [Function:() -> Void], skip straight to Block
-        getHeader();
-        // recursively get header and add headers to a parent header depending on indention
+        objectMap = [];
+        var firstObject:Object = null;
+        // discard first Object for example: [Function:() -> Void], skip straight to Block
+        getObject();
+        // recursively get Object and add Objects to a parent Object depending on indention
         while (true) {
-            final header = getHeader();
-            if (firstHeader == null)
-                firstHeader = header;
-            if (header == null)
+            final object = getObject();
+            if (firstObject == null)
+                firstObject = object;
+            if (object == null)
                 break;
-            headerMap[header.startIndex] = header;
-            if (headerMap.exists(header.startIndex - 1)) {
-                headerMap[header.startIndex - 1].headers.push(header);
+            objectMap[object.startIndex] = object;
+            // add to another object based on indentation
+            if (objectMap.exists(object.startIndex - 1)) {
+                objectMap[object.startIndex - 1].objects.push(object);
             }
         }
-        if (firstHeader == null) {
+        if (firstObject == null) {
             trace("lines parsed:\n" + lines.join("\n"));
-            throw "first header not parsed";
+            throw "first object not parsed";
         }
-        printHeader(firstHeader);
-        final expr = headerToExpr(firstHeader);
+        printObject(firstObject);
+        final expr = objectToExpr(firstObject);
         // trace(new haxe.macro.Printer().printExpr(expr));
         return expr;
     }
@@ -69,86 +73,127 @@ class ExprParser {
         }
         return -1;
     }
-    function headerToExpr(header:Header):HaxeExpr {
+    function objectToExpr(object:Object):HaxeExpr {
         var specialDef:SpecialExprDef = null;
-        final def:HaxeExprDef = switch header.def {
+        final def:HaxeExprDef = switch object.def {
             case BLOCK:
-                EBlock(header.headers.map(header -> headerToExpr(header)));
+                EBlock(object.objects.map(object -> objectToExpr(object)));
             case CALL:
-                ECall(headerToExpr(header.headers[0]), header.headers.slice(1).map(header -> headerToExpr(header)));
+                trace(object.objects.length);
+                if (object.objects.length == 0) {
+                    trace(debug_path);
+                    trace(object.string());
+                }
+                ECall(objectToExpr(object.objects[0]), object.objects.slice(1).map(object -> objectToExpr(object)));
             case FIELD:
-                final field = exprToValueString(headerToExpr(header.headers[1]));
-                EField(headerToExpr(header.headers[0]), field);
+                if (object.objects.length == 0) {
+                    trace(debug_path);
+                    trace(object.string());
+                    // throw "FIELD NEEDS MORE";
+                }
+                final field = exprToValueString(objectToExpr(object.objects[1]));
+                EField(objectToExpr(object.objects[0]), field);
             case TYPEEXPR:
-                EConst(CIdent(header.subType));
+                EConst(CIdent(object.subType));
             case FSTATIC:
                 // [FStatic:(s : String) -> Void]
                 // 			fmt
 				// 			println:(s : String) -> Void
-                final data = StringTools.ltrim(header.dataLines[1]);
-                final colonIndex = data.indexOf(":");
+                EConst(CIdent("#UNKNOWN_STATIC"));
+                var field = object.objects[1].string();
+                final colonIndex = field.indexOf(":");
                 if (colonIndex == -1)
-                    throw "colon not found: " + data;
-                EConst(CIdent(data.substr(0, colonIndex)));
+                    throw "colon not found: " + field;
+                field = field.substr(0, colonIndex);
+                EConst(CIdent(field));
             case CONST:
-                switch header.defType {
+                // TODO should be redundant
+                // but currently catches some semicolon suffixes that get missed
+                final s = removeSemicolonSuffix(object.objects[0].string());
+                switch object.defType {
                     case "String":
-                        final len = header.dataLines[0].length - 1;
+                        final len = s.length - 1;
                         // space + "", end ""
-                        EConst(CString(header.dataLines[0].substring(2, len)));
+                        EConst(CString(s.substring(2, len)));
                     case "Int":
-                        EConst(CInt(header.dataLines[0]));
+                        EConst(CInt(s));
                     case "Float":
-                        EConst(CFloat(header.dataLines[0]));
+                        EConst(CFloat(s));
                     default:
-                        EConst(CIdent(header.dataLines[0]));
+                        EConst(CIdent(s));
                 }
             case META:
-                return headerToExpr(header.headers[0]);
+                return objectToExpr(object.objects[0]);
             case ARG:
                 // TODO add arg info
                 specialDef = Arg("");
                 null;
             case RETURN:
-                EReturn(headerToExpr(header.headers[0]));
+                EReturn(objectToExpr(object.objects[0]));
             case BINOP:
                 // TODO op not implemented
-                EBinop(OpAdd, headerToExpr(header.headers[0]), headerToExpr(header.headers[1]));
+                //trace(StringTools.trim(object.dataLines[0]));
+                EBinop(stringToBinop(object.objects[1].string()), objectToExpr(object.objects[0]), objectToExpr(object.objects[2]));
             case FINSTANCE:
-                specialDef = FInstance(header.dataLines[1].split(":")[0]);
+                //specialDef = FInstance(object.dataLines[1].split(":")[0]);
+                specialDef = FInstance("#UNKNOWN_STATIC");
                 null;
             case UNOP:
                 // TODO unop, and postFix, not implemented
-                EUnop(OpIncrement, false, headerToExpr(header.headers[0]));
+                EUnop(stringToUnop(object.objects[0].string()), object.objects[1].string() != "Prefix", objectToExpr(object.objects[0]));
             case ARRAY:
                 specialDef = DArray;
                 null;
             case NEW:
                 // TODO
+                trace("new not implemented");
                 ENew(null, []);
             case OBJDECL:
+                trace("object decl not implemented");
                 EObjectDecl([]);
             case VAR:
-                final exprHeader = parseHeaderFromString(header.dataLines[0]);
                 EVars([{
-                    name: header.subType.substr(0, header.subType.indexOf("<")),
-                    expr: headerToExpr(exprHeader),
+                    name: object.subType.substr(0, object.subType.indexOf("<")),
+                    expr: object.objects.length == 0 ? null : objectToExpr(object.objects[0]),
                 }]);
             case WHILE:
-                EWhile(headerToExpr(header.headers[0]), headerToExpr(header.headers[1]), false);
+                EWhile(objectToExpr(object.objects[0]), objectToExpr(object.objects[1]), false);
             case LOCAL:
-                header.defType = header.subType;
+                object.defType = object.subType;
                 specialDef = Local;
                 null;
             case PARENTHESIS:
-                EParenthesis(headerToExpr(header.headers[0]));
+                EParenthesis(objectToExpr(object.objects[0]));
+            case THROW:
+                EThrow(objectToExpr(object.objects[0]));
+            case FANON:
+                specialDef = FAnon("#UNKNOWN_FANON");
+                null;
+            case IF:
+                EIf(objectToExpr(object.objects[0]), objectToExpr(object.objects[1]), object.objects.length <= 2 ? null : objectToExpr(object.objects[2]));
+            case THEN:
+                if (object.objects.length == 0) {
+                    EConst(CIdent("#THEN_INVALID"));
+                }else{
+                    object.objects[0].objects = object.objects.slice(1);
+                    return objectToExpr(object.objects[0]);
+                }
+            case ELSE:
+                if (object.objects.length == 0) {
+                    EConst(CIdent("#ELSE_INVALID"));
+                }else{
+                    object.objects[0].objects = object.objects.slice(1);
+                    return objectToExpr(object.objects[0]);
+                }
+            case STRING:
+                EConst(CIdent("#STRING " + object.string()));
             default:
-                // throw "not implemented expr: " + header.def;
-                if (!nonImpl.contains(header.def)) nonImpl.push(header.def);
-                EBlock([]);
+                //throw "not implemented expr: " + object.def;
+                if (!nonImpl.contains(object.def)) nonImpl.push(object.def);
+                EConst(CIdent("#objectToExpr_" + object.string()));
         };
         return {
-            t: header.defType,
+            t: object.defType,
             def: def,
             specialDef: specialDef,
             remapTo: null,
@@ -169,6 +214,8 @@ class ExprParser {
                     field;
                 case FInstance(inst):
                     inst;
+                case FAnon(field):
+                    field;
                 default:
                     throw "exprToValueString specialDef not covered: " + expr.specialDef;
             }
@@ -185,61 +232,72 @@ class ExprParser {
                 throw "not a static expr to convert to a value";
         }
     }
-    function printHeader(header:Header, depth:Int=0) {
-        //trace([for (i in 0...depth * 2) " "].join("") + " " + header.def);
-        //trace(header.subType == null ? "null" :ComplexTypeTools.toString(header.subType));
-        for (subHeader in header.headers) {
-            printHeader(subHeader, depth + 1);
+    function printObject(object:Object, depth:Int=0) {
+        final tab = [for (i in 0...depth * 4) " "].join("");
+        // final objectStr = "(" + object.string() + ")";
+        trace(tab + object.def + "[" + object.defType + " " + object.subType + "]");
+        if (object.def == STRING)
+            trace(tab + "    " + object.string());
+        for (subObject in object.objects) {
+            printObject(subObject, depth + 1);
         }
     }
-    function parseHeaderFromString(s:String):Header {
-        final headerEndIndex = s.lastIndexOf("]") + 1;
-        final headerString = s.substring(s.indexOf("[") + 1, headerEndIndex - 1);
-        final header = parseHeader(0, headerString);
-        // if there is one liner data, put it into data
-        if (headerEndIndex + 2 < s.length) {
-            // remove semicolon from end
-            var endString = removeSemicolonSuffix(s);
-            endString = s.substring(headerEndIndex + 1);
-            header.dataLines = [endString];
-        }
-        return header;
-    }
-    function getHeader():Header {
+
+
+    function getObject():Object {
+        final line = lines[lineIndex];
         if (lineIndex >= lines.length)
             return null;
         // get the starting [ character
-        final headerStartIndex = lines[lineIndex].indexOf("[", stringIndex) + 1;
-        // not -1, because we are adding headerStartIndex 
+        final objectStartIndex = line.indexOf("[", stringIndex) + 1;
+        // not -1, because we are adding ObjectStartIndex 
         // in order to skip over the char (. = cursor)
         // before: .[
         // after:   [.
-        if (headerStartIndex == 0) {
-            if (lastHeader != null) {
-                lastHeader.dataLines.push(lines[lineIndex + 1]);
+
+        // Object header not found, jump to next line and try again
+        if (objectStartIndex == 0) {
+            // check if STRING object and same line object
+            final trimmedString = StringTools.ltrim(line.substr(stringIndex));
+            if (lastObject != null&& trimmedString.length > 0) {
+                if (lastObject.lineIndex == lineIndex) {
+                    if (trimmedString == ";") {
+                        trace("ENDING EXPR PARSER ON LINE (semicolon found): " + line);
+                        return null;
+                    }
+                    final object = Object.fromString(lineIndex, 0, trimmedString);
+                    lastObject.objects.push(object);
+                }else{
+                    // Next line arbitrary #STRING, for example: BINOP +
+                    final startIndex = lines[lineIndex].length - trimmedString.length + 1;
+                    final object = Object.fromString(lineIndex, startIndex, trimmedString);
+                    trace(lineIndex, startIndex, trimmedString);
+                    nextLine();
+                    return object;
+                }
             }
             nextLine();
-            return getHeader();
+            return getObject();
         }
-        final headerEndIndex = lines[lineIndex].indexOf("]", headerStartIndex + 1);
-        if (headerEndIndex < headerStartIndex) {
+        // end position
+        final objectEndIndex = line.indexOf("]", objectStartIndex + 1);
+
+        if (objectEndIndex < objectStartIndex) {
             // TODO more advanced check
             // Assume: cf_overloads = [];
+            trace("ENDING EXPR PARSER ON LINE: " + line);
             return null;
-            //throw "invalid headerEndIndex: " + headerEndIndex + " start: " + headerStartIndex + " " + lines[lineIndex];
         }
-        stringIndex = headerEndIndex + 1;
-        final headerString = lines[lineIndex].substring(headerStartIndex, headerEndIndex);
-        final header = parseHeader(headerStartIndex, headerString);
-        // if there is one liner data, put it into data
-        if (headerEndIndex + 2 < lines[lineIndex].length) {
-            // remove semicolon from end
-            var endString = removeSemicolonSuffix(lines[lineIndex]);
-            endString = lines[lineIndex].substring(headerEndIndex + 1);
-            header.dataLines = [endString];
+        stringIndex = objectEndIndex + 1;
+        
+        final objectString = line.substring(objectStartIndex, objectEndIndex);
+        final object = parseObject(objectStartIndex, objectString);
+        // check if same line object, if so always link to previous
+        if (lastObject != null && lastObject.lineIndex == lineIndex) {
+            object.startIndex = lastObject.startIndex + 1;
         }
-        lastHeader = header;
-        return header;
+        lastObject = object;
+        return object;
     }
     function nextLine() {
         lineIndex++;
@@ -253,19 +311,19 @@ class ExprParser {
             return s;
         }
     }
-    function parseHeader(startIndex:Int, headerString:String):Header {
-        final colonIndex = headerString.indexOf(":", 1);
+    function parseObject(startIndex:Int, objectString:String):Object {
+        final colonIndex = objectString.indexOf(":", 1);
         if (colonIndex == -1)
-            throw "colon not found for given headerString: " + headerString;
-        var defString = headerString.substr(0, colonIndex);
-        var defTypeString = headerString.substring(colonIndex + 1);
+            throw "colon not found for given ObjectString: " + objectString;
+        var defString = objectString.substr(0, colonIndex);
+        var defTypeString = objectString.substring(colonIndex + 1);
         final defType = defTypeString;
         final spaceIndex = defString.indexOf(" ");
         var subTypeString = "";
         if (spaceIndex != -1) {
             // sub
-            subTypeString = headerString.substring(spaceIndex + 1, colonIndex);
-            defString = headerString.substring(0, spaceIndex);
+            subTypeString = objectString.substring(spaceIndex + 1, colonIndex);
+            defString = objectString.substring(0, spaceIndex);
         }
         final subType = subTypeString;
         switch defString {
@@ -273,7 +331,52 @@ class ExprParser {
                 handleMetaAST();
             default:
         }
-        return new Header(defString, defType, startIndex, subType);
+        return new Object(defString, defType, lineIndex, startIndex, subType, objectString);
+    }
+
+    function stringToUnop(un:String):Unop {
+        return switch (un)  {
+            case "++": OpIncrement;
+            case "--": OpDecrement;
+            case "!": OpNot;
+            case "-": OpNeg;
+            case "~": OpNegBits;
+            case "...": OpSpread;
+            default:
+                throw "failed to stringToUnop: " + un;
+        }
+    }
+
+    function stringToBinop(op: String, isOpAssignOp: Bool = false): Binop {
+        return switch (op) {
+            case "+": OpAdd;
+            case "*": OpMult;
+            case "/": OpDiv;
+            case "-": OpSub;
+            case "=": OpAssign;
+            case "==": OpEq;
+            case "!=": OpNotEq;
+            case ">": OpGt;
+            case ">=": OpGte;
+            case "<": OpLt;
+            case "<=": OpLte;
+            case "&": OpAnd;
+            case "|": OpOr;
+            case "^": OpXor;
+            case "&&": OpBoolAnd;
+            case "||": OpBoolOr;
+            case "<<": OpShl;
+            case ">>": OpShr;
+            case ">>>": OpUShr;
+            case "%": OpMod;
+            case "...": OpInterval;
+            case "=>": OpArrow;
+            case "in": OpIn;
+            case "??": OpNullCoal;
+            case _ if (!isOpAssignOp): OpAssignOp(stringToBinop(op.substr(0, 1), true));
+            default:
+                throw "failed to stringToBinop: " + op;
+        }
     }
 
     function handleMetaAST() {
@@ -284,23 +387,41 @@ class ExprParser {
 }
 
 @:structInit
-class Header {
-    public var def:ExprDefHeader;
+class Object {
+    public var def:ExprDefObject;
+    var rawString = "";
     public var defType = "";
     public var subType = "";
+    public var lineIndex:Int = 0;
     public var startIndex:Int = 0;
-    public var headers:Array<Header> = [];
-    public var dataLines:Array<String> = [];
-    public function new(def,defType,startIndex,subType) {
+    public var objects:Array<Object> = [];
+
+    public function new(def,defType,lineIndex,startIndex,subType,rawString) {
         this.def = def;
         this.defType = defType;
+        this.lineIndex = lineIndex;
         this.startIndex = startIndex;
         this.subType = subType;
+        this.rawString = rawString;
+    }
+    public function string():String
+        return rawString;
+
+    public static function fromString(lineIndex, startIndex, s:String):Object {
+        return {
+            def: STRING,
+            defType: null,
+            lineIndex: lineIndex,
+            startIndex: startIndex,
+            subType: "",
+            rawString: s,
+        }
     }
 }
 
 
-enum abstract ExprDefHeader(String) to String {
+enum abstract ExprDefObject(String) to String {
+    var STRING = "#STRING#";
     var FUNCTION = "Function";
     var BLOCK = "Block";
     var CALL = "Call";
@@ -335,6 +456,8 @@ enum abstract ExprDefHeader(String) to String {
     var FENUM = "FEnum";
     var ARRAYDECL = "ArrayDecl";
     var OBJDECL = "ObjectDecl";
+    var THROW = "Throw";
+    var FANON = "FAnon";
     @:from
     static function fromString(s:String) {
         return switch s {
@@ -370,6 +493,8 @@ enum abstract ExprDefHeader(String) to String {
             case FENUM: FENUM;
             case ARRAYDECL: ARRAYDECL;
             case OBJDECL: OBJDECL;
+            case THROW: THROW;
+            case FANON: FANON;
             default:
                 throw "ExprDef not found: " + s;
         }

@@ -2,5 +2,6 @@ dump/*
 *.hl
 *.txt
 export/*
+exportTest/*
 *.js
 .DS_Store

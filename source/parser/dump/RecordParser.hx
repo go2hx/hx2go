@@ -203,9 +203,6 @@ class RecordParser {
                 line++;
             }
         }
-        // TODO remove
-        //if (result.exists("cl_path") && result["cl_path"] == "Fmt")
-        //    trace(result);
         return result;
     }
 
@@ -519,8 +516,6 @@ class RecordParser {
                 recordKind = RUnknown;
                 mapConcrete(block, RecordEntry);
         }
-        // TODO remove
-        // trace(concrete.module, concrete.path);
         concrete.record_kind = recordKind;
         return concrete;
     }

@@ -1,7 +1,9 @@
 package translator;
 
+import haxe.macro.Printer;
 import haxe.macro.Expr;
 import translator.exprs.*;
+import translator.TranslatorTools;
 import HaxeExpr.HaxeTypeDefinition;
 
 /**
@@ -10,8 +12,12 @@ import HaxeExpr.HaxeTypeDefinition;
 @:structInit
 class Translator {
     public function translateExpr(e:HaxeExpr):String {
+        if (e == null)
+            return "#NULL_TRANSLATED_EXPR";
         if (e.def != null)
             return switch e.def {
+                case EParenthesis(e):
+                    Parenthesis.translateParenthesis(this, e);
                 case ECall(e, params):
                     Call.translateCall(this, e,params);
                 case EBlock(exprs):
@@ -20,6 +26,8 @@ class Translator {
                     FieldAccess.translateFieldAccess(this, e, field, kind);
                 case EConst(c):
                     Const.translateConst(this, c);
+                case EIf(econd, eif, eelse):
+                    If.translateIf(this, econd, eif, eelse);
                 case EVars(vars):
                     VarDeclarations.translateVarsDeclarations(this, vars);
                 case EBinop(op, e1, e2):
@@ -44,10 +52,12 @@ class Translator {
             buf.add('import "$imp"\n');
 
         for (field in def.fields) {
-            final name = title(field.name);
+            final name = toPascalCase(field.name);
             var expr = "";
-            if (field.expr != null)
+            if (field.expr != null) {
                 expr = translateExpr(field.expr);
+            }
+
             switch field.kind {
                 case FFun(f):
                     buf.add('func $name() $expr\n');
@@ -65,9 +75,5 @@ class Translator {
             }
         }
         return buf.toString();
-    }
-
-    public function title(s:String) {
-        return s.charAt(0).toUpperCase() + s.substr(1);
     }
 }

@@ -1,10 +1,10 @@
+import translator.TranslatorTools.toCamelCase;
 import sys.io.File;
 import sys.FileSystem;
 import haxe.io.Path;
 import HaxeExpr.HaxeTypeDefinition;
 import transformer.Transformer;
 import translator.Translator;
-
 
 @:structInit
 class Module {
@@ -20,11 +20,12 @@ class Module {
                 switch def.kind {
                 case TDClass:
                     if (def.name == name)
-                    return def;
+                        return def;
                 default:
             }
         }
-        throw "not resolving def: " + name;
+        trace("not resolving def: " + name);
+        return null;
     }
 
      public function resolveGlobalDef(module:Module, name:String) {
@@ -41,6 +42,7 @@ class Module {
 
     public function resolveClass(pack:Array<String>, name:String):HaxeTypeDefinition {
         var resolveModule = pack.join(".") + (pack.length > 0 ? "." : "") + name;
+        trace(resolveModule);
         // local
         if (pack.length == 0) {
             return resolveLocalDef(this, name);
@@ -86,12 +88,8 @@ class Module {
             // translate
             var content = translator.translateDef(def);
             // imports
-            File.saveContent(dir + "/" + untitle(def.name) + ".go", prefixString + content);
+            File.saveContent(dir + "/" + toCamelCase(def.name) + ".go", prefixString + content);
         }
-    }
-
-    private function untitle(s:String) {
-        return s.charAt(0).toLowerCase() + s.substr(1);
     }
 
     private function printFile(s:String) {

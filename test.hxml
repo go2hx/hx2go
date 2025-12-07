@@ -1,0 +1,9 @@
+# haxelib git utest https://github.com/Aidan63/utest coro
+-lib utest
+-cp tests
+-m TestAll
+-w -WUnusedPattern
+extraParams.hxml
+-D run-go
+# set the output directory
+--custom-target go=exportTest

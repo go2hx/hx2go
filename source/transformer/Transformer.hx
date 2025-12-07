@@ -16,9 +16,11 @@ class Transformer {
     public var module:Module = null;
     public var def:HaxeTypeDefinition = null;
     public function transformExpr(e:HaxeExpr) {
-        if (e.def == null)
+        if (e == null || e.def == null)
             return;
         switch e.def {
+            case EConst(c):
+                Const.transformConst(this, e);
             case ETry(_, _):
                 Try.transformTry(this, e);
             case EField(_, _, _):

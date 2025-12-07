@@ -23,14 +23,16 @@ function resolveExpr(t:Transformer, e2:HaxeExpr) {
                 switch p.params[0] {
                     case TPType(TPath(p)):
                         final td = t.module.resolveClass(p.pack, p.name);
-                        for (meta in td.meta()) {
-                            switch meta.name {
-                            case ":go.package":
-                                // import
-                                t.def.addGoImport(exprToString(meta.params[0]));
-                            case ":go.native":
-                                // rename
-                                renamedIdent = exprToString(meta.params[0]);
+                        if (td != null) {
+                            for (meta in td.meta()) {
+                                switch meta.name {
+                                case ":go.package":
+                                    // import
+                                    t.def.addGoImport(exprToString(meta.params[0]));
+                                case ":go.native":
+                                    // rename
+                                    renamedIdent = exprToString(meta.params[0]);
+                                }
                             }
                         }
                     default:

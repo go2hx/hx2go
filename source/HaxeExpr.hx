@@ -8,11 +8,16 @@ class HaxeExpr {
 	public var specialDef:SpecialExprDef;
 	public var def:HaxeExprDef;
 	public var t:String;
+
+	public function toString(): String {
+		return Std.string(def);
+	}
 }
 
 enum SpecialExprDef {
     TypeExpr(path:String);
     FStatic(staticField:String, field:String);
+	FAnon(field:String);
 	Arg(info:String);
 	FInstance(inst:String);
 	Local;

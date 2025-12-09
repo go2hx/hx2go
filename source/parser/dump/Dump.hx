@@ -1,5 +1,7 @@
 package parser.dump;
 
+using StringTools;
+
 import sys.io.File;
 import haxe.io.Path;
 import haxe.io.Bytes;
@@ -15,7 +17,7 @@ class Dump implements IParser {
     public function new(context: Context) {
         _context = context;
     }
-    
+
     public function run(path: String): Void {
         // hardset for now, might need to have path show local path where cli was started
         path = "dump/AfterDce/go/";
@@ -23,11 +25,11 @@ class Dump implements IParser {
         final filePaths = parseFolder(path);
         final records = [];
         for (filePath in filePaths) {
-            final parser:RecordParser = {dbg_path: filePath, input: File.getContent(filePath)};
+            final parser:RecordParser = {dbg_path: filePath, input: File.getContent(filePath).replace("\r\n", "\n").replace("\r", "\n")};
             final record = parser.run();
             records.push(record);
         }
-      
+
         for (record in records) {
             if (record?.module == null) {
                 trace("module should not be null");
@@ -39,7 +41,7 @@ class Dump implements IParser {
             if (!cache.exists(record.module)) {
                 var module: Module = {
                     path: record.module,
-                    translator: {}, 
+                    translator: {},
                     transformer: {},
                     context: _context,
                 };

@@ -1,5 +1,7 @@
 package parser.dump;
 
+using StringTools;
+
 import HaxeExpr.SpecialExprDef;
 import HaxeExpr.HaxeExprDef;
 import HaxeExpr.SpecialExprDef;
@@ -140,7 +142,7 @@ class ExprParser {
                 null;
             case UNOP:
                 // TODO unop, and postFix, not implemented
-                EUnop(stringToUnop(object.objects[0].string()), object.objects[1].string() != "Prefix", objectToExpr(object.objects[0]));
+                EUnop(stringToUnop(object.objects[0].string()), object.objects[1].string() != "Prefix", objectToExpr(object.objects[2]));
             case ARRAY:
                 specialDef = DArray;
                 null;
@@ -163,8 +165,9 @@ class ExprParser {
                     expr: object.objects.length == 0 ? null : objectToExpr(object.objects[0]),
                 }]);
             case WHILE:
-                // TODO normal while bool not implemented
                 EWhile(objectToExpr(object.objects[0]), objectToExpr(object.objects[1]), true);
+            case DO:
+                EWhile(objectToExpr(object.objects[0]), objectToExpr(object.objects[1]), false);
             case LOCAL:
                 object.defType = object.subType;
                 specialDef = Local;
@@ -243,10 +246,10 @@ class ExprParser {
     }
     function printObject(object:Object, depth:Int=0) {
         final tab = [for (i in 0...depth * 4) " "].join("");
-        // final objectStr = "(" + object.string() + ")";
-        // trace(tab + object.def + "[" + object.defType + " " + object.subType + "]");
+        final objectStr = "(" + object.string() + ")";
+        trace(tab + object.def + "[" + object.defType + " " + object.subType + "]");
         if (object.def == STRING)
-            // trace(tab + "    " + object.string());
+            trace(tab + "    " + object.string());
         for (subObject in object.objects) {
             printObject(subObject, depth + 1);
         }
@@ -259,7 +262,7 @@ class ExprParser {
             return null;
         // get the starting [ character
         final objectStartIndex = line.indexOf("[", stringIndex) + 1;
-        // not -1, because we are adding ObjectStartIndex 
+        // not -1, because we are adding ObjectStartIndex
         // in order to skip over the char (. = cursor)
         // before: .[
         // after:   [.
@@ -298,7 +301,7 @@ class ExprParser {
             return null;
         }
         stringIndex = objectEndIndex + 1;
-        
+
         final objectString = line.substring(objectStartIndex, objectEndIndex);
         final object = parseObject(objectStartIndex, objectString);
         // check if same line object, if so always link to previous
@@ -343,7 +346,7 @@ class ExprParser {
         return new Object(defString, defType, lineIndex, startIndex, subType, objectString);
     }
 
-    function stringToUnop(un:String):Unop {
+    function stringToUnop(un: String):Unop {
         return switch (un)  {
             case "++": OpIncrement;
             case "--": OpDecrement;
@@ -461,6 +464,7 @@ enum abstract ExprDefObject(String) to String {
     var SWITCH = "Switch";
     var ENUMINDEX = "EnumIndex";
     var CASE = "Case";
+    var DO = "Do";
     var ENUMPARAMETER = "EnumParameter";
     var FENUM = "FEnum";
     var ARRAYDECL = "ArrayDecl";
@@ -504,6 +508,7 @@ enum abstract ExprDefObject(String) to String {
             case OBJDECL: OBJDECL;
             case THROW: THROW;
             case FANON: FANON;
+            case DO: DO;
             default:
                 throw "ExprDef not found: " + s;
         }

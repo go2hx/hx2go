@@ -247,11 +247,11 @@ class ExprParser {
     function printObject(object:Object, depth:Int=0) {
         final tab = [for (i in 0...depth * 4) " "].join("");
         final objectStr = "(" + object.string() + ")";
-        trace(tab + object.def + "[" + object.defType + " " + object.subType + "]");
+        // trace(tab + object.def + "[" + object.defType + " " + object.subType + "]");
         if (object.def == STRING)
-            trace(tab + "    " + object.string());
+            // trace(tab + "    " + object.string());
         for (subObject in object.objects) {
-            printObject(subObject, depth + 1);
+            // printObject(subObject, depth + 1);
         }
     }
 

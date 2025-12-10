@@ -12,7 +12,7 @@ import parser.dump.RecordParser;
 import HaxeExpr;
 /**
  * Where RecordEntry is turned into a HaxeTypeDefinition
- * @param record 
+ * @param record
  * @return HaxeTypeDefinition
  */
 function recordToHaxeTypeDefinition(record: RecordEntry):HaxeTypeDefinition {
@@ -20,7 +20,7 @@ function recordToHaxeTypeDefinition(record: RecordEntry):HaxeTypeDefinition {
         trace("cl_module should never be null: " + record.record_debug_path);
         return null;
     }
-    
+
     var kind:HaxeTypeDefinitionKind = TDClass;
     var fields:Array<HaxeField> = [];
 
@@ -50,8 +50,7 @@ function recordToHaxeTypeDefinition(record: RecordEntry):HaxeTypeDefinition {
         case REnum:
             var t = record.toEnum();
         case RUnknown:
-            trace(record.record_debug_path);
-            trace('record_kind should not be unknown: ' + record.module);
+            trace('record_kind should not be unknown: ' + record.module + ' in ' + record.record_debug_path);
     }
     return {
         name: record.path,

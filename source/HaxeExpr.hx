@@ -2,12 +2,31 @@ package;
 
 import haxe.macro.Expr;
 
+enum abstract HaxeExprFlags(Int) from Int to Int {
+    public var Processed = 1;
+}
+
 @:structInit
 class HaxeExpr {
 	public var remapTo:Null<String> = null;
 	public var specialDef:SpecialExprDef;
+	public var parent:HaxeExpr = null;
+	public var parentIdx:Int = 0;
+	public var flags:HaxeExprFlags = 0;
 	public var def:HaxeExprDef;
 	public var t:String;
+
+	public function copy(deep: Bool = false): HaxeExpr {
+	    return {
+			remapTo: remapTo,
+			specialDef: specialDef,
+			parent: deep ? parent.copy() : parent,
+			parentIdx: parentIdx,
+			flags: flags,
+			def: def,
+			t: t
+		};
+	}
 
 	public function toString(): String {
 		return Std.string(def);
@@ -197,7 +216,7 @@ class HaxeTypeDefinition {
         if (goImports.contains(imp)) {
             return;
         }
-        
+
         goImports.push(imp);
     }
 	public var name:String;

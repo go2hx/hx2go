@@ -5,6 +5,9 @@ import transformer.Transformer;
 import haxe.macro.Expr;
 
 function transformUnop(t:Transformer, e0: HaxeExpr, op: Unop, postFix: Bool, e1: HaxeExpr) {
+    // iterate over unop
+    t.iterateExpr(e0);
+
     // ignore if not OpIncrement or OpDecrement
     if (op != OpIncrement && op != OpDecrement) {
         return;

@@ -116,7 +116,7 @@ class ExprParser {
                     case "String":
                         final len = s.length - 1;
                         // space + "", end ""
-                        EConst(CString(s.substring(2, len)));
+                        EConst(CString(s.substring(1, len)));
                     case "Int":
                         EConst(CInt(s));
                     case "Float":
@@ -247,11 +247,11 @@ class ExprParser {
     function printObject(object:Object, depth:Int=0) {
         final tab = [for (i in 0...depth * 4) " "].join("");
         final objectStr = "(" + object.string() + ")";
-        trace(tab + object.def + "[" + object.defType + " " + object.subType + "]");
+        // trace(tab + object.def + "[" + object.defType + " " + object.subType + "]");
         if (object.def == STRING)
-            trace(tab + "    " + object.string());
+            // trace(tab + "    " + object.string());
         for (subObject in object.objects) {
-            printObject(subObject, depth + 1);
+            // printObject(subObject, depth + 1);
         }
     }
 
@@ -261,7 +261,11 @@ class ExprParser {
         if (lineIndex >= lines.length)
             return null;
         // get the starting [ character
-        final objectStartIndex = line.indexOf("[", stringIndex) + 1;
+        final quoteIndex = line.indexOf('"', stringIndex) + 1;
+        var objectStartIndex = line.indexOf("[", stringIndex) + 1;
+        // check if const string is quote
+        if (quoteIndex != 0 && objectStartIndex > quoteIndex)
+            objectStartIndex = 0;
         // not -1, because we are adding ObjectStartIndex
         // in order to skip over the char (. = cursor)
         // before: .[

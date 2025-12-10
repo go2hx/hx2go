@@ -6,5 +6,6 @@ import HaxeExpr;
 
 function translateFieldAccess(t:Translator, e:HaxeExpr, field:String, kind:EFieldKind) {
     // TODO implement kind Safe
-    return (e.remapTo ?? t.translateExpr(e)) + '.$field';
+    var fieldOn = e.remapTo ?? t.translateExpr(e);
+    return fieldOn + (fieldOn != "" ? '.' : '') + '$field';
 }

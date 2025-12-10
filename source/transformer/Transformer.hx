@@ -15,9 +15,14 @@ import transformer.exprs.*;
 class Transformer {
     public var module:Module = null;
     public var def:HaxeTypeDefinition = null;
-    public function transformExpr(e:HaxeExpr) {
+    public var tempId:Int = 0;
+    public function transformExpr(e:HaxeExpr, ?parent:HaxeExpr, ?parentIdx:Int) {
         if (e == null || e.def == null)
             return;
+        if (parent != null)
+            e.parent = parent;
+            e.parentIdx = parentIdx;
+
         switch e.def {
             case EConst(c):
                 Const.transformConst(this, e);
@@ -25,9 +30,22 @@ class Transformer {
                 Try.transformTry(this, e);
             case EField(_, _, _):
                 FieldAccess.transformFieldAccess(this, e);
+            case EUnop(op, postFix, e1):
+                UnopExpr.transformUnop(this, e, op, postFix, e1);
+            case EWhile(cond, body, norm):
+                While.transformWhile(this, e, cond, body, norm);
+            case EIf(cond, branchTrue, branchFalse):
+                If.transformIf(this, e, cond, branchTrue, branchFalse);
             default:
-                HaxeExprTools.iter(e, transformExpr);
+                iterateExpr(e);
         }
+    }
+    public function iterateExpr(e:HaxeExpr) {
+        var idx = 0;
+        HaxeExprTools.iter(e, (le) -> {
+            transformExpr(le, e, idx);
+            idx++;
+        });
     }
     public function transformDef(def:HaxeTypeDefinition) {
         if (def.fields == null)
@@ -45,6 +63,90 @@ class Transformer {
             }
             if (field.expr != null)
                 transformExpr(field.expr);
+        }
+    }
+    public function findOuterBlock(e:HaxeExpr): { pos: Int, of: Null<HaxeExpr> } {
+        var parent: HaxeExpr = e;
+        var pos: Int = 0;
+
+        while (parent != null) {
+            switch (parent?.def) {
+                case EBlock(_): break;
+                case _:
+                    pos = parent.parentIdx;
+                    parent = parent.parent;
+            }
+        }
+
+        return { pos: pos, of: parent };
+    }
+    public function createTemporary(e:HaxeExpr, ?pre:HaxeExpr, ?post: HaxeExpr): HaxeExpr {
+        var expr: HaxeExpr = {
+            t: null,
+            specialDef: null,
+            def: EConst(CIdent("#FAILED_TEMP"))
+        };
+
+        var block = findOuterBlock(e);
+        if (block.of == null) {
+            trace('could not create temporary: no outer block');
+            return expr;
+        }
+
+        var children: Array<HaxeExpr> = switch (block.of.def) {
+            case EBlock(x): x;
+            case _: null;
+        }
+
+        if (children == null) {
+            trace('could not create temporary: children should not be null');
+            return expr;
+        }
+
+        var id = tempId++;
+        expr.def = EConst(CIdent('_temp_$id'));
+
+        var insertPos = block.pos;
+        var insertCount = 0;
+
+        if (pre != null) {
+            children.insert(insertPos, pre);
+            insertPos++;
+            insertCount++;
+        }
+
+        children.insert(insertPos, {
+            t: null,
+            specialDef: null,
+            def: EVars([
+                { name: '_temp_$id', expr: e }
+            ])
+        });
+
+        insertPos++;
+        insertCount++;
+
+        if (post != null) {
+            children.insert(insertPos, post);
+            insertCount++;
+        }
+
+        for (i in (block.pos + insertCount)...children.length) {
+            if (children[i].parentIdx >= block.pos) {
+                children[i].parentIdx += insertCount;
+            }
+        }
+
+        return expr;
+    }
+    public function ensureBlock(e:HaxeExpr):HaxeExpr {
+        if (e == null) {
+            return null;
+        }
+
+        return switch (e.def) {
+            case EBlock(_): e;
+            case _: { t: null, specialDef: null, def: EBlock([e]) };
         }
     }
 }

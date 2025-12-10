@@ -42,7 +42,7 @@ class Module {
 
     public function resolveClass(pack:Array<String>, name:String):HaxeTypeDefinition {
         var resolveModule = pack.join(".") + (pack.length > 0 ? "." : "") + name;
-        trace(resolveModule);
+        // trace(resolveModule);
         // local
         if (pack.length == 0) {
             return resolveLocalDef(this, name);

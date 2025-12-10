@@ -37,13 +37,15 @@ class Transformer {
             case EIf(cond, branchTrue, branchFalse):
                 If.transformIf(this, e, cond, branchTrue, branchFalse);
             default:
-                var idx = 0;
-                HaxeExprTools.iter(e, (le) -> {
-                    transformExpr(le, e, idx);
-                    idx++;
-                });
-
+                iterateExpr(e);
         }
+    }
+    public function iterateExpr(e:HaxeExpr) {
+        var idx = 0;
+        HaxeExprTools.iter(e, (le) -> {
+            transformExpr(le, e, idx);
+            idx++;
+        });
     }
     public function transformDef(def:HaxeTypeDefinition) {
         if (def.fields == null)
@@ -144,7 +146,7 @@ class Transformer {
 
         return switch (e.def) {
             case EBlock(_): e;
-            case _: { t: null, specialDef: null, def: EBlock([e])}
+            case _: { t: null, specialDef: null, def: EBlock([e]) };
         }
     }
 }

@@ -38,7 +38,8 @@ class Test {
         //} while (count <= n);
 
         var x = 0;
-        if (x > 5) x++;
+        var y = 0;
+        if (x > 5) y = x++;
 
         //var x = 0;
         //Fmt.println(x++);

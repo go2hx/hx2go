@@ -23,10 +23,12 @@ function recordToHaxeTypeDefinition(record: RecordEntry):HaxeTypeDefinition {
 
     var kind:HaxeTypeDefinitionKind = TDClass;
     var fields:Array<HaxeField> = [];
-
+    var isExtern = false;
     switch record.record_kind {
         case RClass:
             var cls = record.toClass();
+            isExtern = cls.flags.contains("CExtern");
+
             if (cls.ordered_fields == null) {
                 trace(record.record_debug_path);
             }
@@ -56,6 +58,7 @@ function recordToHaxeTypeDefinition(record: RecordEntry):HaxeTypeDefinition {
         name: record.path,
         module: record.module,
         fields: fields,
+        isExtern: isExtern,
         meta: () -> getMeta(record.meta),
         kind: kind,
     };

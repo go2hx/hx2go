@@ -38,7 +38,7 @@ class Test {
         //} while (count <= n);
 
         var x = 0;
-        while (x < 20) x++;
+        if (x > 5) x++;
 
         //var x = 0;
         //Fmt.println(x++);

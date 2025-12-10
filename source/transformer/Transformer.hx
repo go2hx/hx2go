@@ -34,6 +34,8 @@ class Transformer {
                 UnopExpr.transformUnop(this, e, op, postFix, e1);
             case EWhile(cond, body, norm):
                 While.transformWhile(this, e, cond, body, norm);
+            case EIf(cond, branchTrue, branchFalse):
+                If.transformIf(this, e, cond, branchTrue, branchFalse);
             default:
                 var idx = 0;
                 HaxeExprTools.iter(e, (le) -> {
@@ -134,5 +136,15 @@ class Transformer {
         }
 
         return expr;
+    }
+    public function ensureBlock(e:HaxeExpr):HaxeExpr {
+        if (e == null) {
+            return null;
+        }
+
+        return switch (e.def) {
+            case EBlock(_): e;
+            case _: { t: null, specialDef: null, def: EBlock([e])}
+        }
     }
 }

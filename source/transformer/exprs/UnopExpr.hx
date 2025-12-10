@@ -10,6 +10,14 @@ function transformUnop(t:Transformer, e0: HaxeExpr, op: Unop, postFix: Bool, e1:
         return;
     }
 
+    // ignore if parent is a block
+    if (e0.parent != null) {
+        switch (e0.parent.def) {
+            case EBlock(_): return;
+            case _: null;
+        }
+    }
+
     // we first copy over some information needed for temporaries
     e1.parent = e0.parent;
     e1.parentIdx = e0.parentIdx;

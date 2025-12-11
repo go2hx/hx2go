@@ -48,6 +48,8 @@ class Translator {
                     UnopExpr.translateUnop(this, op, postFix, e);
                 case EWhile(econd, e, normalWhile):
                     While.translateWhile(this, econd, e, normalWhile);
+                case ECheckType(e2, t):
+                    CheckType.translateCheckType(this, e2, t);
                 default:
                     "_ = 0";
             }

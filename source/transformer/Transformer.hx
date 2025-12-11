@@ -38,6 +38,8 @@ class Transformer {
                 If.transformIf(this, e, cond, branchTrue, branchFalse);
             case EVars(vars):
                 VarDeclarations.transformVarDeclarations(this, e, vars);
+            case EBinop(op, e1, e2):
+                BinopExpr.transformBinop(this, e, op, e1, e2);
             default:
                 iterateExpr(e);
         }
@@ -49,7 +51,7 @@ class Transformer {
             idx++;
         });
     }
-    public function transformComplexType(t:Transformer, ct:ComplexType) {
+    public function transformComplexType(ct:ComplexType) {
         switch ct {
             case TPath(p):
                 // transform params of complexType
@@ -57,13 +59,17 @@ class Transformer {
                     for (param in p.params) {
                         switch param {
                             case TPType(t2):
-                                transformComplexType(t, t2);
+                                transformComplexType(t2);
                             default:
 
                         }
                     }
                 }
-                final td = t.module.resolveClass(p.pack, p.name);
+                // has already been resolved, because prefix lowercase is not valid Haxe code
+                // I don't love this hack, would prefer to have the transformer only go over once
+                if (isLowercasePrefix(p.name))
+                    return;
+                final td = module.resolveClass(p.pack, p.name);
                 if (td == null) {
                     trace('td is null in transformComplexType for' + ct);
                     return;
@@ -80,6 +86,7 @@ class Transformer {
                                 case "go.Int64": "int64";
                                 case "go.Int16": "int16";
                                 case "go.Int8": "int8";
+                                case "Bool": "bool";
                                 // TODO handle UInt types
                                 default:
                                     trace("unhandled coreType: " + td.name);
@@ -90,6 +97,8 @@ class Transformer {
             default:
         }
     }
+    private function isLowercasePrefix(s:String):Bool
+        return s.charAt(0).toLowerCase() == s.charAt(0);
     public function transformDef(def:HaxeTypeDefinition) {
         if (def.fields == null)
             return;
@@ -122,6 +131,12 @@ class Transformer {
         }
 
         return { pos: pos, of: parent };
+    }
+    // takes the type as a string and transforms it into CheckType ($expr : $ct)
+    public function transformTypeConversion(t:String, e:HaxeExpr) {
+        final ct = HaxeExprTools.stringToComplexType(t);
+        transformComplexType(ct);
+        e.def = ECheckType(e.copy(), ct);
     }
     public function createTemporary(e:HaxeExpr, ?pre:HaxeExpr, ?post: HaxeExpr): HaxeExpr {
         var expr: HaxeExpr = {

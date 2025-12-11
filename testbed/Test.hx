@@ -1,5 +1,6 @@
 // NOTE: @:native causes the name to change in the dump file
 // We only want to use the metadata to point to the Go reference api
+import go.Float32;
 import go.Convert;
 @:go.package("fmt")
 @:go.native("fmt")
@@ -55,7 +56,7 @@ extern class Raylib {
     public static extern function GetMouseY(): Int;
 
     @:go.native("GetFrameTime")
-    public static extern function GetFrameTime(): go.Float32;
+    public static extern function GetFrameTime(): Float32;
 }
 
 @:dce(ignore)
@@ -65,15 +66,15 @@ class Test {
         Raylib.InitWindow(800, 400, "raylib [core] example - basic window");
         var c = 10;
         var b = c++;
-        var target_x:go.Float32 = 0.0;
-        var target_y:go.Float32 = 0.0;
-        var vel_x:go.Float32 = 0.0;
-        var vel_y:go.Float32 = 0.0;
-        var current_x:go.Float32 = 0.0;
-        var current_y:go.Float32 = 0.0;
+        var target_x:Float32 = 0.0;
+        var target_y:Float32 = 0.0;
+        var vel_x:Float32 = 0.0;
+        var vel_y:Float32 = 0.0;
+        var current_x:Float32 = 0.0;
+        var current_y:Float32 = 0.0;
 
-        final stiffness:go.Float32 = 10.0;
-        final damping:go.Float32 = 2.0;
+        final stiffness:Float32 = 10.0;
+        final damping:Float32 = 2.0;
 
         while (!Raylib.WindowShouldClose()) {
             target_x = Raylib.GetMouseX();

@@ -77,6 +77,11 @@ class ExprParser {
     }
     function objectToExpr(object:Object):HaxeExpr {
         var specialDef:SpecialExprDef = null;
+        if (object == null) {
+            trace('obj should not be null!');
+            return { t: null, specialDef: null, def: EBlock([]) };
+        }
+
         final def:HaxeExprDef = switch object.def {
             case BLOCK:
                 EBlock(object.objects.map(object -> objectToExpr(object)));

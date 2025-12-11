@@ -1,5 +1,6 @@
 // NOTE: @:native causes the name to change in the dump file
 // We only want to use the metadata to point to the Go reference api
+import go.Int32;
 import go.Float32;
 import go.Convert;
 @:go.package("fmt")
@@ -23,10 +24,10 @@ extern class Raylib {
     public static extern var Red: RGBA;
 
     @:go.native("InitWindow") // could be removed if function name was "InitWindow"
-    public static extern function InitWindow(width: Int, height: Int, title: String): Void;
+    public static extern function InitWindow(width: Int32, height: Int32, title: String): Void;
 
     @:go.native("SetTargetFPS")
-    public static extern function SetTargetFps(fps: Int): Void;
+    public static extern function SetTargetFps(fps: Int32): Void;
 
     @:go.native("WindowShouldClose")
     public static extern function WindowShouldClose(): Bool;
@@ -41,10 +42,10 @@ extern class Raylib {
     public static extern function ClearBackground(colour: RGBA): Void;
 
     @:go.native("DrawText")
-    public static extern function DrawText(str: String, x: Int, y: Int, size: Int, colour: RGBA): Void;
+    public static extern function DrawText(str: String, x: Int32, y: Int32, size: Int32, colour: RGBA): Void;
 
     @:go.native("DrawCircle")
-    public static extern function DrawCircle(x: Int, y: Int, radius: Float, colour: RGBA): Void;
+    public static extern function DrawCircle(x: Int32, y: Int32, radius: Float32, colour: RGBA): Void;
 
     @:go.native("CloseWindow")
     public static extern function CloseWindow(): Void;
@@ -64,8 +65,6 @@ extern class Raylib {
 class Test {
     public static function main() {
         Raylib.InitWindow(800, 400, "raylib [core] example - basic window");
-        var c = 10;
-        var b = c++;
         var target_x:Float32 = 0.0;
         var target_y:Float32 = 0.0;
         var vel_x:Float32 = 0.0;

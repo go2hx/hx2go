@@ -83,13 +83,18 @@ class Transformer {
                             p.pack = [];
                             p.name = switch td.name {
                                 case "go.Float32", "Single": "float32";
-                                case "Float": "float64";
+                                case "go.Float64", "Float": "float64";
+                                case "go.Int64", "Int64": "int64";
                                 case "go.Int32", "Int": "int32";
-                                case "go.Int64": "int64";
                                 case "go.Int16": "int16";
                                 case "go.Int8": "int8";
+                                case "go.UInt64": "uint64";
+                                case "go.UInt32": "int32";
+                                case "go.UInt16": "int16";
+                                case "go.UInt8": "int8";
+                                case "go.Rune": "rune";
+                                case "go.Byte": "byte";
                                 case "Bool": "bool";
-                                // TODO handle UInt types
                                 default:
                                     trace("unhandled coreType: " + td.name);
                                     "#UNKNOWN_TYPE";

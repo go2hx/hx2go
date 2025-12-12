@@ -118,9 +118,9 @@ abstract UInt8 {
        return Convert.uint8(x);
    }
    @:to public inline function toFloat(): Float {
-       return untyped this;
+       return (untyped this : Float);
    }
    @:to public inline function toInt(): Int {
-       return untyped this;
+       return (untyped this : Int);
    }
 }

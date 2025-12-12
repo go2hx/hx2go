@@ -51,10 +51,10 @@ extern class Raylib {
     public static extern function CloseWindow(): Void;
 
     @:go.native("GetMouseX")
-    public static extern function GetMouseX(): Int;
+    public static extern function GetMouseX(): Int32;
 
     @:go.native("GetMouseY")
-    public static extern function GetMouseY(): Int;
+    public static extern function GetMouseY(): Int32;
 
     @:go.native("GetFrameTime")
     public static extern function GetFrameTime(): Float32;

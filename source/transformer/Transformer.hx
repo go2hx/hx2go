@@ -42,6 +42,8 @@ class Transformer {
                 BinopExpr.transformBinop(this, e, op, e1, e2);
             case EBlock(exprs):
                 Block.transformBlock(this, e, exprs);
+            case ECast(_, t):
+                Cast.transformCast(this, e, t);
             default:
                 iterateExpr(e);
         }

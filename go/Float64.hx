@@ -112,6 +112,6 @@ abstract Float64 {
        return Convert.float64(x);
    }
    @:to public inline function toFloat(): Float {
-       return untyped this;
+       return (untyped this : Float);
    }
 }

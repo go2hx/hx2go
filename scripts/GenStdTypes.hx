@@ -164,7 +164,7 @@ function main() {
 
         for (t in toTypes) {
             content.add('   @:to public inline function to${t}(): $t {\n');
-            content.add('       return untyped this;\n');
+            content.add('       return (untyped this : $t);\n');
             content.add('   }\n');
         }
 

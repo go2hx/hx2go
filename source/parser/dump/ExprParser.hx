@@ -205,6 +205,8 @@ class ExprParser {
                 }
             case STRING:
                 EConst(CIdent("#STRING " + object.string()));
+            case CAST:
+                ECast(objectToExpr(object.objects[0]), HaxeExprTools.stringToComplexType(object.defType));
             default:
                 //throw "not implemented expr: " + object.def;
                 if (!nonImpl.contains(object.def)) nonImpl.push(object.def);

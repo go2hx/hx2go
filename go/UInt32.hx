@@ -124,9 +124,9 @@ abstract UInt32 {
        return Convert.uint32(x);
    }
    @:to public inline function toFloat(): Float {
-       return untyped this;
+       return (untyped this : Float);
    }
    @:to public inline function toInt(): Int {
-       return untyped this;
+       return (untyped this : Int);
    }
 }

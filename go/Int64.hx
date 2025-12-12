@@ -136,9 +136,9 @@ abstract Int64 {
        return Convert.int64(x);
    }
    @:to public inline function toFloat(): Float {
-       return untyped this;
+       return (untyped this : Float);
    }
    @:to public inline function toInt(): Int {
-       return untyped this;
+       return (untyped this : Int);
    }
 }

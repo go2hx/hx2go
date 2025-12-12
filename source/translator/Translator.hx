@@ -52,6 +52,8 @@ class Translator {
                     CheckType.translateCheckType(this, e2, t);
                 case EUntyped(e):
                     Untyped.translateUntyped(this, e);
+                case ECast(e, t):
+                    Cast.translateCast(this, e, t);
                 default:
                     "_ = 0";
             }

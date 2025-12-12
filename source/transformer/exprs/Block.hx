@@ -58,7 +58,6 @@ function extractBlock(t:Transformer, remappedNames:Map<String, String>, e:HaxeEx
             }
 
         case EConst(CIdent(name)):
-            trace(name);
             e.def = EConst(CIdent(remappedNames[name] ?? name)); // TODO: we must ensure that this only remaps on exact CIdent matches and not on an CIdent in fieldaccess...
 
         case _:

@@ -10,29 +10,29 @@ import haxe.io.Path;
 
 var types = ["uint8", "uint16", "uint32", "uint64", "int8", "int16", "int32", "int64", "float32", "float64"];
 var operators = [
-    { name: "add",      format: "A + B",   bitwise: false, outFloat: false, outBool: false, unary: false },
-    { name: "sub",      format: "A - B",   bitwise: false, outFloat: false, outBool: false, unary: false },
-    { name: "mul",      format: "A * B",   bitwise: false, outFloat: false, outBool: false, unary: false },
-    { name: "div",      format: "A / B",   bitwise: false, outFloat: true,  outBool: false, unary: false },
-    { name: "mod",      format: "A % B",   bitwise: false, outFloat: false, outBool: false, unary: false },
-    { name: "neg",      format: "-A",      bitwise: false, outFloat: false, outBool: false, unary: true  },
-    { name: "preinc",   format: "++A",     bitwise: false, outFloat: false, outBool: false, unary: true  },
-    { name: "postinc",  format: "A++",     bitwise: false, outFloat: false, outBool: false, unary: true  },
-    { name: "predec",   format: "--A",     bitwise: false, outFloat: false, outBool: false, unary: true  },
-    { name: "postdec",  format: "A--",     bitwise: false, outFloat: false, outBool: false, unary: true  },
-    { name: "eq",       format: "A == B",  bitwise: false, outFloat: false, outBool: true,  unary: false },
-    { name: "neq",      format: "A != B",  bitwise: false, outFloat: false, outBool: true,  unary: false },
-    { name: "lt",       format: "A < B",   bitwise: false, outFloat: false, outBool: true,  unary: false },
-    { name: "lte",      format: "A <= B",  bitwise: false, outFloat: false, outBool: true,  unary: false },
-    { name: "gt",       format: "A > B",   bitwise: false, outFloat: false, outBool: true,  unary: false },
-    { name: "gte",      format: "A >= B",  bitwise: false, outFloat: false, outBool: true,  unary: false },
-    { name: "and",      format: "A & B",   bitwise: true,  outFloat: false, outBool: false, unary: false },
-    { name: "or",       format: "A | B",   bitwise: true,  outFloat: false, outBool: false, unary: false },
-    { name: "xor",      format: "A ^ B",   bitwise: true,  outFloat: false, outBool: false, unary: false },
-    { name: "not",      format: "~A",      bitwise: true,  outFloat: false, outBool: false, unary: true  },
-    { name: "lshift",   format: "A << B",  bitwise: true,  outFloat: false, outBool: false, unary: false },
-    { name: "rshift",   format: "A >> B",  bitwise: true,  outFloat: false, outBool: false, unary: false },
-    { name: "urshift",  format: "A >>> B", bitwise: true,  outFloat: false, outBool: false, unary: false }
+    { name: "add",      format: "A + B",   bitwise: false, outFloat: false, outBool: false, unary: false, commutative: true  },
+    { name: "sub",      format: "A - B",   bitwise: false, outFloat: false, outBool: false, unary: false, commutative: false },
+    { name: "mul",      format: "A * B",   bitwise: false, outFloat: false, outBool: false, unary: false, commutative: true  },
+    { name: "div",      format: "A / B",   bitwise: false, outFloat: true,  outBool: false, unary: false, commutative: false },
+    { name: "mod",      format: "A % B",   bitwise: false, outFloat: false, outBool: false, unary: false, commutative: false },
+    { name: "neg",      format: "-A",      bitwise: false, outFloat: false, outBool: false, unary: true,  commutative: false },
+    { name: "preinc",   format: "++A",     bitwise: false, outFloat: false, outBool: false, unary: true,  commutative: false },
+    { name: "postinc",  format: "A++",     bitwise: false, outFloat: false, outBool: false, unary: true,  commutative: false },
+    { name: "predec",   format: "--A",     bitwise: false, outFloat: false, outBool: false, unary: true,  commutative: false },
+    { name: "postdec",  format: "A--",     bitwise: false, outFloat: false, outBool: false, unary: true,  commutative: false },
+    { name: "eq",       format: "A == B",  bitwise: false, outFloat: false, outBool: true,  unary: false, commutative: true  },
+    { name: "neq",      format: "A != B",  bitwise: false, outFloat: false, outBool: true,  unary: false, commutative: true  },
+    { name: "lt",       format: "A < B",   bitwise: false, outFloat: false, outBool: true,  unary: false, commutative: false },
+    { name: "lte",      format: "A <= B",  bitwise: false, outFloat: false, outBool: true,  unary: false, commutative: false },
+    { name: "gt",       format: "A > B",   bitwise: false, outFloat: false, outBool: true,  unary: false, commutative: false },
+    { name: "gte",      format: "A >= B",  bitwise: false, outFloat: false, outBool: true,  unary: false, commutative: false },
+    { name: "and",      format: "A & B",   bitwise: true,  outFloat: false, outBool: false, unary: false, commutative: true  },
+    { name: "or",       format: "A | B",   bitwise: true,  outFloat: false, outBool: false, unary: false, commutative: true  },
+    { name: "xor",      format: "A ^ B",   bitwise: true,  outFloat: false, outBool: false, unary: false, commutative: true  },
+    { name: "not",      format: "~A",      bitwise: true,  outFloat: false, outBool: false, unary: true,  commutative: false },
+    { name: "lshift",   format: "A << B",  bitwise: true,  outFloat: false, outBool: false, unary: false, commutative: false },
+    { name: "rshift",   format: "A >> B",  bitwise: true,  outFloat: false, outBool: false, unary: false, commutative: false },
+    { name: "urshift",  format: "A >>> B", bitwise: true,  outFloat: false, outBool: false, unary: false, commutative: false }
 ];
 
 var path = "./go";
@@ -96,13 +96,32 @@ function main() {
             var args = if (op.unary) '';
             else 'other: ${module}';
 
+            // go op variant
             switch (op.name) {
                 case "div" if (returnType != module):
-                    content.add('   @:op(${op.format}) private function ${op.name}(${args}): ${returnType} {\n');
+                    content.add('   @:op(${op.format}) private inline function ${op.name}(${args}): ${returnType} {\n');
                     content.add('       return (this:${returnType}) / (other:${returnType});\n');
                     content.add('   }\n');
                 case _:
                     content.add('   @:op(${op.format}) private function ${op.name}(${args}): ${returnType};\n');
+            }
+
+            // haxe op variant
+            if (op.unary) continue; // not required for unary ops
+            var hxType = isFloat ? 'Float' : 'Int';
+            var opChar = op.format.replace("A", "").replace("B", "").trim();
+
+            if (op.commutative) {
+                content.add('   @:op(${op.format}) @:commutative private inline function hx_${op.name}(other: ${hxType}): ${returnType} {\n');
+                content.add('       return this ${opChar} (other:${module});\n');
+                content.add('   }\n');
+            } else {
+                content.add('   @:op(${op.format}) private inline static function hx_${op.name}_a(a: ${hxType}, b: ${module}): ${returnType} {\n');
+                content.add('       return (a:${module}) ${opChar} b;\n');
+                content.add('   }\n');
+                content.add('   @:op(${op.format}) private inline static function hx_${op.name}_b(a: ${module}, b: ${hxType}): ${returnType} {\n');
+                content.add('       return a ${opChar} (b:${module});\n');
+                content.add('   }\n');
             }
         }
 
@@ -137,6 +156,19 @@ function main() {
             content.add('   }\n');
         }
 
+        // @:to functions
+        var toTypes = ["Float"];
+        if (!isFloat) {
+            toTypes.push("Int");
+        }
+
+        for (t in toTypes) {
+            content.add('   @:to public inline function to${t}(): $t {\n');
+            content.add('       return untyped this;\n');
+            content.add('   }\n');
+        }
+
+        // end
         content.add('}');
 
         File.saveContent(path, content.toString());

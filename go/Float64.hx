@@ -9,21 +9,75 @@ package go;
 @:runtimeValue
 abstract Float64 {
    @:op(A + B) private function add(other: Float64): Float64;
+   @:op(A + B) @:commutative private inline function hx_add(other: Float): Float64 {
+       return this + (other:Float64);
+   }
    @:op(A - B) private function sub(other: Float64): Float64;
+   @:op(A - B) private inline static function hx_sub_a(a: Float, b: Float64): Float64 {
+       return (a:Float64) - b;
+   }
+   @:op(A - B) private inline static function hx_sub_b(a: Float64, b: Float): Float64 {
+       return a - (b:Float64);
+   }
    @:op(A * B) private function mul(other: Float64): Float64;
+   @:op(A * B) @:commutative private inline function hx_mul(other: Float): Float64 {
+       return this * (other:Float64);
+   }
    @:op(A / B) private function div(other: Float64): Float64;
+   @:op(A / B) private inline static function hx_div_a(a: Float, b: Float64): Float64 {
+       return (a:Float64) / b;
+   }
+   @:op(A / B) private inline static function hx_div_b(a: Float64, b: Float): Float64 {
+       return a / (b:Float64);
+   }
    @:op(A % B) private function mod(other: Float64): Float64;
+   @:op(A % B) private inline static function hx_mod_a(a: Float, b: Float64): Float64 {
+       return (a:Float64) % b;
+   }
+   @:op(A % B) private inline static function hx_mod_b(a: Float64, b: Float): Float64 {
+       return a % (b:Float64);
+   }
    @:op(-A) private function neg(): Float64;
    @:op(++A) private function preinc(): Float64;
    @:op(A++) private function postinc(): Float64;
    @:op(--A) private function predec(): Float64;
    @:op(A--) private function postdec(): Float64;
    @:op(A == B) private function eq(other: Float64): Bool;
+   @:op(A == B) @:commutative private inline function hx_eq(other: Float): Bool {
+       return this == (other:Float64);
+   }
    @:op(A != B) private function neq(other: Float64): Bool;
+   @:op(A != B) @:commutative private inline function hx_neq(other: Float): Bool {
+       return this != (other:Float64);
+   }
    @:op(A < B) private function lt(other: Float64): Bool;
+   @:op(A < B) private inline static function hx_lt_a(a: Float, b: Float64): Bool {
+       return (a:Float64) < b;
+   }
+   @:op(A < B) private inline static function hx_lt_b(a: Float64, b: Float): Bool {
+       return a < (b:Float64);
+   }
    @:op(A <= B) private function lte(other: Float64): Bool;
+   @:op(A <= B) private inline static function hx_lte_a(a: Float, b: Float64): Bool {
+       return (a:Float64) <= b;
+   }
+   @:op(A <= B) private inline static function hx_lte_b(a: Float64, b: Float): Bool {
+       return a <= (b:Float64);
+   }
    @:op(A > B) private function gt(other: Float64): Bool;
+   @:op(A > B) private inline static function hx_gt_a(a: Float, b: Float64): Bool {
+       return (a:Float64) > b;
+   }
+   @:op(A > B) private inline static function hx_gt_b(a: Float64, b: Float): Bool {
+       return a > (b:Float64);
+   }
    @:op(A >= B) private function gte(other: Float64): Bool;
+   @:op(A >= B) private inline static function hx_gte_a(a: Float, b: Float64): Bool {
+       return (a:Float64) >= b;
+   }
+   @:op(A >= B) private inline static function hx_gte_b(a: Float64, b: Float): Bool {
+       return a >= (b:Float64);
+   }
    @:from public static inline function fromInt(x: Int): Float64 {
        return Convert.float64(x);
    }
@@ -56,5 +110,8 @@ abstract Float64 {
    }
    @:from public static inline function fromFloat32(x: Float32): Float64 {
        return Convert.float64(x);
+   }
+   @:to public inline function toFloat(): Float {
+       return untyped this;
    }
 }

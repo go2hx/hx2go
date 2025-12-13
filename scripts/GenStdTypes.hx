@@ -43,7 +43,7 @@ var topLevel = [
     { hxName: "cap",    goName: "cap",      returnType: "Int32",    types: ["T"], pure: true,  isOverload: false, args: [ { name: "v", type: "Slice<T>" } ] },
 ];
 
-var path = "./go";
+var path = Path.join([Sys.getCwd(), 'go']);
 
 function toModuleName(str: String) {
     var count = isUnsigned(str) ? 2 : 1;
@@ -77,6 +77,7 @@ function main() {
     for (t in types) {
         var module = toModuleName(t);
         var path = Path.join([ path, '$module.hx' ]);
+        trace(path);
         var content = new StringBuf();
 
         content.add('package go;\n\n');

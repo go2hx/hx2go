@@ -96,6 +96,7 @@ class Transformer {
                                 case "go.UInt8": "int8";
                                 case "go.Rune": "rune";
                                 case "go.Byte": "byte";
+                                case "go.Slice": "[]int32";
                                 case "Bool": "bool";
                                 default:
                                     trace("unhandled coreType: " + td.name);

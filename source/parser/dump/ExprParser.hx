@@ -483,6 +483,7 @@ enum abstract ExprDefObject(String) to String {
     var OBJDECL = "ObjectDecl";
     var THROW = "Throw";
     var FANON = "FAnon";
+    var IDENT = "Ident";
     @:from
     static function fromString(s:String) {
         return switch s {
@@ -521,6 +522,7 @@ enum abstract ExprDefObject(String) to String {
             case THROW: THROW;
             case FANON: FANON;
             case DO: DO;
+            case IDENT: IDENT;
             default:
                 throw "ExprDef not found: " + s;
         }

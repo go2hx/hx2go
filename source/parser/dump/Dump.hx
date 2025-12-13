@@ -43,6 +43,7 @@ class Dump implements IParser {
                     path: record.module,
                     translator: {},
                     transformer: {},
+                    preprocessor: {},
                     context: _context,
                 };
                 cache.set(record.module, module);

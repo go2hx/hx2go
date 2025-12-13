@@ -8,7 +8,6 @@ function transformVarDeclarations(t:Transformer, e:HaxeExpr, vars:Array<HaxeVar>
         if (vars[i].expr == null) {
             vars[i].expr = {
                 t: ComplexTypeTools.toString(vars[i].type),
-                specialDef: null,
                 def: EConst(CIdent("null"))
             };
         }

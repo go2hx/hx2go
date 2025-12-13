@@ -154,7 +154,6 @@ class Transformer {
                     if (field?.expr?.def == null)
                         field.expr = {
                             t: null,
-                            specialDef: null,
                             def: EBlock([]),
                         };
                 default:
@@ -170,7 +169,7 @@ class Transformer {
 
         return switch (e.def) {
             case EBlock(_): e;
-            case _: { t: null, specialDef: null, def: EBlock([e]) };
+            case _: { t: null, def: EBlock([e]) };
         }
     }
     public extern inline overload function exprToString(e:haxe.macro.Expr):String {

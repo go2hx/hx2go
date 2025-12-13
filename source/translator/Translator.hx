@@ -61,14 +61,6 @@ class Translator {
                 default:
                     "_ = 0";
             }
-        if (e.specialDef != null) {
-            switch e.specialDef {
-                case Local:
-                    final ident = e.t.substr(0, e.t.indexOf("("));
-                   return SpecialLocal.translateSpecialLocal(this, ident);
-                default:
-            }
-        }
         return "";
     }
     public function translateDef(def:HaxeTypeDefinition):String {

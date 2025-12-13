@@ -4,6 +4,7 @@ import HaxeExpr;
 import HaxeExpr.HaxeTypeDefinition;
 import HaxeExpr.HaxeTypeDefinition;
 import haxe.macro.Expr.TypeDefinition;
+import haxe.macro.ComplexTypeTools;
 import haxe.macro.Expr;
 import transformer.exprs.*;
 
@@ -40,6 +41,10 @@ class Transformer {
                 VarDeclarations.transformVarDeclarations(this, e, vars);
             case EBinop(op, e1, e2):
                 BinopExpr.transformBinop(this, e, op, e1, e2);
+            case EBlock(exprs):
+                Block.transformBlock(this, e, exprs);
+            case ECast(_, t):
+                Cast.transformCast(this, e, t);
             default:
                 iterateExpr(e);
         }
@@ -52,6 +57,10 @@ class Transformer {
         });
     }
     public function transformComplexType(ct:ComplexType) {
+        if (ct == null) {
+            return;
+        }
+
         switch ct {
             case TPath(p):
                 // transform params of complexType
@@ -81,24 +90,66 @@ class Transformer {
                             p.pack = [];
                             p.name = switch td.name {
                                 case "go.Float32", "Single": "float32";
-                                case "Float": "float64";
+                                case "go.Float64", "Float": "float64";
+                                case "go.Int64", "Int64": "int64";
                                 case "go.Int32", "Int": "int32";
-                                case "go.Int64": "int64";
                                 case "go.Int16": "int16";
                                 case "go.Int8": "int8";
+                                case "go.GoInt": "int";
+                                case "go.UInt64": "uint64";
+                                case "go.UInt32": "uint32";
+                                case "go.UInt16": "uint16";
+                                case "go.UInt8": "uint8";
+                                case "go.GoUInt": "uint";
+                                case "go.Rune": "rune";
+                                case "go.Byte": "byte";
+                                case "go.Slice": '[]${transformComplexTypeParam(p.params, 0)}';
                                 case "Bool": "bool";
-                                // TODO handle UInt types
-                                default:
+                                case _:
                                     trace("unhandled coreType: " + td.name);
                                     "#UNKNOWN_TYPE";
                             }
+                            p.params = switch td.name {
+                                case "go.Slice": [];
+                                case _: p.params;
+                            }
+
+                        case ":go.native":
+                            p.pack = [];
+                            p.params = [];
+                            p.name = exprToString(meta.params[0]);
+
+                        case ":go.package":
+                            def.addGoImport(exprToString(meta.params[0]));
                     }
                 }
             default:
         }
     }
+
+    public function transformComplexTypeParam(params: Array<TypeParam>, idx: Int) {
+        final p = params[idx];
+        if (p == null) {
+            return "any";
+        }
+
+        final ct = switch (p) {
+            case TPType(x): x;
+            case TPExpr(_): null;
+        }
+
+        if (ct == null) {
+            trace('@:const type parameter on @:generic class not supported!');
+            return "any";
+        }
+
+        transformComplexType(ct);
+        return ComplexTypeTools.toString(ct);
+    }
+
     private function isLowercasePrefix(s:String):Bool
         return s.charAt(0).toLowerCase() == s.charAt(0);
+
     public function transformDef(def:HaxeTypeDefinition) {
         if (def.fields == null)
             return;
@@ -117,13 +168,16 @@ class Transformer {
                 transformExpr(field.expr);
         }
     }
-    public function findOuterBlock(e:HaxeExpr): { pos: Int, of: Null<HaxeExpr> } {
+    public function findOuterBlock(e:HaxeExpr, ?initPos: Int): { pos: Int, of: Null<HaxeExpr> } {
         var parent: HaxeExpr = e;
-        var pos: Int = 0;
+        var pos: Int = initPos ?? 0;
 
         while (parent != null) {
             switch (parent?.def) {
                 case EBlock(_): break;
+                case _ if (parent == parent.parent):
+                    trace('findOuterBlock has gone tragically wrong...');
+                    break; // uhhhh...?
                 case _:
                     pos = parent.parentIdx;
                     parent = parent.parent;
@@ -132,11 +186,9 @@ class Transformer {
 
         return { pos: pos, of: parent };
     }
-    // takes the type as a string and transforms it into CheckType ($expr : $ct)
-    public function transformTypeConversion(t:String, e:HaxeExpr) {
-        final ct = HaxeExprTools.stringToComplexType(t);
-        transformComplexType(ct);
-        e.def = ECheckType(e.copy(), ct);
+    public function getTempName(?id: Int): String {
+        var localId = id ?? tempId++;
+        return '_temp_$localId';
     }
     public function createTemporary(e:HaxeExpr, ?pre:HaxeExpr, ?post: HaxeExpr): HaxeExpr {
         var expr: HaxeExpr = {
@@ -161,8 +213,8 @@ class Transformer {
             return expr;
         }
 
-        var id = tempId++;
-        expr.def = EConst(CIdent('_temp_$id'));
+        var name = getTempName();
+        expr.def = EConst(CIdent(name));
 
         var insertPos = block.pos;
         var insertCount = 0;
@@ -182,7 +234,7 @@ class Transformer {
             t: e.t,
             specialDef: null,
             def: EVars([
-                { name: '_temp_$id', expr: e, type: path.length > 0 ? TPath({ pack: path, name: typeModule }) : null }
+                { name: name, expr: e, type: path.length > 0 ? TPath({ pack: path, name: typeModule }) : null }
             ])
         });
 
@@ -210,6 +262,28 @@ class Transformer {
         return switch (e.def) {
             case EBlock(_): e;
             case _: { t: null, specialDef: null, def: EBlock([e]) };
+        }
+    }
+    public function isStatement(e:HaxeExpr) {
+        return switch (e.def) {
+            case EVars(_), EBinop(OpAssign, _, _), EGoCode(_, _, true): true; // TODO: add more if needed
+            case _: false;
+        }
+    }
+    public extern inline overload function exprToString(e:haxe.macro.Expr):String {
+        return switch e.expr {
+            case EConst(CIdent(s)), EConst(CString(s)):
+                s;
+            default:
+                throw "exprToString not implemented: " + e.expr;
+        }
+    }
+    public extern inline overload function exprToString(e: HaxeExpr):String {
+        return switch e.def {
+            case EConst(CIdent(s)), EConst(CString(s)):
+                s;
+            default:
+                throw "exprToString not implemented: " + e.def;
         }
     }
 }

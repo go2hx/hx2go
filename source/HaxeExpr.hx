@@ -9,7 +9,7 @@ enum abstract HaxeExprFlags(Int) from Int to Int {
 @:structInit
 class HaxeExpr {
 	public var remapTo:Null<String> = null;
-	public var specialDef:SpecialExprDef;
+	public var specialDef:SpecialExprDef; // TODO: mikaib: would like to remove this eventually, but will keep it here while I slowly merge things over to all use just .def
 	public var parent:HaxeExpr = null;
 	public var parentIdx:Int = 0;
 	public var flags:HaxeExprFlags = 0;
@@ -26,6 +26,16 @@ class HaxeExpr {
 			def: def,
 			t: t
 		};
+	}
+
+	public function copyFrom(other:HaxeExpr, deep:Bool = false) {
+	    remapTo = other.remapTo;
+		specialDef = other.specialDef;
+		parent = deep ? other.parent.copy() : other.parent;
+		parentIdx = other.parentIdx;
+		flags = other.flags;
+		def = other.def;
+		t = other.t;
 	}
 
 	public function toString(): String {
@@ -203,6 +213,16 @@ enum HaxeExprDef {
 		An `expr is Type` expression.
 	**/
 	EIs(e:HaxeExpr, t:ComplexType);
+
+	/**
+	    A Go code block, created from Syntax.code
+	**/
+	EGoCode(format:String, args:Array<HaxeExpr>, statement: Bool);
+
+    /**
+        The Go expression to create a new slice
+    **/
+    EGoSliceConstruct(ct:ComplexType);
 }
 
 @:structInit

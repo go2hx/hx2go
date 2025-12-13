@@ -77,6 +77,11 @@ class ExprParser {
     }
     function objectToExpr(object:Object):HaxeExpr {
         var specialDef:SpecialExprDef = null;
+        if (object == null) {
+            trace('obj should not be null!');
+            return { t: null, specialDef: null, def: EBlock([]) };
+        }
+
         final def:HaxeExprDef = switch object.def {
             case BLOCK:
                 EBlock(object.objects.map(object -> objectToExpr(object)));
@@ -125,7 +130,7 @@ class ExprParser {
                         EConst(CIdent(s));
                 }
             case META:
-                return objectToExpr(object.objects[0]);
+                return objectToExpr(object.objects[object.objects.length - 1]);
             case ARG:
                 // TODO add arg info
                 specialDef = Arg("");
@@ -172,7 +177,7 @@ class ExprParser {
             case LOCAL:
                 object.defType = object.subType;
                 specialDef = Local;
-                null;
+                EConst(CIdent(object.subType.substr(0, object.subType.indexOf("("))));
             case PARENTHESIS:
                 EParenthesis(objectToExpr(object.objects[0]));
             case THROW:
@@ -200,6 +205,8 @@ class ExprParser {
                 }
             case STRING:
                 EConst(CIdent("#STRING " + object.string()));
+            case CAST:
+                ECast(objectToExpr(object.objects[0]), HaxeExprTools.stringToComplexType(object.defType));
             default:
                 //throw "not implemented expr: " + object.def;
                 if (!nonImpl.contains(object.def)) nonImpl.push(object.def);
@@ -343,11 +350,11 @@ class ExprParser {
             defString = objectString.substring(0, spaceIndex);
         }
         final subType = subTypeString;
-        switch defString {
-            case "Meta":
-                handleMetaAST();
-            default:
-        }
+        //switch defString {
+        //    case "Meta":
+        //        handleMetaAST();
+        //    default:
+        //}
         return new Object(defString, defType, lineIndex, startIndex, subType, objectString);
     }
 
@@ -476,6 +483,7 @@ enum abstract ExprDefObject(String) to String {
     var OBJDECL = "ObjectDecl";
     var THROW = "Throw";
     var FANON = "FAnon";
+    var IDENT = "Ident";
     @:from
     static function fromString(s:String) {
         return switch s {
@@ -514,6 +522,7 @@ enum abstract ExprDefObject(String) to String {
             case THROW: THROW;
             case FANON: FANON;
             case DO: DO;
+            case IDENT: IDENT;
             default:
                 throw "ExprDef not found: " + s;
         }

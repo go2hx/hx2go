@@ -28,6 +28,10 @@ class Translator {
             return "#NULL_TRANSLATED_EXPR";
         if (e.def != null)
             return switch e.def {
+                case EGoCode(format, exprs, _):
+                    GoCode.translateGoCode(this, format, exprs);
+                case EGoSliceConstruct(ct):
+                    GoSliceConstruct.translateGoSliceConstruct(this, ct);
                 case EParenthesis(e):
                     Parenthesis.translateParenthesis(this, e);
                 case ECall(e, params):
@@ -50,6 +54,10 @@ class Translator {
                     While.translateWhile(this, econd, e, normalWhile);
                 case ECheckType(e2, t):
                     CheckType.translateCheckType(this, e2, t);
+                case EUntyped(e):
+                    Untyped.translateUntyped(this, e);
+                case ECast(e, t):
+                    Cast.translateCast(this, e, t);
                 default:
                     "_ = 0";
             }
@@ -95,5 +103,3 @@ class Translator {
         return buf.toString();
     }
 }
-
-

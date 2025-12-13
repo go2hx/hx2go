@@ -57,6 +57,10 @@ class Transformer {
         });
     }
     public function transformComplexType(ct:ComplexType) {
+        if (ct == null) {
+            return;
+        }
+
         switch ct {
             case TPath(p):
                 // transform params of complexType
@@ -254,6 +258,12 @@ class Transformer {
         return switch (e.def) {
             case EBlock(_): e;
             case _: { t: null, specialDef: null, def: EBlock([e]) };
+        }
+    }
+    public function isStatement(e:HaxeExpr) {
+        return switch (e.def) {
+            case EVars(_), EBinop(OpAssign, _, _), EGoCode(_, _, true): true; // TODO: add more if needed
+            case _: false;
         }
     }
 }

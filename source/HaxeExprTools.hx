@@ -51,7 +51,7 @@ class HaxeExprTools {
 				iterArray(el, f);
 			case EReturn(e):
 				opt2(e, f);
-			case EGoCode(_, el):
+			case EGoCode(_, el, _):
 			    iterArray(el, f);
 			case EFunction(_, func):
 				for (arg in func.args)

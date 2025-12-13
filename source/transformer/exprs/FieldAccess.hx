@@ -79,10 +79,17 @@ function resolvePkgTransform(t:Transformer, e:HaxeExpr, e2:HaxeExpr, field: Stri
     return switch (e.parent.def) {
         case ECall(e, params):
             var res = switch [e2Name, field] {
-                case ['go.Syntax', 'code']:
+                case ['go.Syntax', 'expr']:
                     e.parent.def = EGoCode(
                         exprToString(params.shift()),
-                        params
+                        params, false
+                    );
+                    true;
+
+                case ['go.Syntax', 'stmt']:
+                    e.parent.def = EGoCode(
+                        exprToString(params.shift()),
+                        params, true
                     );
                     true;
 

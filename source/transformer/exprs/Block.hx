@@ -29,7 +29,7 @@ function transformBlock(t:Transformer, e:HaxeExpr, exprs:Array<HaxeExpr>) {
 
     var finalExpr = exprs.pop();
     switch (e.parent.def) {
-        case EBlock(_): e.def = EBinop(OpAssign, { t: null, specialDef: null, def: EConst(CIdent("_")) }, finalExpr);
+        case EBlock(_) if (!t.isStatement(finalExpr)): e.def = EBinop(OpAssign, { t: null, specialDef: null, def: EConst(CIdent("_")) }, finalExpr);
         case _: e.copyFrom(finalExpr);
     }
 

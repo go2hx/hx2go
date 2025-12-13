@@ -217,7 +217,7 @@ enum HaxeExprDef {
 	/**
 	    A Go code block, created from Syntax.code
 	**/
-	EGoCode(format:String, args:Array<HaxeExpr>);
+	EGoCode(format:String, args:Array<HaxeExpr>, statement: Bool);
 
     /**
         The Go expression to create a new slice

@@ -8,7 +8,7 @@ using StringTools;
 import sys.io.File;
 import haxe.io.Path;
 
-var types = ["uint8", "uint16", "uint32", "uint64", "int8", "int16", "int32", "int64", "float32", "float64"];
+var types = ["int", "uint", "uint8", "uint16", "uint32", "uint64", "int8", "int16", "int32", "int64", "float32", "float64"];
 var operators = [
     { name: "add",      format: "A + B",   bitwise: false, outFloat: false, outBool: false, unary: false, commutative: true  },
     { name: "sub",      format: "A - B",   bitwise: false, outFloat: false, outBool: false, unary: false, commutative: false },
@@ -37,17 +37,23 @@ var operators = [
 
 var topLevel = [
     { hxName: "panic",  goName: "panic",    returnType: "Void",     types: [],    pure: false, isOverload: false, args: [ { name: "v", type: "Any" } ] },
-    { hxName: "len",    goName: "len",      returnType: "Int32",    types: ["T"], pure: true,  isOverload: false, args: [ { name: "v", type: "T" } ] },
+    { hxName: "len",    goName: "len",      returnType: "GoInt",    types: ["T"], pure: true,  isOverload: false, args: [ { name: "v", type: "T" } ] },
     { hxName: "append", goName: "append",   returnType: "Slice<T>", types: ["T"], pure: false, isOverload: false, args: [ { name: "s", type: "Slice<T>" }, { name: "v", type: "haxe.Rest<T>" } ] },
-    { hxName: "copy",   goName: "copy",     returnType: "Int32",    types: ["T"], pure: false, isOverload: false, args: [ { name: "dst", type: "Slice<T>" }, { name: "src", type: "Slice<T>" } ] },
-    { hxName: "cap",    goName: "cap",      returnType: "Int32",    types: ["T"], pure: true,  isOverload: false, args: [ { name: "v", type: "Slice<T>" } ] },
+    { hxName: "copy",   goName: "copy",     returnType: "GoInt",    types: ["T"], pure: false, isOverload: false, args: [ { name: "dst", type: "Slice<T>" }, { name: "src", type: "Slice<T>" } ] },
+    { hxName: "cap",    goName: "cap",      returnType: "GoInt",    types: ["T"], pure: true,  isOverload: false, args: [ { name: "v", type: "Slice<T>" } ] },
 ];
 
 var path = Path.join([Sys.getCwd(), 'go']);
 
 function toModuleName(str: String) {
     var count = isUnsigned(str) ? 2 : 1;
-    return str.substring(0, count).split('').map(c -> c.toUpperCase()).join('') + str.substring(count);
+    var res = str.substring(0, count).split('').map(c -> c.toUpperCase()).join('') + str.substring(count);
+
+    return switch(res) {
+        case 'Int': 'GoInt';
+        case 'UInt': 'GoUInt';
+        case _: res;
+    }
 }
 
 function getPrecision(t: String) {
@@ -62,7 +68,15 @@ function getPrecision(t: String) {
         pos--;
     }
 
+    if (pos == t.length - 1) {
+        return isFloatType(t) ? 64 : 32;
+    }
+
     return Std.parseInt(t.substring(pos + 1));
+}
+
+function isBaseType(t: String) {
+    return t == "int" || t == "float";
 }
 
 function isFloatType(t: String) {
@@ -116,19 +130,29 @@ function main() {
 
             // haxe op variant
             if (op.unary) continue; // not required for unary ops
-            var hxType = isFloat ? 'Float' : 'Int';
             var opChar = op.format.replace("A", "").replace("B", "").trim();
 
             if (op.commutative) {
-                content.add('   @:op(${op.format}) @:commutative private inline function hx_${op.name}(other: ${hxType}): ${returnType} {\n');
-                content.add('       return this ${opChar} (other:${module});\n');
+                content.add('   @:op(${op.format}) @:commutative private inline function hx_${op.name}_a(other: Float): ${returnType} {\n');
+                content.add('       return this ${opChar} Go.$t(other);\n');
+                content.add('   }\n');
+                content.add('   @:op(${op.format}) @:commutative private inline function hx_${op.name}_b(other: Int): ${returnType} {\n');
+                content.add('       return this ${opChar} Go.$t(other);\n');
                 content.add('   }\n');
             } else {
-                content.add('   @:op(${op.format}) private inline static function hx_${op.name}_a(a: ${hxType}, b: ${module}): ${returnType} {\n');
-                content.add('       return (a:${module}) ${opChar} b;\n');
+                if (!op.bitwise) {
+                    content.add('   @:op(${op.format}) private inline static function hx_${op.name}_a(a: Float, b: ${module}): ${returnType} {\n');
+                    content.add('       return Go.$t(a) ${opChar} b;\n');
+                    content.add('   }\n');
+                    content.add('   @:op(${op.format}) private inline static function hx_${op.name}_b(a: ${module}, b: Float): ${returnType} {\n');
+                    content.add('       return a ${opChar} Go.$t(b);\n');
+                    content.add('   }\n');
+                }
+                content.add('   @:op(${op.format}) private inline static function hx_${op.name}_c(a: Int, b: ${module}): ${returnType} {\n');
+                content.add('       return Go.$t(a) ${opChar} b;\n');
                 content.add('   }\n');
-                content.add('   @:op(${op.format}) private inline static function hx_${op.name}_b(a: ${module}, b: ${hxType}): ${returnType} {\n');
-                content.add('       return a ${opChar} (b:${module});\n');
+                content.add('   @:op(${op.format}) private inline static function hx_${op.name}_d(a: ${module}, b: Int): ${returnType} {\n');
+                content.add('       return a ${opChar} Go.$t(b);\n');
                 content.add('   }\n');
             }
         }
@@ -137,7 +161,7 @@ function main() {
         var fromTypes = ['Int'];
         for (f in types) {
             if (isFloatType(f)) continue;
-            if (getPrecision(f) == precision && !isFloat) continue;
+            if (getPrecision(f) == precision && !isFloat && !isBaseType(f)) continue;
 
             fromTypes.push(
                 toModuleName(f)
@@ -149,7 +173,7 @@ function main() {
 
             for (f in types) {
                 if (!isFloatType(f)) continue;
-                if (getPrecision(f) == precision && isFloat) continue;
+                if (getPrecision(f) == precision && isFloat && !isBaseType(f)) continue;
 
                 fromTypes.push(
                     toModuleName(f)

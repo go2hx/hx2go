@@ -95,10 +95,12 @@ class Transformer {
                                 case "go.Int32", "Int": "int32";
                                 case "go.Int16": "int16";
                                 case "go.Int8": "int8";
+                                case "go.GoInt": "int";
                                 case "go.UInt64": "uint64";
-                                case "go.UInt32": "int32";
-                                case "go.UInt16": "int16";
-                                case "go.UInt8": "int8";
+                                case "go.UInt32": "uint32";
+                                case "go.UInt16": "uint16";
+                                case "go.UInt8": "uint8";
+                                case "go.GoUInt": "uint";
                                 case "go.Rune": "rune";
                                 case "go.Byte": "byte";
                                 case "go.Slice": '[]${transformComplexTypeParam(p.params, 0)}';

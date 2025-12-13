@@ -6,6 +6,10 @@ package go;
 
 @:go.toplevel
 extern class Go {
+   @:go.native("int")
+   @:pure public static extern function int(x: Any): GoInt;
+   @:go.native("uint")
+   @:pure public static extern function uint(x: Any): GoUInt;
    @:go.native("uint8")
    @:pure public static extern function uint8(x: Any): UInt8;
    @:go.native("uint16")
@@ -29,11 +33,11 @@ extern class Go {
    @:go.native("panic")
    public static extern function panic(v: Any): Void;
    @:go.native("len")
-   @:pure public static extern function len<T>(v: T): Int32;
+   public static extern function len<T>(v: T): GoInt;
    @:go.native("append")
    public static extern function append<T>(s: Slice<T>, v: haxe.Rest<T>): Slice<T>;
    @:go.native("copy")
-   public static extern function copy<T>(dst: Slice<T>, src: Slice<T>): Int32;
+   public static extern function copy<T>(dst: Slice<T>, src: Slice<T>): GoInt;
    @:go.native("cap")
-   @:pure public static extern function cap<T>(v: Slice<T>): Int32;
+   public static extern function cap<T>(v: Slice<T>): GoInt;
 }

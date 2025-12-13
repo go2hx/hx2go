@@ -32,12 +32,6 @@ class Translator {
                     GoCode.translateGoCode(this, format, exprs);
                 case EGoSliceConstruct(ct):
                     GoSliceConstruct.translateGoSliceConstruct(this, ct);
-                case EGoSliceOp(e, e1, e2):
-                    GoSliceOp.translateGoSliceOp(this, e, e1, e2);
-                case EGoSliceGet(e, e1):
-                    GoSliceGet.translateGoSliceGet(this, e, e1);
-                case EGoSliceSet(e, e1, e2):
-                    GoSliceSet.translateGoSliceSet(this, e, e1, e2);
                 case EParenthesis(e):
                     Parenthesis.translateParenthesis(this, e);
                 case ECall(e, params):

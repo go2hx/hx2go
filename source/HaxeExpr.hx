@@ -219,25 +219,10 @@ enum HaxeExprDef {
 	**/
 	EGoCode(format:String, args:Array<HaxeExpr>);
 
-	/**
-	    The Go slice operation (e[a:b])
-    **/
-    EGoSliceOp(on:HaxeExpr, start:HaxeExpr, ?end:HaxeExpr);
-
     /**
         The Go expression to create a new slice
     **/
     EGoSliceConstruct(ct:ComplexType);
-
-    /**
-        Sets a value on a go slice.
-    **/
-    EGoSliceSet(on:HaxeExpr, idx:HaxeExpr, val:HaxeExpr);
-
-    /**
-        Gets a value from a go slice.
-    **/
-    EGoSliceGet(on:HaxeExpr, idx:HaxeExpr);
 }
 
 @:structInit

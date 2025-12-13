@@ -27,13 +27,9 @@ class HaxeExprTools {
 			case EConst(_), EGoSliceConstruct(_), EContinue, EBreak:
 			case EField(e, _), EParenthesis(e), EUntyped(e), EThrow(e), EDisplay(e, _), ECheckType(e, _), EUnop(_, _, e), ECast(e, _), EIs(e, _) | EMeta(_, e):
 				f(e);
-			case EArray(e1, e2), EWhile(e1, e2, _), EBinop(_, e1, e2), EFor(e1, e2), EGoSliceGet(e1, e2):
+			case EArray(e1, e2), EWhile(e1, e2, _), EBinop(_, e1, e2), EFor(e1, e2):
 				f(e1);
 				f(e2);
-			case EGoSliceOp(e1, e2, e3), EGoSliceSet(e1, e2, e3):
-			    f(e1);
-				f(e2);
-				f(e3);
 			case EVars(vl):
 				for (v in vl)
 					opt2(v.expr, f);

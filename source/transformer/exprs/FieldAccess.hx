@@ -86,26 +86,6 @@ function resolvePkgTransform(t:Transformer, e:HaxeExpr, e2:HaxeExpr, field: Stri
                     );
                     true;
 
-                case ['go._Slice.Slice_Impl_', 'slice']:
-                    var on = params.shift();
-                    var from = params.shift();
-                    var to = params.shift();
-                    e.parent.def = EGoSliceOp(on, from, to);
-                    true;
-
-                case ['go._Slice.Slice_Impl_', 'get']:
-                    var on = params.shift();
-                    var idx = params.shift();
-                    e.parent.def = EGoSliceGet(on, idx);
-                    true;
-
-                case ['go._Slice.Slice_Impl_', 'set']:
-                    var on = params.shift();
-                    var idx = params.shift();
-                    var val = params.shift();
-                    e.parent.def = EGoSliceSet(on, idx, val);
-                    true;
-
                 case ['go._Slice.Slice_Impl_', '_create']:
                     final ct = HaxeExprTools.stringToComplexType(e.parent.t);
                     t.transformComplexType(ct);

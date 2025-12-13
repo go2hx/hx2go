@@ -1,7 +1,7 @@
 package go;
 
 // ------------------------ THIS FILE HAS BEEN GENERATED! ------------------------
-// Please invoke the generator using `./Scripts/GenStdTypes` from the project root
+// Please invoke the generator using `haxe ./scripts/GenStdTypes.hxml` from the project root
 // ------------------------ THIS FILE HAS BEEN GENERATED! ------------------------
 
 @:coreType

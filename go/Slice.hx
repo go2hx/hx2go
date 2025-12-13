@@ -27,9 +27,25 @@ extern abstract Slice<T> {
         return Go.copy(this, src);
     }
 
-    @:arrayAccess private extern function get(index: Int): T;
-    @:arrayAccess private extern function set(index: Int, value: T): T;
+    // note: marked as extern to force inline
+    @:arrayAccess @:pure private extern inline function get(index: Int): T {
+        return Syntax.code("{0}[{1}]", this, index);
+    }
 
-    public extern overload function slice(start: Int32, end: Int32): Slice<T>;
-    public extern overload function slice(start: Int32): Slice<T>;
+    // note: marked as extern to force inline
+    @:arrayAccess private extern inline function set(index: Int, value: T): T {
+        return Syntax.code("{0}[{1}] = {2}", this, index, value);
+    }
+
+    @:pure public inline extern overload function slice(low: Int32, high: Int32, max: Int32): Slice<T> {
+        return Syntax.code("{0}[{1}:{2}:{3}]", this, low, high, max);
+    }
+
+    @:pure public inline extern overload function slice(low: Int32, high: Int32): Slice<T> {
+        return Syntax.code("{0}[{1}:{2}]", this, low, high);
+    }
+
+    @:pure public inline extern overload function slice(low: Int32): Slice<T> {
+        return Syntax.code("{0}[{1}:]", this, low);
+    }
 }

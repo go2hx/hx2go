@@ -19,7 +19,7 @@ function transformBlock(t:Transformer, e:HaxeExpr, exprs:Array<HaxeExpr>) {
         return; // the block is allowed, no need to process it further.
     }
 
-    var block = t.findOuterBlock(e.parent);
+    var block = t.findOuterBlock(e.parent, e.parentIdx);
     var insertInto = switch (block.of.def) {
         case EBlock(x): x;
         case _: null;

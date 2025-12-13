@@ -154,9 +154,9 @@ class Transformer {
                 transformExpr(field.expr);
         }
     }
-    public function findOuterBlock(e:HaxeExpr): { pos: Int, of: Null<HaxeExpr> } {
+    public function findOuterBlock(e:HaxeExpr, ?initPos: Int): { pos: Int, of: Null<HaxeExpr> } {
         var parent: HaxeExpr = e;
-        var pos: Int = 0;
+        var pos: Int = initPos ?? 0;
 
         while (parent != null) {
             switch (parent?.def) {

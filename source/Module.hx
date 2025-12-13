@@ -1,3 +1,4 @@
+import preprocessor.Preprocessor;
 import translator.TranslatorTools.toCamelCase;
 import sys.io.File;
 import sys.FileSystem;
@@ -11,6 +12,7 @@ class Module {
     public var mainBool:Bool = false;
     public var path:String;
     public var defs:Array<HaxeTypeDefinition> = [];
+    public var preprocessor:Preprocessor;
     public var transformer:Transformer;
     public var translator:Translator;
     public var context:Context;
@@ -74,6 +76,7 @@ class Module {
         if (path == null)
             return; // TODO should not be allowed
         transformer.module = this;
+        preprocessor.module = this;
         //trace(path, defs.length);
 
         final paths = path.split(".");
@@ -94,6 +97,9 @@ class Module {
             if (def == null)
                 continue;
             transformer.def = def;
+            preprocessor.def = def;
+            // preprocessor pass
+            preprocessor.processDef(def);
             // transformer pass
             transformer.transformDef(def);
             // translate

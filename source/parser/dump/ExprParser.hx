@@ -76,10 +76,9 @@ class ExprParser {
         return -1;
     }
     function objectToExpr(object:Object):HaxeExpr {
-        var specialDef:SpecialExprDef = null;
         if (object == null) {
             trace('obj should not be null!');
-            return { t: null, specialDef: null, def: EBlock([]) };
+            return { t: null, def: EBlock([]) };
         }
 
         final def:HaxeExprDef = switch object.def {
@@ -133,7 +132,6 @@ class ExprParser {
                 return objectToExpr(object.objects[object.objects.length - 1]);
             case ARG:
                 // TODO add arg info
-                specialDef = Arg("");
                 null;
             case RETURN:
                 EReturn(objectToExpr(object.objects[0]));
@@ -143,13 +141,11 @@ class ExprParser {
                 EBinop(stringToBinop(object.objects[1].string()), objectToExpr(object.objects[0]), objectToExpr(object.objects[2]));
             case FINSTANCE:
                 //specialDef = FInstance(object.dataLines[1].split(":")[0]);
-                specialDef = FInstance("#UNKNOWN_STATIC");
                 null;
             case UNOP:
                 // TODO unop, and postFix, not implemented
                 EUnop(stringToUnop(object.objects[0].string()), object.objects[1].string() != "Prefix", objectToExpr(object.objects[2]));
             case ARRAY:
-                specialDef = DArray;
                 null;
             case ARRAYDECL:
                 EArray(objectToExpr(object.objects[0]), objectToExpr(object.objects[1]));
@@ -176,14 +172,12 @@ class ExprParser {
                 EWhile(objectToExpr(object.objects[0]), objectToExpr(object.objects[1]), false);
             case LOCAL:
                 object.defType = object.subType;
-                specialDef = Local;
                 EConst(CIdent(object.subType.substr(0, object.subType.indexOf("("))));
             case PARENTHESIS:
                 EParenthesis(objectToExpr(object.objects[0]));
             case THROW:
                 EThrow(objectToExpr(object.objects[0]));
             case FANON:
-                specialDef = FAnon("#UNKNOWN_FANON");
                 null;
             case FOR:
                 EFor(objectToExpr(object.objects[0]), objectToExpr(object.objects[1]));
@@ -215,7 +209,6 @@ class ExprParser {
         return {
             t: object.defType,
             def: def,
-            specialDef: specialDef,
             remapTo: null,
         };
     }
@@ -223,24 +216,13 @@ class ExprParser {
         return {
             def: EBlock([]),
             t: "",
-            specialDef: null,
             remapTo: null,
         };
     }
     function exprToValueString(expr:HaxeExpr):String {
-        if (expr.specialDef != null)
-            switch expr.specialDef {
-                case FStatic(_, field):
-                    field;
-                case FInstance(inst):
-                    inst;
-                case FAnon(field):
-                    field;
-                default:
-                    throw "exprToValueString specialDef not covered: " + expr.specialDef;
-            }
         if (expr.def == null)
             return "#NULL(expr.def)";
+
         return switch expr.def {
             case EConst(CIdent(s)):
                 s;

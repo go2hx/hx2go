@@ -71,8 +71,8 @@ extern class Raylib {
     public static extern function GetFrameTime(): Float32;
 }
 
-//@:dce(ignore)
-//@:analyzer(ignore)
+@:dce(ignore)
+@:analyzer(ignore)
 class Test {
     public static function main() {
         Raylib.InitWindow(800, 600, "Sorting");

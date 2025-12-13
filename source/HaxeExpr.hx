@@ -9,7 +9,6 @@ enum abstract HaxeExprFlags(Int) from Int to Int {
 @:structInit
 class HaxeExpr {
 	public var remapTo:Null<String> = null;
-	public var specialDef:SpecialExprDef; // TODO: mikaib: would like to remove this eventually, but will keep it here while I slowly merge things over to all use just .def
 	public var parent:HaxeExpr = null;
 	public var parentIdx:Int = 0;
 	public var flags:HaxeExprFlags = 0;
@@ -19,7 +18,6 @@ class HaxeExpr {
 	public function copy(deep: Bool = false): HaxeExpr {
 	    return {
 			remapTo: remapTo,
-			specialDef: specialDef,
 			parent: deep ? parent.copy() : parent,
 			parentIdx: parentIdx,
 			flags: flags,
@@ -30,7 +28,6 @@ class HaxeExpr {
 
 	public function copyFrom(other:HaxeExpr, deep:Bool = false) {
 	    remapTo = other.remapTo;
-		specialDef = other.specialDef;
 		parent = deep ? other.parent.copy() : other.parent;
 		parentIdx = other.parentIdx;
 		flags = other.flags;

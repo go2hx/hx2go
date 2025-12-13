@@ -115,25 +115,25 @@ abstract Int8 {
        return a >>> (b:Int8);
    }
    @:from public static inline function fromInt(x: Int): Int8 {
-       return Convert.int8(x);
+       return Go.int8(x);
    }
    @:from public static inline function fromUInt16(x: UInt16): Int8 {
-       return Convert.int8(x);
+       return Go.int8(x);
    }
    @:from public static inline function fromUInt32(x: UInt32): Int8 {
-       return Convert.int8(x);
+       return Go.int8(x);
    }
    @:from public static inline function fromUInt64(x: UInt64): Int8 {
-       return Convert.int8(x);
+       return Go.int8(x);
    }
    @:from public static inline function fromInt16(x: Int16): Int8 {
-       return Convert.int8(x);
+       return Go.int8(x);
    }
    @:from public static inline function fromInt32(x: Int32): Int8 {
-       return Convert.int8(x);
+       return Go.int8(x);
    }
    @:from public static inline function fromInt64(x: Int64): Int8 {
-       return Convert.int8(x);
+       return Go.int8(x);
    }
    @:to public inline function toFloat(): Float {
        return (untyped this : Float);

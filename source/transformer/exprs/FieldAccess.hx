@@ -1,12 +1,20 @@
 package transformer.exprs;
 
+using StringTools;
+
+import haxe.macro.Expr.EFieldKind;
 import HaxeExpr;
 import transformer.Transformer;
+import translator.Translator;
 import translator.TranslatorTools;
 
 function transformFieldAccess(t:Transformer, e:HaxeExpr) {
     switch e.def {
         case EField(e2, field, kind):
+            if (resolvePkgTransform(t, e, e2, field, kind)) {
+                return;
+            }
+
             var isNative = resolveExpr(t, e2);
             field = isNative ? field : toPascalCase(field); // TODO: should use field's @:go.native
             e.def = EField(e2, field, kind);
@@ -15,7 +23,7 @@ function transformFieldAccess(t:Transformer, e:HaxeExpr) {
 }
 
 function resolveExpr(t:Transformer, e2:HaxeExpr): Bool {
-    // TODO check go.native on $field
+    // TODO: check go.native on $field
     final ct = HaxeExprTools.stringToComplexType(e2.t);
     var renamedIdent = "";
     var topLevel = false;
@@ -57,11 +65,54 @@ function resolveExpr(t:Transformer, e2:HaxeExpr): Bool {
     return isNative; // TODO: check if class is extern
 }
 
-function exprToString(e:haxe.macro.Expr):String {
+function resolvePkgTransform(t:Transformer, e:HaxeExpr, e2:HaxeExpr, field: String, kind: EFieldKind): Bool {
+    var e2Name = switch (e2.def) {
+        case EConst(CIdent(x)): x;
+        case _: null;
+    }
+
+    if (e2Name == null) {
+        return false;
+    }
+
+    return switch [e2Name, field] {
+        case ['go.Syntax', 'code']:
+            switch (e.parent.def) {
+                case ECall(e, params):
+                    var format = exprToString(params.shift());
+                    for (i in 0...params.length) {
+                        var p = params[i];
+                        t.transformExpr(p);
+                        format = format.replace('{$i}', ({} : Translator).translateExpr(p));
+                    }
+
+                    e.parent.def = EConst(CIdent(format));
+                    true;
+                case _: false;
+            }
+
+        case ['go._Slice.Slice_Impl_', '_create']:
+            e.parent.def = EConst(CIdent('[]any{}'));
+            false;
+
+        case _: false;
+    }
+}
+
+extern inline overload function exprToString(e:haxe.macro.Expr):String {
     return switch e.expr {
         case EConst(CIdent(s)), EConst(CString(s)):
             s;
         default:
             throw "exprToString not implemented: " + e.expr;
+    }
+}
+
+extern inline overload function exprToString(e: HaxeExpr):String {
+    return switch e.def {
+        case EConst(CIdent(s)), EConst(CString(s)):
+            s;
+        default:
+            throw "exprToString not implemented: " + e.def;
     }
 }

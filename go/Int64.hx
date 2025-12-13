@@ -115,25 +115,25 @@ abstract Int64 {
        return a >>> (b:Int64);
    }
    @:from public static inline function fromInt(x: Int): Int64 {
-       return Convert.int64(x);
+       return Go.int64(x);
    }
    @:from public static inline function fromUInt8(x: UInt8): Int64 {
-       return Convert.int64(x);
+       return Go.int64(x);
    }
    @:from public static inline function fromUInt16(x: UInt16): Int64 {
-       return Convert.int64(x);
+       return Go.int64(x);
    }
    @:from public static inline function fromUInt32(x: UInt32): Int64 {
-       return Convert.int64(x);
+       return Go.int64(x);
    }
    @:from public static inline function fromInt8(x: Int8): Int64 {
-       return Convert.int64(x);
+       return Go.int64(x);
    }
    @:from public static inline function fromInt16(x: Int16): Int64 {
-       return Convert.int64(x);
+       return Go.int64(x);
    }
    @:from public static inline function fromInt32(x: Int32): Int64 {
-       return Convert.int64(x);
+       return Go.int64(x);
    }
    @:to public inline function toFloat(): Float {
        return (untyped this : Float);

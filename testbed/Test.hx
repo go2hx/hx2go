@@ -1,14 +1,9 @@
 import go.Syntax;
+import go.Go;
 import go.Int32;
 import go.Float32;
 import go.Slice;
-
-@:go.package("fmt")
-@:go.native("fmt")
-extern class Fmt {
-    @:go.native("Println")
-	public static extern function Println(e:haxe.Rest<Dynamic>):Void;
-}
+import go.Fmt;
 
 @:go.package("image/color")
 @:go.native("color") // TODO: what would be best here?
@@ -64,10 +59,21 @@ extern class Raylib {
 @:analyzer(ignore)
 class Test {
     public static function main() {
+        // Syntax.code
         var foo: Int32 = Syntax.code("5 + {0}", 10);
-        var bar: Slice<Int32> = new Slice();
 
-        Fmt.Println(foo, bar);
+        // Slices
+        var bar: Slice<Int32> = new Slice();
+        bar = bar.append(1); // Go.append(slice, value) is also valid
+        bar = bar.append(2);
+        bar = bar.append(3);
+
+        // Fmt moved into "go" package
+        Fmt.Println(foo, bar, bar.length); // Go.len(bar) is also valid
+
+        // built-ins are now in the "go.Go" module
+        var x = Go.int32(10.0);
+        Go.panic(x);
 
         //Raylib.InitWindow(800, 400, "raylib [core] example - basic window");
 

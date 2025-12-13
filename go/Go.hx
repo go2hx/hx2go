@@ -5,7 +5,7 @@ package go;
 // ------------------------ THIS FILE HAS BEEN GENERATED! ------------------------
 
 @:go.toplevel
-extern class Convert {
+extern class Go {
    @:go.native("uint8")
    @:pure public static extern function uint8(x: Any): UInt8;
    @:go.native("uint16")
@@ -26,4 +26,10 @@ extern class Convert {
    @:pure public static extern function float32(x: Any): Float32;
    @:go.native("float64")
    @:pure public static extern function float64(x: Any): Float64;
+   @:go.native("panic")
+   public static extern function panic(v: Any): Void;
+   @:go.native("len")
+   @:pure public static extern function len<T>(v: T): Int32;
+   @:go.native("append")
+   public static extern function append<T>(s: Slice<T>, v: haxe.Rest<T>): Slice<T>;
 }

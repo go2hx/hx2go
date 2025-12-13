@@ -35,6 +35,12 @@ var operators = [
     { name: "urshift",  format: "A >>> B", bitwise: true,  outFloat: false, outBool: false, unary: false, commutative: false }
 ];
 
+var topLevel = [
+    { hxName: "panic",  goName: "panic",    returnType: "Void",     types: [],    pure: false, args: [ { name: "v", type: "Any" } ] },
+    { hxName: "len",    goName: "len",      returnType: "Int32",    types: ["T"], pure: true,  args: [ { name: "v", type: "T" } ] },
+    { hxName: "append", goName: "append",   returnType: "Slice<T>", types: ["T"], pure: false, args: [ { name: "s", type: "Slice<T>" }, { name: "v", type: "haxe.Rest<T>" } ] }
+];
+
 var path = "./go";
 
 function toModuleName(str: String) {
@@ -151,7 +157,7 @@ function main() {
 
         for (f in fromTypes) {
             content.add('   @:from public static inline function from${f}(x: ${f}): $module {\n');
-            content.add('       return Convert.$t(x);\n');
+            content.add('       return Go.$t(x);\n');
             content.add('   }\n');
         }
 
@@ -173,7 +179,7 @@ function main() {
         File.saveContent(path, content.toString());
     }
 
-    var convPath = Path.join([ path, 'Convert.hx' ]);
+    var convPath = Path.join([ path, 'Go.hx' ]);
     var convContent = new StringBuf();
 
     convContent.add('package go;\n\n');
@@ -181,12 +187,17 @@ function main() {
     convContent.add('// Please invoke the generator using `./Scripts/GenStdTypes` from the project root\n');
     convContent.add('// ------------------------ THIS FILE HAS BEEN GENERATED! ------------------------\n\n');
     convContent.add('@:go.toplevel\n');
-    convContent.add('extern class Convert {\n');
+    convContent.add('extern class Go {\n');
 
     for (t in types) {
         var module = toModuleName(t);
         convContent.add('   @:go.native("$t")\n');
         convContent.add('   @:pure public static extern function $t(x: Any): $module;\n');
+    }
+
+    for (tl in topLevel) {
+        convContent.add('   @:go.native("${tl.goName}")\n');
+        convContent.add('   ${tl.pure ? '@:pure ' : ''}public static extern function ${tl.hxName}${tl.types.length > 0 ? '<${tl.types.join(", ")}>' : ''}(${tl.args.map(a -> '${a.name}: ${a.type}').join(", ")}): ${tl.returnType};\n');
     }
 
     convContent.add('}');

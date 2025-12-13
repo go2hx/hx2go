@@ -115,25 +115,25 @@ abstract UInt32 {
        return a >>> (b:UInt32);
    }
    @:from public static inline function fromInt(x: Int): UInt32 {
-       return Convert.uint32(x);
+       return Go.uint32(x);
    }
    @:from public static inline function fromUInt8(x: UInt8): UInt32 {
-       return Convert.uint32(x);
+       return Go.uint32(x);
    }
    @:from public static inline function fromUInt16(x: UInt16): UInt32 {
-       return Convert.uint32(x);
+       return Go.uint32(x);
    }
    @:from public static inline function fromUInt64(x: UInt64): UInt32 {
-       return Convert.uint32(x);
+       return Go.uint32(x);
    }
    @:from public static inline function fromInt8(x: Int8): UInt32 {
-       return Convert.uint32(x);
+       return Go.uint32(x);
    }
    @:from public static inline function fromInt16(x: Int16): UInt32 {
-       return Convert.uint32(x);
+       return Go.uint32(x);
    }
    @:from public static inline function fromInt64(x: Int64): UInt32 {
-       return Convert.uint32(x);
+       return Go.uint32(x);
    }
    @:to public inline function toFloat(): Float {
        return (untyped this : Float);

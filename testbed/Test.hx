@@ -56,8 +56,8 @@ extern class Raylib {
     public static extern function GetFrameTime(): Float32;
 }
 
-//@:dce(ignore)
-//@:analyzer(ignore)
+@:dce(ignore)
+@:analyzer(ignore)
 class Test {
     public static function main() {
         // Syntax.code
@@ -80,11 +80,14 @@ class Test {
         Fmt.Println(x, x.length);
         Fmt.Println(y, y.length);
 
-        // Casts
-        var a: Float32 = cast Go.float64(10);
-        var b: Slice<Float32> = cast bar;
-        Fmt.Println(a, b);
-
+        //var q = switch (Go.int32(bar[0]).toInt()) {
+        //    case 0:
+        //        true;
+        //    case 3:
+        //        true;
+        //    case _:
+        //        false;
+        //}
         //Raylib.InitWindow(800, 400, "raylib [core] example - basic window");
 
         //var target_x = 0.0;

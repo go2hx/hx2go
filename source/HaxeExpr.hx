@@ -213,6 +213,21 @@ enum HaxeExprDef {
 		An `expr is Type` expression.
 	**/
 	EIs(e:HaxeExpr, t:ComplexType);
+
+	/**
+	    A Go code block, created from Syntax.code
+	**/
+	EGoCode(format:String, args:Array<HaxeExpr>);
+
+	/**
+	    The Go slice operation (e[a:b])
+    **/
+    EGoSliceOp(on:HaxeExpr, start:HaxeExpr, ?end:HaxeExpr);
+
+    /**
+        The Go expression to create a new slice
+    **/
+    EGoSliceConstruct(ct:ComplexType);
 }
 
 @:structInit

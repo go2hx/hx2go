@@ -80,15 +80,11 @@ function resolvePkgTransform(t:Transformer, e:HaxeExpr, e2:HaxeExpr, field: Stri
         case ['go.Syntax', 'code']:
             switch (e.parent.def) {
                 case ECall(e, params):
-                    var trans: Translator = {};
-                    var format = exprToString(params.shift());
-                    for (i in 0...params.length) {
-                        var p = params[i];
-                        t.transformExpr(p);
-                        format = format.replace('{$i}', trans.translateExpr(p));
-                    }
-
-                    e.parent.def = EConst(CIdent(format));
+                    e.parent.def = EGoCode(
+                        exprToString(params.shift()),
+                        params
+                    );
+                    t.iterateExpr(e.parent);
                     true;
                 case _: false;
             }
@@ -99,33 +95,18 @@ function resolvePkgTransform(t:Transformer, e:HaxeExpr, e2:HaxeExpr, field: Stri
                     var on = params.shift();
                     var from = params.shift();
                     var to = params.shift();
-
-                    var trans: Translator = {};
-
-                    t.transformExpr(on);
-                    t.transformExpr(from);
-                    var identStr = trans.translateExpr(on);
-
-                    var out = if (to == null) '$identStr[${trans.translateExpr(from)}:]';
-                    else {
-                        t.transformExpr(to);
-                        '$identStr[${trans.translateExpr(from)}:${trans.translateExpr(to)}]';
-                    }
-
-                    e.parent.def = EConst(CIdent(out));
+                    e.parent.def = EGoSliceOp(on, from, to);
+                    t.iterateExpr(e.parent);
                     true;
 
                 case _: false;
             }
 
         case ['go._Slice.Slice_Impl_', '_create']:
-            var ct = HaxeExprTools.stringToComplexType(e.parent.t);
+            final ct = HaxeExprTools.stringToComplexType(e.parent.t);
             t.transformComplexType(ct);
-
-            e.parent.def = EConst(CIdent(
-                ComplexTypeTools.toString(ct) + "{}"
-            ));
-
+            e.parent.def = EGoSliceConstruct(ct);
+            t.iterateExpr(e.parent);
             true;
 
         case _: false;

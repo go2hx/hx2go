@@ -64,8 +64,8 @@ class Test {
         Fmt.Println(foo);
 
         // Slices
-        var bar: Slice<Float32> = new Slice();
-        bar = bar.append(1); // Go.append(slice, value) is also valid
+        var bar = new Slice();
+        bar = bar.append(1.0); // Go.append(slice, value) is also valid
         bar = bar.append(2);
         bar = bar.append(3);
         Fmt.Println(bar, bar.length);

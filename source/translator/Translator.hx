@@ -28,6 +28,12 @@ class Translator {
             return "#NULL_TRANSLATED_EXPR";
         if (e.def != null)
             return switch e.def {
+                case EGoCode(format, exprs):
+                    GoCode.translateGoCode(this, format, exprs);
+                case EGoSliceConstruct(ct):
+                    GoSliceConstruct.translateGoSliceConstruct(this, ct);
+                case EGoSliceOp(e, e1, e2):
+                    GoSliceOp.translateGoSliceOp(this, e, e1, e2);
                 case EParenthesis(e):
                     Parenthesis.translateParenthesis(this, e);
                 case ECall(e, params):

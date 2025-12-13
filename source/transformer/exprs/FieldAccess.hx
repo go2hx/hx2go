@@ -76,64 +76,50 @@ function resolvePkgTransform(t:Transformer, e:HaxeExpr, e2:HaxeExpr, field: Stri
         return false;
     }
 
-    return switch [e2Name, field] {
-        case ['go.Syntax', 'code']:
-            switch (e.parent.def) {
-                case ECall(e, params):
+    return switch (e.parent.def) {
+        case ECall(e, params):
+            var res = switch [e2Name, field] {
+                case ['go.Syntax', 'code']:
                     e.parent.def = EGoCode(
                         exprToString(params.shift()),
                         params
                     );
-                    t.iterateExpr(e.parent);
                     true;
-                case _: false;
-            }
 
-        case ['go._Slice.Slice_Impl_', 'slice']:
-            switch (e.parent.def) {
-                case ECall(e, params):
+                case ['go._Slice.Slice_Impl_', 'slice']:
                     var on = params.shift();
                     var from = params.shift();
                     var to = params.shift();
                     e.parent.def = EGoSliceOp(on, from, to);
-                    t.iterateExpr(e.parent);
                     true;
 
-                case _: false;
-            }
-
-        case ['go._Slice.Slice_Impl_', 'get']:
-            switch (e.parent.def) {
-                case ECall(e, params):
+                case ['go._Slice.Slice_Impl_', 'get']:
                     var on = params.shift();
                     var idx = params.shift();
                     e.parent.def = EGoSliceGet(on, idx);
-                    t.iterateExpr(e.parent);
                     true;
 
-                case _: false;
-            }
-
-        case ['go._Slice.Slice_Impl_', 'set']:
-            switch (e.parent.def) {
-                case ECall(e, params):
+                case ['go._Slice.Slice_Impl_', 'set']:
                     var on = params.shift();
                     var idx = params.shift();
                     var val = params.shift();
                     e.parent.def = EGoSliceSet(on, idx, val);
-                    t.iterateExpr(e.parent);
+                    true;
+
+                case ['go._Slice.Slice_Impl_', '_create']:
+                    final ct = HaxeExprTools.stringToComplexType(e.parent.t);
+                    t.transformComplexType(ct);
+                    e.parent.def = EGoSliceConstruct(ct);
                     true;
 
                 case _: false;
             }
 
-        case ['go._Slice.Slice_Impl_', '_create']:
-            final ct = HaxeExprTools.stringToComplexType(e.parent.t);
-            t.transformComplexType(ct);
-            e.parent.def = EGoSliceConstruct(ct);
-            t.iterateExpr(e.parent);
-            true;
+            if (res) {
+                t.iterateExpr(e.parent);
+            }
 
+            res;
         case _: false;
     }
 }

@@ -77,12 +77,11 @@ function main() {
     for (t in types) {
         var module = toModuleName(t);
         var path = Path.join([ path, '$module.hx' ]);
-        trace(path);
         var content = new StringBuf();
 
         content.add('package go;\n\n');
         content.add('// ------------------------ THIS FILE HAS BEEN GENERATED! ------------------------\n');
-        content.add('// Please invoke the generator using `./Scripts/GenStdTypes` from the project root\n');
+        content.add('// Please invoke the generator using `haxe ./scripts/GenStdTypes.hxml` from the project root\n');
         content.add('// ------------------------ THIS FILE HAS BEEN GENERATED! ------------------------\n\n');
         content.add('@:coreType\n');
         content.add('@:notNull\n');

@@ -111,6 +111,14 @@ class Transformer {
                                 case "go.Slice": [];
                                 case _: p.params;
                             }
+
+                        case ":go.native":
+                            p.pack = [];
+                            p.params = [];
+                            p.name = exprToString(meta.params[0]);
+
+                        case ":go.package":
+                            def.addGoImport(exprToString(meta.params[0]));
                     }
                 }
             default:
@@ -175,12 +183,6 @@ class Transformer {
         }
 
         return { pos: pos, of: parent };
-    }
-    // takes the type as a string and transforms it into CheckType ($expr : $ct)
-    public function transformTypeConversion(t:String, e:HaxeExpr) {
-        final ct = HaxeExprTools.stringToComplexType(t);
-        transformComplexType(ct);
-        e.def = ECheckType(e.copy(), ct);
     }
     public function getTempName(?id: Int): String {
         var localId = id ?? tempId++;
@@ -264,6 +266,22 @@ class Transformer {
         return switch (e.def) {
             case EVars(_), EBinop(OpAssign, _, _), EGoCode(_, _, true): true; // TODO: add more if needed
             case _: false;
+        }
+    }
+    public extern inline overload function exprToString(e:haxe.macro.Expr):String {
+        return switch e.expr {
+            case EConst(CIdent(s)), EConst(CString(s)):
+                s;
+            default:
+                throw "exprToString not implemented: " + e.expr;
+        }
+    }
+    public extern inline overload function exprToString(e: HaxeExpr):String {
+        return switch e.def {
+            case EConst(CIdent(s)), EConst(CString(s)):
+                s;
+            default:
+                throw "exprToString not implemented: " + e.def;
         }
     }
 }

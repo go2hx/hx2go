@@ -1,4 +1,3 @@
-import go.Float64;
 import go.Syntax;
 import go.Go;
 import go.Int32;
@@ -56,8 +55,8 @@ extern class Raylib {
     public static extern function GetFrameTime(): Float32;
 }
 
-@:dce(ignore)
-@:analyzer(ignore)
+//@:dce(ignore)
+//@:analyzer(ignore)
 class Test {
     public static function main() {
         // Syntax.code

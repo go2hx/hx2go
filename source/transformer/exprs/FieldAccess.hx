@@ -41,11 +41,11 @@ function resolveExpr(t:Transformer, e2:HaxeExpr): Bool {
                                 switch meta.name {
                                 case ":go.package":
                                     // import
-                                    t.def.addGoImport(exprToString(meta.params[0]));
+                                    t.def.addGoImport(t.exprToString(meta.params[0]));
                                     isNative = true;
                                 case ":go.native":
                                     // rename
-                                    renamedIdent = exprToString(meta.params[0]);
+                                    renamedIdent = t.exprToString(meta.params[0]);
                                     isNative = true;
                                 case ":go.toplevel":
                                     // used for T() calls, removes "$a." in "$a.$b"
@@ -81,14 +81,14 @@ function resolvePkgTransform(t:Transformer, e:HaxeExpr, e2:HaxeExpr, field: Stri
             var res = switch [e2Name, field] {
                 case ['go.Syntax', 'expr']:
                     e.parent.def = EGoCode(
-                        exprToString(params.shift()),
+                        t.exprToString(params.shift()),
                         params, false
                     );
                     true;
 
                 case ['go.Syntax', 'stmt']:
                     e.parent.def = EGoCode(
-                        exprToString(params.shift()),
+                        t.exprToString(params.shift()),
                         params, true
                     );
                     true;
@@ -108,23 +108,5 @@ function resolvePkgTransform(t:Transformer, e:HaxeExpr, e2:HaxeExpr, field: Stri
 
             res;
         case _: false;
-    }
-}
-
-extern inline overload function exprToString(e:haxe.macro.Expr):String {
-    return switch e.expr {
-        case EConst(CIdent(s)), EConst(CString(s)):
-            s;
-        default:
-            throw "exprToString not implemented: " + e.expr;
-    }
-}
-
-extern inline overload function exprToString(e: HaxeExpr):String {
-    return switch e.def {
-        case EConst(CIdent(s)), EConst(CString(s)):
-            s;
-        default:
-            throw "exprToString not implemented: " + e.def;
     }
 }

@@ -29,6 +29,7 @@ extern abstract Slice<T> {
 
     @:arrayAccess private extern function get(index: Int): T;
     @:arrayAccess private extern function set(index: Int, value: T): T;
+
     public extern overload function slice(start: Int32, end: Int32): Slice<T>;
     public extern overload function slice(start: Int32): Slice<T>;
 }

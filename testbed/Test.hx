@@ -68,7 +68,7 @@ class Test {
         bar = bar.append(1.0); // Go.append(slice, value) is also valid
         bar = bar.append(2);
         bar = bar.append(3);
-        bar[0] = 20.0;
+        bar[0] = bar[0] + 20.0;
 
         Fmt.Println(bar, bar.length, bar[1]);
 

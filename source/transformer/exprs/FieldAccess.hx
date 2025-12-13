@@ -108,6 +108,7 @@ function resolvePkgTransform(t:Transformer, e:HaxeExpr, e2:HaxeExpr, field: Stri
                     var on = params.shift();
                     var idx = params.shift();
                     e.parent.def = EGoSliceGet(on, idx);
+                    t.iterateExpr(e.parent);
                     true;
 
                 case _: false;
@@ -120,6 +121,7 @@ function resolvePkgTransform(t:Transformer, e:HaxeExpr, e2:HaxeExpr, field: Stri
                     var idx = params.shift();
                     var val = params.shift();
                     e.parent.def = EGoSliceSet(on, idx, val);
+                    t.iterateExpr(e.parent);
                     true;
 
                 case _: false;

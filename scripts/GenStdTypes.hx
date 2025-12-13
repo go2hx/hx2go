@@ -36,9 +36,13 @@ var operators = [
 ];
 
 var topLevel = [
-    { hxName: "panic",  goName: "panic",    returnType: "Void",     types: [],    pure: false, args: [ { name: "v", type: "Any" } ] },
-    { hxName: "len",    goName: "len",      returnType: "Int32",    types: ["T"], pure: true,  args: [ { name: "v", type: "T" } ] },
-    { hxName: "append", goName: "append",   returnType: "Slice<T>", types: ["T"], pure: false, args: [ { name: "s", type: "Slice<T>" }, { name: "v", type: "haxe.Rest<T>" } ] }
+    { hxName: "panic",  goName: "panic",    returnType: "Void",     types: [],    pure: false, isOverload: false, args: [ { name: "v", type: "Any" } ] },
+    { hxName: "len",    goName: "len",      returnType: "Int32",    types: ["T"], pure: true,  isOverload: false, args: [ { name: "v", type: "T" } ] },
+    { hxName: "append", goName: "append",   returnType: "Slice<T>", types: ["T"], pure: false, isOverload: false, args: [ { name: "s", type: "Slice<T>" }, { name: "v", type: "haxe.Rest<T>" } ] },
+    { hxName: "copy",   goName: "copy",     returnType: "Int32",    types: ["T"], pure: false, isOverload: false, args: [ { name: "dst", type: "Slice<T>" }, { name: "src", type: "Slice<T>" } ] },
+    { hxName: "cap",    goName: "cap",      returnType: "Int32",    types: ["T"], pure: true,  isOverload: false, args: [ { name: "v", type: "Slice<T>" } ] },
+    { hxName: "slice",  goName: "slice",    returnType: "Slice<T>", types: ["T"], pure: true,  isOverload: true,  args: [ { name: "v", type: "Slice<T>" }, { name: "start", type: "Int32" }, { name: "end", type: "Int32" } ] },
+    { hxName: "slice",  goName: "slice",    returnType: "Slice<T>", types: ["T"], pure: true,  isOverload: true,  args: [ { name: "v", type: "Slice<T>" }, { name: "start", type: "Int32" } ] }
 ];
 
 var path = "./go";
@@ -197,7 +201,7 @@ function main() {
 
     for (tl in topLevel) {
         convContent.add('   @:go.native("${tl.goName}")\n');
-        convContent.add('   ${tl.pure ? '@:pure ' : ''}public static extern function ${tl.hxName}${tl.types.length > 0 ? '<${tl.types.join(", ")}>' : ''}(${tl.args.map(a -> '${a.name}: ${a.type}').join(", ")}): ${tl.returnType};\n');
+        convContent.add('   ${tl.pure ? '@:pure ' : ''}public static extern ${tl.isOverload ? 'overload ' : ''}function ${tl.hxName}${tl.types.length > 0 ? '<${tl.types.join(", ")}>' : ''}(${tl.args.map(a -> '${a.name}: ${a.type}').join(", ")}): ${tl.returnType};\n');
     }
 
     convContent.add('}');

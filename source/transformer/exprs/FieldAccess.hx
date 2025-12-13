@@ -80,15 +80,41 @@ function resolvePkgTransform(t:Transformer, e:HaxeExpr, e2:HaxeExpr, field: Stri
         case ['go.Syntax', 'code']:
             switch (e.parent.def) {
                 case ECall(e, params):
+                    var trans: Translator = {};
                     var format = exprToString(params.shift());
                     for (i in 0...params.length) {
                         var p = params[i];
                         t.transformExpr(p);
-                        format = format.replace('{$i}', ({} : Translator).translateExpr(p));
+                        format = format.replace('{$i}', trans.translateExpr(p));
                     }
 
                     e.parent.def = EConst(CIdent(format));
                     true;
+                case _: false;
+            }
+
+        case ['go.Go', 'slice']:
+            switch (e.parent.def) {
+                case ECall(e, params):
+                    var on = params.shift();
+                    var from = params.shift();
+                    var to = params.shift();
+
+                    var trans: Translator = {};
+
+                    t.transformExpr(on);
+                    t.transformExpr(from);
+                    var identStr = trans.translateExpr(on);
+
+                    var out = if (to == null) '$identStr[${trans.translateExpr(from)}:]';
+                    else {
+                        t.transformExpr(to);
+                        '$identStr[${trans.translateExpr(from)}:${trans.translateExpr(to)}]';
+                    }
+
+                    e.parent.def = EConst(CIdent(out));
+                    true;
+
                 case _: false;
             }
 
@@ -100,7 +126,7 @@ function resolvePkgTransform(t:Transformer, e:HaxeExpr, e2:HaxeExpr, field: Stri
                 ComplexTypeTools.toString(ct) + "{}"
             ));
 
-            false;
+            true;
 
         case _: false;
     }

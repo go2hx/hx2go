@@ -61,15 +61,20 @@ class Test {
     public static function main() {
         // Syntax.code
         var foo: Int32 = Syntax.code("5 + {0}", 10);
+        Fmt.Println(foo);
 
         // Slices
         var bar: Slice<Float32> = new Slice();
         bar = bar.append(1); // Go.append(slice, value) is also valid
         bar = bar.append(2);
         bar = bar.append(3);
+        Fmt.Println(bar, bar.length);
 
-        // Fmt moved into "go" package
-        Fmt.Println(foo, bar, bar.length); // Go.len(bar) is also valid
+        // Slice#slice
+        var x = bar.slice(1);
+        var y = bar.slice(0, 2);
+        Fmt.Println(x, x.length);
+        Fmt.Println(y, y.length);
 
         // built-ins are now in the "go.Go" module
         var x = Go.int32(10.0);

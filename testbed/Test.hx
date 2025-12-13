@@ -1,3 +1,4 @@
+import go.Float64;
 import go.Syntax;
 import go.Go;
 import go.Int32;
@@ -63,13 +64,14 @@ class Test {
         var foo: Int32 = Syntax.code("5 + {0}", 10);
         Fmt.Println(foo);
 
-        // Slices
-        var bar = new Slice();
+        // Slice#append
+        var bar: Slice<Float64> = new Slice();
         bar = bar.append(1.0); // Go.append(slice, value) is also valid
         bar = bar.append(2);
         bar = bar.append(3);
-        bar[0] = bar[0] + 20.0;
 
+        // Slice[n]
+        bar[1] = bar[1] + 20.0;
         Fmt.Println(bar, bar.length, bar[1]);
 
         // Slice#slice
@@ -78,9 +80,10 @@ class Test {
         Fmt.Println(x, x.length);
         Fmt.Println(y, y.length);
 
-        // built-ins are now in the "go.Go" module
-        var x = Go.int32(10.0);
-        Go.panic(x);
+        // Casts
+        var a: Float32 = cast Go.float64(10);
+        var b: Slice<Float32> = cast bar;
+        Fmt.Println(a, b);
 
         //Raylib.InitWindow(800, 400, "raylib [core] example - basic window");
 

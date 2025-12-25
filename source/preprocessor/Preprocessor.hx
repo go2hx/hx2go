@@ -111,7 +111,7 @@ class Preprocessor {
         // sometimes special handling needs to be done in order to ensure other transformations correctly apply
         switch e.def {
             // ensure all children are extracted if any of them will be transformed or otherwise have any side effects
-            case EBinop(_, e0, e1): ensureSemantics(e, [e0, e1], scope);
+            case EBinop(op, e0, e1) if (op != OpAssign && !op.match(OpAssignOp(_))): ensureSemantics(e, [e0, e1], scope);
             case ECall(_, params): ensureSemantics(e, params, scope);
 
             // extract conditional to body
@@ -167,7 +167,42 @@ class Preprocessor {
             return;
         }
 
-        trace('need ensure semantics', p);
+        for (c in children) {
+            processExpr(c, scope);
+
+            var canSkip = switch (c.def) {
+                case EConst(CIdent(name)) if (isTempName(name)):
+                    true;
+                case EConst(CIdent("null" | "true" | "false")):
+                    true;
+                case EConst(CIdent(_)):
+                    false;
+                case EConst(_):
+                    true;
+                case EParenthesis({def: EConst(CIdent(name))}) if (isTempName(name)):
+                    true;
+                case _:
+                    false;
+            };
+
+            if (canSkip) { // otherwise temporaries might be assigned to temporaries which is redundant verbosity, I am not 100% sure this won't cause issues later on though.....
+                continue;
+            }
+
+            var tmpName = getTempName(tempId++);
+            var into = getOuterBlock(c, scope);
+
+            var toInsert: HaxeExpr = {
+                t: null,
+                def: EVars([{
+                    name: tmpName,
+                    expr: c.copy()
+                }])
+            };
+
+            insertExprs([toInsert], into.block, into.at);
+            c.def = EConst(CIdent(tmpName));
+        }
     }
 
     public function exprContainsStmt(e:HaxeExpr, scope:PreprocessorScope): Bool {

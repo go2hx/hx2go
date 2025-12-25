@@ -139,7 +139,7 @@ class Preprocessor {
 
                         prepassExpr(bodyExpr, body, 0);
                         insertExprs([bodyExpr], body, 0);
-                        cond.def = EConst(CIdent('true'));
+                        e.def = EWhile(null, body, norm);
 
                     case _: null;
                 }

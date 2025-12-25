@@ -30,20 +30,26 @@ class Test {
         //};
 
         // Test: While Conditional Block
-        //var count = 0;
-        //while ({
-        //    var curr = count;
-        //    var max = 10;
-        //    curr < max;
-        //}) count++;
+        var count = 0;
+        while ({
+            var curr = count;
+            var max = 10;
+            curr < max;
+        }) {
+            count++;
+            ++count;
+        }
 
         // Test: Processing in while conditional
-        //var idx = 0;
-        //while (idx++ < 10) {}
+        var idx = 0;
+        while (idx++ < 10) {}
 
         // Test: Conditional without special transformations
-        //var q = 0;
-        //while (q < 10) q++;
+        var q = 0;
+        while (q < 10) {
+            q++;
+            ++q;
+        }
 
         // Test: Basic If
         //var ifOutA = 0;

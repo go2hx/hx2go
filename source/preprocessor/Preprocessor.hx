@@ -108,7 +108,7 @@ class Preprocessor {
             }
         }
 
-        switch e.def { // sometimes special handling needs to be
+        switch e.def { // sometimes special handling needs to be done in order to ensure other transformations correctly apply
             case EWhile(outerCond, body, norm): // if cond is `Stmt` (like EBlock(...) or EIf(...)) we need to extract the conditional to inside of the loop body, as otherwise it might be extracted out of the loop which causes incorrect behaviour.
                 switch outerCond.def {
                     case EParenthesis(cond) if (exprContainsStmt(cond, scope)): // while (x) y; -> while (true) if (!x) break; y;
@@ -137,6 +137,12 @@ class Preprocessor {
 
                     case _: null;
                 }
+
+            case EUnop(op, postFix, expr) if (!postFix && (op == OpIncrement || op == OpDecrement)):
+                // this code will be ran if "++e" is used as a statement, this implies we don't care about the result of this EUnop(...)
+                // we transform it to postFix as it will result in the same value of `e` but without extracting it to a temporary, furthermore, if it is already postFix it should just work.
+                // if we DO use the resulting value of the EUnop this code path won't be reached: it should be handled by the EUnop(...) case in `Preprocessor#toExpr(...)`
+                e.def = EUnop(op, true, expr);
 
             case _: null;
         }
@@ -180,6 +186,27 @@ class Preprocessor {
         }
 
         for (i in pos...arr.length) {
+            arr[i].parentIdx = i;
+        }
+    }
+
+    public function removeExpr(e: HaxeExpr, scope:PreprocessorScope) {
+        if (e?.def == null || e?.parent?.def == null) {
+            return;
+        }
+
+        var arr = switch (e.parent.def) {
+            case EBlock(x): x;
+            case _: null;
+        }
+
+        if (arr == null) {
+            return;
+        }
+
+        arr.remove(e);
+
+        for (i in 0...arr.length) {
             arr[i].parentIdx = i;
         }
     }

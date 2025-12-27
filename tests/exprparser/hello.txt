@@ -1,0 +1,14 @@
+[Function:() -> Void]
+			[Block:Void]
+				[Call:Void]
+					[Field:(v : Dynamic, ?infos : Null<haxe.PosInfos>) -> Void]
+						[TypeExpr haxe.Log:Class<haxe.Log>]
+						[FStatic:(v : Dynamic, ?infos : Null<haxe.PosInfos>) -> Void]
+							haxe.Log
+							trace:(v : Dynamic, ?infos : Null<haxe.PosInfos>) -> Void
+					[Const:String] "hello"
+					[ObjectDecl:{ methodName : String, lineNumber : Int, fileName : String, ?customParams : Null<Array<Dynamic>>, className : String }]
+						fileName: [Const:String] "testbed/Test.hx"
+						lineNumber: [Const:Int] 3
+						className: [Const:String] "Test"
+						methodName: [Const:String] "main";

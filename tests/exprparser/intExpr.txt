@@ -1,0 +1,9 @@
+[Function:(a : haxe.Int32, b : haxe.Int32) -> haxe.Int32]
+			[Arg a<6220>(VUsedByTyper VAnalyzed):haxe.Int32]
+			[Arg b<6221>(VUsedByTyper VAnalyzed):haxe.Int32]
+			[Block:Dynamic]
+				[Return:Dynamic]
+					[Binop:Int]
+						[Cast:Int] [Local a(6220):haxe.Int32:haxe.Int32]
+						-
+						[Cast:Int] [Local b(6221):haxe.Int32:haxe.Int32];

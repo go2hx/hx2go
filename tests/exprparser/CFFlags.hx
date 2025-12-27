@@ -9,5 +9,6 @@ function run() {
     final object = parser.parseObject(lines);
     // check to make sure that cf_flags is not caught at the end
     equals(object.objects.length, 1);
+    equals(object.objects[0].objects.length, 1);
     parser.printObject(object);
 }

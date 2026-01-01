@@ -11,28 +11,28 @@ import go.Fmt;
 class Test {
     public static function main() {
         // Test: Blocks
-        var resA = {
-            var x: Int32 = 5;
-            var y: Float32 = 10.0;
-            x + y;
-        };
+        //var resA = {
+        //    var x: Int32 = 5;
+        //    var y: Float32 = 10.0;
+        //    x + y;
+        //};
 
-        var resB = {
-            var x: Int32 = 20;
-            var y: Float32 = 40.0;
-            x + y;
-        };
+        //var resB = {
+        //    var x: Int32 = 20;
+        //    var y: Float32 = 40.0;
+        //    x + y;
+        //};
 
         // Test: Nested Blocks
-        var resC = {
-            var x: Int32 = 5;
-            var y: Float32 = {
-                var z: Int32 = 10;
-                var w: Float32 = 20;
-                z * w;
-            }
-            x + y;
-        };
+        //var resC = {
+        //    var x: Int32 = 5;
+        //    var y: Float32 = {
+        //        var z: Int32 = 10;
+        //        var w: Float32 = 20;
+        //        z * w;
+        //    }
+        //    x + y;
+        //};
 
         // Test: While Conditional Block
         //var count = 0;
@@ -54,6 +54,13 @@ class Test {
         //var shadow = 0; shadow = 5;
         //var shadow = 3; shadow = 8;
         //var shadow = true; shadow = false;
+
+        // Test: Pointers
+        //var x: Int32 = 5;
+        //var y: go.Pointer<Int32> = x;
+        //var z: Int = y.value;
+        //y.value += 10;
+        //go.Fmt.Println(y, y.value, x, z);
 
         // Test: Basic If
         //var ifOutA = 0;

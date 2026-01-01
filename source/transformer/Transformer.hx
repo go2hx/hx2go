@@ -99,6 +99,7 @@ class Transformer {
                                 case "go.Rune": "rune";
                                 case "go.Byte": "byte";
                                 case "go.Slice": '[]${transformComplexTypeParam(p.params, 0)}';
+                                case "go.Pointer": '*${transformComplexTypeParam(p.params, 0)}';
                                 case "Bool": "bool";
                                 case _:
                                     trace("unhandled coreType: " + td.name);

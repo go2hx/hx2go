@@ -10,6 +10,7 @@ import haxe.macro.Expr;
  */
 @:structInit
 class Preprocessor {
+
     public var module: Module = null;
     public var def: HaxeTypeDefinition = null;
     public var annonymiser: Annonymiser = {};
@@ -35,16 +36,24 @@ class Preprocessor {
     }
 
     public function toExpr(stmt: HaxeExpr): HaxeExpr {
-        return switch stmt.def {
-            case EBlock(exprs): {
-                var copy = stmt.copy();
+        var copy = stmt.copy();
+        var result = copy;
+
+        switch copy.def {
+            case EBlock(exprs): { // annonymise -> get last -> iterate over exprs -> insert exprs -> (iterate over last)
                 annonymiser.annonymise(copy);
 
-                copy;
+                var last = exprs.pop();
+                iterateExpr(copy);
+                insertExprsBefore(exprs, stmt);
+
+                result = last;
             };
 
             case _: trace('cannot transform to expr:', stmt); stmt;
         }
+
+        return result;
     }
 
     public function toStmt(expr: HaxeExpr): HaxeExpr {
@@ -88,6 +97,50 @@ class Preprocessor {
                 processExpr(field.expr);
             }
         }
+    }
+
+    public function getOuterBlock(e: HaxeExpr): { block: HaxeExpr, at: Int } {
+        var pa = e.parent;
+        var po = e.parentIdx;
+
+        while (pa != null) {
+            switch (pa.def) {
+                case EBlock(_): break;
+                case _:
+                    po = pa.parentIdx;
+                    pa = pa.parent;
+            }
+        }
+
+        return { block: pa, at: po };
+    }
+
+    public function insertExprs(exprs: Array<HaxeExpr>, into: HaxeExpr, at: Int) {
+        var pos = at;
+        var arr = switch (into.def) {
+            case EBlock(x): x;
+            case _: null;
+        }
+
+        if (arr == null) {
+            trace('insertExprs arr should not be null');
+            return;
+        }
+
+        for (expr in exprs) {
+            expr.parent = into;
+            arr.insert(pos, expr);
+            pos++;
+        }
+
+        for (i in pos...arr.length) {
+            arr[i].parentIdx = i;
+        }
+    }
+
+    public function insertExprsBefore(exprs: Array<HaxeExpr>, p: HaxeExpr) {
+        var pos = getOuterBlock(p);
+        insertExprs(exprs, pos.block, pos.at);
     }
 
 }

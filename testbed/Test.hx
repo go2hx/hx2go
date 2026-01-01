@@ -17,22 +17,22 @@ class Test {
             x + y;
         };
 
-        //var resB = {
-        //    var x: Int32 = 20;
-        //    var y: Float32 = 40.0;
-        //    x + y;
-        //};
+        var resB = {
+            var x: Int32 = 20;
+            var y: Float32 = 40.0;
+            x + y;
+        };
 
         // Test: Nested Blocks
-        //var resC = {
-        //    var x: Int32 = 5;
-        //    var y: Float32 = {
-        //        var z: Int32 = 10;
-        //        var w: Float32 = 20;
-        //        z * w;
-        //    }
-        //    x + y;
-        //};
+        var resC = {
+            var x: Int32 = 5;
+            var y: Float32 = {
+                var z: Int32 = 10;
+                var w: Float32 = 20;
+                z * w;
+            }
+            x + y;
+        };
 
         // Test: While Conditional Block
         //var count = 0;
@@ -49,6 +49,11 @@ class Test {
         // Test: Conditional without special transformations
         //var q = 0;
         //while (q < 10) q++;
+
+        // Test: Shadowing
+        //var shadow = 0; shadow = 5;
+        //var shadow = 3; shadow = 8;
+        //var shadow = true; shadow = false;
 
         // Test: Basic If
         //var ifOutA = 0;

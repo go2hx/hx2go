@@ -13,18 +13,10 @@ class Annonymiser {
     private var _tempId: Int = 0;
 
     /**
-     * Resets the state of the annonymiser, calling reset() allows the annonymiser to be re-used.
-     */
-    public function reset() {
-        _tempId = 0;
-    }
-
-    /**
      * Annonymises a given expression and it's children.
      * @param e The expression to annonymise.
      */
     public function annonymise(e: HaxeExpr) {
-        reset();
         iter(e, []);
     }
 

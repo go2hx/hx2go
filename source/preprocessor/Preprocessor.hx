@@ -15,27 +15,30 @@ class Preprocessor {
     public var def: HaxeTypeDefinition = null;
     public var annonymiser: Annonymiser = {};
 
-    public function processExpr(e: HaxeExpr) {
+    public function processExpr(e: HaxeExpr, scope: Scope) {
         if (e?.def == null) {
             return;
         }
 
         if (!Semantics.canHold(e.parent, e)) {
             var res = switch Semantics.getExprKind(e) {
-                case Expr: toStmt(e); // expr -> stmt (by `_ = expr`)
-                case Stmt: toExpr(e); // stmt -> expr (by kind-specific extraction)
+                case Expr: toStmt(e, scope); // expr -> stmt (by `_ = expr`)
+                case Stmt: toExpr(e, scope); // stmt -> expr (by kind-specific extraction)
                 case EitherKind: e;
             };
 
             e.copyFrom(res);
         }
 
+        var localScope: Scope = {};
         switch e.def {
-            case _: iterateExpr(e);
+            case _: iterateExpr(e, localScope);
         }
+
+        localScope.finalise();
     }
 
-    public function toExpr(stmt: HaxeExpr): HaxeExpr {
+    public function toExpr(stmt: HaxeExpr, scope: Scope): HaxeExpr {
         var copy = stmt.copy();
         var result = copy;
 
@@ -44,8 +47,8 @@ class Preprocessor {
                 annonymiser.annonymise(copy);
 
                 var last = exprs.pop();
-                iterateExpr(copy);
-                insertExprsBefore(exprs, stmt);
+                iterateExpr(copy, scope);
+                insertExprsBefore(exprs, stmt, scope);
 
                 result = last;
             };
@@ -56,7 +59,7 @@ class Preprocessor {
         return result;
     }
 
-    public function toStmt(expr: HaxeExpr): HaxeExpr {
+    public function toStmt(expr: HaxeExpr, scope: Scope): HaxeExpr {
         var inner: HaxeExpr = expr.copy();
         var outer: HaxeExpr = { t: null, def: EBinop(Binop.OpAssign, { t: null, def: EConst(CIdent("_")) }, inner) };
         inner.parent = expr;
@@ -65,12 +68,12 @@ class Preprocessor {
         return outer; // `e` -> `_ = e`
     }
 
-    public function iterateExpr(e: HaxeExpr) {
+    public function iterateExpr(e: HaxeExpr, scope: Scope) {
         var idx = 0;
         HaxeExprTools.iter(e, l -> {
             l.parent = e;
             l.parentIdx = idx++;
-            processExpr(l);
+            processExpr(l, scope);
         });
     }
 
@@ -94,7 +97,10 @@ class Preprocessor {
             if (field.expr != null) {
                 field.expr.parent = { t: null, def: EBlock([]) };
                 field.expr.parentIdx = 0;
-                processExpr(field.expr);
+
+                var scope: Scope = {};
+                processExpr(field.expr, scope);
+                scope.finalise();
             }
         }
     }
@@ -115,7 +121,7 @@ class Preprocessor {
         return { block: pa, at: po };
     }
 
-    public function insertExprs(exprs: Array<HaxeExpr>, into: HaxeExpr, at: Int) {
+    public function insertExprs(exprs: Array<HaxeExpr>, into: HaxeExpr, at: Int, scope: Scope) {
         var pos = at;
         var arr = switch (into.def) {
             case EBlock(x): x;
@@ -127,20 +133,22 @@ class Preprocessor {
             return;
         }
 
-        for (expr in exprs) {
-            expr.parent = into;
-            arr.insert(pos, expr);
-            pos++;
-        }
+        scope.defer(() -> {
+            for (expr in exprs) {
+                expr.parent = into;
+                arr.insert(pos, expr);
+                pos++;
+            }
 
-        for (i in pos...arr.length) {
-            arr[i].parentIdx = i;
-        }
+            for (i in pos...arr.length) {
+                arr[i].parentIdx = i;
+            }
+        });
     }
 
-    public function insertExprsBefore(exprs: Array<HaxeExpr>, p: HaxeExpr) {
+    public function insertExprsBefore(exprs: Array<HaxeExpr>, p: HaxeExpr, scope: Scope) {
         var pos = getOuterBlock(p);
-        insertExprs(exprs, pos.block, pos.at);
+        insertExprs(exprs, pos.block, pos.at, scope);
     }
 
 }

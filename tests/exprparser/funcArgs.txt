@@ -1,0 +1,7 @@
+[Function:(l : haxe.ds.TreeNode<haxe.ds.TreeNode.K, haxe.ds.TreeNode.V>, k : haxe.ds.TreeNode.K, v : haxe.ds.TreeNode.V, r : haxe.ds.TreeNode<haxe.ds.TreeNode.K, haxe.ds.TreeNode.V>, ?h : Int) -> Void]
+			[Arg l<5974>(VUsedByTyper VAnalyzed):haxe.ds.TreeNode<haxe.ds.TreeNode.K, haxe.ds.TreeNode.V>]
+			[Arg k<5975>(VUsedByTyper VAnalyzed):haxe.ds.TreeNode.K]
+			[Arg v<5976>(VUsedByTyper VAnalyzed):haxe.ds.TreeNode.V]
+			[Arg r<5977>(VUsedByTyper VAnalyzed):haxe.ds.TreeNode<haxe.ds.TreeNode.K, haxe.ds.TreeNode.V>]
+			[Arg h<5978>(VUsedByTyper VAnalyzed):Int] [Const:Int] -1
+			[Block:Void]

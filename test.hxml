@@ -1,9 +1,11 @@
-# haxelib git utest https://github.com/Aidan63/utest coro
--lib utest
 -cp tests
+common.hxml
 -m TestAll
 -w -WUnusedPattern
 extraParams.hxml
+# haxelib git deep_equal https://github.com/kevinresol/deep_equal
+-lib deep_equal
 -D run-go
-# set the output directory
---custom-target go=exportTest
+-D color
+--interp
+#--custom-target go=exportTest

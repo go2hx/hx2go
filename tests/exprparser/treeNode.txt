@@ -1,0 +1,24 @@
+[Function:(l : haxe.ds.TreeNode<haxe.ds.TreeNode.K, haxe.ds.TreeNode.V>, k : haxe.ds.TreeNode.K, v : haxe.ds.TreeNode.V, r : haxe.ds.TreeNode<haxe.ds.TreeNode.K, haxe.ds.TreeNode.V>, ?h : Int) -> Void]
+			[Arg l<5974>(VUsedByTyper VAnalyzed):haxe.ds.TreeNode<haxe.ds.TreeNode.K, haxe.ds.TreeNode.V>]
+			[Arg k<5975>(VUsedByTyper VAnalyzed):haxe.ds.TreeNode.K]
+			[Arg v<5976>(VUsedByTyper VAnalyzed):haxe.ds.TreeNode.V]
+			[Arg r<5977>(VUsedByTyper VAnalyzed):haxe.ds.TreeNode<haxe.ds.TreeNode.K, haxe.ds.TreeNode.V>]
+			[Arg h<5978>(VUsedByTyper VAnalyzed):Int] [Const:Int] -1
+			[Block:Void]
+				[If:Void]
+					[Parenthesis:Bool]
+						[Const:Bool] true
+					[Then:Int] [Block:Int]
+						[If:Int]
+							[Parenthesis:Bool]
+								[Const:Bool] true
+							[Then:Int] [Const:Int] 0
+				[If:Void]
+					[Else:Int] [Binop:Int]
+						[Field:Int]
+							[Const:haxe.ds.TreeNode<haxe.ds.TreeNode.K, haxe.ds.TreeNode.V>] this
+							[FInstance:Int]
+								haxe.ds.TreeNode<haxe.ds.TreeNode.K, haxe.ds.TreeNode.V>
+								_height:Int
+						=
+						[Local h(5978):Int:Int];

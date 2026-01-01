@@ -20,47 +20,74 @@ class ExprParser {
     var lastObject:Object = null;
     var debug_path:String = "";
     var nonImpl: Array<String> = [];
+    var stopParser:Bool = false;
     var objectMap:Map<Int, Object> = [];
 
     public function new(debug_path) {
         this.debug_path = debug_path;
     }
 
+    public function reset() {
+        lineIndex = 0;
+        stringIndex = 0;
+        lastObject = null;
+        objectMap.clear();
+        stopParser = false;
+        nonImpl = [];
+    }
+
     public function parse(lines:Array<String>):HaxeExpr {
+        final firstObject = parseObject(lines);
+        final expr = objectToExpr(firstObject);
+        // trace(new haxe.macro.Printer().printExpr(expr));
+        return expr;
+    }
+
+    public function parseObject(lines:Array<String>):Object {
         // invalid expr
         if (lines.length == 0 || StringTools.contains(lines[0], "cf_expr = None;"))
             return null;
         this.lines = lines;
         objectMap = [];
         var firstObject:Object = null;
-        // discard first Object for example: [Function:() -> Void], skip straight to Block
-        getObject();
         // recursively get Object and add Objects to a parent Object depending on indention
         while (true) {
             final object = getObject();
             if (firstObject == null)
                 firstObject = object;
-            if (object == null)
+            if (object == null) {
                 break;
+            }
             objectMap[object.startIndex] = object;
             // add to another object based on indentation
             if (objectMap.exists(object.startIndex - 1)) {
                 objectMap[object.startIndex - 1].objects.push(object);
+            }else{
+                // simply add it to the first object
+                if (firstObject != object) {
+                    firstObject.objects.push(object);
+                }
+            }
+            if (stopParser) {
+                stopParser = false;
+                break;
             }
         }
         if (firstObject == null) {
             // trace("lines parsed:\n" + lines.join("\n"));
             throw "first object not parsed";
         }
-        printObject(firstObject);
-        final expr = objectToExpr(firstObject);
-        // trace(new haxe.macro.Printer().printExpr(expr));
-        return expr;
+        // printObject(firstObject);
+        return firstObject;
     }
 
     function findCloseParen(startIndex):Int {
         var parenCount = 0;
+        // look one line ahead
         for (i in startIndex...lines.length) {
+            if (parenCount == 0 && i > startIndex + 1) {
+                break;
+            }
             for (char in new StringIterator(lines[i])) {
                 switch char {
                     case "(".code:
@@ -90,22 +117,30 @@ class ExprParser {
                     // trace(debug_path);
                     // trace(object.string());
                 }
-                ECall(objectToExpr(object.objects[0]), object.objects.slice(1).map(object -> objectToExpr(object)));
+                final e = objectToExpr(object.objects[0]);
+                final params = object.objects.slice(1).map(object -> objectToExpr(object));
+                ECall(e, params);
             case FIELD:
                 if (object.objects.length == 0) {
                     // trace(debug_path);
                     // trace(object.string());
                     // throw "FIELD NEEDS MORE";
                 }
+                final e = objectToExpr(object.objects[0]);
                 final field = exprToValueString(objectToExpr(object.objects[1]));
-                EField(objectToExpr(object.objects[0]), field);
+                EField(e, field);
             case TYPEEXPR:
                 EConst(CIdent(object.subType));
             case FSTATIC:
                 // [FStatic:(s : String) -> Void]
                 // 			fmt
 				// 			println:(s : String) -> Void
-                EConst(CIdent("#UNKNOWN_STATIC"));
+                if (object.objects.length <= 1) {
+                    trace(object.string());
+                    trace(object.filePath);
+                    trace(object.objects.length);
+                    trace(object.objects[0].string());
+                }
                 var field = object.objects[1].string();
                 final colonIndex = field.indexOf(":");
                 if (colonIndex == -1)
@@ -113,9 +148,10 @@ class ExprParser {
                 field = field.substr(0, colonIndex);
                 EConst(CIdent(field));
             case CONST:
-                // TODO should be redundant
-                // but currently catches some semicolon suffixes that get missed
-                final s = removeSemicolonSuffix(object.objects[0].string());
+                if (object.objects.length == 0) {
+                    trace(debug_path, object.string());
+                }
+                final s = object.objects[0].string();
                 switch object.defType {
                     case "String":
                         final len = s.length - 1;
@@ -136,15 +172,17 @@ class ExprParser {
             case RETURN:
                 EReturn(objectToExpr(object.objects[0]));
             case BINOP:
-                // TODO op not implemented
-                //trace(StringTools.trim(object.dataLines[0]));
                 EBinop(stringToBinop(object.objects[1].string()), objectToExpr(object.objects[0]), objectToExpr(object.objects[2]));
             case FINSTANCE:
                 //specialDef = FInstance(object.dataLines[1].split(":")[0]);
                 null;
             case UNOP:
                 // TODO unop, and postFix, not implemented
-                EUnop(stringToUnop(object.objects[0].string()), object.objects[1].string() != "Prefix", objectToExpr(object.objects[2]));
+                if (object.objects.length != 3) {
+                    emptyExpr().def;
+                }else{
+                    EUnop(stringToUnop(object.objects[0].string()), object.objects[1].string() != "Prefix", objectToExpr(object.objects[2]));
+                }
             case ARRAY:
                 null;
             case ARRAYDECL:
@@ -158,8 +196,15 @@ class ExprParser {
                         throw "unknown ct for new: " + ct;
                 }
             case OBJDECL:
-                // trace("object decl not implemented");
-                EObjectDecl([]);
+                final fields:Array<HaxeObjectField> = [];
+                for (obj in object.objects) {
+                    final fieldName = obj.string();
+                    fields.push({
+                        field: fieldName,
+                        expr: objectToExpr(obj.objects[0]),
+                    });
+                }
+                EObjectDecl(fields);
             case VAR:
                 EVars([{
                     name: object.subType.substr(0, object.subType.indexOf("<")),
@@ -187,20 +232,24 @@ class ExprParser {
                 if (object.objects.length == 0) {
                     EConst(CIdent("#THEN_INVALID"));
                 }else{
-                    object.objects[0].objects = object.objects.slice(1);
+                    if (object.objects[0].objects.length == 0)
+                        object.objects[0].objects = object.objects.slice(1);
                     return objectToExpr(object.objects[0]);
                 }
             case ELSE:
                 if (object.objects.length == 0) {
                     EConst(CIdent("#ELSE_INVALID"));
                 }else{
-                    object.objects[0].objects = object.objects.slice(1);
+                    if (object.objects[0].objects.length == 0)
+                        object.objects[0].objects = object.objects.slice(1);
                     return objectToExpr(object.objects[0]);
                 }
             case STRING:
                 EConst(CIdent("#STRING " + object.string()));
             case CAST:
                 ECast(objectToExpr(object.objects[0]), HaxeExprTools.stringToComplexType(object.defType));
+            case FUNCTION:
+                objectToExpr(object.objects[object.objects.length - 1]).def;
             default:
                 //throw "not implemented expr: " + object.def;
                 if (!nonImpl.contains(object.def)) nonImpl.push(object.def);
@@ -230,18 +279,21 @@ class ExprParser {
                 v;
             case EConst(CFloat(f, _)):
                 f;
+            case EBlock(_.length => 0):
+                "#EMPTY_EXPR";
             default:
-                throw "not a static expr to convert to a value";
+                throw "not a static expr to convert to a value: " + expr.def;
         }
     }
-    function printObject(object:Object, depth:Int=0) {
+
+    public function printObject(object:Object, depth:Int=0) {
         final tab = [for (i in 0...depth * 4) " "].join("");
         final objectStr = "(" + object.string() + ")";
-        // trace(tab + object.def + "[" + object.defType + " " + object.subType + "]");
+        trace(tab + object.def + "[" + object.defType + " " + object.subType + "]");
         if (object.def == STRING)
-            // trace(tab + "    " + object.string());
+            trace(tab + "    " + object.string());
         for (subObject in object.objects) {
-            // printObject(subObject, depth + 1);
+            printObject(subObject, depth + 1);
         }
     }
 
@@ -260,28 +312,35 @@ class ExprParser {
         // in order to skip over the char (. = cursor)
         // before: .[
         // after:   [.
-
+        // trace(line);
         // Object header not found, jump to next line and try again
         if (objectStartIndex == 0) {
+            var trimmedString = getTrimmedString(line);
+            if (hasSemicolonSuffix(trimmedString)) {
+                // cut off semicolon
+                trimmedString = trimmedString.substr(0, trimmedString.length - 1);
+                stopParser = true;
+            }
+            // trace(stopParser, trimmedString);
             // check if STRING object and same line object
-            final trimmedString = StringTools.ltrim(line.substr(stringIndex));
-            if (lastObject != null&& trimmedString.length > 0) {
+            if (lastObject != null && trimmedString.length > 0) {
                 if (lastObject.lineIndex == lineIndex) {
-                    if (trimmedString == ";") {
-                        // trace("ENDING EXPR PARSER ON LINE (semicolon found): " + line);
-                        return null;
-                    }
-                    final object = Object.fromString(lineIndex, 0, trimmedString);
+                    final object = Object.fromString(lineIndex, 0, trimmedString, debug_path);
                     lastObject.objects.push(object);
                 }else{
                     // Next line arbitrary #STRING, for example: BINOP +
-                    final startIndex = lines[lineIndex].length - trimmedString.length + 1;
-                    final object = Object.fromString(lineIndex, startIndex, trimmedString);
+                    // start index where the first non space char shows up
+                    final startIndex = lines[lineIndex].length - StringTools.ltrim(lines[lineIndex]).length  + 1;
+                    final object = Object.fromString(lineIndex, startIndex, trimmedString, debug_path);
                     // trace(lineIndex, startIndex, trimmedString);
+                    if (stopParser)
+                        return object;
                     nextLine();
                     return object;
                 }
             }
+            if (stopParser)
+                return null;
             nextLine();
             return getObject();
         }
@@ -294,33 +353,64 @@ class ExprParser {
             // trace("ENDING EXPR PARSER ON LINE: " + line);
             return null;
         }
+        var colonIndex = line.indexOf(":", stringIndex);
+        var parentObj = null;
+        if (objectStartIndex > colonIndex) {
+            // special designated expr object such as ObjectDecl
+            // fileName: [CONST] #STRING
+            // etc...
+            var trimmedString = getTrimmedString(line);
+            // recalculate colonIndex based on trimmed string
+            colonIndex -= line.length - trimmedString.length;
+            final startIndex = line.length - trimmedString.length + 1;
+            trimmedString = trimmedString.substr(0, colonIndex);
+            parentObj = Object.fromString(lineIndex, startIndex, trimmedString, debug_path);
+        }
         stringIndex = objectEndIndex + 1;
 
         final objectString = line.substring(objectStartIndex, objectEndIndex);
-        final object = parseObject(objectStartIndex, objectString);
+        final object = parseObjectLine(objectStartIndex, objectString);
+        final setStartingIndex = lastObject != null && lastObject.lineIndex == lineIndex;
+        /*if (lastObject != null) {
+            trace("-----");
+            trace(object.def, object.string(), object.lineIndex, setStartingIndex);
+            trace(lastObject != null, lastObject.lineIndex == lineIndex, parentObj != null);
+            trace("past: " + lastObject.lineIndex);
+            trace("========");
+        }*/
         // check if same line object, if so always link to previous
-        if (lastObject != null && lastObject.lineIndex == lineIndex) {
+        if (setStartingIndex) {
             object.startIndex = lastObject.startIndex + 1;
         }
         lastObject = object;
-        return object;
+        if (parentObj != null) {
+            object.startIndex = lastObject.startIndex + 1;
+            parentObj.objects.push(object);
+            return parentObj;
+        }else{
+            return object;
+        }
     }
     function nextLine() {
         lineIndex++;
         stringIndex = 0;
         return lineIndex < lines.length;
     }
-    private inline function removeSemicolonSuffix(s:String):String {
-        if (s.charAt(s.length - 1) == ";") {
-            return s.substr(0, s.length - 1);
-        }else{
-            return s;
-        }
+
+
+    private inline function hasSemicolonSuffix(s:String):Bool {
+       return s.charAt(s.length - 1) == ";";
     }
-    function parseObject(startIndex:Int, objectString:String):Object {
+
+    function getTrimmedString(line:String) {
+        return StringTools.ltrim(line.substr(stringIndex));
+    }
+
+    function parseObjectLine(startIndex:Int, objectString:String):Object {
         final colonIndex = objectString.indexOf(":", 1);
-        if (colonIndex == -1)
+        if (colonIndex == -1) {
             throw "colon not found for given ObjectString: " + objectString;
+        }
         var defString = objectString.substr(0, colonIndex);
         var defTypeString = objectString.substring(colonIndex + 1);
         final defType = defTypeString;
@@ -332,12 +422,12 @@ class ExprParser {
             defString = objectString.substring(0, spaceIndex);
         }
         final subType = subTypeString;
-        //switch defString {
-        //    case "Meta":
-        //        handleMetaAST();
-        //    default:
-        //}
-        return new Object(defString, defType, lineIndex, startIndex, subType, objectString);
+        switch defString {
+           case "Meta":
+               handleMeta();
+           default:
+        }
+        return new Object(defString, defType, lineIndex, startIndex, subType, objectString, debug_path);
     }
 
     function stringToUnop(un: String):Unop {
@@ -384,11 +474,13 @@ class ExprParser {
                 throw "failed to stringToBinop: " + op;
         }
     }
-
-    function handleMetaAST() {
-        final end = findCloseParen(lineIndex + 1);
-        //trace("REMOVED");
-        final removedLines = lines.splice(lineIndex + 1, end - lineIndex  - 1);
+    function handleMeta() {
+        var end = findCloseParen(lineIndex + 1);
+        // assume meta without parenthesis 
+        if (end == -1) {
+            end = lineIndex + 1;
+        }
+        lines.splice(lineIndex + 1, end - lineIndex  - 1);
     }
 }
 
@@ -401,19 +493,21 @@ class Object {
     public var lineIndex:Int = 0;
     public var startIndex:Int = 0;
     public var objects:Array<Object> = [];
+    public var filePath:String = "";
 
-    public function new(def,defType,lineIndex,startIndex,subType,rawString) {
+    public function new(def,defType,lineIndex,startIndex,subType,rawString, filePath) {
         this.def = def;
         this.defType = defType;
         this.lineIndex = lineIndex;
         this.startIndex = startIndex;
         this.subType = subType;
         this.rawString = rawString;
+        this.filePath = filePath;
     }
     public function string():String
         return rawString;
 
-    public static function fromString(lineIndex, startIndex, s:String):Object {
+    public static function fromString(lineIndex, startIndex, s:String, filePath:String):Object {
         return {
             def: STRING,
             defType: null,
@@ -421,6 +515,7 @@ class Object {
             startIndex: startIndex,
             subType: "",
             rawString: s,
+            filePath: filePath,
         }
     }
 }
@@ -466,6 +561,9 @@ enum abstract ExprDefObject(String) to String {
     var THROW = "Throw";
     var FANON = "FAnon";
     var IDENT = "Ident";
+    var DEFAULT = "Default";
+    var FDYNAMIC = "FDynamic";
+    var TRY = "Try";
     @:from
     static function fromString(s:String) {
         return switch s {
@@ -505,6 +603,9 @@ enum abstract ExprDefObject(String) to String {
             case FANON: FANON;
             case DO: DO;
             case IDENT: IDENT;
+            case DEFAULT: DEFAULT;
+            case FDYNAMIC: FDYNAMIC;
+            case TRY: TRY;
             default:
                 throw "ExprDef not found: " + s;
         }

@@ -25,7 +25,7 @@ class Dump implements IParser {
         final filePaths = parseFolder(path);
         final records = [];
         for (filePath in filePaths) {
-            final parser:RecordParser = {dbg_path: filePath, input: File.getContent(filePath).replace("\r\n", "\n").replace("\r", "\n")};
+            final parser:RecordParser = {dbg_path: filePath, input: Util.normalizeCLRF(File.getContent(filePath))};
             final record = parser.run();
             records.push(record);
         }

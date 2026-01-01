@@ -5,3 +5,4 @@ export/*
 exportTest/*
 *.js
 .DS_Store
+!tests/exprparser/*.txt

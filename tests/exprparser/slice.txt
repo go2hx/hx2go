@@ -1,0 +1,10 @@
+[Function:() -> go.Slice<go.Slice.T>]
+			[Block:Dynamic]
+				[Return:Dynamic]
+					[Call:go.Slice<go.Slice.T>]
+						[Field:() -> go.Slice<go.Slice.T>]
+							[TypeExpr go._Slice.Slice_Impl_:Abstract<go.Slice>]
+							[FStatic:() -> go.Slice<go.Slice.T>]
+								go._Slice.Slice_Impl_
+								_create:() -> _create.T;
+		cf_flags = CfAbstractConstructor CfPostProcessed CfImpl CfModifiesThis CfStatic CfPublic;

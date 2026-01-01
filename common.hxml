@@ -1,0 +1,5 @@
+# haxelib git hxparse https://github.com/Simn/hxparse
+# haxelib git haxeparser https://github.com/HaxeCheckstyle/haxeparser
+-lib hxparse
+-lib haxeparser
+-cp source

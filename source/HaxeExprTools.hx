@@ -77,6 +77,8 @@ class HaxeExprTools {
     public static function stringToComplexType(s:String):ComplexType {
         s = '(_ : $s)';
         final expr = stringToExprDef(s);
+		if (expr == null)
+			return TPath({pack: [], name: "#NULL_COMPLEXTYPE_EXPR"});
         final t:ComplexType = switch expr {
             case EParenthesis({pos: _, expr: ECheckType(_, t)}):
                 t;

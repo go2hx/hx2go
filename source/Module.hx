@@ -37,11 +37,13 @@ class Module {
                 return resolveGlobalDef(module, name);
             default:
         }
-        trace("not resolving def: " + name);
+        trace("not resolving def: " + module + " " + name);
         return null;
     }
 
      public function resolveGlobalDef(module:Module, name:String) {
+        if (module == null)
+            return null;
         for (def in module.defs) {
                 switch def.kind {
                 case TDClass:

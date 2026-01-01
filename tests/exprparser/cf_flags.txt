@@ -1,0 +1,9 @@
+cf_expr = [Function:() -> Void]
+			[Block:Void]
+				[Call:Void]
+					[Field:() -> Void]
+						[TypeExpr Raylib:Class<Raylib>]
+						[FStatic:() -> Void]
+							Raylib
+							CloseWindow:() -> Void;
+cf_flags = CfMaybeUsed CfPostProcessed CfStatic CfPublic;

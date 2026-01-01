@@ -150,6 +150,7 @@ class ExprParser {
             case ARRAYDECL:
                 EArray(objectToExpr(object.objects[0]), objectToExpr(object.objects[1]));
             case NEW:
+                trace(object.objects[0].string());
                 final ct = HaxeExprTools.stringToComplexType(object.objects[0].string());
                 switch ct {
                     case TPath(p):

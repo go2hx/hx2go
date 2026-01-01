@@ -1,5 +1,6 @@
 package;
 
+import haxe.runtime.Copy;
 import haxe.macro.Expr;
 
 enum abstract HaxeExprFlags(Int) from Int to Int {
@@ -21,7 +22,7 @@ class HaxeExpr {
 			parent: deep ? parent.copy() : parent,
 			parentIdx: parentIdx,
 			flags: flags,
-			def: def,
+			def: Copy.copy(def),
 			t: t
 		};
 	}
@@ -364,6 +365,11 @@ typedef HaxeVar = {
 		Metadata associated with the variable, if available.
 	**/
 	var ?meta:Metadata;
+
+	/**
+	    (hx2go internal) If the variable has been annoymised already.
+    **/
+    var ?annonymous:Bool;
 }
 
 /**

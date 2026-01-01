@@ -11,11 +11,11 @@ import go.Fmt;
 class Test {
     public static function main() {
         // Test: Blocks
-        //var resA = {
-        //    var x: Int32 = 5;
-        //    var y: Float32 = 10.0;
-        //    x + y;
-        //};
+        var resA = {
+            var x: Int32 = 5;
+            var y: Float32 = 10.0;
+            x + y;
+        };
 
         //var resB = {
         //    var x: Int32 = 20;

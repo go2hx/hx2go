@@ -46,10 +46,18 @@ class Preprocessor {
             }
 
             // normalise body
+            case EIf(cond, eif, eelse): {
+                ensureParenthesis(cond);
+                ensureBlock(eif);
+                ensureBlock(eelse);
+                iterateExprPost(e, localScope);
+            }
 
             // extract while loop conditional to the body so that extraction makes sense
             case EWhile(cond, body, norm): {
+                ensureParenthesis(cond);
                 ensureBlock(body);
+
                 var expr: HaxeExpr = {
                     t: null,
                     def: EIf(
@@ -265,6 +273,17 @@ class Preprocessor {
         e.def = switch (e.def) {
             case EBlock(_): e.def;
             case _: EBlock([e.copy()]);
+        }
+    }
+
+    public function ensureParenthesis(e: HaxeExpr) {
+        if (e == null) {
+            return;
+        }
+
+        e.def = switch (e.def) {
+            case EParenthesis(_): e.def;
+            case _: EParenthesis(e.copy());
         }
     }
 

@@ -20,6 +20,7 @@ class ExprParser {
     var lastObject:Object = null;
     var debug_path:String = "";
     var nonImpl: Array<String> = [];
+    var stopParser:Bool = false;
     var objectMap:Map<Int, Object> = [];
 
     public function new(debug_path) {
@@ -31,6 +32,7 @@ class ExprParser {
         stringIndex = 0;
         lastObject = null;
         objectMap.clear();
+        stopParser = false;
         nonImpl = [];
     }
 
@@ -53,8 +55,9 @@ class ExprParser {
             final object = getObject();
             if (firstObject == null)
                 firstObject = object;
-            if (object == null)
+            if (object == null) {
                 break;
+            }
             objectMap[object.startIndex] = object;
             // add to another object based on indentation
             if (objectMap.exists(object.startIndex - 1)) {
@@ -64,6 +67,10 @@ class ExprParser {
                 if (firstObject != object) {
                     firstObject.objects.push(object);
                 }
+            }
+            if (stopParser) {
+                stopParser = false;
+                break;
             }
         }
         if (firstObject == null) {
@@ -110,22 +117,30 @@ class ExprParser {
                     // trace(debug_path);
                     // trace(object.string());
                 }
-                ECall(objectToExpr(object.objects[0]), object.objects.slice(1).map(object -> objectToExpr(object)));
+                final e = objectToExpr(object.objects[0]);
+                final params = object.objects.slice(1).map(object -> objectToExpr(object));
+                ECall(e, params);
             case FIELD:
                 if (object.objects.length == 0) {
                     // trace(debug_path);
                     // trace(object.string());
                     // throw "FIELD NEEDS MORE";
                 }
+                final e = objectToExpr(object.objects[0]);
                 final field = exprToValueString(objectToExpr(object.objects[1]));
-                EField(objectToExpr(object.objects[0]), field);
+                EField(e, field);
             case TYPEEXPR:
                 EConst(CIdent(object.subType));
             case FSTATIC:
                 // [FStatic:(s : String) -> Void]
                 // 			fmt
 				// 			println:(s : String) -> Void
-                EConst(CIdent("#UNKNOWN_STATIC"));
+                if (object.objects.length <= 1) {
+                    trace(object.string());
+                    trace(object.filePath);
+                    trace(object.objects.length);
+                    trace(object.objects[0].string());
+                }
                 var field = object.objects[1].string();
                 final colonIndex = field.indexOf(":");
                 if (colonIndex == -1)
@@ -163,7 +178,11 @@ class ExprParser {
                 null;
             case UNOP:
                 // TODO unop, and postFix, not implemented
-                EUnop(stringToUnop(object.objects[0].string()), object.objects[1].string() != "Prefix", objectToExpr(object.objects[2]));
+                if (object.objects.length != 3) {
+                    emptyExpr().def;
+                }else{
+                    EUnop(stringToUnop(object.objects[0].string()), object.objects[1].string() != "Prefix", objectToExpr(object.objects[2]));
+                }
             case ARRAY:
                 null;
             case ARRAYDECL:
@@ -260,8 +279,10 @@ class ExprParser {
                 v;
             case EConst(CFloat(f, _)):
                 f;
+            case EBlock(_.length => 0):
+                "#EMPTY_EXPR";
             default:
-                throw "not a static expr to convert to a value";
+                throw "not a static expr to convert to a value: " + expr.def;
         }
     }
 
@@ -291,20 +312,16 @@ class ExprParser {
         // in order to skip over the char (. = cursor)
         // before: .[
         // after:   [.
-        trace(line);
+        // trace(line);
         // Object header not found, jump to next line and try again
         if (objectStartIndex == 0) {
             var trimmedString = getTrimmedString(line);
-            var stopParser = false;
             if (hasSemicolonSuffix(trimmedString)) {
                 // cut off semicolon
                 trimmedString = trimmedString.substr(0, trimmedString.length - 1);
                 stopParser = true;
             }
-            if (trimmedString == ";") {
-                // trace("ENDING EXPR PARSER ON LINE (semicolon found): " + line);
-                stopParser = true;
-            }
+            // trace(stopParser, trimmedString);
             // check if STRING object and same line object
             if (lastObject != null && trimmedString.length > 0) {
                 if (lastObject.lineIndex == lineIndex) {
@@ -312,9 +329,12 @@ class ExprParser {
                     lastObject.objects.push(object);
                 }else{
                     // Next line arbitrary #STRING, for example: BINOP +
-                    final startIndex = lines[lineIndex].length - trimmedString.length + 1;
+                    // start index where the first non space char shows up
+                    final startIndex = lines[lineIndex].length - StringTools.ltrim(lines[lineIndex]).length  + 1;
                     final object = Object.fromString(lineIndex, startIndex, trimmedString, debug_path);
                     // trace(lineIndex, startIndex, trimmedString);
+                    if (stopParser)
+                        return object;
                     nextLine();
                     return object;
                 }

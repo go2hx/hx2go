@@ -1,0 +1,25 @@
+-cp source
+-m Main
+# haxelib git hxparse https://github.com/Simn/hxparse
+# haxelib git haxeparser https://github.com/HaxeCheckstyle/haxeparser
+-lib hxparse
+-lib haxeparser
+--dce full
+-D hx2go-main=Test
+-D build-go
+-D run-go
+-D HXCPP_TRACY
+-D HXCPP_TELEMETRY
+-D HXCPP_TELEMETRY
+-D HXCPP_STACK_TRACE
+-D HXCPP_STACK_LINE
+-D HXCPP_TRACY_MEMORY
+-D HXCPP_TRACY_NO_EXIT
+-D HXCPP_DEBUG_LINK
+-D output=export
+#-lib hxnodejs
+#--js compile.js
+#--cmd node compile.js
+--cpp bin
+#-hl compile.c
+#--cmd hl compile.hl

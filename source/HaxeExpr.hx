@@ -24,7 +24,7 @@ class HaxeExpr {
 			parent: deep ? parent.copy() : parent,
 			parentIdx: parentIdx,
 			flags: flags,
-			def: Copy.copy(def),
+			def: def,
 			t: t
 		};
 	}

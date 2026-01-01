@@ -22,7 +22,6 @@ enum RecordEntryKind {
 /**
  * Shared across both Class and Abstract
  */
-@:structInit
 class RecordEntry {
     public var record_kind: RecordEntryKind = RUnknown;
     public var record_debug_path: String;
@@ -39,9 +38,9 @@ class RecordEntry {
     public function toAbstract(): RecordAbstract return cast (this, RecordAbstract);
     public function toType():RecordType return cast (this, RecordType);
     public function toEnum():RecordEnum return cast (this, RecordEnum);
+    public function new() {}
 }
 
-@:structInit
 class RecordClass extends RecordEntry {
     public var flags: Array<String> = [];
     public var kind: Null<String> = null;
@@ -49,22 +48,17 @@ class RecordClass extends RecordEntry {
     public var _implements: Array<String> = [];
     public var array_access: Null<String> = null;
     public var init: Null<String> = null;
-    public var constructor: Null<String> = null;
+    public var constructor: Map<String, Dynamic> = null;
     public var ordered_fields: Array<RecordClassField> = [];
     public var ordered_statics: Array<RecordClassField> = [];
 }
 
-@:structInit
 class RecordType extends RecordEntry {
     public var type:String = "";
 }
 
-@:structInit
-class RecordEnum extends RecordEntry {
+class RecordEnum extends RecordEntry {}
 
-}
-
-@:structInit
 class RecordAbstract extends RecordEntry {
     public var ops: Array<Dynamic> = [];
     public var unops: Array<Dynamic> = [];
@@ -80,7 +74,6 @@ class RecordAbstract extends RecordEntry {
     public var _default: Null<String> = null;
 }
 
-@:structInit
 class RecordClassField {
     public var name: Null<String> = null;
     public var doc: Null<String> = null;
@@ -479,13 +472,14 @@ class RecordParser {
         // }
 
         var inst = Type.createEmptyInstance(concrete);
+        var fields = Type.getInstanceFields(Type.getClass(inst));
         for (key in map.keys()) {
             var field = key.split("_").slice(1).join("_");
             if (remapConcrete.exists(field)) {
                 field = remapConcrete.get(field);
             }
 
-            if (Reflect.hasField(inst, field)) Reflect.setField(inst, field, map.get(key));
+            if (fields.contains(field)) Reflect.setField(inst, field, map.get(key));
         }
 
         return inst;

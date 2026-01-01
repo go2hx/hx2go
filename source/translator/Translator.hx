@@ -28,7 +28,7 @@ class Translator {
             return "#NULL_TRANSLATED_EXPR";
         if (e.def != null)
             return switch e.def {
-                case EGoCode(format, exprs, _):
+                case EGoCode(format, exprs):
                     GoCode.translateGoCode(this, format, exprs);
                 case EGoSliceConstruct(ct):
                     GoSliceConstruct.translateGoSliceConstruct(this, ct);

@@ -30,6 +30,8 @@ function resolveExpr(t:Transformer, e2:HaxeExpr): Bool {
     var topLevel = false;
     var isNative = false;
 
+    if (ct == null)
+        return false;
     switch ct {
         case TPath(p):
             if (p.name == "Class" && p.pack.length == 0)

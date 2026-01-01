@@ -10,6 +10,13 @@ enum ExprKind {
 
 class Semantics {
 
+    /**
+     * Given the expression `expr` this function will return one of the following cases:
+     * Stmt - Something that can only be used as a statement, like `EVars(...)`
+     * Expr - Something that can only be used as an expression.
+     * EitherKind - Something that can be used in the place of both, like `ECall(...)`
+     * @param expr Input expression
+     */
     public static function getExprKind(expr: HaxeExpr): ExprKind {
         return switch expr.def {
             case EBlock(_), EVars(_), EWhile(_, _, _), EIf(_, _, _), EReturn(_), EBinop(OpAssignOp(_), _, _), EBinop(OpAssign, _, _), EUnop(OpIncrement, _, _), EUnop(OpDecrement, _, _), EBreak: Stmt;
@@ -19,6 +26,10 @@ class Semantics {
         }
     }
 
+    /**
+     * Will check if the given expression `expr` has side effects.
+     * @param expr The expression to recursively check for side effects.
+     */
     public static function hasSideEffects(expr: HaxeExpr): Bool {
         return switch expr.def {
             // TODO: we always assume ECall(...) has side effects, even if that is not the case. If we were to introduce a lookup then the preprocessor can't parralelise per unit (dump file)...
@@ -41,6 +52,11 @@ class Semantics {
         }
     }
 
+    /**
+     * Checks if `p` can hold `expr`
+     * @params p The parent which holds `expr`
+     * @param expr The expression or statement held in `p`
+     */
     public static function canHold(p: HaxeExpr, expr: HaxeExpr): Bool {
         return switch getExprKind(expr) {
             case Stmt: canHoldStmt(p);
@@ -49,6 +65,10 @@ class Semantics {
         }
     }
 
+    /**
+     * Checks if the given `expr` can hold a statement.
+     * @param The input expression.
+     */
     public static function canHoldStmt(expr: HaxeExpr): Bool {
         return switch expr.def {
             case EBlock(_), EWhile(_), EIf(_): true;
@@ -56,6 +76,10 @@ class Semantics {
         }
     }
 
+    /**
+     * Checks if the given `expr` can hold an expression.
+     * @param The input expression.
+     */
     public static function canHoldExpr(expr: HaxeExpr): Bool {
         return switch expr?.def {
             case EBlock(_): false;

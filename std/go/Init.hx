@@ -1,5 +1,5 @@
 package go;
-#if macro
+#if (macro && !go)
 import haxe.macro.PlatformConfig;
 import haxe.macro.Compiler;
 import haxe.macro.Context;
@@ -54,7 +54,7 @@ class Init {
                 tmpMainSubPaths.push(mainClass.sub);
             final mainString = mainClass.pack.concat(tmpMainSubPaths).join(".");
             final outputString = Compiler.getOutput();
-            Sys.println("Haxe compilation time: " + (Timer.stamp() - stamp));
+            std.Sys.println("Haxe compilation time: " + (Timer.stamp() - stamp));
             var command = "haxe compile.hxml -D hx2go-main=\"" + mainString + "\" -D output=" + outputString;
             if (runGoDefine != null) {
                 command += " -D run-go";
@@ -62,7 +62,7 @@ class Init {
 			 if (buildGoDefine != null) {
                 command += " -D build-go";
             }
-            Sys.command(command);
+            std.Sys.command(command);
         });
     }
 }

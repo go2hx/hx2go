@@ -1,4 +1,5 @@
 -D dump-dependencies
 -D no-compilation
 -D dump=record
+-cp std
 -D hx2go

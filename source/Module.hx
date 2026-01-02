@@ -36,6 +36,8 @@ class Module {
                 final module = context.getModule("StdTypes");
                 return resolveGlobalDef(module, name);
             default:
+                final sameNameModule = context.getModule(name);
+                return resolveGlobalDef(sameNameModule, name);
         }
         trace("not resolving def: " + module + " " + name);
         return null;
@@ -48,11 +50,12 @@ class Module {
                 switch def.kind {
                 case TDClass:
                     if (def.name == name)
-                    return def;
+                        return def;
                 default:
             }
         }
-        throw "not resolving def: " + name;
+        trace("WARNING not resolving def: " + name);
+        return null;
     }
 
     public function resolveClass(pack:Array<String>, name:String):HaxeTypeDefinition {

@@ -140,5 +140,13 @@ class Test {
         n = 5; go.Fmt.Println(n, n++, n);
         n = 5; go.Fmt.Println(n, n += 5, n);
         n = 5; go.Fmt.Println(n, n + 5, n);
+
+        // Test: Short circuiting
+        var s1 = 0;
+        var s2 = 0;
+        if (s1 == 100 && ++s2 < 100) {
+            go.Fmt.Println("should never reach!!");
+        }
+        go.Fmt.Println("should be zero", s2);
     }
 }

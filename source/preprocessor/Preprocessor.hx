@@ -36,8 +36,11 @@ class Preprocessor {
         }
 
         switch e.def {
+            // defaults
+            case EBinop(OpAssign | OpAssignOp(_), _, _): iterateExprPost(e, scope);
+
             // ensure semantics
-            case EBinop(op, e0, e1) if (op != OpAssign && !op.match(OpAssignOp(_))): Semantics.ensure(e, [e0, e1], this, scope);
+            case EBinop(_, e0, e1): Semantics.ensure(e, [e0, e1], this, scope);
             case ECall(_, params): Semantics.ensure(e, params, this, scope);
 
             // apply var alias

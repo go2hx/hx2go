@@ -5,7 +5,7 @@ import translator.Translator;
 import HaxeExpr;
 
 function translateBinop(t:Translator, op:Binop, e1:HaxeExpr, e2:HaxeExpr) {
-    return t.translateExpr(e1) + printBinop(op) + t.translateExpr(e2);
+    return t.translateExpr(e1) + ' ' + printBinop(op) + ' ' + t.translateExpr(e2); // the spaces are very important, perhaps we should wrap them in parenthesis?
 }
 
 private function printBinop(op:Binop) {

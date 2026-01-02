@@ -29,18 +29,55 @@ class Semantics {
 			return;
 		}
 
-		var idx = 0;
-		for (c in children) {
-		    if (c?.def == null) continue;
-			if (goingToMutate(c, p)) ctx.processExpr(c, scope);
-			else if (!isConstant(c)) {
-				var tmp = ctx.annonymiser.assign(c.copy());
-				ctx.insertExprsBefore([tmp.decl], p, scope);
-				ctx.processExpr(tmp.decl, scope);
+		switch p.def {
+            case EBinop(OpBoolAnd, e1, e2): // `a && b` -> `(if (a) b else false)`
+                p.def = EIf(
+                    {
+                        t: null,
+                        def: EBinop(OpEq, e1, {
+                            t: null,
+                            def: EConst(CIdent('true'))
+                        })
+                    },
+                    e2, {
+                        t: null,
+                        def: EConst(CIdent('false'))
+                    }
+                );
 
-				c.def = tmp.ident.def;
-			}
-		}
+                ctx.processExpr(p, scope);
+
+            case EBinop(OpBoolOr, e1, e2): // `a || b` -> `(if (a) true else b)`
+                p.def = EIf(
+                    {
+                        t: null,
+                        def: EBinop(OpEq, e1, {
+                            t: null,
+                            def: EConst(CIdent('true'))
+                        })
+                    },
+                    {
+                        t: null,
+                        def: EConst(CIdent('true'))
+                    }, e2
+                );
+
+                ctx.processExpr(p, scope);
+
+            default: // any other expression (example: `x(a, b)` -> `$1 = a; $2 = b; x($1, $2);`)
+                var idx = 0;
+                for (c in children) {
+                    if (c?.def == null) continue;
+                    if (goingToMutate(c, p)) ctx.processExpr(c, scope);
+                    else if (!isConstant(c)) {
+                        var tmp = ctx.annonymiser.assign(c.copy());
+                        ctx.insertExprsBefore([tmp.decl], p, scope);
+                        ctx.processExpr(tmp.decl, scope);
+
+                        c.def = tmp.ident.def;
+                    }
+                }
+        }
 	}
 
 	/**

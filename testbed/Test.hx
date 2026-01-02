@@ -141,12 +141,22 @@ class Test {
         n = 5; go.Fmt.Println(n, n += 5, n);
         n = 5; go.Fmt.Println(n, n + 5, n);
 
-        // Test: Short circuiting
+        // Test: Short circuiting (and)
         var s1 = 0;
         var s2 = 0;
         if (s1 == 100 && ++s2 < 100) {
-            go.Fmt.Println("should never reach!!");
+            go.Fmt.Println("AND branch reached");
         }
+
         go.Fmt.Println("should be zero", s2);
+
+        // Test: Short circuiting (or)
+        var s3 = 0;
+        var s4 = 0;
+        if (s3 < s4 || s4++ < 100) {
+            go.Fmt.Println("OR branch reached");
+        }
+
+        go.Fmt.Println("s4 value", s4);
     }
 }

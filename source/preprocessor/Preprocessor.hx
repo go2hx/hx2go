@@ -112,6 +112,11 @@ class Preprocessor {
 
         switch copy.def {
             case EBlock(exprs): { // annonymise -> get last -> iterate over exprs -> insert exprs -> (iterate over last)
+                if (exprs.length == 0) {
+                    iterateExprPost(result, scope);
+                    return result;
+                }
+
                 annonymiser.annonymise(copy);
 
                 var last = exprs.pop();

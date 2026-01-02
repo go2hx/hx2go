@@ -20,6 +20,7 @@ class Semantics {
 	public static function ensure(p:HaxeExpr, children:Array<HaxeExpr>, ctx:Preprocessor, scope:Scope):Void {
 		var willMutate = false;
 		for (c in children) {
+		    if (c?.def == null) continue;
 			willMutate = willMutate || hasSideEffects(c) || goingToMutate(c, p);
 		}
 
@@ -30,6 +31,7 @@ class Semantics {
 
 		var idx = 0;
 		for (c in children) {
+		    if (c?.def == null) continue;
 			if (goingToMutate(c, p)) ctx.processExpr(c, scope);
 			else if (!isConstant(c)) {
 				var tmp = ctx.annonymiser.assign(c.copy());
@@ -62,6 +64,7 @@ class Semantics {
 		var res = !canHold(parent, e);
 
 		HaxeExprTools.iter(e, (l) -> {
+		    if (l?.def == null) return;
 			res = res || goingToMutate(l, e);
 		});
 

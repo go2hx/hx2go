@@ -25,47 +25,57 @@ function transformFieldAccess(t:Transformer, e:HaxeExpr) {
 
 function resolveExpr(t:Transformer, e2:HaxeExpr): Bool {
     // TODO: check go.native on $field
-    final ct = HaxeExprTools.stringToComplexType(e2.t);
-    var renamedIdent = "";
-    var topLevel = false;
-    var isNative = false;
-
-    if (ct == null)
+    if (e2.t == null) {
+        trace('null e2.t');
         return false;
-    switch ct {
-        case TPath(p):
-            if (p.name == "Class" && p.pack.length == 0)
-                switch p.params[0] {
-                    case TPType(TPath(p)):
-                        final td = t.module.resolveClass(p.pack, p.name);
-                        if (td != null) {
-                            for (meta in td.meta()) {
-                                switch meta.name {
-                                case ":go.package":
-                                    // import
-                                    t.def.addGoImport(t.exprToString(meta.params[0]));
-                                    isNative = true;
-                                case ":go.native":
-                                    // rename
-                                    renamedIdent = t.exprToString(meta.params[0]);
-                                    isNative = true;
-                                case ":go.toplevel":
-                                    // used for T() calls, removes "$a." in "$a.$b"
-                                    renamedIdent = "";
-                                    topLevel = true;
-                                    isNative = true;
-                                }
-                            }
-                        }
-                    default:
-                }
-        default:
     }
 
-    if (renamedIdent != "" || topLevel)
-        e2.remapTo = renamedIdent;
+    try {
+        final ct = HaxeExprTools.stringToComplexType(e2.t);
+        var renamedIdent = "";
+        var topLevel = false;
+        var isNative = false;
 
-    return isNative; // TODO: check if class is extern
+        if (ct == null)
+            return false;
+        switch ct {
+            case TPath(p):
+                if (p.name == "Class" && p.pack.length == 0)
+                    switch p.params[0] {
+                        case TPType(TPath(p)):
+                            final td = t.module.resolveClass(p.pack, p.name);
+                            if (td != null) {
+                                for (meta in td.meta()) {
+                                    switch meta.name {
+                                    case ":go.package":
+                                        // import
+                                        t.def.addGoImport(t.exprToString(meta.params[0]));
+                                        isNative = true;
+                                    case ":go.native":
+                                        // rename
+                                        renamedIdent = t.exprToString(meta.params[0]);
+                                        isNative = true;
+                                    case ":go.toplevel":
+                                        // used for T() calls, removes "$a." in "$a.$b"
+                                        renamedIdent = "";
+                                        topLevel = true;
+                                        isNative = true;
+                                    }
+                                }
+                            }
+                        default:
+                    }
+            default:
+        }
+
+        if (renamedIdent != "" || topLevel)
+            e2.remapTo = renamedIdent;
+
+        return isNative; // TODO: check if class is extern
+    } catch (e) {
+        trace('parsing type failed', e);
+        return false;
+    }
 }
 
 function resolvePkgTransform(t:Transformer, e:HaxeExpr, e2:HaxeExpr, field: String, kind: EFieldKind): Bool {

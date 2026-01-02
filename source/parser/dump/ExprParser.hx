@@ -122,9 +122,9 @@ class ExprParser {
                 ECall(e, params);
             case FIELD:
                 if (object.objects.length == 0) {
-                    // trace(debug_path);
-                    // trace(object.string());
-                    // throw "FIELD NEEDS MORE";
+                    trace(debug_path);
+                    trace(object.string());
+                    throw "FIELD NEEDS MORE";
                 }
                 final e = objectToExpr(object.objects[0]);
                 final field = exprToValueString(objectToExpr(object.objects[1]));
@@ -188,7 +188,6 @@ class ExprParser {
             case ARRAYDECL:
                 EArray(objectToExpr(object.objects[0]), objectToExpr(object.objects[1]));
             case NEW:
-                trace(object.objects[0].string());
                 final ct = HaxeExprTools.stringToComplexType(object.objects[0].string());
                 switch ct {
                     case TPath(p):
@@ -200,6 +199,10 @@ class ExprParser {
                 final fields:Array<HaxeObjectField> = [];
                 for (obj in object.objects) {
                     final fieldName = obj.string();
+                    // shift object decl string back to field "field": value if multiple objects found connected to string
+                    if (obj.objects.length > 1) {
+                        obj.objects[0].objects = obj.objects.slice(1);
+                    }
                     fields.push({
                         field: fieldName,
                         expr: objectToExpr(obj.objects[0]),
@@ -290,9 +293,10 @@ class ExprParser {
     public function printObject(object:Object, depth:Int=0) {
         final tab = [for (i in 0...depth * 4) " "].join("");
         final objectStr = "(" + object.string() + ")";
-        trace(tab + object.def + "[" + object.defType + " " + object.subType + "]");
+        var str = tab + object.def + "[" + object.defType + " " + object.subType + "]";
         if (object.def == STRING)
-            trace(tab + "    " + object.string());
+            str += " " + object.string();
+        trace(str);
         for (subObject in object.objects) {
             printObject(subObject, depth + 1);
         }

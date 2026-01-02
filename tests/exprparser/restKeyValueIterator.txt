@@ -1,0 +1,14 @@
+[Function:() -> { value : haxe.iterators.RestKeyValueIterator.T, key : Int }]
+			[Block:Dynamic]
+				[Return:Dynamic]
+					[ObjectDecl:{ key : Int }]
+						key: [Field:Int]
+							[Const:haxe.iterators.RestKeyValueIterator<haxe.iterators.RestKeyValueIterator.T>] this
+							[FInstance:Int]
+								haxe.iterators.RestKeyValueIterator<haxe.iterators.RestKeyValueIterator.T>
+								current:Int
+						value: [Array:haxe.iterators.RestKeyValueIterator.T]
+							[Const:haxe.iterators.RestKeyValueIterator<haxe.iterators.RestKeyValueIterator.T>] this
+							[FInstance:Int]
+								haxe.iterators.RestKeyValueIterator<haxe.iterators.RestKeyValueIterator.T>
+								current:Int

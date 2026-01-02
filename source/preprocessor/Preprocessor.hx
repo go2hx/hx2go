@@ -20,8 +20,7 @@ class Preprocessor {
             return;
         }
 
-        var localScope: Scope = {};
-        iterateExprPre(e, localScope);
+        iterateExprPre(e, scope);
 
         if (!Semantics.canHold(e.parent, e)) {
             var res = switch Semantics.getExprKind(e) {
@@ -35,14 +34,26 @@ class Preprocessor {
 
         switch e.def {
             // ensure semantics
-            case EBinop(op, e0, e1) if (op != OpAssign && !op.match(OpAssignOp(_))): Semantics.ensure(e, [e0, e1], this, localScope);
-            case ECall(_, params): Semantics.ensure(e, params, this, localScope);
+            case EBinop(op, e0, e1) if (op != OpAssign && !op.match(OpAssignOp(_))): Semantics.ensure(e, [e0, e1], this, scope);
+            case ECall(_, params): Semantics.ensure(e, params, this, scope);
+
+            // apply var alias
+            case EConst(CIdent(name)): e.def = EConst(CIdent(scope.getAlias(name)));
+
+            // register var alias
+            case EVars(vars): {
+                iterateExprPost(e, scope);
+
+                for (v in vars) {
+                    v.name = scope.defineVariable(v.name, this);
+                }
+            }
 
             // prefix unop inc/dec as stmt
             // we do not care about the result so we transform it to a postFix unop
             case EUnop(op, false, l) if (op == OpIncrement || op == OpDecrement): {
                 e.def = EUnop(op, true, l);
-                iterateExprPost(e, localScope);
+                iterateExprPost(e, scope);
             }
 
             // normalise body
@@ -50,7 +61,7 @@ class Preprocessor {
                 ensureParenthesis(cond);
                 ensureBlock(eif);
                 ensureBlock(eelse);
-                iterateExprPost(e, localScope);
+                iterateExprPost(e, scope.copy());
             }
 
             // extract while loop conditional to the body so that extraction makes sense
@@ -78,17 +89,16 @@ class Preprocessor {
                     )
                 };
 
-                insertExprs([ expr ], body, 0, localScope);
-                processExpr(expr, scope);
+                insertExprs([ expr ], body, 0, scope);
+                processExpr(body, scope.copy());
 
                 cond.def = null;
             }
 
             // default
-            case _: iterateExprPost(e, localScope);
+            case _: iterateExprPost(e, scope);
         }
 
-        localScope.finalise();
         e.flags |= Processed;
     }
 
@@ -106,6 +116,8 @@ class Preprocessor {
 
                 last.parent = result.parent;
                 last.parentIdx = result.parentIdx;
+                processExpr(last, scope);
+
                 result = last;
             };
 
@@ -215,7 +227,6 @@ class Preprocessor {
 
                 var scope: Scope = {};
                 processExpr(field.expr, scope);
-                scope.finalise();
             }
         }
     }

@@ -51,9 +51,15 @@ class Test {
         while (q < 10) q++;
 
         // Test: Shadowing
-        //var shadow = 0; shadow = 5;
-        //var shadow = 3; shadow = 8;
-        //var shadow = true; shadow = false;
+        var shadow = 5; shadow = 0;
+        var shadow = 8; shadow = 3;
+        var shadow = false; shadow = true;
+        var shadow = {
+            var shadow = 0; shadow = 5;
+            var shadow = 3; shadow = 8;
+            var shadow = true; shadow = false;
+        }
+        go.Fmt.Println(shadow);
 
         // Test: Pointers
         var valA: Int32 = 5;

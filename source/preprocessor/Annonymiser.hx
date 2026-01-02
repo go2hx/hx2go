@@ -57,6 +57,13 @@ class Annonymiser {
     }
 
     /**
+     * Allocates a unique ID
+     */
+    public function allocId(): Int {
+        return _tempId++;
+    }
+
+    /**
      * Creates a new temporary, registers it in the mapping and returns the name
      * @param original The original name of the variable.
      * @param mapping The mapping in which aliases are stored.

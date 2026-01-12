@@ -19,6 +19,8 @@ class Translator {
                 }else{
                     p.pack.join(".") + p.name;
                 }
+            case TFunction(args, ret):
+                "func(" + args.map(arg -> translateComplexType(arg)).join(", ") + ")" + translateComplexType(ret);
             default:
                 throw "unknown ct for translateComplexType: " + ct;
         }
@@ -60,7 +62,10 @@ class Translator {
                     Cast.translateCast(this, e, t);
                 case EBreak:
                     Break.translateBreak(this);
+                case EFunction(kind, f):
+                    translator.exprs.Function.translateFunction(this, "", f);
                 default:
+                    //trace("UNKNOWN EXPR TO TRANSLATE:" + e.def);
                     "_ = 0";
             }
         return "";
@@ -73,18 +78,23 @@ class Translator {
 
         for (field in def.fields) {
             final name = toPascalCase(field.name);
-            var expr = "";
-            if (field.expr != null) {
-                expr = translateExpr(field.expr);
-            }
+            final expr:HaxeExpr = field.expr;
 
             switch field.kind {
-                case FFun(f):
-                    buf.add('func $name() $expr\n');
+                case FFun({params: params}):
+                    switch expr.def {
+                        case EFunction(kind, f):
+                            // pass on the params
+                            f.params = params;
+                            buf.add(translator.exprs.Function.translateFunction(this, name, f));
+                        default:
+                            trace(field.name);
+                            throw "expr.def is not EFunction: " + expr.def;
+                    }
                 case FVar:
                     buf.add('var $name');
                     if (expr != null)
-                        buf.add(expr);
+                        buf.add(translateExpr(expr));
                     buf.add("\n");
                 case FProp(get, set):
                     buf.add('//FPROP\nvar $name');

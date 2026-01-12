@@ -17,6 +17,8 @@ function run() {
     assert(haxeExpr != null, true);
     assert(haxeExpr.def != null, true);
     switch haxeExpr.def {
+        case EFunction(kind, f):
+    switch f.expr.def {
         case EBlock(exprs):
             assert(exprs.length, 1);
             switch exprs[0].def {
@@ -38,4 +40,8 @@ function run() {
         default:
             assert("haxeExpr wrong def type: " + haxeExpr.def, "");
     }
+    default:
+         assert("haxeExpr wrong def type: " + haxeExpr.def, "");
+
+}
 }

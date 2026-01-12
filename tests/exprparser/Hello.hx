@@ -5,12 +5,18 @@ import parser.dump.ExprParser;
 
 function run() {
     final parser = new ExprParser("DEBUG");
-    final haxeExpr = parser.parse(Util.normalizeCLRF(File.getContent("tests/exprparser/hello.txt")).split("\n"));
+    final lines = Util.normalizeCLRF(File.getContent("tests/exprparser/hello.txt")).split("\n");
+    final obj = parser.parseObject(lines);
+    parser.printObject(obj);
+    parser.reset();
+    final haxeExpr = parser.parse(lines);
     assert(haxeExpr != null, true);
     assert(haxeExpr.def != null, true);
     // goes through the entire expr and makes sure it is exactly equal to:
     // trace("hello")
     switch haxeExpr.def {
+    case EFunction(kind, f):
+    switch f.expr.def {
         case EBlock(exprs):
             assert(exprs.length, 1);
             if (exprs.length == 1)
@@ -46,4 +52,7 @@ function run() {
         default:
             assert("haxeExpr wrong def type: " + haxeExpr.def, "");
     }
+    default:
+        assert("haxeExpr wrong def type: " + haxeExpr.def, "");
+}
 }

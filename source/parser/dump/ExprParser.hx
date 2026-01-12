@@ -104,8 +104,8 @@ class ExprParser {
     }
     function objectToExpr(object:Object):HaxeExpr {
         if (object == null) {
-            trace('obj should not be null!');
-            return { t: null, def: EBlock([]) };
+            throw ('obj should not be null!');
+            return { t: null, def: EBlock([])};
         }
 
         final def:HaxeExprDef = switch object.def {
@@ -168,7 +168,7 @@ class ExprParser {
                 return objectToExpr(object.objects[object.objects.length - 1]);
             case ARG:
                 // TODO add arg info
-                null;
+                throw "not allowed to have arg converted to expr";
             case RETURN:
                 EReturn(objectToExpr(object.objects[0]));
             case BINOP:
@@ -186,7 +186,7 @@ class ExprParser {
             case ARRAY:
                 null;
             case ARRAYDECL:
-                EArray(objectToExpr(object.objects[0]), objectToExpr(object.objects[1]));
+                EArrayDecl(object.objects.map(obj -> objectToExpr(obj)));
             case NEW:
                 final ct = HaxeExprTools.stringToComplexType(object.objects[0].string());
                 switch ct {
@@ -231,7 +231,8 @@ class ExprParser {
             case FOR:
                 EFor(objectToExpr(object.objects[0]), objectToExpr(object.objects[1]));
             case IF:
-                EIf(objectToExpr(object.objects[0]), objectToExpr(object.objects[1]), object.objects.length <= 2 ? null : objectToExpr(object.objects[2]));
+                final eelse = object.objects.length <= 2 ? null : objectToExpr(object.objects[2]);
+                EIf(objectToExpr(object.objects[0]), objectToExpr(object.objects[1]), eelse);
             case THEN:
                 if (object.objects.length == 0) {
                     EConst(CIdent("#THEN_INVALID"));
@@ -253,7 +254,21 @@ class ExprParser {
             case CAST:
                 ECast(objectToExpr(object.objects[0]), HaxeExprTools.stringToComplexType(object.defType));
             case FUNCTION:
-                objectToExpr(object.objects[object.objects.length - 1]).def;
+                final args:Array<HaxeFunctionArg> = [];
+                if (object.objects.length == 2) {
+                    // TODO
+                    // only allow functions to have max 1 arg for now
+                    final name = object.objects[0].subType.substr(0, object.objects[0].subType.indexOf("<"));
+                    args.push({
+                        name: name,
+                        type: HaxeExprTools.stringToComplexType(object.objects[0].defType),
+                    });
+                }
+                EFunction(null, {
+                    args: args,
+                    expr: objectToExpr(object.objects[object.objects.length - 1]),
+                });
+                //objectToExpr(object.objects[object.objects.length - 1]).def;
             default:
                 //throw "not implemented expr: " + object.def;
                 if (!nonImpl.contains(object.def)) nonImpl.push(object.def);

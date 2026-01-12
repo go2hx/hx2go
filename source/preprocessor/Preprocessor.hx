@@ -25,7 +25,7 @@ class Preprocessor {
 
         iterateExprPre(e, scope);
 
-        if (!Semantics.canHold(e.parent, e)) {
+        if (e.parent != null && !Semantics.canHold(e.parent, e)) {
             var res = switch Semantics.getExprKind(e) {
                 case Expr: toStmt(e, scope); // expr -> stmt (by `_ = expr`)
                 case Stmt: toExpr(e, scope); // stmt -> expr (by kind-specific extraction)
@@ -263,7 +263,7 @@ class Preprocessor {
                     if (field?.expr?.def == null)
                         field.expr = {
                             t: null,
-                            def: EBlock([]),
+                            def: EFunction(null, {expr: {def: EBlock([]), t: ""}, args: []}),
                         };
 
                 case _: null;
@@ -274,7 +274,12 @@ class Preprocessor {
                 field.expr.parentIdx = 0;
 
                 var scope: Scope = {};
-                processExpr(field.expr, scope);
+                switch field.expr.def {
+                    case EFunction(_, f):
+                        processExpr(f.expr, scope);
+                    default:
+                        processExpr(field.expr, scope);
+                }
             }
         }
     }
@@ -296,6 +301,9 @@ class Preprocessor {
     }
 
     public function insertExprs(exprs: Array<HaxeExpr>, into: HaxeExpr, at: Int, scope: Scope) {
+        // TODO remove?
+        if (into == null)
+            return;
         var arr = switch (into.def) {
             case EBlock(x): x;
             case _: null;

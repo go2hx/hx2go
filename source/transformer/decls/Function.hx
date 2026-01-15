@@ -1,9 +1,10 @@
 package transformer.decls;
 
 import HaxeExpr.HaxeFunction;
-import HaxeExpr.HaxeField;
-import translator.Translator;
+import translator.TranslatorTools;
 
-function typeFunction(t:Transformer, name:String, f:HaxeFunction) {
-    
+function transformFunction(t:Transformer, name:String, f:HaxeFunction) {
+    for (arg in f.args) {
+        t.transformComplexType(arg.type);
+    }
 }

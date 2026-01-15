@@ -81,11 +81,9 @@ class Translator {
             final expr:HaxeExpr = field.expr;
 
             switch field.kind {
-                case FFun({params: params}):
+                case FFun(_):
                     switch expr.def {
                         case EFunction(kind, f):
-                            // pass on the params
-                            f.params = params;
                             buf.add(translator.exprs.Function.translateFunction(this, name, f));
                         default:
                             trace(field.name);

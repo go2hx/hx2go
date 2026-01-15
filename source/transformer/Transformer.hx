@@ -75,7 +75,14 @@ class Transformer {
                     return;
                 final td = module.resolveClass(p.pack, p.name);
                 if (td == null) {
-                    trace('td is null in transformComplexType for' + ct);
+                    // check if function generic
+                    if (p.pack.length == 1) {
+                        if (module.canResolveLocalTypeParam(p.pack[0], p.name)) {
+                            p.pack = [];
+                        }
+                    }else{
+                        trace('td is null in transformComplexType for' + ct);
+                    }
                     return;
                 }
 
@@ -157,8 +164,14 @@ class Transformer {
             return;
         for (field in def.fields) {
             switch field.kind {
-                case FFun(f):
-                    transformer.decls.Function.typeFunction(this, field.name, f);
+                case FFun({params: params}):
+                    switch field.expr.def {
+                        case EFunction(kind, f):
+                            // pass on the params
+                            f.params = params;
+                            transformer.decls.Function.transformFunction(this, field.name, f);
+                        default:
+                    }
                 default:
             }
             if (field.expr != null)

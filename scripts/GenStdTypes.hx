@@ -43,7 +43,7 @@ var topLevel = [
     { hxName: "cap",    goName: "cap",      returnType: "GoInt",    types: ["T"], pure: true,  isOverload: false, args: [ { name: "v", type: "Slice<T>" } ] },
 ];
 
-var path = Path.join([Sys.getCwd(), 'go']);
+var path = Path.join([Sys.getCwd(), 'std/go']);
 
 function toModuleName(str: String) {
     var count = isUnsigned(str) ? 2 : 1;

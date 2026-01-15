@@ -59,12 +59,12 @@ class Module {
     }
 
     public function resolveClass(pack:Array<String>, name:String):HaxeTypeDefinition {
-        var resolveModule = pack.join(".") + (pack.length > 0 ? "." : "") + name;
         // trace(resolveModule);
         // local
         if (pack.length == 0) {
             return resolveLocalDef(this, name);
         }else{
+            final resolveModule = pack.join(".") + (pack.length > 0 ? "." : "") + name;
             // global
             final module = context.getModule(resolveModule);
             return resolveGlobalDef(module, resolveModule);
@@ -82,8 +82,8 @@ class Module {
                 return;
         }
         final td = resolveClass([], modulePath);
-        // prevent import if typedef is extern
-        if (td != null && td.isExtern)
+        // prevent import if typedef is null
+        if (td != null)
             return;
         imports.push(modulePath);
     }
@@ -124,9 +124,6 @@ class Module {
             transformer.transformDef(def);
             // translate
             var content = translator.translateDef(def);
-            // skip externs from generation
-            if (def.isExtern)
-                continue;
             // imports
             File.saveContent(dir + "/" + toCamelCase(def.name) + ".go", prefixString + content);
         }

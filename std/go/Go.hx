@@ -33,11 +33,11 @@ extern class Go {
    @:go.native("panic")
    public static extern function panic(v: Any): Void;
    @:go.native("len")
-   public static extern function len<T>(v: T): GoInt;
+   @:pure public static extern function len<T>(v: T): GoInt;
    @:go.native("append")
    public static extern function append<T>(s: Slice<T>, v: haxe.Rest<T>): Slice<T>;
    @:go.native("copy")
    public static extern function copy<T>(dst: Slice<T>, src: Slice<T>): GoInt;
    @:go.native("cap")
-   public static extern function cap<T>(v: Slice<T>): GoInt;
+   @:pure public static extern function cap<T>(v: Slice<T>): GoInt;
 }

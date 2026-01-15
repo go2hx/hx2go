@@ -130,6 +130,7 @@ class Transformer {
 
                 p.name = switch (td.name) {
                     case "String": "string"; // string doesn't have @:coreType
+                    case "Unknown": "any"; // must be resolved in Go
                     case _: p.name;
                 }
             default:

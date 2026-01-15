@@ -1,5 +1,6 @@
 package transformer.exprs;
 
+import haxe.macro.Expr.ComplexType;
 import haxe.macro.Expr.Constant;
 
 function transformConst(t:Transformer, e:HaxeExpr) {
@@ -11,13 +12,26 @@ function transformConst(t:Transformer, e:HaxeExpr) {
                     final ct = HaxeExprTools.stringToComplexType(e.t);
                     e.def = EConst(CIdent(switch ct {
                         case TPath({pack: [], name: "Null", params: [TPType(t)]}):
-                            defaultConst(c);
+                            if (isUnknown(t)) {
+                                "any(nil)";
+                            }else{
+                                defaultConst(c);
+                            }
                         default:
                             "nil";
                     }));
                 default:
             }
         default:
+    }
+}
+
+private function isUnknown(ct:ComplexType) {
+    return switch ct {
+        case TPath({sub: null, pack: [], name: "Unknown", params: _}):
+            true;
+        default:
+            false;
     }
 }
 

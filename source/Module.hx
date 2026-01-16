@@ -99,7 +99,7 @@ class Module {
     function hasGoPackageMetadata(td:HaxeTypeDefinition) {
         for (meta in td.meta()) {
             switch meta.name {
-                case ":go.package":
+                case ":go.package", ":go.toplevel":
                     return true;
             }
         }
@@ -117,9 +117,9 @@ class Module {
     }
 
     public function addImport(modulePath:String) {
-        // 
         switch modulePath {
-            case "StdTypes", "go.Syntax":
+            // Add TODO temporarily until we know when to exclude extern classes
+            case "StdTypes", "go.Syntax", "String":
                 return;
         }
         final td = resolveClass([], modulePath);

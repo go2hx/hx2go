@@ -106,6 +106,16 @@ class Module {
         return false;
     }
 
+    function hasCoreTypeMetadata(td:HaxeTypeDefinition) {
+        for (meta in td.meta()) {
+            switch meta.name {
+                case ":coreType":
+                    return true;
+            }
+        }
+        return false;
+    }
+
     public function addImport(modulePath:String) {
         // 
         switch modulePath {
@@ -117,7 +127,7 @@ class Module {
         if (td == null) {
             return;
         }else{
-            if (hasGoPackageMetadata(td))
+            if (hasGoPackageMetadata(td) || hasCoreTypeMetadata(td))
                 return;
         }
         imports.push(modulePath);
@@ -157,7 +167,7 @@ class Module {
             preprocessor.processDef(def);
             // transformer pass
             transformer.transformDef(def);
-            if (hasGoPackageMetadata(def))
+            if (hasGoPackageMetadata(def) || hasCoreTypeMetadata(def))
                 continue;
             // translate
             var content = translator.translateDef(def);

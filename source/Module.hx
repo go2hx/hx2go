@@ -119,7 +119,7 @@ class Module {
     public function addImport(modulePath:String) {
         switch modulePath {
             // Add TODO temporarily until we know when to exclude extern classes
-            case "StdTypes", "go.Syntax", "String":
+            case "StdTypes", "go.Syntax":
                 return;
         }
         final td = resolveClass([], modulePath);
@@ -127,7 +127,7 @@ class Module {
         if (td == null) {
             return;
         }else{
-            if (hasGoPackageMetadata(td) || hasCoreTypeMetadata(td))
+            if (hasGoPackageMetadata(td) || hasCoreTypeMetadata(td) || td.isExtern)
                 return;
         }
         imports.push(modulePath);
@@ -167,7 +167,7 @@ class Module {
             preprocessor.processDef(def);
             // transformer pass
             transformer.transformDef(def);
-            if (hasGoPackageMetadata(def) || hasCoreTypeMetadata(def))
+            if (hasGoPackageMetadata(def) || hasCoreTypeMetadata(def) || def.isExtern)
                 continue;
             // translate
             var content = translator.translateDef(def);

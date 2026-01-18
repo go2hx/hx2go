@@ -136,10 +136,9 @@ class Semantics {
 	 */
 	public static function hasSideEffects(expr:HaxeExpr):Bool {
 		return switch expr.def {
-			// TODO: we always assume ECall(...) has side effects, even if that is not the case. If we were to introduce a lookup then the preprocessor can't parralelise per unit (dump file)...
-			// is there a way in which we can get the best of both worlds (per unit parallelisation AND side effect flag lookup)?
-			// we could potentially make the preprocessor a step after transformation has completed, but, that would significantly complicate the transformation process which we also don't want :(
-			case EBinop(OpAssign, _, _), EBinop(OpAssignOp(_), _, _), EUnop(OpIncrement, _, _), EUnop(OpDecrement, _, _), ECall(_, _), ENew(_, _), EReturn(_),
+			case ECall(e, params):
+				true; // TODO: @:pure is defined on cf_meta, we should check for that. (HaxeClassField#meta)
+			case EBinop(OpAssign, _, _), EBinop(OpAssignOp(_), _, _), EUnop(OpIncrement, _, _), EUnop(OpDecrement, _, _), ENew(_, _), EReturn(_),
 				EBreak: true;
 			case EVars(vars):
 				for (v in vars)

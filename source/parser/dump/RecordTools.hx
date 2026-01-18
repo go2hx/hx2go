@@ -106,5 +106,6 @@ private function recordClassFieldToHaxeField(record_debug_path:String, field:Rec
         kind: kind,
         t: "#UNKNOWN_TYPE",
         expr: field.expr,
+        meta: getMeta(field.meta),
     };
 }

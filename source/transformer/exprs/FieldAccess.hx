@@ -16,35 +16,47 @@ function transformFieldAccess(t:Transformer, e:HaxeExpr) {
                 return;
             }
 
-            var isNative = resolveExpr(t, e2);
-            field = isNative ? field : toPascalCase(field); // TODO: should use field's @:go.native
+            var res = resolveExpr(t, e2, field);
+            if (res.isNative && res.field != null) {
+                for (m in res.field.meta) {
+                    switch m.name {
+                        case ":go.native":
+                            field = t.exprToString(m.params[0]);
+                        case _:
+                            null;
+                    }
+                }
+            } else {
+                field = toPascalCase(field);
+            }
+
             e.def = EField(e2, field, kind);
         default:
     }
 }
 
-function resolveExpr(t:Transformer, e2:HaxeExpr): Bool {
+function resolveExpr(t:Transformer, e2:HaxeExpr, fieldName: String): { isNative: Bool, field: HaxeField } {
     // TODO: check go.native on $field
     if (e2.t == null) {
         trace('null e2.t');
-        return false;
+        return { isNative: false, field: null };
     }
 
     try {
         final ct = HaxeExprTools.stringToComplexType(e2.t);
-        var renamedIdent = "";
+        var renamedIdentLeft = "";
+        var access: Null<HaxeField> = null;
         var topLevel = false;
         var isNative = false;
-
         if (ct == null)
-            return false;
+            return { isNative: false, field: null };
         switch ct {
             case TPath(p):
                 if (p.name == "Class" && p.pack.length == 0)
                     switch p.params[0] {
                         case TPType(TPath(p)):
                             final td = t.module.resolveClass(p.pack, p.name);
-                            renamedIdent = t.module.toGoPath(td.module).join(".");
+                            renamedIdentLeft = t.module.toGoPath(td.module).join(".");
                             if (td != null) {
                                 for (meta in td.meta()) {
                                     switch meta.name {
@@ -54,28 +66,36 @@ function resolveExpr(t:Transformer, e2:HaxeExpr): Bool {
                                         isNative = true;
                                     case ":go.native":
                                         // rename
-                                        renamedIdent = t.exprToString(meta.params[0]);
+                                        renamedIdentLeft = t.exprToString(meta.params[0]);
                                         isNative = true;
                                     case ":go.toplevel":
                                         // used for T() calls, removes "$a." in "$a.$b"
-                                        renamedIdent = "";
+                                        renamedIdentLeft = "";
                                         topLevel = true;
                                         isNative = true;
                                     }
                                 }
                             }
+
+                            for (field in td.fields) {
+                                if (fieldName == field.name) {
+                                    access = field;
+                                    break;
+                                }
+                            }
+
                         default:
                     }
             default:
         }
 
-        if (renamedIdent != "" || topLevel)
-            e2.remapTo = renamedIdent;
+        if (renamedIdentLeft != "" || topLevel)
+            e2.remapTo = renamedIdentLeft;
 
-        return isNative; // TODO: check if class is extern
+        return { isNative: isNative, field: access }; // TODO: check if class is extern
     } catch (e) {
         trace('parsing type failed', e);
-        return false;
+        return { isNative: false, field: null };
     }
 }
 

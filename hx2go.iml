@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="HAXE_MODULE" version="4">
+  <component name="Go" enabled="true" />
+  <component name="HaxeModuleSettingsStorage">
+    <option name="buildConfig" value="1" />
+    <option name="haxeTarget" value="Interpretation" />
+    <option name="hxmlPath" value="$MODULE_DIR$/compile.hxml" />
+    <option name="outputFolder" value="$MODULE_DIR$/out/production/hx2go" />
+  </component>
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/source" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/testbed" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/std" isTestSource="false" />
+    </content>
+    <orderEntry type="jdk" jdkName="Haxe 5.0.0" jdkType="Haxe toolkit" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>

@@ -260,6 +260,7 @@ class HaxeField {
 	public var kind:HaxeFieldKind;
 	public var t:String;
 	public var expr:HaxeExpr;
+	public var meta:Array<MetadataEntry>;
 }
 
 enum HaxeFieldKind {

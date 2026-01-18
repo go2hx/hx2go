@@ -107,6 +107,7 @@ class Transformer {
                                 case "go.Byte": "byte";
                                 case "go.Slice": '[]${transformComplexTypeParam(p.params, 0)}';
                                 case "go.Pointer": '*${transformComplexTypeParam(p.params, 0)}';
+                                case "go.Nullable": '${transformComplexTypeParam(p.params, 0)}';
                                 case "Bool": "bool";
                                 case "Dynamic": "map[string]dynamic";
                                 case _:
@@ -114,7 +115,7 @@ class Transformer {
                                     "#UNKNOWN_TYPE";
                             }
                             p.params = switch td.name {
-                                case "go.Slice": [];
+                                case "go.Slice" | "go.Nullable" | "go.Pointer": [];
                                 case _: p.params;
                             }
 

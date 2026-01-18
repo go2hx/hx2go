@@ -261,9 +261,19 @@ class ExprParser {
                         type: HaxeExprTools.stringToComplexType(object.objects[0].defType),
                     });
                 }
+                trace(object.defType);
+                final ct = HaxeExprTools.stringToComplexType(object.defType);
+                final ret = switch ct {
+                    case TFunction(_, ret2):
+                        ret2;
+                    default:
+                        trace(ct);
+                        throw "ComplexType of type FUNCTION is not TFunction";
+                }
                 EFunction(null, {
                     args: args,
                     expr: objectToExpr(object.objects[object.objects.length - 1]),
+                    ret: ret,
                 });
                 //objectToExpr(object.objects[object.objects.length - 1]).def;
             default:

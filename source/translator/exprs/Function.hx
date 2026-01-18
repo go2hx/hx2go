@@ -15,5 +15,6 @@ function translateFunction(t:Translator, name:String, f:HaxeFunction) {
         "";
     }
     final args = f.args.map(arg -> arg.name + " " + t.translateComplexType(arg.type));
-    return 'func $name$paramString(${args.join(", ")}) $exprString\n';
+    final ret = f.ret == null ? "" : t.translateComplexType(f.ret);
+    return 'func $name$paramString(${args.join(", ")}) $ret $exprString\n';
 }

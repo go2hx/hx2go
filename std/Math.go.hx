@@ -49,36 +49,31 @@ extern class Math {
     @:go.native("Round")
     static function fround(v:Float):Float;
 
-    @:go.native("Round")
     inline static function round(v:Float):Int
         return Go.int(fround(v));
 
-    @:go.native("Floor")
     inline static function floor(v:Float):Int
         return Go.int(ffloor(v));
 
-    @:go.native("Ceil")
     inline static function ceil(v:Float):Int
         return Go.int(fceil(v));
 
-    @:go.native("Rand")
     inline static function random():Float
         return Rand.float64();
 
-    @:go.native("IsFinite")
     inline static function isFinite(f:Float):Bool
         return Syntax.code("!math.IsNaN({0}) && !math.IsInf({0}, 0)", f);
 
-    @:pure inline static function get_PI():Float
+    inline static function get_PI():Float
         return 3.141592653589793;
 
-    @:pure inline static function get_NEGATIVE_INFINITY():Float
+    inline static function get_NEGATIVE_INFINITY():Float
         return Syntax.code("math.Inf(-1)");
 
-    @:pure inline static function get_POSITIVE_INFINITY():Float
+    inline static function get_POSITIVE_INFINITY():Float
         return Syntax.code("math.Inf(1)");
 
-    @:pure inline static function get_NaN():Float
+    inline static function get_NaN():Float
         return Syntax.code("math.NaN()");
 
 }

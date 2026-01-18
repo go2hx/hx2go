@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module type="HAXE_MODULE" version="4">
+  <component name="Go" enabled="true" />
   <component name="HaxeModuleSettingsStorage">
     <option name="buildConfig" value="1" />
     <option name="hxmlPath" value="$MODULE_DIR$/extraParams.hxml" />

@@ -71,7 +71,7 @@ class Preprocessor {
             }
 
             // extract while loop conditional to the body so that extraction makes sense
-            case EWhile(cond, body, norm): {
+            case EWhile(cond, body, norm) if (Semantics.goingToMutate(cond, e)): {
                 ensureParenthesis(cond);
                 ensureBlock(body);
 
@@ -100,6 +100,11 @@ class Preprocessor {
 
                 cond.def = null;
             }
+
+            // still ensure braces if EWhile(...) with mutation hasn't been reached
+            case EWhile(cond, body, _):
+                ensureParenthesis(cond);
+                ensureBlock(body);
 
             // default
             case _: iterateExprPost(e, scope);

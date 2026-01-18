@@ -18,8 +18,12 @@ function transformFieldAccess(t:Transformer, e:HaxeExpr) {
             if (resolvePkgTransform(t, e, e2, field, kind)) {
                 return;
             }
-
-            var keepName = resolveExpr(t, e2, field);
+            final ct = HaxeExprTools.stringToComplexType(e2.t);    
+            if (isAnonType(ct)) {
+                e.def = EArray(e, {def: EConst(CString(field)), t: null});
+                return;
+            }
+            var keepName = processComplexType(t, e2, ct);
             if (!keepName) {
                 field = toPascalCase(field);
             }
@@ -29,22 +33,12 @@ function transformFieldAccess(t:Transformer, e:HaxeExpr) {
     }
 }
 
-function resolveExpr(t:Transformer, e2:HaxeExpr, fieldName:String):Bool {
-    if (e2.t == null) {
-        trace('null e2.t');
-        return false;
-    }
-
-    try {
-        final ct = HaxeExprTools.stringToComplexType(e2.t);
-        if (ct == null) {
-            return false;
-        }
-
-        return processComplexType(t, e2, ct);
-    } catch (e) {
-        trace('parsing type failed', e);
-        return false;
+function isAnonType(ct:ComplexType):Bool {
+    return switch ct {
+        case TAnonymous(_):
+            true;
+        default:
+            false;
     }
 }
 

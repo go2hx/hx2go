@@ -393,6 +393,8 @@ typedef HaxeObjectField = {
 		How the field name is quoted.
 	**/
 	var ?quotes:QuoteStatus;
+
+	var ?t:ComplexType;
 }
 
 

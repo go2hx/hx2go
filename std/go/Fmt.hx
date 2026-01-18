@@ -1,13 +1,12 @@
 package go;
 
-@:go.package("fmt")
-@:go.native("fmt")
+@:go.StaticAccess({ name: "fmt", imports: ["fmt"] })
 extern class Fmt {
 
-    @:go.native("Println")
+    @:native("Println")
 	public static function println(e: haxe.Rest<Dynamic>): Void;
 
-    @:go.native("Print")
+    @:native("Print")
     public static function print(e: haxe.Rest<Dynamic>): Void;
 
 }

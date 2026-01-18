@@ -1,46 +1,45 @@
 package go.math;
 
 @:pure
-@:go.package("math/rand")
-@:go.native("rand")
+@:go.StaticAccess({ name: "rand", imports: ["math/rand"] })
 extern class Rand {
 
     // TODO: this extern is incomplete - https://pkg.go.dev/math/rand
 
-    @:go.native("ExpFloat64")
+    @:native("ExpFloat64")
     static function expFloat64(): go.Float64;
 
-    @:go.native("Float32")
+    @:native("Float32")
     static function float32(): go.Float32;
 
-    @:go.native("Float64")
+    @:native("Float64")
     static function float64(): go.Float64;
 
-    @:go.native("Int")
+    @:native("Int")
     static function int(): go.GoInt;
 
-    @:go.native("Int31")
-    static function int31(): go.Int32;
+    @:native("Int31")
+    static function int3 1(): go.Int32;
 
-    @:go.native("Int31n")
+    @:native("Int31n")
     static function int31n(n: go.Int32): go.Int32;
 
-    @:go.native("Int63")
+    @:native("Int63")
     static function int63(): go.Int64;
 
-    @:go.native("Int63n")
+    @:native("Int63n")
     static function int63n(n: go.Int64): go.Int64;
 
-    @:go.native("Intn")
+    @:native("Intn")
     static function intn(n: go.GoInt): go.GoInt;
 
-    @:go.native("NormFloat64")
+    @:native("NormFloat64")
     static function normFloat64(): go.Float64;
 
-    @:go.native("Uint32")
+    @:native("Uint32")
     static function uint32(): go.UInt32;
 
-    @:go.native("Uint64")
+    @:native("Uint64")
     static function uint64(): go.UInt64;
 
 }

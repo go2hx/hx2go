@@ -19,8 +19,8 @@ function transformFieldAccess(t:Transformer, e:HaxeExpr) {
                 return;
             }
 
-            var isNative = resolveExpr(t, e2, field);
-            if (!isNative) {
+            var keepName = resolveExpr(t, e2, field);
+            if (!keepName) {
                 field = toPascalCase(field);
             }
 
@@ -71,6 +71,7 @@ function processComplexType(t:Transformer, e2:HaxeExpr, ct:ComplexType):Bool {
     var renamedIdentLeft = t.module.toGoPath(td.module).join(".");
     var isNative = false;
     var topLevel = false;
+    var transformName = false;
 
     for (meta in td.meta()) {
         if (meta.name == ":go.StaticAccess") {
@@ -78,6 +79,7 @@ function processComplexType(t:Transformer, e2:HaxeExpr, ct:ComplexType):Bool {
             renamedIdentLeft = result.name;
             isNative = result.isNative;
             topLevel = result.topLevel;
+            transformName = result.transformName;
         }
     }
 
@@ -85,17 +87,18 @@ function processComplexType(t:Transformer, e2:HaxeExpr, ct:ComplexType):Bool {
         e2.remapTo = renamedIdentLeft;
     }
 
-    return isNative;
+    return isNative && !transformName;
 }
 
-function processStaticAccessMeta(t:Transformer, meta:MetadataEntry, defaultName:String):{name:String, isNative:Bool, topLevel:Bool} {
+function processStaticAccessMeta(t:Transformer, meta:MetadataEntry, defaultName:String):{name:String, isNative:Bool, topLevel:Bool, transformName: Bool} {
     var name = defaultName;
     var isNative = false;
     var topLevel = false;
+    var transformName = false;
 
     var fields = switch meta.params[0].expr {
         case EObjectDecl(fields): fields;
-        case _: return {name: name, isNative: isNative, topLevel: topLevel};
+        case _: return {name: name, isNative: isNative, topLevel: topLevel, transformName: transformName};
     }
 
     for (field in fields) {
@@ -109,6 +112,10 @@ function processStaticAccessMeta(t:Transformer, meta:MetadataEntry, defaultName:
                 isNative = true;
                 topLevel = true;
 
+            case "transformName" if (t.exprToString(field.expr).trim() == "true"):
+                isNative = true;
+                transformName = true;
+
             case "imports":
                 processImports(t, field.expr);
                 isNative = true;
@@ -117,7 +124,7 @@ function processStaticAccessMeta(t:Transformer, meta:MetadataEntry, defaultName:
         }
     }
 
-    return {name: name, isNative: isNative, topLevel: topLevel};
+    return {name: name, isNative: isNative, topLevel: topLevel, transformName: transformName};
 }
 
 function processImports(t:Transformer, expr:Expr) {

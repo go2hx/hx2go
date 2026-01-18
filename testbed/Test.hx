@@ -1,8 +1,7 @@
-import go.Go;
 class Test {
 
     public static function main() {
-        Sys.println(Go.uint64(1));
+        Sys.println(Math.sin(1/4 * Math.PI));
     }
 
 }

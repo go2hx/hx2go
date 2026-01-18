@@ -3,7 +3,7 @@ import go.Syntax;
 import go.math.Rand;
 
 @:pure
-@:go.StaticAccess({ name: "math", imports: ["math"] })
+@:go.StaticAccess({ name: "math", imports: ["math"], transformName: true })
 extern class Math {
 
     static var PI(get, null):Float;
@@ -11,36 +11,22 @@ extern class Math {
     static var POSITIVE_INFINITY(get, null):Float;
     static var NaN(get, null):Float;
 
-    @:native("Abs")
     static function abs(v:Float):Float;
-    @:native("Min")
     static function min(a:Float, b:Float):Float;
-    @:native("Max")
     static function max(a:Float, b:Float):Float;
-    @:native("Sin")
     static function sin(v:Float):Float;
-    @:native("Cos")
     static function cos(v:Float):Float;
-    @:native("Tan")
     static function tan(v:Float):Float;
-    @:native("Asin")
     static function asin(v:Float):Float;
-    @:native("Acos")
     static function acos(v:Float):Float;
-    @:native("Atan")
     static function atan(v:Float):Float;
-    @:native("Atan2")
     static function atan2(y:Float, x:Float):Float;
-    @:native("Exp")
     static function exp(v:Float):Float;
-    @:native("Log")
     static function log(v:Float):Float;
-    @:native("Pow")
     static function pow(v:Float, exp:Float):Float;
-    @:native("Sqrt")
     static function sqrt(v:Float):Float;
-    @:native("IsNaN")
     static function isNaN(f:Float):Bool;
+
     @:native("Floor")
     static function ffloor(v:Float):Float;
     @:native("Ceil")

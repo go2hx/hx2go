@@ -43,6 +43,8 @@ class Transformer {
                 Cast.transformCast(this, e, t);
             case EArrayDecl(values, _):
                 transformer.decls.ArrayDecl.transformArray(this, e, values);
+            case EArray(e1, e2):
+                transformer.exprs.ArrayAccess.transformArrayAccess(this, e, e1, e2);
             default:
                 iterateExpr(e);
         }
@@ -184,7 +186,7 @@ class Transformer {
                 'struct { ${struct.map(f -> '${f.name} ${f.type}').join('; ')} }';
             }
             case "Bool": "bool";
-            case "Dynamic": "map[string]dynamic";
+            case "Dynamic": "any";
             case "Array": '*struct{ data []${transformComplexTypeParam(p.params, 0)} }';
             case "Null": '${transformComplexTypeParam(p.params, 0)}'; // TODO: implement Null<T>, currently just bypass
             case _:

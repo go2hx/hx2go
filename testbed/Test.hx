@@ -1,19 +1,15 @@
 import go.Fmt;
 
+@:analyzer(ignore)
 class Test {
 
     public static function main(): Void {
-        var arr: Array<Int> = [1, 2, 3];
-        var cpy: Array<Int> = arr.copy();
-        arr.push(4);
+        var arr = ["Hello", "World", "Hx2go"];
+        for (word in arr) {
+            Fmt.println(word);
+        }
 
-        var combined = arr.concat(cpy);
-        var last = combined.pop();
-        var reversed = combined.copy();
-
-        reversed.reverse();
-
-        Fmt.println(arr, cpy, combined, reversed, last);
+        Fmt.println(arr.join(", "));
     }
 
 }

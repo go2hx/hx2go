@@ -151,6 +151,24 @@ function resolvePkgTransform(t:Transformer, e:HaxeExpr, e2:HaxeExpr, field:Strin
         return false;
     }
 
+    if (e?.special != null) {
+        final tstr = switch (e.special) {
+            case FInstance(x): x;
+            case FStatic(x, _): x;
+            case _: null;
+        }
+
+        final ct = HaxeExprTools.stringToComplexType(tstr);
+        final fieldHandled = switch ct {
+            case TPath(p): handleFieldTransform(t, e, p, e2Name, field);
+            case _: false;
+        }
+
+        if (fieldHandled) {
+            return true;
+        }
+    }
+
     return switch e.parent.def {
         case ECall(e, params): handleCallTransform(t, e, params, e2Name, field);
         case _: false;
@@ -167,6 +185,23 @@ function handleCallTransform(t:Transformer, e:HaxeExpr, params:Array<HaxeExpr>, 
             final ct = HaxeExprTools.stringToComplexType(e.parent.t);
             t.transformComplexType(ct);
             e.parent.def = EGoSliceConstruct(ct);
+            true;
+
+        case _:
+            false;
+    }
+
+    if (transformed) {
+        t.iterateExpr(e.parent);
+    }
+
+    return transformed;
+}
+
+function handleFieldTransform(t:Transformer, e:HaxeExpr, p:TypePath, e2Name:String, field:String):Bool {
+    var transformed = switch [p.name, p.pack, p.params, field] {
+        case ['Array', [], _, 'length']:
+            e.def = EGoCode('int32(len(${e2Name}.data))', []);
             true;
 
         case _:

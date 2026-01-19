@@ -66,7 +66,7 @@ class Preprocessor {
             // apply var alias
             case EConst(CIdent(name)): e.def = EConst(CIdent(scope.getAlias(name)));
 
-            // register var alias, support Tuple<T>
+            // register var alias
             case EVars(vars): {
                 iterateExprPost(e, scope);
 

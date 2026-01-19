@@ -66,6 +66,8 @@ class Translator {
                     Return.translateReturn(this, e);
                 case EFunction(kind, f):
                     translator.exprs.Function.translateFunction(this, "", f);
+                case EArrayDecl(values, ct):
+                    ArrayDeclaration.translateArrayDeclaration(this, e, values, ct);
                 default:
                     //trace("UNKNOWN EXPR TO TRANSLATE:" + e.def);
                     "_ = 0";

@@ -207,7 +207,7 @@ class ExprParser {
             case ARRAY:
                 null;
             case ARRAYDECL:
-                EArrayDecl(object.objects.map(obj -> objectToExpr(obj)));
+                EArrayDecl(object.objects.map(obj -> objectToExpr(obj)), null);
             case NEW:
                 final ct = HaxeExprTools.stringToComplexType(object.objects[0].string());
                 switch ct {

@@ -152,7 +152,7 @@ class Module {
             final importPath = paths.join("/");
             File.saveContent(context.options.output + "/main.go", 'package main\nimport "hx2go/$importPath"\nfunc main() {\n' + lastPathLowercase + ".Main()\n}");
         }
-        var prefixString = "package " + paths.join("/") + "\n";
+        var prefixString = "package " + paths.pop() + "\n";
         for (imp in imports) {
             imp = toGoPath(imp).join("/");
             prefixString += 'import "hx2go/$imp"\n';

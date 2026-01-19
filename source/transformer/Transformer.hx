@@ -41,6 +41,8 @@ class Transformer {
                 BinopExpr.transformBinop(this, e, op, e1, e2);
             case ECast(_, t):
                 Cast.transformCast(this, e, t);
+            case EArrayDecl(values, _):
+                transformer.decls.ArrayDecl.transformArray(this, e, values);
             default:
                 iterateExpr(e);
         }
@@ -149,6 +151,7 @@ class Transformer {
             case "go.GoUInt": "uint";
             case "go.Rune": "rune";
             case "go.Byte": "byte";
+            case "Array": '*struct{ data []${transformComplexTypeParam(p.params, 0)} }';
             case "go.Slice": '[]${transformComplexTypeParam(p.params, 0)}';
             case "go.Pointer": '*${transformComplexTypeParam(p.params, 0)}';
             case "go.Tuple": {

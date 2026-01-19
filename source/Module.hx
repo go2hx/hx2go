@@ -18,7 +18,6 @@ class Module {
     public var translator:Translator;
     public var context:Context;
 
-
     public function canResolveLocalTypeParam(funcName:String, typeName:String):Bool {
         for (def in this.defs) {
             for (field in def.fields) {

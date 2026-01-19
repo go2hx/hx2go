@@ -108,6 +108,7 @@ class ExprParser {
             return { t: null, def: EBlock([])};
         }
 
+        var specialDef: Null<SpecialExprDef> = null;
         final def:HaxeExprDef = switch object.def {
             case BLOCK:
                 EBlock(object.objects.map(object -> objectToExpr(object)));
@@ -119,6 +120,7 @@ class ExprParser {
                 }
                 final e = objectToExpr(object.objects[0]);
                 final params = object.objects.slice(1).map(object -> objectToExpr(object));
+                specialDef = e.special; // we copy the specialDef from objects[0]; required for FInstance.
                 ECall(e, params);
             case FIELD:
                 if (object.objects.length == 0) {
@@ -127,7 +129,9 @@ class ExprParser {
                     throw "FIELD NEEDS MORE";
                 }
                 final e = objectToExpr(object.objects[0]);
-                final field = exprToValueString(objectToExpr(object.objects[1]));
+                final fexpr = objectToExpr(object.objects[1]);
+                final field = exprToValueString(fexpr);
+                specialDef = fexpr.special ?? e.special; // we copy the specialDef from objects[1]; required for FInstance.
                 EField(e, field);
             case TYPEEXPR:
                 EConst(CIdent(object.subType));
@@ -141,7 +145,27 @@ class ExprParser {
                     trace(object.objects.length);
                     trace(object.objects[0].string());
                 }
+
                 var field = object.objects[1].string();
+                var path = object.objects[0].string();
+
+                final colonIndex = field.indexOf(":");
+                if (colonIndex == -1)
+                    throw "colon not found: " + field;
+                field = field.substr(0, colonIndex);
+
+                specialDef = switch object.def {
+                    case FSTATIC:
+                        FStatic(path, field);
+                    case FINSTANCE:
+                        FInstance(path);
+                    case _:
+                        null;
+                };
+
+                EConst(CIdent(field));
+            case FANON:
+                var field = object.objects[0].string();
                 final colonIndex = field.indexOf(":");
                 if (colonIndex == -1)
                     throw "colon not found: " + field;
@@ -223,8 +247,6 @@ class ExprParser {
                 EParenthesis(objectToExpr(object.objects[0]));
             case THROW:
                 EThrow(objectToExpr(object.objects[0]));
-            case FANON:
-                null;
             case FOR:
                 EFor(objectToExpr(object.objects[0]), objectToExpr(object.objects[1]));
             case IF:
@@ -275,6 +297,7 @@ class ExprParser {
             t: object.defType,
             def: def,
             remapTo: null,
+            special: specialDef
         };
     }
     function emptyExpr():HaxeExpr {
@@ -493,7 +516,7 @@ class ExprParser {
     }
     function handleMeta() {
         var end = findCloseParen(lineIndex + 1);
-        // assume meta without parenthesis 
+        // assume meta without parenthesis
         if (end == -1) {
             end = lineIndex + 1;
         }

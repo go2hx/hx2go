@@ -25,6 +25,7 @@ function transformFieldAccess(t:Transformer, e:HaxeExpr) {
             }
 
             e.def = EField(e2, field, kind);
+            t.transformExpr(e2); // handle recursive field accesses
         default:
     }
 }
@@ -74,13 +75,19 @@ function processComplexType(t:Transformer, e2:HaxeExpr, ct:ComplexType):Bool {
     var transformName = false;
 
     for (meta in td.meta()) {
-        if (meta.name == ":go.StructAccess") {
+        if (meta.name == ":go.TypeAccess") {
             var result = processStructAccessMeta(t, meta, renamedIdentLeft);
             renamedIdentLeft = result.name;
             isNative = result.isNative;
             topLevel = result.topLevel;
             transformName = result.transformName;
         }
+    }
+
+    // this will handle the case if a class tries to call something on itself: it will remove the package path
+    if (!isNative && t.module.path == innerPath.pack.concat([innerPath.name]).join(".")) {
+        renamedIdentLeft = "";
+        topLevel = true;
     }
 
     if (renamedIdentLeft != "" || topLevel) {
@@ -138,6 +145,10 @@ function resolvePkgTransform(t:Transformer, e:HaxeExpr, e2:HaxeExpr, field:Strin
     var e2Name = switch e2.def {
         case EConst(CIdent(x)): x;
         case _: return false;
+    }
+
+    if (e.parent?.def == null) {
+        return false;
     }
 
     return switch e.parent.def {

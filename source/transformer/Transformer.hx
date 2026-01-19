@@ -7,6 +7,7 @@ import haxe.macro.Expr.TypeDefinition;
 import haxe.macro.ComplexTypeTools;
 import haxe.macro.Expr;
 import transformer.exprs.*;
+import translator.TranslatorTools;
 
 @:structInit
 class Transformer {
@@ -125,7 +126,7 @@ class Transformer {
                 case ":go.package":
                     def.addGoImport(exprToString(meta.params[0]));
 
-                case ":go.StructAccess":
+                case ":go.TypeAccess":
                     processStructAccess(p, meta);
             }
         }
@@ -150,7 +151,36 @@ class Transformer {
             case "go.Byte": "byte";
             case "go.Slice": '[]${transformComplexTypeParam(p.params, 0)}';
             case "go.Pointer": '*${transformComplexTypeParam(p.params, 0)}';
-            case "go.Nullable": '${transformComplexTypeParam(p.params, 0)}';
+            case "go.Tuple": {
+                var struct: Array<{ name: String, type: String }> = [];
+
+                switch p.params[0] {
+                    case TPType(ct):
+                        switch ct {
+                            case TAnonymous(fields):
+                                for (f in fields) {
+                                    var fct = switch f.kind {
+                                        case FVar(fct): fct;
+                                        case _: null;
+                                    }
+
+                                    transformComplexType(fct);
+
+                                    var ftp = switch (fct) {
+                                        case TPath(tp): tp;
+                                        case _: null;
+                                    }
+
+                                    struct.push({ name: toPascalCase(f.name), type: ftp.name });
+                                }
+
+                            case _: null;
+                        }
+                    case _: null;
+                }
+
+                'struct { ${struct.map(f -> '${f.name} ${f.type}').join('; ')} }';
+            }
             case "Bool": "bool";
             case "Dynamic": "map[string]dynamic";
             case _:

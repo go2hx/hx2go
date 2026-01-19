@@ -1,7 +1,7 @@
 package go.math;
 
 @:pure
-@:go.StructAccess({ name: "rand", imports: ["math/rand"]  })
+@:go.TypeAccess({ name: "rand", imports: ["math/rand"]  })
 extern class Rand {
 
     // TODO: this extern is incomplete - https://pkg.go.dev/math/rand

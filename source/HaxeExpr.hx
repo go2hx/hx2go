@@ -15,6 +15,7 @@ class HaxeExpr {
 	public var parent:HaxeExpr = null;
 	public var parentIdx:Int = 0;
 	public var flags:HaxeExprFlags = 0;
+	public var special:SpecialExprDef = null;
 	public var def:HaxeExprDef;
 	public var t:String;
 
@@ -25,7 +26,8 @@ class HaxeExpr {
 			parentIdx: parentIdx,
 			flags: flags,
 			def: def, // Copy.copy(def),
-			t: t
+			t: t,
+			special: special,
 		};
 	}
 
@@ -36,6 +38,7 @@ class HaxeExpr {
 		flags = other.flags;
 		def = other.def;
 		t = other.t;
+		special = other.special;
 	}
 
 	public function toString(): String {

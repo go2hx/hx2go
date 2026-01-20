@@ -9,7 +9,7 @@ function transformArrayAccess(t:Transformer, e: HaxeExpr, e1:HaxeExpr, e2:HaxeEx
         case TPath(p):
             switch [p.name, p.pack, p.params] {
                 case ["Array", [], [TPType(innerType)]]:
-                    e1.def = EGoCode("{0}.data", [e1.copy()]);
+                    e1.def = EGoCode("(*{0})", [e1.copy()]);
 
                 case _: null;
             }

@@ -4,4 +4,5 @@ package go;
 extern class Fmt {
 	public static function println(e: haxe.Rest<Dynamic>): Void;
     public static function print(e: haxe.Rest<Dynamic>): Void;
+    public static function sprintf(format: String, args: haxe.Rest<Dynamic>): String;
 }

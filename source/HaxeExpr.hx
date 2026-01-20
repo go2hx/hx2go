@@ -92,7 +92,7 @@ enum HaxeExprDef {
 	/**
 		An array declaration `[el]`.
 	**/
-	EArrayDecl(values:Array<HaxeExpr>);
+	EArrayDecl(values:Array<HaxeExpr>, ct: ComplexType);
 
 	/**
 		A call `e(params)`.

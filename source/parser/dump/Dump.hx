@@ -31,17 +31,18 @@ class Dump implements IParser {
         }
 
         final depsMap = Deps.run("./dump/go/dependencies.dump");
-        final fileNameToModulePath:Map<String,String> = [];
+        final fileNameToModulePath:Map<String,Array<String>> = [];
+        final pathToModule:Map<String, String> = [];
         final cache = _context.getCache();
 
         for (record in records) {
-            if (record?.module == null) {
-                trace("module should not be null");
+            if (record?.path == null) {
+                trace("record path should not be null");
                 continue;
             }
 
             final def = RecordTools.recordToHaxeTypeDefinition(record);
-            final module = if (!cache.exists(record.module)) {
+            final module = if (!cache.exists(record.path)) {
                 var module: Module = {
                     path: record.module,
                     translator: {},
@@ -49,19 +50,24 @@ class Dump implements IParser {
                     preprocessor: {},
                     context: _context,
                 };
-                cache.set(record.module, module);
+                cache.set(record.path, module);
                 module;
             }else{
                 // module already exists, add a new def to it
-                cache.get(record.module);
+                cache.get(record.path);
             }
             module.addDef(def);
             // add to deps module key map
-            fileNameToModulePath[record.name_pos.file] = record.module;
-            
+            if (!fileNameToModulePath.exists(record.name_pos.file)) {
+                fileNameToModulePath[record.name_pos.file] = [];
+            }
+
+            fileNameToModulePath[record.name_pos.file].push(record.path);
+            pathToModule[record.name_pos.file] = record.module;
         }
+
         for (fileName => files in depsMap) {
-            final modulePath = fileNameToModulePath[fileName];
+            final modulePath = pathToModule[fileName];
             // assume modulePath is null means the compiler is fine to skip it and is only in eval
             if (modulePath == null) {
                 continue;
@@ -70,7 +76,7 @@ class Dump implements IParser {
             if (module == null)
                 continue;
             for (fileName in files) {
-                final imp = fileNameToModulePath[fileName];
+                final imp = pathToModule[fileName];
                 // assume import is null means the compiler is fine to skip it and is only in eval
                 if (imp == null)
                     continue;

@@ -41,6 +41,10 @@ class Transformer {
                 BinopExpr.transformBinop(this, e, op, e1, e2);
             case ECast(_, t):
                 Cast.transformCast(this, e, t);
+            case EArrayDecl(values, _):
+                transformer.decls.ArrayDecl.transformArray(this, e, values);
+            case EArray(e1, e2):
+                transformer.exprs.ArrayAccess.transformArrayAccess(this, e, e1, e2);
             default:
                 iterateExpr(e);
         }
@@ -182,14 +186,16 @@ class Transformer {
                 'struct { ${struct.map(f -> '${f.name} ${f.type}').join('; ')} }';
             }
             case "Bool": "bool";
-            case "Dynamic": "map[string]dynamic";
+            case "Dynamic": "any";
+            case "Array": '*[]${transformComplexTypeParam(p.params, 0)}';
+            case "Null": '${transformComplexTypeParam(p.params, 0)}'; // TODO: implement Null<T>, currently just bypass
             case _:
                 trace("unhandled coreType: " + tdName);
                 "#UNKNOWN_TYPE";
         }
 
         p.params = switch tdName {
-            case "go.Slice" | "go.Nullable" | "go.Pointer": [];
+            case "go.Slice" | "go.Nullable" | "go.Pointer" | "Null": [];
             case _: p.params;
         }
     }

@@ -64,13 +64,15 @@ function processComplexType(t:Transformer, e2:HaxeExpr, ct:ComplexType): { isNat
         case _: return { isNative: false, transformName: true };
     }
 
-    if (path.name != "Class" || path.pack.length != 0) {
-        return { isNative: false, transformName: true };
-    }
-
-    var innerPath = switch path.params[0] {
-        case TPType(TPath(p)): p;
-        case _: return { isNative: false, transformName: true };
+    var isInstance = false;
+    var innerPath = if (path.name != "Class" || path.pack.length != 0) {
+        isInstance = true;
+        path;
+    } else {
+        switch path.params[0] {
+            case TPType(TPath(p)): p;
+            case _: return { isNative: false, transformName: true };
+        }
     }
 
     final td = t.module.resolveClass(innerPath.pack, innerPath.name, t.module.path);
@@ -78,7 +80,7 @@ function processComplexType(t:Transformer, e2:HaxeExpr, ct:ComplexType): { isNat
         return { isNative: false, transformName: true };
     }
 
-    var renamedIdentLeft = t.module.toGoPath(td.module).join(".");
+    var renamedIdentLeft = "";
     var isNative = false;
     var topLevel = false;
     var transformName = true;
@@ -86,10 +88,13 @@ function processComplexType(t:Transformer, e2:HaxeExpr, ct:ComplexType): { isNat
     for (meta in td.meta()) {
         if (meta.name == ":go.TypeAccess") {
             var result = processStructAccessMeta(t, meta, renamedIdentLeft);
-            renamedIdentLeft = result.name;
             isNative = result.isNative;
             topLevel = result.topLevel;
             transformName = result.transformName;
+
+            if (!isInstance) {
+                renamedIdentLeft = result.name;
+            }
         }
     }
 
@@ -103,7 +108,7 @@ function processComplexType(t:Transformer, e2:HaxeExpr, ct:ComplexType): { isNat
         e2.remapTo = renamedIdentLeft;
     }
 
-    return { isNative: isNative, transformName: transformName } ;
+    return { isNative: isNative, transformName: transformName };
 }
 
 function processStructAccessMeta(t:Transformer, meta:MetadataEntry, defaultName:String):{name:String, isNative:Bool, topLevel:Bool, transformName: Bool} {

@@ -1,36 +1,27 @@
-import go.Fmt;
-import go.Pointer;
+import go.time.Time;
+
+@:go.TypeAccess({ name: "machine", imports: ["machine"] })
+extern class Machine {
+    static var LED: Pin;
+}
+
+@:go.TypeAccess({ name: "machine.Pin", imports: ["machine"] })
+extern class Pin {
+    function low(): Void;
+    function high(): Void;
+}
 
 class Test {
 
     public static function main() {
-        var arr = ["你好", "世界"];
-        arr.push("!");
-        arr.reverse();
+        var led = Machine.LED;
 
-        for (word in arr) {
-            Fmt.println(word);
+        while (true) {
+            led.high();
+            Time.sleep(Time.second);
+            led.low();
+            Time.sleep(Time.second);
         }
-
-        Sys.println(arr.copy());
-        Sys.println(arr.join(", "));
-        Sys.println("Array Length: " + Std.string(arr.length));
-        Sys.println("Summed Character Count: " + Std.string(lengthOfAll(arr)));
-
-        var ptr = Pointer.addressOf(arr);
-        Sys.println(ptr);
-
-        var sin = Math.sin(Math.PI / 2);
-        Sys.println("Sin(PI/2): " + Std.string(sin));
-    }
-
-    public static function lengthOfAll(arr: Array<String>) {
-        var sum = 0;
-        for (s in arr) {
-            sum += s.length;
-        }
-
-        return sum;
     }
 
 }

@@ -218,7 +218,7 @@ function handleFieldTransform(t:Transformer, e:HaxeExpr, p:TypePath, e2:HaxeExpr
             true;
 
         case ['String', [], _, 'length']:
-            e.def = EGoCode('int32(utf8.RuneCountInString({0}))', [e2]); // TODO: use AST
+            e.def = EGoCode('int32(utf8.RuneCountInString({0}))', [e2]);
             t.def.addGoImport('unicode/utf8');
             true;
 

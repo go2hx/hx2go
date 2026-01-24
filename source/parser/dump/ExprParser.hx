@@ -288,9 +288,44 @@ class ExprParser {
                         type: HaxeExprTools.stringToComplexType(object.objects[0].defType),
                     });
                 }
+
+                var ret = null;
+                if (object.defType != null) {
+                    var depth = 0;
+                    var str = "";
+                    var capture = false;
+                    var last = -1;
+
+                    for (char in object.defType) {
+                        switch char {
+                            case "(".code:
+                                depth++;
+
+                            case ")".code:
+                                depth--;
+
+                            case ">".code if (last == "-".code && depth == 0):
+                                capture = true;
+
+                            case _ if (capture):
+                                str += String.fromCharCode(char);
+
+                            case _: null;
+                        }
+
+                        last = char;
+                    }
+
+                    var trimmed = str.trim();
+                    if (trimmed != "Void") {
+                        ret = HaxeExprTools.stringToComplexType(trimmed);
+                    }
+                }
+
                 EFunction(null, {
                     args: args,
                     expr: objectToExpr(object.objects[object.objects.length - 1]),
+                    ret: ret
                 });
                 //objectToExpr(object.objects[object.objects.length - 1]).def;
             default:

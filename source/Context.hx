@@ -77,33 +77,66 @@ class Context {
         var buf = new StringBuf();
         buf.add("package main\n\n");
 
-        var subBuffer = new StringBuf();
         for (module in _cache.iterator()) {
             if (module.path == options.entryPoint) {
                 module.mainBool = true;
             }
 
-            module.run(subBuffer);
+            module.run();
+        }
+
+        var compileList = [];
+        var lastLength = -1;
+
+        while (true) {
+            for (mod in _cache.iterator()) {
+                var usages = 0;
+
+                for (def in mod.defs) {
+                    for (origin in def.usages.keys()) {
+                        if (origin == mod.path || !compileList.contains(origin)) continue;
+                        usages += def.usages[origin];
+                    }
+                }
+
+                if ((usages > 0 || mod.mainBool) && !compileList.contains(mod.path)) {
+                    compileList.push(mod.path);
+                }
+            }
+
+            if (compileList.length == lastLength) break;
+            lastLength = compileList.length;
         }
 
         var imports = [];
         for (mod in _cache.iterator()) {
+            if (!compileList.contains(mod.path)) continue;
+
             for (def in mod.defs) {
                 for (imp in def.goImports) {
-                    if (!imports.contains(imp)) imports.push(imp);
+                    if (!imports.contains(imp)) {
+                        imports.push(imp);
+                        buf.add('import "' + imp + '"\n');
+                    }
                 }
             }
         }
 
-        for (imp in imports) {
-            buf.add('import "' + imp + '"\n');
+        if (imports.length > 0) {
+            buf.add('\n');
         }
 
-        if (imports.length > 0) buf.add("\n");
-        buf.add(subBuffer.toString());
+        for (mod in _cache.iterator()) {
+            if (!compileList.contains(mod.path)) continue;
+
+            for (def in mod.defs) {
+                if (def.isExtern) continue;
+                buf.add(def.buf.toString());
+            }
+        }
 
         buf.add('func main() {\n');
-        buf.add('\tHx_${modulePathToPrefix(options.entryPoint)}_main()\n');
+        buf.add('\tHx_${modulePathToPrefix(options.entryPoint)}_Main()\n');
         buf.add('}\n');
 
         final outPath = Path.join([ options.output ]);

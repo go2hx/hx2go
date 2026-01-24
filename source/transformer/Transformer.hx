@@ -71,7 +71,7 @@ class Transformer {
                     return;
                 }
 
-                final td = module.resolveClass(p.pack, p.name);
+                final td = module.resolveClass(p.pack, p.name, module.path);
                 if (td == null) {
                     trace('null td for transformComplexType', p);
                     return;
@@ -100,7 +100,6 @@ class Transformer {
 
     function handleCoreTypeName(p:TypePath, tdName:String) {
         p.name = switch tdName {
-            case "String": "string";
             case "Unknown": "any";
             case _: p.name;
         }
@@ -178,6 +177,7 @@ class Transformer {
             case "Bool": "bool";
             case "Dynamic": "any";
             case "Array": '*[]${transformComplexTypeParam(p.params, 0)}';
+            case "String": "string";
             case "Null": '${transformComplexTypeParam(p.params, 0)}'; // TODO: implement Null<T>, currently just bypass
             case _:
                 trace("unhandled coreType: " + tdName);
@@ -185,7 +185,7 @@ class Transformer {
         }
 
         p.params = switch tdName {
-            case "go.Slice" | "go.Nullable" | "go.Pointer" | "Null": [];
+            case "go.Slice" | "go.Nullable" | "go.Pointer" | "Null" | "Array": [];
             case _: p.params;
         }
     }

@@ -31,8 +31,8 @@ function transformFieldAccess(t:Transformer, e:HaxeExpr) {
                 return;
             }
 
-            e.def = switch (e.special) {
-                case FStatic(tstr, fstr): EConst(CIdent('Hx_${modulePathToPrefix(tstr)}_${fstr}'));
+            e.def = switch (e?.special) {
+                case FStatic(tstr, _) | FInstance(tstr): EConst(CIdent('Hx_${modulePathToPrefix(tstr)}_${field}'));
                 case _: EField(e2, field, kind);
             }
         default:
@@ -73,7 +73,7 @@ function processComplexType(t:Transformer, e2:HaxeExpr, ct:ComplexType): { isNat
         case _: return { isNative: false, transformName: true };
     }
 
-    final td = t.module.resolveClass(innerPath.pack, innerPath.name);
+    final td = t.module.resolveClass(innerPath.pack, innerPath.name, t.module.path);
     if (td == null) {
         return { isNative: false, transformName: true };
     }
@@ -151,9 +151,9 @@ function processImports(t:Transformer, expr:Expr) {
 }
 
 function resolvePkgTransform(t:Transformer, e:HaxeExpr, e2:HaxeExpr, field:String, kind:EFieldKind):Bool {
-    var e2Name = switch e2.def {
+    var e2Name: Null<String> = switch e2.def {
         case EConst(CIdent(x)): x;
-        case _: return false;
+        case _: null;
     }
 
     if (e.parent?.def == null) {
@@ -163,19 +163,23 @@ function resolvePkgTransform(t:Transformer, e:HaxeExpr, e2:HaxeExpr, field:Strin
     if (e?.special != null) {
         final tstr = switch (e.special) {
             case FInstance(x): x;
-            case FStatic(x, _): x;
+            case FStatic(x, f): x;
             case _: null;
         }
 
         final ct = HaxeExprTools.stringToComplexType(tstr);
         final fieldHandled = switch ct {
-            case TPath(p): handleFieldTransform(t, e, p, e2Name, field);
+            case TPath(p): handleFieldTransform(t, e, p, e2, field);
             case _: false;
         }
 
         if (fieldHandled) {
             return true;
         }
+    }
+
+    if (e2Name == null) {
+        return false;
     }
 
     return switch e.parent.def {
@@ -207,10 +211,15 @@ function handleCallTransform(t:Transformer, e:HaxeExpr, params:Array<HaxeExpr>, 
     return transformed;
 }
 
-function handleFieldTransform(t:Transformer, e:HaxeExpr, p:TypePath, e2Name:String, field:String):Bool {
+function handleFieldTransform(t:Transformer, e:HaxeExpr, p:TypePath, e2:HaxeExpr, field:String):Bool {
     var transformed = switch [p.name, p.pack, p.params, field] {
         case ['Array', [], _, 'length']:
-            e.def = EGoCode('int32(len(*${e2Name}))', []);
+            e.def = EGoCode('int32(len(*{0}))', [e2]);
+            true;
+
+        case ['String', [], _, 'length']:
+            e.def = EGoCode('int32(utf8.RuneCountInString({0}))', [e2]); // TODO: use AST
+            t.def.addGoImport('unicode/utf8');
             true;
 
         case _:

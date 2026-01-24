@@ -12,25 +12,31 @@ class Module {
     public var mainBool:Bool = false;
     public var path:String;
     public var defs:Array<HaxeTypeDefinition> = [];
-    public var imports:Array<String> = [];
     public var preprocessor:Preprocessor;
     public var transformer:Transformer;
     public var translator:Translator;
     public var context:Context;
 
-    public function resolveClass(pack:Array<String>, name:String, forceGlobalResolve: Bool = false): HaxeTypeDefinition {
+    public function resolveClass(pack:Array<String>, name:String, origin:String): HaxeTypeDefinition {
         final path = pack.join(".") + (pack.length > 0 ? "." : "") + name;
         final module = context.getModule(path);
 
-        if (module == null)
+        if (module == null) {
             return null;
+        }
 
         for (def in module.defs) {
             switch def.kind {
                 case TDClass:
-                    if (def.name.split(".").pop() == name)
-                        def.usages++;
+                    if (def.name.split(".").pop() == name) {
+                        if (!def.usages.exists(origin)) {
+                            def.usages[origin] = 0;
+                        }
+
+                        def.usages[origin] += 1;
+
                         return def;
+                    }
 
                 case _: null;
             }
@@ -44,7 +50,7 @@ class Module {
         defs.push(def);
     }
 
-    public function run(buf: StringBuf) {
+    public function run() {
         if (path == null) {
             trace('invalid path');
             return;
@@ -59,10 +65,6 @@ class Module {
                 continue;
             }
 
-            if (def.usages == 0 && !mainBool) {
-                continue;
-            }
-
             transformer.def = def;
             preprocessor.def = def;
 
@@ -74,7 +76,7 @@ class Module {
             }
 
             final output = translator.translateDef(def);
-            buf.add(output);
+            def.buf.add(output);
         }
     }
 

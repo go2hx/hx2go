@@ -7,7 +7,7 @@ package go;
 @:coreType
 @:notNull
 @:runtimeValue
-abstract UInt64 {
+extern abstract UInt64 {
    @:op(A + B) private function add(other: UInt64): UInt64;
    @:op(A + B) @:commutative private inline function hx_add_a(other: Float): UInt64 {
        return this + Go.uint64(other);

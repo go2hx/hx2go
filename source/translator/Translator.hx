@@ -21,6 +21,8 @@ class Translator {
                 }
             case TFunction(args, ret):
                 "func(" + args.map(arg -> translateComplexType(arg)).join(", ") + ")" + translateComplexType(ret);
+            case TAnonymous(fields):
+                "any"; // TODO: implement
             default:
                 throw "unknown ct for translateComplexType: " + ct;
         }
@@ -80,7 +82,7 @@ class Translator {
         var buf = new StringBuf();
 
         for (field in def.fields) {
-            final name = 'Hx_${modulePathToPrefix(def.module)}_${field.name}';
+            final name = 'Hx_${modulePathToPrefix(def.module)}_${toPascalCase(field.name)}';
             final expr:HaxeExpr = field.expr;
 
             switch field.kind {
@@ -93,15 +95,15 @@ class Translator {
                             throw "expr.def is not EFunction: " + expr.def;
                     }
                 case FVar:
-                    buf.add('var $name');
+                    buf.add('var $name'); // TODO: typing
                     if (expr != null)
                         buf.add(translateExpr(expr));
                     buf.add("\n");
-                case FProp(get, set):
-                    buf.add('//FPROP\nvar $name');
-                    if (expr != null)
-                        buf.add(expr);
-                    buf.add("\n");
+                case FProp(get, set): // TODO: impl
+//                    buf.add('//FPROP\nvar $name');
+//                    if (expr != null)
+//                        buf.add(expr);
+//                    buf.add("\n");
                 default:
             }
         }

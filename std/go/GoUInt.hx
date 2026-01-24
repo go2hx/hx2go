@@ -7,7 +7,7 @@ package go;
 @:coreType
 @:notNull
 @:runtimeValue
-abstract GoUInt {
+extern abstract GoUInt {
    @:op(A + B) private function add(other: GoUInt): GoUInt;
    @:op(A + B) @:commutative private inline function hx_add_a(other: Float): GoUInt {
        return this + Go.uint(other);

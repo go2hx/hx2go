@@ -10,5 +10,5 @@ import HaxeExpr;
     When `normalWhile` is `false` it is `do {...} while (...)`.
 **/
 function translateWhile(t:Translator, econd:HaxeExpr, e:HaxeExpr, normalWhile:Bool) {
-    return "for" + (econd != null ? '' : ' ${t.translateExpr(econd)}') + " " + t.translateExpr(e);
+    return "for" + (econd?.def == null ? '' : ' ${t.translateExpr(econd)}') + " " + t.translateExpr(e);
 }

@@ -18,7 +18,6 @@ class Module {
     public var translator:Translator;
     public var context:Context;
 
-
     public function canResolveLocalTypeParam(funcName:String, typeName:String):Bool {
         for (def in this.defs) {
             for (field in def.fields) {
@@ -79,11 +78,11 @@ class Module {
         return null;
     }
 
-    public function resolveClass(pack:Array<String>, name:String):HaxeTypeDefinition {
+    public function resolveClass(pack:Array<String>, name:String, forceGlobalResolve: Bool = false):HaxeTypeDefinition {
         // trace(resolveModule);
         // local
-        if (pack.length == 0) {
-            return resolveLocalDef(this, name);
+        if (pack.length == 0 && !forceGlobalResolve) {
+            return resolveLocalDef(this, name) ?? resolveClass(pack, name, true);
         }else{
             final resolveModule = pack.join(".") + (pack.length > 0 ? "." : "") + name;
             // global
@@ -153,7 +152,7 @@ class Module {
             final importPath = paths.join("/");
             File.saveContent(context.options.output + "/main.go", 'package main\nimport "hx2go/$importPath"\nfunc main() {\n' + lastPathLowercase + ".Main()\n}");
         }
-        var prefixString = "package " + paths.join("/") + "\n";
+        var prefixString = "package " + paths.pop() + "\n";
         for (imp in imports) {
             imp = toGoPath(imp).join("/");
             prefixString += 'import "hx2go/$imp"\n';

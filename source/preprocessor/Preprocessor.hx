@@ -2,6 +2,7 @@ package preprocessor;
 
 import HaxeExpr;
 import HaxeExpr.HaxeTypeDefinition;
+import translator.TranslatorTools;
 import haxe.macro.Expr;
 
 /**
@@ -41,7 +42,26 @@ class Preprocessor {
 
             // ensure semantics
             case EBinop(_, e0, e1): Semantics.ensure(e, [e0, e1], this, scope);
-            case ECall(_, params): Semantics.ensure(e, params, this, scope);
+            case ECall(_, params): {
+                Semantics.ensure(e, params, this, scope);
+
+                final ct = HaxeExprTools.stringToComplexType(e.t);
+                if (ct == null) {
+                    return;
+                }
+
+                switch ct {
+                    case TPath(p) if (p.name == "Tuple" && p.pack[0] == "go"):
+                        var info = Semantics.analyzeFunctionCall(this, e);
+                        if (!info.isExtern) {
+                            return;
+                        }
+
+                        handleTuple(e, ct, scope);
+
+                    case _: null;
+                }
+            }
 
             // apply var alias
             case EConst(CIdent(name)): e.def = EConst(CIdent(scope.getAlias(name)));
@@ -71,7 +91,7 @@ class Preprocessor {
             }
 
             // extract while loop conditional to the body so that extraction makes sense
-            case EWhile(cond, body, norm) if (Semantics.goingToMutate(cond, e)): {
+            case EWhile(cond, body, norm) if (Semantics.goingToMutate(cond, e) || Semantics.hasSideEffects(this, cond)): {
                 ensureParenthesis(cond);
                 ensureBlock(body);
 
@@ -358,6 +378,55 @@ class Preprocessor {
             case EParenthesis(_): e.def;
             case _: EParenthesis(e.copy());
         }
+    }
+
+    public function handleTuple(cexpr: HaxeExpr, tupleType: ComplexType, scope: Scope): Void {
+        var fields = switch (tupleType) {
+            case TPath(p) if (p.params != null && p.params.length == 1):
+                switch p.params[0] {
+                    case TPType(t2):
+                        switch t2 {
+                            case TAnonymous(fields):
+                                fields;
+
+                            case _:
+                                trace('Tuple type parameter is not a TTuple');
+                                return;
+                        }
+
+                    case _:
+                        trace('Tuple type parameter is not a TPType');
+                        return;
+                }
+
+            case _:
+                trace('Tuple type is not a TPath with one parameter');
+                return;
+
+        }
+
+        var tmpId = annonymiser.allocId();
+        insertExprsBefore([
+            {
+                t: null,
+                def: EVars([
+                    {
+                        name: '_tuple_' + tmpId,
+                        type: tupleType,
+                        expr: null
+                    }
+                ])
+            },
+            {
+                t: null,
+                def: EBinop(Binop.OpAssign, {
+                    t: null,
+                    def: EConst(CIdent(fields.map(f -> '_tuple_$tmpId.${toPascalCase(f.name)}').join(', ')))
+                }, cexpr.copy()) // note: cexpr is the call which has already been processed by Semantics#ensure
+            }
+        ], cexpr, scope);
+
+        cexpr.def = EConst(CIdent('_tuple_' + tmpId));
     }
 
 }

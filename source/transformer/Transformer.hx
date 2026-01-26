@@ -7,6 +7,7 @@ import haxe.macro.Expr.TypeDefinition;
 import haxe.macro.ComplexTypeTools;
 import haxe.macro.Expr;
 import transformer.exprs.*;
+import translator.TranslatorTools;
 
 /**
  * Transforms Haxe AST to Go ready Haxe AST
@@ -43,6 +44,10 @@ class Transformer {
                 BinopExpr.transformBinop(this, e, op, e1, e2);
             case ECast(_, t):
                 Cast.transformCast(this, e, t);
+            case EArrayDecl(values, _):
+                transformer.decls.ArrayDecl.transformArray(this, e, values);
+            case EArray(e1, e2):
+                transformer.exprs.ArrayAccess.transformArrayAccess(this, e, e1, e2);
             case EFunction(_, f):
                 transformer.exprs.Function.transformFunction(this, f);
             case EObjectDecl(fields):
@@ -131,7 +136,7 @@ class Transformer {
                 case ":go.package":
                     def.addGoImport(exprToString(meta.params[0]));
 
-                case ":go.StructAccess":
+                case ":go.TypeAccess":
                     processStructAccess(p, meta);
             }
         }
@@ -156,16 +161,47 @@ class Transformer {
             case "go.Byte": "byte";
             case "go.Slice": '[]${transformComplexTypeParam(p.params, 0)}';
             case "go.Pointer": '*${transformComplexTypeParam(p.params, 0)}';
-            case "go.Nullable": '${transformComplexTypeParam(p.params, 0)}';
+            case "go.Tuple": {
+                var struct: Array<{ name: String, type: String }> = [];
+
+                switch p.params[0] {
+                    case TPType(ct):
+                        switch ct {
+                            case TAnonymous(fields):
+                                for (f in fields) {
+                                    var fct = switch f.kind {
+                                        case FVar(fct): fct;
+                                        case _: null;
+                                    }
+
+                                    transformComplexType(fct);
+
+                                    var ftp = switch (fct) {
+                                        case TPath(tp): tp;
+                                        case _: null;
+                                    }
+
+                                    struct.push({ name: toPascalCase(f.name), type: ftp.name });
+                                }
+
+                            case _: null;
+                        }
+                    case _: null;
+                }
+
+                'struct { ${struct.map(f -> '${f.name} ${f.type}').join('; ')} }';
+            }
             case "Bool": "bool";
-            case "Dynamic": "map[string]dynamic";
+            case "Dynamic": "any";
+            case "Array": '*[]${transformComplexTypeParam(p.params, 0)}';
+            case "Null": '${transformComplexTypeParam(p.params, 0)}'; // TODO: implement Null<T>, currently just bypass
             case _:
                 trace("unhandled coreType: " + tdName);
                 "#UNKNOWN_TYPE";
         }
 
         p.params = switch tdName {
-            case "go.Slice" | "go.Nullable" | "go.Pointer": [];
+            case "go.Slice" | "go.Nullable" | "go.Pointer" | "Null": [];
             case _: p.params;
         }
     }

@@ -40,7 +40,7 @@ var topLevel = [
     { hxName: "len",    goName: "len",      returnType: "GoInt",    types: ["T"], pure: true,  isOverload: false, args: [ { name: "v", type: "T" } ] },
     { hxName: "append", goName: "append",   returnType: "Slice<T>", types: ["T"], pure: false, isOverload: false, args: [ { name: "s", type: "Slice<T>" }, { name: "v", type: "haxe.Rest<T>" } ] },
     { hxName: "copy",   goName: "copy",     returnType: "GoInt",    types: ["T"], pure: false, isOverload: false, args: [ { name: "dst", type: "Slice<T>" }, { name: "src", type: "Slice<T>" } ] },
-    { hxName: "cap",    goName: "cap",      returnType: "GoInt",    types: ["T"], pure: true,  isOverload: false, args: [ { name: "v", type: "Slice<T>" } ] },
+    { hxName: "cap",    goName: "cap",      returnType: "GoInt",    types: ["T"], pure: true,  isOverload: false, args: [ { name: "v", type: "Slice<T>" } ] }
 ];
 
 var path = Path.join([Sys.getCwd(), 'std/go']);
@@ -212,17 +212,17 @@ function main() {
     convContent.add('// ------------------------ THIS FILE HAS BEEN GENERATED! ------------------------\n');
     convContent.add('// Please invoke the generator using `./Scripts/GenStdTypes` from the project root\n');
     convContent.add('// ------------------------ THIS FILE HAS BEEN GENERATED! ------------------------\n\n');
-    convContent.add('@:go.StructAccess({ topLevel: true, transformName: false })\n');
+    convContent.add('@:go.TypeAccess({ topLevel: true, transformName: false })\n');
     convContent.add('extern class Go {\n');
 
     for (t in types) {
         var module = toModuleName(t);
-        convContent.add('   @:pure public static extern function $t(x: Any): $module;\n');
+        convContent.add('   @:pure static function $t(x: Any): $module;\n');
     }
 
     for (tl in topLevel) {
         if (tl.goName != tl.hxName) convContent.add('   @:native("${tl.goName}")\n');
-        convContent.add('   ${tl.pure ? '@:pure ' : ''}public static extern ${tl.isOverload ? 'overload ' : ''}function ${tl.hxName}${tl.types.length > 0 ? '<${tl.types.join(", ")}>' : ''}(${tl.args.map(a -> '${a.name}: ${a.type}').join(", ")}): ${tl.returnType};\n');
+        convContent.add('   ${tl.pure ? '@:pure ' : ''}static ${tl.isOverload ? 'overload ' : ''}function ${tl.hxName}${tl.types.length > 0 ? '<${tl.types.join(", ")}>' : ''}(${tl.args.map(a -> '${a.name}: ${a.type}').join(", ")}): ${tl.returnType};\n');
     }
 
     convContent.add('}');

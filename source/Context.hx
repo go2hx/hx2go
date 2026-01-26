@@ -70,6 +70,8 @@ class Context {
      * @return A virtual filesystem of all the results including path, content and module.
      */
     public function run(): ContextResults {
+        // adds def
+        // sets context cache
         _parser.run("");
 
         for (module in _cache.iterator()) {
@@ -85,7 +87,7 @@ class Context {
         if (!FileSystem.exists("go.mod"))
             Sys.command("go mod init hx2go");
         if (options.buildAfterCompilation) {
-            Sys.command('go build .');
+            haxe.Timer.measure(() -> Sys.command('go build .'));
         }
         if (options.runAfterCompilation) {
             Sys.command('go run .');

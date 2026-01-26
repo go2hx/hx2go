@@ -108,9 +108,12 @@ class ExprParser {
             return { t: null, def: EBlock([])};
         }
 
+        var specialDef: Null<SpecialExprDef> = null;
         final def:HaxeExprDef = switch object.def {
             case BLOCK:
                 EBlock(object.objects.map(object -> objectToExpr(object)));
+            case BREAK:
+                EBreak;
             case CALL:
                 // trace(object.objects.length);
                 if (object.objects.length == 0) {
@@ -119,6 +122,7 @@ class ExprParser {
                 }
                 final e = objectToExpr(object.objects[0]);
                 final params = object.objects.slice(1).map(object -> objectToExpr(object));
+                specialDef = e.special; // we copy the specialDef from objects[0]; required for FInstance.
                 ECall(e, params);
             case FIELD:
                 if (object.objects.length == 0) {
@@ -127,7 +131,9 @@ class ExprParser {
                     throw "FIELD NEEDS MORE";
                 }
                 final e = objectToExpr(object.objects[0]);
-                final field = exprToValueString(objectToExpr(object.objects[1]));
+                final fexpr = objectToExpr(object.objects[1]);
+                final field = exprToValueString(fexpr);
+                specialDef = fexpr.special ?? e.special; // we copy the specialDef from objects[1]; required for FInstance.
                 EField(e, field);
             case TYPEEXPR:
                 EConst(CIdent(object.subType));
@@ -141,7 +147,27 @@ class ExprParser {
                     trace(object.objects.length);
                     trace(object.objects[0].string());
                 }
+
                 var field = object.objects[1].string();
+                var path = object.objects[0].string();
+
+                final colonIndex = field.indexOf(":");
+                if (colonIndex == -1)
+                    throw "colon not found: " + field;
+                field = field.substr(0, colonIndex);
+
+                specialDef = switch object.def {
+                    case FSTATIC:
+                        FStatic(path, field);
+                    case FINSTANCE:
+                        FInstance(path);
+                    case _:
+                        null;
+                };
+
+                EConst(CIdent(field));
+            case FANON:
+                var field = object.objects[0].string();
                 final colonIndex = field.indexOf(":");
                 if (colonIndex == -1)
                     throw "colon not found: " + field;
@@ -181,9 +207,11 @@ class ExprParser {
                     EUnop(stringToUnop(object.objects[0].string()), object.objects[1].string() != "Prefix", objectToExpr(object.objects[2]));
                 }
             case ARRAY:
-                null;
+                var e1 = objectToExpr(object.objects[0]);
+                var e2 = objectToExpr(object.objects[1]);
+                EArray(e1, e2);
             case ARRAYDECL:
-                EArrayDecl(object.objects.map(obj -> objectToExpr(obj)));
+                EArrayDecl(object.objects.map(obj -> objectToExpr(obj)), null);
             case NEW:
                 final ct = HaxeExprTools.stringToComplexType(object.objects[0].string());
                 switch ct {
@@ -217,14 +245,13 @@ class ExprParser {
             case DO:
                 EWhile(objectToExpr(object.objects[0]), objectToExpr(object.objects[1]), false);
             case LOCAL:
-                object.defType = object.subType;
+                // mikaib: why do we need this?
+                // object.defType = object.subType;
                 EConst(CIdent(object.subType.substr(0, object.subType.indexOf("("))));
             case PARENTHESIS:
                 EParenthesis(objectToExpr(object.objects[0]));
             case THROW:
                 EThrow(objectToExpr(object.objects[0]));
-            case FANON:
-                null;
             case FOR:
                 EFor(objectToExpr(object.objects[0]), objectToExpr(object.objects[1]));
             case IF:
@@ -281,10 +308,12 @@ class ExprParser {
                 if (!nonImpl.contains(object.def)) nonImpl.push(object.def);
                 EConst(CIdent("#objectToExpr_" + object.string()));
         };
+
         return {
             t: object.defType,
             def: def,
             remapTo: null,
+            special: specialDef
         };
     }
     function emptyExpr():HaxeExpr {
@@ -434,27 +463,49 @@ class ExprParser {
     }
 
     function parseObjectLine(startIndex:Int, objectString:String):Object {
-        final colonIndex = objectString.indexOf(":", 1);
-        if (colonIndex == -1) {
-            throw "colon not found for given ObjectString: " + objectString;
+        var str = objectString;
+        if (str.startsWith("[")) str = str.substring(1);
+        if (str.endsWith("]")) str = str.substring(0, str.length - 1);
+
+        function findColon(str:String, startPos:Int = 0):Int {
+            var depth = 0;
+            for (i in startPos...str.length) {
+                var char = str.charAt(i);
+                if (char == "<" || char == "(") depth++;
+                else if (char == ">" || char == ")") depth--;
+                else if (char == ":" && depth == 0) return i;
+            }
+            return -1;
         }
-        var defString = objectString.substr(0, colonIndex);
-        var defTypeString = objectString.substring(colonIndex + 1);
-        final defType = defTypeString;
-        final spaceIndex = defString.indexOf(" ");
+
+        final colIdx = findColon(str);
+        if (colIdx == -1) throw "colon not found for given ObjectString: " + objectString;
+
+        var defString = str.substring(0, colIdx);
+        var remaining = str.substring(colIdx + 1);
+
+        var lastColIdx = findColon(remaining);
+        while (lastColIdx != -1) {
+            remaining = remaining.substring(lastColIdx + 1);
+            lastColIdx = findColon(remaining);
+        }
+
+        final defTypeString = remaining;
+
+        final sIdx = defString.indexOf(" ");
         var subTypeString = "";
-        if (spaceIndex != -1) {
-            // sub
-            subTypeString = objectString.substring(spaceIndex + 1, colonIndex);
-            defString = objectString.substring(0, spaceIndex);
+        if (sIdx != -1) {
+            subTypeString = defString.substring(sIdx + 1);
+            defString = defString.substring(0, sIdx);
         }
-        final subType = subTypeString;
+
         switch defString {
-           case "Meta":
-               handleMeta();
-           default:
+            case "Meta":
+                handleMeta();
+            default:
         }
-        return new Object(defString, defType, lineIndex, startIndex, subType, objectString, debug_path);
+
+        return new Object(defString, defTypeString, lineIndex, startIndex, subTypeString, objectString, debug_path);
     }
 
     function stringToUnop(un: String):Unop {
@@ -503,7 +554,7 @@ class ExprParser {
     }
     function handleMeta() {
         var end = findCloseParen(lineIndex + 1);
-        // assume meta without parenthesis 
+        // assume meta without parenthesis
         if (end == -1) {
             end = lineIndex + 1;
         }

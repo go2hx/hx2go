@@ -29,6 +29,7 @@ function transformFieldAccess(t:Transformer, e:HaxeExpr) {
             }
 
             e.def = EField(e2, field, kind);
+            t.transformExpr(e2); // handle recursive field accesses
         default:
     }
 }
@@ -68,13 +69,19 @@ function processComplexType(t:Transformer, e2:HaxeExpr, ct:ComplexType):Bool {
     var transformName = false;
 
     for (meta in td.meta()) {
-        if (meta.name == ":go.StructAccess") {
+        if (meta.name == ":go.TypeAccess") {
             var result = processStructAccessMeta(t, meta, renamedIdentLeft);
             renamedIdentLeft = result.name;
             isNative = result.isNative;
             topLevel = result.topLevel;
             transformName = result.transformName;
         }
+    }
+
+    // this will handle the case if a class tries to call something on itself: it will remove the package path
+    if (!isNative && t.module.path == innerPath.pack.concat([innerPath.name]).join(".")) {
+        renamedIdentLeft = "";
+        topLevel = true;
     }
 
     if (renamedIdentLeft != "" || topLevel) {
@@ -134,6 +141,28 @@ function resolvePkgTransform(t:Transformer, e:HaxeExpr, e2:HaxeExpr, field:Strin
         case _: return false;
     }
 
+    if (e.parent?.def == null) {
+        return false;
+    }
+
+    if (e?.special != null) {
+        final tstr = switch (e.special) {
+            case FInstance(x): x;
+            case FStatic(x, _): x;
+            case _: null;
+        }
+
+        final ct = HaxeExprTools.stringToComplexType(tstr);
+        final fieldHandled = switch ct {
+            case TPath(p): handleFieldTransform(t, e, p, e2Name, field);
+            case _: false;
+        }
+
+        if (fieldHandled) {
+            return true;
+        }
+    }
+
     return switch e.parent.def {
         case ECall(e, params): handleCallTransform(t, e, params, e2Name, field);
         case _: false;
@@ -150,6 +179,23 @@ function handleCallTransform(t:Transformer, e:HaxeExpr, params:Array<HaxeExpr>, 
             final ct = HaxeExprTools.stringToComplexType(e.parent.t);
             t.transformComplexType(ct);
             e.parent.def = EGoSliceConstruct(ct);
+            true;
+
+        case _:
+            false;
+    }
+
+    if (transformed) {
+        t.iterateExpr(e.parent);
+    }
+
+    return transformed;
+}
+
+function handleFieldTransform(t:Transformer, e:HaxeExpr, p:TypePath, e2Name:String, field:String):Bool {
+    var transformed = switch [p.name, p.pack, p.params, field] {
+        case ['Array', [], _, 'length']:
+            e.def = EGoCode('int32(len(*${e2Name}))', []);
             true;
 
         case _:

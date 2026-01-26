@@ -1,6 +1,7 @@
 package preprocessor;
 
 import HaxeExpr;
+import transformer.Transformer;
 
 enum ExprKind {
 	Stmt;
@@ -21,7 +22,7 @@ class Semantics {
 		var willMutate = false;
 		for (c in children) {
 		    if (c?.def == null) continue;
-			willMutate = willMutate || hasSideEffects(c) || goingToMutate(c, p);
+			willMutate = willMutate || hasSideEffects(ctx, c) || goingToMutate(c, p);
 		}
 
 		if (!willMutate) {
@@ -134,26 +135,26 @@ class Semantics {
 	 * Will check if the given expression `expr` has side effects.
 	 * @param expr The expression to recursively check for side effects.
 	 */
-	public static function hasSideEffects(expr:HaxeExpr):Bool {
+	public static function hasSideEffects(ctx: Preprocessor, expr:HaxeExpr):Bool {
 		return switch expr.def {
 			case ECall(e, params):
-				true; // TODO: @:pure is defined on cf_meta, we should check for that. (HaxeClassField#meta)
+				!analyzeFunctionCall(ctx, expr).isPure;
 			case EBinop(OpAssign, _, _), EBinop(OpAssignOp(_), _, _), EUnop(OpIncrement, _, _), EUnop(OpDecrement, _, _), ENew(_, _), EReturn(_),
 				EBreak: true;
 			case EVars(vars):
 				for (v in vars)
-					if (v.expr != null && hasSideEffects(v.expr))
+					if (v.expr != null && hasSideEffects(ctx, v.expr))
 						return true;
 				false;
-			case EBinop(_, e1, e2): hasSideEffects(e1) || hasSideEffects(e2);
-			case EUnop(_, _, e), EField(e, _, _), EParenthesis(e), ECast(e, _): hasSideEffects(e);
+			case EBinop(_, e1, e2): hasSideEffects(ctx, e1) || hasSideEffects(ctx, e2);
+			case EUnop(_, _, e), EField(e, _, _), EParenthesis(e), ECast(e, _): hasSideEffects(ctx, e);
 			case EBlock(exprs):
 				for (e in exprs)
-					if (hasSideEffects(e))
+					if (hasSideEffects(ctx, e))
 						return true;
 				false;
-			case EIf(econd, eif, eelse): hasSideEffects(econd) || hasSideEffects(eif) || (eelse != null && hasSideEffects(eelse));
-			case EWhile(econd, ebody, _): hasSideEffects(econd) || hasSideEffects(ebody);
+			case EIf(econd, eif, eelse): hasSideEffects(ctx, econd) || hasSideEffects(ctx, eif) || (eelse != null && hasSideEffects(ctx, eelse));
+			case EWhile(econd, ebody, _): hasSideEffects(ctx, econd) || hasSideEffects(ctx, ebody);
 			case EConst(_): false;
 			case _:
 				trace('unknown if expr has side effects');
@@ -195,4 +196,65 @@ class Semantics {
 			case _: true;
 		}
 	}
+
+	/**
+	 * Gives some useful information given a function call expression.
+	 * @param e The function call expression
+	 */
+	public static function analyzeFunctionCall(ctx: Preprocessor, e:HaxeExpr): { isExtern: Bool, isPure: Bool, failed: Bool } {
+		if (e?.def == null) {
+			return { isExtern: false, isPure: false, failed: true };
+		}
+
+		return switch e.def { // TODO: cache results?
+			case ECall(cexpr, args):
+				switch cexpr.def {
+					case EField(fexpr, fieldName, kind):
+						var isPure = false;
+						var pack = switch cexpr.special {
+							case FStatic(p, _): p.split(".");
+							case FInstance(p): p.split(".");
+							case _: null;
+						};
+
+						if (pack == null || pack.length == 0) {
+							return { isExtern: false, isPure: false, failed: true };
+						}
+
+						var className = pack.pop();
+						var funcName = fieldName;
+
+						final td = ctx.module.resolveClass(pack, className);
+						if (td == null) {
+							return { isExtern: false, isPure: false, failed: true };
+						}
+
+						for (meta in td.meta()) {
+							if (meta.name == ":pure") {
+								isPure = true;
+								break;
+							}
+						}
+
+						for (field in td.fields) {
+							if (field.name != funcName) continue;
+
+							for (meta in field.meta) {
+								if (meta.name == ":pure") {
+									isPure = true;
+								}
+							}
+
+							break;
+						}
+
+						{ isExtern: td.isExtern, isPure: isPure, failed: false };
+
+					case _: { isExtern: false, isPure: false, failed: true };
+				}
+
+			case _: { isExtern: false, isPure: false, failed: true };
+		}
+	}
+
 }

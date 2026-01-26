@@ -14,7 +14,7 @@ function transformConst(t:Transformer, e:HaxeExpr) {
                         case TPath({pack: [], name: "Null", params: [TPType(t)]}):
                             if (isUnknown(t)) {
                                 "any(nil)";
-                            }else{
+                            } else {
                                 defaultConst(c);
                             }
                         default:

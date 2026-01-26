@@ -17,7 +17,7 @@ function transformObjectDecl(t:Transformer, fields:Array<HaxeObjectField>, ct:Co
         // a => b
         list.push({def: EBinop(OpArrow, fieldName, field.expr), t: null});
     }
-    return EArrayDecl(list);
+    return EArrayDecl(list, ct);
 }
 
 function transformObjectDeclTypes(t:Transformer, fields:Array<HaxeObjectField>, ct:ComplexType) {

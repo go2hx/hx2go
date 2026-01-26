@@ -41,7 +41,7 @@ class HaxeExprTools {
 				f(e1);
 				f(e2);
 				opt2(e3, f);
-			case EArrayDecl(el), ENew(_, el), EBlock(el):
+			case EArrayDecl(el, _), ENew(_, el), EBlock(el):
 				iterArray(el, f);
 			case EObjectDecl(fl):
 				for (fd in fl)

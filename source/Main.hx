@@ -7,6 +7,8 @@ class Main {
    public static function main() {
       final context:Context = {options: loadContextOptions()};
       context.run();
+
+
    }
 
    static function loadContextOptions():ContextOptions {

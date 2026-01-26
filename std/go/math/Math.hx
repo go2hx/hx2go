@@ -4,10 +4,8 @@ import go.Float64;
 import go.GoInt;
 
 @:pure
-@:go.StructAccess({ name: "math", imports: ["math"] })
+@:go.TypeAccess({ name: "math", imports: ["math"] })
 extern class Math {
-
-    // TODO: this extern is incomplete - https://pkg.go.dev/math
 
     static var E: Float64;
     static var Pi: Float64;
@@ -84,11 +82,9 @@ extern class Math {
     static function y0(x: Float64): Float64;
     static function y1(x: Float64): Float64;
     static function yn(n: GoInt, x: Float64): Float64;
-
-    // TODO: tuples are required to complete the following:
-    // static function frexp(f: Float64): go.Tuple<Float64, GoInt>;
-    // static function lgamma(x: Float64): go.Tuple<Float64, GoInt>;
-    // static function modf(f: Float64): go.Tuple<Float64, Float64>;
-    // static function sincos(x: Float64): go.Tuple<Float64, Float64>;
+    static function frexp(f: Float64): Tuple<{ frac: Float64, exp: GoInt }>;
+    static function lgamma(x: Float64): Tuple<{ lgamma: Float64, sign: GoInt }>;
+    static function modf(f: Float64): Tuple<{ int: Float64, frac: Float64 }>;
+    static function sincos(x: Float64): Tuple<{ sin: Float64, cos: Float64 }>;
 
 }

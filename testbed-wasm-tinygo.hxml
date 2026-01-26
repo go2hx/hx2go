@@ -1,0 +1,3 @@
+testbed.hxml
+-D tinygo
+-D tinygo.target=wasi

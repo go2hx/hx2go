@@ -5,6 +5,9 @@ package go.time;
 @:runtimeValue
 @:go.TypeAccess({ name: "time.Duration", imports: ["time"] })
 extern abstract Duration {
+
+    // TODO: this extern is incomplete - https://pkg.go.dev/time
+
     @:op(A + B) private function add(other: Duration): Duration;
     @:op(A + B) @:commutative private inline function hx_add_a(other: Float): Duration {
         return this + Time.duration(other);

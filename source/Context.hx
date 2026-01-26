@@ -22,10 +22,26 @@ class ContextOptions {
     @:opt_desc("The entry point of your Haxe program.")
     @:opt_type("String")
     public var entryPoint: String = "Main";
+
     @:opt_name("output")
     @:opt_desc("Output location of the Go code")
     @:opt_type("String")
     public var output: String = "export";
+
+    @:opt_name("tinygo")
+    @:opt_desc("If set, tinygo will be used instead of the default go compiler")
+    @:opt_type("Bool")
+    public var tinygo: Bool = false;
+
+    @:opt_name("tinygo.target")
+    @:opt_desc("The target that tinygo should use")
+    @:opt_type("String")
+    public var tinygoTarget: String = "arduino";
+
+    @:opt_name("tinygo.port")
+    @:opt_desc("The port to flash the build to")
+    @:opt_type("String")
+    public var tinygoPort: String = "/dev/ttyUSB0";
 }
 
 @:structInit
@@ -154,12 +170,39 @@ class Context {
             Sys.command("go mod init hx2go");
         }
 
-        if (options.buildAfterCompilation) {
-            Sys.command('go build .');
-        }
+        if (options.tinygo) {
+            // tinygo flash -target=... -port ...
+            var action = "";
 
-        if (options.runAfterCompilation) {
-            Sys.command('go run .');
+            if (options.buildAfterCompilation) {
+                action = "build";
+            }
+
+            if (options.runAfterCompilation) {
+                action = "flash"; // TODO: if non-hardware target, use 'run' instead.
+            }
+
+            if (action != "") {
+                var cmd = 'tinygo $action';
+                if (options.tinygoPort != null && options.tinygoPort != "") {
+                    cmd += ' -port ${options.tinygoPort}';
+                }
+
+                if (options.tinygoTarget != null && options.tinygoTarget != "") {
+                    cmd += ' -target=${options.tinygoTarget}';
+                }
+
+                Sys.command(cmd);
+            }
+
+        } else {
+            if (options.buildAfterCompilation) {
+                Sys.command('go build .');
+            }
+
+            if (options.runAfterCompilation) {
+                Sys.command('go run .');
+            }
         }
 
         Sys.setCwd(cwd);

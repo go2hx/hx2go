@@ -50,6 +50,10 @@ function transformNew(t:Transformer, e:HaxeExpr, tpath: TypePath, params: Array<
         }
 
         var count = 0;
+        if (name.charAt(0) == "*") {
+            name = "&" + name.substr(1);
+        }
+
         e.def = EGoCode('${name}{ ${args.map(a -> '${transformName ? toPascalCase(a.name) : a.name}: {${count++}}').join(', ')} }', params);
     }
 

@@ -46,6 +46,10 @@ class Init {
         final stamp = Timer.stamp();
         final runGoDefine = Context.definedValue("run-go");
 		final buildGoDefine = Context.definedValue("build-go");
+		final tinyGoDefine = Context.definedValue("tinygo");
+		final tinyGoTargetDefine = Context.definedValue("tinygo.target");
+		final tinyGoPortDefine = Context.definedValue("tinygo.port");
+
         Context.onAfterGenerate(() -> {
             // spin up hx2go to read dump
             final mainClass = Compiler.getConfiguration().mainClass;
@@ -59,8 +63,17 @@ class Init {
             if (runGoDefine != null) {
                 command += " -D run-go";
             }
-			 if (buildGoDefine != null) {
+			if (buildGoDefine != null) {
                 command += " -D build-go";
+            }
+            if (tinyGoDefine != null) {
+                command += " -D tinygo";
+            }
+            if (tinyGoTargetDefine != null) {
+                command += " -D tinygo.target=" + tinyGoTargetDefine;
+            }
+            if (tinyGoDefine != null) {
+                command += " -D tinygo.port=" + tinyGoPortDefine;
             }
             std.Sys.command(command);
         });

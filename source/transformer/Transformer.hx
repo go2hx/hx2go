@@ -119,14 +119,6 @@ class Transformer {
                 case ":coreType":
                     processCoreType(p, td.name);
 
-                case ":go.native":
-                    p.pack = [];
-                    p.params = [];
-                    p.name = exprToString(meta.params[0]);
-
-                case ":go.package":
-                    def.addGoImport(exprToString(meta.params[0]));
-
                 case ":go.TypeAccess":
                     processStructAccess(p, meta);
             }
@@ -206,6 +198,8 @@ class Transformer {
             switch field.field {
                 case "name":
                     p.name = exprToString(field.expr);
+                    p.pack = [];
+                    p.params = [];
 
                 case "imports":
                     var values = switch field.expr.expr {

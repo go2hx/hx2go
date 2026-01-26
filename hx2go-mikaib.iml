@@ -3,7 +3,7 @@
   <component name="Go" enabled="true" />
   <component name="HaxeModuleSettingsStorage">
     <option name="buildConfig" value="1" />
-    <option name="hxmlPath" value="$MODULE_DIR$/extraParams.hxml" />
+    <option name="hxmlPath" value="$MODULE_DIR$/testbed-tinygo.hxml" />
     <option name="outputFolder" value="$MODULE_DIR$/out/production/hx2go-mikaib" />
   </component>
   <component name="NewModuleRootManager" inherit-compiler-output="true">

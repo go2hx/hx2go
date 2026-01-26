@@ -1,0 +1,4 @@
+testbed.hxml
+-D tinygo
+-D tinygo.target=arduino
+-D tinygo.port=/dev/ttyUSB0

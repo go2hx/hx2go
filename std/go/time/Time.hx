@@ -3,6 +3,8 @@ package go.time;
 @:go.TypeAccess({ name: "time", imports: ["time"] })
 extern class Time {
 
+    // TODO: this extern is incomplete - https://pkg.go.dev/time
+
     static var millisecond: Duration;
     static var second: Duration;
 

@@ -55,7 +55,9 @@ typedef ContextResults = Array<ContextFile>;
 
 @:structInit
 class Context {
-    
+
+    static final NATIVE_TINYGO_TARGETS = ["wasm", "wasi"];
+
     public var options: ContextOptions;
     
     private var _parser: IParser = null;
@@ -179,17 +181,26 @@ class Context {
             }
 
             if (options.runAfterCompilation) {
-                action = "flash"; // TODO: if non-hardware target, use 'run' instead.
+                action = "flash";
             }
 
             if (action != "") {
                 var cmd = 'tinygo $action';
+
+                switch options.tinygoTarget {
+                    case "wasi": {
+                        cmd = 'GOOS=wasip1 GOARCH=wasm tinygo build -o output.wasm';
+                        if (options.runAfterCompilation) cmd += ' && wasmtime ./output.wasm';
+                    }
+
+                    case "wasm": {
+                        cmd = 'GOOS=js GOARCH=wasm tinygo build -o output.wasm';
+                    }
+
+                    case _: cmd += ' -target=${options.tinygoTarget}';
+                }
                 if (options.tinygoPort != null && options.tinygoPort != "") {
                     cmd += ' -port ${options.tinygoPort}';
-                }
-
-                if (options.tinygoTarget != null && options.tinygoTarget != "") {
-                    cmd += ' -target=${options.tinygoTarget}';
                 }
 
                 Sys.command(cmd);

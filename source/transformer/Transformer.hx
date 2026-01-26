@@ -56,6 +56,8 @@ class Transformer {
                 transformer.exprs.ArrayAccess.transformArrayAccess(this, e, e1, e2);
             case ENew(tpath, params):
                 transformer.exprs.New.transformNew(this, e, tpath, params);
+            case EGoEnumParameter(e0, kind, idx):
+                transformer.exprs.EnumParameter.transformEnumParameter(this, e, e0, kind, idx);
             default:
                 iterateExpr(e);
         }

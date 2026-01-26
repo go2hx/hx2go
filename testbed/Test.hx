@@ -20,9 +20,10 @@ enum Cool {
 class Test {
 
     public static function main() {
-        var file = switch OS.open("~/Documents/test.txt") {
+        final res = OS.open("~/Documents/test.txt");
+        final file = switch res {
             case Ok(r): Fmt.println("File opened :-)", r); r;
-            case _: Fmt.println("Failed :'("); null;
+            case Err(e): Fmt.println("Failed :'(", e); null;
         }
 
         Fmt.println("Final result:", file);

@@ -118,10 +118,10 @@ class Semantics {
 	 */
 	public static function getExprKind(expr:HaxeExpr):ExprKind {
 		return switch expr.def {
-			case EGoEnumIndex(_), ESwitch(_, _, _), EBlock(_), EVars(_), EWhile(_, _, _), EIf(_, _, _), EReturn(_), EBinop(OpAssignOp(_), _, _), EBinop(OpAssign, _, _),
+			case ESwitch(_, _, _), EBlock(_), EVars(_), EWhile(_, _, _), EIf(_, _, _), EReturn(_), EBinop(OpAssignOp(_), _, _), EBinop(OpAssign, _, _),
 				EUnop(OpIncrement, _, _), EUnop(OpDecrement, _, _), EBreak: Stmt;
 
-			case EArrayDecl(_), EFunction(_, _), EArray(_), EConst(_), EField(_, _, _), ECast(_, _), EBinop(_, _, _),
+			case EGoEnumIndex(_), EGoEnumParameter(_, _, _), EArrayDecl(_), EFunction(_, _), EArray(_), EConst(_), EField(_, _, _), ECast(_, _), EBinop(_, _, _),
 				EUnop(_, _, _), ENew(_, _), EParenthesis(_): Expr;
 
 			case ECall(_, _):
@@ -149,7 +149,7 @@ class Semantics {
 						return true;
 				false;
 			case EBinop(_, e1, e2), EArray(e1, e2): hasSideEffects(ctx, e1) || hasSideEffects(ctx, e2);
-			case EUnop(_, _, e), EField(e, _, _), EParenthesis(e), ECast(e, _): hasSideEffects(ctx, e);
+			case EUnop(_, _, e), EField(e, _, _), EParenthesis(e), ECast(e, _), EGoEnumParameter(e, _, _), EGoEnumIndex(e): hasSideEffects(ctx, e);
 			case EBlock(exprs), EArrayDecl(exprs, _):
 				for (e in exprs)
 					if (hasSideEffects(ctx, e))

@@ -160,15 +160,15 @@ class Transformer {
             case "go.Byte": "byte"; // TODO: must be implemented
             case "go.Slice": '[]${transformComplexTypeParam(p.params, 0)}';
             case "go.Pointer": '*${transformComplexTypeParam(p.params, 0)}';
-            case "go.Result", "go.ResultKind": {
-                resultToTuple(p);
-                handleTuple(p);
-            }
             case "Bool": "bool";
             case "Dynamic": "any";
             case "Array": '*[]${transformComplexTypeParam(p.params, 0)}';
             case "String": "string";
             case "Null": '${transformComplexTypeParam(p.params, 0)}'; // TODO: implement Null<T>, currently just bypass
+            case "go.Result", "go.ResultKind": {
+                resultToTuple(p);
+                handleTuple(p);
+            }
             case _: p.name; // ignore coreType
         }
 

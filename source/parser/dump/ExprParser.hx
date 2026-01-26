@@ -250,6 +250,28 @@ class ExprParser {
                 EConst(CIdent(object.subType.substr(0, object.subType.indexOf("("))));
             case PARENTHESIS:
                 EParenthesis(objectToExpr(object.objects[0]));
+            case SWITCH:
+                var cases = object.objects.copy(); // [on, case, case]
+                var on = objectToExpr(cases.shift()); // on, [case, case]
+
+                // mikaib: haxe seems to be very eager on reordering switch cases, so thus far I've been unable to get a dump which defines a guard or more than 1 value per case.
+                // it may only be generated in very specific situations, or perhaps the dump is in a form where that info is lost.
+                // either way, I don't think it should be a huge deal, but, expect the following code to be incomplete in that regard.
+                // if you are able to get a dump with such cases, please fix this implementation or send me the dump so I can.
+                ESwitch(on, cases.map(c -> {
+                    if (c.objects.length > 2) {
+                        trace("!!! [Case] block with more than 2 objects, please store the dump and report to mikaib !!!");
+                        trace("Dump path: " + debug_path);
+                        throw "https://github.com/go2hx/hx2go/issues"; // we nag the user to send us a report, sorry... ( ﾟｏ⌒)
+                    }
+
+                    {
+                        values: [ objectToExpr(object.objects[0]) ],
+                        guard: emptyExpr(),
+                        expr: object.objects.length > 1 ? objectToExpr(object.objects[1]) : emptyExpr(),
+                    }
+                }), null);
+
             case THROW:
                 EThrow(objectToExpr(object.objects[0]));
             case FOR:
@@ -275,6 +297,10 @@ class ExprParser {
                 }
             case STRING:
                 EConst(CIdent("#STRING " + object.string()));
+            case ENUMINDEX:
+                EGoEnumIndex(objectToExpr(object.objects[0]));
+            case ENUMPARAMETER:
+                EGoEnumParameter(objectToExpr(object.objects[0]), object.objects[1].string(), Std.parseInt(object.objects[2].string()));
             case CAST:
                 ECast(objectToExpr(object.objects[0]), HaxeExprTools.stringToComplexType(object.defType));
             case FUNCTION:

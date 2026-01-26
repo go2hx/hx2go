@@ -4,6 +4,7 @@ import HaxeExpr;
 import HaxeExpr.HaxeTypeDefinition;
 import translator.TranslatorTools;
 import haxe.macro.Expr;
+import transformer.Transformer;
 
 /**
  * Gets rid of the bulk of Haxe language features that make working with it a nightmare.
@@ -66,12 +67,7 @@ class Preprocessor {
                             return;
                         }
 
-                        p.name = "Tuple";
-                        p.params[0] = TPType(TAnonymous([
-                            { name: "result", pos: p.pos, kind: FVar(HaxeExprTools.typeOfParam(p.params[0])) },
-                            { name: "error", pos: p.pos, kind: FVar(HaxeExprTools.typeOfParam(p.params[1])) }
-                        ]));
-                        p.params.resize(1);
+                        Transformer.resultToTuple(p);
 
                         handleTuple(e, ct, scope);
 
@@ -103,6 +99,20 @@ class Preprocessor {
                 ensureParenthesis(cond);
                 ensureBlock(eif);
                 ensureBlock(eelse);
+                iterateExprPost(e, scope.copy());
+            }
+
+            // normalise body
+            case ESwitch(e, cases, edef): {
+                ensureParenthesis(e);
+                for (c in cases) {
+                    ensureBlock(c.expr);
+                }
+
+                if (edef != null) {
+                    ensureBlock(edef);
+                }
+
                 iterateExprPost(e, scope.copy());
             }
 

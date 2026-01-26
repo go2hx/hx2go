@@ -14,6 +14,15 @@ class Transformer {
     public var module:Module = null;
     public var def:HaxeTypeDefinition = null;
 
+    public static function resultToTuple(p: TypePath): Void {
+        p.name = "Tuple";
+        p.params[0] = TPType(TAnonymous([
+            { name: "result", pos: p.pos, kind: FVar(HaxeExprTools.typeOfParam(p.params[0])) },
+            { name: "error", pos: p.pos, kind: FVar(HaxeExprTools.typeOfParam(p.params[1])) }
+        ]));
+        p.params.resize(1);
+    }
+
     public function transformExpr(e:HaxeExpr, ?parent:HaxeExpr, ?parentIdx:Int) {
         if (e == null || e.def == null) {
             return;
@@ -39,8 +48,8 @@ class Transformer {
                 VarDeclarations.transformVarDeclarations(this, e, vars);
             case EBinop(op, e1, e2):
                 BinopExpr.transformBinop(this, e, op, e1, e2);
-            case ECast(_, t):
-                Cast.transformCast(this, e, t);
+            case ECast(inner, t):
+                Cast.transformCast(this, inner, e, t);
             case EArrayDecl(values, _):
                 transformer.decls.ArrayDecl.transformArray(this, e, values);
             case EArray(e1, e2):
@@ -73,14 +82,23 @@ class Transformer {
                     return;
                 }
 
-                final td = module.resolveClass(p.pack, p.name, module.path);
-                if (td == null) {
-                    trace('null td for transformComplexType', p);
-                    return;
-                }
+                switch [p.pack, p.name] {
+                    case [["go"], "Tuple"]: {
+                        p.pack = [];
+                        p.name = handleTuple(p);
+                    }
 
-                handleCoreTypeName(p, td.name);
-                processTypeMetadata(p, td);
+                    case _: {
+                        final td = module.resolveClass(p.pack, p.name, module.path);
+                        if (td == null) {
+                            trace('null td for transformComplexType', p);
+                            return;
+                        }
+
+                        handleCoreTypeName(p, td.name);
+                        processTypeMetadata(p, td);
+                    }
+                }
 
             default:
         }
@@ -134,21 +152,14 @@ class Transformer {
             case "go.UInt16": "uint16";
             case "go.UInt8": "uint8";
             case "go.GoUInt": "uint";
-            case "go.Rune": "rune";
-            case "go.Byte": "byte";
+            case "go.Rune": "rune"; // TODO: must be implemented
+            case "go.Byte": "byte"; // TODO: must be implemented
             case "go.Slice": '[]${transformComplexTypeParam(p.params, 0)}';
             case "go.Pointer": '*${transformComplexTypeParam(p.params, 0)}';
             case "go.Result": {
-                p.name = "Tuple";
-                p.params[0] = TPType(TAnonymous([
-                    { name: "result", pos: p.pos, kind: FVar(HaxeExprTools.typeOfParam(p.params[0])) },
-                    { name: "error", pos: p.pos, kind: FVar(HaxeExprTools.typeOfParam(p.params[1])) }
-                ]));
-                p.params.resize(1);
-                handleTuple(p, tdName);
+                resultToTuple(p);
+                handleTuple(p);
             }
-
-            case "go.Tuple": handleTuple(p, tdName);
             case "Bool": "bool";
             case "Dynamic": "any";
             case "Array": '*[]${transformComplexTypeParam(p.params, 0)}';
@@ -158,12 +169,12 @@ class Transformer {
         }
 
         p.params = switch tdName {
-            case "go.Slice" | "go.Nullable" | "go.Pointer" | "Null" | "Array": [];
+            case "go.Slice" | "go.Pointer" | "Null" | "Array": [];
             case _: p.params; // ignore coreType
         }
     }
 
-    function handleTuple(p:TypePath, tdName:String): String {
+    function handleTuple(p:TypePath): String {
         var struct: Array<{ name: String, type: String }> = [];
 
         switch p.params[0] {

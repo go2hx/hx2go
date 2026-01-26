@@ -69,10 +69,15 @@ class HaxeExprTools {
 		}
 	}
     public static function stringToExprDef(s:String):ExprDef {
-        final input = byte.ByteData.ofString(s);
-        final parser = new haxeparser.HaxeParser(input, s);
-        final expr = parser.expr().expr;
-        return expr;
+		try {
+			final input = byte.ByteData.ofString(s);
+			final parser = new haxeparser.HaxeParser(input, s);
+			final expr = parser.expr().expr;
+			return expr;
+		} catch (e:Dynamic) {
+			trace("HaxeExprTools.stringToExprDef parse error!");
+			return EMeta({ pos: null, name: "PARSE_ERROR" }, null);
+		}
     }
     public static function stringToComplexType(s:String):ComplexType {
         s = '(_ : $s)';

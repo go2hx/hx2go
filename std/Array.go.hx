@@ -77,19 +77,21 @@ extern class Array<T> {
     function sort(f:T->T->Int):Void;
     function resize(len:Int):Void;
 
-    @:runtime inline function iterator():haxe.iterators.ArrayIterator<T> {
-        return new haxe.iterators.ArrayIterator(this);
+    @:runtime inline extern function iterator():haxe.iterators.ArrayIterator<T> { // TODO: remove "extern" when supported
+        // return new haxe.iterators.ArrayIterator(this);
+        return null;
     }
 
-    @:pure @:runtime public inline function keyValueIterator() : ArrayKeyValueIterator<T> {
-        return new ArrayKeyValueIterator(this);
+    @:pure @:runtime public inline extern function keyValueIterator() : ArrayKeyValueIterator<T> { // TODO: remove "extern" when supported
+        // return new ArrayKeyValueIterator(this);
+        return null;
     }
 
-    @:runtime inline function map<S>(f:T->S):Array<S> {
+    @:runtime inline extern function map<S>(f:T->S):Array<S> { // TODO: remove "extern" when supported
         return [];
     }
 
-    @:runtime inline function filter(f:T->Bool):Array<T> {
+    @:runtime inline extern function filter(f:T->Bool):Array<T> { // TODO: remove "extern" when supported
         return [];
     }
 

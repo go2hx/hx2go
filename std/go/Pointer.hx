@@ -2,6 +2,9 @@ package go;
 
 @:coreType
 @:runtimeValue
+/**
+ * Represents a go pointer in Haxe, note that these are mainly intended for interop purposes and usage should be minimized.
+ */
 abstract Pointer<T> {
 
     public var value(get, set): T;

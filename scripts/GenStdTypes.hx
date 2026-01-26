@@ -100,7 +100,7 @@ function main() {
         content.add('@:coreType\n');
         content.add('@:notNull\n');
         content.add('@:runtimeValue\n');
-        content.add('abstract $module {\n');
+        content.add('extern abstract $module {\n');
 
         // info
         var isFloat = isFloatType(module);

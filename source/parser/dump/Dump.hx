@@ -80,7 +80,7 @@ class Dump implements IParser {
                 // assume import is null means the compiler is fine to skip it and is only in eval
                 if (imp == null)
                     continue;
-                module.addImport(imp);
+                // module.addImport(imp, fileNameToModulePath[fileName]);
             }
         }
     }

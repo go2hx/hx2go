@@ -73,6 +73,10 @@ class HaxeExprTools {
 			final input = byte.ByteData.ofString(s);
 			final parser = new haxeparser.HaxeParser(input, s);
 			final expr = parser.expr().expr;
+			if (expr == null) {
+				trace(s);
+				throw "expr is null";
+			}
 			return expr;
 		} catch (e:Dynamic) {
 			trace("HaxeExprTools.stringToExprDef parse error!");
@@ -80,6 +84,9 @@ class HaxeExprTools {
 		}
     }
     public static function stringToComplexType(s:String):ComplexType {
+		// temporary fix to prevent parsing error of for example:
+		// (_ : (this : EnumValue, pattern : Dynamic) -> Bool)
+		s = StringTools.replace(s, "this", "this2");
         s = '(_ : $s)';
         final expr = stringToExprDef(s);
 		if (expr == null)

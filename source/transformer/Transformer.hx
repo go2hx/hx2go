@@ -49,7 +49,7 @@ class Transformer {
             case EArray(e1, e2):
                 transformer.exprs.ArrayAccess.transformArrayAccess(this, e, e1, e2);
             case EFunction(_, f):
-                transformer.exprs.Function.transformFunction(this, f);
+                transformer.exprs.Function.transformFunction(this, f, "");
             case EObjectDecl(fields):
                 final ct = HaxeExprTools.stringToComplexType(e.t);
                 e.def = transformer.exprs.ObjectDecl.transformObjectDecl(this, fields, ct);
@@ -252,7 +252,7 @@ class Transformer {
                         case EFunction(kind, f):
                             // pass on the params
                             f.params = params;
-                            transformer.exprs.Function.transformFunction(this, f);
+                            transformer.exprs.Function.transformFunction(this, f, field.name);
                         default:
                     }
                 default:

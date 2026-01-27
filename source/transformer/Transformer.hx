@@ -138,11 +138,11 @@ class Transformer {
         p.name = switch tdName {
             case "go.Float32", "Single": "float32";
             case "go.Float64", "Float": "float64";
+            case "Int", "go.GoInt": "int";
             case "go.Int64", "Int64": "int64";
-            case "go.Int32", "Int": "int32";
+            case "go.Int32": "int32";
             case "go.Int16": "int16";
             case "go.Int8": "int8";
-            case "go.GoInt": "int";
             case "go.UInt64": "uint64";
             case "go.UInt32": "uint32";
             case "go.UInt16": "uint16";

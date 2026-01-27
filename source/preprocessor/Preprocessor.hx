@@ -58,7 +58,6 @@ class Preprocessor {
                             return;
                         }
 
-                        trace(p.params[0]);
                         handleTuple(e, ct, scope);
 
                     case TPath(p) if (p.name == "Result" && p.pack[0] == "go"):

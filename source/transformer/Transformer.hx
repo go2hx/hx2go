@@ -107,7 +107,6 @@ class Transformer {
     function handleCoreTypeName(p:TypePath, tdName:String) {
         p.name = switch tdName {
             case "String": "string";
-            case "Dynamic": "any";
             case "Unknown": "any";
             case _: p.name;
         }

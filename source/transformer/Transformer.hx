@@ -86,10 +86,10 @@ class Transformer {
                     return;
                 }
 
-                switch [p.pack, p.name] {
-                    case [["go"], "Tuple"]: {
-                        p.pack = [];
+                switch p {
+                    case { pack: ["go"], name: "Tuple" }: {
                         p.name = handleTuple(p);
+                        p.pack.resize(0);
                     }
 
                     case _: {

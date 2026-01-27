@@ -187,28 +187,6 @@ function resolvePkgTransform(t:Transformer, e:HaxeExpr, e2:HaxeExpr, field:Strin
         return false;
     }
 
-    if (e.parent?.def == null) {
-        return false;
-    }
-
-    if (e?.special != null) {
-        final tstr = switch (e.special) {
-            case FInstance(x): x;
-            case FStatic(x, _): x;
-            case _: null;
-        }
-
-        final ct = HaxeExprTools.stringToComplexType(tstr);
-        final fieldHandled = switch ct {
-            case TPath(p): handleFieldTransform(t, e, p, e2Name, field);
-            case _: false;
-        }
-
-        if (fieldHandled) {
-            return true;
-        }
-    }
-
     return switch e.parent.def {
         case ECall(e, params): handleCallTransform(t, e, params, e2Name, field);
         case _: false;

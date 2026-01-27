@@ -92,7 +92,7 @@ enum HaxeExprDef {
 	/**
 		An array declaration `[el]`.
 	**/
-	EArrayDecl(values:Array<HaxeExpr>);
+	EArrayDecl(values:Array<HaxeExpr>, ct: ComplexType);
 
 	/**
 		A call `e(params)`.
@@ -248,7 +248,10 @@ class HaxeTypeDefinition {
 	// need to cache this after the first use
 	public var meta:Void->Array<MetadataEntry>;
 	public var fields:Array<HaxeField>;
+	public var constructor: HaxeField;
 	public var kind:HaxeTypeDefinitionKind;
+	public var usages: Map<String, Int> = []; // origin, count
+	public var buf: StringBuf = new StringBuf();
 }
 // Closely structured from: https://api.haxe.org/haxe/macro/TypeDefKind.html
 enum HaxeTypeDefinitionKind {

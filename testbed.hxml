@@ -6,6 +6,6 @@ extraParams.hxml
 -D run-go
 -D build-go
 # set the output directory
---custom-target go=export
+--custom-target go=export/output.go
 # optimises output
 -D analyzer-optimize

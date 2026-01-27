@@ -39,6 +39,7 @@ function recordToHaxeTypeDefinition(record: RecordEntry):HaxeTypeDefinition {
             for (field in cls.ordered_fields) {
                 fields.push(recordClassFieldToHaxeField(record.record_debug_path, field, false));
             }
+
             // TODO: temp fix
             if (cls.ordered_statics == null)
                 cls.ordered_statics = [];
@@ -60,12 +61,34 @@ function recordToHaxeTypeDefinition(record: RecordEntry):HaxeTypeDefinition {
         case RUnknown:
             trace('record_kind should not be unknown: ' + record.module + ' in ' + record.record_debug_path);
     }
+
+    var constructor: HaxeField = null;
+    if (record.record_kind == RClass && record.toClass().constructor != null) {
+        var cls = record.toClass();
+        var c = cls.constructor;
+        var params: Array<TypeParamDecl> = [];
+
+        // interp doesn't like the mapping of the constructor, so doing it like this...
+        for (p in ( c.get("cf_params") : Array<Dynamic> )) {
+            params.push({ name: p.cf_name });
+        }
+
+        constructor = {
+            name: c.get("cf_name"),
+            kind: FFun({ args: [], params: params }),
+            t: "#UNKNOWN_TYPE",
+            expr: c.get("cf_expr"),
+            meta: getMeta(c.get("cf_meta")),
+        };
+    }
+
     return {
         name: record.path,
         module: record.module,
         fields: fields,
         isExtern: isExtern,
         meta: () -> getMeta(record.meta),
+        constructor: constructor,
         kind: kind,
     };
 }

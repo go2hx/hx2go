@@ -21,6 +21,8 @@ class Translator {
                 }
             case TFunction(args, ret):
                 "func(" + args.map(arg -> translateComplexType(arg)).join(", ") + ")" + translateComplexType(ret);
+            case TAnonymous(fields):
+                "any"; // TODO: implement
             default:
                 throw "unknown ct for translateComplexType: " + ct;
         }
@@ -66,6 +68,10 @@ class Translator {
                     Return.translateReturn(this, e);
                 case EFunction(kind, f):
                     translator.exprs.Function.translateFunction(this, "", f);
+                case EArrayDecl(values, ct):
+                    ArrayDeclaration.translateArrayDeclaration(this, e, values, ct);
+                case EArray(e1, e2):
+                    translator.exprs.ArrayAccess.translateArrayAccess(this, e1, e2);
                 default:
                     //trace("UNKNOWN EXPR TO TRANSLATE:" + e.def);
                     "_ = 0";
@@ -74,12 +80,9 @@ class Translator {
     }
     public function translateDef(def:HaxeTypeDefinition):String {
         var buf = new StringBuf();
-        var impString = "";
-        for (imp in def.goImports)
-            buf.add('import "$imp"\n');
 
         for (field in def.fields) {
-            final name = toPascalCase(field.name);
+            final name = 'Hx_${modulePathToPrefix(def.module)}_${toPascalCase(field.name)}';
             final expr:HaxeExpr = field.expr;
 
             switch field.kind {
@@ -92,15 +95,15 @@ class Translator {
                             throw "expr.def is not EFunction: " + expr.def;
                     }
                 case FVar:
-                    buf.add('var $name');
+                    buf.add('var $name'); // TODO: typing
                     if (expr != null)
                         buf.add(translateExpr(expr));
                     buf.add("\n");
-                case FProp(get, set):
-                    buf.add('//FPROP\nvar $name');
-                    if (expr != null)
-                        buf.add(expr);
-                    buf.add("\n");
+                case FProp(get, set): // TODO: impl
+//                    buf.add('//FPROP\nvar $name');
+//                    if (expr != null)
+//                        buf.add(expr);
+//                    buf.add("\n");
                 default:
             }
         }

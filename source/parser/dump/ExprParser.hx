@@ -112,6 +112,8 @@ class ExprParser {
         final def:HaxeExprDef = switch object.def {
             case BLOCK:
                 EBlock(object.objects.map(object -> objectToExpr(object)));
+            case BREAK:
+                EBreak;
             case CALL:
                 // trace(object.objects.length);
                 if (object.objects.length == 0) {
@@ -205,9 +207,11 @@ class ExprParser {
                     EUnop(stringToUnop(object.objects[0].string()), object.objects[1].string() != "Prefix", objectToExpr(object.objects[2]));
                 }
             case ARRAY:
-                null;
+                var e1 = objectToExpr(object.objects[0]);
+                var e2 = objectToExpr(object.objects[1]);
+                EArray(e1, e2);
             case ARRAYDECL:
-                EArrayDecl(object.objects.map(obj -> objectToExpr(obj)));
+                EArrayDecl(object.objects.map(obj -> objectToExpr(obj)), null);
             case NEW:
                 final ct = HaxeExprTools.stringToComplexType(object.objects[0].string());
                 switch ct {
@@ -241,7 +245,8 @@ class ExprParser {
             case DO:
                 EWhile(objectToExpr(object.objects[0]), objectToExpr(object.objects[1]), false);
             case LOCAL:
-                object.defType = object.subType;
+                // mikaib: why do we need this?
+                // object.defType = object.subType;
                 EConst(CIdent(object.subType.substr(0, object.subType.indexOf("("))));
             case PARENTHESIS:
                 EParenthesis(objectToExpr(object.objects[0]));
@@ -283,9 +288,44 @@ class ExprParser {
                         type: HaxeExprTools.stringToComplexType(object.objects[0].defType),
                     });
                 }
+
+                var ret = null;
+                if (object.defType != null) {
+                    var depth = 0;
+                    var str = "";
+                    var capture = false;
+                    var last = -1;
+
+                    for (char in object.defType) {
+                        switch char {
+                            case "(".code:
+                                depth++;
+
+                            case ")".code:
+                                depth--;
+
+                            case ">".code if (last == "-".code && depth == 0):
+                                capture = true;
+
+                            case _ if (capture):
+                                str += String.fromCharCode(char);
+
+                            case _: null;
+                        }
+
+                        last = char;
+                    }
+
+                    var trimmed = str.trim();
+                    if (trimmed != "Void") {
+                        ret = HaxeExprTools.stringToComplexType(trimmed);
+                    }
+                }
+
                 EFunction(null, {
                     args: args,
                     expr: objectToExpr(object.objects[object.objects.length - 1]),
+                    ret: ret
                 });
                 //objectToExpr(object.objects[object.objects.length - 1]).def;
             default:
@@ -293,6 +333,7 @@ class ExprParser {
                 if (!nonImpl.contains(object.def)) nonImpl.push(object.def);
                 EConst(CIdent("#objectToExpr_" + object.string()));
         };
+
         return {
             t: object.defType,
             def: def,
@@ -447,27 +488,49 @@ class ExprParser {
     }
 
     function parseObjectLine(startIndex:Int, objectString:String):Object {
-        final colonIndex = objectString.indexOf(":", 1);
-        if (colonIndex == -1) {
-            throw "colon not found for given ObjectString: " + objectString;
+        var str = objectString;
+        if (str.startsWith("[")) str = str.substring(1);
+        if (str.endsWith("]")) str = str.substring(0, str.length - 1);
+
+        function findColon(str:String, startPos:Int = 0):Int {
+            var depth = 0;
+            for (i in startPos...str.length) {
+                var char = str.charAt(i);
+                if (char == "<" || char == "(") depth++;
+                else if (char == ">" || char == ")") depth--;
+                else if (char == ":" && depth == 0) return i;
+            }
+            return -1;
         }
-        var defString = objectString.substr(0, colonIndex);
-        var defTypeString = objectString.substring(colonIndex + 1);
-        final defType = defTypeString;
-        final spaceIndex = defString.indexOf(" ");
+
+        final colIdx = findColon(str);
+        if (colIdx == -1) throw "colon not found for given ObjectString: " + objectString;
+
+        var defString = str.substring(0, colIdx);
+        var remaining = str.substring(colIdx + 1);
+
+        var lastColIdx = findColon(remaining);
+        while (lastColIdx != -1) {
+            remaining = remaining.substring(lastColIdx + 1);
+            lastColIdx = findColon(remaining);
+        }
+
+        final defTypeString = remaining;
+
+        final sIdx = defString.indexOf(" ");
         var subTypeString = "";
-        if (spaceIndex != -1) {
-            // sub
-            subTypeString = objectString.substring(spaceIndex + 1, colonIndex);
-            defString = objectString.substring(0, spaceIndex);
+        if (sIdx != -1) {
+            subTypeString = defString.substring(sIdx + 1);
+            defString = defString.substring(0, sIdx);
         }
-        final subType = subTypeString;
+
         switch defString {
-           case "Meta":
-               handleMeta();
-           default:
+            case "Meta":
+                handleMeta();
+            default:
         }
-        return new Object(defString, defType, lineIndex, startIndex, subType, objectString, debug_path);
+
+        return new Object(defString, defTypeString, lineIndex, startIndex, subTypeString, objectString, debug_path);
     }
 
     function stringToUnop(un: String):Unop {

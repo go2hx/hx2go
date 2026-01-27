@@ -19,68 +19,82 @@ function transformFieldAccess(t:Transformer, e:HaxeExpr) {
                 return;
             }
 
-            var keepName = resolveExpr(t, e2, field);
-            if (!keepName) {
+            var res = resolveExpr(t, e2, field);
+            t.transformExpr(e2);
+
+            if (res.transformName) {
                 field = toPascalCase(field);
             }
 
-            e.def = EField(e2, field, kind);
-            t.transformExpr(e2); // handle recursive field accesses
+            if (res.isNative) {
+                e.def = EField(e2, field, kind);
+                return;
+            }
+
+            e.def = switch (e?.special) {
+                case FStatic(tstr, _) | FInstance(tstr): EConst(CIdent('Hx_${modulePathToPrefix(tstr)}_${field}'));
+                case _: EField(e2, field, kind);
+            }
         default:
     }
 }
 
-function resolveExpr(t:Transformer, e2:HaxeExpr, fieldName:String):Bool {
+function resolveExpr(t:Transformer, e2:HaxeExpr, fieldName:String): { isNative:Bool, transformName:Bool } {
     if (e2.t == null) {
         trace('null e2.t');
-        return false;
+        return { isNative: false, transformName: true };
     }
 
     try {
         final ct = HaxeExprTools.stringToComplexType(e2.t);
         if (ct == null) {
-            return false;
+            return { isNative: false, transformName: true };
         }
 
         return processComplexType(t, e2, ct);
     } catch (e) {
         trace('parsing type failed', e);
-        return false;
+        return { isNative: false, transformName: true };
     }
 }
 
-function processComplexType(t:Transformer, e2:HaxeExpr, ct:ComplexType):Bool {
+function processComplexType(t:Transformer, e2:HaxeExpr, ct:ComplexType): { isNative:Bool, transformName:Bool } {
     var path = switch ct {
         case TPath(p): p;
-        case _: return false;
+        case _: return { isNative: false, transformName: true };
     }
 
-    if (path.name != "Class" || path.pack.length != 0) {
-        return false;
+    var isInstance = false;
+    var innerPath = if (path.name != "Class" || path.pack.length != 0) {
+        isInstance = true;
+        path;
+    } else {
+        switch path.params[0] {
+            case TPType(TPath(p)): p;
+            case _: return { isNative: false, transformName: true };
+        }
     }
 
-    var innerPath = switch path.params[0] {
-        case TPType(TPath(p)): p;
-        case _: return false;
-    }
-
-    final td = t.module.resolveClass(innerPath.pack, innerPath.name);
+    final td = t.module.resolveClass(innerPath.pack, innerPath.name, t.module.path);
     if (td == null) {
-        return false;
+        return { isNative: false, transformName: true };
     }
 
-    var renamedIdentLeft = t.module.toGoPath(td.module).join(".");
+    var renamedIdentLeft = "";
     var isNative = false;
     var topLevel = false;
-    var transformName = false;
+    var transformName = true;
 
     for (meta in td.meta()) {
         if (meta.name == ":go.TypeAccess") {
             var result = processStructAccessMeta(t, meta, renamedIdentLeft);
-            renamedIdentLeft = result.name;
             isNative = result.isNative;
             topLevel = result.topLevel;
             transformName = result.transformName;
+
+            if (!isInstance) {
+                renamedIdentLeft = result.name;
+            }
         }
     }
 
@@ -94,7 +108,7 @@ function processComplexType(t:Transformer, e2:HaxeExpr, ct:ComplexType):Bool {
         e2.remapTo = renamedIdentLeft;
     }
 
-    return isNative && !transformName;
+    return { isNative: isNative, transformName: transformName };
 }
 
 function processStructAccessMeta(t:Transformer, meta:MetadataEntry, defaultName:String):{name:String, isNative:Bool, topLevel:Bool, transformName: Bool} {
@@ -142,12 +156,34 @@ function processImports(t:Transformer, expr:Expr) {
 }
 
 function resolvePkgTransform(t:Transformer, e:HaxeExpr, e2:HaxeExpr, field:String, kind:EFieldKind):Bool {
-    var e2Name = switch e2.def {
+    var e2Name: Null<String> = switch e2.def {
         case EConst(CIdent(x)): x;
-        case _: return false;
+        case _: null;
     }
 
     if (e.parent?.def == null) {
+        return false;
+    }
+
+    if (e?.special != null) {
+        final tstr = switch (e.special) {
+            case FInstance(x): x;
+            case FStatic(x, f): x;
+            case _: null;
+        }
+
+        final ct = HaxeExprTools.stringToComplexType(tstr);
+        final fieldHandled = switch ct {
+            case TPath(p): handleFieldTransform(t, e, p, e2, field);
+            case _: false;
+        }
+
+        if (fieldHandled) {
+            return true;
+        }
+    }
+
+    if (e2Name == null) {
         return false;
     }
 
@@ -167,6 +203,28 @@ function handleCallTransform(t:Transformer, e:HaxeExpr, params:Array<HaxeExpr>, 
             final ct = HaxeExprTools.stringToComplexType(e.parent.t);
             t.transformComplexType(ct);
             e.parent.def = EGoSliceConstruct(ct);
+            true;
+
+        case _:
+            false;
+    }
+
+    if (transformed) {
+        t.iterateExpr(e.parent);
+    }
+
+    return transformed;
+}
+
+function handleFieldTransform(t:Transformer, e:HaxeExpr, p:TypePath, e2:HaxeExpr, field:String):Bool {
+    var transformed = switch [p.name, p.pack, p.params, field] {
+        case ['Array', [], _, 'length']:
+            e.def = EGoCode('int32(len(*{0}))', [e2]);
+            true;
+
+        case ['String', [], _, 'length']:
+            e.def = EGoCode('int32(utf8.RuneCountInString({0}))', [e2]);
+            t.def.addGoImport('unicode/utf8');
             true;
 
         case _:

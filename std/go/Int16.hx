@@ -7,7 +7,7 @@ package go;
 @:coreType
 @:notNull
 @:runtimeValue
-abstract Int16 {
+extern abstract Int16 {
    @:op(A + B) private function add(other: Int16): Int16;
    @:op(A + B) @:commutative private inline function hx_add_a(other: Float): Int16 {
        return this + Go.int16(other);

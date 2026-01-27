@@ -5,13 +5,13 @@ package go;
 extern abstract Slice<T> {
     @:pure private extern static function _create<T>(): T;
 
-    public var length(get, never): Int32;
-    private inline function get_length(): Int32 {
+    public var length(get, never): GoInt;
+    private inline function get_length(): GoInt {
         return Go.len(this);
     }
 
-    public var capacity(get, never): Int32;
-    private inline function get_capacity(): Int32 {
+    public var capacity(get, never): GoInt;
+    private inline function get_capacity(): GoInt {
         return Go.cap(this);
     }
 
@@ -23,7 +23,7 @@ extern abstract Slice<T> {
         return Go.append(this, v);
     }
 
-    public inline function copy(src: Slice<T>): Int32 {
+    public inline function copy(src: Slice<T>): GoInt {
         return Go.copy(this, src);
     }
 
@@ -38,15 +38,19 @@ extern abstract Slice<T> {
         return value; // statement cannot be used as expression
     }
 
-    @:pure public inline extern overload function slice(low: Int32, high: Int32, max: Int32): Slice<T> {
+    @:pure public inline extern overload function slice(low: GoInt, high: GoInt, max: GoInt): Slice<T> {
         return Syntax.code("{0}[{1}:{2}:{3}]", this, low, high, max);
     }
 
-    @:pure public inline extern overload function slice(low: Int32, high: Int32): Slice<T> {
+    @:pure public inline extern overload function slice(low: GoInt, high: GoInt): Slice<T> {
         return Syntax.code("{0}[{1}:{2}]", this, low, high);
     }
 
-    @:pure public inline extern overload function slice(low: Int32): Slice<T> {
+    @:pure public inline extern overload function slice(low: GoInt): Slice<T> {
         return Syntax.code("{0}[{1}:]", this, low);
+    }
+
+    @:pure public inline extern overload function sliceEnd(high: GoInt): Slice<T> {
+        return Syntax.code("{0}[:{1}]", this, high);
     }
 }

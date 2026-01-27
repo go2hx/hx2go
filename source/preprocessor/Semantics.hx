@@ -146,9 +146,9 @@ class Semantics {
 					if (v.expr != null && hasSideEffects(ctx, v.expr))
 						return true;
 				false;
-			case EBinop(_, e1, e2): hasSideEffects(ctx, e1) || hasSideEffects(ctx, e2);
+			case EBinop(_, e1, e2), EArray(e1, e2): hasSideEffects(ctx, e1) || hasSideEffects(ctx, e2);
 			case EUnop(_, _, e), EField(e, _, _), EParenthesis(e), ECast(e, _): hasSideEffects(ctx, e);
-			case EBlock(exprs):
+			case EBlock(exprs), EArrayDecl(exprs, _):
 				for (e in exprs)
 					if (hasSideEffects(ctx, e))
 						return true;
@@ -157,7 +157,7 @@ class Semantics {
 			case EWhile(econd, ebody, _): hasSideEffects(ctx, econd) || hasSideEffects(ctx, ebody);
 			case EConst(_): false;
 			case _:
-				trace('unknown if expr has side effects');
+				trace('unknown if expr has side effects', expr);
 				true;
 		}
 	}
@@ -224,7 +224,7 @@ class Semantics {
 						var className = pack.pop();
 						var funcName = fieldName;
 
-						final td = ctx.module.resolveClass(pack, className);
+						final td = ctx.module.resolveClass(pack, className, ctx.module.path);
 						if (td == null) {
 							return { isExtern: false, isPure: false, failed: true };
 						}

@@ -41,6 +41,12 @@ class Transformer {
                 BinopExpr.transformBinop(this, e, op, e1, e2);
             case ECast(_, t):
                 Cast.transformCast(this, e, t);
+            case EArrayDecl(values, _):
+                transformer.decls.ArrayDecl.transformArray(this, e, values);
+            case EArray(e1, e2):
+                transformer.exprs.ArrayAccess.transformArrayAccess(this, e, e1, e2);
+            case ENew(tpath, params):
+                transformer.exprs.New.transformNew(this, e, tpath, params);
             default:
                 iterateExpr(e);
         }
@@ -67,9 +73,9 @@ class Transformer {
                     return;
                 }
 
-                final td = module.resolveClass(p.pack, p.name);
+                final td = module.resolveClass(p.pack, p.name, module.path);
                 if (td == null) {
-                    handleMissingTypeDefinition(p, ct);
+                    trace('null td for transformComplexType', p);
                     return;
                 }
 
@@ -94,19 +100,8 @@ class Transformer {
         }
     }
 
-    function handleMissingTypeDefinition(p:TypePath, ct:ComplexType) {
-        if (p.pack.length == 1) {
-            if (module.canResolveLocalTypeParam(p.pack[0], p.name)) {
-                p.pack = [];
-            }
-        } else {
-            trace('td is null in transformComplexType for' + ct);
-        }
-    }
-
     function handleCoreTypeName(p:TypePath, tdName:String) {
         p.name = switch tdName {
-            case "String": "string";
             case "Unknown": "any";
             case _: p.name;
         }
@@ -117,14 +112,6 @@ class Transformer {
             switch meta.name {
                 case ":coreType":
                     processCoreType(p, td.name);
-
-                case ":go.native":
-                    p.pack = [];
-                    p.params = [];
-                    p.name = exprToString(meta.params[0]);
-
-                case ":go.package":
-                    def.addGoImport(exprToString(meta.params[0]));
 
                 case ":go.TypeAccess":
                     processStructAccess(p, meta);
@@ -183,14 +170,15 @@ class Transformer {
             }
             case "Bool": "bool";
             case "Dynamic": "any";
-            case _:
-                trace("unhandled coreType: " + tdName);
-                "#UNKNOWN_TYPE";
+            case "Array": '*[]${transformComplexTypeParam(p.params, 0)}';
+            case "String": "string";
+            case "Null": '${transformComplexTypeParam(p.params, 0)}'; // TODO: implement Null<T>, currently just bypass
+            case _: p.name; // ignore coreType
         }
 
         p.params = switch tdName {
-            case "go.Slice" | "go.Nullable" | "go.Pointer": [];
-            case _: p.params;
+            case "go.Slice" | "go.Nullable" | "go.Pointer" | "Null" | "Array": [];
+            case _: p.params; // ignore coreType
         }
     }
 
@@ -204,6 +192,8 @@ class Transformer {
             switch field.field {
                 case "name":
                     p.name = exprToString(field.expr);
+                    p.pack = [];
+                    p.params = [];
 
                 case "imports":
                     var values = switch field.expr.expr {

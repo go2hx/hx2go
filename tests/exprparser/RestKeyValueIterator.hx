@@ -9,4 +9,6 @@ function run() {
     //parser.printObject(obj);
     parser.reset();
     final expr = parser.parse(lines);
+    final ct = HaxeExprTools.stringToComplexType(expr.t);
+    assert(ct == null, false);
 }

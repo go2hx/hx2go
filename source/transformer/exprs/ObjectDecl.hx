@@ -8,7 +8,6 @@ import HaxeExpr.HaxeField;
 function transformObjectDecl(t:Transformer, fields:Array<HaxeObjectField>, ct:ComplexType):HaxeExprDef {
     transformObjectDeclTypes(t, fields, ct);
     final list:Array<HaxeExpr> = [];
-    trace("fields len:", fields.length);
     for (field in fields) {
         t.transformExpr(field.expr);
         // expr -> any(expr)
@@ -43,6 +42,7 @@ function transformObjectDeclTypes(t:Transformer, fields:Array<HaxeObjectField>, 
                 }
             }
         default:
+            trace(ct);
             throw "Not TAnon";
     }
 }

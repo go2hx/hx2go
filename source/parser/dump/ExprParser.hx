@@ -43,6 +43,12 @@ class ExprParser {
         return expr;
     }
 
+    private function spacesToTabs(lines:Array<String>) {
+        for (i in 0...lines.length) {
+            lines[i] = StringTools.replace(lines[i], "    ", "\t");
+        }
+    }
+
     public function parseObject(lines:Array<String>):Object {
         // invalid expr
         if (lines.length == 0 || StringTools.contains(lines[0], "cf_expr = None;"))

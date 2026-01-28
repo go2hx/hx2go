@@ -3,7 +3,7 @@ package go;
 import haxe.macro.PlatformConfig;
 import haxe.macro.Compiler;
 import haxe.macro.Context;
-import haxe.Timer; 
+import haxe.Timer;
 class Init {
     public static function init() {
         var whatever = {

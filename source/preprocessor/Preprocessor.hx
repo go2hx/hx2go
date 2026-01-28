@@ -159,6 +159,25 @@ class Preprocessor {
         e.flags |= Processed;
     }
 
+    public function makeLastAssign(e: HaxeExpr, ident: HaxeExpr): Void {
+        var arr = switch(e.def) {
+            case EBlock(x): x;
+            case _: null;
+        }
+
+        if (arr == null) {
+            trace('makeLastAssign expr is not a block');
+            return;
+        }
+
+        if (arr.length == 0) {
+            return; // empty
+        }
+
+        var last = arr[arr.length - 1];
+        last.def = EBinop(OpAssign, ident, last.copy());
+    }
+
     public function toExpr(stmt: HaxeExpr, scope: Scope): HaxeExpr {
         var copy = stmt.copy();
         var result = copy;
@@ -241,27 +260,9 @@ class Preprocessor {
 
                 var tmp = annonymiser.assign(null, stmt.t);
                 var ifStmt = copy.copy();
-                var makeLastAssign = (eBranch: HaxeExpr) -> {
-                    var arr = switch(eBranch.def) {
-                        case EBlock(x): x;
-                        case _: null;
-                    }
 
-                    if (arr == null) {
-                        trace('makeLastAssign branch is not a block');
-                        return;
-                    }
-
-                    if (arr.length == 0) {
-                        return; // empty branch
-                    }
-
-                    var last = arr[arr.length - 1];
-                    last.def = EBinop(OpAssign, tmp.ident, last.copy());
-                };
-
-                makeLastAssign(eif);
-                if (eelse != null) makeLastAssign(eelse);
+                makeLastAssign(eif, tmp.ident);
+                if (eelse != null) makeLastAssign(eelse, tmp.ident);
 
                 iterateExprPost(ifStmt, scope);
                 insertExprsBefore([
@@ -272,7 +273,24 @@ class Preprocessor {
             }
 
             case ESwitch(e, cases, edef): {
-                throw "ESwitch(...) toExpr not implemented yet";
+                ensureParenthesis(e);
+
+                var tmp = annonymiser.assign(null, stmt.t);
+                var sw = copy.copy();
+
+                for (c in cases) {
+                    if (c?.expr == null) continue;
+
+                    ensureBlock(c.expr);
+                    makeLastAssign(c.expr, tmp.ident);
+                }
+
+                iterateExprPost(sw, scope);
+                insertExprsBefore([
+                    tmp.decl, sw
+                ], copy, scope);
+
+                result = tmp.ident;
             }
 
             case _: trace('cannot transform to expr:', stmt); stmt;

@@ -256,7 +256,8 @@ class ExprParser {
                 // mikaib: why do we need this?
                 // px: because it's required otherwise we get an invalid type
                 // [Local this1(6035):haxe._Rest.NativeRest<haxe.Rest.T>:haxe._Rest.NativeRest<haxe.Rest.T>]
-                object.defType = object.defType.substr(0, object.defType.lastIndexOf(":"));
+                object.defType = cutHalfComplexTypeString(object.defType);
+                specialDef = Local;
                 EConst(CIdent(object.subType.substr(0, object.subType.indexOf("("))));
             case PARENTHESIS:
                 EParenthesis(objectToExpr(object.objects[0]));
@@ -324,6 +325,21 @@ class ExprParser {
             remapTo: null,
             special: specialDef
         };
+    }
+    // { y : Float, x : Int }:{ y : Float, x : Int }
+    // into
+    // { y : Float, x : Int }
+    function cutHalfComplexTypeString(s:String):String {
+        var indexes:Array<Int> = [];
+        colonIndexes(s, 0, indexes);
+        return s.substr(0, indexes[Std.int(indexes.length/2)]);
+    }
+    function colonIndexes(s:String, startingIndex:Int, list:Array<Int>) {
+        final index = s.indexOf(":", startingIndex);
+        if (index == -1)
+            return;
+        list.push(index);
+        colonIndexes(s, index + 1, list);
     }
     function emptyExpr():HaxeExpr {
         return {

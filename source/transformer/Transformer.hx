@@ -14,6 +14,15 @@ class Transformer {
     public var module:Module = null;
     public var def:HaxeTypeDefinition = null;
 
+    public static function resultToTuple(p: TypePath): Void {
+        p.name = "Tuple";
+        p.params[0] = TPType(TAnonymous([
+            { name: "result", pos: p.pos, kind: FVar(HaxeExprTools.typeOfParam(p.params[0])) },
+            { name: "error", pos: p.pos, kind: FVar(HaxeExprTools.typeOfParam(p.params[1])) }
+        ]));
+        p.params.resize(1);
+    }
+
     public function transformExpr(e:HaxeExpr, ?parent:HaxeExpr, ?parentIdx:Int) {
         if (e == null || e.def == null) {
             return;
@@ -39,14 +48,18 @@ class Transformer {
                 VarDeclarations.transformVarDeclarations(this, e, vars);
             case EBinop(op, e1, e2):
                 BinopExpr.transformBinop(this, e, op, e1, e2);
-            case ECast(_, t):
-                Cast.transformCast(this, e, t);
+            case ECast(inner, t):
+                Cast.transformCast(this, inner, e, t);
             case EArrayDecl(values, _):
                 transformer.decls.ArrayDecl.transformArray(this, e, values);
             case EArray(e1, e2):
                 transformer.exprs.ArrayAccess.transformArrayAccess(this, e, e1, e2);
             case ENew(tpath, params):
                 transformer.exprs.New.transformNew(this, e, tpath, params);
+            case ESwitch(on, cases, def):
+                Switch.transformSwitch(this, e, on, cases, def);
+            case EGoEnumParameter(e0, kind, idx):
+                transformer.exprs.EnumParameter.transformEnumParameter(this, e, e0, kind, idx);
             default:
                 iterateExpr(e);
         }
@@ -73,14 +86,23 @@ class Transformer {
                     return;
                 }
 
-                final td = module.resolveClass(p.pack, p.name, module.path);
-                if (td == null) {
-                    trace('null td for transformComplexType', p);
-                    return;
-                }
+                switch p {
+                    case { pack: ["go"], name: "Tuple" }: {
+                        p.name = handleTuple(p);
+                        p.pack.resize(0);
+                    }
 
-                handleCoreTypeName(p, td.name);
-                processTypeMetadata(p, td);
+                    case _: {
+                        final td = module.resolveClass(p.pack, p.name, module.path);
+                        if (td == null) {
+                            trace('null td for transformComplexType', p);
+                            return;
+                        }
+
+                        handleCoreTypeName(p, td.name);
+                        processTypeMetadata(p, td);
+                    }
+                }
 
             default:
         }
@@ -110,7 +132,7 @@ class Transformer {
     function processTypeMetadata(p:TypePath, td:HaxeTypeDefinition) {
         for (meta in td.meta()) {
             switch meta.name {
-                case ":coreType":
+                case ":coreType" | ":go.ProcessedType": // coreType doesn't always make sense, :go.ProcessedType exists so you can force processing.
                     processCoreType(p, td.name);
 
                 case ":go.TypeAccess":
@@ -134,52 +156,53 @@ class Transformer {
             case "go.UInt16": "uint16";
             case "go.UInt8": "uint8";
             case "go.GoUInt": "uint";
-            case "go.Rune": "rune";
-            case "go.Byte": "byte";
+            case "go.Rune": "rune"; // TODO: must be implemented
+            case "go.Byte": "byte"; // TODO: must be implemented
             case "go.Slice": '[]${transformComplexTypeParam(p.params, 0)}';
             case "go.Pointer": '*${transformComplexTypeParam(p.params, 0)}';
-            case "go.Tuple": {
-                var struct: Array<{ name: String, type: String }> = [];
-
-                switch p.params[0] {
-                    case TPType(ct):
-                        switch ct {
-                            case TAnonymous(fields):
-                                for (f in fields) {
-                                    var fct = switch f.kind {
-                                        case FVar(fct): fct;
-                                        case _: null;
-                                    }
-
-                                    transformComplexType(fct);
-
-                                    var ftp = switch (fct) {
-                                        case TPath(tp): tp;
-                                        case _: null;
-                                    }
-
-                                    struct.push({ name: toPascalCase(f.name), type: ftp.name });
-                                }
-
-                            case _: null;
-                        }
-                    case _: null;
-                }
-
-                'struct { ${struct.map(f -> '${f.name} ${f.type}').join('; ')} }';
-            }
             case "Bool": "bool";
             case "Dynamic": "any";
             case "Array": '*[]${transformComplexTypeParam(p.params, 0)}';
             case "String": "string";
             case "Null": '${transformComplexTypeParam(p.params, 0)}'; // TODO: implement Null<T>, currently just bypass
+            case "go.Result", "go.ResultKind": {
+                resultToTuple(p);
+                handleTuple(p);
+            }
             case _: p.name; // ignore coreType
         }
 
         p.params = switch tdName {
-            case "go.Slice" | "go.Nullable" | "go.Pointer" | "Null" | "Array": [];
+            case "go.Slice" | "go.Pointer" | "Null" | "Array": [];
             case _: p.params; // ignore coreType
         }
+    }
+
+    function handleTuple(p:TypePath): String {
+        var struct: Array<{ name: String, type: String }> = [];
+
+        switch p.params[0] {
+            case TPType(TAnonymous(fields)):
+                for (f in fields) {
+                    var fct = switch f.kind {
+                        case FVar(fct): fct;
+                        case _: null;
+                    }
+
+                    transformComplexType(fct);
+
+                    var ftp = switch (fct) {
+                        case TPath(tp): tp;
+                        case _: trace("ftp in handleTuple (transformer.hx) is null"); null;
+                    }
+
+                    struct.push({ name: toPascalCase(f.name), type: ftp.name });
+                }
+
+            case _: null;
+        }
+
+        return 'struct { ${struct.map(f -> '${f.name} ${f.type}').join('; ')} }';
     }
 
     function processStructAccess(p:TypePath, meta:MetadataEntry) {

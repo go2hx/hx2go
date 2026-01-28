@@ -15,5 +15,10 @@ function transformVarDeclarations(t:Transformer, e:HaxeExpr, vars:Array<HaxeVar>
 
         t.transformComplexType(vars[i].type);
         t.transformExpr(vars[i].expr, e, i);
+
+        vars[i].type = switch (vars[i].type) { // mikaib: go can infer unknown types, not done in transformComplexType as not everything is guarenteed to allow inference.
+            case TPath({ name: "Unknown", pack: [] }): null;
+            case _: vars[i].type;
+        }
     }
 }

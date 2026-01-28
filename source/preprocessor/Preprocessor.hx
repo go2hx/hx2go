@@ -4,6 +4,7 @@ import HaxeExpr;
 import HaxeExpr.HaxeTypeDefinition;
 import translator.TranslatorTools;
 import haxe.macro.Expr;
+import transformer.Transformer;
 
 /**
  * Gets rid of the bulk of Haxe language features that make working with it a nightmare.
@@ -59,6 +60,16 @@ class Preprocessor {
 
                         handleTuple(e, ct, scope);
 
+                    case TPath(p) if (p.name == "Result" && p.pack[0] == "go"):
+                        var info = Semantics.analyzeFunctionCall(this, e);
+                        if (!info.isExtern) {
+                            return;
+                        }
+
+                        Transformer.resultToTuple(p);
+
+                        handleTuple(e, ct, scope);
+
                     case _: null;
                 }
             }
@@ -87,6 +98,20 @@ class Preprocessor {
                 ensureParenthesis(cond);
                 ensureBlock(eif);
                 ensureBlock(eelse);
+                iterateExprPost(e, scope.copy());
+            }
+
+            // normalise body
+            case ESwitch(e, cases, edef): {
+                ensureParenthesis(e);
+                for (c in cases) {
+                    ensureBlock(c.expr);
+                }
+
+                if (edef != null) {
+                    ensureBlock(edef);
+                }
+
                 iterateExprPost(e, scope.copy());
             }
 
@@ -132,6 +157,25 @@ class Preprocessor {
         }
 
         e.flags |= Processed;
+    }
+
+    public function makeLastAssign(e: HaxeExpr, ident: HaxeExpr): Void {
+        var arr = switch(e.def) {
+            case EBlock(x): x;
+            case _: null;
+        }
+
+        if (arr == null) {
+            trace('makeLastAssign expr is not a block');
+            return;
+        }
+
+        if (arr.length == 0) {
+            return; // empty
+        }
+
+        var last = arr[arr.length - 1];
+        last.def = EBinop(OpAssign, ident, last.copy());
     }
 
     public function toExpr(stmt: HaxeExpr, scope: Scope): HaxeExpr {
@@ -216,31 +260,34 @@ class Preprocessor {
 
                 var tmp = annonymiser.assign(null, stmt.t);
                 var ifStmt = copy.copy();
-                var makeLastAssign = (eBranch: HaxeExpr) -> {
-                    var arr = switch(eBranch.def) {
-                        case EBlock(x): x;
-                        case _: null;
-                    }
 
-                    if (arr == null) {
-                        trace('makeLastAssign branch is not a block');
-                        return;
-                    }
-
-                    if (arr.length == 0) {
-                        return; // empty branch
-                    }
-
-                    var last = arr[arr.length - 1];
-                    last.def = EBinop(OpAssign, tmp.ident, last.copy());
-                };
-
-                makeLastAssign(eif);
-                if (eelse != null) makeLastAssign(eelse);
+                makeLastAssign(eif, tmp.ident);
+                if (eelse != null) makeLastAssign(eelse, tmp.ident);
 
                 iterateExprPost(ifStmt, scope);
                 insertExprsBefore([
                     tmp.decl, ifStmt
+                ], copy, scope);
+
+                result = tmp.ident;
+            }
+
+            case ESwitch(e, cases, edef): {
+                ensureParenthesis(e);
+
+                var tmp = annonymiser.assign(null, stmt.t);
+                var sw = copy.copy();
+
+                for (c in cases) {
+                    if (c?.expr == null) continue;
+
+                    ensureBlock(c.expr);
+                    makeLastAssign(c.expr, tmp.ident);
+                }
+
+                iterateExprPost(sw, scope);
+                insertExprsBefore([
+                    tmp.decl, sw
                 ], copy, scope);
 
                 result = tmp.ident;

@@ -226,6 +226,16 @@ enum HaxeExprDef {
         The Go expression to create a new slice
     **/
     EGoSliceConstruct(ct:ComplexType);
+
+	/**
+	 	Enum index
+	**/
+	EGoEnumIndex(e:HaxeExpr);
+
+	/**
+	    Enum Parameter
+	**/
+	EGoEnumParameter(e:HaxeExpr, kind:String, index:Int);
 }
 
 @:structInit

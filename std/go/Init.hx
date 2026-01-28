@@ -1,5 +1,6 @@
 package go;
 #if (macro && !go)
+import sys.FileSystem;
 import haxe.macro.PlatformConfig;
 import haxe.macro.Compiler;
 import haxe.macro.Context;
@@ -40,8 +41,21 @@ class Init {
 			supportsAtomics: true
 		}
 		Compiler.setPlatformConfiguration(newConfig);
+		// delete dump to remove deleted files/modules that would otherwise linger
+		if (FileSystem.exists("dump"))
+			deleteRecursively("dump");
 		afterBuild();
     }
+	static function deleteRecursively(path:String):Void {
+		if (FileSystem.isDirectory(path)) {
+			for (file in FileSystem.readDirectory(path)) {
+				deleteRecursively(path + "/" + file);
+			}
+			FileSystem.deleteDirectory(path);
+		} else {
+			FileSystem.deleteFile(path);
+		}
+	}
 	public static function afterBuild() {
         final stamp = Timer.stamp();
         final runGoDefine = Context.definedValue("run-go");

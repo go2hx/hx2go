@@ -9,4 +9,5 @@ function run() {
     CFFlags.run();
     Slice.run();
     RestKeyValueIterator.run();
+    RestKeyValueIterator2.run();
 }

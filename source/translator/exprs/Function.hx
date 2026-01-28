@@ -1,5 +1,6 @@
 package translator.exprs;
 
+import haxe.macro.Expr.ComplexType;
 import HaxeExpr.HaxeFunction;
 import translator.Translator;
 import translator.TranslatorTools;
@@ -17,5 +18,15 @@ function translateFunction(t:Translator, name:String, f:HaxeFunction) {
     }
 
     final args = f.args.map(arg -> arg.name + " " + t.translateComplexType(arg.type));
-    return 'func $name$paramString(${args.join(", ")}) $retString$exprString\n';
+    final ret = f.ret == null || isVoid(f.ret) ? "" : t.translateComplexType(f.ret);
+    return 'func $name$paramString(${args.join(", ")}) $ret $exprString\n';
+}
+
+function isVoid(ct:ComplexType) {
+    return switch ct {
+        case TPath({pack: [], name: "Void"}):
+            true;
+        default:
+            false;
+    }
 }

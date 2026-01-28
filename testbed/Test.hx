@@ -11,23 +11,20 @@ extern class OS {
 }
 
 class Test {
-
     public static function main() {
-        final path = "/home/mikaib/Documents/test.txt";
+        var x = {
+            x: foo(),
+            y: 0.2,
+        };
+        change(x);
 
-        // using tuple()
-        final tuple = OS.open(path).tuple();
-        Fmt.println("Tuple result:", tuple.error, tuple.result);
-
-        // using switch
-        final file = switch OS.open(path) {
-            case Ok(r): Fmt.println("File opened :-)", r); r;
-            case Err(e): Fmt.println("Failed :'(", e); null;
-        }
-        Fmt.println("Switch result:", file);
-
-        // using sure() or f()!
-        Fmt.println("Sure() result:", OS.open(path).sure());
+        Sys.println(x.x);
     }
 
+    public static function change(x:{x:Int, y:Float}) {
+        x.x = 10;
+    }
+
+    public static function foo():Int
+        return 10;
 }

@@ -11,4 +11,4 @@
 							[Const:haxe.iterators.RestKeyValueIterator<haxe.iterators.RestKeyValueIterator.T>] this
 							[FInstance:Int]
 								haxe.iterators.RestKeyValueIterator<haxe.iterators.RestKeyValueIterator.T>
-								current:Int
+								current:Int;

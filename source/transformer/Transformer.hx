@@ -9,6 +9,10 @@ import haxe.macro.Expr;
 import transformer.exprs.*;
 import translator.TranslatorTools;
 
+/**
+ * Transforms Haxe AST to Go ready Haxe AST
+ * For example, changes try catch to defer panic pattern
+ */
 @:structInit
 class Transformer {
     public var module:Module = null;
@@ -51,9 +55,14 @@ class Transformer {
             case ECast(inner, t):
                 Cast.transformCast(this, inner, e, t);
             case EArrayDecl(values, _):
-                transformer.decls.ArrayDecl.transformArray(this, e, values);
+                transformer.decls.ArrayDeclaration.transformArray(this, e, values);
             case EArray(e1, e2):
                 transformer.exprs.ArrayAccess.transformArrayAccess(this, e, e1, e2);
+            case EFunction(_, f):
+                transformer.exprs.Function.transformFunction(this, f, "");
+            case EObjectDecl(fields):
+                final ct = HaxeExprTools.stringToComplexType(e.t);
+                e.def = transformer.exprs.ObjectDeclaration.transformObjectDeclaration(this, fields, ct);
             case ENew(tpath, params):
                 transformer.exprs.New.transformNew(this, e, tpath, params);
             case ESwitch(on, cases, def):
@@ -64,7 +73,6 @@ class Transformer {
                 iterateExpr(e);
         }
     }
-
     public function iterateExpr(e:HaxeExpr) {
         var idx = 0;
         HaxeExprTools.iter(e, (le) -> {
@@ -72,7 +80,6 @@ class Transformer {
             idx++;
         });
     }
-
     public function transformComplexType(ct:ComplexType) {
         if (ct == null) {
             return;
@@ -86,6 +93,11 @@ class Transformer {
                     return;
                 }
 
+                final td = module.resolveClass(p.pack, p.name, module.path);
+                if (td == null) {
+                    //trace('null td for transformComplexType', p);
+                    return;
+                }
                 switch p {
                     case { pack: ["go"], name: "Tuple" }: {
                         p.name = handleTuple(p);
@@ -267,8 +279,9 @@ class Transformer {
                 case FFun({params: params}):
                     switch field.expr.def {
                         case EFunction(kind, f):
+                            // pass on the params
                             f.params = params;
-                            transformer.decls.Function.transformFunction(this, field.name, f);
+                            transformer.exprs.Function.transformFunction(this, f, field.name);
                         default:
                     }
                 default:

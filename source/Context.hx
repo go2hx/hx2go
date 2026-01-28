@@ -90,6 +90,8 @@ class Context {
      * @return A virtual filesystem of all the results including path, content and module.
      */
     public function run(): ContextResults {
+        // adds def
+        // sets context cache
         _parser.run("");
 
         var buf = new StringBuf();

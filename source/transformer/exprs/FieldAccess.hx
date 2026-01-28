@@ -169,15 +169,14 @@ function resolvePkgTransform(t:Transformer, e:HaxeExpr, e2:HaxeExpr, field:Strin
         final tstr = switch (e.special) {
             case FInstance(x): x;
             case FStatic(x, f): x;
-            case _: null;
+            case Local:
+                e2.t;
+            case _: "";
         }
-
+        if (tstr == "")
+            return false;
         final ct = HaxeExprTools.stringToComplexType(tstr);
-        final fieldHandled = switch ct {
-            case TPath(p): handleFieldTransform(t, e, p, e2, field);
-            case _: false;
-        }
-
+        final fieldHandled = handleFieldTransform(t, e, ct, e2, field);
         if (fieldHandled) {
             return true;
         }
@@ -216,17 +215,18 @@ function handleCallTransform(t:Transformer, e:HaxeExpr, params:Array<HaxeExpr>, 
     return transformed;
 }
 
-function handleFieldTransform(t:Transformer, e:HaxeExpr, p:TypePath, e2:HaxeExpr, field:String):Bool {
-    var transformed = switch [p.name, p.pack, p.params, field] {
-        case ['Array', [], _, 'length']:
+function handleFieldTransform(t:Transformer, e:HaxeExpr, ct:ComplexType, e2:HaxeExpr, field:String):Bool {
+    var transformed = switch ct {
+        case TPath({name: "Array", pack: []}) if (field == "length"):
             e.def = EGoCode('int32(len(*{0}))', [e2]);
             true;
-
-        case ['String', [], _, 'length']:
+        case TPath({name: 'String', pack: []}) if(field == "length"):
             e.def = EGoCode('int32(utf8.RuneCountInString({0}))', [e2]);
             t.def.addGoImport('unicode/utf8');
             true;
-
+        case TAnonymous(fields):
+            e.def = EGoCode('{0}[{1}]', [e2, {def: EConst(CString(field)), t: ""}]);
+            true;
         case _:
             false;
     }

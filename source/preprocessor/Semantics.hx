@@ -120,13 +120,12 @@ class Semantics {
 		return switch expr.def {
 			case ESwitch(_, _, _), EBlock(_), EVars(_), EWhile(_, _, _), EIf(_, _, _), EReturn(_), EBinop(OpAssignOp(_), _, _), EBinop(OpAssign, _, _),
 				EUnop(OpIncrement, _, _), EUnop(OpDecrement, _, _), EBreak: Stmt;
-
-			case EGoEnumIndex(_), EGoEnumParameter(_, _, _), EArrayDecl(_), EFunction(_, _), EArray(_), EConst(_), EField(_, _, _), ECast(_, _), EBinop(_, _, _),
-				EUnop(_, _, _), ENew(_, _), EParenthesis(_): Expr;
-
-			case ECall(_, _):
-				EitherKind;
-
+			case EConst(_), EField(_, _, _), ECast(_, _), EBinop(_, _, _), EUnop(_, _, _), ENew(_, _), EParenthesis(_): Expr;
+			case EArray(_): Expr;
+			case ECall(_, _): EitherKind;
+			case EFunction(_, _): Expr;
+			case EArrayDecl(_): Expr;
+			case EObjectDecl(_): Expr;
 			case _:
 				trace('unknown kind for:', expr);
 				EitherKind;

@@ -1,0 +1,7 @@
+[Function:() -> Void]
+			[Block:Void]
+                [ObjectDecl:Null<haxe.PosInfos>]
+                    fileName: [Const:String] "tests/MacroTest.macro.hx"
+                    lineNumber: [Const:Int] 14
+                    className: [Const:String] "exprparser._RestKeyValueIterator.RestKeyValueIterator_Fields_"
+                    methodName: [Const:String] "run"

@@ -94,7 +94,7 @@ function recordToHaxeTypeDefinition(record: RecordEntry):HaxeTypeDefinition {
 }
 
 private function getMeta(list:Array<String>):Array<MetadataEntry> {
-    return list.map(s -> switch HaxeExprTools.stringToExprDef(s + " _") {
+    return list.map(s -> switch @:privateAccess HaxeExprTools.stringToExprDef(s + " _") {
          case EMeta(s, _):
             s;
         default:

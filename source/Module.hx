@@ -59,7 +59,6 @@ class Module {
 
         transformer.module = this;
         preprocessor.module = this;
-
         for (def in defs) {
             if (def == null) {
                 trace('null def');

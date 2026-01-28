@@ -15,7 +15,7 @@ function transformArray(t:Transformer, e: HaxeExpr, values: Array<HaxeExpr>) {
                 case _: null;
             }
 
-        case _: null;
+        case _: ct;
     }
 
     e.def = EArrayDecl(values, pct);

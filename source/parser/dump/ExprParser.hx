@@ -43,7 +43,14 @@ class ExprParser {
         return expr;
     }
 
+    private function spacesToTabs(lines:Array<String>) {
+        for (i in 0...lines.length) {
+            lines[i] = StringTools.replace(lines[i], "    ", "\t");
+        }
+    }
+
     public function parseObject(lines:Array<String>):Object {
+        spacesToTabs(lines);
         // invalid expr
         if (lines.length == 0 || StringTools.contains(lines[0], "cf_expr = None;"))
             return null;
@@ -211,7 +218,8 @@ class ExprParser {
                 var e2 = objectToExpr(object.objects[1]);
                 EArray(e1, e2);
             case ARRAYDECL:
-                EArrayDecl(object.objects.map(obj -> objectToExpr(obj)), null);
+                final ct = HaxeExprTools.stringToComplexType(object.defType);
+                EArrayDecl(object.objects.map(obj -> objectToExpr(obj)), ct);
             case NEW:
                 final ct = HaxeExprTools.stringToComplexType(object.objects[0].string());
                 switch ct {
@@ -246,7 +254,10 @@ class ExprParser {
                 EWhile(objectToExpr(object.objects[0]), objectToExpr(object.objects[1]), false);
             case LOCAL:
                 // mikaib: why do we need this?
-                // object.defType = object.subType;
+                // px: because it's required otherwise we get an invalid type
+                // [Local this1(6035):haxe._Rest.NativeRest<haxe.Rest.T>:haxe._Rest.NativeRest<haxe.Rest.T>]
+                object.defType = cutHalfComplexTypeString(object.defType);
+                specialDef = Local;
                 EConst(CIdent(object.subType.substr(0, object.subType.indexOf("("))));
             case PARENTHESIS:
                 EParenthesis(objectToExpr(object.objects[0]));
@@ -312,44 +323,18 @@ class ExprParser {
                         type: HaxeExprTools.stringToComplexType(object.objects[0].defType),
                     });
                 }
-
-                var ret = null;
-                if (object.defType != null) {
-                    var depth = 0;
-                    var str = "";
-                    var capture = false;
-                    var last = -1;
-
-                    for (char in object.defType) {
-                        switch char {
-                            case "(".code:
-                                depth++;
-
-                            case ")".code:
-                                depth--;
-
-                            case ">".code if (last == "-".code && depth == 0):
-                                capture = true;
-
-                            case _ if (capture):
-                                str += String.fromCharCode(char);
-
-                            case _: null;
-                        }
-
-                        last = char;
-                    }
-
-                    var trimmed = str.trim();
-                    if (trimmed != "Void") {
-                        ret = HaxeExprTools.stringToComplexType(trimmed);
-                    }
+                final ct = HaxeExprTools.stringToComplexType(object.defType);
+                final ret = switch ct {
+                    case TFunction(_, ret2):
+                        ret2;
+                    default:
+                        trace(ct);
+                        throw "ComplexType of type FUNCTION is not TFunction";
                 }
-
                 EFunction(null, {
                     args: args,
                     expr: objectToExpr(object.objects[object.objects.length - 1]),
-                    ret: ret
+                    ret: ret,
                 });
                 //objectToExpr(object.objects[object.objects.length - 1]).def;
             default:
@@ -364,6 +349,21 @@ class ExprParser {
             remapTo: null,
             special: specialDef
         };
+    }
+    // { y : Float, x : Int }:{ y : Float, x : Int }
+    // into
+    // { y : Float, x : Int }
+    function cutHalfComplexTypeString(s:String):String {
+        var indexes:Array<Int> = [];
+        colonIndexes(s, 0, indexes);
+        return s.substr(0, indexes[Std.int(indexes.length/2)]);
+    }
+    function colonIndexes(s:String, startingIndex:Int, list:Array<Int>) {
+        final index = s.indexOf(":", startingIndex);
+        if (index == -1)
+            return;
+        list.push(index);
+        colonIndexes(s, index + 1, list);
     }
     function emptyExpr():HaxeExpr {
         return {
@@ -532,12 +532,12 @@ class ExprParser {
 
         var defString = str.substring(0, colIdx);
         var remaining = str.substring(colIdx + 1);
-
-        var lastColIdx = findColon(remaining);
-        while (lastColIdx != -1) {
-            remaining = remaining.substring(lastColIdx + 1);
-            lastColIdx = findColon(remaining);
-        }
+        // px: I don't think this is required and was causing problems with some of the dump exprParser tests
+        // var lastColIdx = findColon(remaining);
+        // while (lastColIdx != -1) {
+        //     remaining = remaining.substring(lastColIdx + 1);
+        //     lastColIdx = findColon(remaining);
+        // }
 
         final defTypeString = remaining;
 

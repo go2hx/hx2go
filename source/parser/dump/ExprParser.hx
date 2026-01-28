@@ -44,10 +44,6 @@ class ExprParser {
     }
 
     public function parseObject(lines:Array<String>):Object {
-        // normalize new lines across os systems
-        for (i in 0...lines.length) {
-            lines[i] = Util.normalizeCLRF(lines[i]);
-        }
         // invalid expr
         if (lines.length == 0 || StringTools.contains(lines[0], "cf_expr = None;"))
             return null;

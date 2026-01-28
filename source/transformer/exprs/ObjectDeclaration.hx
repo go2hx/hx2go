@@ -5,7 +5,7 @@ import haxe.macro.Expr.ComplexType;
 import HaxeExpr.HaxeObjectField;
 import HaxeExpr.HaxeField;
 
-function transformObjectDecl(t:Transformer, fields:Array<HaxeObjectField>, ct:ComplexType):HaxeExprDef {
+function transformObjectDeclaration(t:Transformer, fields:Array<HaxeObjectField>, ct:ComplexType):HaxeExprDef {
     transformObjectDeclTypes(t, fields, ct);
     final list:Array<HaxeExpr> = [];
     for (field in fields) {

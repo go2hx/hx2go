@@ -45,14 +45,14 @@ class Transformer {
             case ECast(_, t):
                 Cast.transformCast(this, e, t);
             case EArrayDecl(values, _):
-                transformer.decls.ArrayDecl.transformArray(this, e, values);
+                transformer.decls.ArrayDeclaration.transformArray(this, e, values);
             case EArray(e1, e2):
                 transformer.exprs.ArrayAccess.transformArrayAccess(this, e, e1, e2);
             case EFunction(_, f):
                 transformer.exprs.Function.transformFunction(this, f, "");
             case EObjectDecl(fields):
                 final ct = HaxeExprTools.stringToComplexType(e.t);
-                e.def = transformer.exprs.ObjectDecl.transformObjectDecl(this, fields, ct);
+                e.def = transformer.exprs.ObjectDeclaration.transformObjectDeclaration(this, fields, ct);
             case ENew(tpath, params):
                 transformer.exprs.New.transformNew(this, e, tpath, params);
             default:
@@ -81,7 +81,7 @@ class Transformer {
 
                 final td = module.resolveClass(p.pack, p.name, module.path);
                 if (td == null) {
-                    trace('null td for transformComplexType', p);
+                    //trace('null td for transformComplexType', p);
                     return;
                 }
 

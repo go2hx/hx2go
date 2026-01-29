@@ -10,6 +10,8 @@ class TestAll {
     public static function cyan(s:String):String return colorEnabled ? '\033[36m$s\033[0m' : s;
 
     public static function main() {
+        Logging.init();
+
         trace(cyan("=== hx2go Tests ===\n"));
         final pattern = "*";
         MacroTest.runTests(pattern, {

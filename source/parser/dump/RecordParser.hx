@@ -268,34 +268,30 @@ class RecordParser {
 
         while (line < lines.length) {
             var currentLine = lines[line];
-            var trimmed = currentLine.trim();
-            var isNested = trimmed.startsWith("{") || trimmed.startsWith("}") || trimmed.startsWith("]") || trimmed == "";
 
-            if (isNested) {
-                for (i in 0...currentLine.length) {
-                    var char = currentLine.charAt(i);
+            for (i in 0...currentLine.length) {
+                var char = currentLine.charAt(i);
 
-                    switch (char) {
-                        case "{", "[":
-                            depth++;
+                switch (char) {
+                    case "{", "[":
+                        depth++;
 
-                        case "}":
-                            depth--;
-                            if (depth == 1) {
-                                currentItem.push(currentLine.substring(0, i + 1));
+                    case "}":
+                        depth--;
+                        if (depth == 1) {
+                            currentItem.push(currentLine.substring(0, i + 1));
+                            items.push(parseBlock(currentItem.join("\n")));
+                            currentItem = [];
+                        }
+
+                    case "]":
+                        depth--;
+                        if (depth == 0) {
+                            if (currentItem.length > 0) {
                                 items.push(parseBlock(currentItem.join("\n")));
-                                currentItem = [];
                             }
-
-                        case "]":
-                            depth--;
-                            if (depth == 0) {
-                                if (currentItem.length > 0) {
-                                    items.push(parseBlock(currentItem.join("\n")));
-                                }
-                                return { value: items, lastLine: line };
-                            }
-                    }
+                            return { value: items, lastLine: line };
+                        }
                 }
             }
 

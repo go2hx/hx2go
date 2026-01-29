@@ -632,7 +632,7 @@ class Object {
         this.filePath = filePath;
     }
     public function string():String
-        return rawString;
+        return rawString.trim();
 
     public static function fromString(lineIndex, startIndex, s:String, filePath:String):Object {
         return {

@@ -19,6 +19,11 @@ class TestAll {
         });
         trace("\n=== Results ===");
         trace('Passed: ${green(Std.string(passed))}, Failed: ${red(Std.string(failed))}');
-        trace(failed == 0 ? green("ALL PASSED") : red("SOME FAILED"));
+        if (failed == 0) {
+            trace(green("ALL PASSED"));
+        }else{
+            trace(red("SOME FAILED"));
+            Sys.exit(1);
+        }
     }
 }

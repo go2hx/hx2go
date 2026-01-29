@@ -13,6 +13,7 @@ class TestAll {
         trace(cyan("=== hx2go Tests ===\n"));
         final pattern = "*";
         MacroTest.runTests(pattern, {
+                recordparser.RecordParser.run();
                 exprparser.ExprParser.run();
                 language.Language.run();
                 unit.Unit.run();

@@ -37,7 +37,7 @@ class Dump implements IParser {
 
         for (record in records) {
             if (record?.path == null) {
-                trace("record path should not be null");
+                Logging.recordParser.warn("record path should not be null");
                 continue;
             }
 

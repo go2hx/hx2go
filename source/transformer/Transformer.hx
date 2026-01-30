@@ -107,7 +107,7 @@ class Transformer {
                     case _: {
                         final td = module.resolveClass(p.pack, p.name, module.path);
                         if (td == null) {
-                            trace('null td for transformComplexType', p);
+                            Logging.transformer.warn('null td for transformComplexType, at $p');
                             return;
                         }
 
@@ -205,7 +205,7 @@ class Transformer {
 
                     var ftp = switch (fct) {
                         case TPath(tp): tp;
-                        case _: trace("ftp in handleTuple (transformer.hx) is null"); null;
+                        case _: Logging.transformer.warn('ftp in handleTuple is null, given type: $fct'); null;
                     }
 
                     struct.push({ name: toPascalCase(f.name), type: ftp.name });
@@ -257,7 +257,7 @@ class Transformer {
         }
 
         if (ct == null) {
-            trace('@:const type parameter on @:generic class not supported!');
+            Logging.transformer.error('@:const type parameter on @:generic class not supported!');
             return "any";
         }
 

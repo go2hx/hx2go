@@ -95,7 +95,7 @@ class Translator {
                         case EFunction(kind, f):
                             buf.add(translator.exprs.Function.translateFunction(this, name, f));
                         default:
-                            trace(field.name);
+                            Logging.translator.error('expr.def failure field:' + field.name);
                             throw "expr.def is not EFunction: " + expr.def;
                     }
                 case FVar:

@@ -42,7 +42,7 @@ function transformObjectDeclTypes(t:Transformer, fields:Array<HaxeObjectField>, 
                 }
             }
         default:
-            trace(ct);
+            Logging.transformer.error('not TAnon: $ct');
             throw "Not TAnon";
     }
 }

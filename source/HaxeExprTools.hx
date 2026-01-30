@@ -74,12 +74,12 @@ class HaxeExprTools {
 			final parser = new haxeparser.HaxeParser(input, s);
 			final expr = parser.expr().expr;
 			if (expr == null) {
-				trace(s);
+				Logging.exprTools.error(s);
 				throw "expr is null";
 			}
 			return expr;
 		} catch (e:Dynamic) {
-			trace("HaxeExprTools.stringToExprDef parse error!");
+			Logging.exprTools.error("HaxeExprTools.stringToExprDef parse error!");
 			return EMeta({ pos: null, name: "PARSE_ERROR" }, null);
 		}
     }
@@ -104,7 +104,7 @@ class HaxeExprTools {
 		return switch (p) {
 			case TPType(t): t;
 			case TPExpr(_): {
-				trace('cannot get type of TPExpr');
+				Logging.exprTools.warn('cannot get type of TPExpr');
 				null;
 			}
 		}

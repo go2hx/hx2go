@@ -133,8 +133,8 @@ class ExprParser {
                 ECall(e, params);
             case FIELD:
                 if (object.objects.length == 0) {
-                    trace(debug_path);
-                    trace(object.string());
+                    Logging.exprParser.error('Field failure at: $debug_path');
+                    Logging.exprParser.error('Field failure on: ${object.string()}');
                     throw "FIELD NEEDS MORE";
                 }
                 final e = objectToExpr(object.objects[0]);
@@ -149,10 +149,11 @@ class ExprParser {
                 // 			fmt
 				// 			println:(s : String) -> Void
                 if (object.objects.length <= 1) {
-                    trace(object.string());
-                    trace(object.filePath);
-                    trace(object.objects.length);
-                    trace(object.objects[0].string());
+                    Logging.exprParser.warn('Unexpected FSTATIC/FINSTANCE object length <= 1 at: $debug_path');
+                    Logging.exprParser.warn('Object string: ${object.string()}');
+                    Logging.exprParser.warn('Object file path: ${object.filePath}');
+                    Logging.exprParser.warn('Object objects length: ${object.objects.length}');
+                    Logging.exprParser.warn('First object string: ${object.objects[0].string()}');
                 }
 
                 var field = object.objects[1].string();
@@ -182,7 +183,7 @@ class ExprParser {
                 EConst(CIdent(field));
             case CONST:
                 if (object.objects.length == 0) {
-                    trace(debug_path, object.string());
+                    Logging.exprParser.warn('no value for const at $debug_path, given ${object.string()}');
                 }
                 final s = object.objects[0].string();
                 switch object.defType {
@@ -328,7 +329,7 @@ class ExprParser {
                     case TFunction(_, ret2):
                         ret2;
                     default:
-                        trace(ct);
+                        Logging.exprParser.error('Expected function, but not TFunction: given $ct');
                         throw "ComplexType of type FUNCTION is not TFunction";
                 }
                 EFunction(null, {
@@ -396,12 +397,11 @@ class ExprParser {
         var str = tab + object.def + "[" + object.defType + " " + object.subType + "]";
         if (object.def == STRING)
             str += " " + object.string();
-        trace(str);
+        Logging.exprParser.debug(str);
         for (subObject in object.objects) {
             printObject(subObject, depth + 1);
         }
     }
-
 
     function getObject():Object {
         final line = lines[lineIndex];

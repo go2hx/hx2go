@@ -166,7 +166,7 @@ class Preprocessor {
         }
 
         if (arr == null) {
-            trace('makeLastAssign expr is not a block');
+            Logging.preprocessor.warn('makeLastAssign expr is not a block');
             return;
         }
 
@@ -293,7 +293,7 @@ class Preprocessor {
                 result = tmp.ident;
             }
 
-            case _: trace('cannot transform to expr:', stmt); stmt;
+            case _: Logging.preprocessor.warn('cannot transform to expr: $stmt'); stmt;
         }
 
         return result;
@@ -383,7 +383,7 @@ class Preprocessor {
         }
 
         if (arr == null) {
-            trace('insertExprs arr should not be null');
+            Logging.preprocessor.error('insertExprs arr should not be null'); // marked as error due to risk of lost exprs
             return;
         }
 
@@ -437,17 +437,17 @@ class Preprocessor {
                                 fields;
 
                             case _:
-                                trace('Tuple type parameter is not a TTuple');
+                                Logging.preprocessor.error('Tuple type parameter is not a TAnonymous, ensure you are doing something like "go.Tuple<{ a: Int, b: String }>", at $cexpr');
                                 return;
                         }
 
                     case _:
-                        trace('Tuple type parameter is not a TPType');
+                        Logging.preprocessor.error('Tuple type parameter is not a TPType, ensure you are doing something like "go.Tuple<{ a: Int, b: String }>", at $cexpr');
                         return;
                 }
 
             case _:
-                trace('Tuple type is not a TPath with one parameter');
+                Logging.preprocessor.error('Tuple type is not a TPath with one parameter, ensure you are doing something like "go.Tuple<{ a: Int, b: String }>", at $cexpr');
                 return;
 
         }

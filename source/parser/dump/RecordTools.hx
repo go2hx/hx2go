@@ -18,7 +18,7 @@ import HaxeExpr;
  */
 function recordToHaxeTypeDefinition(record: RecordEntry):HaxeTypeDefinition {
     if (record.module == null) {
-        trace("cl_module should never be null: " + record.record_debug_path);
+        Logging.recordParser.error("cl_module should never be null: " + record.record_debug_path);
         return null;
     }
 
@@ -31,7 +31,7 @@ function recordToHaxeTypeDefinition(record: RecordEntry):HaxeTypeDefinition {
             isExtern = cls.flags.contains("CExtern");
 
             if (cls.ordered_fields == null) {
-                trace(record.record_debug_path);
+                Logging.recordParser.warn('no ordered fields for: ${record.record_debug_path}');
             }
             // TODO: temp fix
             if (cls.ordered_fields == null)
@@ -59,7 +59,7 @@ function recordToHaxeTypeDefinition(record: RecordEntry):HaxeTypeDefinition {
         case REnum:
             var t = record.toEnum();
         case RUnknown:
-            trace('record_kind should not be unknown: ' + record.module + ' in ' + record.record_debug_path);
+            Logging.recordParser.warn('record_kind should not be unknown: ' + record.module + ' in ' + record.record_debug_path);
     }
 
     var constructor: HaxeField = null;
@@ -115,7 +115,7 @@ private function recordClassFieldToHaxeField(record_debug_path:String, field:Rec
         case "var":
             FVar;
         case _ if (field.kind == null):
-            trace(record_debug_path);
+            Logging.recordParser.error('null kind: $record_debug_path');
             throw "field.kind is null: " + field.name;
         // property
         case _ if (field.kind.charAt(0) == "(" && field.kind.charAt(field.kind.length - 1) == ")"):

@@ -41,7 +41,7 @@ function transformFieldAccess(t:Transformer, e:HaxeExpr) {
 
 function resolveExpr(t:Transformer, e2:HaxeExpr, fieldName:String): { isNative:Bool, transformName:Bool } {
     if (e2.t == null) {
-        trace('null e2.t');
+        Logging.transformer.warn('null e2.t');
         return { isNative: false, transformName: true };
     }
 
@@ -53,7 +53,7 @@ function resolveExpr(t:Transformer, e2:HaxeExpr, fieldName:String): { isNative:B
 
         return processComplexType(t, e2, ct);
     } catch (e) {
-        trace('parsing type failed', e);
+        Logging.transformer.warn('parsing type failed in FieldAccess, given $e');
         return { isNative: false, transformName: true };
     }
 }

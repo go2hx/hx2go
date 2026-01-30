@@ -105,6 +105,10 @@ class Context {
             module.run();
         }
 
+        if (!Logging.finalise()) {
+            return [];
+        }
+
         var compileList = [];
         var lastLength = -1;
 

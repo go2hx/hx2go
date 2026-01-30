@@ -20,8 +20,6 @@ class Module {
     public function resolveClass(pack:Array<String>, name:String, origin:String): HaxeTypeDefinition {
         final path = pack.join(".") + (pack.length > 0 ? "." : "") + name;
         final module = context.getModule(path);
-
-
         if (module == null) {
             return null;
         }
@@ -43,7 +41,7 @@ class Module {
             }
         }
 
-        trace("def not found in module: ", pack, name);
+        Logging.module.warn('def not found in module: $name at $pack');
         return null;
     }
 
@@ -53,7 +51,7 @@ class Module {
 
     public function run() {
         if (path == null) {
-            trace('invalid path');
+            Logging.module.error('invalid path (null)');
             return;
         }
 
@@ -61,7 +59,7 @@ class Module {
         preprocessor.module = this;
         for (def in defs) {
             if (def == null) {
-                trace('null def');
+                Logging.module.warn('null def');
                 continue;
             }
 

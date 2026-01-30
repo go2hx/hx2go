@@ -127,7 +127,7 @@ class Semantics {
 			case EArrayDecl(_): Expr;
 			case EObjectDecl(_): Expr;
 			case _:
-				trace('unknown kind for:', expr);
+				Logging.preprocessor.error('unknown kind for: $expr');
 				EitherKind;
 		}
 	}
@@ -158,7 +158,7 @@ class Semantics {
 			case EWhile(econd, ebody, _): hasSideEffects(ctx, econd) || hasSideEffects(ctx, ebody);
 			case EConst(_): false;
 			case _:
-				trace('unknown if expr has side effects', expr);
+				Logging.preprocessor.warn('unknown if expr has side effects (safely assuming it does), for: $expr');
 				true;
 		}
 	}

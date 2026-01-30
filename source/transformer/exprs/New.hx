@@ -10,7 +10,7 @@ import transformer.exprs.FieldAccess;
 function transformNew(t:Transformer, e:HaxeExpr, tpath: TypePath, params: Array<HaxeExpr>) {
     final td = t.module.resolveClass(tpath.pack, tpath.name, t.module.path);
     if (td == null) {
-        trace('null td for ENew(...)');
+        Logging.transformer.warn('null td for ENew(...)');
     }
 
     var structInit = false;
@@ -35,7 +35,7 @@ function transformNew(t:Transformer, e:HaxeExpr, tpath: TypePath, params: Array<
 
     if (isNative && structInit) {
         if (td.constructor == null) {
-            trace('td.constructor may not be null');
+            Logging.transformer.error('td.constructor may not be null');
             return;
         }
 
@@ -45,7 +45,7 @@ function transformNew(t:Transformer, e:HaxeExpr, tpath: TypePath, params: Array<
         };
 
         if (args == null) {
-            trace('td.constructor args may not be null');
+            Logging.transformer.error('td.constructor args may not be null');
             return;
         }
 

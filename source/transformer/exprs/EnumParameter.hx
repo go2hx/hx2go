@@ -20,6 +20,6 @@ function transformResultAccess(outer: HaxeExpr, inner:HaxeExpr, kind:String) {
     switch kind { // we don't care about the parameter index as there is only one.
         case "Ok": outer.def = EField(inner, "Result");
         case "Err": outer.def = EField(inner, "Error");
-        case _: trace("unknown ResultKind<R, E> kind!");
+        case _: Logging.transformer.error("unknown ResultKind<R, E> kind!");
     }
 }

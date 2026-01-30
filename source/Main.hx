@@ -5,10 +5,10 @@ import Context.ContextOptions;
 
 class Main {
    public static function main() {
+      Logging.init();
+
       final context:Context = {options: loadContextOptions()};
       context.run();
-
-
    }
 
    static function loadContextOptions():ContextOptions {

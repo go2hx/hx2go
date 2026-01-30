@@ -1,0 +1,89 @@
+{
+	cl_path = hxparse.LexEngine;
+	cl_module = hxparse.LexEngine;
+	cl_pos = /usr/local/lib/haxe/lib/hxparse/git/src/hxparse/LexEngine.hx: 383-9785;
+	cl_name_pos = /usr/local/lib/haxe/lib/hxparse/git/src/hxparse/LexEngine.hx: 389-398;
+	cl_private = false;
+	cl_doc = None;
+	cl_meta = [@:directlyUsed];
+	cl_flags = CUsed;
+	cl_params = [];
+	cl_kind = KNormal;
+	cl_super = None;
+	cl_implements = [];
+	cl_array_access = None;
+	cl_init = None;
+	cl_constructor = None;
+	cl_ordered_statics = [{
+		cf_name = parse;
+		cf_doc = 
+		Parses the `pattern` `String` and returns an instance of `Pattern`.
+
+		If `pattern` is not a valid pattern string, an exception of `String` is
+		thrown.
+
+		The following meta characters are supported:
+
+			- `*`: zero or more
+			- `+`: one or more
+			- `?`: zero or one
+			- `|`: or
+			- `[`: begin char range
+			- `]`: end char range
+			- `(`: begin group
+			- `)`: end group
+			- `\`: escape next char
+
+		These characters must be escaped if they are part of the pattern, by
+		using `\\*`, `\\]` etc.
+	;
+		cf_type = TFun([pattern:TInst(String, [])], TEnum(hxparse._LexEngine.Pattern, []));
+		cf_pos = /usr/local/lib/haxe/lib/hxparse/git/src/hxparse/LexEngine.hx: 5401-5600;
+		cf_name_pos = /usr/local/lib/haxe/lib/hxparse/git/src/hxparse/LexEngine.hx: 5424-5429;
+		cf_meta = [];
+		cf_kind = method;
+		cf_params = [];
+		cf_expr = [Function:(pattern : String) -> hxparse._LexEngine.Pattern]
+			[Arg pattern<14467>(VUsedByTyper):String]
+			[Block:Dynamic]
+				[Var p<14740>(VUsedByTyper):{ pos : Int, pattern : hxparse._LexEngine.Pattern }]
+					[Call:{ pos : Int, pattern : hxparse._LexEngine.Pattern }]
+						[Field:(pattern : byte.ByteData, ?i : Int, ?pDepth : Int) -> { pos : Int, pattern : hxparse._LexEngine.Pattern }]
+							[TypeExpr hxparse.LexEngine:Class<hxparse.LexEngine>]
+							[FStatic:(pattern : byte.ByteData, ?i : Int, ?pDepth : Int) -> { pos : Int, pattern : hxparse._LexEngine.Pattern }]
+								hxparse.LexEngine
+								parseInner:(pattern : byte.ByteData, ?i : Int, ?pDepth : Int) -> { pos : Int, pattern : hxparse._LexEngine.Pattern }
+						[Cast:byte.ByteData]
+							[Call:haxe.io.Bytes]
+								[Field:(s : String, ?encoding : Null<haxe.io.Encoding>) -> haxe.io.Bytes]
+									[TypeExpr haxe.io.Bytes:Class<haxe.io.Bytes>]
+									[FStatic:(s : String, ?encoding : Null<haxe.io.Encoding>) -> haxe.io.Bytes]
+										haxe.io.Bytes
+										ofString:(s : String, ?encoding : Null<haxe.io.Encoding>) -> haxe.io.Bytes
+								[Local pattern(14467):String:String]
+								[Const:Null<haxe.io.Encoding>] null
+						[Const:Null<Int>] null
+						[Const:Null<Int>] null
+				[If:Void]
+					[Parenthesis:Bool]
+						[Binop:Bool]
+							[Local p(14740):{ pos : Int, pattern : hxparse._LexEngine.Pattern }:{ pos : Int, pattern : hxparse._LexEngine.Pattern }]
+							==
+							[Const:{ pos : Int, pattern : hxparse._LexEngine.Pattern }] null
+					[Then:Dynamic] [Throw:Dynamic]
+						[Binop:String]
+							[Binop:String]
+								[Const:String] "Invalid pattern '"
+								+
+								[Local pattern(14467):String:String]
+							+
+							[Const:String] "'"
+				[Return:Dynamic]
+					[Field:hxparse._LexEngine.Pattern]
+						[Local p(14740):{ pos : Int, pattern : hxparse._LexEngine.Pattern }:{ pos : Int, pattern : hxparse._LexEngine.Pattern }]
+						[FAnon:hxparse._LexEngine.Pattern] pattern:hxparse._LexEngine.Pattern;
+		cf_flags = CfPostProcessed CfStatic CfPublic;
+		cf_overloads = [];
+	}],
+	cl_ordered_fields = [],
+}

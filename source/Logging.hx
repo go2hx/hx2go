@@ -52,7 +52,7 @@ class Logging {
         Logging.trace = getOrCreateSource("trace");
 
         haxe.Log.trace = (v: Dynamic, ?posInfos: PosInfos) -> {
-            Logging.context.info(Std.string(v) + posInfos?.customParams?.map(v -> Std.string(v)).join(", ") ?? "", posInfos);
+            Logging.trace.info(Std.string(v) + (posInfos?.customParams?.length > 0 ? ", " + posInfos?.customParams?.map(v -> Std.string(v)).join(", ") : "" ), posInfos);
         };
     }
 

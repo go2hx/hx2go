@@ -149,18 +149,20 @@ class Context {
         if (imports.length > 0) {
             buf.add('\n');
         }
-
-        for (mod in _cache.iterator()) {
+        var entryPointPath = options.entryPoint;
+        for (obj in _cache.keyValueIterator()) {
+            final mod = obj.value;
             if (!compileList.contains(mod.path)) continue;
-
+            if (mod.path == options.entryPoint)
+                entryPointPath = obj.key;
             for (def in mod.defs) {
                 if (def.isExtern) continue;
                 buf.add(def.buf.toString());
             }
         }
-
+        
         buf.add('func main() {\n');
-        buf.add('\tHx_${modulePathToPrefix(options.entryPoint)}_Main()\n');
+        buf.add('\tHx_${modulePathToPrefix(entryPointPath)}_Main()\n');
         buf.add('}\n');
 
         final outPath = Path.join([ options.output ]);

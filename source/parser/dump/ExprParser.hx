@@ -315,13 +315,11 @@ class ExprParser {
                 ECast(objectToExpr(object.objects[0]), HaxeExprTools.stringToComplexType(object.defType));
             case FUNCTION:
                 final args:Array<HaxeFunctionArg> = [];
-                if (object.objects.length == 2) {
-                    // TODO
-                    // only allow functions to have max 1 arg for now
-                    final name = object.objects[0].subType.substr(0, object.objects[0].subType.indexOf("<"));
+                for (i in 0...object.objects.length - 1) {
+                    final name = object.objects[i].subType.substr(0, object.objects[i].subType.indexOf("<"));
                     args.push({
                         name: name,
-                        type: HaxeExprTools.stringToComplexType(object.objects[0].defType),
+                        type: HaxeExprTools.stringToComplexType(object.objects[i].defType),
                     });
                 }
                 final ct = HaxeExprTools.stringToComplexType(object.defType);

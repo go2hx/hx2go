@@ -498,8 +498,7 @@ class Preprocessor {
             case "go.Int16", "go.UInt16": 16;
             case "go.Int32", "go.UInt32": 32;
             case "go.Int64", "go.UInt64": 64;
-            case "Float": 64;
-            case _: 32;
+            case _: 64; // assume widest type possible
         }
     }
 

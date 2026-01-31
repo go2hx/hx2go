@@ -70,24 +70,24 @@ extern abstract UInt64 {
    @:op(A--) private function postdec(): UInt64;
    @:op(A == B) private function eq(other: UInt64): Bool;
    @:op(A == B) @:commutative private inline function hx_eq_a(other: Float): Bool {
-       return this == Go.uint64(other);
+       return Go.float64(this) == other;
    }
    @:op(A == B) @:commutative private inline function hx_eq_b(other: Int): Bool {
        return this == Go.uint64(other);
    }
    @:op(A != B) private function neq(other: UInt64): Bool;
    @:op(A != B) @:commutative private inline function hx_neq_a(other: Float): Bool {
-       return this != Go.uint64(other);
+       return Go.float64(this) != other;
    }
    @:op(A != B) @:commutative private inline function hx_neq_b(other: Int): Bool {
        return this != Go.uint64(other);
    }
    @:op(A < B) private function lt(other: UInt64): Bool;
    @:op(A < B) private inline static function hx_lt_a(a: Float, b: UInt64): Bool {
-       return Go.uint64(a) < b;
+       return Go.float64(a) < Go.float64(b);
    }
    @:op(A < B) private inline static function hx_lt_b(a: UInt64, b: Float): Bool {
-       return a < Go.uint64(b);
+       return Go.float64(a) < Go.float64(b);
    }
    @:op(A < B) private inline static function hx_lt_c(a: Int, b: UInt64): Bool {
        return Go.uint64(a) < b;
@@ -97,10 +97,10 @@ extern abstract UInt64 {
    }
    @:op(A <= B) private function lte(other: UInt64): Bool;
    @:op(A <= B) private inline static function hx_lte_a(a: Float, b: UInt64): Bool {
-       return Go.uint64(a) <= b;
+       return Go.float64(a) <= Go.float64(b);
    }
    @:op(A <= B) private inline static function hx_lte_b(a: UInt64, b: Float): Bool {
-       return a <= Go.uint64(b);
+       return Go.float64(a) <= Go.float64(b);
    }
    @:op(A <= B) private inline static function hx_lte_c(a: Int, b: UInt64): Bool {
        return Go.uint64(a) <= b;
@@ -110,10 +110,10 @@ extern abstract UInt64 {
    }
    @:op(A > B) private function gt(other: UInt64): Bool;
    @:op(A > B) private inline static function hx_gt_a(a: Float, b: UInt64): Bool {
-       return Go.uint64(a) > b;
+       return Go.float64(a) > Go.float64(b);
    }
    @:op(A > B) private inline static function hx_gt_b(a: UInt64, b: Float): Bool {
-       return a > Go.uint64(b);
+       return Go.float64(a) > Go.float64(b);
    }
    @:op(A > B) private inline static function hx_gt_c(a: Int, b: UInt64): Bool {
        return Go.uint64(a) > b;
@@ -123,10 +123,10 @@ extern abstract UInt64 {
    }
    @:op(A >= B) private function gte(other: UInt64): Bool;
    @:op(A >= B) private inline static function hx_gte_a(a: Float, b: UInt64): Bool {
-       return Go.uint64(a) >= b;
+       return Go.float64(a) >= Go.float64(b);
    }
    @:op(A >= B) private inline static function hx_gte_b(a: UInt64, b: Float): Bool {
-       return a >= Go.uint64(b);
+       return Go.float64(a) >= Go.float64(b);
    }
    @:op(A >= B) private inline static function hx_gte_c(a: Int, b: UInt64): Bool {
        return Go.uint64(a) >= b;

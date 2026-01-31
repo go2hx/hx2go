@@ -134,18 +134,20 @@ function main() {
 
             if (op.commutative) {
                 content.add('   @:op(${op.format}) @:commutative private inline function hx_${op.name}_a(other: Float): ${returnType} {\n');
-                content.add('       return this ${opChar} Go.$t(other);\n');
+                content.add('       return ${op.outBool ? 'Go.float64(this) ${opChar} other' : 'this ${opChar} Go.$t(other)'};\n');
                 content.add('   }\n');
                 content.add('   @:op(${op.format}) @:commutative private inline function hx_${op.name}_b(other: Int): ${returnType} {\n');
                 content.add('       return this ${opChar} Go.$t(other);\n');
                 content.add('   }\n');
             } else {
                 if (!op.bitwise) {
+                    var fstr = op.outBool ? 'Go.float64(a) ${opChar} Go.float64(b)' : 'Go.$t(a) ${opChar} b';
+                    var sstr = op.outBool ? 'Go.float64(a) ${opChar} Go.float64(b)' : 'a ${opChar} Go.$t(b)';
                     content.add('   @:op(${op.format}) private inline static function hx_${op.name}_a(a: Float, b: ${module}): ${returnType} {\n');
-                    content.add('       return Go.$t(a) ${opChar} b;\n');
+                    content.add('       return ${fstr};\n');
                     content.add('   }\n');
                     content.add('   @:op(${op.format}) private inline static function hx_${op.name}_b(a: ${module}, b: Float): ${returnType} {\n');
-                    content.add('       return a ${opChar} Go.$t(b);\n');
+                    content.add('       return ${sstr};\n');
                     content.add('   }\n');
                 }
                 content.add('   @:op(${op.format}) private inline static function hx_${op.name}_c(a: Int, b: ${module}): ${returnType} {\n');

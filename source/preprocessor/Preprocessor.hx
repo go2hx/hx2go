@@ -487,7 +487,7 @@ class Preprocessor {
         return switch t {
             case "Int", "go.GoInt", "go.Int8", "go.Int16", "go.Int32", "go.Int64": true;
             case "UInt", "go.GoUInt", "go.UInt8", "go.UInt16", "go.UInt32", "go.UInt64": false;
-            case _: true;
+            case _: Logging.preprocessor.error('unrecognised integer type: $t'); true;
         }
     }
 
@@ -498,7 +498,7 @@ class Preprocessor {
             case "go.Int16", "go.UInt16": 16;
             case "go.Int32", "go.UInt32": 32;
             case "go.Int64", "go.UInt64": 64;
-            case _: 64; // assume widest type possible
+            case _: Logging.preprocessor.error('unrecognised integer type: $t'); 64; // assume widest type possible
         }
     }
 

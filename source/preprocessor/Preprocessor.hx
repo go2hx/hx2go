@@ -43,8 +43,8 @@ class Preprocessor {
 
             // ensure shift + semantics
             case EBinop(op, e0, e1): {
-                if (op == OpUShr) ensureShift(e, e0, e1, op, false);
-                if (op == OpShr || op == OpShl) ensureShift(e, e0, e1, op, true);
+                if (op == OpUShr) ensureShift(e, e0, e1, op, scope, false);
+                if (op == OpShr || op == OpShl) ensureShift(e, e0, e1, op, scope, true);
 
                 Semantics.ensure(e, [e0, e1], this, scope);
             }
@@ -502,7 +502,7 @@ class Preprocessor {
         }
     }
 
-    public function ensureShift(expr: HaxeExpr, e0: HaxeExpr, e1: HaxeExpr, op: Binop, signed: Bool): Void {
+    public function ensureShift(expr: HaxeExpr, e0: HaxeExpr, e1: HaxeExpr, op: Binop, scope: Scope, signed: Bool): Void {
         if (getIntegerSigned(e0.t) != signed) {
             final width = getIntegerWidth(e0.t);
 
@@ -512,11 +512,20 @@ class Preprocessor {
             final ct_new = HaxeExprTools.stringToComplexType(st_new);
             final ct_old = HaxeExprTools.stringToComplexType(st_old);
 
+            var left = switch e0.def {
+                case EConst(CIdent(s)): e0.copy();
+                case _: {
+                    var anon = annonymiser.assign(e0.copy());
+                    insertExprsBefore([ anon.decl ], expr, scope);
+                    anon.ident;
+                }
+            }
+
             expr.def = ECast({
                 t: st_new,
                 def: EBinop(op, {
                     t: st_new,
-                    def: ECast(e0.copy(), ct_new)
+                    def: ECast(left, ct_new)
                 }, e1)
             }, ct_old);
         }

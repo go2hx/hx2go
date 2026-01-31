@@ -1,3 +1,4 @@
+import go.Go;
 @:analyzer(ignore)
 class Test {
 
@@ -28,6 +29,9 @@ class Test {
         Sys.println(y >>> a); // 0
         Sys.println(y >> b);  // 0
         Sys.println(y >>> b); // 0
+
+        Sys.println(5 >> Go.int(3));
+        Sys.println(5 >>> Go.int(3));
     }
 
 }

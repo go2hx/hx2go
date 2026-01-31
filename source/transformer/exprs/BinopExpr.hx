@@ -51,3 +51,4 @@ function handleResultBinop(t:Transformer, e:HaxeExpr, op:Binop, side:HaxeExpr, o
 
     return true;
 }
+

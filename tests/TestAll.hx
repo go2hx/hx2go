@@ -18,6 +18,7 @@ class TestAll {
                 exprparser.ExprParser.run();
                 language.Language.run();
                 unit.Unit.run();
+                // issues.Issues.run();
         });
         trace("\n=== Results ===");
         trace('Passed: ${green(Std.string(passed))}, Failed: ${red(Std.string(failed))}');

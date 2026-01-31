@@ -100,7 +100,7 @@ class Logging {
         }
 
         var colour = _colours.get(level);
-        var str = colour + Std.string(level).lpad(" ", 5).toUpperCase() + DIM + " | " + source.name + " ";
+        var str = colour + Std.string(level).rpad(" ", 5).toUpperCase() + DIM + " | " + source.name + " ";
 
         if (posInfos != null) {
             str += "(" + posInfos.fileName + ":" + posInfos.lineNumber + ") ";

@@ -28,12 +28,12 @@ private function printBinop(op:Binop) {
         case OpBoolOr: "||";
         case OpShl: "<<";
         case OpShr: ">>";
-        case OpUShr: ">>>";
+        case OpUShr: ">>"; // in go, it depends on the type if it's signed or unsigned shift
         case OpMod: "%";
-        case OpInterval: "...";
-        case OpArrow: "=>";
-        case OpIn: "in";
-        case OpNullCoal: "??";
+        case OpInterval: Logging.translator.error("unsupported binop kind: " + op); "..."; // TODO: impl
+        case OpArrow: Logging.translator.error("unsupported binop kind: " + op); "=>"; // TODO: impl
+        case OpIn: Logging.translator.error("unsupported binop kind: " + op); "in"; // TODO: impl
+        case OpNullCoal: Logging.translator.error("unsupported binop kind: " + op); "??"; // TODO: impl
         case OpAssignOp(op):
             printBinop(op) + "=";
     }

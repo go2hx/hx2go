@@ -270,22 +270,8 @@ class Semantics {
 	 */
 	public static function getIntegerSigned(t: ComplexType): Bool {
 		return switch t {
-			case TPath({ pack: [], name: "Int" }): true;
-			case TPath({ pack: ["go"], name: "GoInt" }): true;
-			case TPath({ pack: ["go"], name: "Int8" }): true;
-			case TPath({ pack: ["go"], name: "Int16" }): true;
-			case TPath({ pack: ["go"], name: "Int32" }): true;
-			case TPath({ pack: ["go"], name: "Int64" }): true;
-
-			case TPath({ pack: [], name: "UInt" }): false;
-			case TPath({ pack: ["go"], name: "GoUInt" }): false;
-			case TPath({ pack: ["go"], name: "UInt8" }): false;
-			case TPath({ pack: ["go"], name: "UInt16" }): false;
-			case TPath({ pack: ["go"], name: "UInt32" }): false;
-			case TPath({ pack: ["go"], name: "UInt64" }): false;
-			case TPath({ pack: ["go"], name: "Rune" }): false;
-			case TPath({ pack: ["go"], name: "Byte" }): false;
-
+			case TPath({ pack: [], name: "Int" }) | TPath({ pack: ["go"], name: "GoInt" | "Int8" | "Int16" | "Int32" | "Int64" }): true;
+			case TPath({ pack: [], name: "UInt" }) | TPath({ pack: ["go"], name: "GoUInt" | "UInt8" | "UInt16" | "UInt32" | "UInt64" | "Rune" | "Byte" }): false;
 			case _: Logging.preprocessor.error('unrecognised integer type: $t'); true; // abstract should not cause this code path anyway.
 		}
 	}
@@ -296,25 +282,11 @@ class Semantics {
 	 */
 	public static function getIntegerWidth(t: ComplexType): Int {
 		return switch t {
-			case TPath({ pack: [], name: "Int" }): 64;
-			case TPath({ pack: [], name: "UInt" }): 64;
-			case TPath({ pack: ["go"], name: "GoInt" }): 64; // assuming the wider type here...
-			case TPath({ pack: ["go"], name: "GoUInt" }): 64;
-
-			case TPath({ pack: ["go"], name: "Int8" }): 8;
-			case TPath({ pack: ["go"], name: "UInt8" }): 8;
-			case TPath({ pack: ["go"], name: "Rune" }): 8;
-			case TPath({ pack: ["go"], name: "Byte" }): 8;
-
-			case TPath({ pack: ["go"], name: "Int16" }): 16;
-			case TPath({ pack: ["go"], name: "UInt16" }): 16;
-
-			case TPath({ pack: ["go"], name: "Int32" }): 32;
-			case TPath({ pack: ["go"], name: "UInt32" }): 32;
-
-			case TPath({ pack: ["go"], name: "Int64" }): 64;
-			case TPath({ pack: ["go"], name: "UInt64" }): 64;
-
+			case TPath({ pack: [], name: "Int" | "UInt" }) | TPath({ pack: ["go"], name: "Int" | "UInt" | "GoInt" | "GoUInt" }): 64; // for GoInt I assume the wider type, i could add special handling but that is extra comlexity for little (to no) gain.
+			case TPath({ pack: ["go"], name: "Int8" | "UInt8" | "Rune" | "Byte" }): 8;
+			case TPath({ pack: ["go"], name: "Int16" | "UInt16" }): 16;
+			case TPath({ pack: ["go"], name: "Int32" | "UInt32" }): 32;
+			case TPath({ pack: ["go"], name: "Int64" | "UInt64" }): 64;
 			case _: Logging.preprocessor.error('unrecognised integer type: $t'); 64; // abstract should not cause this code path anyway.
 		}
 	}
@@ -325,9 +297,7 @@ class Semantics {
 	 */
 	public static function isFloatType(t: ComplexType): Bool {
 		return switch t {
-			case TPath({ pack: [], name: "Float" }): true;
-			case TPath({ pack: ["go"], name: "Float32" }): true;
-			case TPath({ pack: ["go"], name: "Float64" }): true;
+			case TPath({ pack: [], name: "Float" }) | TPath({ pack: ["go"], name: "Float32" | "Float64" }): true;
 			case _: false;
 		}
 	}
@@ -349,20 +319,7 @@ class Semantics {
 	 */
 	public static function isIntegerType(t: ComplexType): Bool {
 		return switch t {
-			case TPath({ pack: [], name: "Int" }): true;
-			case TPath({ pack: [], name: "UInt" }): true;
-			case TPath({ pack: ["go"], name: "GoInt" }): true;
-			case TPath({ pack: ["go"], name: "GoUInt" }): true;
-			case TPath({ pack: ["go"], name: "Int8" }): true;
-			case TPath({ pack: ["go"], name: "UInt8" }): true;
-			case TPath({ pack: ["go"], name: "Int16" }): true;
-			case TPath({ pack: ["go"], name: "UInt16" }): true;
-			case TPath({ pack: ["go"], name: "Int32" }): true;
-			case TPath({ pack: ["go"], name: "UInt32" }): true;
-			case TPath({ pack: ["go"], name: "Int64" }): true;
-			case TPath({ pack: ["go"], name: "UInt64" }): true;
-			case TPath({ pack: ["go"], name: "Rune" }): true;
-			case TPath({ pack: ["go"], name: "Byte" }): true;
+			case TPath({ pack: [], name: "Int" | "UInt" }) | TPath({ pack: ["go"], name: "GoInt" | "GoUInt" | "Int8" | "UInt8" | "Int16" | "UInt16" | "Int32" | "UInt32" | "Int64" | "UInt64" | "Rune" |  "Byte" }): true;
 			case _: false;
 		}
 	}

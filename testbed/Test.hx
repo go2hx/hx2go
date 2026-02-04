@@ -1,83 +1,40 @@
-//class Vehicle {
-//
-//    public function new() {
-//        Sys.println("Vehicle created");
-//    }
-//
-//    public function start(): Void {
-//        Sys.println("Vehicle started");
-//    }
-//
-//    public function horsepower(): Int {
-//        return 100;
-//    }
-//
-//}
-//
-//class Car extends Vehicle {
-//
-//    public function new() {
-//        super();
-//    }
-//
-//    override public function start(): Void {
-//        super.start();
-//        Sys.println("Car started");
-//    }
-//
-//    public function honk(): Void {
-//        Sys.println("Car honked");
-//    }
-//
-//}
-//
-//class Truck extends Car {
-//
-//    public function new() {
-//        super();
-//    }
-//
-//    override public function start(): Void {
-//        super.start();
-//        Sys.println("Truck started");
-//    }
-//
-//    override public function honk(): Void {
-//        super.honk();
-//        Sys.println("Truck honked loudly");
-//    }
-//
-//}
-
-class MyClass {
+class Vehicle {
 
     public function new() {
-        Sys.println("MyClass instance created");
+        Sys.println("Vehicle created");
     }
 
-    public function greet(): Void {
-        Sys.println("Hello from MyClass!");
+    public function start(): Void {
+        Sys.println("Vehicle started");
     }
 
-    public function greetFromSelf(): Void {
-        Sys.println("Greeting from: " + this);
-        this.greet();
-    }
-
-}
-
-class MySecondClass extends MyClass {
-
-    override public function greet(): Void {
-        Sys.println("Hello from MySecondClass!");
+    public function horsepower(): Int {
+        return 100;
     }
 
 }
 
-class MyThirdClass extends MySecondClass {
+class Car extends Vehicle {
 
-    override public function greet(): Void {
-        Sys.println("Hello from MyThirdClass!");
+    override public function start(): Void {
+        Sys.println("Car started");
+    }
+
+    public function honk(): Void {
+        Sys.println("Car honked");
+    }
+
+}
+
+class Truck extends Car {
+
+
+    override public function start(): Void {
+        Sys.println("Truck started");
+    }
+
+    override public function honk(): Void {
+        Sys.println("Truck honked loudly");
     }
 
 }
@@ -85,29 +42,17 @@ class MyThirdClass extends MySecondClass {
 class Test {
 
     public static function main() {
-        var clsA = new MyClass();
-        clsA.greet();
-        clsA.greetFromSelf();
+        var myCar = new Car();
+        myCar.start();
+        myCar.honk();
 
-        var clsB = new MySecondClass();
-        clsB.greet();
-        clsB.greetFromSelf();
+        var myTruck = new Truck();
+        myTruck.start();
+        myTruck.honk();
 
-        var clsC = new MyThirdClass();
-        clsC.greet();
-        clsC.greetFromSelf();
+        var myVehicle: Vehicle = new Vehicle();
+        myVehicle.start();
 
-//        var myCar = new Car();
-//        myCar.start();
-//        myCar.honk();
-//
-//        var myTruck = new Truck();
-//        myTruck.start();
-//        myTruck.honk();
-//
-//        var myVehicle: Vehicle = new Vehicle();
-//        myVehicle.start();
-//
 //        var carAsVehicle: Vehicle = myCar;
 //        carAsVehicle.start();
 //
@@ -116,8 +61,8 @@ class Test {
 //
 //        var truckAsCar: Car = myTruck;
 //        truckAsCar.honk();
-//
-//        Sys.println(myTruck.horsepower());
+
+        Sys.println(myTruck.horsepower());
 
         /*
             Expected Output:

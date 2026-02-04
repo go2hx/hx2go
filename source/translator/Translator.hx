@@ -11,6 +11,9 @@ import HaxeExpr.HaxeTypeDefinition;
  */
 @:structInit
 class Translator {
+
+    public var module: Module = null;
+
     public inline function translateComplexType(ct:ComplexType):String {
         return switch ct {
             case TPath(p):
@@ -88,7 +91,7 @@ class Translator {
         if (!def.isExtern) {
             switch (def.kind) {
                 case TDClass:
-                    buf.add(translateClassDef(this, def)); // TODO: support interfaces
+                    buf.add(translateClassDef(def)); // TODO: support interfaces
 
                 case _:
                     // ignore
@@ -124,13 +127,47 @@ class Translator {
         return buf.toString();
     }
 
-    public function translateClassDef(t: Translator, def: HaxeTypeDefinition): String {
+    public function translateClassDef(def: HaxeTypeDefinition): String {
         var buf = new StringBuf();
         final className = 'Hx_${modulePathToPrefix(def.name)}';
 
         buf.add('type ${className}_VTable interface {\n');
 
-        for (field in def.fields) {
+        var mergedFields = def.fields.copy();
+        var inheritedFields = [];
+        var vTableAssignmentBuf = new StringBuf();
+
+        var superClass = def.superClass;
+        var fieldName = "obj.Super";
+
+        while (superClass != null) {
+            final ct = HaxeExprTools.stringToComplexType(superClass);
+            if (ct == null) {
+                break;
+            }
+
+            final td = switch ct {
+                case TPath(p): module.resolveClass(p.pack, p.name, module.path);
+                case _: null;
+            }
+
+            if (td == null) {
+                break;
+            }
+
+            for (f in td.fields) {
+                if (!(mergedFields.filter(f2 -> f2.name == f.name).length > 0)) {
+                    mergedFields.push(f);
+                    inheritedFields.push(f);
+                }
+            }
+
+            vTableAssignmentBuf.add('\t${fieldName}.Vtable = obj\n');
+            fieldName += '.Super';
+            superClass = td.superClass;
+        }
+
+        for (field in mergedFields) {
             switch field.kind {
                 case FFun(_) if (!field.isStatic):
                     final methodName = toPascalCase(field.name);
@@ -146,11 +183,11 @@ class Translator {
                                     buf.add(', ');
                                 }
                                 first = false;
-                                buf.add(arg.name + ' ' + t.translateComplexType(arg.type));
+                                buf.add(arg.name + ' ' + translateComplexType(arg.type));
                             }
                             buf.add(') ');
 
-                            final returnType = t.translateComplexType(f.ret);
+                            final returnType = translateComplexType(f.ret);
                             if (returnType != "Void") {
                                 buf.add(returnType);
                             }
@@ -182,8 +219,60 @@ class Translator {
         buf.add('func ${className}_New() *$className {\n');
         buf.add('\tobj := &$className{}\n');
         buf.add('\tobj.Vtable = obj\n'); // TODO: also set vtable on the entire hierarchy of super classes
+
+        if (def.constructor == null && def.superClass != null) {
+            buf.add('\tobj.Super = Hx_${modulePathToPrefix(def.superClass)}_New()\n');
+        }
+
+        buf.add(vTableAssignmentBuf.toString());
+
         buf.add('\treturn obj\n');
         buf.add('}\n\n');
+
+        for (f in inheritedFields) {
+            switch f.kind {
+                case FFun(_):
+                    switch f.expr.def {
+                        case EFunction(kind, func):
+                            final methodName = toPascalCase(f.name);
+                            buf.add('func (obj *$className) $methodName(');
+
+                            var first = true;
+                            for (arg in func.args) {
+                                if (!first) {
+                                    buf.add(', ');
+                                }
+                                first = false;
+                                buf.add(arg.name + ' ' + translateComplexType(arg.type));
+                            }
+                            buf.add(') ');
+
+                            final returnType = translateComplexType(func.ret);
+                            if (returnType != "Void") {
+                                buf.add(returnType);
+                            }
+
+                            buf.add(' {\n');
+                            buf.add('\treturn obj.Super.$methodName(');
+
+                            first = true;
+                            for (arg in func.args) {
+                                if (!first) {
+                                    buf.add(', ');
+                                }
+                                first = false;
+                                buf.add(arg.name);
+                            }
+
+                            buf.add(')\n');
+                            buf.add('}\n\n');
+
+                        case _: null;
+                    }
+
+                case _: null;
+            }
+        }
 
         return buf.toString();
     }

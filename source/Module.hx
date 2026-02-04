@@ -55,8 +55,10 @@ class Module {
             return;
         }
 
+        translator.module = this;
         transformer.module = this;
         preprocessor.module = this;
+
         for (def in defs) {
             if (def == null) {
                 Logging.module.warn('null def');

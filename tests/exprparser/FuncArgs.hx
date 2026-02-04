@@ -4,7 +4,7 @@ import parser.dump.ExprParser;
 import sys.io.File;
 
 
-function run() {
+function main() {
     final parser = new ExprParser("DEBUG");
     final haxeExpr = parser.parse(Util.normalizeCLRF(File.getContent("tests/exprparser/funcArgs.txt")).split("\n"));
     assert(haxeExpr != null, true);

@@ -1,6 +1,6 @@
 package language;
 
-function run() {
+function main() {
     trace("Immediate Constants\n");
     assert(true, true);
     assert(false, false);

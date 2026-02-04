@@ -1,13 +1,14 @@
 package exprparser;
 
-function run() {
-    Semicolon.run();
-    Hello.run();
-    FuncArgs.run();
-    IntExpr.run();
-    TreeNode.run();
-    CFFlags.run();
-    Slice.run();
-    RestKeyValueIterator.run();
-    RestKeyValueIterator2.run();
+function main() {
+	Semicolon.main();
+	Hello.main();
+	FuncArgs.main();
+	IntExpr.main();
+	TreeNode.main();
+	CFFlags.main();
+	Slice.main();
+	RestKeyValueIterator.main();
+	RestKeyValueIterator2.main();
+	ObjectDecl.main();
 }

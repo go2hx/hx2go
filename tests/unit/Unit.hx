@@ -1,6 +1,6 @@
 package unit;
 
-function run() {
+function main() {
     NullGeneric.main();
     IntAddressOf.main();
 }

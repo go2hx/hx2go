@@ -1,6 +1,6 @@
 -cp tests
 common.hxml
--m TestAll
+-m TestParser
 -w -WUnusedPattern
 extraParams.hxml
 # haxelib git deep_equal https://github.com/kevinresol/deep_equal
@@ -8,4 +8,3 @@ extraParams.hxml
 -D run-go
 -D color
 --interp
-#--custom-target go=exportTest

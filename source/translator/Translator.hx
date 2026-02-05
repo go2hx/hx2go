@@ -5,6 +5,7 @@ import haxe.macro.Expr;
 import translator.exprs.*;
 import translator.TranslatorTools;
 import HaxeExpr.HaxeTypeDefinition;
+import HaxeExpr.HaxeField;
 
 /**
  * Translates Haxe AST to Go AST (strings for now TODO)
@@ -134,17 +135,13 @@ class Translator {
 
         buf.add('type ${className}_VTable interface {\n');
 
-        var mergedFields = def.fields.copy();
-        var inheritedFields = [];
         var vTableAssignmentBuf = new StringBuf();
-
         var superClass = def.superClass;
         var fieldName = "obj.Super";
-        var hasConstructor = false;
+        var constructor: HaxeField = def?.constructor;
 
-        if (def.constructor != null) {
-            inheritedFields.push(def.constructor);
-            hasConstructor = true;
+        if (superClass != null) {
+            buf.add('\tHx_${modulePathToPrefix(def.superClass)}_Obj_VTable\n');
         }
 
         while (superClass != null) {
@@ -162,16 +159,8 @@ class Translator {
                 break;
             }
 
-            for (f in td.fields) {
-                if (!(mergedFields.filter(f2 -> f2.name == f.name).length > 0)) {
-                    mergedFields.push(f);
-                    inheritedFields.push(f);
-                }
-            }
-
-            if (!hasConstructor && td.constructor != null) {
-                inheritedFields.push(td.constructor);
-                hasConstructor = true;
+            if (constructor == null && td.constructor != null) {
+                constructor = td.constructor;
             }
 
             vTableAssignmentBuf.add('\t${fieldName}.Vtable = obj\n');
@@ -179,7 +168,7 @@ class Translator {
             superClass = td.superClass;
         }
 
-        for (field in mergedFields) {
+        for (field in def.fields) {
             switch field.kind {
                 case FFun(_) if (!field.isStatic):
                     final methodName = toPascalCase(field.name);
@@ -222,7 +211,7 @@ class Translator {
         buf.add('type $className struct {\n');
 
         if (def.superClass != null) {
-            buf.add('Hx_${modulePathToPrefix(def.superClass)}_Obj\n');
+            buf.add('\tHx_${modulePathToPrefix(def.superClass)}_Obj\n');
             buf.add('\tSuper *Hx_${modulePathToPrefix(def.superClass)}_Obj\n');
         }
 
@@ -247,54 +236,21 @@ class Translator {
 
         buf.add('func ${className}_CreateInstance($prmStr) *$className {\n');
         buf.add('\tobj := ${className}_CreateEmptyInstance()\n');
-        if (hasConstructor) buf.add('\tobj.New()\n');
+        if (constructor != null) buf.add('\tobj.New()\n');
         buf.add('\treturn obj\n');
         buf.add('}\n\n');
 
-        for (f in inheritedFields) {
-            switch f.kind {
-                case FFun(_):
-                    switch f.expr.def {
-                        case EFunction(kind, func):
-                            final methodName = toPascalCase(f.name);
-                            buf.add('func (obj *$className) $methodName(');
-
-                            var first = true;
-                            for (arg in func.args) {
-                                if (!first) {
-                                    buf.add(', ');
-                                }
-                                first = false;
-                                buf.add(arg.name + ' ' + translateComplexType(arg.type));
-                            }
-                            buf.add(') ');
-
-                            final returnType = translateComplexType(func.ret);
-                            if (returnType != "Void") {
-                                buf.add(returnType);
-                            }
-
-                            var e = func.expr.copy(); // we copy the expression over instead of forwarding it (obj.Super.X) as it's more efficient and also handles the constructor...
-                            module.transformer.transformExpr(e);
-
-                            buf.add(translateExpr(e));
-
-                            first = true;
-                            for (arg in func.args) {
-                                if (!first) {
-                                    buf.add(', ');
-                                }
-                                first = false;
-                                buf.add(arg.name);
-                            }
-
-                            buf.add("\n\n");
-
-                        case _: null;
-                    }
-
-                case _: null;
-            }
+        switch constructor?.kind {
+            case FFun(_):
+                switch constructor.expr.def {
+                    case EFunction(kind, f):
+                        module.transformer.transformExpr(constructor.expr);
+                        buf.add(translator.exprs.Function.translateFunction(this, 'New', f, def, false) + "\n");
+                    default:
+                        Logging.translator.error('expr.def failure for constructor');
+                        throw "expr.def is not EFunction: " + constructor.expr.def;
+                }
+            default:
         }
 
         return buf.toString();

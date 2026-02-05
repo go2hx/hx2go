@@ -28,7 +28,6 @@ class Car extends Vehicle {
 
 class Truck extends Car {
 
-
     override public function start(): Void {
         Sys.println("Truck started");
     }
@@ -43,20 +42,14 @@ class Truck extends Car {
 class Test {
 
     public static function main() {
-        var myCar = new Car();
-        myCar.start();
-        myCar.honk();
+        var truck: Truck = new Truck();
+        var vehicle: Vehicle = cast truck;
+        Sys.println(vehicle.horsepower());
 
-        var myTruck = new Truck();
-        myTruck.start();
-        myTruck.honk();
+        vehicle.start();
 
-        var myVehicle: Vehicle = new Vehicle();
-        myVehicle.start();
-
-        (myTruck : Vehicle).start();
-
-        Sys.println(myTruck.horsepower());
+        Sys.println(truck.horsepower());
+        truck.honk();
     }
 
 }

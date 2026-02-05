@@ -99,6 +99,12 @@ class Logging {
             return;
         }
 
+        #if !debug
+        if (level == Debug) {
+            return;
+        }
+        #end
+
         var colour = _colours.get(level);
         var str = colour + Std.string(level).rpad(" ", 5).toUpperCase() + DIM + " | " + source.name + " ";
 

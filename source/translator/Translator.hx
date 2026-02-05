@@ -88,16 +88,6 @@ class Translator {
     public function translateDef(def:HaxeTypeDefinition):String {
         var buf = new StringBuf();
 
-        if (!def.isExtern) {
-            switch (def.kind) {
-                case TDClass:
-                    buf.add(translateClassDef(def)); // TODO: support interfaces
-
-                case _:
-                    // ignore
-            }
-        }
-
         for (field in def.fields) {
             final name = field.isStatic ? 'Hx_${modulePathToPrefix(def.name)}_${toPascalCase(field.name)}' : toPascalCase(field.name);
             final expr:HaxeExpr = field.expr;
@@ -124,12 +114,23 @@ class Translator {
                 default:
             }
         }
+
+        if (!def.isExtern) {
+            switch (def.kind) {
+                case TDClass:
+                    buf.add(translateClassDef(def)); // TODO: support interfaces
+
+                case _:
+                // ignore
+            }
+        }
+
         return buf.toString();
     }
 
     public function translateClassDef(def: HaxeTypeDefinition): String {
         var buf = new StringBuf();
-        final className = 'Hx_${modulePathToPrefix(def.name)}';
+        final className = 'Hx_${modulePathToPrefix(def.name)}_Obj';
 
         buf.add('type ${className}_VTable interface {\n');
 
@@ -139,6 +140,12 @@ class Translator {
 
         var superClass = def.superClass;
         var fieldName = "obj.Super";
+        var hasConstructor = false;
+
+        if (def.constructor != null) {
+            inheritedFields.push(def.constructor);
+            hasConstructor = true;
+        }
 
         while (superClass != null) {
             final ct = HaxeExprTools.stringToComplexType(superClass);
@@ -160,6 +167,11 @@ class Translator {
                     mergedFields.push(f);
                     inheritedFields.push(f);
                 }
+            }
+
+            if (!hasConstructor && td.constructor != null) {
+                inheritedFields.push(td.constructor);
+                hasConstructor = true;
             }
 
             vTableAssignmentBuf.add('\t${fieldName}.Vtable = obj\n');
@@ -208,24 +220,34 @@ class Translator {
         buf.add('}\n\n');
 
         buf.add('type $className struct {\n');
-        buf.add('\tVtable ${className}_VTable\n'); // TODO: add superClass to struct
 
         if (def.superClass != null) {
-            buf.add('\tSuper *Hx_${modulePathToPrefix(def.superClass)}\n');
+            buf.add('Hx_${modulePathToPrefix(def.superClass)}_Obj\n');
+            buf.add('\tSuper *Hx_${modulePathToPrefix(def.superClass)}_Obj\n');
         }
 
+        buf.add('\tVtable ${className}_VTable\n'); // TODO: add superClass to struct
         buf.add('}\n\n');
 
-        buf.add('func ${className}_New() *$className {\n');
+        var prmStr = '';
+        var argStr = '';
+
+        buf.add('func ${className}_CreateEmptyInstance() *$className {\n');
         buf.add('\tobj := &$className{}\n');
         buf.add('\tobj.Vtable = obj\n'); // TODO: also set vtable on the entire hierarchy of super classes
 
-        if (def.constructor == null && def.superClass != null) {
-            buf.add('\tobj.Super = Hx_${modulePathToPrefix(def.superClass)}_New()\n');
+        if (def.superClass != null) {
+            buf.add('\tobj.Super = Hx_${modulePathToPrefix(def.superClass)}_Obj_CreateEmptyInstance()\n');
         }
 
         buf.add(vTableAssignmentBuf.toString());
 
+        buf.add('\treturn obj\n');
+        buf.add('}\n\n');
+
+        buf.add('func ${className}_CreateInstance($prmStr) *$className {\n');
+        buf.add('\tobj := ${className}_CreateEmptyInstance()\n');
+        if (hasConstructor) buf.add('\tobj.New()\n');
         buf.add('\treturn obj\n');
         buf.add('}\n\n');
 
@@ -252,8 +274,10 @@ class Translator {
                                 buf.add(returnType);
                             }
 
-                            buf.add(' {\n');
-                            buf.add('\treturn obj.Super.$methodName(');
+                            var e = func.expr.copy(); // we copy the expression over instead of forwarding it (obj.Super.X) as it's more efficient and also handles the constructor...
+                            module.transformer.transformExpr(e);
+
+                            buf.add(translateExpr(e));
 
                             first = true;
                             for (arg in func.args) {
@@ -264,8 +288,7 @@ class Translator {
                                 buf.add(arg.name);
                             }
 
-                            buf.add(')\n');
-                            buf.add('}\n\n');
+                            buf.add("\n\n");
 
                         case _: null;
                     }

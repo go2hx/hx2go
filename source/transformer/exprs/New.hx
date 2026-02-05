@@ -57,10 +57,10 @@ function transformNew(t:Transformer, e:HaxeExpr, tpath: TypePath, params: Array<
         e.def = EGoCode('${name}{ ${args.map(a -> '${transformName ? toPascalCase(a.name) : a.name}: {${count++}}').join(', ')} }', params);
     }
 
-    var className = 'Hx_${modulePathToPrefix(td.name)}';
+    var className = 'Hx_${modulePathToPrefix(td.name)}_Obj';
     e.def = ECall({
-        t: null,
-        def: EConst(CIdent('${className}_New'))
+        t: e.t,
+        def: EConst(CIdent('${className}_CreateInstance'))
     }, params);
 
     for (p in params) {

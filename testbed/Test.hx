@@ -39,6 +39,7 @@ class Truck extends Car {
 
 }
 
+@:analyzer(ignore)
 class Test {
 
     public static function main() {
@@ -53,40 +54,22 @@ class Test {
         var myVehicle: Vehicle = new Vehicle();
         myVehicle.start();
 
-//        var carAsVehicle: Vehicle = myCar;
-//        carAsVehicle.start();
-//
-//        var truckAsVehicle: Vehicle = myTruck;
-//        truckAsVehicle.start();
-//
-//        var truckAsCar: Car = myTruck;
-//        truckAsCar.honk();
+        (myTruck : Vehicle).start();
 
         Sys.println(myTruck.horsepower());
-
-        /*
-            Expected Output:
-
-            09:24:26:711   Test.hx:4:,Vehicle created
-            09:24:26:712   Test.hx:8:,Vehicle started
-            09:24:26:712   Test.hx:21:,Car started
-            09:24:26:712   Test.hx:25:,Car honked
-            09:24:26:712   Test.hx:4:,Vehicle created
-            09:24:26:712   Test.hx:8:,Vehicle started
-            09:24:26:712   Test.hx:21:,Car started
-            09:24:26:712   Test.hx:38:,Truck started
-            09:24:26:712   Test.hx:25:,Car honked
-            09:24:26:712   Test.hx:43:,Truck honked loudly
-            09:24:26:712   Test.hx:4:,Vehicle created
-            09:24:26:712   Test.hx:8:,Vehicle started
-            09:24:26:712   Test.hx:8:,Vehicle started
-            09:24:26:712   Test.hx:21:,Car started
-            09:24:26:712   Test.hx:8:,Vehicle started
-            09:24:26:712   Test.hx:21:,Car started
-            09:24:26:712   Test.hx:38:,Truck started
-            09:24:26:712   Test.hx:25:,Car honked
-            09:24:26:712   Test.hx:43:,Truck honked loudly
-         */
     }
 
 }
+
+/*
+
+14:05:18:663   Test.hx:4:,Vehicle created
+14:05:18:664   Test.hx:20:,Car started
+14:05:18:664   Test.hx:24:,Car honked
+14:05:18:664   Test.hx:4:,Vehicle created
+14:05:18:664   Test.hx:33:,Truck started
+14:05:18:664   Test.hx:37:,Truck honked loudly
+14:05:18:664   Test.hx:4:,Vehicle created
+14:05:18:664   Test.hx:8:,Vehicle started
+14:05:18:664   Test.hx:65:,100
+ */

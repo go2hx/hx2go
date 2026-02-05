@@ -53,7 +53,7 @@ class Transformer {
             case EBinop(op, e1, e2):
                 BinopExpr.transformBinop(this, e, op, e1, e2);
             case ECast(inner, t):
-                Cast.transformCast(this, inner, e, t);
+                Cast.transformCast(this, e, inner, t);
             case EArrayDecl(values, _):
                 transformer.decls.ArrayDeclaration.transformArray(this, e, values);
             case EArray(e1, e2):
@@ -114,7 +114,7 @@ class Transformer {
                         handleCoreTypeName(p, td.name);
 
                         if (!processTypeMetadata(p, td)) {
-                            var clsName = 'Hx_${modulePathToPrefix(td.name)}';
+                            var clsName = 'Hx_${modulePathToPrefix(td.name)}_Obj';
                             p.pack = [];
                             p.name = '*$clsName';
                         }

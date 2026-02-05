@@ -32,7 +32,8 @@ function transformFieldAccess(t:Transformer, e:HaxeExpr) {
             }
 
             e.def = switch (e?.special) {
-                case FStatic(tstr, _) | FInstance(tstr): EConst(CIdent('Hx_${modulePathToPrefix(tstr)}_${field}'));
+                case FStatic(tstr, _): EConst(CIdent('Hx_${modulePathToPrefix(tstr)}_${field}'));
+                case FInstance(tstr): EField(e2, field, kind);
                 case _: EField(e2, field, kind);
             }
         default:

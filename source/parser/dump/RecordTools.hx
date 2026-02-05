@@ -63,6 +63,8 @@ function recordToHaxeTypeDefinition(record: RecordEntry):HaxeTypeDefinition {
     }
 
     var constructor: HaxeField = null;
+    var superClass: String = null;
+
     if (record.record_kind == RClass && record.toClass().constructor != null) {
         var cls = record.toClass();
         var c = cls.constructor;
@@ -79,7 +81,15 @@ function recordToHaxeTypeDefinition(record: RecordEntry):HaxeTypeDefinition {
             t: "#UNKNOWN_TYPE",
             expr: c.get("cf_expr"),
             meta: getMeta(c.get("cf_meta")),
+            isStatic: true
         };
+    }
+
+    if (record.record_kind == RClass) {
+        var cls = record.toClass();
+        if (cls._super != null && cls._super.toLowerCase() != "none") {
+            superClass = cls._super;
+        }
     }
 
     return {
@@ -90,6 +100,7 @@ function recordToHaxeTypeDefinition(record: RecordEntry):HaxeTypeDefinition {
         meta: () -> getMeta(record.meta),
         constructor: constructor,
         kind: kind,
+        superClass: superClass
     };
 }
 
@@ -130,5 +141,6 @@ private function recordClassFieldToHaxeField(record_debug_path:String, field:Rec
         t: "#UNKNOWN_TYPE",
         expr: field.expr,
         meta: getMeta(field.meta),
+        isStatic: isStatic
     };
 }

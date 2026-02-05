@@ -5,12 +5,16 @@ import haxe.macro.Expr;
 import translator.exprs.*;
 import translator.TranslatorTools;
 import HaxeExpr.HaxeTypeDefinition;
+import HaxeExpr.HaxeField;
 
 /**
  * Translates Haxe AST to Go AST (strings for now TODO)
  */
 @:structInit
 class Translator {
+
+    public var module: Module = null;
+
     public inline function translateComplexType(ct:ComplexType):String {
         return switch ct {
             case TPath(p):
@@ -67,7 +71,7 @@ class Translator {
                 case EReturn(e):
                     Return.translateReturn(this, e);
                 case EFunction(kind, f):
-                    translator.exprs.Function.translateFunction(this, "", f);
+                    translator.exprs.Function.translateFunction(this, "", f, null, true);
                 case EObjectDecl(fields):
                     translator.exprs.ObjectDeclaration.translateObjectDeclaration(this, fields);
                 case EArrayDecl(values, ct):
@@ -88,14 +92,14 @@ class Translator {
         var buf = new StringBuf();
 
         for (field in def.fields) {
-            final name = 'Hx_${modulePathToPrefix(def.name)}_${toPascalCase(field.name)}';
+            final name = field.isStatic ? 'Hx_${modulePathToPrefix(def.name)}_${toPascalCase(field.name)}' : toPascalCase(field.name);
             final expr:HaxeExpr = field.expr;
 
             switch field.kind {
                 case FFun(_):
                     switch expr.def {
                         case EFunction(kind, f):
-                            buf.add(translator.exprs.Function.translateFunction(this, name, f));
+                            buf.add(translator.exprs.Function.translateFunction(this, name, f, def, field.isStatic) + "\n");
                         default:
                             Logging.translator.error('expr.def failure field:' + field.name);
                             throw "expr.def is not EFunction: " + expr.def;
@@ -113,6 +117,144 @@ class Translator {
                 default:
             }
         }
+
+        if (!def.isExtern) {
+            switch (def.kind) {
+                case TDClass:
+                    buf.add(translateClassDef(def)); // TODO: support interfaces
+
+                case _:
+                // ignore
+            }
+        }
+
+        return buf.toString();
+    }
+
+    public function translateClassDef(def: HaxeTypeDefinition): String {
+        var buf = new StringBuf();
+        final className = 'Hx_${modulePathToPrefix(def.name)}_Obj';
+
+        buf.add('type ${className}_VTable interface {\n');
+
+        var vTableAssignmentBuf = new StringBuf();
+        var superClass = def.superClass;
+        var fieldName = "obj.Super";
+        var constructor: HaxeField = def?.constructor;
+
+        if (superClass != null) {
+            buf.add('\tHx_${modulePathToPrefix(def.superClass)}_Obj_VTable\n');
+        }
+
+        while (superClass != null) {
+            final ct = HaxeExprTools.stringToComplexType(superClass);
+            if (ct == null) {
+                break;
+            }
+
+            final td = switch ct {
+                case TPath(p): module.resolveClass(p.pack, p.name, module.path);
+                case _: null;
+            }
+
+            if (td == null) {
+                break;
+            }
+
+            if (constructor == null && td.constructor != null) {
+                constructor = td.constructor;
+            }
+
+            vTableAssignmentBuf.add('\t${fieldName}.Vtable = obj\n');
+            fieldName += '.Super';
+            superClass = td.superClass;
+        }
+
+        for (field in def.fields) {
+            switch field.kind {
+                case FFun(_) if (!field.isStatic):
+                    final methodName = toPascalCase(field.name);
+                    final expr:HaxeExpr = field.expr;
+
+                    buf.add('\t$methodName(');
+
+                    switch expr.def {
+                        case EFunction(kind, f): {
+                            var first = true;
+                            for (arg in f.args) {
+                                if (!first) {
+                                    buf.add(', ');
+                                }
+                                first = false;
+                                buf.add(arg.name + ' ' + translateComplexType(arg.type));
+                            }
+                            buf.add(') ');
+
+                            final returnType = translateComplexType(f.ret);
+                            if (returnType != "Void") {
+                                buf.add(returnType);
+                            }
+                        }
+
+                        case _: {
+                            Logging.translator.error('expr.def failure field:' + field.name);
+                            throw "expr.def is not EFunction: " + expr.def;
+                        }
+                    }
+
+                    buf.add('\n');
+
+                case _:
+            }
+        }
+
+        buf.add('}\n\n');
+
+        buf.add('type $className struct {\n');
+
+        if (def.superClass != null) {
+            buf.add('\tHx_${modulePathToPrefix(def.superClass)}_Obj\n');
+            buf.add('\tSuper *Hx_${modulePathToPrefix(def.superClass)}_Obj\n');
+        }
+
+        buf.add('\tVtable ${className}_VTable\n'); // TODO: add superClass to struct
+        buf.add('}\n\n');
+
+        var prmStr = '';
+        var argStr = '';
+
+        buf.add('func ${className}_CreateEmptyInstance() *$className {\n');
+        buf.add('\tobj := &$className{}\n');
+        buf.add('\tobj.Vtable = obj\n'); // TODO: also set vtable on the entire hierarchy of super classes
+
+        if (def.superClass != null) {
+            buf.add('\tobj.Super = Hx_${modulePathToPrefix(def.superClass)}_Obj_CreateEmptyInstance()\n');
+        }
+
+        buf.add(vTableAssignmentBuf.toString());
+
+        buf.add('\treturn obj\n');
+        buf.add('}\n\n');
+
+        buf.add('func ${className}_CreateInstance($prmStr) *$className {\n');
+        buf.add('\tobj := ${className}_CreateEmptyInstance()\n');
+        if (constructor != null) buf.add('\tobj.New()\n');
+        buf.add('\treturn obj\n');
+        buf.add('}\n\n');
+
+        switch constructor?.kind {
+            case FFun(_):
+                switch constructor.expr.def {
+                    case EFunction(kind, f):
+                        module.transformer.transformExpr(constructor.expr);
+                        buf.add(translator.exprs.Function.translateFunction(this, 'New', f, def, false) + "\n");
+                    default:
+                        Logging.translator.error('expr.def failure for constructor');
+                        throw "expr.def is not EFunction: " + constructor.expr.def;
+                }
+            default:
+        }
+
         return buf.toString();
     }
 }

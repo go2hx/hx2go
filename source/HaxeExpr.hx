@@ -260,6 +260,7 @@ class HaxeTypeDefinition {
 	public var fields:Array<HaxeField>;
 	public var constructor: HaxeField;
 	public var kind:HaxeTypeDefinitionKind;
+	public var superClass: Null<String>;
 	public var usages: Map<String, Int> = []; // origin, count
 	public var buf: StringBuf = new StringBuf();
 }
@@ -277,6 +278,7 @@ class HaxeField {
 	public var t:String;
 	public var expr:HaxeExpr;
 	public var meta:Array<MetadataEntry>;
+	public var isStatic:Bool;
 }
 
 enum HaxeFieldKind {

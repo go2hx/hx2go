@@ -16,6 +16,17 @@ function transformBinop(t:Transformer, e:HaxeExpr, op:Binop, e1:HaxeExpr, e2:Hax
         promoteBinop(e1, e2, e, op);
     }
 
+    if (e1.t != e2.t && op == OpAssign) {
+        if (e1?.t == null) {
+            Logging.transformer.debug('Cannot resolve resulting type: ${e1?.t} -> ${e2?.t}');
+            t.iterateExpr(e);
+            return;
+        }
+
+        final ct = HaxeExprTools.stringToComplexType(e1.t);
+        e2.def = ECast(e2.copy(), ct);
+    }
+
     t.iterateExpr(e);
 }
 

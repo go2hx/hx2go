@@ -1,21 +1,68 @@
-import go.Go;
+class Vehicle {
+
+    public function new() {
+        Sys.println("Vehicle created");
+    }
+
+    public function start(): Void {
+        Sys.println("Vehicle started");
+    }
+
+    public function horsepower(): Int {
+        return 100;
+    }
+
+}
+
+class Car extends Vehicle {
+
+    override public function start(): Void {
+        Sys.println("Car started");
+    }
+
+    public function honk(): Void {
+        Sys.println("Car honked");
+    }
+
+}
+
+class Truck extends Car {
+
+    override public function start(): Void {
+        Sys.println("Truck started");
+    }
+
+    override public function honk(): Void {
+        Sys.println("Truck honked loudly");
+    }
+
+}
 
 @:analyzer(ignore)
 class Test {
 
     public static function main() {
-        var i: Int = 15;
-        var f: Float = 20;
+        var truck: Truck = new Truck();
+        var vehicle: Vehicle = cast truck;
+        Sys.println(vehicle.horsepower());
 
-        var i32 = Go.int32(10);
-        var u32 = Go.uint32(10);
+        vehicle.start();
 
-        Sys.println(i == f);
-        Sys.println(i32 == u32);
-
-        var aI: Int = -1;
-        var bI: Int = 1;
-        Sys.println((aI >>> bI : Int));
+        Sys.println(truck.horsepower());
+        truck.honk();
     }
 
 }
+
+/*
+
+14:05:18:663   Test.hx:4:,Vehicle created
+14:05:18:664   Test.hx:20:,Car started
+14:05:18:664   Test.hx:24:,Car honked
+14:05:18:664   Test.hx:4:,Vehicle created
+14:05:18:664   Test.hx:33:,Truck started
+14:05:18:664   Test.hx:37:,Truck honked loudly
+14:05:18:664   Test.hx:4:,Vehicle created
+14:05:18:664   Test.hx:8:,Vehicle started
+14:05:18:664   Test.hx:65:,100
+ */

@@ -153,8 +153,7 @@ class Context {
         for (obj in _cache.keyValueIterator()) {
             final mod = obj.value;
             if (!compileList.contains(mod.path)) continue;
-            if (mod.path == options.entryPoint)
-                entryPointPath = obj.key;
+
             for (def in mod.defs) {
                 if (def.isExtern) continue;
                 buf.add(def.buf.toString());

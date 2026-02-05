@@ -50,6 +50,7 @@ class Dump implements IParser {
                     preprocessor: {},
                     context: _context,
                 };
+
                 cache.set(record.path, module);
                 module;
             }else{

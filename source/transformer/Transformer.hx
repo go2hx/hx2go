@@ -53,7 +53,7 @@ class Transformer {
             case EBinop(op, e1, e2):
                 BinopExpr.transformBinop(this, e, op, e1, e2);
             case ECast(inner, t):
-                Cast.transformCast(this, inner, e, t);
+                Cast.transformCast(this, e, inner, t);
             case EArrayDecl(values, _):
                 transformer.decls.ArrayDeclaration.transformArray(this, e, values);
             case EArray(e1, e2):
@@ -112,7 +112,12 @@ class Transformer {
                         }
 
                         handleCoreTypeName(p, td.name);
-                        processTypeMetadata(p, td);
+
+                        if (!processTypeMetadata(p, td)) {
+                            var clsName = 'Hx_${modulePathToPrefix(td.name)}_Obj';
+                            p.pack = [];
+                            p.name = '*$clsName';
+                        }
                     }
                 }
 
@@ -141,16 +146,24 @@ class Transformer {
         }
     }
 
-    function processTypeMetadata(p:TypePath, td:HaxeTypeDefinition) {
+    function processTypeMetadata(p:TypePath, td:HaxeTypeDefinition): Bool {
+        var res = false;
+
         for (meta in td.meta()) {
-            switch meta.name {
+            res = res || switch meta.name {
                 case ":coreType" | ":go.ProcessedType": // coreType doesn't always make sense, :go.ProcessedType exists so you can force processing.
                     processCoreType(p, td.name);
+                    true;
 
                 case ":go.TypeAccess":
                     processStructAccess(p, meta);
+                    true;
+
+                case _: false;
             }
         }
+
+        return res;
     }
 
     function processCoreType(p:TypePath, tdName:String) {

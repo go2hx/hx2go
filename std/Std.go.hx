@@ -1,24 +1,32 @@
+import go.math.Rand;
+import go.StrConv;
 import go.Fmt;
+import go.Go;
 
 extern class Std {
+	// TODO: this extern is incomplete - https://api.haxe.org/Std.html
+	inline static function string(s:Dynamic):String
+		return Fmt.sprintf("%v", s);
 
-    // TODO: this extern is incomplete - https://api.haxe.org/Std.html
+	@:deprecated('Std.is is deprecated. Use Std.isOfType instead.')
+	static function is(v:Dynamic, t:Dynamic):Bool;
 
-    inline static function string(s:Dynamic):String
-        return Fmt.sprintf("%v", s);
+	static function isOfType(v:Dynamic, t:Dynamic):Bool;
+	static function downcast<T:{}, S:T>(value:T, c:Class<S>):S;
 
-    @:deprecated('Std.is is deprecated. Use Std.isOfType instead.')
-    static function is(v:Dynamic, t:Dynamic):Bool;
+	@:deprecated('Std.instance() is deprecated. Use Std.downcast() instead.')
+	static function instance<T:{}, S:T>(value:T, c:Class<S>):S;
 
-    static function isOfType(v:Dynamic, t:Dynamic):Bool;
-    static function downcast<T:{}, S:T>(value:T, c:Class<S>):S;
+	inline static function int(x:Float):Int
+		return Go.int(x);
 
-    @:deprecated('Std.instance() is deprecated. Use Std.downcast() instead.')
-    static function instance<T:{}, S:T>(value:T, c:Class<S>):S;
+	inline static function parseInt(x:String):Null<Int>
+		return StrConv.parseInt(x, 10, 0).tuple().result;
 
-    static function int(x:Float):Int;
-    static function parseInt(x:String):Null<Int>;
-    static function parseFloat(x:String):Float;
-    static function random(x:Int):Int;
+	inline static function parseFloat(x:String):Float
+		return StrConv.parseFloat(x, 64).tuple().result;
 
+	inline static function random(x:Int):Int {
+		return Rand.intn(x);
+	}
 }

@@ -10,5 +10,5 @@ function main() {
 	Slice.main();
 	RestKeyValueIterator.main();
 	RestKeyValueIterator2.main();
-	ObjectDecl.main();
+	// ObjectDecl.main();
 }

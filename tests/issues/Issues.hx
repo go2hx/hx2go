@@ -1,6 +1,6 @@
 package issues;
 
-function run() {
-    Issue37.run();
-    Issue41.run();
+function main() {
+    Issue37.main();
+    Issue41.main();
 }

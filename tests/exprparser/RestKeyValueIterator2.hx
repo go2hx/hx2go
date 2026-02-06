@@ -2,7 +2,7 @@ package exprparser;
 import parser.dump.ExprParser;
 import sys.io.File;
 
-function run() {
+function main() {
     final parser = new ExprParser("DEBUG");
     final lines = File.getContent(Util.normalizeCLRF("tests/exprparser/restKeyValueIterator2.txt")).split("\n");
     final obj = parser.parseObject(lines);

@@ -1,10 +1,10 @@
 package language;
 
-function run() {
-    IntegerLiterals.run();
-    ImmediateConstants.run();
-    UnaryOperators.run();
-    BinaryOperators.run();
-    LocalVariables.run();
-    Conditionals.run();
+function main() {
+    IntegerLiterals.main();
+    ImmediateConstants.main();
+    UnaryOperators.main();
+    BinaryOperators.main();
+    LocalVariables.main();
+    Conditionals.main();
 }

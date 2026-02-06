@@ -1,6 +1,6 @@
 package language;
 
-function run() {
+function main() {
     trace("Conditionals\n");
 
     var r1 = 0;

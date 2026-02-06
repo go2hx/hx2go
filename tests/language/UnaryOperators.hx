@@ -1,6 +1,6 @@
 package language;
 
-function run() {
+function main() {
     trace("Unary Operators\n");
     var x = 5;
     assert(-x, -5);

@@ -1,6 +1,6 @@
 package issues;
 
-function run() {
+function main() {
     var a: go.Int32 = -16;
     var b: go.Int32 = 3;
     assert(a >>> b, 536870910); // 536870910

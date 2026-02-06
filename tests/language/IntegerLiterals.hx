@@ -1,6 +1,6 @@
 package language;
 
-function run() {
+function main() {
     trace("Integer Literals\n");
     assert(42, 42);
     assert(0, 0);

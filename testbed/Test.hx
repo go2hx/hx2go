@@ -1,6 +1,3 @@
-import go.Go;
-
-@:analyzer(ignore)
 class Test {
 	public static function main() {
 		var i:Int = 15;

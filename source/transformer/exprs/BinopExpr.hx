@@ -25,6 +25,7 @@ function transformBinop(t:Transformer, e:HaxeExpr, op:Binop, e1:HaxeExpr, e2:Hax
 
         final ct = HaxeExprTools.stringToComplexType(e1.t);
         e2.def = ECast(e2.copy(), ct);
+        e2.t = e1.t;
     }
 
     t.iterateExpr(e);
@@ -90,6 +91,8 @@ function promoteBinop(e1:HaxeExpr, e2:HaxeExpr, e:HaxeExpr, op: Binop) {
     final resultCt = HaxeExprTools.stringToComplexType(e.t);
     final leftCt = unpackNull(e1.t != null ? HaxeExprTools.stringToComplexType(e1.t) : null);
     final rightCt = unpackNull(e2.t != null ? HaxeExprTools.stringToComplexType(e2.t) : null);
+
+    // TODO: review whenever we properly introduce Null<T>
 
     final typeEq = (a: ComplexType, b: ComplexType) -> {
         if (a == null || b == null) {

@@ -43,7 +43,7 @@ class Test {
 
     public static function main() {
         var truck: Truck = new Truck();
-        var vehicle: Vehicle = cast truck;
+        var vehicle: Vehicle = truck;
         Sys.println(vehicle.horsepower());
 
         vehicle.start();

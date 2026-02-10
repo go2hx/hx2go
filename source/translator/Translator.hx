@@ -163,7 +163,7 @@ class Translator {
                 constructor = td.constructor;
             }
 
-            vTableAssignmentBuf.add('\t${fieldName}.Vtable = obj\n');
+            vTableAssignmentBuf.add('\t${fieldName}.VTable = obj\n');
             fieldName += '.Super';
             superClass = td.superClass;
         }
@@ -215,7 +215,7 @@ class Translator {
             buf.add('\tSuper *Hx_${modulePathToPrefix(def.superClass)}_Obj\n');
         }
 
-        buf.add('\tVtable ${className}_VTable\n'); // TODO: add superClass to struct
+        buf.add('\tVTable ${className}_VTable\n'); // TODO: add superClass to struct
         buf.add('}\n\n');
 
         var prmStr = '';
@@ -223,7 +223,7 @@ class Translator {
 
         buf.add('func ${className}_CreateEmptyInstance() *$className {\n');
         buf.add('\tobj := &$className{}\n');
-        buf.add('\tobj.Vtable = obj\n'); // TODO: also set vtable on the entire hierarchy of super classes
+        buf.add('\tobj.VTable = obj\n'); // TODO: also set vtable on the entire hierarchy of super classes
 
         if (def.superClass != null) {
             buf.add('\tobj.Super = Hx_${modulePathToPrefix(def.superClass)}_Obj_CreateEmptyInstance()\n');

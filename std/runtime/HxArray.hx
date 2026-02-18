@@ -137,7 +137,7 @@ class HxArray {
         setData(
             arr,
             Syntax.code(
-                'append(*{0}[:{1}], *{0}[{2}:]...)',
+                'append((*{0})[:{1}], (*{0})[{2}:]...)',
                 arr,
                 start,
                 start + removeLen
@@ -177,7 +177,7 @@ class HxArray {
         setData(
             result,
             Syntax.code(
-                'append(*{0}, *{1}[{2}:{3}]...)',
+                'append(*{0}, (*{1})[{2}:{3}]...)',
                 result,
                 arr,
                 start,
@@ -210,7 +210,7 @@ class HxArray {
         setData(
             arr,
             Syntax.code(
-                'append(*{0}[:{1}], *{0}[{2}:]...)',
+                'append((*{0})[:{1}], (*{0})[{2}:]...)',
                 arr,
                 index,
                 index + 1

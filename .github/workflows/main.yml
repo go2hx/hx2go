@@ -13,6 +13,7 @@ jobs:
     strategy:
       matrix:
         go-version: ['1.21.3', 'oldstable', 'stable']
+        haxe-version: [latest, 4.3.7]
         os: [ubuntu-latest, macos-latest, windows-latest]
     steps:
       # setup repo
@@ -26,7 +27,7 @@ jobs:
       # setup haxe
       - uses: krdlab/setup-haxe@v2.0.2
         with:
-          haxe-version: latest
+          haxe-version: ${{ matrix.haxe-version }}
       # Get the cores 
       - name: Get number of cores (Ubuntu)
         if: startsWith(runner.os, 'Linux')

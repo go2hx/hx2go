@@ -1,7 +1,6 @@
 package;
 
 import preprocessor.Scope;
-import haxe.runtime.Copy;
 import haxe.macro.Expr;
 
 enum abstract HaxeExprFlags(Int) from Int to Int {

@@ -54,7 +54,6 @@ function transformFieldAccess(t:Transformer, e:HaxeExpr) {
 
 function resolveExpr(t:Transformer, e2:HaxeExpr, fieldName:String): { isNative:Bool, transformName:Bool } {
     if (e2.t == null) {
-        Logging.transformer.warn('null e2.t');
         return { isNative: false, transformName: true };
     }
 

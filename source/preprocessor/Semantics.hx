@@ -72,7 +72,7 @@ class Semantics {
                     if (c?.def == null) continue;
                     if (goingToMutate(c, p)) ctx.processExpr(c, scope);
                     else if (!isConstant(c)) {
-                        var tmp = ctx.annonymiser.assign(c.copy());
+                        var tmp = ctx.annonymiser.assign(c.copy(), c.t);
                         ctx.insertExprsBefore([tmp.decl], p, scope);
                         ctx.processExpr(tmp.decl, scope);
 

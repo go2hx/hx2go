@@ -156,9 +156,11 @@ class Context {
             if (mod.path == options.entryPoint) {
                 var isMain = false;
                 for (def in mod.defs) {
-                    if (def.name == "main") {
-                        isMain = true;
-                        break;
+                    for (field in def.fields) {
+                        if (field.name == "main") {
+                            isMain = true;
+                            break;
+                        }
                     }
                 }
                 if (isMain)

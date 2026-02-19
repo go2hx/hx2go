@@ -21,8 +21,8 @@ class Transformer {
     public static function resultToTuple(p: TypePath): Void {
         p.name = "Tuple";
         p.params[0] = TPType(TAnonymous([
-            { name: "result", pos: #if (haxe_ver <= 4.37) 0 #else p.pos #end, kind: FVar(HaxeExprTools.typeOfParam(p.params[0])) },
-            { name: "error", pos: #if (haxe_ver <= 4.37) 0 #else p.pos #end, kind: FVar(HaxeExprTools.typeOfParam(p.params[1])) }
+            { name: "result", pos: #if (haxe_ver <= 4.37) null #else p.pos #end, kind: FVar(HaxeExprTools.typeOfParam(p.params[0])) },
+            { name: "error", pos: #if (haxe_ver <= 4.37) null #else p.pos #end, kind: FVar(HaxeExprTools.typeOfParam(p.params[1])) }
         ]));
         p.params.resize(1);
     }

@@ -1,6 +1,6 @@
 package language;
 
-function run() {
+function main() {
     trace("Binary Operators\n");
 
     // Arithmetic

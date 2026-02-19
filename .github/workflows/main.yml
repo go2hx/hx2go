@@ -42,5 +42,5 @@ jobs:
           haxelib git hxparse https://github.com/Simn/hxparse
           haxelib git haxeparser https://github.com/HaxeCheckstyle/haxeparser
       # run the test
-      - name: Run test
-        run: haxe test.hxml
+      - name: Run all tests
+        run: haxe test-all.hxml

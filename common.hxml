@@ -3,3 +3,4 @@
 -lib hxparse
 -lib haxeparser
 -cp source
+-cp source/logging

@@ -2,7 +2,7 @@ package exprparser;
 
 import parser.dump.ExprParser;
 
-function run() {
+function main() {
     final parser = new ExprParser("DEBUG");
 
     // Expr with Const followed by string, after semicolon

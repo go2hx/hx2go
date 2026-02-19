@@ -301,6 +301,9 @@ class Translator {
         buf.add('\treturn obj\n');
         buf.add('}\n\n');
 
+        buf.add('func ${className}_Boot() {\n');
+        buf.add('}\n\n');
+
         buf.add('func (this *${className}${typeParamUsageStr}) __HxClass() *Hx_runtime_hxclass_Obj {\n');
         buf.add('\treturn ${className}_ClassType\n');
         buf.add('}\n\n');

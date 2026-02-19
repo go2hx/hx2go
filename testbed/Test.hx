@@ -1,7 +1,7 @@
 import go.Fmt;
 
-import haxe.iterators.ArrayIterator;
 import runtime.HxClass;
+import haxe.iterators.ArrayIterator;
 
 class Vehicle {
 

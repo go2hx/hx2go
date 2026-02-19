@@ -154,7 +154,6 @@ class Context {
             buf.add('\n');
         }
 
-        var bootBuf = new StringBuf();
         var entryPointPath = options.entryPoint;
         for (obj in _cache.keyValueIterator()) {
             final mod = obj.value;
@@ -163,12 +162,10 @@ class Context {
             for (def in mod.defs) {
                 if (def.isExtern) continue;
                 buf.add(def.buf.toString());
-                bootBuf.add('\tHx_${modulePathToPrefix(def.name)}_Obj_Boot()\n');
             }
         }
 
         buf.add('func Hx_Boot() {\n');
-        buf.add(bootBuf);
         buf.add('\tHx_${modulePathToPrefix(entryPointPath)}_Main_Field()\n');
         buf.add('}\n\n');
 

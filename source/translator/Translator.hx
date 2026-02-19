@@ -151,6 +151,7 @@ class Translator {
 
         var buf = new StringBuf();
         var staticsBuf = new StringBuf();
+        var initBuf = new StringBuf();
         var typeParamDeclStr = translateParamDecl(def.params);
         var typeParamUsageStr = translateParamUse(def.params);
 
@@ -247,7 +248,25 @@ class Translator {
 
             switch field.kind {
                 case FVar | FProp("default", _) | FProp(_, "default") if (field.isStatic): {
-                    staticsBuf.add('var Hx_${modulePathToPrefix(def.name)}_${toPascalCase(field.name)}_Field ${translateComplexType(ct)}\n');
+                    var typeStr = translateComplexType(ct);
+                    var fieldName = toPascalCase(field.name);
+
+                    staticsBuf.add('var Hx_${modulePathToPrefix(def.name)}_${fieldName}_Field ${typeStr}');
+
+                    if (field.expr != null) {
+                        initBuf.add('func ${className}_InitField_${fieldName}() ${typeStr} {\n'); // we do it this way to support EIE while keeping initialisation order correct.
+                        initBuf.add('\t' + translateExpr({
+                            t: null,
+                            def: EReturn(switch field?.expr?.def {
+                                case EBinop(OpAssign, { def: EConst(CIdent("_")) }, inner): inner; // undo stmt -> expr conversion
+                                case _: field.expr;
+                            })
+                        }) + '\n');
+                        initBuf.add('}\n\n');
+                        staticsBuf.add(' = ${className}_InitField_${fieldName}()');
+                    }
+
+                    staticsBuf.add('\n');
                 }
 
                 case FVar | FProp("default", _) | FProp(_, "default") if (!field.isStatic): {
@@ -301,9 +320,6 @@ class Translator {
         buf.add('\treturn obj\n');
         buf.add('}\n\n');
 
-        buf.add('func ${className}_Boot() {\n');
-        buf.add('}\n\n');
-
         buf.add('func (this *${className}${typeParamUsageStr}) __HxClass() *Hx_runtime_hxclass_Obj {\n');
         buf.add('\treturn ${className}_ClassType\n');
         buf.add('}\n\n');
@@ -315,6 +331,6 @@ class Translator {
             staticsStr += "\n";
         }
 
-        return staticsStr + buf.toString();
+        return staticsStr + initBuf.toString() + buf.toString();
     }
 }

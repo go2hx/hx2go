@@ -121,6 +121,10 @@ class Context {
                         if (origin == mod.path || !compileList.contains(origin)) continue;
                         usages += def.usages[origin];
                     }
+
+                    for (m in def.meta()) {
+                        if (m.name == ":keep") usages++;
+                    }
                 }
 
                 if ((usages > 0 || mod.mainBool) && !compileList.contains(mod.path)) {
@@ -161,7 +165,7 @@ class Context {
         }
         
         buf.add('func main() {\n');
-        buf.add('\tHx_${modulePathToPrefix(entryPointPath)}_Main()\n');
+        buf.add('\tHx_${modulePathToPrefix(entryPointPath)}_Main_Field()\n');
         buf.add('}\n');
 
         final outPath = Path.join([ options.output ]);

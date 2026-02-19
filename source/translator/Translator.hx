@@ -83,6 +83,8 @@ class Translator {
                     translator.exprs.ArrayAccess.translateArrayAccess(this, e1, e2);
                 case EThrow(e):
                     Throw.translateThrow(this, e);
+                case EContinue:
+                    Continue.translateContinue(this);
                 default:
                     //trace("UNKNOWN EXPR TO TRANSLATE:" + e.def);
                     "_ = 0";
@@ -93,7 +95,7 @@ class Translator {
         var buf = new StringBuf();
 
         for (field in def.fields) {
-            final name = field.isStatic ? 'Hx_${modulePathToPrefix(def.name)}_${toPascalCase(field.name)}' : toPascalCase(field.name);
+            final name = field.isStatic ? 'Hx_${modulePathToPrefix(def.name)}_${toPascalCase(field.name)}_Field' : toPascalCase(field.name);
             final expr:HaxeExpr = field.expr;
 
             switch field.kind {
@@ -141,12 +143,20 @@ class Translator {
     }
 
     public function translateClassDef(def: HaxeTypeDefinition): String {
+        if (def.isExtern) {
+            return "";
+        }
+
+        // TODO: check if impl of abstract is extern
+
         var buf = new StringBuf();
+        var staticsBuf = new StringBuf();
         var typeParamDeclStr = translateParamDecl(def.params);
         var typeParamUsageStr = translateParamUse(def.params);
 
         final className = 'Hx_${modulePathToPrefix(def.name)}_Obj';
 
+        buf.add('var ${className}_ClassType *Hx_runtime_hxclass_Obj = Hx_runtime_hxclass_Obj_CreateInstance("${def.name}", ${def.superClass != null ? 'Hx_${modulePathToPrefix(def.superClass)}_Obj_ClassType' : 'nil'})\n');
         buf.add('type ${className}_VTable${typeParamDeclStr} interface {\n');
 
         var vTableAssignmentBuf = new StringBuf();
@@ -220,6 +230,7 @@ class Translator {
             }
         }
 
+        buf.add('\t__HxClass() *Hx_runtime_hxclass_Obj\n');
         buf.add('}\n\n');
         buf.add('type ${className}${typeParamDeclStr} struct {\n');
 
@@ -230,23 +241,17 @@ class Translator {
 
         buf.add('\tVTable ${className}_VTable${typeParamUsageStr}\n'); // TODO: add superClass to struct
 
-        var instanceFieldInit:Array<HaxeExpr> = [];
         for (field in def.fields) {
-            switch field.kind {
-                case FVar | FProp("default", _) | FProp(_, "default"): {
-                    final ct = HaxeExprTools.stringToComplexType(field.t);
-                    module.transformer.transformComplexType(ct);
+            final ct = HaxeExprTools.stringToComplexType(field.t);
+            module.transformer.transformComplexType(ct);
 
-                    buf.add('\t${toPascalCase(field.name)} ${translateComplexType(ct)}\n'); // TODO: typing and prepend "Hx_"
-                    if (field.expr != null) {
-                        instanceFieldInit.push({
-                            t: null,
-                            def: EBinop(OpAssign, {
-                                t: field.t,
-                                def: EConst(CIdent(field.name))
-                            }, field.expr)
-                        });
-                    }
+            switch field.kind {
+                case FVar | FProp("default", _) | FProp(_, "default") if (field.isStatic): {
+                    staticsBuf.add('var Hx_${modulePathToPrefix(def.name)}_${toPascalCase(field.name)}_Field ${translateComplexType(ct)}\n');
+                }
+
+                case FVar | FProp("default", _) | FProp(_, "default") if (!field.isStatic): {
+                    buf.add('\t${toPascalCase(field.name)} ${translateComplexType(ct)}\n');
                 }
 
                 case _: null;
@@ -296,9 +301,17 @@ class Translator {
         buf.add('\treturn obj\n');
         buf.add('}\n\n');
 
+        buf.add('func (this *${className}${typeParamUsageStr}) __HxClass() *Hx_runtime_hxclass_Obj {\n');
+        buf.add('\treturn ${className}_ClassType\n');
+        buf.add('}\n\n');
+
         buf.add(constructorStr);
 
+        var staticsStr = staticsBuf.toString();
+        if (staticsStr.length != 0) {
+            staticsStr += "\n";
+        }
 
-        return buf.toString();
+        return staticsStr + buf.toString();
     }
 }

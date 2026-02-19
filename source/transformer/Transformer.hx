@@ -201,6 +201,7 @@ class Transformer {
             case "Array": '*[]${transformComplexTypeParam(p.params, 0)}';
             case "String": "string";
             case "Null": '${transformComplexTypeParam(p.params, 0)}'; // TODO: implement Null<T>, currently just bypass
+            case "Class": "*Hx_runtime_hxclass_Obj";
             case "go.Result", "go.ResultKind": {
                 resultToTuple(p);
                 handleTuple(p);
@@ -317,6 +318,10 @@ class Transformer {
                             transformer.exprs.Function.transformFunction(this, f, field.name);
                             continue;
                         default:
+                    }
+                case FVar | FProp(_):
+                    if (field.expr != null) {
+                        transformExpr(field.expr);
                     }
                 default:
             }

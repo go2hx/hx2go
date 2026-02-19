@@ -120,7 +120,7 @@ class Semantics {
 	public static function getExprKind(expr:HaxeExpr):ExprKind {
 		return switch expr.def {
 			case ESwitch(_, _, _), EBlock(_), EVars(_), EWhile(_, _, _), EIf(_, _, _), EReturn(_), EBinop(OpAssignOp(_), _, _), EBinop(OpAssign, _, _),
-				EUnop(OpIncrement, _, _), EUnop(OpDecrement, _, _), EBreak: Stmt;
+				EUnop(OpIncrement, _, _), EUnop(OpDecrement, _, _), EBreak, EContinue: Stmt;
 			case EConst(_), EField(_, _, _), ECast(_, _), EBinop(_, _, _), EUnop(_, _, _), ENew(_, _), EParenthesis(_): Expr;
 			case EArray(_): Expr;
 			case ECall(_, _): EitherKind;
@@ -141,8 +141,7 @@ class Semantics {
 		return switch expr.def {
 			case ECall(e, params):
 				!analyzeFunctionCall(ctx, expr).isPure;
-			case EBinop(OpAssign, _, _), EBinop(OpAssignOp(_), _, _), EUnop(OpIncrement, _, _), EUnop(OpDecrement, _, _), ENew(_, _), EReturn(_),
-				EBreak: true;
+			case EBinop(OpAssign, _, _), EBinop(OpAssignOp(_), _, _), EUnop(OpIncrement, _, _), EUnop(OpDecrement, _, _), ENew(_, _), EReturn(_): true;
 			case EVars(vars):
 				for (v in vars)
 					if (v.expr != null && hasSideEffects(ctx, v.expr))
@@ -157,7 +156,7 @@ class Semantics {
 				false;
 			case EIf(econd, eif, eelse): hasSideEffects(ctx, econd) || hasSideEffects(ctx, eif) || (eelse != null && hasSideEffects(ctx, eelse));
 			case EWhile(econd, ebody, _): hasSideEffects(ctx, econd) || hasSideEffects(ctx, ebody);
-			case EConst(_): false;
+			case EConst(_), EBreak, EContinue: false;
 			case EObjectDecl(fields):
 				for (field in fields)
 					if (hasSideEffects(ctx, field.expr))

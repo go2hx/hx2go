@@ -1,6 +1,7 @@
 import go.Fmt;
 
 import haxe.iterators.ArrayIterator;
+import runtime.HxClass;
 
 class Vehicle {
 
@@ -40,6 +41,23 @@ class Truck extends Car {
         Sys.println("Truck honked loudly");
     }
 
+}
+
+class Greeter {
+    public var firstName = "First";
+    public var lastName = "Second";
+
+    public function new(firstName: String) {
+        this.firstName = firstName;
+    }
+
+    public function getFullName(): String {
+        return firstName + " " + lastName;
+    }
+
+    public function greet(): Void {
+        Fmt.println("Hello,", getFullName());
+    }
 }
 
 class Ref<T> {
@@ -102,6 +120,20 @@ class Test {
 
         var v: Vehicle = refb.get().get();
         v.start();
+
+        var cls = HxClass.findClass("Truck");
+        Fmt.println(cls);
+        Fmt.println(cls.superClass);
+        Fmt.println(cls.superClass.superClass);
+        Fmt.println(cls.superClass.superClass.superClass); // should be null
+
+        Fmt.println("class list:");
+        for (c in HxClass.getAllClasses()) {
+            Fmt.println("  ", c);
+        }
+
+        var greet = new Greeter("Elise");
+        greet.greet();
     }
 
 }

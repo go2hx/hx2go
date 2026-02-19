@@ -121,6 +121,8 @@ class ExprParser {
                 EBlock(object.objects.map(object -> objectToExpr(object)));
             case BREAK:
                 EBreak;
+            case CONTINUE:
+                EContinue;
             case CALL:
                 // trace(object.objects.length);
                 if (object.objects.length == 0) {

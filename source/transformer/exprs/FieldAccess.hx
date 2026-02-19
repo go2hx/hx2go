@@ -32,12 +32,12 @@ function transformFieldAccess(t:Transformer, e:HaxeExpr) {
             }
 
             var parentIsCall = switch e?.parent?.def {
-                case ECall(_): true;
+                case ECall(ie, _) if (ie == e): true;
                 case _: false;
             }
 
             e.def = switch (e?.special) {
-                case FStatic(tstr, _): EConst(CIdent('Hx_${modulePathToPrefix(tstr)}_${field}'));
+                case FStatic(tstr, _): EConst(CIdent('Hx_${modulePathToPrefix(tstr)}_${field}_Field'));
                 case FInstance(tstr) if (parentIsCall): EField({ t: null, def: EField(e2, 'VTable') }, field, kind);
                 case FInstance(tstr) if (!parentIsCall): EField(e2, field, kind);
                 case _: EField(e2, field, kind);

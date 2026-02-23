@@ -3,7 +3,7 @@ package exprparser;
 import sys.io.File;
 import parser.dump.ExprParser;
 
-function run() {
+function main() {
     final parser = new ExprParser("DEBUG");
     final lines = Util.normalizeCLRF(File.getContent("tests/exprparser/hello.txt")).split("\n");
     final obj = parser.parseObject(lines);

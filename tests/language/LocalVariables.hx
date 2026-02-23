@@ -1,6 +1,6 @@
 package language;
 
-function run() {
+function main() {
     trace("Local Variables\n");
 
     var x = 5;

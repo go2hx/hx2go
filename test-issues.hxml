@@ -1,0 +1,9 @@
+-cp tests
+-cp source/logging
+-m TestIssues
+-w -WUnusedPattern
+extraParams.hxml
+-D run-go
+-D build-go
+-D color
+--custom-target go=exportTest/output.go

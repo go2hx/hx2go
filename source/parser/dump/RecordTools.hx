@@ -56,6 +56,7 @@ function recordToHaxeTypeDefinition(record: RecordEntry):HaxeTypeDefinition {
 
         case RType:
             var t = record.toType();
+            kind = TDType(t.type);
         case REnum:
             var t = record.toEnum();
         case RUnknown:

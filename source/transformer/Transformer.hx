@@ -105,12 +105,6 @@ class Transformer {
                     }
 
                     case _: {
-                        final td = module.resolveClass(p.pack, p.name, module.path);
-                        if (td == null) {
-                            Logging.transformer.warn('null td for transformComplexType, at $p');
-                            return;
-                        }
-
                         handleCoreTypeName(p, td.name);
                         processTypeMetadata(p, td);
                     }

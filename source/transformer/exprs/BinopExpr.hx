@@ -12,7 +12,7 @@ function transformBinop(t:Transformer, e:HaxeExpr, op:Binop, e1:HaxeExpr, e2:Hax
     if (handleSideTransform(t, e, op, e1, e2)) return;
     if (handleSideTransform(t, e, op, e2, e1)) return;
 
-    if (e1.t != e2.t && op != OpAssign) {
+    if ((e1.t != e2.t || op == OpDiv) && op != OpAssign) {
         promoteBinop(e1, e2, e, op);
     }
 
@@ -75,13 +75,18 @@ function promoteBinop(e1:HaxeExpr, e2:HaxeExpr, e:HaxeExpr, op: Binop) {
         Logging.transformer.warn("unknown return type of binop");
         return;
     }
+    // special case to prevent division from being floored in Go if an integer
+    if (op == OpDiv) {
+        e1.t = "Float";
+        e2.t = "Float";
+    }
 
     final resultCt = HaxeExprTools.stringToComplexType(e.t);
     final leftCt = unpackNull(e1.t != null ? HaxeExprTools.stringToComplexType(e1.t) : null);
     final rightCt = unpackNull(e2.t != null ? HaxeExprTools.stringToComplexType(e2.t) : null);
 
     final typeEq = (a: ComplexType, b: ComplexType) -> {
-        if (a == null || b == null) {
+        if (a == null || b == null || op == OpDiv) {
             return false;
         }
 

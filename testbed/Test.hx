@@ -1,3 +1,6 @@
 function main() {
-	Sys.println("hello" + 10 + "hi" + 10.3);
+    Sys.println(get()/5 == 0.6);
 }
+
+function get()
+    return 3;

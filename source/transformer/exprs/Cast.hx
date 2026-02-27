@@ -58,7 +58,7 @@ function transformCast(t:Transformer, e:HaxeExpr, inner: HaxeExpr, type:ComplexT
 
     var hasNative = fromTd.isExtern || toTd.isExtern;
     for (meta in fromTd.meta().concat(toTd.meta())) {
-        if (meta.name == ":go.TypeAccess" || meta.name == ":coreType") {
+        if (meta.name == ":go.TypeAccess" || meta.name == ":coreType" || meta.name == ":go.NativeCast") {
             hasNative = true;
             break;
         }

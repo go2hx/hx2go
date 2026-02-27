@@ -1,6 +1,7 @@
 package go;
 
 @:go.ProcessedType
+@:go.NativeCast
 abstract Result<R, E = Error>(ResultKind<R, E>) from ResultKind<R, E> to ResultKind<R, E> {
 
     @:op(a!)

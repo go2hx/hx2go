@@ -282,6 +282,7 @@ class HaxeField {
 	public var expr:HaxeExpr;
 	public var meta:Array<MetadataEntry>;
 	public var isStatic:Bool;
+	public var pos:Position;
 }
 
 enum HaxeFieldKind {

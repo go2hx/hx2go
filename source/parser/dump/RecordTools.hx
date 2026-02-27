@@ -94,6 +94,7 @@ function recordToHaxeTypeDefinition(record: RecordEntry):HaxeTypeDefinition {
             name: c.get("cf_name"),
             kind: FFun({ args: [], params: params }),
             t: "#UNKNOWN_TYPE",
+            pos: null,
             expr: c.get("cf_expr"),
             meta: getMeta(c.get("cf_meta")),
             isStatic: true

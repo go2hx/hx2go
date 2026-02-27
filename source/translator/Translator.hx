@@ -1,5 +1,9 @@
 package translator;
 
+import sys.FileSystem;
+import haxe.io.Path;
+import sys.io.File;
+import haxe.macro.PositionTools;
 import haxe.macro.Printer;
 import haxe.macro.Expr;
 import translator.exprs.*;
@@ -102,7 +106,9 @@ class Translator {
                 case FFun(_):
                     switch expr.def {
                         case EFunction(kind, f):
-                            buf.add(translator.exprs.Function.translateFunction(this, name, f, def, field.isStatic) + "\n");
+                            if (field.pos != null)
+                                buf.add(commentJumpTo(field.pos));
+                            buf.add(translator.exprs.Function.translateFunction(this, name, f));
                         default:
                             Logging.translator.error('expr.def failure field:' + field.name);
                             throw "expr.def is not EFunction: " + expr.def;
@@ -331,4 +337,27 @@ class Translator {
 
         return staticsStr + initBuf.toString() + buf.toString();
     }
+}
+
+private function toLocationLine(pos:Position):Int {
+    final lines = Util.normalizeCLRF(File.getContent(pos.file)).split("\n");
+    var current = 0;
+    for (i in 0...lines.length) {
+        if (current + lines[i].length > pos.min) {
+            return i + 1;
+        }
+        current += lines[i].length + 1;
+    }
+    return 0;
+}
+
+private function commentJumpTo(pos:Position):String {
+    final isWindows = Sys.systemName().toLowerCase() == "windows";
+    final path = FileSystem.absolutePath(pos.file);
+    var location = path + "#L" + toLocationLine(pos);
+    if (isWindows) {
+        location = haxe.io.Path.normalize(location);
+        location = "/" + location;
+    }
+    return '//file://$location\n';
 }

@@ -14,11 +14,21 @@ function translateCast(t:Translator, e:HaxeExpr, type:ComplexType) {
 
     var tStr = t.translateComplexType(type);
     var eStr = t.translateExpr(e);
-
+    switch e.t {
+        case "Dynamic": { 
+            return '(' + eStr + '.(' + tStr + '))';
+        }
+        default:
+    }
+    
     return switch (tStr) {
+        // pointer
         case _ if (path != null && tStr.charAt(0) == "*"): '((' + tStr + ')(' + eStr + '))';
+        // array access
         case _ if (path != null && tStr.startsWith('[')): '((' + tStr + ')(' + eStr + '))';
-        case _ if (path == null || path.params.length == 0): tStr + '(' + eStr + ')';
+        // no params type
+        case _ if (path == null || (path.params == null || path.params.length == 0)): tStr + '(' + eStr + ')';
+        // default case
         case _: '((' + tStr + ')(' + eStr + '))';
     };
 }

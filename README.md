@@ -4,8 +4,8 @@ Work in progress Go target for the Haxe programming language.
 Written in Haxe, open to contributions, stay tuned!
 
 ## Setup
-- Go 1.21.3+
-- Haxe nightly
+- [Go 1.21.3+](https://go.dev/dl/)
+- [Haxe nightly](https://haxe.org/download/nightlies/)
 - Download the necessary Haxe libraries with the commands below:
 ```sh
 haxelib git hxparse https://github.com/Simn/hxparse

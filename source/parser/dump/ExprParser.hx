@@ -70,9 +70,14 @@ class ExprParser {
             if (objectMap.exists(object.startIndex - 1)) {
                 objectMap[object.startIndex - 1].objects.push(object);
             }else{
-                // simply add it to the first object
                 if (firstObject != object) {
-                    firstObject.objects.push(object);
+                    if (object.startIndex > 4) {
+                        // error
+                        Logging.exprParser.error("wrong indention to be added to firstObject: " + object.def + " " + object.string());
+                    }else{
+                        // simply add it to the first object
+                        firstObject.objects.push(object);
+                    }
                 }
             }
             if (stopParser) {
@@ -318,6 +323,9 @@ class ExprParser {
             case FUNCTION:
                 final args:Array<HaxeFunctionArg> = [];
                 for (i in 0...object.objects.length - 1) {
+                    if (object.objects[i].def != ARG) {
+                        Logging.exprParser.error("Function args must be of arg type: " + object.objects[i].def);
+                    }
                     final name = object.objects[i].subType.substr(0, object.objects[i].subType.indexOf("<"));
                     args.push({
                         name: name,
@@ -338,6 +346,8 @@ class ExprParser {
                     ret: ret,
                 });
                 //objectToExpr(object.objects[object.objects.length - 1]).def;
+            case CONTINUE:
+                EContinue;
             default:
                 //throw "not implemented expr: " + object.def;
                 if (!nonImpl.contains(object.def)) nonImpl.push(object.def);
@@ -450,7 +460,7 @@ class ExprParser {
             return getObject();
         }
         // end position
-        final objectEndIndex = line.indexOf("]", objectStartIndex + 1);
+        var objectEndIndex = line.indexOf("]", objectStartIndex + 1);
 
         if (objectEndIndex < objectStartIndex) {
             // TODO more advanced check
@@ -459,7 +469,7 @@ class ExprParser {
             return null;
         }
         var colonIndex = line.indexOf(":", stringIndex);
-        var parentObj = null;
+        final setStartingIndex = lastObject != null && lastObject.lineIndex == lineIndex;
         if (objectStartIndex > colonIndex) {
             // special designated expr object such as ObjectDecl
             // fileName: [CONST] #STRING
@@ -469,13 +479,19 @@ class ExprParser {
             colonIndex -= line.length - trimmedString.length;
             final startIndex = line.length - trimmedString.length + 1;
             trimmedString = trimmedString.substr(0, colonIndex);
-            parentObj = Object.fromString(lineIndex, startIndex, trimmedString, debug_path);
+            stringIndex = colonIndex + 0 + startIndex;
+            final object = Object.fromString(lineIndex, startIndex, trimmedString, debug_path);
+            // check if same line object, if so always link to previous
+            if (setStartingIndex) {
+                object.startIndex = lastObject.startIndex + 1;
+            }
+            lastObject = object;
+            return object;
         }
         stringIndex = objectEndIndex + 1;
 
         final objectString = line.substring(objectStartIndex, objectEndIndex);
         final object = parseObjectLine(objectStartIndex, objectString);
-        final setStartingIndex = lastObject != null && lastObject.lineIndex == lineIndex;
         /*if (lastObject != null) {
             trace("-----");
             trace(object.def, object.string(), object.lineIndex, setStartingIndex);
@@ -488,13 +504,7 @@ class ExprParser {
             object.startIndex = lastObject.startIndex + 1;
         }
         lastObject = object;
-        if (parentObj != null) {
-            object.startIndex = lastObject.startIndex + 1;
-            parentObj.objects.push(object);
-            return parentObj;
-        }else{
-            return object;
-        }
+        return object;
     }
     function nextLine() {
         lineIndex++;

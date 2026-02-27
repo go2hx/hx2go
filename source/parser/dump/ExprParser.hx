@@ -126,6 +126,8 @@ class ExprParser {
                 EBlock(object.objects.map(object -> objectToExpr(object)));
             case BREAK:
                 EBreak;
+            case CONTINUE:
+                EContinue;
             case CALL:
                 // trace(object.objects.length);
                 if (object.objects.length == 0) {
@@ -344,8 +346,6 @@ class ExprParser {
                     ret: ret,
                 });
                 //objectToExpr(object.objects[object.objects.length - 1]).def;
-            case CONTINUE:
-                EContinue;
             default:
                 //throw "not implemented expr: " + object.def;
                 if (!nonImpl.contains(object.def)) nonImpl.push(object.def);

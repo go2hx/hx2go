@@ -121,6 +121,10 @@ class Context {
                         if (origin == mod.path || !compileList.contains(origin)) continue;
                         usages += def.usages[origin];
                     }
+
+                    for (m in def.meta()) {
+                        if (m.name == ":keep") usages++;
+                    }
                 }
 
                 if ((usages > 0 || mod.mainBool) && !compileList.contains(mod.path)) {
@@ -149,6 +153,7 @@ class Context {
         if (imports.length > 0) {
             buf.add('\n');
         }
+
         var entryPointPath = options.entryPoint;
         for (obj in _cache.keyValueIterator()) {
             final mod = obj.value;
@@ -171,9 +176,13 @@ class Context {
                 buf.add(def.buf.toString());
             }
         }
-        
+
+        buf.add('func Hx_Boot() {\n');
+        buf.add('\tHx_${modulePathToPrefix(entryPointPath)}_Main_Field()\n');
+        buf.add('}\n\n');
+
         buf.add('func main() {\n');
-        buf.add('\tHx_${modulePathToPrefix(entryPointPath)}_Main()\n');
+        buf.add('\tHx_Boot()\n');
         buf.add('}\n');
 
         final outPath = Path.join([ options.output ]);

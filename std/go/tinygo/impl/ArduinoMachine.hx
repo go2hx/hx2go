@@ -24,28 +24,6 @@ extern class ArduinoMachine {
     static var D12: Pin;
     static var D13: Pin;
 
-    // AVR pin mapping
-    static var PD0: Pin;
-    static var PD1: Pin;
-    static var PD2: Pin;
-    static var PD3: Pin;
-    static var PD4: Pin;
-    static var PD5: Pin;
-    static var PD6: Pin;
-    static var PD7: Pin;
-    static var PB0: Pin;
-    static var PB1: Pin;
-    static var PB2: Pin;
-    static var PB3: Pin;
-    static var PB4: Pin;
-    static var PB5: Pin;
-    static var PC0: Pin;
-    static var PC1: Pin;
-    static var PC2: Pin;
-    static var PC3: Pin;
-    static var PC4: Pin;
-    static var PC5: Pin;
-
     // adc pins
     static var ADC0: Pin;
     static var ADC1: Pin;

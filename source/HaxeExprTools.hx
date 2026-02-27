@@ -68,7 +68,7 @@ class HaxeExprTools {
 					f(edef);
 		}
 	}
-   	private static function stringToExprDef(s:String):ExprDef {
+   	public static function stringToExprDef(s:String):ExprDef {
 		try {
 			final input = byte.ByteData.ofString(s);
 			final parser = new haxeparser.HaxeParser(input, s);

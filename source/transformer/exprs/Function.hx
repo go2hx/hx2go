@@ -1,6 +1,7 @@
 package transformer.exprs;
 
 import HaxeExpr.HaxeFunction;
+import HaxeExpr.HaxeExprFlags;
 
 function transformFunction(t:Transformer, f:HaxeFunction, name:String) {
     for (arg in f.args) {
@@ -13,6 +14,7 @@ function transformFunction(t:Transformer, f:HaxeFunction, name:String) {
             case _: t.transformComplexType(arg.type);
         }
     }
+
     t.iterateExpr(f.expr);
     t.transformComplexType(f.ret);
 }

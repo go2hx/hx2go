@@ -11,6 +11,7 @@ function transformNew(t:Transformer, e:HaxeExpr, tpath: TypePath, params: Array<
     final td = t.module.resolveClass(tpath.pack, tpath.name, t.module.path);
     if (td == null) {
         Logging.transformer.warn('null td for ENew(...)');
+        return;
     }
 
     var structInit = false;
@@ -57,7 +58,11 @@ function transformNew(t:Transformer, e:HaxeExpr, tpath: TypePath, params: Array<
         e.def = EGoCode('${name}{ ${args.map(a -> '${transformName ? toPascalCase(a.name) : a.name}: {${count++}}').join(', ')} }', params);
     }
 
-    // TODO: handle normal case
+    var className = 'Hx_${modulePathToPrefix(td.name)}_Obj';
+    e.def = ECall({
+        t: e.t,
+        def: EConst(CIdent('${className}_CreateInstance'))
+    }, params);
 
     for (p in params) {
         t.transformExpr(p);

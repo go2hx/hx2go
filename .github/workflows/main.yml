@@ -13,7 +13,7 @@ jobs:
     strategy:
       matrix:
         go-version: ['1.21.3', 'oldstable', 'stable']
-        haxe-version: [latest, 4.3.7]
+        haxe-version: [latest]
         os: [ubuntu-latest, macos-latest, windows-latest]
     steps:
       # setup repo
@@ -41,6 +41,7 @@ jobs:
           haxelib git deep_equal https://github.com/kevinresol/deep_equal
           haxelib git hxparse https://github.com/Simn/hxparse
           haxelib git haxeparser https://github.com/HaxeCheckstyle/haxeparser
-      # run the test
+      - name: Run testbed
+        run: haxe testbed.hxml
       - name: Run test
         run: haxe test.hxml

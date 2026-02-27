@@ -35,14 +35,14 @@ class Semantics {
             case EBinop(OpBoolAnd, e1, e2): // `a && b` -> `(if (a) b else false)`
                 p.def = EIf(
                     {
-                        t: null,
+                        t: "Bool",
                         def: EBinop(OpEq, e1, {
-                            t: null,
+                            t: "Bool",
                             def: EConst(CIdent('true'))
                         })
                     },
                     e2, {
-                        t: null,
+                        t: "Bool",
                         def: EConst(CIdent('false'))
                     }
                 );
@@ -52,14 +52,14 @@ class Semantics {
             case EBinop(OpBoolOr, e1, e2): // `a || b` -> `(if (a) true else b)`
                 p.def = EIf(
                     {
-                        t: null,
+                        t: "Bool",
                         def: EBinop(OpEq, e1, {
-                            t: null,
+                            t: "Bool",
                             def: EConst(CIdent('true'))
                         })
                     },
                     {
-                        t: null,
+                        t: "Bool",
                         def: EConst(CIdent('true'))
                     }, e2
                 );
@@ -72,7 +72,7 @@ class Semantics {
                     if (c?.def == null) continue;
                     if (goingToMutate(c, p)) ctx.processExpr(c, scope);
                     else if (!isConstant(c)) {
-                        var tmp = ctx.annonymiser.assign(c.copy());
+                        var tmp = ctx.annonymiser.assign(c.copy(), c.t);
                         ctx.insertExprsBefore([tmp.decl], p, scope);
                         ctx.processExpr(tmp.decl, scope);
 
@@ -141,8 +141,7 @@ class Semantics {
 		return switch expr.def {
 			case ECall(e, params):
 				!analyzeFunctionCall(ctx, expr).isPure;
-			case EBinop(OpAssign, _, _), EBinop(OpAssignOp(_), _, _), EUnop(OpIncrement, _, _), EUnop(OpDecrement, _, _), ENew(_, _), EReturn(_),
-				EBreak: true;
+			case EBinop(OpAssign, _, _), EBinop(OpAssignOp(_), _, _), EUnop(OpIncrement, _, _), EUnop(OpDecrement, _, _), ENew(_, _), EReturn(_): true;
 			case EVars(vars):
 				for (v in vars)
 					if (v.expr != null && hasSideEffects(ctx, v.expr))
@@ -157,7 +156,7 @@ class Semantics {
 				false;
 			case EIf(econd, eif, eelse): hasSideEffects(ctx, econd) || hasSideEffects(ctx, eif) || (eelse != null && hasSideEffects(ctx, eelse));
 			case EWhile(econd, ebody, _): hasSideEffects(ctx, econd) || hasSideEffects(ctx, ebody);
-			case EConst(_): false;
+			case EConst(_), EBreak, EContinue: false;
 			case EObjectDecl(fields):
 				for (field in fields)
 					if (hasSideEffects(ctx, field.expr))

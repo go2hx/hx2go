@@ -31,9 +31,22 @@ function transformFieldAccess(t:Transformer, e:HaxeExpr) {
                 return;
             }
 
-            e.def = switch (e?.special) {
-                case FStatic(tstr, _) | FInstance(tstr): EConst(CIdent('Hx_${modulePathToPrefix(tstr)}_${field}'));
-                case _: EField(e2, field, kind);
+            var parentIsCall = switch e?.parent?.def {
+                case ECall(ie, _) if (ie == e): true;
+                case _: false;
+            }
+
+            e.def = switch (e2?.def) {
+                case EConst(CIdent("super")):
+                    EField({ t: null, def: EField({ t: null, def: EConst(CIdent("this")) }, "Super", kind)}, field, kind); // t is null, so VTable isn't used (static access)
+
+                case _:
+                    switch (e?.special) {
+                        case FStatic(tstr, _): EConst(CIdent('Hx_${modulePathToPrefix(tstr)}_${field}_Field'));
+                        case FInstance(tstr) if (parentIsCall): EField({ t: null, def: EField(e2, 'VTable') }, field, kind);
+                        case FInstance(tstr) if (!parentIsCall): EField(e2, field, kind);
+                        case _: EField(e2, field, kind);
+                    }
             }
         default:
     }
@@ -41,7 +54,6 @@ function transformFieldAccess(t:Transformer, e:HaxeExpr) {
 
 function resolveExpr(t:Transformer, e2:HaxeExpr, fieldName:String): { isNative:Bool, transformName:Bool } {
     if (e2.t == null) {
-        Logging.transformer.warn('null e2.t');
         return { isNative: false, transformName: true };
     }
 
@@ -96,12 +108,6 @@ function processComplexType(t:Transformer, e2:HaxeExpr, ct:ComplexType): { isNat
                 renamedIdentLeft = result.name;
             }
         }
-    }
-
-    // this will handle the case if a class tries to call something on itself: it will remove the package path
-    if (!isNative && t.module.path == innerPath.pack.concat([innerPath.name]).join(".")) {
-        renamedIdentLeft = "";
-        topLevel = true;
     }
 
     if (renamedIdentLeft != "" || topLevel) {
@@ -209,7 +215,7 @@ function handleCallTransform(t:Transformer, e:HaxeExpr, params:Array<HaxeExpr>, 
     }
 
     if (transformed) {
-        t.iterateExpr(e.parent);
+        t.iterateExpr(e); // mikaib: e.parent or e?
     }
 
     return transformed;
@@ -218,10 +224,10 @@ function handleCallTransform(t:Transformer, e:HaxeExpr, params:Array<HaxeExpr>, 
 function handleFieldTransform(t:Transformer, e:HaxeExpr, ct:ComplexType, e2:HaxeExpr, field:String):Bool {
     var transformed = switch ct {
         case TPath({name: "Array", pack: []}) if (field == "length"):
-            e.def = EGoCode('int32(len(*{0}))', [e2]);
+            e.def = EGoCode('len(*{0})', [e2]);
             true;
         case TPath({name: 'String', pack: []}) if(field == "length"):
-            e.def = EGoCode('int32(utf8.RuneCountInString({0}))', [e2]);
+            e.def = EGoCode('utf8.RuneCountInString({0})', [e2]);
             t.def.addGoImport('unicode/utf8');
             true;
         case TAnonymous(fields):
@@ -233,7 +239,7 @@ function handleFieldTransform(t:Transformer, e:HaxeExpr, ct:ComplexType, e2:Haxe
     }
 
     if (transformed) {
-        t.iterateExpr(e.parent);
+        t.iterateExpr(e); // mikaib: e.parent or e?
     }
 
     return transformed;

@@ -41,7 +41,7 @@ class Annonymiser {
                 ])
             },
             ident: {
-                t: e?.t,
+                t: e?.t ?? type,
                 def: EConst(CIdent(name)),
                 parent: e?.parent,
                 parentIdx: e?.parentIdx ?? 0

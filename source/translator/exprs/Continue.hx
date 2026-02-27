@@ -4,5 +4,5 @@ import translator.Translator;
 import HaxeExpr;
 
 function translateContinue(t:Translator) {
-    return "continue";
+    return 'continue';
 } 

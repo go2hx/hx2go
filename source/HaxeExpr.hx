@@ -2,9 +2,11 @@ package;
 
 import preprocessor.Scope;
 import haxe.macro.Expr;
+import haxe.CallStack.StackItem;
 
 enum abstract HaxeExprFlags(Int) from Int to Int {
     public var Processed = 1;
+	public var Transformed = 2;
 }
 
 @:structInit
@@ -17,6 +19,7 @@ class HaxeExpr {
 	public var special:SpecialExprDef = null;
 	public var def:HaxeExprDef;
 	public var t:String;
+	// public var stck: Array<Array<StackItem>> = [];
 
 	public function copy(deep: Bool = false): HaxeExpr {
 	    return {
@@ -259,6 +262,8 @@ class HaxeTypeDefinition {
 	public var fields:Array<HaxeField>;
 	public var constructor: HaxeField;
 	public var kind:HaxeTypeDefinitionKind;
+	public var params:Array<TypeParamDecl>;
+	public var superClass: Null<String>;
 	public var usages: Map<String, Int> = []; // origin, count
 	public var buf: StringBuf = new StringBuf();
 }
@@ -277,6 +282,8 @@ class HaxeField {
 	public var t:String;
 	public var expr:HaxeExpr;
 	public var meta:Array<MetadataEntry>;
+	public var isStatic:Bool;
+	public var pos:Position;
 }
 
 enum HaxeFieldKind {

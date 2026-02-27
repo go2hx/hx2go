@@ -128,17 +128,17 @@ class Preprocessor {
                 ensureBlock(body);
 
                 var expr: HaxeExpr = {
-                    t: null,
+                    t: "Void",
                     def: EIf(
                         {
                             t: cond.t,
                             def: EUnop(OpNot, false, cond.copy())
                         },
                         {
-                            t: null,
+                            t: "Void",
                             def: EBlock([
                                 {
-                                    t: null,
+                                    t: "Void",
                                     def: EBreak
                                 }
                             ])
@@ -210,9 +210,9 @@ class Preprocessor {
             };
 
             case EUnop(op, postFix, e) if (op == OpIncrement || op == OpDecrement): {
-                var tmp = annonymiser.assign(e);
+                var tmp = annonymiser.assign(e, e.t);
                 var act: HaxeExpr = {
-                    t: null,
+                    t: "Int",
                     def: EBinop(OpAssign, e, {
                         t: 'Int',
                         def: EBinop(op == OpIncrement ? OpAdd : OpSub, e, {
@@ -232,9 +232,9 @@ class Preprocessor {
             }
 
             case EBinop(OpAssignOp(op), e1, e2): {
-                var tmp = annonymiser.assign(e1);
+                var tmp = annonymiser.assign(e1, e1.t);
                 var act: HaxeExpr = {
-                    t: null,
+                    t: e1.t,
                     def: EBinop(OpAssign, e1, {
                         t: stmt.t,
                         def: EBinop(op, e1, e2)
@@ -250,7 +250,7 @@ class Preprocessor {
             }
 
             case EBinop(OpAssign, e1, e2): {
-                var tmp = annonymiser.assign(e1);
+                var tmp = annonymiser.assign(e1, e1.t);
 
                 iterateExprPost(copy, scope);
                 insertExprsBefore([
@@ -496,7 +496,7 @@ class Preprocessor {
             var left = switch e0.def {
                 case EConst(CIdent(s)): e0.copy();
                 case _: {
-                    var anon = annonymiser.assign(e0.copy());
+                    var anon = annonymiser.assign(e0.copy(), e1.t);
                     insertExprsBefore([ anon.decl ], expr, scope);
                     anon.ident;
                 }

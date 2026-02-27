@@ -2,4 +2,5 @@
 -D no-compilation
 -D dump=record
 -cp std
+--macro include('runtime', true)
 -D hx2go

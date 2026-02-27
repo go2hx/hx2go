@@ -8,6 +8,8 @@ import haxe.macro.ComplexTypeTools;
 import haxe.macro.Expr;
 import transformer.exprs.*;
 import translator.TranslatorTools;
+import haxe.PosInfos;
+import haxe.CallStack;
 
 /**
  * Transforms Haxe AST to Go ready Haxe AST
@@ -37,6 +39,14 @@ class Transformer {
             e.parentIdx = parentIdx;
         }
 
+        // e.stck.push(CallStack.callStack());
+
+        if (e.flags & Transformed != 0) {
+            // trace(e.stck.map(cs -> '-->' + cs.join('\n')).join('\n'));
+            // Logging.transformer.error('transformExpr called twice, something has gone *very* wrong! Try building with `-D trace-expr-go` to debug this issue!');
+            return;
+        }
+
         switch e.def {
             case EConst(c):
                 Const.transformConst(this, e);
@@ -53,7 +63,7 @@ class Transformer {
             case EBinop(op, e1, e2):
                 BinopExpr.transformBinop(this, e, op, e1, e2);
             case ECast(inner, t):
-                Cast.transformCast(this, inner, e, t);
+                Cast.transformCast(this, e, inner, t);
             case EArrayDecl(values, _):
                 transformer.decls.ArrayDeclaration.transformArray(this, e, values);
             case EArray(e1, e2):
@@ -69,9 +79,13 @@ class Transformer {
                 Switch.transformSwitch(this, e, on, cases, def);
             case EGoEnumParameter(e0, kind, idx):
                 transformer.exprs.EnumParameter.transformEnumParameter(this, e, e0, kind, idx);
+            case ECall(e0, params):
+                transformer.exprs.Call.transformCall(this, e, e0, params);
             default:
                 iterateExpr(e);
         }
+
+        e.flags |= Transformed;
     }
     public function iterateExpr(e:HaxeExpr) {
         var idx = 0;
@@ -106,7 +120,15 @@ class Transformer {
 
                     case _: {
                         handleCoreTypeName(p, td.name);
-                        processTypeMetadata(p, td);
+
+                        if (!processTypeMetadata(p, td)) {
+                            var clsName = 'Hx_${modulePathToPrefix(td.name)}_Obj';
+                            p.pack = [];
+                            p.name = '*${clsName}${p.params.length > 0 ? '[${p.params.map(p -> switch p {
+                                case TPType(TPath(p)): p.name;
+                                case _: '';
+                            }).join(', ')}]' : ""}';
+                        }
                     }
                 }
 
@@ -119,12 +141,8 @@ class Transformer {
             return;
         }
 
-        for (param in params) {
-            switch param {
-                case TPType(t2):
-                    transformComplexType(t2);
-                default:
-            }
+        for (idx in 0...params.length) {
+            transformComplexTypeParam(params, idx);
         }
     }
 
@@ -135,16 +153,24 @@ class Transformer {
         }
     }
 
-    function processTypeMetadata(p:TypePath, td:HaxeTypeDefinition) {
+    function processTypeMetadata(p:TypePath, td:HaxeTypeDefinition): Bool {
+        var res = false;
+
         for (meta in td.meta()) {
-            switch meta.name {
+            res = res || switch meta.name {
                 case ":coreType" | ":go.ProcessedType": // coreType doesn't always make sense, :go.ProcessedType exists so you can force processing.
                     processCoreType(p, td.name);
+                    true;
 
                 case ":go.TypeAccess":
                     processStructAccess(p, meta);
+                    true;
+
+                case _: false;
             }
         }
+
+        return res;
     }
 
     function processCoreType(p:TypePath, tdName:String) {
@@ -171,6 +197,7 @@ class Transformer {
             case "Array": '*[]${transformComplexTypeParam(p.params, 0)}';
             case "String": "string";
             case "Null": '${transformComplexTypeParam(p.params, 0)}'; // TODO: implement Null<T>, currently just bypass
+            case "Class": "*Hx_runtime_hxclass_Obj";
             case "go.Result", "go.ResultKind": {
                 resultToTuple(p);
                 handleTuple(p);
@@ -245,7 +272,7 @@ class Transformer {
             return "any";
         }
 
-        final ct = switch (p) {
+        var ct = switch (p) {
             case TPType(x): x;
             case TPExpr(_): null;
         }
@@ -255,7 +282,16 @@ class Transformer {
             return "any";
         }
 
+        ct = switch ct {
+            case TPath({ name: name, pack: pack, params: params, sub: sub }) if (sub != null):
+                // TODO: track param origin (cl_params, cf_params) and mangle; only if needed: inlining may cause params to collide possibly; requires testing.
+                TPath({ name: sub, pack: [], params: params, sub: null }); // mikaib: pretty nasty, but best way for now...
+
+            case _: ct;
+        }
+
         transformComplexType(ct);
+
         return ComplexTypeTools.toString(ct);
     }
 
@@ -276,7 +312,12 @@ class Transformer {
                             // pass on the params
                             f.params = params;
                             transformer.exprs.Function.transformFunction(this, f, field.name);
+                            continue;
                         default:
+                    }
+                case FVar | FProp(_):
+                    if (field.expr != null) {
+                        transformExpr(field.expr);
                     }
                 default:
             }

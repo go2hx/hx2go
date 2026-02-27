@@ -324,7 +324,7 @@ class ExprParser {
                 final args:Array<HaxeFunctionArg> = [];
                 for (i in 0...object.objects.length - 1) {
                     if (object.objects[i].def != ARG) {
-                        Logging.exprParser.warn("Function args must be of arg type: " + object.objects[i].def);
+                        Logging.exprParser.error("Function args must be of arg type: " + object.objects[i].def + " in " + debug_path);
                     }
                     final name = object.objects[i].subType.substr(0, object.objects[i].subType.indexOf("<"));
                     args.push({

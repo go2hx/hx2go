@@ -95,6 +95,34 @@ class Ref<T> {
 class Test {
 
     public static function main() {
+
+        ////////////////////////////
+        // Sys.go.hx tests
+        ///////////////////////////
+
+        // TODO fix getCwd() and chdir() tests - .sure() processing is not working, need to fix
+        // Sys.println(Sys.getCwd());
+        // Sys.setCwd("..");
+        // Sys.println(Sys.getCwd());
+        // Sys.setCwd("./export");
+        // Sys.println(Sys.getCwd());
+
+        Sys.println(Sys.systemName());
+        Sys.println(Sys.args());
+        Sys.println(Sys.programPath());        
+        Sys.println(Sys.getEnv("HOME"));
+
+        var t1 = Sys.time();
+        Sys.println(t1);
+        var t2 = Sys.time();
+        Sys.println((t2-t1)*1000000);
+
+        #if sys
+        Sys.println("sys!");        
+        #end
+        Sys.exit(42); // end run!
+
+        /////////////////////////////
         var truck: Truck = new Truck();
         var vehicle: Vehicle = truck;
         Sys.println(vehicle.horsepower());

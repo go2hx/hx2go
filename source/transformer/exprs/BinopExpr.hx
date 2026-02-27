@@ -7,13 +7,16 @@ import haxe.macro.Expr.ComplexType;
 import preprocessor.Preprocessor;
 import haxe.EnumTools.EnumValueTools;
 import preprocessor.Semantics;
+import HaxeExpr.HaxeExprDef;
+import HaxeExpr.SpecialExprDef;
 
 function transformBinop(t:Transformer, e:HaxeExpr, op:Binop, e1:HaxeExpr, e2:HaxeExpr) {
     if (handleSideTransform(t, e, op, e1, e2)) return;
     if (handleSideTransform(t, e, op, e2, e1)) return;
 
-    if ((e1.t != e2.t || op == OpDiv) && op != OpAssign) {
-        promoteBinop(e1, e2, e, op);
+    if ((e1.t != e2.t || op == OpDiv || e1.t == "Dynamic" || e2.t == "Dynamic") && op != OpAssign) {
+        promoteBinop(t, e1, e2, e, op);
+        return;
     }
 
     if (e1.t != e2.t && op == OpAssign) {
@@ -26,6 +29,9 @@ function transformBinop(t:Transformer, e:HaxeExpr, op:Binop, e1:HaxeExpr, e2:Hax
         final ct = HaxeExprTools.stringToComplexType(e1.t);
         e2.def = ECast(e2.copy(), ct);
         e2.t = e1.t;
+        t.iterateExpr(e);
+
+        return;
     }
 
     t.iterateExpr(e);
@@ -82,12 +88,15 @@ function unpackNull(ct: ComplexType) { // avoid usage of this if you can...
     }
 }
 
-function promoteBinop(e1:HaxeExpr, e2:HaxeExpr, e:HaxeExpr, op: Binop) {
+function promoteBinop(t: Transformer, e1:HaxeExpr, e2:HaxeExpr, e:HaxeExpr, op: Binop) {
     if (e.t == null) {
         Logging.transformer.warn("unknown return type of binop");
+        t.iterateExpr(e);
         return;
     }
+
     // special case to prevent division from being floored in Go if an integer
+    // TODO: this is not correct, for example: dynamic, abstracts, etc ~mikaib
     if (op == OpDiv) {
         e1.t = "Float";
         e2.t = "Float";
@@ -107,6 +116,23 @@ function promoteBinop(e1:HaxeExpr, e2:HaxeExpr, e:HaxeExpr, op: Binop) {
         return ComplexTypeTools.toString(a) == ComplexTypeTools.toString(b);
     }
 
+    switch [leftCt, rightCt] {
+        case [TPath({ pack: [], name: "Dynamic" }), _] | [_, TPath({ pack: [], name: "Dynamic" })]: // cast if any type is dynamic, regardless of result type
+            var dyn = toDynamicOp(e1, e2, op);
+
+            e.def = switch resultCt {
+                case TPath({ pack: [], name: "Float" }): makeHxDynamicCall("toFloat", [dyn]);
+                case TPath({ pack: [], name: "Int" }): makeHxDynamicCall("toInt", [dyn]);
+                case TPath({ pack: [], name: "Bool" }): makeHxDynamicCall("toBool", [dyn]);
+                case _: dyn.def;
+            }
+
+            t.transformExpr(e);
+            return;
+
+        case _:
+    }
+
     switch resultCt {
         case TPath({ pack: [], name: "Bool" }): { // compare
             // all go.* types are already handled, so we only need to care about basic types
@@ -122,6 +148,7 @@ function promoteBinop(e1:HaxeExpr, e2:HaxeExpr, e:HaxeExpr, op: Binop) {
                 case _: // any other comparison we ignore for now...
             }
         }
+
         case _: { // generic
             if (!typeEq(resultCt, leftCt)) {
                 e1.def = ECast(e1.copy(), resultCt);
@@ -134,5 +161,48 @@ function promoteBinop(e1:HaxeExpr, e2:HaxeExpr, e:HaxeExpr, op: Binop) {
             }
         }
     }
+
+    t.iterateExpr(e);
+}
+
+function makeHxDynamicCall(funcName: String, params: Array<HaxeExpr>): HaxeExprDef {
+    return ECall({
+        t: null,
+        def: EField({
+            t: null,
+            def: EField({
+                t: null,
+                def: EConst(CIdent("runtime")),
+            }, "HxDynamic"),
+        }, funcName),
+        special: FStatic("runtime.HxDynamic", funcName)
+    }, params);
+}
+
+function toDynamicOp(left: HaxeExpr, right: HaxeExpr, op: Binop): HaxeExpr {
+    var funcName = switch op {
+        case OpAdd: "add";
+        case OpMult: "multiply";
+        case OpDiv: "divide";
+        case OpSub: "subtract";
+        case OpEq: "equals";
+        case OpNotEq: "nequals";
+        case OpGt: "gt";
+        case OpGte: "gtequals";
+        case OpLt: "lt";
+        case OpLte: "ltequals";
+        case OpAnd: "bitand";
+        case OpOr: "bitor";
+        case OpXor: "bitxor";
+        case OpBoolAnd: "and";
+        case OpBoolOr: "or";
+        case OpShl: "lbitshift";
+        case OpShr: "rbitshift";
+        case OpUShr: "urbitshift";
+        case OpMod: "modulo";
+        case OpAssign, OpAssignOp(_), OpInterval, OpArrow, OpIn, OpNullCoal: Logging.transformer.error("Invalid promoteBinop with Dynamic (toDynamicOp)"); "#ERROR";
+    }
+
+    return { t: null, def: makeHxDynamicCall(funcName, [left.copy(), right.copy()]) };
 }
 

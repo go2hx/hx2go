@@ -1,7 +1,6 @@
 import go.Tuple;
 import go.Fmt;
 import go.GoInt;
-import go.Go;
 
 @:go.TypeAccess({ name: "error" })
 extern class Error {}
@@ -11,7 +10,7 @@ extern class File {}
 
 @:go.TypeAccess({ name: "os", imports: ["os"] })
 extern class OS {
-    static function open(path: String): Tuple<{ handle: File, err: Error }>;
+    @:go.Tuple("handle", "err") static function open(path: String): Tuple<{ handle: File, err: Error }>;
 }
 
 @:go.TypeAccess({ name: "time", imports: ["time"] })
@@ -21,7 +20,7 @@ extern class Time {
 }
 
 @:coreType
-@:go.TypeAccess({ name: "beep.SampleRate", imports: ["github.com/faiface/beep"] })
+@:go.TypeAccess({ name: "time.Duration", imports: ["github.com/faiface/beep"] })
 extern abstract Duration {
     @:op(A / B) public function div(x: Duration): Duration;
 }
@@ -43,7 +42,7 @@ extern class Format {
 
 @:go.TypeAccess({ name: "mp3", imports: ["github.com/faiface/beep/mp3"] })
 extern class MP3 {
-    static function decode(file: File): Tuple<{ streamer: Streamer, format: Format, err: Error }>;
+    @:go.Tuple("streamer", "format", "err") static function decode(file: File): Tuple<{ streamer: Streamer, format: Format, err: Error }>;
 }
 
 @:go.TypeAccess({ name: "speaker", imports: ["github.com/faiface/beep/speaker"] })

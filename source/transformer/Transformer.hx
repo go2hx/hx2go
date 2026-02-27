@@ -81,6 +81,8 @@ class Transformer {
                 transformer.exprs.EnumParameter.transformEnumParameter(this, e, e0, kind, idx);
             case ECall(e0, params):
                 transformer.exprs.Call.transformCall(this, e, e0, params);
+            case EUnop(op, postFix, e0):
+                transformer.exprs.UnopExpr.transformUnop(this, e, op, postFix, e0);
             default:
                 iterateExpr(e);
         }

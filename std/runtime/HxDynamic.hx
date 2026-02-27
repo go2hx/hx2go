@@ -1,6 +1,7 @@
 package runtime;
 
 import go.reflect.Reflect;
+import go.Syntax;
 
 // HxDynamic implements Dynamic runtime manipulation required by Haxe
 // using go.reflect.Reflect and naming from http://haxedev.wikidot.com/article:operator-overloading
@@ -10,20 +11,20 @@ import go.reflect.Reflect;
 // All functions return String, Int, Float, Bool or null inside a Dynamic
 //
 // TODO tests
+@:keep
 class HxDynamic {
 
 	//
 	// unary operations
 	//
 
-	public static function not(d:Dynamic):Dynamic {
+	public static function not(d:Dynamic):Bool {
 		var dV = Reflect.valueOf(d);
 		if (dV.kind() == Reflect.Bool) {
 			var dB:Bool = dV.bool();
-			return (!dB : Dynamic);
+			return !dB;
 		} else {
-			Sys.println("throw runtime.HxDynamic.not value invalid: " + Std.string(d));
-			return (null : Dynamic);
+			throw "runtime.HxDynamic.not value invalid: " + Std.string(d);
 		}
 	}
 
@@ -73,24 +74,22 @@ class HxDynamic {
 	// binary operations
 	//
 
-	public static function and(a:Dynamic, b:Dynamic):Dynamic {
+	public static function and(a:Dynamic, b:Dynamic):Bool {
 		var aV = Reflect.valueOf(a);
 		var bV = Reflect.valueOf(b);
 		if (aV.kind() == Reflect.Bool && bV.kind() == Reflect.Bool)
-			return (aV.bool() && bV.bool():Dynamic);
+			return aV.bool() && bV.bool();
 		else
-			Sys.println("throw runtime.HxDynamic.and invalid operands: " + aV.string() + " and " + bV.string());
-		return (null : Dynamic);
+			throw "runtime.HxDynamic.and invalid operands: " + aV.string() + " and " + bV.string();
 	}
 
-	public static function or(a:Dynamic, b:Dynamic):Dynamic {
+	public static function or(a:Dynamic, b:Dynamic):Bool {
 		var aV = Reflect.valueOf(a);
 		var bV = Reflect.valueOf(b);
 		if (aV.kind() == Reflect.Bool && bV.kind() == Reflect.Bool)
-			return (aV.bool() || bV.bool():Dynamic);
+			return aV.bool() || bV.bool();
 		else
-			Sys.println("throw runtime.HxDynamic.or invalid operands: " + aV.string() + " and " + bV.string());
-		return (null : Dynamic);
+			throw "throw runtime.HxDynamic.or invalid operands: " + aV.string() + " and " + bV.string();
 	}
 
 	// interal function for assessing what kind of operation to perform on comperable values
@@ -108,13 +107,20 @@ class HxDynamic {
 		return Reflect.Invalid;
 	}
 
-	public static function equals(a:Dynamic, b:Dynamic):Dynamic {
+	public static function isNull(x: Dynamic): Bool {
+		return Syntax.code("{0} == nil", x); // this doesn't work: Reflect.valueOf(x).isNil();
+	}
+
+	public static function equals(a:Dynamic, b:Dynamic):Bool {
 		// null == special case
-		if (a == null || b == null) {
-			if (a == null && b == null)
-				return (true : Dynamic);
+		var aN = isNull(a);
+		var bN = isNull(b);
+
+		if (aN || bN) {
+			if (aN && bN)
+				return true;
 			else
-				return (false : Dynamic); // null only ever equals null
+				return false; // null only ever equals null
 		}
 
 		var aV = Reflect.valueOf(a);
@@ -125,61 +131,62 @@ class HxDynamic {
 		// Bool == special case
 		// Note: not promoting bool to int
 		if (aK == Reflect.Bool || bK == Reflect.Bool) {
-			if (aK == Reflect.Bool && bK == Reflect.Bool)
-				return (aV.bool() == bV.bool():Dynamic);
-			else
-				return (false : Dynamic); // bool only equal other bool
+			if (aK == Reflect.Bool && bK == Reflect.Bool) {
+				return aV.bool() == bV.bool();
+			} else {
+				return false; // bool only equal other bool
+			}
 		}
 
 		var k = jointKind(aV, bV);
 		if (k == Reflect.Int)
-			return (valueToInt(aV) == valueToInt(bV) : Dynamic);
+			return valueToInt(aV) == valueToInt(bV);
 		else if (k == Reflect.Float64)
-			return (valueToFloat(aV) == valueToFloat(bV) : Dynamic);
+			return valueToFloat(aV) == valueToFloat(bV);
 		else if (k == Reflect.String)
-			return ( toString(a) == toString(b):Dynamic);
+			return toString(a) == toString(b);
 		else
-			return (null : Dynamic);
+			throw "Invalid equals on Dynamic";
 	}
 
-	public static function nequals(a:Dynamic, b:Dynamic):Dynamic {
-		return not(equals(a, b));
+	public static function nequals(a:Dynamic, b:Dynamic):Bool {
+		return !equals(a, b);
 	}
 
-	public static function lt(a:Dynamic, b:Dynamic):Dynamic {
+	public static function lt(a:Dynamic, b:Dynamic):Bool {
 		var aV = Reflect.valueOf(a);
 		var bV = Reflect.valueOf(b);
 		var k = jointKind(aV, bV);
 		if (k == Reflect.Int)
-			return (valueToInt(aV) < valueToInt(bV) : Dynamic);
+			return valueToInt(aV) < valueToInt(bV);
 		else if (k == Reflect.Float64)
-			return (valueToFloat(aV) < valueToFloat(bV) : Dynamic);
+			return valueToFloat(aV) < valueToFloat(bV);
 		else if (k == Reflect.String)
-			return (toString(a) < toString(b):Dynamic);
+			return toString(a) < toString(b);
 		else
-			return (null : Dynamic);
+			throw "Invalid lt on Dynamic";
 	}
 
-	public static function gtequals(a:Dynamic, b:Dynamic):Dynamic {
-		return not(lt(a, b));
+	public static function gtequals(a:Dynamic, b:Dynamic):Bool {
+		return !lt(a, b);
 	}
 
-	public static function gt(a:Dynamic, b:Dynamic):Dynamic {
+	public static function gt(a:Dynamic, b:Dynamic):Bool {
 		var aV = Reflect.valueOf(a);
 		var bV = Reflect.valueOf(b);
 		var k = jointKind(aV, bV);
 		if (k == Reflect.Int)
-			return (valueToInt(aV) > valueToInt(bV) : Dynamic);
+			return valueToInt(aV) > valueToInt(bV);
 		else if (k == Reflect.Float64)
-			return (valueToFloat(aV) > valueToFloat(bV) : Dynamic);
+			return valueToFloat(aV) > valueToFloat(bV);
 		else if (k == Reflect.String)
-			return (toString(a) > toString(b):Dynamic);
+			return toString(a) > toString(b);
 		else
-			return (null : Dynamic);
+			throw "Invalid gt on Dynamic";
 	}
 
-	public static function ltequals(a:Dynamic, b:Dynamic):Dynamic {
-		return not(gt(a, b));
+	public static function ltequals(a:Dynamic, b:Dynamic):Bool {
+		return !gt(a, b);
 	}
 
 	public static function add(a:Dynamic, b:Dynamic):Dynamic {

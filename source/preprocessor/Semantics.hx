@@ -33,6 +33,7 @@ class Semantics {
 
 		switch p.def {
             case EBinop(OpBoolAnd, e1, e2): // `a && b` -> `(if (a) b else false)`
+				p.t = "Bool";
                 p.def = EIf(
                     {
                         t: "Bool",
@@ -50,6 +51,7 @@ class Semantics {
                 ctx.processExpr(p, scope);
 
             case EBinop(OpBoolOr, e1, e2): // `a || b` -> `(if (a) true else b)`
+				p.t = "Bool";
                 p.def = EIf(
                     {
                         t: "Bool",
@@ -120,7 +122,7 @@ class Semantics {
 	public static function getExprKind(expr:HaxeExpr):ExprKind {
 		return switch expr.def {
 			case ESwitch(_, _, _), EBlock(_), EVars(_), EWhile(_, _, _), EIf(_, _, _), EReturn(_), EBinop(OpAssignOp(_), _, _), EBinop(OpAssign, _, _),
-				EUnop(OpIncrement, _, _), EUnop(OpDecrement, _, _), EBreak, EContinue: Stmt;
+				EUnop(OpIncrement, _, _), EUnop(OpDecrement, _, _), EBreak, EContinue, EThrow(_): Stmt;
 			case EConst(_), EField(_, _, _), ECast(_, _), EBinop(_, _, _), EUnop(_, _, _), ENew(_, _), EParenthesis(_): Expr;
 			case EArray(_): Expr;
 			case ECall(_, _): EitherKind;
@@ -156,7 +158,7 @@ class Semantics {
 				false;
 			case EIf(econd, eif, eelse): hasSideEffects(ctx, econd) || hasSideEffects(ctx, eif) || (eelse != null && hasSideEffects(ctx, eelse));
 			case EWhile(econd, ebody, _): hasSideEffects(ctx, econd) || hasSideEffects(ctx, ebody);
-			case EConst(_), EBreak, EContinue: false;
+			case EConst(_), EBreak, EContinue, EThrow(_): false;
 			case EObjectDecl(fields):
 				for (field in fields)
 					if (hasSideEffects(ctx, field.expr))
@@ -269,7 +271,7 @@ class Semantics {
 	 */
 	public static function getIntegerSigned(t: ComplexType): Bool {
 		return switch t {
-			case TPath({ pack: [], name: "Int" }) | TPath({ pack: ["go"], name: "GoInt" | "Int8" | "Int16" | "Int32" | "Int64" }): true;
+			case TPath({ pack: [], name: "Int" | "Dynamic" }) | TPath({ pack: ["go"], name: "GoInt" | "Int8" | "Int16" | "Int32" | "Int64" }): true;
 			case TPath({ pack: [], name: "UInt" }) | TPath({ pack: ["go"], name: "GoUInt" | "UInt8" | "UInt16" | "UInt32" | "UInt64" | "Rune" | "Byte" }): false;
 			case _: Logging.preprocessor.error('unrecognised integer type: $t'); true; // abstract should not cause this code path anyway.
 		}
@@ -281,7 +283,7 @@ class Semantics {
 	 */
 	public static function getIntegerWidth(t: ComplexType): Int {
 		return switch t {
-			case TPath({ pack: [], name: "Int" | "UInt" }) | TPath({ pack: ["go"], name: "Int" | "UInt" | "GoInt" | "GoUInt" }): 64; // for GoInt I assume the wider type, i could add special handling but that is extra comlexity for little (to no) gain.
+			case TPath({ pack: [], name: "Int" | "Dynamic" | "UInt" }) | TPath({ pack: ["go"], name: "Int" | "UInt" | "GoInt" | "GoUInt" }): 64; // for GoInt I assume the wider type, i could add special handling but that is extra comlexity for little (to no) gain.
 			case TPath({ pack: ["go"], name: "Int8" | "UInt8" | "Rune" | "Byte" }): 8;
 			case TPath({ pack: ["go"], name: "Int16" | "UInt16" }): 16;
 			case TPath({ pack: ["go"], name: "Int32" | "UInt32" }): 32;

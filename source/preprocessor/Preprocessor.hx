@@ -128,17 +128,17 @@ class Preprocessor {
                 ensureBlock(body);
 
                 var expr: HaxeExpr = {
-                    t: "Void",
+                    t: null,
                     def: EIf(
                         {
                             t: cond.t,
                             def: EUnop(OpNot, false, cond.copy())
                         },
                         {
-                            t: "Void",
+                            t: null,
                             def: EBlock([
                                 {
-                                    t: "Void",
+                                    t: null,
                                     def: EBreak
                                 }
                             ])

@@ -243,6 +243,9 @@ class Transformer {
             case _: null;
         }
 
+        // we sort it to ensure consistent field order, { a; b } is apparently not { b; a } in go..........
+        struct.sort((a, b) -> Reflect.compare(a.name, b.name));
+
         return 'struct { ${struct.map(f -> '${f.name} ${f.type}').join('; ')} }';
     }
 

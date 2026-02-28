@@ -86,11 +86,24 @@ class Test {
         Sys.println(Test.foo.bind(10)());
         Test.foo.bind(10)();
 
-//        var instance = new Instance();
-//        Sys.println(instance.x);
-//        var dyn_inst = instance.inc;
-//        dyn_inst(2);
-//        Sys.println(instance.x);
+        var instanceA = new Instance();
+        var instanceB = new Instance();
+
+        var dyn_inst_a = instanceA.inc;
+        var dyn_inst_b = instanceB.inc;
+
+        Sys.println(instanceA.x);
+        Sys.println(instanceB.x);
+
+        dyn_inst_a(1);
+
+        Sys.println(instanceA.x);
+        Sys.println(instanceB.x);
+
+        dyn_inst_b(1);
+
+        Sys.println(instanceA.x);
+        Sys.println(instanceB.x);
 
 //        var f: Array<Void->Void> = [];
 //

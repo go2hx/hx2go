@@ -25,6 +25,13 @@ class Test {
         return { a: 3 };
     }
 
+    static function foo(x: Int): { double: Int, half: Float } {
+        return {
+            double: x * 2,
+            half: x / 2
+        }
+    }
+
     static function main() {
         var a = cap();
         var b = cap();
@@ -52,8 +59,14 @@ class Test {
         count = 200;
         Sys.println(bar(100)); // should still be 200, not 300
 
-        var dyn = Test.test;
-        var dyn_res = dyn();
-        Sys.println(dyn_res.a);
+        var dyn = Test.foo;
+        var dyn_res = dyn(5);
+        Sys.println(dyn_res.double);
+        Sys.println(dyn_res.half);
+
+        var dyn_bound = Test.foo.bind(10);
+        var dyn_bound_res = dyn_bound();
+        Sys.println(dyn_bound_res.double);
+        Sys.println(dyn_bound_res.half);
     }
 }

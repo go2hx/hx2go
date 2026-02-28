@@ -120,7 +120,7 @@ class Test {
         #if sys
         Sys.println("sys!");        
         #end
-        Sys.exit(42); // end run!
+        // Sys.exit(42); // end run!
 
         /////////////////////////////
         var truck: Truck = new Truck();

@@ -104,7 +104,7 @@ class Sys {
 	public static function setCwd(s:String):Void {
 		var err = Os.chdir(s);
 		if (err != null)
-			go.Syntax.code("panic({0})", err); // TODO haxe throw not implemented yet
+			throw err.error(); 
 	}
 
 	/**
@@ -190,7 +190,7 @@ class Sys {
 		// TODO solve error report below
 		// https://github.com/go2hx/hx2go/issues/56
 		// var tup = Time.now().local().zone();
-		// ret += (tup.t1_offset:Float);
+		// ret += (tup.offset:Float);
 		return ret;
 	}
 

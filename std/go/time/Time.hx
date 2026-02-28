@@ -1,4 +1,5 @@
 package go.time;
+import go.Tuple;
 
 @:go.TypeAccess({name: "time", imports: ["time"]})
 extern class Time {
@@ -13,5 +14,6 @@ extern class Time {
 
     public function unixNano():go.Int64;
     public function local():Time;
-    public function zone():go.Tuple<{t0_name:String, t1_offset:Int}>;
+    @:go.Tuple("name", "offset") public function zone():go.Tuple<{name:String, offset:Int}>;
+    
 }

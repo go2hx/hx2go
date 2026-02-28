@@ -46,11 +46,15 @@ function transformCast(t:Transformer, e:HaxeExpr, inner: HaxeExpr, type:ComplexT
             var params: Array<HaxeExpr> = [];
             for (i in 0...tArgs.length) {
                 var fromArg = fArgs[i];
-                var toArg = tArgs[i];
                 var paramName = '_${i}';
-                var paramExpr: HaxeExpr = { t: null, def: EConst(CIdent(paramName)) };
 
-                params.push(HaxeExprTools.compareType(fromArg, toArg) ? paramExpr : { t: null, def: ECast(paramExpr, fromArg) });
+                params.push({
+                    t: null,
+                    def: ECast({
+                        t: null,
+                        def: EConst(CIdent(paramName))
+                    }, fromArg)
+                });
             }
 
             for (arg in tArgs) {

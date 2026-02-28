@@ -3,7 +3,7 @@ class Instance {
     public var x: Float;
 
     public function new() {
-        x = 5.0;
+        x = 4.0;
     }
 
     public function inc(by: Float) {
@@ -88,6 +88,9 @@ class Test {
 
         var instanceA = new Instance();
         var instanceB = new Instance();
+
+        instanceA.inc(1);
+        instanceB.inc(1);
 
         var dyn_inst_a = instanceA.inc;
         var dyn_inst_b = instanceB.inc;

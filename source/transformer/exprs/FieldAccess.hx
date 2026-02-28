@@ -15,6 +15,7 @@ import haxe.macro.Expr;
 function transformFieldAccess(t:Transformer, e:HaxeExpr) {
     switch e.def {
         case EField(e2, field, kind):
+            var originalField: String = field;
             if (resolvePkgTransform(t, e, e2, field, kind)) {
                 return;
             }
@@ -31,9 +32,12 @@ function transformFieldAccess(t:Transformer, e:HaxeExpr) {
                 return;
             }
 
-            var parentIsCall = switch e?.parent?.def {
-                case ECall(ie, _) if (ie == e): true;
-                case _: false;
+            var isCall = false;
+            for (f in res.fields) {
+                if (f.name == originalField && f.kind.match(FFun(_))) {
+                    isCall = true;
+                    break;
+                }
             }
 
             e.def = switch (e2?.def) {
@@ -43,8 +47,7 @@ function transformFieldAccess(t:Transformer, e:HaxeExpr) {
                 case _:
                     switch (e?.special) {
                         case FStatic(tstr, _): EConst(CIdent('Hx_${modulePathToPrefix(tstr)}_${field}_Field'));
-                        case FInstance(tstr) if (parentIsCall): EField({ t: null, def: EField(e2, 'VTable') }, field, kind);
-                        case FInstance(tstr) if (!parentIsCall): EField(e2, field, kind);
+                        case _ if (isCall): EField({ t: null, def: EField(e2, 'VTable') }, field, kind);
                         case _: EField(e2, field, kind);
                     }
             }
@@ -52,28 +55,28 @@ function transformFieldAccess(t:Transformer, e:HaxeExpr) {
     }
 }
 
-function resolveExpr(t:Transformer, e2:HaxeExpr, fieldName:String): { isNative:Bool, transformName:Bool } {
+function resolveExpr(t:Transformer, e2:HaxeExpr, fieldName:String): { isNative:Bool, transformName:Bool, fields: Array<HaxeField> } {
     if (e2.t == null) {
-        return { isNative: false, transformName: true };
+        return { isNative: false, transformName: true, fields: [] };
     }
 
     try {
         final ct = HaxeExprTools.stringToComplexType(e2.t);
         if (ct == null) {
-            return { isNative: false, transformName: true };
+            return { isNative: false, transformName: true, fields: [] };
         }
 
         return processComplexType(t, e2, ct);
     } catch (e) {
         Logging.transformer.warn('parsing type failed in FieldAccess, given $e');
-        return { isNative: false, transformName: true };
+        return { isNative: false, transformName: true, fields: [] };
     }
 }
 
-function processComplexType(t:Transformer, e2:HaxeExpr, ct:ComplexType): { isNative:Bool, transformName:Bool } {
+function processComplexType(t:Transformer, e2:HaxeExpr, ct:ComplexType): { isNative:Bool, transformName:Bool, fields: Array<HaxeField> } {
     var path = switch ct {
         case TPath(p): p;
-        case _: return { isNative: false, transformName: true };
+        case _: return { isNative: false, transformName: true, fields: [] };
     }
 
     var isInstance = false;
@@ -83,13 +86,13 @@ function processComplexType(t:Transformer, e2:HaxeExpr, ct:ComplexType): { isNat
     } else {
         switch path.params[0] {
             case TPType(TPath(p)): p;
-            case _: return { isNative: false, transformName: true };
+            case _: return { isNative: false, transformName: true, fields: [] };
         }
     }
 
     final td = t.module.resolveClass(innerPath.pack, innerPath.name, t.module.path);
     if (td == null) {
-        return { isNative: false, transformName: true };
+        return { isNative: false, transformName: true, fields: [] };
     }
 
     var renamedIdentLeft = "";
@@ -114,7 +117,7 @@ function processComplexType(t:Transformer, e2:HaxeExpr, ct:ComplexType): { isNat
         e2.remapTo = renamedIdentLeft;
     }
 
-    return { isNative: isNative, transformName: transformName };
+    return { isNative: isNative, transformName: transformName, fields: td.fields };
 }
 
 function processStructAccessMeta(t:Transformer, meta:MetadataEntry, defaultName:String):{name:String, isNative:Bool, topLevel:Bool, transformName: Bool} {

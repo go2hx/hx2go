@@ -63,10 +63,14 @@ class Test {
         var dyn_res = dyn(5);
         Sys.println(dyn_res.double);
         Sys.println(dyn_res.half);
+        Sys.println(Test.foo(5));
+        Test.foo(5);
 
         var dyn_bound = Test.foo.bind(10);
         var dyn_bound_res = dyn_bound();
         Sys.println(dyn_bound_res.double);
         Sys.println(dyn_bound_res.half);
+        Sys.println(Test.foo.bind(10)());
+        Test.foo.bind(10)();
     }
 }

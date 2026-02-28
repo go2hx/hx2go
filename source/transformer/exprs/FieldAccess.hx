@@ -231,8 +231,16 @@ function handleFieldTransform(t:Transformer, e:HaxeExpr, ct:ComplexType, e2:Haxe
             t.def.addGoImport('unicode/utf8');
             true;
         case TAnonymous(fields):
-            e.def = EGoCode('{0}[{1}]', [e2, {def: EConst(CString(field)), t: "Dynamic"}]);
-            e.t = "Dynamic";
+            e.def = EGoCode('{0}[{1}]', [e2, { def: EConst(CString(field)), t: "Dynamic" }]);
+            if (e.t != "Dynamic" && !e?.parent?.def.match(ECast(_, _))) {
+                final tct = HaxeExprTools.stringToComplexType(e.t);
+                final ecpy = e.copy();
+                t.transformComplexType(tct);
+
+                e.def = ECast(ecpy, tct);
+                ecpy.t = "Dynamic";
+            }
+
             true;
         case _:
             false;

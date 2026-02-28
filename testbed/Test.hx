@@ -1,4 +1,4 @@
-// @:analyzer(ignore)
+@:analyzer(ignore)
 class Test {
     static function cap():{inc:Void->Void, print:Void->Void} {
         var x = 5;
@@ -21,21 +21,27 @@ class Test {
         return {inc: inc, print: print};
     }
 
+    static function test() {
+        return { a: 3 };
+    }
+
     static function main() {
         var a = cap();
         var b = cap();
+        var c = test();
 
-        // a.print();
-        // b.print();
+        Sys.println(c.a);
+        a.print();
+        b.print();
 
-        // a.inc();
+        a.inc();
 
-        // a.print();
-        // b.print();
+        a.print();
+        b.print();
 
-        // b.inc();
+        b.inc();
 
-        // a.print();
-        // b.print();
+        a.print();
+        b.print();
     }
 }

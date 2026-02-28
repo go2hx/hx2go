@@ -1,10 +1,10 @@
 // @:analyzer(ignore)
 class Test {
-    static function cap():{inc:Void->Void, print:Void->Void} {
-        var x = 5;
+    static function cap():{incV:Float->Void, incI: Int->Float, incF: Float->Float, print:Void->Void} {
+        var x = 5.0;
 
-        var inc = () -> {
-            x++;
+        var inc = (by: Float) -> {
+            x += by;
         }
         var print = () -> {
             Sys.println(x);
@@ -18,7 +18,7 @@ class Test {
 //            Sys.println(x);
 //        }
 
-        return {inc: inc, print: print};
+        return {incV: inc, incI: inc, incF: inc, print: print};
     }
 
     static function test() {
@@ -34,12 +34,12 @@ class Test {
         a.print();
         b.print();
 
-        a.inc();
+        a.incI(1);
 
         a.print();
         b.print();
 
-        b.inc();
+        b.incF(1);
 
         a.print();
         b.print();

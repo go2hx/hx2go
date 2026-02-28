@@ -37,6 +37,8 @@ class Translator {
                 (translator.exprs.Function.isVoid(ret) ? "" : translateComplexType(ret));
             case TAnonymous(fields):
                 "map[string]any";
+            case TNamed(_, t):
+                translateComplexType(t);
             default:
                 throw "unknown ct for translateComplexType: " + ct;
         }

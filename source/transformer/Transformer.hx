@@ -109,6 +109,7 @@ class Transformer {
                 for (arg in args)
                     transformComplexType(arg);
                 transformComplexType(ret);
+
             case TPath(p):
                 transformTypeParams(p.params);
 
@@ -140,6 +141,9 @@ class Transformer {
                         }
                     }
                 }
+
+            case TNamed(_, t):
+                transformComplexType(t);
 
             default:
         }

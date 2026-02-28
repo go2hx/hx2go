@@ -36,9 +36,49 @@ function transformCast(t:Transformer, e:HaxeExpr, inner: HaxeExpr, type:ComplexT
     }
 
     switch [from, to] {
-        case [TFunction(args, fRet), TFunction(_, tRet)]: if (!isVoid(fRet) && isVoid(tRet)) {
-            var argStr = [for (i in 0...args.length) '_$i'].join(', ');
-            e.def = EGoCode('func ($argStr) { _ = {0}($argStr) }', [inner.copy()]); // X->Y to X->Void, we wrap it in a func that assigns the result to _ (discard)
+        case [TFunction(fArgs, fRet), TFunction(tArgs, tRet)]: {
+            var fromIsVoid = isVoid(fRet);
+            var toIsVoid = isVoid(tRet);
+
+            t.transformComplexType(fRet);
+            t.transformComplexType(tRet);
+
+            var params: Array<HaxeExpr> = [];
+            for (i in 0...tArgs.length) {
+                var fromArg = fArgs[i];
+                var toArg = tArgs[i];
+                var paramName = '_${i}';
+                var paramExpr: HaxeExpr = { t: null, def: EConst(CIdent(paramName)) };
+
+                params.push(HaxeExprTools.compareType(fromArg, toArg) ? paramExpr : { t: null, def: ECast(paramExpr, fromArg) });
+            }
+
+            for (arg in tArgs) {
+                t.transformComplexType(arg);
+            }
+
+            for (arg in fArgs) {
+                t.transformComplexType(arg);
+            }
+
+            var call: HaxeExpr = { t: null, def: ECall(inner, params) };
+            if (!toIsVoid) {
+                call.def = ECast(call.copy(), tRet);
+            }
+
+            var paramsForm = [for (i in 0...tArgs.length) '_${i} ${t.module.translator.translateComplexType(tArgs[i])}'].join(', ');
+            var bodyForm = switch [fromIsVoid, toIsVoid] {
+                case [false, false]: 'return {0}';
+                case [false, true]: '_ = {0}';
+                case [true, true]: '{0}';
+                case [true, false]: Logging.transformer.error("illegal function cast from void to non-void!"); '#ERROR_ILLEGAL_CAST';
+            }
+
+            var retTypeForm = toIsVoid ? '' : ' ' + t.module.translator.translateComplexType(tRet);
+
+            var funcForm = 'func($paramsForm)${retTypeForm} { $bodyForm }';
+            e.def = EGoCode(funcForm, [ call ]);
+
             return;
         }
 

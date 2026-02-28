@@ -315,7 +315,15 @@ class Preprocessor {
 
                 result = tmp.ident;
             }
-
+            case EFunction(kind, f): {
+                ensureBlock(f.expr);
+                var tmp = annonymiser.assign(copy);
+                insertExprsBefore([
+                    tmp.decl,
+                ], copy, scope);
+                result = tmp.ident;
+                iterateExprPost(copy, scope.copy());
+            }
             case _: Logging.preprocessor.warn('cannot transform to expr: $stmt'); stmt;
         }
 

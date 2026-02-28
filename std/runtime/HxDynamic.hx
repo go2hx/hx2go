@@ -23,9 +23,9 @@ class HxDynamic {
 		if (dV.kind() == Reflect.Bool) {
 			var dB:Bool = dV.bool();
 			return !dB;
-		} else {
-			throw "runtime.HxDynamic.not value invalid: " + Std.string(d);
 		}
+
+		throw "runtime.HxDynamic.not value invalid: " + Std.string(d);
 	}
 
 	public static function increment(d:Dynamic):Dynamic {
@@ -35,8 +35,8 @@ class HxDynamic {
 		} else if (dV.canFloat()) {
 			return (valueToFloat(dV) + 1.0 : Dynamic);
 		}
-		Sys.println("throw runtime.HxDynamic.increment value invalid: " + Std.string(d));
-		return (null : Dynamic);
+
+		throw "runtime.HxDynamic.increment value invalid: " + Std.string(d);
 	}
 
 	public static function decrement(d:Dynamic):Dynamic {
@@ -46,8 +46,8 @@ class HxDynamic {
 		} else if (dV.canFloat()) {
 			return (valueToFloat(dV) - 1.0 : Dynamic);
 		}
-		Sys.println("throw runtime.HxDynamic.decrement value invalid: " + Std.string(d));
-		return (null : Dynamic);
+
+		throw "runtime.HxDynamic.decrement value invalid: " + Std.string(d);
 	}
 
 	public static function negate(d:Dynamic):Dynamic {
@@ -57,8 +57,8 @@ class HxDynamic {
 		} else if (dV.canFloat()) {
 			return (0.0 - valueToFloat(dV) : Dynamic);
 		}
-		Sys.println("throw runtime.HxDynamic.negate value invalid: " + Std.string(d));
-		return (null : Dynamic);
+
+		throw "runtime.HxDynamic.negate value invalid: " + Std.string(d);
 	}
 
 	public static function bitnot(d:Dynamic):Dynamic {
@@ -66,8 +66,8 @@ class HxDynamic {
 		if (dV.canInt() || dV.canUint()) {
 			return (~valueToInt(dV) : Dynamic);
 		}
-		Sys.println("throw runtime.HxDynamic.bitnot value invalid: " + Std.string(d));
-		return (null : Dynamic);
+
+		throw "runtime.HxDynamic.bitnot value invalid: " + Std.string(d);
 	}
 
 	//
@@ -89,7 +89,7 @@ class HxDynamic {
 		if (aV.kind() == Reflect.Bool && bV.kind() == Reflect.Bool)
 			return aV.bool() || bV.bool();
 		else
-			throw "throw runtime.HxDynamic.or invalid operands: " + aV.string() + " and " + bV.string();
+			throw "runtime.HxDynamic.or invalid operands: " + aV.string() + " and " + bV.string();
 	}
 
 	// interal function for assessing what kind of operation to perform on comperable values
@@ -102,8 +102,7 @@ class HxDynamic {
 			return Reflect.Float64;
 		else if (aV.kind() == Reflect.String || bV.kind() == Reflect.String)
 			return Reflect.String;
-		else
-			Sys.println("throw runtime.HxDynamic.jointKind invalid operands: " + aV.string() + " and " + bV.string());
+
 		return Reflect.Invalid;
 	}
 
@@ -146,7 +145,7 @@ class HxDynamic {
 		else if (k == Reflect.String)
 			return toString(a) == toString(b);
 		else
-			throw "Invalid equals on Dynamic";
+			throw "runtime.HxDynamic.equals invalid operands: " + aV.string() + " and " + bV.string();
 	}
 
 	public static function nequals(a:Dynamic, b:Dynamic):Bool {
@@ -164,7 +163,7 @@ class HxDynamic {
 		else if (k == Reflect.String)
 			return toString(a) < toString(b);
 		else
-			throw "Invalid lt on Dynamic";
+			throw "runtime.HxDynamic.lt invalid operands: " + aV.string() + " and " + bV.string();
 	}
 
 	public static function gtequals(a:Dynamic, b:Dynamic):Bool {
@@ -182,7 +181,7 @@ class HxDynamic {
 		else if (k == Reflect.String)
 			return toString(a) > toString(b);
 		else
-			throw "Invalid gt on Dynamic";
+			throw "runtime.HxDynamic.gt invalid operands: " + aV.string() + " and " + bV.string();
 	}
 
 	public static function ltequals(a:Dynamic, b:Dynamic):Bool {
@@ -200,7 +199,7 @@ class HxDynamic {
 		else if (k == Reflect.String)
 			return (toString(a) + toString(b):Dynamic);
 		else
-			return (null : Dynamic);
+			throw "runtime.HxDynamic.add invalid operands: " + aV.string() + " and " + bV.string();
 	}
 
 	public static function subtract(a:Dynamic, b:Dynamic):Dynamic {
@@ -212,7 +211,7 @@ class HxDynamic {
 		else if (k == Reflect.Float64)
 			return (valueToFloat(aV) - valueToFloat(bV) : Dynamic);
 		else
-			return (null : Dynamic);
+			throw "runtime.HxDynamic.subtract invalid operands: " + aV.string() + " and " + bV.string();
 	}
 
 	public static function multiply(a:Dynamic, b:Dynamic):Dynamic {
@@ -224,7 +223,7 @@ class HxDynamic {
 		else if (k == Reflect.Float64)
 			return (valueToFloat(aV) * valueToFloat(bV) : Dynamic);
 		else
-			return (null : Dynamic);
+			throw "runtime.HxDynamic.multiply invalid operands: " + aV.string() + " and " + bV.string();
 	}
 
 	public static function divide(a:Dynamic, b:Dynamic):Dynamic {
@@ -235,7 +234,7 @@ class HxDynamic {
 		if (k == Reflect.Int || k == Reflect.Float64)
 			return (valueToFloat(aV) / valueToFloat(bV) : Dynamic);
 		else
-			return (null : Dynamic);
+			throw "runtime.HxDynamic.divide invalid operands: " + aV.string() + " and " + bV.string();
 	}
 
 	public static function modulo(a:Dynamic, b:Dynamic):Dynamic {
@@ -246,7 +245,7 @@ class HxDynamic {
 		if (k == Reflect.Int)
 			return (valueToInt(aV) % valueToInt(bV) : Dynamic);
 		else
-			return (null : Dynamic);
+			throw "runtime.HxDynamic.modulo invalid operands: " + aV.string() + " and " + bV.string();
 	}
 
 	public static function bitand(a:Dynamic, b:Dynamic):Dynamic {
@@ -256,7 +255,7 @@ class HxDynamic {
 		if (k == Reflect.Int)
 			return (valueToInt(aV) & valueToInt(bV) : Dynamic);
 		else
-			return (null : Dynamic);
+			throw "runtime.HxDynamic.bitand invalid operands: " + aV.string() + " and " + bV.string();
 	}
 
 	public static function bitor(a:Dynamic, b:Dynamic):Dynamic {
@@ -266,7 +265,7 @@ class HxDynamic {
 		if (k == Reflect.Int)
 			return (valueToInt(aV) | valueToInt(bV) : Dynamic);
 		else
-			return (null : Dynamic);
+			throw "runtime.HxDynamic.bitor invalid operands: " + aV.string() + " and " + bV.string();
 	}
 
 	public static function bitxor(a:Dynamic, b:Dynamic):Dynamic {
@@ -276,7 +275,7 @@ class HxDynamic {
 		if (k == Reflect.Int)
 			return (valueToInt(aV) ^ valueToInt(bV) : Dynamic);
 		else
-			return (null : Dynamic);
+			throw "runtime.HxDynamic.bitxor invalid operands: " + aV.string() + " and " + bV.string();
 	}
 
 	public static function lbitshift(a:Dynamic, b:Dynamic):Dynamic {
@@ -286,7 +285,7 @@ class HxDynamic {
 		if (k == Reflect.Int)
 			return (valueToInt(aV) << valueToInt(bV) : Dynamic);
 		else
-			return (null : Dynamic);
+			throw "runtime.HxDynamic.lbitshift invalid operands: " + aV.string() + " and " + bV.string();
 	}
 
 	public static function rbitshift(a:Dynamic, b:Dynamic):Dynamic {
@@ -296,7 +295,7 @@ class HxDynamic {
 		if (k == Reflect.Int)
 			return (valueToInt(aV) >> valueToInt(bV) : Dynamic);
 		else
-			return (null : Dynamic);
+			throw "runtime.HxDynamic.rbitshift invalid operands: " + aV.string() + " and " + bV.string();
 	}
 
 	public static function urbitshift(a:Dynamic, b:Dynamic):Dynamic {
@@ -306,7 +305,7 @@ class HxDynamic {
 		if (k == Reflect.Int)
 			return (valueToInt(aV) >>> valueToInt(bV) : Dynamic);
 		else
-			return (null : Dynamic);
+			throw "runtime.HxDynamic.urbitshift invalid operands: " + aV.string() + " and " + bV.string();
 	}
 
 	//

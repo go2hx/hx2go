@@ -5,7 +5,7 @@ class Test {
         var cwd = Os.getwd();
         Sys.println(cwd);
         Sys.println(cwd.tuple());
-        Sys.println(cwd.sure());
+        // Sys.println(cwd.sure());
     }
 
 }

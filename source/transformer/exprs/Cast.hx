@@ -26,7 +26,7 @@ function transformCast(t:Transformer, e:HaxeExpr, inner: HaxeExpr, type:ComplexT
         Logging.transformer.debug("Unable to process cast, it may be incorrect: " + inner.t + " -> " + e.t);
         return;
     }
-
+    
     final to = HaxeExprTools.stringToComplexType(e.t); // yes, you are correct, this is questionable. also yes, you should ignore this...
     if (to == null) {
         Logging.transformer.debug("Unable to process cast, it may be incorrect: " + inner.t + " -> " + e.t);

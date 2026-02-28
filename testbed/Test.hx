@@ -1,4 +1,4 @@
-// @:analyzer(ignore)
+@:analyzer(ignore)
 class Test {
     static function cap():{incV:Float->Void, incI: Int->Float, incF: Float->Float, print:Void->Void} {
         var x = 5.0;
@@ -43,5 +43,17 @@ class Test {
 
         a.print();
         b.print();
+
+        var count = 100;
+        var foo = (a, b) -> a + b;
+        var bar = foo.bind(count, _);
+
+        Sys.println(bar(100));
+        count = 200;
+        Sys.println(bar(100)); // should still be 200, not 300
+
+        var dyn = Test.test;
+        var dyn_res = dyn();
+        Sys.println(dyn_res.a);
     }
 }

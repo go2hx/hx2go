@@ -442,7 +442,13 @@ class Preprocessor {
 
         e.def = switch (e.def) {
             case EBlock(_): e.def;
-            case _: EBlock([e.copy()]);
+            case _: {
+                final cpy = e.copy();
+                cpy.parent = e;
+                cpy.parentIdx = 0;
+
+                EBlock([ cpy ]);
+            }
         }
     }
 
@@ -453,7 +459,13 @@ class Preprocessor {
 
         e.def = switch (e.def) {
             case EParenthesis(_): e.def;
-            case _: EParenthesis(e.copy());
+            case _: {
+                final cpy = e.copy();
+                cpy.parent = e;
+                cpy.parentIdx = 0;
+
+                EParenthesis(cpy);
+            }
         }
     }
 

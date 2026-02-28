@@ -11,7 +11,7 @@ class Test {
         }
 
 //        function inc() {
-//            x++;
+//            return x++;
 //        }
 //
 //        function print() {

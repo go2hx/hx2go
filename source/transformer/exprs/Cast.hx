@@ -36,8 +36,9 @@ function transformCast(t:Transformer, e:HaxeExpr, inner: HaxeExpr, type:ComplexT
     }
 
     switch [from, to] {
-        case [TFunction(_, fRet), TFunction(_, tRet)]: if (!isVoid(fRet) && isVoid(tRet)) {
-            e.def = EGoCode("func () { _ = {0} }", [inner.copy()]); // X->Y to X->Void, we wrap it in a func that assigns the result to _ (discard)
+        case [TFunction(args, fRet), TFunction(_, tRet)]: if (!isVoid(fRet) && isVoid(tRet)) {
+            var argStr = [for (i in 0...args.length) '_$i'].join(', ');
+            e.def = EGoCode('func ($argStr) { _ = {0}($argStr) }', [inner.copy()]); // X->Y to X->Void, we wrap it in a func that assigns the result to _ (discard)
             return;
         }
 

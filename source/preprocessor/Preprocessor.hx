@@ -127,8 +127,10 @@ class Preprocessor {
 
             // normalise body
             case EFunction(_, f): {
+                final localScope = scope.copy();
+                iterateExprPre(f.expr, localScope); // needed because we don't update state of f.expr
                 ensureBlock(f.expr);
-                iterateExprPost(f.expr, scope.copy());
+                iterateExprPost(f.expr, localScope);
             }
 
             // normalise body

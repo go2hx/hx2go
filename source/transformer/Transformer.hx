@@ -184,8 +184,8 @@ class Transformer {
             case "go.Float32", "Single": "float32";
             case "go.Float64", "Float": "float64";
             case "Int", "go.GoInt": "int";
-            case "go.Int64", "Int64": "int64";
-            case "go.Int32": "int32";
+            case "haxe.Int64", "go.Int64", "Int64": "int64";
+            case "haxe.Int32", "go.Int32": "int32";
             case "go.Int16": "int16";
             case "go.Int8": "int8";
             case "go.UInt64": "uint64";

@@ -49,27 +49,7 @@ class Preprocessor {
 
                 Semantics.ensure(e, [e0, e1], this, scope);
             }
-            
-            case ECast(e, t):
-                final innerType = HaxeExprTools.stringToComplexType(e.t);
-                final isVoid = translator.exprs.Function.isVoid;
-                switch [t, innerType] {
-                    case [TFunction(args, ret), TFunction(args2, ret2)] if (isVoid(ret) && !isVoid(ret2)):
-                        var i = 0;
-                        final funcArgs:Array<HaxeFunctionArg> = [];
-                        for (i in 0...args.length) {
-                            trace(args[i]);
-                            funcArgs[i] = {name: "f" + i};
-                        }
-                        final callArgs = [];
-                        final expr:HaxeExpr = {t: e.t, def: ECall(e.copy(), callArgs)};
-                        final blockExpr:HaxeExpr = {t: "", def: EBlock([expr])};
-                        e.def = EFunction(FAnonymous, {args: funcArgs, ret: ret, expr: blockExpr});
-                        //Semantics.ensure(e, [], this, scope);
-                        // processExpr(e, scope.copy());
-                        iterateExprPost(e, scope.copy());
-                    case _:
-                }
+
             // ensure tuple/result + semantics
             case ECall(_, params): {
                 Semantics.ensure(e, params, this, scope);
@@ -143,6 +123,12 @@ class Preprocessor {
                 ensureBlock(eif);
                 ensureBlock(eelse);
                 iterateExprPost(e, scope.copy());
+            }
+
+            // normalise body
+            case EFunction(_, f): {
+                ensureBlock(f.expr);
+                iterateExprPost(f.expr, scope.copy());
             }
 
             // normalise body
@@ -336,15 +322,7 @@ class Preprocessor {
 
                 result = tmp.ident;
             }
-            case EFunction(kind, f): {
-                ensureBlock(f.expr);
-                var tmp = annonymiser.assign(copy);
-                insertExprsBefore([
-                    tmp.decl,
-                ], copy, scope);
-                result = tmp.ident;
-                iterateExprPost(copy, scope.copy());
-            }
+
             case _: Logging.preprocessor.warn('cannot transform to expr: $stmt'); stmt;
         }
 

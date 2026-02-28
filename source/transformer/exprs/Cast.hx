@@ -4,12 +4,14 @@ import haxe.macro.Expr.ComplexType;
 import HaxeExpr.HaxeVar;
 import haxe.macro.ComplexTypeTools;
 import translator.TranslatorTools;
+import translator.exprs.Function;
 
 function transformCast(t:Transformer, e:HaxeExpr, inner: HaxeExpr, type:ComplexType) {
     switch type {
         case TPath({ pack: [], name: "String" }): {
             e.def = EGoCode("fmt.Sprint({0})", [inner.copy()]);
         }
+
         default:
     }
 
@@ -31,6 +33,15 @@ function transformCast(t:Transformer, e:HaxeExpr, inner: HaxeExpr, type:ComplexT
     if (to == null) {
         Logging.transformer.debug("Unable to process cast, it may be incorrect: " + inner.t + " -> " + e.t);
         return;
+    }
+
+    switch [from, to] {
+        case [TFunction(_, fRet), TFunction(_, tRet)]: if (!isVoid(fRet) && isVoid(tRet)) {
+            e.def = EGoCode("func () { _ = {0} }", [inner.copy()]); // X->Y to X->Void, we wrap it in a func that assigns the result to _ (discard)
+            return;
+        }
+
+        case _: null;
     }
 
     final fromPath = switch from {

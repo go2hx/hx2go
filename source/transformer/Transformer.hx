@@ -11,12 +11,15 @@ import translator.TranslatorTools;
 import haxe.PosInfos;
 import haxe.CallStack;
 
+using StringTools;
+
 /**
  * Transforms Haxe AST to Go ready Haxe AST
  * For example, changes try catch to defer panic pattern
  */
 @:structInit
 class Transformer {
+
     public var module:Module = null;
     public var def:HaxeTypeDefinition = null;
 
@@ -111,9 +114,9 @@ class Transformer {
 
                 final td = module.resolveClass(p.pack, p.name, module.path);
                 if (td == null) {
-                    //trace('null td for transformComplexType', p);
                     return;
                 }
+
                 switch p {
                     case { pack: ["go"], name: "Tuple" }: {
                         p.name = handleTuple(p);
@@ -121,12 +124,6 @@ class Transformer {
                     }
 
                     case _: {
-                        final td = module.resolveClass(p.pack, p.name, module.path);
-                        if (td == null) {
-                            Logging.transformer.warn('null td for transformComplexType, at $p');
-                            return;
-                        }
-
                         handleCoreTypeName(p, td.name);
 
                         if (!processTypeMetadata(p, td)) {
@@ -165,7 +162,7 @@ class Transformer {
         var res = false;
 
         for (meta in td.meta()) {
-            res = res || switch meta.name {
+            res = (switch meta.name {
                 case ":coreType" | ":go.ProcessedType": // coreType doesn't always make sense, :go.ProcessedType exists so you can force processing.
                     processCoreType(p, td.name);
                     true;
@@ -175,7 +172,7 @@ class Transformer {
                     true;
 
                 case _: false;
-            }
+            }) || res;
         }
 
         return res;

@@ -5,6 +5,7 @@ extraParams.hxml
 # sets to run the Go code after
 -D run-go
 -D build-go
+-D install-dep-go
 # set the output directory
 --custom-target go=export/output.go
 # optimises output

@@ -63,6 +63,7 @@ class Init {
 		final tinyGoDefine = Context.definedValue("tinygo");
 		final tinyGoTargetDefine = Context.definedValue("tinygo.target");
 		final tinyGoPortDefine = Context.definedValue("tinygo.port");
+		final installDepDefine = Context.definedValue("install-dep-go");
 
         Context.onAfterGenerate(() -> {
             // spin up hx2go to read dump
@@ -88,6 +89,9 @@ class Init {
             }
             if (tinyGoDefine != null) {
                 command += " -D tinygo.port=" + tinyGoPortDefine;
+            }
+            if (installDepDefine != null) {
+                command += " -D install-dep-go";
             }
             std.Sys.command(command);
         });

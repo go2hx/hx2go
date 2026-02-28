@@ -124,7 +124,8 @@ class Semantics {
 		return switch expr.def {
 			case ESwitch(_, _, _), EBlock(_), EVars(_), EWhile(_, _, _), EIf(_, _, _), EReturn(_), EBinop(OpAssignOp(_), _, _), EBinop(OpAssign, _, _),
 				EUnop(OpIncrement, _, _), EUnop(OpDecrement, _, _), EBreak, EContinue, EThrow(_): Stmt;
-			case EGoEnumIndex(_), EGoEnumParameter(_, _, _), EObjectDecl(_), EArrayDecl(_), EFunction(_, _), EArray(_), EConst(_), EField(_, _, _), ECast(_, _), EBinop(_, _, _), EUnop(_, _, _), ENew(_, _), EParenthesis(_): Expr;
+			case EGoEnumIndex(_), EGoEnumParameter(_, _, _), EObjectDecl(_), EArrayDecl(_), EArray(_), EConst(_), EField(_, _, _), ECast(_, _), EBinop(_, _, _), EUnop(_, _, _), ENew(_, _), EParenthesis(_): Expr;
+			case EFunction(_, _): Stmt;
 			case ECall(_, _): EitherKind;
 			case _:
 				Logging.preprocessor.error('unknown kind for: $expr');
@@ -203,7 +204,7 @@ class Semantics {
 	 */
 	public static function canHoldStmt(expr:HaxeExpr):Bool {
 		return switch expr.def {
-			case EBlock(_), EWhile(_), EIf(_), ESwitch(_): true;
+			case EBlock(_), EWhile(_), EIf(_), ESwitch(_), EFunction(_, _), EFor(_, _): true;
 			case _: false;
 		}
 	}

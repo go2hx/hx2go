@@ -1,5 +1,6 @@
 package preprocessor;
 
+import haxe.macro.ExprTools;
 import HaxeExpr;
 import HaxeExpr.HaxeTypeDefinition;
 import translator.TranslatorTools;
@@ -48,7 +49,27 @@ class Preprocessor {
 
                 Semantics.ensure(e, [e0, e1], this, scope);
             }
-
+            
+            case ECast(e, t):
+                final innerType = HaxeExprTools.stringToComplexType(e.t);
+                final isVoid = translator.exprs.Function.isVoid;
+                switch [t, innerType] {
+                    case [TFunction(args, ret), TFunction(args2, ret2)] if (isVoid(ret) && !isVoid(ret2)):
+                        var i = 0;
+                        final funcArgs:Array<HaxeFunctionArg> = [];
+                        for (i in 0...args.length) {
+                            trace(args[i]);
+                            funcArgs[i] = {name: "f" + i};
+                        }
+                        final callArgs = [];
+                        final expr:HaxeExpr = {t: e.t, def: ECall(e.copy(), callArgs)};
+                        final blockExpr:HaxeExpr = {t: "", def: EBlock([expr])};
+                        e.def = EFunction(FAnonymous, {args: funcArgs, ret: ret, expr: blockExpr});
+                        //Semantics.ensure(e, [], this, scope);
+                        // processExpr(e, scope.copy());
+                        iterateExprPost(e, scope.copy());
+                    case _:
+                }
             // ensure tuple/result + semantics
             case ECall(_, params): {
                 Semantics.ensure(e, params, this, scope);

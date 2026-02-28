@@ -105,6 +105,10 @@ class Transformer {
         }
 
         switch ct {
+            case TFunction(args, ret):
+                for (arg in args)
+                    transformComplexType(arg);
+                transformComplexType(ret);
             case TPath(p):
                 transformTypeParams(p.params);
 

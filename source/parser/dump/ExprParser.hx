@@ -189,6 +189,7 @@ class ExprParser {
                 if (colonIndex == -1)
                     throw "colon not found: " + field;
                 field = field.substr(0, colonIndex);
+                specialDef = FAnon(field);
                 EConst(CIdent(field));
             case CONST:
                 if (object.objects.length == 0) {

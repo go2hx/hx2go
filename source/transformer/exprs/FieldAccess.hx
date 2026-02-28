@@ -175,12 +175,15 @@ function resolvePkgTransform(t:Transformer, e:HaxeExpr, e2:HaxeExpr, field:Strin
         final tstr = switch (e.special) {
             case FInstance(x): x;
             case FStatic(x, f): x;
+            case FAnon(field): e2.t;
             case Local:
                 e2.t;
             case _: "";
         }
+
         if (tstr == "")
             return false;
+
         final ct = HaxeExprTools.stringToComplexType(tstr);
         final fieldHandled = handleFieldTransform(t, e, ct, e2, field);
         if (fieldHandled) {

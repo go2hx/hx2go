@@ -1,4 +1,4 @@
-@:analyzer(ignore)
+// @:analyzer(ignore)
 class Test {
     static function cap():{inc:Void->Void, print:Void->Void} {
         var x = 5;

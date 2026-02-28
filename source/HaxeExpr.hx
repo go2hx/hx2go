@@ -270,6 +270,7 @@ class HaxeTypeDefinition {
 // Closely structured from: https://api.haxe.org/haxe/macro/TypeDefKind.html
 enum HaxeTypeDefinitionKind {
 	TDClass;
+	TDType(t:String);
 	TDAbstract;
 	TDFields;
 }

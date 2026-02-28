@@ -1,3 +1,16 @@
+class Instance {
+
+    public var x: Float;
+
+    public function new() {
+        x = 5.0;
+    }
+
+    public function inc(by: Float) {
+        x += by;
+    }
+}
+
 @:analyzer(ignore)
 class Test {
     static function cap():{incV:Float->Void, incI: Int->Float, incF: Float->Float, print:Void->Void} {
@@ -72,5 +85,23 @@ class Test {
         Sys.println(dyn_bound_res.half);
         Sys.println(Test.foo.bind(10)());
         Test.foo.bind(10)();
+
+//        var instance = new Instance();
+//        Sys.println(instance.x);
+//        var dyn_inst = instance.inc;
+//        dyn_inst(2);
+//        Sys.println(instance.x);
+
+//        var f: Array<Void->Void> = [];
+//
+//        for (i in 0...3) {
+//            f.push(() -> Sys.println(i));
+//        }
+//
+//        for (fn in f) {
+//            fn();
+//        }
+
+
     }
 }

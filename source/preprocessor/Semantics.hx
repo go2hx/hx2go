@@ -178,6 +178,9 @@ class Semantics {
 
 				false;
 
+			case EFunction(_, f):
+				hasSideEffects(ctx, f.expr);
+
 			case _:
 				Logging.preprocessor.warn('unknown if expr has side effects (safely assuming it does), for: $expr');
 				true;

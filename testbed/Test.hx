@@ -108,16 +108,15 @@ class Test {
         Sys.println(instanceA.x);
         Sys.println(instanceB.x);
 
-//        var f: Array<Void->Void> = [];
-//
-//        for (i in 0...3) {
-//            f.push(() -> Sys.println(i));
-//        }
-//
-//        for (fn in f) {
-//            fn();
-//        }
+        var f: Array<Void->Void> = [];
 
+        for (i in 0...3) {
+            f.push(() -> Sys.println(i));
+        }
+
+        for (fn in f) {
+            fn();
+        }
 
     }
 }

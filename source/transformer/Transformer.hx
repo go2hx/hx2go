@@ -100,6 +100,7 @@ class Transformer {
         });
     }
     public function transformComplexType(ct:ComplexType) {
+
         if (ct == null) {
             return;
         }
@@ -282,6 +283,7 @@ class Transformer {
         }
     }
 
+
     public function transformComplexTypeParam(params:Array<TypeParam>, idx:Int) {
         final p = params[idx];
         if (p == null) {
@@ -308,7 +310,7 @@ class Transformer {
 
         transformComplexType(ct);
 
-        return ComplexTypeTools.toString(ct);
+        return module.translator.translateComplexType(ct);
     }
 
     private function isLowercasePrefix(s:String):Bool {

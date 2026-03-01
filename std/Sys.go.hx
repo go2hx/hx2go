@@ -1,4 +1,5 @@
 // Sys.go.hx
+import go.Result;
 import go.os.Os;
 import go.Fmt;
 import go.time.Time;
@@ -91,10 +92,8 @@ class Sys {
 		Gets the current working directory (usually the one in which the program was started).
 	**/
 	public static function getCwd():String {
-        // TODO .sure() processing is not working - worked before so a regression was introduced, need to fix
-		// return Os.getwd().sure();
-        return "error: Os.getwd().sure() not working"; // TODO
-    }
+		return Os.getwd().sure();
+	}
 
 	/**
 		Changes the current working directory.
@@ -104,7 +103,7 @@ class Sys {
 	public static function setCwd(s:String):Void {
 		var err = Os.chdir(s);
 		if (err != null)
-			throw err.error(); 
+			throw err.error();
 	}
 
 	/**
@@ -185,12 +184,10 @@ class Sys {
 		Gives the most precise timestamp value available (in seconds).
 	**/
 	public static function time():Float {
-		// TODO add not typed correctly: var tn = Time.now();
-		var ret = (Time.now().unixNano() : Float) / 1000000000.0;
-		// TODO solve error report below
-		// https://github.com/go2hx/hx2go/issues/56
-		// var tup = Time.now().local().zone();
-		// ret += (tup.offset:Float);
+		var tn = Time.now();
+		var ret = (tn.unixNano() : Float) / 1000000000.0;
+		var tup = tn.local().zone();
+		ret += (tup.offset : Float);
 		return ret;
 	}
 

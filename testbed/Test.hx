@@ -1,100 +1,122 @@
-import go.Tuple;
-import go.Fmt;
-import go.GoInt;
+class Instance {
 
-@:go.TypeAccess({ name: "error" })
-extern class Error {}
+    public var x: Float;
 
-@:go.TypeAccess({ name: "*os.File", imports: ["os"] })
-extern class File {}
-
-@:go.TypeAccess({ name: "os", imports: ["os"] })
-extern class OS {
-    @:go.Tuple("handle", "err") static function open(path: String): Tuple<{ handle: File, err: Error }>;
-}
-
-@:go.TypeAccess({ name: "time", imports: ["time"] })
-extern class Time {
-    static var second: Duration;
-    static function duration(v: GoInt): Duration; // turns into `time.Duration` which is a cast.
-}
-
-@:coreType
-@:go.TypeAccess({ name: "time.Duration", imports: ["github.com/faiface/beep"] })
-extern abstract Duration {
-    @:op(A / B) public function div(x: Duration): Duration;
-}
-
-@:go.TypeAccess({ name: "beep.StreamSeekCloser", imports: ["github.com/faiface/beep"] })
-extern class Streamer {
-    public function len(): GoInt;
-    public function position(): GoInt;
-    public function seek(pos: GoInt): Error;
-    public function close(): Error;
-}
-
-@:go.TypeAccess({ name: "beep.Format", imports: ["github.com/faiface/beep"] })
-extern class Format {
-    var sampleRate: SampleRate;
-    var numChannels: GoInt;
-    var precision: GoInt;
-}
-
-@:go.TypeAccess({ name: "mp3", imports: ["github.com/faiface/beep/mp3"] })
-extern class MP3 {
-    @:go.Tuple("streamer", "format", "err") static function decode(file: File): Tuple<{ streamer: Streamer, format: Format, err: Error }>;
-}
-
-@:go.TypeAccess({ name: "speaker", imports: ["github.com/faiface/beep/speaker"] })
-extern class Speaker {
-    static function clear(): Void;
-    static function close(): Void;
-    static function init(sampleRate: SampleRate, bufferSize: GoInt): Error;
-    static function lock(): Void;
-    static function unlock(): Void;
-    static function play(streamer: Streamer): Void; // todo: make rest
-}
-
-@:go.TypeAccess({ name: "beep.SampleRate", imports: ["github.com/faiface/beep"] })
-extern class SampleRate {
-    public function N(duration: Duration): GoInt;
-}
-
-@:go.TypeAccess({ name: "beep", imports: ["github.com/faiface/beep"] })
-extern class Beep {
-    static function sampleRate(rate: GoInt): SampleRate;
-}
-
-class Test {
-
-    public static function main(): Void {
-        var path = "/home/mikaib/Music/audio.mp3";
-
-        var file = OS.open(path);
-        if (file.err != null) {
-            Fmt.println("Error opening file: ", file.err);
-            return;
-        }
-
-        var dec = MP3.decode(file.handle);
-        if (dec.err != null) {
-            Fmt.println("Error decoding mp3: ",  dec.err);
-            return;
-        }
-
-        var err = Speaker.init(dec.format.sampleRate, dec.format.sampleRate.N(Time.second / Time.duration(10)));
-        if (err != null) {
-            Fmt.println("Error initializing speaker: ", err);
-            return;
-        }
-
-        Speaker.play(dec.streamer);
-
-        while (dec.streamer.position() < dec.streamer.len()) {
-            Fmt.println(dec.streamer.position(), " / ", dec.streamer.len());
-        }
-
-        dec.streamer.close();
+    public function new() {
+        x = 4.0;
     }
 
+    public function inc(by: Float) {
+        x += by;
+    }
+}
+
+@:analyzer(ignore)
+class Test {
+    static function cap():{incV:Float->Void, incI: Int->Float, incF: Float->Float, print:Void->Void} {
+        var x = 5.0;
+
+        var inc = (by: Float) -> {
+            x += by;
+        }
+        var print = () -> {
+            Sys.println(x);
+        }
+
+//        function inc() {
+//            return x++;
+//        }
+//
+//        function print() {
+//            Sys.println(x);
+//        }
+
+        return {incV: inc, incI: inc, incF: inc, print: print};
+    }
+
+    static function test() {
+        return { a: 3 };
+    }
+
+    static function foo(x: Int): { double: Int, half: Float } {
+        return {
+            double: x * 2,
+            half: x / 2
+        }
+    }
+
+    static function main() {
+        var a = cap();
+        var b = cap();
+        var c = test();
+
+        Sys.println(c.a);
+        a.print();
+        b.print();
+
+        a.incI(1);
+
+        a.print();
+        b.print();
+
+        b.incF(1);
+
+        a.print();
+        b.print();
+
+        var count = 100;
+        var foo = (a, b) -> a + b;
+        var bar = foo.bind(count, _);
+
+        Sys.println(bar(100));
+        count = 200;
+        Sys.println(bar(100)); // should still be 200, not 300
+
+        var dyn = Test.foo;
+        var dyn_res = dyn(5);
+        Sys.println(dyn_res.double);
+        Sys.println(dyn_res.half);
+        Sys.println(Test.foo(5));
+        Test.foo(5);
+
+        var dyn_bound = Test.foo.bind(10);
+        var dyn_bound_res = dyn_bound();
+        Sys.println(dyn_bound_res.double);
+        Sys.println(dyn_bound_res.half);
+        Sys.println(Test.foo.bind(10)());
+        Test.foo.bind(10)();
+
+        var instanceA = new Instance();
+        var instanceB = new Instance();
+
+        instanceA.inc(1);
+        instanceB.inc(1);
+
+        var dyn_inst_a = instanceA.inc;
+        var dyn_inst_b = instanceB.inc;
+
+        Sys.println(instanceA.x);
+        Sys.println(instanceB.x);
+
+        dyn_inst_a(1);
+
+        Sys.println(instanceA.x);
+        Sys.println(instanceB.x);
+
+        dyn_inst_b(1);
+
+        Sys.println(instanceA.x);
+        Sys.println(instanceB.x);
+
+        var f: Array<Void->Void> = [];
+
+        for (i in 0...3) {
+            f.push(() -> Sys.println(i));
+        }
+
+        for (fn in f) {
+            fn();
+        }
+
+    }
 }

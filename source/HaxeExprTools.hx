@@ -3,6 +3,7 @@ package;
 import haxe.macro.Expr;
 import HaxeExpr.HaxeVar;
 import haxe.macro.Expr.ComplexType;
+import haxe.macro.ComplexTypeTools;
 
 class HaxeExprTools {
     static inline function opt(e:Null<HaxeExpr>, f:HaxeExpr->HaxeExpr):HaxeExpr
@@ -108,5 +109,11 @@ class HaxeExprTools {
 				null;
 			}
 		}
+	}
+	public static function copyType(t: ComplexType): ComplexType {
+		return HaxeExprTools.stringToComplexType(ComplexTypeTools.toString(t)); // mikaib: evil hack, sorry :(
+	}
+	public static function compareType(a: ComplexType, b: ComplexType): Bool {
+		return ComplexTypeTools.toString(a) == ComplexTypeTools.toString(b); // mikaib: evil hack, sorry :(
 	}
 }

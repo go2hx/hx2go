@@ -31,9 +31,14 @@ class Translator {
                     p.pack.join(".") + p.name;
                 }
             case TFunction(args, ret):
-                "func(" + args.map(arg -> translateComplexType(arg)).join(", ") + ")" + translateComplexType(ret);
+                "func(" + 
+                    args.map(arg -> translateComplexType(arg)).join(", ") + 
+                ")" + 
+                (translator.exprs.Function.isVoid(ret) ? "" : translateComplexType(ret));
             case TAnonymous(fields):
                 "map[string]any";
+            case TNamed(_, t):
+                translateComplexType(t);
             default:
                 throw "unknown ct for translateComplexType: " + ct;
         }

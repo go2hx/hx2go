@@ -1,5 +1,6 @@
 package preprocessor;
 
+import haxe.macro.ExprTools;
 import HaxeExpr;
 import HaxeExpr.HaxeTypeDefinition;
 import translator.TranslatorTools;
@@ -122,6 +123,14 @@ class Preprocessor {
                 ensureBlock(eif);
                 ensureBlock(eelse);
                 iterateExprPost(e, scope.copy());
+            }
+
+            // normalise body
+            case EFunction(_, f): {
+                final localScope = scope.copy();
+                iterateExprPre(f.expr, localScope); // needed because we don't update state of f.expr
+                ensureBlock(f.expr);
+                iterateExprPost(f.expr, localScope);
             }
 
             // normalise body
@@ -435,7 +444,13 @@ class Preprocessor {
 
         e.def = switch (e.def) {
             case EBlock(_): e.def;
-            case _: EBlock([e.copy()]);
+            case _: {
+                final cpy = e.copy();
+                cpy.parent = e;
+                cpy.parentIdx = 0;
+
+                EBlock([ cpy ]);
+            }
         }
     }
 
@@ -446,7 +461,13 @@ class Preprocessor {
 
         e.def = switch (e.def) {
             case EParenthesis(_): e.def;
-            case _: EParenthesis(e.copy());
+            case _: {
+                final cpy = e.copy();
+                cpy.parent = e;
+                cpy.parentIdx = 0;
+
+                EParenthesis(cpy);
+            }
         }
     }
 

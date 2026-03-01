@@ -11,12 +11,15 @@ import translator.TranslatorTools;
 import haxe.PosInfos;
 import haxe.CallStack;
 
+using StringTools;
+
 /**
  * Transforms Haxe AST to Go ready Haxe AST
  * For example, changes try catch to defer panic pattern
  */
 @:structInit
 class Transformer {
+
     public var module:Module = null;
     public var def:HaxeTypeDefinition = null;
 
@@ -81,6 +84,8 @@ class Transformer {
                 transformer.exprs.EnumParameter.transformEnumParameter(this, e, e0, kind, idx);
             case ECall(e0, params):
                 transformer.exprs.Call.transformCall(this, e, e0, params);
+            case EUnop(op, postFix, e0):
+                transformer.exprs.UnopExpr.transformUnop(this, e, op, postFix, e0);
             default:
                 iterateExpr(e);
         }
@@ -109,9 +114,9 @@ class Transformer {
 
                 final td = module.resolveClass(p.pack, p.name, module.path);
                 if (td == null) {
-                    //trace('null td for transformComplexType', p);
                     return;
                 }
+
                 switch p {
                     case { pack: ["go"], name: "Tuple" }: {
                         p.name = handleTuple(p);
@@ -119,12 +124,6 @@ class Transformer {
                     }
 
                     case _: {
-                        final td = module.resolveClass(p.pack, p.name, module.path);
-                        if (td == null) {
-                            Logging.transformer.warn('null td for transformComplexType, at $p');
-                            return;
-                        }
-
                         handleCoreTypeName(p, td.name);
 
                         if (!processTypeMetadata(p, td)) {
@@ -163,7 +162,7 @@ class Transformer {
         var res = false;
 
         for (meta in td.meta()) {
-            res = res || switch meta.name {
+            res = (switch meta.name {
                 case ":coreType" | ":go.ProcessedType": // coreType doesn't always make sense, :go.ProcessedType exists so you can force processing.
                     processCoreType(p, td.name);
                     true;
@@ -173,7 +172,7 @@ class Transformer {
                     true;
 
                 case _: false;
-            }
+            }) || res;
         }
 
         return res;
@@ -240,6 +239,9 @@ class Transformer {
 
             case _: null;
         }
+
+        // we sort it to ensure consistent field order, { a; b } is apparently not { b; a } in go..........
+        struct.sort((a, b) -> Reflect.compare(a.name, b.name));
 
         return 'struct { ${struct.map(f -> '${f.name} ${f.type}').join('; ')} }';
     }

@@ -9,7 +9,7 @@ function transformVarDeclarations(t:Transformer, e:HaxeExpr, vars:Array<HaxeVar>
             final varType = ComplexTypeTools.toString(vars[i].type);
             final exprType = vars[i].expr.t;
 
-            if (varType != exprType) {
+            if (varType != exprType) { // TODO: anon is compared incorrectly, results in redundant casts.
                 vars[i].expr.def = ECast(vars[i].expr.copy(), vars[i].type);
                 vars[i].expr.t = varType;
             }

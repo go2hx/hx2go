@@ -65,7 +65,23 @@ class Preprocessor {
                             return;
                         }
 
-                        handleTuple(e, ct, scope);
+                        var preferredOrder: Array<String> = [];
+                        for (m in info.meta) {
+                            if (m.name == ":go.Tuple") { // @:go.Tuple("A", "B") for order
+                                for (p in m.params) {
+                                    switch p.expr {
+                                        case EConst(CString(s)): preferredOrder.push(s);
+                                        case _: Logging.preprocessor.warn('unexpected @:go.Tuple parameter, expected string literal, got $p');
+                                    }
+                                }
+                            }
+                        }
+
+                        if (preferredOrder.length == 0) {
+                            Logging.preprocessor.error('Extern returning tuple must properly define "@:go.Tuple(...)" metadata with field names for ordering, in $e');
+                        }
+
+                        handleTuple(e, ct, scope, preferredOrder);
 
                     case TPath(p) if (p.name == "Result" && p.pack[0] == "go"):
                         var info = Semantics.analyzeFunctionCall(this, e);
@@ -75,7 +91,7 @@ class Preprocessor {
 
                         Transformer.resultToTuple(p);
 
-                        handleTuple(e, ct, scope);
+                        handleTuple(e, ct, scope, ["result", "error"]);
 
                     case _: null;
                 }
@@ -128,17 +144,17 @@ class Preprocessor {
                 ensureBlock(body);
 
                 var expr: HaxeExpr = {
-                    t: "Void",
+                    t: null,
                     def: EIf(
                         {
                             t: cond.t,
                             def: EUnop(OpNot, false, cond.copy())
                         },
                         {
-                            t: "Void",
+                            t: null,
                             def: EBlock([
                                 {
-                                    t: "Void",
+                                    t: null,
                                     def: EBreak
                                 }
                             ])
@@ -434,7 +450,7 @@ class Preprocessor {
         }
     }
 
-    public function handleTuple(cexpr: HaxeExpr, tupleType: ComplexType, scope: Scope): Void {
+    public function handleTuple(cexpr: HaxeExpr, tupleType: ComplexType, scope: Scope, preferredOrder: Array<String>): Void {
         var fields = switch (tupleType) {
             case TPath(p) if (p.params != null && p.params.length == 1):
                 switch p.params[0] {
@@ -458,6 +474,16 @@ class Preprocessor {
                 return;
 
         }
+
+        fields.sort((a, b) -> {
+            var i0 = preferredOrder.indexOf(a.name);
+            var i1 = preferredOrder.indexOf(b.name);
+
+            if (i0 == -1) i0 = 9999999;
+            if (i1 == -1) i1 = 9999999;
+
+            return i0 - i1;
+        });
 
         var tmpId = annonymiser.allocId();
         insertExprsBefore([

@@ -7,25 +7,16 @@ import go.Float64;
 
 // TODO implement more of reflect...
 
-@:coreType
-@:notNull
-@:runtimeValue
 @:go.TypeAccess({name: "reflect.Kind", imports: ["reflect"]})
 extern class Kind {
     function string():String;
 }
 
-@:coreType
-@:notNull
-@:runtimeValue
 @:go.TypeAccess({name: "reflect.Type", imports: ["reflect"]})
 extern class Type {
     function kind():Kind;
 }
 
-@:coreType
-@:notNull
-@:runtimeValue
 @:go.TypeAccess({name: "reflect.Value", imports: ["reflect"]})
 extern class Value {
     function type():Type;
@@ -43,6 +34,7 @@ extern class Value {
     function uint():go.UInt64;
     function string():String;
     function bool():Bool;
+    function isNil():Bool;
 
     function mapIndex(i:Value):Value;
     function setMapIndex(key:Value, element:Value):Void;
@@ -53,9 +45,6 @@ extern class Value {
     function convert(t:Type):Value;
 }
 
-@:coreType
-@:notNull
-@:runtimeValue
 @:go.TypeAccess({name: "reflect", imports: ["reflect"]})
 extern class Reflect {
     /* Kind constants... */
@@ -87,9 +76,8 @@ extern class Reflect {
     public static var UnsafePointer:Kind;
 
     static function typeOf(i:Dynamic):Type;
-
     static function valueOf(i:Dynamic):Value;
-
     static function indirect(ptr:Value):Value;
+
 }
 

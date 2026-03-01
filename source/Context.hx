@@ -18,6 +18,11 @@ class ContextOptions {
     @:opt_type("Bool")
     public var buildAfterCompilation: Bool = false;
 
+    @:opt_name("install_deps")
+    @:opt_desc("Let hx2go install dependencies for you.")
+    @:opt_type("Bool")
+    public var installDependencies: Bool = false;
+
     @:opt_name("main")
     @:opt_desc("The entry point of your Haxe program.")
     @:opt_type("String")
@@ -198,6 +203,12 @@ class Context {
 
         if (!FileSystem.exists("go.mod")) {
             Sys.command("go mod init hx2go");
+        }
+
+        if (options.installDependencies) {
+            for (imp in imports) {
+                if (StringTools.contains(imp, ".")) Sys.command('go get $imp');
+            }
         }
 
         if (options.tinygo) {

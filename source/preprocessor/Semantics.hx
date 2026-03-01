@@ -3,6 +3,7 @@ package preprocessor;
 import HaxeExpr;
 import transformer.Transformer;
 import haxe.macro.Expr.ComplexType;
+import haxe.macro.Expr.MetadataEntry;
 
 enum ExprKind {
 	Stmt;
@@ -33,6 +34,7 @@ class Semantics {
 
 		switch p.def {
             case EBinop(OpBoolAnd, e1, e2): // `a && b` -> `(if (a) b else false)`
+				p.t = "Bool";
                 p.def = EIf(
                     {
                         t: "Bool",
@@ -50,6 +52,7 @@ class Semantics {
                 ctx.processExpr(p, scope);
 
             case EBinop(OpBoolOr, e1, e2): // `a || b` -> `(if (a) true else b)`
+				p.t = "Bool";
                 p.def = EIf(
                     {
                         t: "Bool",
@@ -120,13 +123,9 @@ class Semantics {
 	public static function getExprKind(expr:HaxeExpr):ExprKind {
 		return switch expr.def {
 			case ESwitch(_, _, _), EBlock(_), EVars(_), EWhile(_, _, _), EIf(_, _, _), EReturn(_), EBinop(OpAssignOp(_), _, _), EBinop(OpAssign, _, _),
-				EUnop(OpIncrement, _, _), EUnop(OpDecrement, _, _), EBreak, EContinue: Stmt;
-			case EConst(_), EField(_, _, _), ECast(_, _), EBinop(_, _, _), EUnop(_, _, _), ENew(_, _), EParenthesis(_): Expr;
-			case EArray(_): Expr;
+				EUnop(OpIncrement, _, _), EUnop(OpDecrement, _, _), EBreak, EContinue, EThrow(_): Stmt;
+			case EGoEnumIndex(_), EGoEnumParameter(_, _, _), EObjectDecl(_), EArrayDecl(_), EFunction(_, _), EArray(_), EConst(_), EField(_, _, _), ECast(_, _), EBinop(_, _, _), EUnop(_, _, _), ENew(_, _), EParenthesis(_): Expr;
 			case ECall(_, _): EitherKind;
-			case EFunction(_, _): Expr;
-			case EArrayDecl(_): Expr;
-			case EObjectDecl(_): Expr;
 			case _:
 				Logging.preprocessor.error('unknown kind for: $expr');
 				EitherKind;
@@ -156,12 +155,29 @@ class Semantics {
 				false;
 			case EIf(econd, eif, eelse): hasSideEffects(ctx, econd) || hasSideEffects(ctx, eif) || (eelse != null && hasSideEffects(ctx, eelse));
 			case EWhile(econd, ebody, _): hasSideEffects(ctx, econd) || hasSideEffects(ctx, ebody);
-			case EConst(_), EBreak, EContinue: false;
+			case EConst(_), EBreak, EContinue, EThrow(_): false;
 			case EObjectDecl(fields):
 				for (field in fields)
 					if (hasSideEffects(ctx, field.expr))
 						return true;
 				false;
+
+			case ESwitch(e, cases, def):
+				if (hasSideEffects(ctx, e)) return true;
+				for (c in cases) {
+					for (e in c.values)
+						if (hasSideEffects(ctx, e))
+							return true;
+
+					if (hasSideEffects(ctx, c.expr))
+						return true;
+				}
+
+				if (def != null && hasSideEffects(ctx, def))
+					return true;
+
+				false;
+
 			case _:
 				Logging.preprocessor.warn('unknown if expr has side effects (safely assuming it does), for: $expr');
 				true;
@@ -207,9 +223,9 @@ class Semantics {
 	 * Gives some useful information given a function call expression.
 	 * @param e The function call expression
 	 */
-	public static function analyzeFunctionCall(ctx: Preprocessor, e:HaxeExpr): { isExtern: Bool, isPure: Bool, failed: Bool } {
+	public static function analyzeFunctionCall(ctx: Preprocessor, e:HaxeExpr): { isExtern: Bool, isPure: Bool, failed: Bool, meta: Array<MetadataEntry> } {
 		if (e?.def == null) {
-			return { isExtern: false, isPure: false, failed: true };
+			return { isExtern: false, isPure: false, failed: true, meta: [] };
 		}
 
 		return switch e.def { // TODO: cache results?
@@ -224,7 +240,7 @@ class Semantics {
 						};
 
 						if (pack == null || pack.length == 0) {
-							return { isExtern: false, isPure: false, failed: true };
+							return { isExtern: false, isPure: false, failed: true, meta: [] };
 						}
 
 						var className = pack.pop();
@@ -232,7 +248,7 @@ class Semantics {
 
 						final td = ctx.module.resolveClass(pack, className, ctx.module.path);
 						if (td == null) {
-							return { isExtern: false, isPure: false, failed: true };
+							return { isExtern: false, isPure: false, failed: true, meta: [] };
 						}
 
 						for (meta in td.meta()) {
@@ -242,8 +258,10 @@ class Semantics {
 							}
 						}
 
+						var meta: Array<MetadataEntry> = [];
 						for (field in td.fields) {
 							if (field.name != funcName) continue;
+							meta = field.meta;
 
 							for (meta in field.meta) {
 								if (meta.name == ":pure") {
@@ -254,12 +272,12 @@ class Semantics {
 							break;
 						}
 
-						{ isExtern: td.isExtern, isPure: isPure, failed: false };
+						{ isExtern: td.isExtern, isPure: isPure, failed: false, meta: meta };
 
-					case _: { isExtern: false, isPure: false, failed: true };
+					case _: { isExtern: false, isPure: false, failed: true, meta: [] };
 				}
 
-			case _: { isExtern: false, isPure: false, failed: true };
+			case _: { isExtern: false, isPure: false, failed: true, meta: [] };
 		}
 	}
 
@@ -269,7 +287,7 @@ class Semantics {
 	 */
 	public static function getIntegerSigned(t: ComplexType): Bool {
 		return switch t {
-			case TPath({ pack: [], name: "Int" }) | TPath({ pack: ["go"], name: "GoInt" | "Int8" | "Int16" | "Int32" | "Int64" }): true;
+			case TPath({ pack: [], name: "Int" | "Dynamic" }) | TPath({ pack: ["go"], name: "GoInt" | "Int8" | "Int16" | "Int32" | "Int64" }): true;
 			case TPath({ pack: [], name: "UInt" }) | TPath({ pack: ["go"], name: "GoUInt" | "UInt8" | "UInt16" | "UInt32" | "UInt64" | "Rune" | "Byte" }): false;
 			case _: Logging.preprocessor.error('unrecognised integer type: $t'); true; // abstract should not cause this code path anyway.
 		}
@@ -281,7 +299,7 @@ class Semantics {
 	 */
 	public static function getIntegerWidth(t: ComplexType): Int {
 		return switch t {
-			case TPath({ pack: [], name: "Int" | "UInt" }) | TPath({ pack: ["go"], name: "Int" | "UInt" | "GoInt" | "GoUInt" }): 64; // for GoInt I assume the wider type, i could add special handling but that is extra comlexity for little (to no) gain.
+			case TPath({ pack: [], name: "Int" | "Dynamic" | "UInt" }) | TPath({ pack: ["go"], name: "Int" | "UInt" | "GoInt" | "GoUInt" }): 64; // for GoInt I assume the wider type, i could add special handling but that is extra comlexity for little (to no) gain.
 			case TPath({ pack: ["go"], name: "Int8" | "UInt8" | "Rune" | "Byte" }): 8;
 			case TPath({ pack: ["go"], name: "Int16" | "UInt16" }): 16;
 			case TPath({ pack: ["go"], name: "Int32" | "UInt32" }): 32;

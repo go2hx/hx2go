@@ -26,7 +26,7 @@ function transformCast(t:Transformer, e:HaxeExpr, inner: HaxeExpr, type:ComplexT
         Logging.transformer.debug("Unable to process cast, it may be incorrect: " + inner.t + " -> " + e.t);
         return;
     }
-
+    
     final to = HaxeExprTools.stringToComplexType(e.t); // yes, you are correct, this is questionable. also yes, you should ignore this...
     if (to == null) {
         Logging.transformer.debug("Unable to process cast, it may be incorrect: " + inner.t + " -> " + e.t);
@@ -58,7 +58,7 @@ function transformCast(t:Transformer, e:HaxeExpr, inner: HaxeExpr, type:ComplexT
 
     var hasNative = fromTd.isExtern || toTd.isExtern;
     for (meta in fromTd.meta().concat(toTd.meta())) {
-        if (meta.name == ":go.TypeAccess" || meta.name == ":coreType") {
+        if (meta.name == ":go.TypeAccess" || meta.name == ":coreType" || meta.name == ":go.NativeCast") {
             hasNative = true;
             break;
         }

@@ -19,6 +19,7 @@ class Main {
       final tinyGoDefine = HaxeCompiler.getDefine("tinygo") != null;
       final tinyGoTarget = HaxeCompiler.getDefine("tinygo.target");
       final tinyGoPort = HaxeCompiler.getDefine("tinygo.port");
+      final installDepDefine = HaxeCompiler.getDefine("install-dep-go") != null;
 
       if (mainDefine == "")
          throw "mainDefine not defined from -D hx2go-main";
@@ -33,7 +34,8 @@ class Main {
          output: outputDefine,
          tinygo: tinyGoDefine,
          tinygoTarget: tinyGoTarget,
-         tinygoPort: tinyGoPort
+         tinygoPort: tinyGoPort,
+         installDependencies: installDepDefine
       };
    }
 }

@@ -73,7 +73,7 @@ class ExprParser {
                 if (firstObject != object) {
                     if (object.startIndex > 4) {
                         // error
-                        Logging.exprParser.error("wrong indention to be added to firstObject: " + object.def + " " + object.string());
+                        Logging.exprParser.error("wrong indention to be added to firstObject: " + object.def + " " + object.string() + " in " + debug_path);
                     }else{
                         // simply add it to the first object
                         firstObject.objects.push(object);
@@ -95,18 +95,20 @@ class ExprParser {
 
     function findCloseParen(startIndex):Int {
         var parenCount = 0;
+        var isOpen = false;
         // look one line ahead
         for (i in startIndex...lines.length) {
-            if (parenCount == 0 && i > startIndex + 1) {
+            if (isOpen && parenCount == 0 && i > startIndex + 1) {
                 break;
             }
             for (char in new StringIterator(lines[i])) {
                 switch char {
                     case "(".code:
                         parenCount++;
+                        isOpen = true;
                     case ")".code:
                         parenCount--;
-                        if (parenCount == 0)
+                        if (isOpen && parenCount == 0)
                             return i;
                     default:
                 }
@@ -324,7 +326,7 @@ class ExprParser {
                 final args:Array<HaxeFunctionArg> = [];
                 for (i in 0...object.objects.length - 1) {
                     if (object.objects[i].def != ARG) {
-                        Logging.exprParser.error("Function args must be of arg type: " + object.objects[i].def);
+                        Logging.exprParser.error("Function args must be of arg type: " + object.objects[i].def + " in " + debug_path);
                     }
                     final name = object.objects[i].subType.substr(0, object.objects[i].subType.indexOf("<"));
                     args.push({
@@ -610,12 +612,20 @@ class ExprParser {
         }
     }
     function handleMeta() {
-        var end = findCloseParen(lineIndex + 1);
-        // assume meta without parenthesis
-        if (end == -1) {
-            end = lineIndex + 1;
+        var nextLine = lines[lineIndex + 1];
+        if (nextLine == null) return;
+
+        var trimmed = StringTools.ltrim(nextLine);
+        if (trimmed.contains("(")) {
+            var end = findCloseParen(lineIndex);
+            if (end == -1) {
+                end = lineIndex + 1;
+            }
+
+            lines.splice(lineIndex + 1, end - lineIndex);
+        } else {
+            lines.splice(lineIndex + 1, 1);
         }
-        lines.splice(lineIndex + 1, end - lineIndex  - 1);
     }
 }
 

@@ -1,189 +1,100 @@
+import go.Tuple;
 import go.Fmt;
+import go.GoInt;
 
-import runtime.HxClass;
-import haxe.iterators.ArrayIterator;
+@:go.TypeAccess({ name: "error" })
+extern class Error {}
 
-class Vehicle {
+@:go.TypeAccess({ name: "*os.File", imports: ["os"] })
+extern class File {}
 
-    public function new() {
-        Sys.println("Vehicle created");
-    }
-
-    public function start(): Void {
-        Sys.println("Vehicle started");
-    }
-
-    public function horsepower(): Int {
-        return 100;
-    }
-
+@:go.TypeAccess({ name: "os", imports: ["os"] })
+extern class OS {
+    @:go.Tuple("handle", "err") static function open(path: String): Tuple<{ handle: File, err: Error }>;
 }
 
-class Car extends Vehicle {
-
-    override public function start(): Void {
-        Sys.println("Car started");
-    }
-
-    public function startVehicle(): Void {
-        super.start();
-    }
-
-    public function honk(): Void {
-        Sys.println("Car honked");
-    }
-
+@:go.TypeAccess({ name: "time", imports: ["time"] })
+extern class Time {
+    static var second: Duration;
+    static function duration(v: GoInt): Duration; // turns into `time.Duration` which is a cast.
 }
 
-class Truck extends Car {
-
-    override public function start(): Void {
-        Sys.println("Truck started");
-    }
-
-    override public function honk(): Void {
-        Sys.println("Truck honked loudly");
-    }
-
+@:coreType
+@:go.TypeAccess({ name: "time.Duration", imports: ["github.com/faiface/beep"] })
+extern abstract Duration {
+    @:op(A / B) public function div(x: Duration): Duration;
 }
 
-class Greeter {
-    public var firstName = "First";
-    public var lastName = "Second";
-
-    public function new(firstName: String) {
-        this.firstName = firstName;
-    }
-
-    public function getFullName(): String {
-        return firstName + " " + lastName;
-    }
-
-    public function greet(): Void {
-        Sys.println("Hello, " + getFullName());
-    }
+@:go.TypeAccess({ name: "beep.StreamSeekCloser", imports: ["github.com/faiface/beep"] })
+extern class Streamer {
+    public function len(): GoInt;
+    public function position(): GoInt;
+    public function seek(pos: GoInt): Error;
+    public function close(): Error;
 }
 
-class LastNameGreeter extends Greeter {
-
-    public function new(firstName: String, lastName: String) {
-        super(firstName);
-        this.lastName = lastName;
-    }
-
+@:go.TypeAccess({ name: "beep.Format", imports: ["github.com/faiface/beep"] })
+extern class Format {
+    var sampleRate: SampleRate;
+    var numChannels: GoInt;
+    var precision: GoInt;
 }
 
-class Ref<T> {
-
-    public var value: T;
-
-    public function new(_value: T) {
-        set(_value);
-    }
-
-    public function set(_value: T) {
-        value = _value;
-    }
-
-    public function get(): T {
-        return value;
-    }
-
+@:go.TypeAccess({ name: "mp3", imports: ["github.com/faiface/beep/mp3"] })
+extern class MP3 {
+    @:go.Tuple("streamer", "format", "err") static function decode(file: File): Tuple<{ streamer: Streamer, format: Format, err: Error }>;
 }
 
-@:analyzer(ignore)
+@:go.TypeAccess({ name: "speaker", imports: ["github.com/faiface/beep/speaker"] })
+extern class Speaker {
+    static function clear(): Void;
+    static function close(): Void;
+    static function init(sampleRate: SampleRate, bufferSize: GoInt): Error;
+    static function lock(): Void;
+    static function unlock(): Void;
+    static function play(streamer: Streamer): Void; // todo: make rest
+}
+
+@:go.TypeAccess({ name: "beep.SampleRate", imports: ["github.com/faiface/beep"] })
+extern class SampleRate {
+    public function N(duration: Duration): GoInt;
+}
+
+@:go.TypeAccess({ name: "beep", imports: ["github.com/faiface/beep"] })
+extern class Beep {
+    static function sampleRate(rate: GoInt): SampleRate;
+}
+
 class Test {
 
-    public static function main() {
+    public static function main(): Void {
+        var path = "/home/mikaib/Music/audio.mp3";
 
-        ////////////////////////////
-        // Sys.go.hx tests
-        ///////////////////////////
-
-        // TODO fix getCwd() and chdir() tests - .sure() processing is not working, need to fix
-        // Sys.println(Sys.getCwd());
-        // Sys.setCwd("..");
-        // Sys.println(Sys.getCwd());
-        // Sys.setCwd("./export");
-        // Sys.println(Sys.getCwd());
-
-        Sys.println(Sys.systemName());
-        Sys.println(Sys.args());
-        Sys.println(Sys.programPath());        
-        Sys.println(Sys.getEnv("HOME"));
-
-        var t1 = Sys.time();
-        Sys.println(t1);
-        var t2 = Sys.time();
-        Sys.println((t2-t1)*1000000);
-
-        #if sys
-        Sys.println("sys!");        
-        #end
-        // Sys.exit(42); // end run!
-
-        /////////////////////////////
-        var truck: Truck = new Truck();
-        var vehicle: Vehicle = truck;
-        Sys.println(vehicle.horsepower());
-
-        vehicle.start();
-        truck.startVehicle();
-
-        Sys.println(truck.horsepower());
-        truck.honk();
-
-        var arr = [1, 2, 3];
-        var str = ["a", "b", "c"];
-        var arr_iter = new ArrayIterator(arr);
-        var str_iter = new ArrayIterator(str);
-
-        for (x in arr_iter) {
-            Sys.println('iter: ' + Std.string(x));
+        var file = OS.open(path);
+        if (file.err != null) {
+            Fmt.println("Error opening file: ", file.err);
+            return;
         }
 
-        for (x in str_iter) {
-            Sys.println('iter: ' + Std.string(x));
+        var dec = MP3.decode(file.handle);
+        if (dec.err != null) {
+            Fmt.println("Error decoding mp3: ",  dec.err);
+            return;
         }
 
-        var x: Ref<Int> = new Ref(3);
-        Sys.println(x.get());
-        x.set(5);
-        Sys.println(x.get());
-        x.set(10);
-
-        var y: Ref<Ref<Int>> = new Ref(x);
-        Sys.println(y.get());
-        Sys.println(y.get().get());
-
-        var refa: Ref<Truck> = new Ref(truck);
-        var refb: Ref<Ref<Truck>> = new Ref(refa);
-        refa.get().honk();
-
-        var v: Vehicle = refb.get().get();
-        v.start();
-
-        var cls = HxClass.findClass("Truck");
-        Sys.println(cls);
-        Sys.println(cls.superClass);
-        Sys.println(cls.superClass.superClass);
-        Sys.println(cls.superClass.superClass.superClass); // should be null
-
-        Sys.println("class list:");
-        for (c in HxClass.getAllClasses()) {
-            Sys.println("  " + c);
+        var err = Speaker.init(dec.format.sampleRate, dec.format.sampleRate.N(Time.second / Time.duration(10)));
+        if (err != null) {
+            Fmt.println("Error initializing speaker: ", err);
+            return;
         }
 
-        var greet0 = new Greeter("Elise");
-        greet0.greet();
+        Speaker.play(dec.streamer);
 
-        var greet1 = new LastNameGreeter("Bob", "Third");
-        greet1.greet();
+        while (dec.streamer.position() < dec.streamer.len()) {
+            Fmt.println(dec.streamer.position(), " / ", dec.streamer.len());
+        }
 
-//        var buf = new StringBuf();
-//        buf.add("Hello, ");
-//        buf.add("World!");
-//        Sys.println(buf.toString());
+        dec.streamer.close();
     }
 
 }

@@ -27,6 +27,7 @@ class Annonymiser {
     public function assign(e: HaxeExpr, ?type: String): { decl: HaxeExpr, ident: HaxeExpr } {
         var id = _tempId++;
         var name = getName(id);
+        var type = type ?? e?.t;
 
         return {
             decl: {
@@ -41,7 +42,7 @@ class Annonymiser {
                 ])
             },
             ident: {
-                t: e?.t ?? type,
+                t: type,
                 def: EConst(CIdent(name)),
                 parent: e?.parent,
                 parentIdx: e?.parentIdx ?? 0

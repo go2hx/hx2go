@@ -56,6 +56,11 @@ class Preprocessor {
                 Semantics.ensure(e, fields.map(f -> f.expr), this, scope);
                 iterateExprPost(e, scope);
 
+            // ensure semantics
+            case EArrayDecl(values, _):
+                Semantics.ensure(e, values, this, scope);
+                iterateExprPost(e, scope);
+
             // ensure tuple/result + semantics
             case ECall(_, params): {
                 Semantics.ensure(e, params, this, scope);

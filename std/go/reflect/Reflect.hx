@@ -21,6 +21,10 @@ extern class Type {
 extern class Value {
     function type():Type;
     function kind():Kind;
+    function elem():Value;
+    function isValid(): Bool;
+    function numField(): go.GoInt;
+    function field(i: go.GoInt): Value;
 
     function canInterface():Bool;
     @:native("Interface") function iface():Dynamic; // interface is a Haxe keyword, so name had to change

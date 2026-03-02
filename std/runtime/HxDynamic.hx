@@ -2,6 +2,7 @@ package runtime;
 
 import go.reflect.Reflect;
 import go.Syntax;
+import go.Strings;
 
 // HxDynamic implements Dynamic runtime manipulation required by Haxe
 // using go.reflect.Reflect and naming from http://haxedev.wikidot.com/article:operator-overloading
@@ -104,6 +105,14 @@ class HxDynamic {
 			return Reflect.String;
 
 		return Reflect.Invalid;
+	}
+
+	public static function formatField(name: String): String {
+		if (name.length == 0) {
+			return name;
+		}
+
+		return Strings.toUpper(Syntax.code("{0}[:1]", name)) + Syntax.code("{0}[1:]", name);
 	}
 
 	public static function isNull(x: Dynamic): Bool {
@@ -369,4 +378,48 @@ class HxDynamic {
 		var dV = Reflect.valueOf(d);
 		return valueToFloat(dV);
 	}
+
+	public static function field(d: Dynamic, fieldName: String): Dynamic {
+		var value = Reflect.valueOf(d);
+		var kind = value.kind();
+
+		if (isNull(value)) {
+			throw "runtime.HxDynamic.field null field access: " + fieldName;
+		}
+
+		if (kind == Reflect.Ptr) {
+			return field(value.elem().iface(), fieldName);
+		}
+
+		if (kind == Reflect.Struct) {
+			var f = value.fieldByName(formatField(fieldName));
+			if (!f.isValid()) {
+				return null;
+			}
+
+			if (!f.canInterface()) {
+				throw "runtime.HxDynamic.field private field access: " + fieldName + " on " + value;
+			}
+
+			return f.iface();
+		}
+
+		if (kind == Reflect.Map) {
+			var key = Reflect.valueOf(fieldName);
+			var f = value.mapIndex(key);
+
+			if (!f.isValid()) {
+				return null;
+			}
+
+			if (!f.canInterface()) {
+				throw "runtime.HxDynamic.field private field access: " + fieldName + " on " + value;
+			}
+
+			return f.iface();
+		}
+
+		throw "runtime.HxDynamic.field unsupported field access on " + kind;
+	}
+
 }

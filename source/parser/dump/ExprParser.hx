@@ -153,7 +153,7 @@ class ExprParser {
                 EField(e, field);
             case TYPEEXPR:
                 EConst(CIdent(object.subType));
-            case FSTATIC | FINSTANCE:
+            case FSTATIC | FINSTANCE | FCLOSURE:
                 // [FStatic:(s : String) -> Void]
                 // 			fmt
 				// 			println:(s : String) -> Void
@@ -178,6 +178,8 @@ class ExprParser {
                         FStatic(path, field);
                     case FINSTANCE:
                         FInstance(path);
+                    case FCLOSURE:
+                        null;
                     case _:
                         null;
                 };
@@ -189,6 +191,7 @@ class ExprParser {
                 if (colonIndex == -1)
                     throw "colon not found: " + field;
                 field = field.substr(0, colonIndex);
+                specialDef = FAnon(field);
                 EConst(CIdent(field));
             case CONST:
                 if (object.objects.length == 0) {
@@ -709,6 +712,7 @@ enum abstract ExprDefObject(String) to String {
     var DEFAULT = "Default";
     var FDYNAMIC = "FDynamic";
     var TRY = "Try";
+    var FCLOSURE = "FClosure";
     @:from
     static function fromString(s:String) {
         return switch s {
@@ -751,6 +755,7 @@ enum abstract ExprDefObject(String) to String {
             case DEFAULT: DEFAULT;
             case FDYNAMIC: FDYNAMIC;
             case TRY: TRY;
+            case FCLOSURE: FCLOSURE;
             default:
                 throw "ExprDef not found: " + s;
         }

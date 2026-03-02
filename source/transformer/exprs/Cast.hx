@@ -4,12 +4,14 @@ import haxe.macro.Expr.ComplexType;
 import HaxeExpr.HaxeVar;
 import haxe.macro.ComplexTypeTools;
 import translator.TranslatorTools;
+import translator.exprs.Function;
 
 function transformCast(t:Transformer, e:HaxeExpr, inner: HaxeExpr, type:ComplexType) {
     switch type {
         case TPath({ pack: [], name: "String" }): {
             e.def = EGoCode("fmt.Sprint({0})", [inner.copy()]);
         }
+
         default:
     }
 
@@ -31,6 +33,60 @@ function transformCast(t:Transformer, e:HaxeExpr, inner: HaxeExpr, type:ComplexT
     if (to == null) {
         Logging.transformer.debug("Unable to process cast, it may be incorrect: " + inner.t + " -> " + e.t);
         return;
+    }
+
+    switch [from, to] {
+        case [TFunction(fArgs, fRet), TFunction(tArgs, tRet)]: {
+            var fromIsVoid = isVoid(fRet);
+            var toIsVoid = isVoid(tRet);
+
+            t.transformComplexType(fRet);
+            t.transformComplexType(tRet);
+
+            var params: Array<HaxeExpr> = [];
+            for (i in 0...tArgs.length) {
+                var fromArg = fArgs[i];
+                var paramName = '_${i}';
+
+                params.push({
+                    t: null,
+                    def: ECast({
+                        t: null,
+                        def: EConst(CIdent(paramName))
+                    }, fromArg)
+                });
+            }
+
+            for (arg in tArgs) {
+                t.transformComplexType(arg);
+            }
+
+            for (arg in fArgs) {
+                t.transformComplexType(arg);
+            }
+
+            var call: HaxeExpr = { t: null, def: ECall(inner, params) };
+            if (!toIsVoid) {
+                call.def = ECast(call.copy(), tRet);
+            }
+
+            var paramsForm = [for (i in 0...tArgs.length) '_${i} ${t.module.translator.translateComplexType(tArgs[i])}'].join(', ');
+            var bodyForm = switch [fromIsVoid, toIsVoid] {
+                case [false, false]: 'return {0}';
+                case [false, true]: '_ = {0}';
+                case [true, true]: '{0}';
+                case [true, false]: Logging.transformer.error("illegal function cast from void to non-void!"); '#ERROR_ILLEGAL_CAST';
+            }
+
+            var retTypeForm = toIsVoid ? '' : ' ' + t.module.translator.translateComplexType(tRet);
+
+            var funcForm = 'func($paramsForm)${retTypeForm} { $bodyForm }';
+            e.def = EGoCode(funcForm, [ call ]);
+
+            return;
+        }
+
+        case _: null;
     }
 
     final fromPath = switch from {

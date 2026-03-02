@@ -136,7 +136,7 @@ private function recordTypeParamToParamDecl(record_debug_path:String, param: Map
     };
 }
 
-private function parseAstType(t: String): String {
+function parseAstType(t: String): String {
     var parseList: String->Array<String> = (s) -> {
         if (s == null) {
             return [];

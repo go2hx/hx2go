@@ -20,10 +20,13 @@ function translateFunction(t:Translator, name:String, f:HaxeFunction, def: HaxeT
 
     final args = f.args.map(arg -> arg.name + " " + t.translateComplexType(arg.type));
     final ret = f.ret == null || isVoid(f.ret) ? "" : t.translateComplexType(f.ret);
-    final clsName = 'Hx_' + modulePathToPrefix(def.name) + '_Obj';
 
-    return if (isStatic) 'func $name$paramString(${args.join(", ")}) $ret $exprString\n';
-    else 'func (this *${clsName}${t.translateParamUse(def.params)}) $name$paramString(${args.join(", ")}) $ret $exprString\n';
+    return if (isStatic) {
+        'func $name$paramString(${args.join(", ")}) $ret $exprString';
+    }else{
+        final clsName = 'Hx_' + modulePathToPrefix(def.name) + '_Obj';
+        'func (this *${clsName}${t.translateParamUse(def.params)}) $name$paramString(${args.join(", ")}) $ret $exprString\n';
+    }
 }
 
 function isVoid(ct:ComplexType) {

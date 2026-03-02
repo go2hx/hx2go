@@ -233,7 +233,7 @@ private function recordClassFieldToHaxeField(record_debug_path:String, field:Rec
             final params:Array<TypeParamDecl> = [];
             for (param in field.params) {
                 params.push({
-                    name: param.get("name"),
+                    name: param.get("class"),
                 });
             }
             FFun({args: [], params: params});

@@ -6,6 +6,7 @@ import HaxeExpr.HaxeTypeDefinition;
 import translator.TranslatorTools;
 import haxe.macro.Expr;
 import transformer.Transformer;
+import haxe.macro.ComplexTypeTools;
 
 /**
  * Gets rid of the bulk of Haxe language features that make working with it a nightmare.
@@ -390,6 +391,7 @@ class Preprocessor {
                 field.expr.parentIdx = 0;
 
                 var scope: Scope = {};
+
                 switch field.expr.def {
                     case EFunction(_, f):
                         processExpr(f.expr, scope);

@@ -10,10 +10,10 @@ import go.Go;
 class HxArray {
 
     @:pure public static function getData<T>(arr: Array<T>): Slice<T>
-        return Syntax.code('*{0}', arr);
+        return Syntax.code('(*{0})', arr);
 
     public static function setData<T>(arr: Array<T>, data: Slice<T>): Void
-        Syntax.code('*{0} = {1}', arr, data);
+        Syntax.code('(*{0}) = {1}', arr, data);
 
     public static function push<T>(arr: Array<T>, value: T): GoInt {
         var data = getData(arr);
@@ -24,14 +24,14 @@ class HxArray {
 
     @:pure public static function concat<T>(on: Array<T>, arr: Array<T>): Array<T> {
         var newArr: Array<T> = on.copy();
-        setData(newArr, Syntax.code('append(*{0}, *{1}...)', newArr, arr));
+        setData(newArr, Syntax.code('append({0}, {1}...)', getData(newArr), getData(arr)));
 
         return newArr;
     }
 
     @:pure public static function copy<T>(arr: Array<T>): Array<T> {
         var newArr: Array<T> = [];
-        setData(newArr, Syntax.code('append(*{0}, *{1}...)', newArr, arr));
+        setData(newArr, Syntax.code('append({0}, {1}...)', getData(newArr), getData(arr)));
 
         return newArr;
     }
@@ -75,7 +75,7 @@ class HxArray {
     }
 
     public static function unshift<T>(arr: Array<T>, value: T): Void {
-        setData(arr, Syntax.code('append(*{0}, *{1}...)', ([value] : Array<T>), arr));
+        setData(arr, Syntax.code('append({0}, {1}...)', getData(([value] : Array<T>)), getData(arr)));
     }
 
     public static function insert<T>(arr: Array<T>, pos: Int, value: T): Void {
@@ -92,11 +92,11 @@ class HxArray {
         grow[clampedPos] = value;
     }
 
-    public static function splice<T>(arr: Array<T>, pos: Int, len: Int): Array<T> {
+    public static function splice<T>(arr: Array<T>, pos: Int, length: Int): Array<T> {
         var data = getData(arr);
         var length = data.length;
 
-        if (len < 0) {
+        if (length < 0) {
             return [];
         }
 
@@ -111,10 +111,10 @@ class HxArray {
             return [];
         }
 
-        var removeLen: GoInt = if (start + len > length) {
+        var removeLen: GoInt = if (start + length > length) {
             length - start;
         } else {
-            len;
+            length;
         }
 
         if (removeLen <= 0) {
@@ -126,9 +126,9 @@ class HxArray {
         setData(
             removed,
             Syntax.code(
-                'append(*{0}, *{1}[{2}:{3}]...)',
-                removed,
-                arr,
+                'append({0}, {1}[{2}:{3}]...)',
+                getData(removed),
+                getData(arr),
                 start,
                 start + removeLen
             )
@@ -137,8 +137,8 @@ class HxArray {
         setData(
             arr,
             Syntax.code(
-                'append((*{0})[:{1}], (*{0})[{2}:]...)',
-                arr,
+                'append({0}[:{1}], {0}[{2}:]...)',
+                getData(arr),
                 start,
                 start + removeLen
             )
@@ -177,9 +177,9 @@ class HxArray {
         setData(
             result,
             Syntax.code(
-                'append(*{0}, (*{1})[{2}:{3}]...)',
-                result,
-                arr,
+                'append({0}, {1}[{2}:{3}]...)',
+                getData(result),
+                getData(arr),
                 start,
                 stop
             )
@@ -210,8 +210,8 @@ class HxArray {
         setData(
             arr,
             Syntax.code(
-                'append((*{0})[:{1}], (*{0})[{2}:]...)',
-                arr,
+                'append({0}[:{1}], {0}[{2}:]...)',
+                getData(arr),
                 index,
                 index + 1
             )

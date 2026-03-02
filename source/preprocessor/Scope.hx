@@ -1,12 +1,9 @@
 package preprocessor;
-import haxe.macro.Expr.ComplexType;
-import haxe.macro.ComplexTypeTools;
 
 @:structInit
 class Scope {
 
     private var _variables: Map<String, String> = [];
-    private var _typeSub: Map<String, { name: String, pack: Array<String> }> = []; // type substitutions for type params
 
     public function defineVariable(name: String, ctx: Preprocessor): String {
         var n: String = name;

@@ -22,6 +22,7 @@ class ExprParser {
     var nonImpl: Array<String> = [];
     var stopParser:Bool = false;
     var objectMap:Map<Int, Object> = [];
+    var typeMapping: Map<String, String> = [];
 
     public function new(debug_path) {
         this.debug_path = debug_path;
@@ -36,7 +37,8 @@ class ExprParser {
         nonImpl = [];
     }
 
-    public function parse(lines:Array<String>):HaxeExpr {
+    public function parse(lines:Array<String>, typeRemapping: Map<String, String>):HaxeExpr {
+        typeMapping = typeRemapping;
         final firstObject = parseObject(lines);
         final expr = objectToExpr(firstObject);
         // trace(new haxe.macro.Printer().printExpr(expr));
@@ -552,7 +554,7 @@ class ExprParser {
         //     lastColIdx = findColon(remaining);
         // }
 
-        final defTypeString = remaining;
+        var defTypeString = remaining;
 
         final sIdx = defString.indexOf(" ");
         var subTypeString = "";
@@ -565,6 +567,11 @@ class ExprParser {
             case "Meta":
                 handleMeta();
             default:
+        }
+
+        for (t in typeMapping.keyValueIterator()) {
+            // mikaib: this *can* technically break in *very* rare cases, I doubt it will be an issue but we might something better in the future.
+            defTypeString = defTypeString.replace(t.key, t.value);
         }
 
         return new Object(defString, defTypeString, lineIndex, startIndex, subTypeString, objectString, debug_path);

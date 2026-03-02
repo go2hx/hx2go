@@ -329,6 +329,56 @@ class HxArray {
         return result;
     }
 
+    public static function map<X, Y>(arr: Array<X>, f: X->Y): Array<Y> {
+        var output: Array<Y> = [];
+
+        for (x in arr) {
+            output.push(f(x));
+        }
+
+        return output;
+    }
+
+    public static function filter<T>(arr: Array<T>, f: T->Bool): Array<T> {
+        var output: Array<T> = [];
+
+        for (x in arr) {
+            if (f(x)) {
+                output.push(x);
+            }
+        }
+
+        return output;
+    }
+
+    public static function sort<T>(arr: Array<T>, f: T->T->Int): Void {
+        var data = getData(arr);
+        var length = data.length;
+
+        for (i in 0...length) {
+            for (j in 0...length - i - 1) {
+                if (f(data[j], data[j + 1]) > 0) {
+                    var temp = data[j];
+                    data[j] = data[j + 1];
+                    data[j + 1] = temp;
+                }
+            }
+        }
+    }
+
+    public static function resize<T>(arr: Array<T>, length: Int): Void {
+        var data = getData(arr);
+        var dataLength = data.length;
+
+        if (length < dataLength) {
+            setData(arr, data.slice(0, length));
+        } else if (length > dataLength) {
+            var newData = Syntax.code("make([]T, {0})", length);
+            Go.copy(newData, data);
+            setData(arr, newData);
+        }
+    }
+
     public static function toString<T>(arr: Array<T>): String {
         return Std.string(arr);
     }

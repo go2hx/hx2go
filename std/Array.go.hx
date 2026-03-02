@@ -72,11 +72,6 @@ extern class Array<T> {
         return HxArray.toString(this);
     }
 
-    // TODO: the following needs to be implemented
-    function new(): Void;
-    function sort(f:T->T->Int):Void;
-    function resize(len:Int):Void;
-
     @:runtime inline extern function iterator():haxe.iterators.ArrayIterator<T> { // TODO: remove "extern" when supported
         return new haxe.iterators.ArrayIterator(this);
     }
@@ -86,11 +81,20 @@ extern class Array<T> {
     }
 
     @:runtime inline extern function map<S>(f:T->S):Array<S> { // TODO: remove "extern" when supported
-        return [];
+        return HxArray.map(this, f);
     }
 
     @:runtime inline extern function filter(f:T->Bool):Array<T> { // TODO: remove "extern" when supported
-        return [];
+        return HxArray.filter(this, f);
     }
 
+    inline extern function sort(f:T->T->Int):Void {
+        HxArray.sort(this, f);
+    }
+
+    inline extern function resize(len:Int):Void {
+        HxArray.resize(this, len);
+    }
+
+    function new(): Void;
 }

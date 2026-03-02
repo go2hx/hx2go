@@ -6,6 +6,7 @@ import translator.TranslatorTools;
 import haxe.macro.Expr.TypePath;
 import haxe.macro.Expr.MetadataEntry;
 import transformer.exprs.FieldAccess;
+import haxe.macro.Expr.TypeParam.TPType;
 
 function transformNew(t:Transformer, e:HaxeExpr, tpath: TypePath, params: Array<HaxeExpr>) {
     final td = t.module.resolveClass(tpath.pack, tpath.name, t.module.path);
@@ -19,6 +20,15 @@ function transformNew(t:Transformer, e:HaxeExpr, tpath: TypePath, params: Array<
     var transformName = false;
     var name = ''; // TODO: default name
 
+    switch tpath {
+        case { pack: [], name: "Array", params: [TPType(ct)] }:
+            e.def = EArrayDecl([], ct);
+            t.transformComplexType(ct);
+            return;
+
+        case _: null;
+    }
+
     for (m in td.meta()) {
         switch m.name {
             case ':structInit':
@@ -31,6 +41,12 @@ function transformNew(t:Transformer, e:HaxeExpr, tpath: TypePath, params: Array<
                 name = res.name;
 
             case _: null;
+        }
+    }
+
+    for (field in td.fields) {
+        if (field.name == 'new') {
+            trace('new field: ${field.name}, expr: ${field.expr}');
         }
     }
 

@@ -4,6 +4,7 @@ import haxe.macro.Expr;
 import HaxeExpr.HaxeVar;
 import haxe.macro.Expr.ComplexType;
 import haxe.macro.ComplexTypeTools;
+import haxe.CallStack;
 
 class HaxeExprTools {
     static inline function opt(e:Null<HaxeExpr>, f:HaxeExpr->HaxeExpr):HaxeExpr

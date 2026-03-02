@@ -4,7 +4,7 @@ Work in progress Go target for the Haxe programming language.
 Written in Haxe, open to contributions, stay tuned!
 
 ## Setup
-- [Go 1.21.3+](https://go.dev/dl/)
+- [Go 1.22+](https://go.dev/dl/)
 - [Haxe nightly](https://haxe.org/download/nightlies/)
 - Download the necessary Haxe libraries with the commands below:
 ```sh

@@ -71,6 +71,14 @@ function recordToHaxeTypeDefinition(record: RecordEntry):HaxeTypeDefinition {
 
         case RType:
             var t = record.toType();
+            if (t.params == null)
+                t.params = [];
+
+            for (param in t.params) {
+                params.push(recordTypeParamToParamDecl(record.record_debug_path, param));
+            }
+            // isExtern = t.meta
+            kind = TDType(HaxeExprTools.stringToComplexType(parseAstType(t.type)));
         case REnum:
             var t = record.toEnum();
         case RUnknown:
@@ -210,10 +218,10 @@ function parseAstType(t: String): String {
                 }
 
                 '$argStr->$ret';
-
-            case "TDynamic" | "TAnon": // mikaib: i think TAnon is OK like this?
+            case "TAnon":
+                "{}";
+            case "TDynamic":
                 "Dynamic";
-
             case "TLazy":
                 Logging.recordParser.warn('TLazy in field type, inside of ast type: "$t"');
                 "Dynamic";

@@ -86,6 +86,16 @@ class Test {
         Sys.println(Test.foo.bind(10)());
         Test.foo.bind(10)();
 
+        var f: Array<Void->Void> = [];
+
+        for (i in 0...3) {
+            f.push(() -> Sys.println(i));
+        }
+
+        for (fn in f) {
+            fn();
+        }
+
         var instanceA = new Instance();
         var instanceB = new Instance();
 
@@ -94,6 +104,7 @@ class Test {
 
         var dyn_inst_a = instanceA.inc;
         var dyn_inst_b = instanceB.inc;
+        instanceB = instanceA;
 
         Sys.println(instanceA.x);
         Sys.println(instanceB.x);
@@ -108,15 +119,13 @@ class Test {
         Sys.println(instanceA.x);
         Sys.println(instanceB.x);
 
-        var f: Array<Void->Void> = [];
+        var dyn_inst_a_one = instanceA.inc.bind(1);
+        var dyn_inst_b_one = instanceB.inc.bind(1);
 
-        for (i in 0...3) {
-            f.push(() -> Sys.println(i));
-        }
-
-        for (fn in f) {
-            fn();
-        }
-
+//        dyn_inst_a_one();
+//        dyn_inst_b_one();
+//
+//        Sys.println(instanceA.x);
+//        Sys.println(instanceB.x);
     }
 }

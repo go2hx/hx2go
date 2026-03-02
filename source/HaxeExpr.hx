@@ -54,6 +54,7 @@ enum SpecialExprDef {
 	FAnon(field:String);
 	Arg(info:String);
 	FInstance(inst:String);
+	FClosure(inst:String, field:String);
 	Local;
 	DArray;
 }

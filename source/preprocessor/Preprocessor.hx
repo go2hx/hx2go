@@ -110,6 +110,17 @@ class Preprocessor {
                 }
             }
 
+            // capture "this" when doing instance.method to get closure
+            case EField(inner, field, _) if (e.special != null && e.special.match(FClosure(_))):
+                var tmp = annonymiser.assign(inner.copy(), inner.t);
+
+                iterateExprPost(e, scope);
+                insertExprsBefore([
+                    tmp.decl
+                ], e, scope);
+
+                inner.def = tmp.ident.def;
+
             // prefix unop inc/dec as stmt
             // we do not care about the result so we transform it to a postFix unop
             case EUnop(op, false, l) if (op == OpIncrement || op == OpDecrement): {

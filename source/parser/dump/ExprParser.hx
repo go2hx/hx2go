@@ -179,7 +179,7 @@ class ExprParser {
                     case FINSTANCE:
                         FInstance(path);
                     case FCLOSURE:
-                        null;
+                        FClosure(path, field); // TODO: implement if we need it...
                     case _:
                         null;
                 };

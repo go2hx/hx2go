@@ -178,7 +178,7 @@ function resolvePkgTransform(t:Transformer, e:HaxeExpr, e2:HaxeExpr, field:Strin
         final tstr = switch (e.special) {
             case FInstance(x): x;
             case FStatic(x, f): x;
-            case FAnon(field): e2.t;
+            case FAnon(field) | FDynamic(field): e2.t;
             case Local:
                 e2.t;
             case _: "";
@@ -229,13 +229,28 @@ function handleCallTransform(t:Transformer, e:HaxeExpr, params:Array<HaxeExpr>, 
 
 function handleFieldTransform(t:Transformer, e:HaxeExpr, ct:ComplexType, e2:HaxeExpr, field:String):Bool {
     var transformed = switch ct {
-        case TPath({name: "Array", pack: []}) if (field == "length"):
+        case TPath({ name: "Array", pack: [] }) if (field == "length"):
             e.def = EGoCode('len(*{0})', [e2]);
             true;
-        case TPath({name: 'String', pack: []}) if(field == "length"):
+        case TPath({ name: 'String', pack: [] }) if (field == "length"):
             e.def = EGoCode('utf8.RuneCountInString({0})', [e2]);
             t.def.addGoImport('unicode/utf8');
             true;
+        case TPath({ name: 'Dynamic', pack: [] }):
+            e.def = ECall({
+                t: null,
+                def: EField({
+                    t: null,
+                    def: EField({
+                        t: null,
+                        def: EConst(CIdent("runtime"))
+                    }, "HxDynamic")
+                }, "field"),
+                special: FStatic("runtime.HxDynamic", "field")
+            }, [e2, { t: null, def: EConst(CString(field)) }]);
+            t.transformExpr(e);
+            true;
+
         case TAnonymous(fields):
             e.def = EGoCode('{0}[{1}]', [e2, { def: EConst(CString(field)), t: "Dynamic" }]);
             if (e.t != "Dynamic" && !e?.parent?.def.match(ECast(_, _))) {

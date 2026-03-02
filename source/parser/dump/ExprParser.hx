@@ -37,8 +37,8 @@ class ExprParser {
         nonImpl = [];
     }
 
-    public function parse(lines:Array<String>, typeRemapping: Map<String, String> = []):HaxeExpr {
-        typeMapping = typeRemapping;
+    public function parse(lines:Array<String>, ?typeRemapping: Map<String, String>):HaxeExpr {
+        typeMapping = typeRemapping ?? [];
         final firstObject = parseObject(lines);
         final expr = objectToExpr(firstObject);
         // trace(new haxe.macro.Printer().printExpr(expr));

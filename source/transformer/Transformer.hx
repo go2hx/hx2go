@@ -100,11 +100,17 @@ class Transformer {
         });
     }
     public function transformComplexType(ct:ComplexType) {
+
         if (ct == null) {
             return;
         }
 
         switch ct {
+            case TFunction(args, ret):
+                for (arg in args)
+                    transformComplexType(arg);
+                transformComplexType(ret);
+
             case TPath(p):
                 transformTypeParams(p.params);
 
@@ -136,6 +142,9 @@ class Transformer {
                         }
                     }
                 }
+
+            case TNamed(_, t):
+                transformComplexType(t);
 
             default:
         }
@@ -274,6 +283,7 @@ class Transformer {
         }
     }
 
+
     public function transformComplexTypeParam(params:Array<TypeParam>, idx:Int) {
         final p = params[idx];
         if (p == null) {
@@ -300,7 +310,7 @@ class Transformer {
 
         transformComplexType(ct);
 
-        return ComplexTypeTools.toString(ct);
+        return module.translator.translateComplexType(ct);
     }
 
     private function isLowercasePrefix(s:String):Bool {

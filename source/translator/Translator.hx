@@ -35,7 +35,7 @@ class Translator {
                     args.map(arg -> translateComplexType(arg)).join(", ") + 
                 ")" + 
                 (translator.exprs.Function.isVoid(ret) ? "" : translateComplexType(ret));
-            case TAnonymous(fields):
+            case TAnonymous(_):
                 "map[string]any";
             case TNamed(_, t):
                 translateComplexType(t);
@@ -137,7 +137,8 @@ class Translator {
             switch (def.kind) {
                 case TDClass:
                     buf.add(translateClassDef(def)); // TODO: support interfaces
-
+                case TDType(ct):
+                    buf.add(translateTypeDef(def, ct));
                 case _:
                 // ignore
             }
@@ -152,6 +153,16 @@ class Translator {
 
     public function translateParamUse(params: Array<TypeParamDecl>): String {
         return params.length > 0 ? '[${params.map(p -> '${p.name}').join(', ')}]' : '';
+    }
+
+    public function translateTypeDef(def: HaxeTypeDefinition, ct:ComplexType):String {
+        if (def.isExtern) {
+            return "";
+        }
+        final className = 'Hx_${modulePathToPrefix(def.name)}_Obj';
+        var typeParamDeclStr = translateParamDecl(def.params);
+        final t = translateComplexType(ct);
+        return 'type ${className}${typeParamDeclStr} ${t}\n';
     }
 
     public function translateClassDef(def: HaxeTypeDefinition): String {

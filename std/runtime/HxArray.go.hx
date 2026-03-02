@@ -36,9 +36,13 @@ class HxArray {
         return newArr;
     }
 
-    public static function pop<T>(arr: Array<T>): Null<T> {
+    public static extern inline function pop<T>(arr: Array<T>): Null<T> {
         var data = getData(arr);
         var lastIdx = data.length - 1;
+
+        if (lastIdx < 0) {
+            return null; // TODO: won't work until Null<T> is implemented
+        }
 
         var last = data[lastIdx];
         setData(arr, data.sliceEnd(lastIdx));
@@ -62,7 +66,7 @@ class HxArray {
         }
     }
 
-    public static function shift<T>(arr: Array<T>): Null<T> {
+    public static extern inline function shift<T>(arr: Array<T>): Null<T> {
         var data = getData(arr);
         if (data.length == 0) {
             return null; // TODO: won't work until Null<T> is implemented
@@ -147,7 +151,7 @@ class HxArray {
         return removed;
     }
 
-    public static function slice<T>(arr: Array<T>, pos: Int, ?end: Int): Array<T> {
+    public static extern inline function slice<T>(arr: Array<T>, pos: Int, ?end: Int): Array<T> {
         var data = getData(arr);
         var length = data.length;
 
@@ -188,7 +192,7 @@ class HxArray {
         return result;
     }
 
-    public static function remove<T>(arr: Array<T>, x: T): Bool {
+    public static extern inline function remove<T>(arr: Array<T>, x: T): Bool {
         var data = getData(arr);
         var length = data.length;
 
@@ -220,7 +224,7 @@ class HxArray {
         return true;
     }
 
-    public static function indexOf<T>(arr: Array<T>, x: T, ?fromIndex: Int): GoInt {
+    public static extern inline function indexOf<T>(arr: Array<T>, x: T, ?fromIndex: Int): GoInt {
         var data = getData(arr);
         var length = data.length;
 
@@ -250,7 +254,7 @@ class HxArray {
         return res;
     }
 
-    public static function lastIndexOf<T>(arr: Array<T>, x: T, ?fromIndex: Int): GoInt {
+    public static extern inline function lastIndexOf<T>(arr: Array<T>, x: T, ?fromIndex: Int): GoInt {
         var data = getData(arr);
         var length = data.length;
 
@@ -283,7 +287,7 @@ class HxArray {
         return res;
     }
 
-    @:pure public static function contains<T>(arr: Array<T>, x: T): Bool {
+    @:pure public static extern inline function contains<T>(arr: Array<T>, x: T): Bool {
         var data = getData(arr);
         var length = data.length;
 
@@ -300,7 +304,7 @@ class HxArray {
         return res;
     }
 
-    public static function join<T>(arr: Array<T>, ?separator: String): String {
+    public static extern inline function join<T>(arr: Array<T>, ?separator: String): String {
         var data = getData(arr);
         var length = data.length;
         var sep: String = if (separator == null) "," else separator;

@@ -8,7 +8,5 @@ extraParams.hxml
 -D install-dep-go
 # set the output directory
 --custom-target go=export/output.go
-# no TRE
--D no-tre
 # optimises output
 -D analyzer-optimize

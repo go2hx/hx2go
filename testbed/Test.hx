@@ -1,49 +1,42 @@
-@:analyzer(ignore)
+class Wee {
+
+    public var waa: Float;
+
+    public function new (_w: Float) {
+        waa = _w;
+    }
+
+}
+
+class Waa extends Wee {}
+
 class Test {
 
-    public static function main() {
-        var i = 0;
-        var arr = [i, ++i, ++i, ++i, ++i, ++i];
+    static function main() {
+        var cls: Dynamic = new Waa(12.34);
+        var obj: Dynamic = {
+            x: 5,
+            y: {
+                foo: 10,
+                bar: 20
+            }
+        };
 
-        for (x in arr.iterator()) {
-            Sys.println(x);
-        }
+        Sys.println("read");
+        Sys.println("cls.waa: " + cls.waa);
+        Sys.println("obj.x: " + obj.x);
+        Sys.println("obj.y: " + obj.y);
+        Sys.println("obj.y.foo: " + obj.y.foo);
+        Sys.println("obj.y.bar: " + obj.y.bar);
+         Sys.println(obj.y.foo + obj.y.bar + cls.waa);
 
-        for (x in arr.keyValueIterator()) {
-            Sys.println(x);
-        }
-
-        for (x in arr.map(x -> 'item $x')) {
-            Sys.println(x);
-        }
-
-        for (x in arr.filter(x -> x % 2 == 0)) {
-            Sys.println(x);
-        }
-
-        arr.sort((a, b) -> b - a);
-
-        for (x in arr.iterator()) {
-            Sys.println(x);
-        }
-
-        Sys.println("initial length: " + arr.length);
-        arr.resize(100);
-        Sys.println("resized length: " + arr.length);
-        arr.resize(3);
-        Sys.println("resized length: " + arr.length);
-
-        for (x in arr.iterator()) {
-            Sys.println(x);
-        }
-
-        arr = new Array();
-        arr.push(10);
-        arr.push(20);
-
-        for (x in arr.iterator()) {
-            Sys.println(x);
-        }
+        Sys.println("write");
+        Sys.println("before: " + obj.y.foo + " and " + cls.waa);
+        obj.y.foo = 20;
+        obj.y.foo *= 2;
+        cls.waa = 56.78;
+        cls.waa -= 0.01;
+        Sys.println("after: " + obj.y.foo + " and " + cls.waa);
     }
 
 }

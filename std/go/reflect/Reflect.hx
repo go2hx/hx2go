@@ -8,19 +8,26 @@ import go.Float64;
 // TODO implement more of reflect...
 
 @:go.TypeAccess({name: "reflect.Kind", imports: ["reflect"]})
+@:notNull
 extern class Kind {
     function string():String;
 }
 
 @:go.TypeAccess({name: "reflect.Type", imports: ["reflect"]})
+@:notNull
 extern class Type {
     function kind():Kind;
 }
 
 @:go.TypeAccess({name: "reflect.Value", imports: ["reflect"]})
+@:notNull
 extern class Value {
     function type():Type;
     function kind():Kind;
+    function elem():Value;
+    function isValid(): Bool;
+    function numField(): go.GoInt;
+    function field(i: go.GoInt): Value;
 
     function canInterface():Bool;
     @:native("Interface") function iface():Dynamic; // interface is a Haxe keyword, so name had to change
@@ -35,6 +42,7 @@ extern class Value {
     function string():String;
     function bool():Bool;
     function isNil():Bool;
+    function canSet():Bool;
 
     function mapIndex(i:Value):Value;
     function setMapIndex(key:Value, element:Value):Void;

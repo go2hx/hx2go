@@ -178,7 +178,7 @@ function resolvePkgTransform(t:Transformer, e:HaxeExpr, e2:HaxeExpr, field:Strin
         final tstr = switch (e.special) {
             case FInstance(x): x;
             case FStatic(x, f): x;
-            case FAnon(field): e2.t;
+            case FAnon(field) | FDynamic(field): e2.t;
             case Local:
                 e2.t;
             case _: "";
@@ -229,13 +229,42 @@ function handleCallTransform(t:Transformer, e:HaxeExpr, params:Array<HaxeExpr>, 
 
 function handleFieldTransform(t:Transformer, e:HaxeExpr, ct:ComplexType, e2:HaxeExpr, field:String):Bool {
     var transformed = switch ct {
-        case TPath({name: "Array", pack: []}) if (field == "length"):
+        case TPath({ name: "Array", pack: [] }) if (field == "length"):
             e.def = EGoCode('len(*{0})', [e2]);
             true;
-        case TPath({name: 'String', pack: []}) if(field == "length"):
+
+        case TPath({ name: 'String', pack: [] }) if (field == "length"):
             e.def = EGoCode('utf8.RuneCountInString({0})', [e2]);
             t.def.addGoImport('unicode/utf8');
             true;
+
+        case TPath({ name: 'Dynamic', pack: [] }):
+            var op = switch e.parent?.def {
+                case EBinop(OpAssign, inner, right) if (inner == e): { name: 'setField', on: e.parent, right: right };
+                case EBinop(OpAssignOp(_), _, _): Logging.transformer.error('OpAssignOp dynamic set'); null;
+                case _: { name: 'getField', on: e, right: null };
+            }
+
+            var field: HaxeExpr = {
+                t: null,
+                def: EConst(CString(field))
+            };
+
+            op.on.def = ECall({
+                t: null,
+                def: EField({
+                    t: null,
+                    def: EField({
+                        t: null,
+                        def: EConst(CIdent("runtime"))
+                    }, "HxDynamic")
+                }, op.name),
+                special: FStatic("runtime.HxDynamic", op.name)
+            }, op.right != null ? [e2, field, op.right] : [e2, field]);
+
+            t.transformExpr(op.on);
+            true;
+
         case TAnonymous(fields):
             e.def = EGoCode('{0}[{1}]', [e2, { def: EConst(CString(field)), t: "Dynamic" }]);
             if (e.t != "Dynamic" && !e?.parent?.def.match(ECast(_, _))) {

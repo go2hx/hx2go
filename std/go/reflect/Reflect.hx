@@ -8,16 +8,19 @@ import go.Float64;
 // TODO implement more of reflect...
 
 @:go.TypeAccess({name: "reflect.Kind", imports: ["reflect"]})
+@:notNull
 extern class Kind {
     function string():String;
 }
 
 @:go.TypeAccess({name: "reflect.Type", imports: ["reflect"]})
+@:notNull
 extern class Type {
     function kind():Kind;
 }
 
 @:go.TypeAccess({name: "reflect.Value", imports: ["reflect"]})
+@:notNull
 extern class Value {
     function type():Type;
     function kind():Kind;

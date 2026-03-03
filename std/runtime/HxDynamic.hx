@@ -388,7 +388,7 @@ class HxDynamic {
 			throw "runtime.HxDynamic.field null field access: " + fieldName;
 		}
 
-		if (kind == Reflect.Ptr) {
+		if (kind == Reflect.Ptr || kind == Reflect.Interface) {
 			return field(value.elem(), fieldName);
 		}
 
@@ -402,9 +402,9 @@ class HxDynamic {
 			);
 		}
 
-		// throw "runtime.HxDynamic.field unsupported field access on " + kind;
+		throw "runtime.HxDynamic.field unsupported field access on " + kind;
 
-		return identityAsValue(null);
+		return _null;
 	}
 
 	public static function getField(dyn: Dynamic, fieldName: String): Dynamic {

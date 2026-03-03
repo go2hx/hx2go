@@ -3,8 +3,7 @@
   <component name="Go" enabled="true" />
   <component name="HaxeModuleSettingsStorage">
     <option name="buildConfig" value="1" />
-    <option name="haxeTarget" value="Interpretation" />
-    <option name="hxmlPath" value="$MODULE_DIR$/compile.hxml" />
+    <option name="hxmlPath" value="$MODULE_DIR$/testbed.hxml" />
     <option name="outputFolder" value="$MODULE_DIR$/out/production/hx2go" />
   </component>
   <component name="NewModuleRootManager" inherit-compiler-output="true">

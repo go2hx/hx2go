@@ -107,6 +107,7 @@ class RecordParser {
 
     private var input: String;
     private var dbg_path: String;
+    private var def_params: Array<RecordSection> = null;
 
     /**
      * Parses a block with key-value constructions.
@@ -115,6 +116,8 @@ class RecordParser {
      */
     public function parseBlock(input: String): RecordSection {
         var result: RecordSection = [];
+        var blockParams: Array<RecordSection> = null;
+
         result["hx2go_record_debug_path"] = dbg_path;
 
         var lines: Array<String> = input.split("\n");
@@ -156,13 +159,20 @@ class RecordParser {
                     parseFlags(lines, line, value);
 
                 case _ if (key.endsWith("_expr")):
-                    var result = parseExpr(lines, line, value);
+                    var params = def_params.concat(blockParams);
+                    var result = parseExpr(lines, line, value, params);
                     line = result.lastLine;
                     result.value;
 
                 case _ if (key.endsWith("_params")):
                     var result = parseList(lines, line, value);
                     line = result.lastLine;
+                    blockParams = result.value;
+
+                    if (def_params == null) {
+                        def_params = blockParams; // params of def are guarenteed to be parsed first.
+                    }
+
                     result.value;
 
                 case _ if (key.endsWith("_doc")):
@@ -441,7 +451,7 @@ class RecordParser {
      * @param value The value of the entry point (from the key = value format)
      * @return Haxe Expression
      */
-    public function parseExpr(lines: Array<String>, entryLine: Int, value: String): { value: HaxeExpr, lastLine: Int } {
+    public function parseExpr(lines: Array<String>, entryLine: Int, value: String, params: Array<RecordSection>): { value: HaxeExpr, lastLine: Int } {
         if (value == "None") {
             return {
                 value: null,
@@ -450,10 +460,24 @@ class RecordParser {
         }
 
         var result = parseMultilineString(lines, entryLine, value);
+        var remapped = createParamRemapping(params);
+
         return {
-            value: new ExprParser(dbg_path).parse(result.value),
+            value: new ExprParser(dbg_path).parse(result.value, remapped),
             lastLine: result.lastLine
         };
+    }
+
+    public function createParamRemapping(params: Array<RecordSection>): Map<String, String> {
+        var map: Map<String, String> = [];
+        for (p in params) {
+            map.set(
+                p.get("class"),
+                p.get("name")
+            );
+        }
+
+        return map;
     }
 
     /**

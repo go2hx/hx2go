@@ -306,14 +306,6 @@ class Transformer {
             return "any";
         }
 
-        ct = switch ct {
-            case TPath({ name: name, pack: pack, params: params, sub: sub }) if (sub != null):
-                // TODO: track param origin (cl_params, cf_params) and mangle; only if needed: inlining may cause params to collide possibly; requires testing.
-                TPath({ name: sub, pack: [], params: params, sub: null }); // mikaib: pretty nasty, but best way for now...
-
-            case _: ct;
-        }
-
         transformComplexType(ct);
 
         return module.translator.translateComplexType(ct);

@@ -23,13 +23,7 @@ class Translator {
     public inline function translateComplexType(ct:ComplexType):String {
         return switch ct {
             case TPath(p):
-                if (p.sub != null) {
-                    p.sub; // TODO: we need to make a distinction between a.T and b.T
-                } else if (p.pack.length == 0) {
-                    p.name;
-                } else {
-                    p.pack.join(".") + p.name;
-                }
+                p.pack.join(".") + p.name;
             case TFunction(args, ret):
                 "func(" + 
                     args.map(arg -> translateComplexType(arg)).join(", ") + 

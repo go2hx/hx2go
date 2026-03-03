@@ -6,6 +6,7 @@ import HaxeExpr.HaxeTypeDefinition;
 import translator.TranslatorTools;
 import haxe.macro.Expr;
 import transformer.Transformer;
+import haxe.macro.ComplexTypeTools;
 
 /**
  * Gets rid of the bulk of Haxe language features that make working with it a nightmare.
@@ -49,6 +50,16 @@ class Preprocessor {
 
                 Semantics.ensure(e, [e0, e1], this, scope);
             }
+
+            // ensure semantics
+            case EObjectDecl(fields):
+                Semantics.ensure(e, fields.map(f -> f.expr), this, scope);
+                iterateExprPost(e, scope);
+
+            // ensure semantics
+            case EArrayDecl(values, _):
+                Semantics.ensure(e, values, this, scope);
+                iterateExprPost(e, scope);
 
             // ensure tuple/result + semantics
             case ECall(_, params): {
@@ -390,8 +401,13 @@ class Preprocessor {
                 field.expr.parentIdx = 0;
 
                 var scope: Scope = {};
+
                 switch field.expr.def {
                     case EFunction(_, f):
+                        for (arg in f.args) {
+                            scope.defineVariable(arg.name, this);
+                        }
+
                         processExpr(f.expr, scope);
                     default:
                         processExpr(field.expr, scope);

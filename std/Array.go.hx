@@ -4,8 +4,6 @@ import runtime.HxArray;
 @:coreType
 extern class Array<T> {
 
-    // TODO: this extern is incomplete - https://api.haxe.org/Array.html
-
     var length(default, null):Int;
 
     inline function push(x: T):Int {
@@ -72,27 +70,29 @@ extern class Array<T> {
         return HxArray.toString(this);
     }
 
-    // TODO: the following needs to be implemented
+    @:runtime inline function iterator():haxe.iterators.ArrayIterator<T> {
+        return new haxe.iterators.ArrayIterator(this);
+    }
+
+    @:pure @:runtime public inline function keyValueIterator() : ArrayKeyValueIterator<T> {
+        return new ArrayKeyValueIterator(this);
+    }
+
+    @:runtime inline function map<S>(f:T->S):Array<S> {
+        return HxArray.map(this, f);
+    }
+
+    @:runtime inline function filter(f:T->Bool):Array<T> {
+        return HxArray.filter(this, f);
+    }
+
+    inline function sort(f:T->T->Int):Void {
+        HxArray.sort(this, f);
+    }
+
+    inline function resize(len:Int):Void {
+        HxArray.resize(this, len);
+    }
+
     function new(): Void;
-    function sort(f:T->T->Int):Void;
-    function resize(len:Int):Void;
-
-    @:runtime inline extern function iterator():haxe.iterators.ArrayIterator<T> { // TODO: remove "extern" when supported
-        // return new haxe.iterators.ArrayIterator(this);
-        return null;
-    }
-
-    @:pure @:runtime public inline extern function keyValueIterator() : ArrayKeyValueIterator<T> { // TODO: remove "extern" when supported
-        // return new ArrayKeyValueIterator(this);
-        return null;
-    }
-
-    @:runtime inline extern function map<S>(f:T->S):Array<S> { // TODO: remove "extern" when supported
-        return [];
-    }
-
-    @:runtime inline extern function filter(f:T->Bool):Array<T> { // TODO: remove "extern" when supported
-        return [];
-    }
-
 }

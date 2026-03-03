@@ -6,6 +6,7 @@ import translator.TranslatorTools;
 import haxe.macro.Expr.TypePath;
 import haxe.macro.Expr.MetadataEntry;
 import transformer.exprs.FieldAccess;
+import haxe.macro.Expr.TypeParam.TPType;
 
 function transformNew(t:Transformer, e:HaxeExpr, tpath: TypePath, params: Array<HaxeExpr>) {
     final td = t.module.resolveClass(tpath.pack, tpath.name, t.module.path);
@@ -18,6 +19,15 @@ function transformNew(t:Transformer, e:HaxeExpr, tpath: TypePath, params: Array<
     var isNative = false;
     var transformName = false;
     var name = ''; // TODO: default name
+
+    switch tpath {
+        case { pack: [], name: "Array", params: [TPType(ct)] }:
+            e.def = EArrayDecl([], ct);
+            t.transformComplexType(ct);
+            return;
+
+        case _: null;
+    }
 
     for (m in td.meta()) {
         switch m.name {

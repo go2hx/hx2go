@@ -463,8 +463,9 @@ class HxDynamic {
 		var v = ensureValue(dyn);
 		var k = v.kind();
 
-		if (k == Reflect.Interface) {
-			return v.elem();
+		while (k == Reflect.Interface) {
+			v = v.elem();
+			k = v.kind();
 		}
 
 		return v;

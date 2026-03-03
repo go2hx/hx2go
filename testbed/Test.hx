@@ -10,7 +10,6 @@ class Wee {
 
 class Waa extends Wee {}
 
-@:analyzer(ignore)
 class Test {
 
     static function main() {

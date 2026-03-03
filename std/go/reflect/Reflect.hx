@@ -42,6 +42,7 @@ extern class Value {
     function string():String;
     function bool():Bool;
     function isNil():Bool;
+    function canSet():Bool;
 
     function mapIndex(i:Value):Value;
     function setMapIndex(key:Value, element:Value):Void;

@@ -13,15 +13,16 @@ import go.Strings;
 //
 // TODO tests
 @:keep
+@:analyzer(ignore)
 class HxDynamic {
 
-	private static var _null: Value = Reflect.valueOf(null);
+	public static var Null: Value = Reflect.valueOf(null);
 
 	//
 	// unary operations
 	//
 	public static function not(d:Dynamic):Bool {
-		var dV = identityAsValue(d);
+		var dV = ensureConcreteValue(d);
 		if (dV.kind() == Reflect.Bool) {
 			var dB:Bool = dV.bool();
 			return !dB;
@@ -31,7 +32,7 @@ class HxDynamic {
 	}
 
 	public static function increment(d:Dynamic):Dynamic {
-		var dV = identityAsValue(d);
+		var dV = ensureConcreteValue(d);
 		if (dV.canInt() || dV.canUint()) {
 			return (valueToInt(dV) + 1 : Dynamic);
 		} else if (dV.canFloat()) {
@@ -42,7 +43,7 @@ class HxDynamic {
 	}
 
 	public static function decrement(d:Dynamic):Dynamic {
-		var dV = identityAsValue(d);
+		var dV = ensureConcreteValue(d);
 		if (dV.canInt() || dV.canUint()) {
 			return (valueToInt(dV) - 1 : Dynamic);
 		} else if (dV.canFloat()) {
@@ -53,7 +54,7 @@ class HxDynamic {
 	}
 
 	public static function negate(d:Dynamic):Dynamic {
-		var dV = identityAsValue(d);
+		var dV = ensureConcreteValue(d);
 		if (dV.canInt() || dV.canUint()) {
 			return (0 - valueToInt(dV) : Dynamic);
 		} else if (dV.canFloat()) {
@@ -64,7 +65,7 @@ class HxDynamic {
 	}
 
 	public static function bitnot(d:Dynamic):Dynamic {
-		var dV = identityAsValue(d);
+		var dV = ensureConcreteValue(d);
 		if (dV.canInt() || dV.canUint()) {
 			return (~valueToInt(dV) : Dynamic);
 		}
@@ -77,8 +78,8 @@ class HxDynamic {
 	//
 
 	public static function and(a:Dynamic, b:Dynamic):Bool {
-		var aV = identityAsValue(a);
-		var bV = identityAsValue(b);
+		var aV = ensureConcreteValue(a);
+		var bV = ensureConcreteValue(b);
 		if (aV.kind() == Reflect.Bool && bV.kind() == Reflect.Bool)
 			return aV.bool() && bV.bool();
 		else
@@ -86,8 +87,8 @@ class HxDynamic {
 	}
 
 	public static function or(a:Dynamic, b:Dynamic):Bool {
-		var aV = identityAsValue(a);
-		var bV = identityAsValue(b);
+		var aV = ensureConcreteValue(a);
+		var bV = ensureConcreteValue(b);
 		if (aV.kind() == Reflect.Bool && bV.kind() == Reflect.Bool)
 			return aV.bool() || bV.bool();
 		else
@@ -117,7 +118,7 @@ class HxDynamic {
 	}
 
 	public static function isNull(x: Dynamic): Bool {
-		return Syntax.code("{0} == nil", x); // this doesn't work: identityAsValue(x).isNil();
+		return Syntax.code("{0} == nil", x); // this doesn't work: ensureConcreteValue(x).isNil();
 	}
 
 	public static function equals(a:Dynamic, b:Dynamic):Bool {
@@ -132,8 +133,8 @@ class HxDynamic {
 				return false; // null only ever equals null
 		}
 
-		var aV = identityAsValue(a);
-		var bV = identityAsValue(b);
+		var aV = ensureConcreteValue(a);
+		var bV = ensureConcreteValue(b);
 		var aK = aV.kind();
 		var bK = bV.kind();
 
@@ -163,8 +164,8 @@ class HxDynamic {
 	}
 
 	public static function lt(a:Dynamic, b:Dynamic):Bool {
-		var aV = identityAsValue(a);
-		var bV = identityAsValue(b);
+		var aV = ensureConcreteValue(a);
+		var bV = ensureConcreteValue(b);
 		var k = jointKind(aV, bV);
 		if (k == Reflect.Int)
 			return valueToInt(aV) < valueToInt(bV);
@@ -181,8 +182,8 @@ class HxDynamic {
 	}
 
 	public static function gt(a:Dynamic, b:Dynamic):Bool {
-		var aV = identityAsValue(a);
-		var bV = identityAsValue(b);
+		var aV = ensureConcreteValue(a);
+		var bV = ensureConcreteValue(b);
 		var k = jointKind(aV, bV);
 		if (k == Reflect.Int)
 			return valueToInt(aV) > valueToInt(bV);
@@ -199,8 +200,8 @@ class HxDynamic {
 	}
 
 	public static function add(a:Dynamic, b:Dynamic):Dynamic {
-		var aV = identityAsValue(a);
-		var bV = identityAsValue(b);
+		var aV = ensureConcreteValue(a);
+		var bV = ensureConcreteValue(b);
 		var k = jointKind(aV, bV);
 		if (k == Reflect.Int)
 			return (valueToInt(aV) + valueToInt(bV) : Dynamic);
@@ -213,8 +214,8 @@ class HxDynamic {
 	}
 
 	public static function subtract(a:Dynamic, b:Dynamic):Dynamic {
-		var aV = identityAsValue(a);
-		var bV = identityAsValue(b);
+		var aV = ensureConcreteValue(a);
+		var bV = ensureConcreteValue(b);
 		var k = jointKind(aV, bV);
 		if (k == Reflect.Int)
 			return (valueToInt(aV) - valueToInt(bV) : Dynamic);
@@ -225,8 +226,8 @@ class HxDynamic {
 	}
 
 	public static function multiply(a:Dynamic, b:Dynamic):Dynamic {
-		var aV = identityAsValue(a);
-		var bV = identityAsValue(b);
+		var aV = ensureConcreteValue(a);
+		var bV = ensureConcreteValue(b);
 		var k = jointKind(aV, bV);
 		if (k == Reflect.Int)
 			return (valueToInt(aV) * valueToInt(bV) : Dynamic);
@@ -237,8 +238,8 @@ class HxDynamic {
 	}
 
 	public static function divide(a:Dynamic, b:Dynamic):Dynamic {
-		var aV = identityAsValue(a);
-		var bV = identityAsValue(b);
+		var aV = ensureConcreteValue(a);
+		var bV = ensureConcreteValue(b);
 		var k = jointKind(aV, bV);
 		// In Haxe, the standard division operator (/) always produces a Float result, even if both operands are integers.
 		if (k == Reflect.Int || k == Reflect.Float64)
@@ -248,8 +249,8 @@ class HxDynamic {
 	}
 
 	public static function modulo(a:Dynamic, b:Dynamic):Dynamic {
-		var aV = identityAsValue(a);
-		var bV = identityAsValue(b);
+		var aV = ensureConcreteValue(a);
+		var bV = ensureConcreteValue(b);
 		var k = jointKind(aV, bV);
 		// In Haxe, Float does not support modulo
 		if (k == Reflect.Int)
@@ -259,8 +260,8 @@ class HxDynamic {
 	}
 
 	public static function bitand(a:Dynamic, b:Dynamic):Dynamic {
-		var aV = identityAsValue(a);
-		var bV = identityAsValue(b);
+		var aV = ensureConcreteValue(a);
+		var bV = ensureConcreteValue(b);
 		var k = jointKind(aV, bV);
 		if (k == Reflect.Int)
 			return (valueToInt(aV) & valueToInt(bV) : Dynamic);
@@ -269,8 +270,8 @@ class HxDynamic {
 	}
 
 	public static function bitor(a:Dynamic, b:Dynamic):Dynamic {
-		var aV = identityAsValue(a);
-		var bV = identityAsValue(b);
+		var aV = ensureConcreteValue(a);
+		var bV = ensureConcreteValue(b);
 		var k = jointKind(aV, bV);
 		if (k == Reflect.Int)
 			return (valueToInt(aV) | valueToInt(bV) : Dynamic);
@@ -279,8 +280,8 @@ class HxDynamic {
 	}
 
 	public static function bitxor(a:Dynamic, b:Dynamic):Dynamic {
-		var aV = identityAsValue(a);
-		var bV = identityAsValue(b);
+		var aV = ensureConcreteValue(a);
+		var bV = ensureConcreteValue(b);
 		var k = jointKind(aV, bV);
 		if (k == Reflect.Int)
 			return (valueToInt(aV) ^ valueToInt(bV) : Dynamic);
@@ -289,8 +290,8 @@ class HxDynamic {
 	}
 
 	public static function lbitshift(a:Dynamic, b:Dynamic):Dynamic {
-		var aV = identityAsValue(a);
-		var bV = identityAsValue(b);
+		var aV = ensureConcreteValue(a);
+		var bV = ensureConcreteValue(b);
 		var k = jointKind(aV, bV);
 		if (k == Reflect.Int)
 			return (valueToInt(aV) << valueToInt(bV) : Dynamic);
@@ -299,8 +300,8 @@ class HxDynamic {
 	}
 
 	public static function rbitshift(a:Dynamic, b:Dynamic):Dynamic {
-		var aV = identityAsValue(a);
-		var bV = identityAsValue(b);
+		var aV = ensureConcreteValue(a);
+		var bV = ensureConcreteValue(b);
 		var k = jointKind(aV, bV);
 		if (k == Reflect.Int)
 			return (valueToInt(aV) >> valueToInt(bV) : Dynamic);
@@ -309,8 +310,8 @@ class HxDynamic {
 	}
 
 	public static function urbitshift(a:Dynamic, b:Dynamic):Dynamic {
-		var aV = identityAsValue(a);
-		var bV = identityAsValue(b);
+		var aV = ensureConcreteValue(a);
+		var bV = ensureConcreteValue(b);
 		var k = jointKind(aV, bV);
 		if (k == Reflect.Int)
 			return (valueToInt(aV) >>> valueToInt(bV) : Dynamic);
@@ -323,7 +324,7 @@ class HxDynamic {
 	//
 
 	public static function toString(d:Dynamic):String {
-		// var dV = identityAsValue(d);
+		// var dV = ensureConcreteValue(d);
 		// if (dV.kind() == Reflect.String) {
 		// 	return dV.string(); // gives a string showing the type of the value, not a representation of the value
 		// }
@@ -331,7 +332,7 @@ class HxDynamic {
 	}
 
 	public static function toBool(d:Dynamic):Bool {
-		var dV = identityAsValue(d);
+		var dV = ensureConcreteValue(d);
 		if (dV.kind() == Reflect.Bool) {
 			return dV.bool();
 		}
@@ -355,7 +356,7 @@ class HxDynamic {
 	}
 
 	public static function toInt(d:Dynamic):Int {
-		var dV = identityAsValue(d);
+		var dV = ensureConcreteValue(d);
 		return valueToInt(dV);
 	}
 
@@ -376,12 +377,12 @@ class HxDynamic {
 	}
 
 	public static function toFloat(d:Dynamic):Float {
-		var dV = identityAsValue(d);
+		var dV = ensureConcreteValue(d);
 		return valueToFloat(dV);
 	}
 
-	private static function field(d: Dynamic, fieldName: String): Value {
-		var value = identityAsValue(d);
+	public static function getField(dyn: Dynamic, fieldName: String): Dynamic {
+		var value = ensureValue(dyn);
 		var kind = value.kind();
 
 		if (isNull(value)) {
@@ -389,80 +390,83 @@ class HxDynamic {
 		}
 
 		if (kind == Reflect.Ptr || kind == Reflect.Interface) {
-			return field(value.elem(), fieldName);
+			value = getField(value.elem(), fieldName);
 		}
 
 		if (kind == Reflect.Struct) {
-			return value.fieldByName(formatField(fieldName));
+			value = value.fieldByName(formatField(fieldName));
 		}
 
 		if (kind == Reflect.Map) {
-			return value.mapIndex(
-				identityAsValue(fieldName)
+			value = value.mapIndex(
+				ensureValue(fieldName)
 			);
 		}
 
-		throw "runtime.HxDynamic.field unsupported field access on " + kind;
-
-		return _null;
+		return value;
 	}
 
-	public static function getField(dyn: Dynamic, fieldName: String): Dynamic {
-		var f = field(dyn, fieldName);
-		if (!f.isValid()) {
-			return null;
-		}
+	public static function setField(dyn: Dynamic, fieldName: String, v: Dynamic): Void {
+		var value = ensureValue(dyn);
+		var kind = value.kind();
 
-		if (!f.canInterface()) {
-			throw "runtime.HxDynamic.field private field access: " + f;
-		}
-
-		return f;
-	}
-
-	public static function setField(dyn: Dynamic, fieldName: String, value: Dynamic): Void {
-		var f = field(dyn, fieldName);
-		if (!f.isValid()) {
+		if (kind == Reflect.Interface) {
+			setField(value.elem(), fieldName, v);
 			return;
 		}
 
-		if (!f.canInterface()) {
-			throw "runtime.HxDynamic.field private field access: " + f;
+		if (kind == Reflect.Ptr) {
+			value = value.elem();
+			kind = value.kind();
 		}
 
-		f.set(
-			identityAsValue(dyn)
-		);
-	}
+		Sys.println('set $fieldName on $dyn to $v (kind: ${value.kind()})');
 
-	@:analyzer(ignore)
-	public static function identityAsValue(d: Dynamic): Value {
-		var ok: Bool = false;
-		var v: Value = _null;
-		Syntax.code("{0}, {1} = {2}.(reflect.Value)", v, ok, d);
+		if (kind == Reflect.Struct) {
+			var field = value.fieldByName(formatField(fieldName));
 
-		if (ok) {
-			return v;
-		}
-
-		return Reflect.valueOf(d);
-	}
-
-	@:analyzer(ignore)
-	public static function identityAsConcrete(d: Dynamic): Dynamic {
-		var ok: Bool = false;
-		var v: Value = _null;
-		Syntax.code("{0}, {1} = {2}.(reflect.Value)", v, ok, d);
-
-		if (ok) {
-			if (!v.canInterface()) {
-				throw "runtime.HxDynamic.field private field access: " + v;
+			if (!field.isValid()) {
+				throw 'runtime.HxDynamic.setField field "$fieldName" not present on "$value"';
 			}
 
-			return v.iface();
+			if (!field.canSet()) {
+				throw 'runtime.HxDynamic.setField cannot set "$fieldName" on "$value"';
+			}
+
+			field.set(
+				ensureValue(v)
+			);
 		}
 
-		return d;
+		if (kind == Reflect.Map) {
+			value.setMapIndex(
+				ensureValue(fieldName),
+				ensureValue(v)
+			);
+		}
+	}
+
+	private static function ensureValue(dyn: Dynamic): Value {
+		var ok: Bool = false;
+		var value: Value = Null;
+		Syntax.code("{0}, {1} = {2}.(reflect.Value)", value, ok, dyn);
+
+		if (!ok) {
+			return Reflect.valueOf(dyn);
+		}
+
+		return value;
+	}
+
+	private static function ensureConcreteValue(dyn: Dynamic): Value {
+		var v = ensureValue(dyn);
+		var k = v.kind();
+
+		if (k == Reflect.Interface) {
+			return v.elem();
+		}
+
+		return v;
 	}
 
 }

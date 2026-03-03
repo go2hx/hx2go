@@ -381,6 +381,7 @@ class HxDynamic {
 		return valueToFloat(dV);
 	}
 
+	// read field access on dynamic (class, anon, etc)
 	public static function getField(dyn: Dynamic, fieldName: String): Dynamic {
 		var value = ensureValue(dyn);
 		var kind = value.kind();
@@ -406,6 +407,7 @@ class HxDynamic {
 		return value;
 	}
 
+	// write field access on dynamic (class, anon, etc)
 	public static function setField(dyn: Dynamic, fieldName: String, v: Dynamic): Void {
 		var value = ensureValue(dyn);
 		var kind = value.kind();
@@ -447,6 +449,7 @@ class HxDynamic {
 		}
 	}
 
+	// given the type of dyn, if it is reflect.Value we return that, otherwise we use reflect.valueOf
 	private static function ensureValue(dyn: Dynamic): Value {
 		var ok: Bool = false;
 		var value: Value = Null;
@@ -459,6 +462,10 @@ class HxDynamic {
 		return value;
 	}
 
+	// same as ensureValue, but recursively unpacks interface{}
+	// in cases like operations (add, sub, etc) we need to work with the underlying type.
+	// as dynamic field access always returns interface{}, we need to fetch the underlying value.
+	// for field access (w/ ensureValue) we don't want to get the underlying value as that may destroy setability.
 	private static function ensureConcreteValue(dyn: Dynamic): Value {
 		var v = ensureValue(dyn);
 		var k = v.kind();

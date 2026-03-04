@@ -404,6 +404,8 @@ class HxDynamic {
 			);
 		}
 
+		// TODO: throw when Null<T> is supported.
+
 		return value;
 	}
 
@@ -447,6 +449,34 @@ class HxDynamic {
 
 			value.setMapIndex(fn, ensureValue(v));
 		}
+
+		// TODO: throw when Null<T> is supported.
+	}
+
+	public static function getArrayIndex(dyn: Dynamic, index: Int): Dynamic {
+		var value = ensureValue(dyn);
+		var kind = value.kind();
+
+		if (isNull(value)) {
+			throw "runtime.HxDynamic.field null array access";
+		}
+
+		if (kind == Reflect.Ptr || kind == Reflect.Interface) {
+			value = getArrayIndex(value.elem(), index);
+		}
+
+		if (kind == Reflect.Slice || kind == Reflect.Array) {
+			var length = value.len();
+			if (index >= length) {
+				throw "runtime.HxDynamic.field out of bounds exception";
+			}
+
+			value = value.index(index);
+		}
+
+		// TODO: throw when Null<T> is supported.
+
+		return value;
 	}
 
 	// given the type of dyn, if it is reflect.Value we return that, otherwise we use reflect.valueOf

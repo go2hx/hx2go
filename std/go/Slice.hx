@@ -55,6 +55,6 @@ extern abstract Slice<T> {
     }
 
     @:to public inline function toArray():Array<T> {
-        return cast Pointer.addressOf(this);
+        return Syntax.code("(&{0})", this);
     }
 }

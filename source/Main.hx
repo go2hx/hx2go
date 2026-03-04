@@ -9,9 +9,7 @@ class Main {
 
       final context:Context = {options: loadContextOptions()};
       final results = context.run();
-      trace(results);
       if (results == null) {
-         trace("exit code 1");
          Sys.exit(1);
       }
    }

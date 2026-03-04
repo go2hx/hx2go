@@ -185,6 +185,20 @@ class Sys {
 			log.Println(ret)
 			}
 		 */
+		 /* Haxe:
+		var err = Exec.command("sleep", ["1"]).run();
+		if (err != null) {
+			var exitErr = cast err, ExitError;
+			if (exitErr != null) {
+				Sys.println("Command exited with code: " + exitErr.processState.exitCode());
+			} else {
+				Sys.println("Command did not run successfully: " + err);
+			}
+		} else {
+			Sys.println("Command ran successfully with no error");
+		}
+
+		 */
 		return -1; // TODO
 
 	/**

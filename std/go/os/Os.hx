@@ -21,3 +21,4 @@ extern class Os {
 
 	static function setenv(key:String, value:String):Error;
 }
+

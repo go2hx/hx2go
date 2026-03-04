@@ -187,6 +187,10 @@ class ExprParser {
                 };
 
                 EConst(CIdent(field));
+            case FDYNAMIC:
+                var field = object.objects[0].string();
+                specialDef = FDynamic(field);
+                EConst(CIdent(field));
             case FANON:
                 var field = object.objects[0].string();
                 final colonIndex = field.indexOf(":");

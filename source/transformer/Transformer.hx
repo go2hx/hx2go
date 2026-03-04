@@ -131,12 +131,18 @@ class Transformer {
 
                     case _: {
                         handleCoreTypeName(p, td.name);
-
                         if (!processTypeMetadata(p, td)) {
                             var clsName = 'Hx_${modulePathToPrefix(td.name)}_Obj';
                             p.pack = [];
-                            p.name = '*${clsName}${p.params.length > 0 ? '[${p.params.map(p -> switch p {
+                            final isPointer = switch td.kind {
+                                case TDClass:
+                                    true;
+                                case _:
+                                    false;
+                            }
+                            p.name = (isPointer ? '*' : '') + '${clsName}${p.params.length > 0 ? '[${p.params.map(p -> switch p {
                                 case TPType(TPath(p)): p.name;
+                                case TPType(TAnonymous(_)): 'map[string]any';
                                 case _: '';
                             }).join(', ')}]' : ""}';
                         }
@@ -310,6 +316,14 @@ class Transformer {
     }
 
     public function transformDef(def:HaxeTypeDefinition) {
+        switch def.kind {
+            case TDType(ct):
+                def.isExtern = processTypeMetadata({name: def.name, pack: []}, def);
+                if (!def.isExtern)
+                    transformComplexType(ct);
+            default:
+        }
+        
         if (def.fields == null) {
             return;
         }

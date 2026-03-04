@@ -22,6 +22,7 @@ class ExprParser {
     var nonImpl: Array<String> = [];
     var stopParser:Bool = false;
     var objectMap:Map<Int, Object> = [];
+    var typeMapping: Map<String, String> = [];
 
     public function new(debug_path) {
         this.debug_path = debug_path;
@@ -36,7 +37,8 @@ class ExprParser {
         nonImpl = [];
     }
 
-    public function parse(lines:Array<String>):HaxeExpr {
+    public function parse(lines:Array<String>, ?typeRemapping: Map<String, String>):HaxeExpr {
+        typeMapping = typeRemapping ?? [];
         final firstObject = parseObject(lines);
         final expr = objectToExpr(firstObject);
         // trace(new haxe.macro.Printer().printExpr(expr));
@@ -179,11 +181,15 @@ class ExprParser {
                     case FINSTANCE:
                         FInstance(path);
                     case FCLOSURE:
-                        null;
+                        FClosure(path, field); // TODO: implement if we need it...
                     case _:
                         null;
                 };
 
+                EConst(CIdent(field));
+            case FDYNAMIC:
+                var field = object.objects[0].string();
+                specialDef = FDynamic(field);
                 EConst(CIdent(field));
             case FANON:
                 var field = object.objects[0].string();
@@ -552,7 +558,7 @@ class ExprParser {
         //     lastColIdx = findColon(remaining);
         // }
 
-        final defTypeString = remaining;
+        var defTypeString = remaining;
 
         final sIdx = defString.indexOf(" ");
         var subTypeString = "";
@@ -567,7 +573,8 @@ class ExprParser {
             default:
         }
 
-        return new Object(defString, defTypeString, lineIndex, startIndex, subTypeString, objectString, debug_path);
+
+        return new Object(defString, RecordTools.remapType(defTypeString, typeMapping), lineIndex, startIndex, subTypeString, objectString, debug_path);
     }
 
     function stringToUnop(un: String):Unop {

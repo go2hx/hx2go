@@ -23,13 +23,7 @@ class Translator {
     public inline function translateComplexType(ct:ComplexType):String {
         return switch ct {
             case TPath(p):
-                if (p.sub != null) {
-                    p.sub; // TODO: we need to make a distinction between a.T and b.T
-                } else if (p.pack.length == 0) {
-                    p.name;
-                } else {
-                    p.pack.join(".") + p.name;
-                }
+                p.pack.join(".") + p.name;
             case TFunction(args, ret):
                 "func(" + 
                     args.map(arg -> translateComplexType(arg)).join(", ") + 
@@ -268,14 +262,33 @@ class Translator {
                     staticsBuf.add('var Hx_${modulePathToPrefix(def.name)}_${fieldName}_Field ${typeStr}');
 
                     if (field.expr != null) {
-                        initBuf.add('func ${className}_InitField_${fieldName}() ${typeStr} {\n'); // we do it this way to support EIE while keeping initialisation order correct.
-                        initBuf.add('\t' + translateExpr({
+                        var body: Array<HaxeExpr> = [];
+
+                        var blockExpr: HaxeExpr = {
+                            t: null,
+                            def: EBlock(body)
+                        };
+
+                        var retExpr: HaxeExpr = {
                             t: null,
                             def: EReturn(switch field?.expr?.def {
+                                case EBlock(exprs):
+                                    var last = exprs.pop();
+                                    for (e in exprs) {
+                                        body.push(e);
+                                    }
+
+                                    last;
                                 case EBinop(OpAssign, { def: EConst(CIdent("_")) }, inner): inner; // undo stmt -> expr conversion
                                 case _: field.expr;
                             })
-                        }) + '\n');
+                        };
+
+                        body.push(retExpr);
+
+                        initBuf.add('func ${className}_InitField_${fieldName}() ${typeStr} {\n'); // we do it this way to support EIE while keeping initialisation order correct.
+                        initBuf.add('\t' + translateExpr(blockExpr) + '\n');
+
                         initBuf.add('}\n\n');
                         staticsBuf.add(' = ${className}_InitField_${fieldName}()');
                     }

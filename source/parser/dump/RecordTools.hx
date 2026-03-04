@@ -39,12 +39,20 @@ function recordToHaxeTypeDefinition(record: RecordEntry):HaxeTypeDefinition {
             if (cls.ordered_fields == null) {
                 Logging.recordParser.warn('no ordered fields for: ${record.record_debug_path}');
             }
+
+            if (cls.params == null)
+                cls.params = [];
+
+            for (param in cls.params) {
+                params.push(recordTypeParamToParamDecl(record.record_debug_path, param));
+            }
+
             // TODO: temp fix
             if (cls.ordered_fields == null)
                 cls.ordered_fields = [];
 
             for (field in cls.ordered_fields) {
-                fields.push(recordClassFieldToHaxeField(record.record_debug_path, field, false));
+                fields.push(recordClassFieldToHaxeField(record.record_debug_path, field, false, cls.params));
             }
 
             // TODO: temp fix
@@ -52,14 +60,7 @@ function recordToHaxeTypeDefinition(record: RecordEntry):HaxeTypeDefinition {
                 cls.ordered_statics = [];
 
             for (field in cls.ordered_statics) {
-                fields.push(recordClassFieldToHaxeField(record.record_debug_path, field, true));
-            }
-
-            if (cls.params == null)
-                cls.params = [];
-
-            for (param in cls.params) {
-                params.push(recordTypeParamToParamDecl(record.record_debug_path, param));
+                fields.push(recordClassFieldToHaxeField(record.record_debug_path, field, true, cls.params));
             }
 
         case RAbstract:
@@ -227,7 +228,16 @@ function parseAstType(t: String): String {
     return parseInner(t);
 }
 
-private function recordClassFieldToHaxeField(record_debug_path:String, field:RecordClassField, isStatic:Bool):HaxeField {
+function remapType(type: String, mapping: Map<String, String>): String {
+    for (t in mapping.keyValueIterator()) {
+        // mikaib: this *can* technically break in *very* rare cases, I doubt it will be an issue but we might something better in the future.
+        type = type.replace(t.key, t.value);
+    }
+
+    return type;
+}
+
+private function recordClassFieldToHaxeField(record_debug_path:String, field:RecordClassField, isStatic:Bool, defParams: Array<Map<String, Dynamic>>):HaxeField {
     final kind:HaxeFieldKind = switch field.kind {
         case "method", "dynamic method", "inline method":
             final params:Array<TypeParamDecl> = [];
@@ -249,10 +259,21 @@ private function recordClassFieldToHaxeField(record_debug_path:String, field:Rec
         default:
             throw "field.cf_kind unknown: " + field.kind;
     }
+
+    var remapping: Map<String, String> = [];
+
+    for (param in field.params) {
+        remapping.set(param.get("class"), param.get("name"));
+    }
+
+    for (param in defParams) {
+        remapping.set(param.get("class"), param.get("name"));
+    }
+
     return {
         name: field.name,
         kind: kind,
-        t: parseAstType(field.type),
+        t: remapType(parseAstType(field.type), remapping),
         expr: field.expr,
         meta: getMeta(field.meta),
         isStatic: isStatic,

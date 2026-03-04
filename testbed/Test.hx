@@ -1,35 +1,42 @@
-import go.Tuple;
-import go.Fmt;
-import go.GoInt;
-import go.time.Time;
-import go.os.Os;
-import go.runtime.Runtime;
-import tests.runtime.TestHxDynamic;
-import tests.TestReflect;
+class Wee {
+
+    public var waa: Float;
+
+    public function new (_w: Float) {
+        waa = _w;
+    }
+
+}
+
+class Waa extends Wee {}
 
 class Test {
-	public static function main():Void {
-		Sys.println("TestReflect.main():" + TestReflect.main());
-		Sys.println("TestHxDynamic.main():" + TestHxDynamic.main());
-		Sys.println(Sys.getCwd());
-		Sys.setCwd("..");
-		Sys.println(Sys.getCwd());
-		Sys.setCwd("./export");
-		Sys.println(Sys.getCwd());
-		Sys.println(Sys.systemName());
-		Sys.println(Sys.programPath());
-		Sys.println(Sys.args());
-		Sys.println(Sys.programPath());
-		Sys.println(Sys.getEnv("HOME"));
 
-		var t1 = Sys.time();
-		Sys.println(t1);
-		var t2 = Sys.time();
-		Sys.println((t2 - t1) * 1000000);
+    static function main() {
+        var cls: Dynamic = new Waa(12.34);
+        var obj: Dynamic = {
+            x: 5,
+            y: {
+                foo: 10,
+                bar: 20
+            }
+        };
 
-		#if sys
-		Sys.println("sys!");
-		#end
-		Sys.exit(42);
-	}
+        Sys.println("read");
+        Sys.println("cls.waa: " + cls.waa);
+        Sys.println("obj.x: " + obj.x);
+        Sys.println("obj.y: " + obj.y);
+        Sys.println("obj.y.foo: " + obj.y.foo);
+        Sys.println("obj.y.bar: " + obj.y.bar);
+         Sys.println(obj.y.foo + obj.y.bar + cls.waa);
+
+        Sys.println("write");
+        Sys.println("before: " + obj.y.foo + " and " + cls.waa);
+        obj.y.foo = 20;
+        obj.y.foo *= 2;
+        cls.waa = 56.78;
+        cls.waa -= 0.01;
+        Sys.println("after: " + obj.y.foo + " and " + cls.waa);
+    }
+
 }

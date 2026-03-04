@@ -97,7 +97,7 @@ class Init {
             if (installDepDefine != null) {
                 command += " -D install-dep-go";
             }
-            std.Sys.command(command);
+            Sys.exit(std.Sys.command(command));
         });
     }
 }

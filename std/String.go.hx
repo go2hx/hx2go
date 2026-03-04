@@ -22,6 +22,11 @@ extern class String {
         return "".toLowerCase() + Syntax.code("string(([]rune)({0})[{1}])", this, index);
     }
     inline function charCodeAt(index:Int):Null<Int> {
+        // If index is negative or exceeds this.length, null is returned.
+        if (index < 0 || index > this.length) {
+            // TODO: null not supported yet
+            // return null;
+        }
         // "".toLowerCase required to make sure import is used
         return ("".toLowerCase() == "" ? 0 : 0) + Syntax.code("([]rune)({0})[{1}]", this, index);
     }

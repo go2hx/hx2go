@@ -15,9 +15,10 @@ class Waa extends Wee {}
 class Test {
 
     static function main() {
-        var arr: Dynamic = [1, 2, 3];
+        var arr: Dynamic = [5, 10, 20];
         Sys.println(arr);
-        Sys.println(arr[0] * arr[1]);
+        arr[3] = arr[0] * arr[1];
+        Sys.println(arr);
     }
 
 }

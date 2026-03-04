@@ -18,6 +18,12 @@ class ContextOptions {
     @:opt_type("Bool")
     public var buildAfterCompilation: Bool = false;
 
+    @:opt_name("format")
+    @:opt_desc("Format the output code after compilation")
+    @:opt_type("Bool")
+    public var formatAfterCompilation: Bool = false;
+
+
     @:opt_name("install_deps")
     @:opt_desc("Let hx2go install dependencies for you.")
     @:opt_type("Bool")
@@ -209,6 +215,15 @@ class Context {
             for (imp in imports) {
                 if (StringTools.contains(imp, ".")) Sys.command('go get $imp');
             }
+        }
+
+        if (options.formatAfterCompilation) {
+            final code = Sys.command("goimports -w .");
+            if (code != 0) {
+                Sys.println("goimports failed make sure to install it:");
+                Sys.println("\tgo install golang.org/x/tools/cmd/goimports@latest");
+            }
+            Sys.command("go fmt ./...");
         }
 
         if (options.tinygo) {

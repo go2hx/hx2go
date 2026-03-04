@@ -13,6 +13,7 @@ class Main {
 
    static function loadContextOptions():ContextOptions {
       final runGoDefine = HaxeCompiler.getDefine("run-go") != null;
+      final formatGoDefine = HaxeCompiler.getDefine("format-go") != null;
       final buildGoDefine = HaxeCompiler.getDefine("build-go") != null;
       final mainDefine = HaxeCompiler.getDefine("hx2go-main") ?? "";
       final outputDefine = HaxeCompiler.getDefine("output");
@@ -30,6 +31,7 @@ class Main {
       return {
          runAfterCompilation: runGoDefine,
          buildAfterCompilation: buildGoDefine,
+         formatAfterCompilation: formatGoDefine,
          entryPoint: mainDefine,
          output: outputDefine,
          tinygo: tinyGoDefine,

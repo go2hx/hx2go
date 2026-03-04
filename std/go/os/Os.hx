@@ -16,4 +16,8 @@ extern class Os {
 	static function getenv(key:String):String;
 
 	static function exit(code:Int):Void;
+
+	static function environ():go.Slice<String>;
+
+	static function setenv(key:String, value:String):Error;
 }

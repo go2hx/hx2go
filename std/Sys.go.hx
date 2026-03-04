@@ -55,8 +55,15 @@ class Sys {
 
 		(java) This functionality is not available on Java; calling this function will throw.
 	**/
-	static function putEnv(s:String, v:Null<String>):Void {
-		// TODO wait for Null<String> to be defined in hx2go
+	public static function putEnv(s:String, v:Null<String>):Void {
+		// TODO rewrite when Null<String> has been defined in hx2go
+		// if (v == null) {
+		// 	// TODO remove env var
+		// } else {
+		var err = Os.setenv(s, v);
+		if (err != null)
+			throw err.error();
+		// }
 	}
 
 	/**
@@ -72,7 +79,17 @@ class Sys {
 		On Windows on remaining targets, variable name capitalization matches however they were capitalized
 		at the start of the process or at the moment of their creation.
 	**/
-	// static function environment():Map<String, String>
+	public static function environment():Dynamic { // TODO Map<String, String> {
+		// var ret = new Map<String, String>();  // TODO Map<String, String> not stable yet
+		var envs = Os.environ();
+		Fmt.println("envs: " + envs);
+		// for (env in envs) {
+		// 	var tup = Syntax.split2(env, "="); // TODO this is not correct since values can also contain "="
+		// 	ret.set(tup[0], tup[1]);
+		// }
+		return null; // ret;
+	}
+
 	//  return null; // TODO Map<String, String> not stable yet
 
 	/**

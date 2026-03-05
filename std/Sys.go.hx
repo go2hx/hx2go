@@ -1,11 +1,16 @@
 // Sys.go.hx
+import go.os.exec.ExitError;
 import go.Result;
 import go.os.Os;
+import go.os.exec.Exec;
 import go.Fmt;
 import go.time.Time;
 import go.runtime.Runtime;
 import runtime.HxArray;
 import go.Syntax;
+import go.Slice;
+import go.Error;
+import go.Pointer;
 
 /**
 	This class provides access to various base functions of system platforms.
@@ -159,47 +164,34 @@ class Sys {
 
 		Use the `sys.io.Process` API for more complex tasks, such as background processes, or providing input to the command.
 	**/
-	static function command(cmd:String, ?args:Array<String>):Int // https://pkg.go.dev/os/exec
-		/*
-			package main
+	@:analyzer(ignore)
+	public static function command(cmd:String, ?args:Array<String>):Int { 
+		// for called Go in Syntax.code() see https://pkg.go.dev/os/exec
+		
+		var argSlice = new go.Slice<String>();
+		if (args != null)
+			argSlice = HxArray.getData(args); // make sure args is a real array and not null so that it can be passed to Go correctly
 
-			import (
-			"log"
-			"os/exec"
-			)
+		var err:Error = null;
+		var output:go.Slice<go.UInt8> = null;
+		Syntax.code("output, err = exec.Command({0},{1}...).Output()", cmd, argSlice);
 
-			func main() {
-			cmd := exec.Command("sleep", "1")
-			log.Printf("Running command and waiting for it to finish...")
-			err := cmd.Run()
-			log.Printf("Command finished with error: %v", err)
-			ret := 0
-			if err != nil {
-				exitErr, ok := err.(*exec.ExitError)
-				if ok {
-					ret = exitErr.ProcessState.ExitCode()
-				} else {
-					ret = -1 // command did not even run
-				}
-			}
-			log.Println(ret)
-			}
-		 */
-		 /* Haxe:
-		var err = Exec.command("sleep", ["1"]).run();
+		var exitErr:Pointer<ExitError> = null; // using ExitError causes os/exec to be imported 
+		var ok:Bool = false;
+		var ret = 0; // default to 0 (success) but will change if there is an error
 		if (err != null) {
-			var exitErr = cast err, ExitError;
-			if (exitErr != null) {
-				Sys.println("Command exited with code: " + exitErr.processState.exitCode());
-			} else {
-				Sys.println("Command did not run successfully: " + err);
-			}
+			Syntax.code("exitErr, ok = err.(*exec.ExitError)");
+			if (ok)
+				Syntax.code("ret = exitErr.ProcessState.ExitCode()");
+			else
+				ret = -1; // command did not even run
 		} else {
-			Sys.println("Command ran successfully with no error");
+			var outputStr = "";
+			Syntax.code("outputStr = string(output)");
+			Fmt.print(outputStr); // print command output if it ran successfully
 		}
-
-		 */
-		return -1; // TODO
+		return ret;
+	}
 
 	/**
 		Exits the current process with the given exit code.

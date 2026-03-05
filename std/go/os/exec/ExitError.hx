@@ -4,7 +4,8 @@ import go.os.ProcessState;
 
 // TODO implemnt more of os/exec
 // https://pkg.go.dev/os/exec
-@:go.TypeAccess({name: "*ExitError", imports: ["os/exec"]})
+
+@:go.TypeAccess({name: "exec.ExitError", imports: ["os/exec"]})
 
 extern class ExitError extends Error {
     /**

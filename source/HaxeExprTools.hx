@@ -90,6 +90,9 @@ class HaxeExprTools {
 		// (_ : Array<haxe._Rest.NativeRest.T>) -> (_ : Array<haxe._RestNativeRest.T>) 
 		// to allow Haxe Parser to properly handle name and sub
 		final elems = s.split(".");
+		// Not needed if modular path is not over pack, name, sub limit
+		if (elems.length < 3)
+			return s;
 		var addToNext = "";
 		var wasUppercase = false;
 		var removal = [];
@@ -117,6 +120,7 @@ class HaxeExprTools {
 		// temporary fix to prevent parsing error of for example:
 		// (_ : (this : EnumValue, pattern : Dynamic) -> Bool)
 		// `this` would cause a parser error so we replace it with `this2`
+		final originalString = s;
 		s = StringTools.replace(s, "this", "this2");
 		s = cleanUpModularPath(s);
         s = '(_ : $s)';
@@ -127,6 +131,7 @@ class HaxeExprTools {
             case EParenthesis({pos: _, expr: ECheckType(_, t)}):
                 t;
             default:
+				trace(originalString);
 				Logging.exprTools.error("HaxeExprTools.stringToComplexType parse error! s: " + s + " expr: " + expr);
 				HaxeExprTools.stringToComplexType("ParsingError");
                 // throw "invalid expr: " + expr + " in s: " + s;

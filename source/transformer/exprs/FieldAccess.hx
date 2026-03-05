@@ -250,18 +250,6 @@ function handleFieldTransform(t:Transformer, e:HaxeExpr, ct:ComplexType, e2:Haxe
                 def: EConst(CString(field))
             };
 
-            /* op.on.def = ECall({
-                t: null,
-                def: EField({
-                    t: null,
-                    def: EField({
-                        t: null,
-                        def: EConst(CIdent("runtime"))
-                    }, "HxDynamic")
-                }, op.name),
-                special: FStatic("runtime.HxDynamic", op.name)
-            }, op.right != null ? [e2, field, op.right] : [e2, field]); */
-
             op.on.def = t.createCallStatic("runtime.HxDynamic", op.name, op.right != null ? [e2, field, op.right] : [e2, field]);
             t.transformExpr(op.on);
 

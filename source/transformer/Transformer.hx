@@ -32,16 +32,19 @@ class Transformer {
         p.params.resize(1);
     }
 
-    public function createCallStatic(path: String, funcName: String, params: Array<HaxeExpr>, returnType: String = "Dynamic"): HaxeExprDef {
+    public function createFieldAccess(path: String, trimBy: Int = 0) {
         var parts = path.split('.');
         var e: HaxeExprDef = EConst(CIdent(parts[0]));
-        for (i in 1...parts.length) {
+        for (i in trimBy...parts.length) {
             e = EField({ t: null, def: e }, parts[i]);
         }
 
+        return e;
+    }
+    public function createCallStatic(path: String, funcName: String, params: Array<HaxeExpr>, returnType: String = "Dynamic"): HaxeExprDef {
         return ECall({
             t: returnType,
-            def: EField({ t: null, def: e }, funcName),
+            def: EField({ t: null, def: createFieldAccess(path, 1) }, funcName),
             special: FStatic(path, funcName)
         }, params);
     }

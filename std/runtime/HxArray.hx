@@ -373,7 +373,7 @@ class HxArray {
         if (length < dataLength) {
             setData(arr, data.slice(0, length));
         } else if (length > dataLength) {
-            var newData = Syntax.code("make([]T, {0})", length);
+            var newData = Syntax.code("make([]Hx_Param__T, {0})", length);
             Go.copy(newData, data);
             setData(arr, newData);
         }

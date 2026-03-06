@@ -53,4 +53,8 @@ extern abstract Slice<T> {
     @:pure public inline extern overload function sliceEnd(high: GoInt): Slice<T> {
         return Syntax.code("{0}[:{1}]", this, high);
     }
+
+    @:to public inline function toArray():Array<T> {
+        return Syntax.code("(&{0})", this);
+    }
 }

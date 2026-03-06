@@ -18,7 +18,7 @@ class Module {
     public var context:Context;
 
     public function resolveClass(pack:Array<String>, name:String, origin:String): HaxeTypeDefinition {
-        final path = pack.join(".") + (pack.length > 0 ? "." : "") + name;
+        final path = (pack != null ? pack.join(".") + (pack.length > 0 ? "." : "") : "") + name;
         final module = context.getModule(path);
         if (module == null) {
             return null;

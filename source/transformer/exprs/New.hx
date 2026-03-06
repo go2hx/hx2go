@@ -25,7 +25,9 @@ function transformNew(t:Transformer, e:HaxeExpr, tpath: TypePath, params: Array<
             e.def = EArrayDecl([], ct);
             t.transformComplexType(ct);
             return;
-
+        case { pack: [], name: "String"}:
+            e.def = params[0].def;
+            return;
         case _: null;
     }
 

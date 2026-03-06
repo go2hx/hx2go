@@ -59,6 +59,7 @@ class Init {
 	public static function afterBuild() {
         final stamp = Timer.stamp();
         final runGoDefine = Context.definedValue("run-go");
+		final formatGoDefine = Context.definedValue("format-go");
 		final buildGoDefine = Context.definedValue("build-go");
 		final tinyGoDefine = Context.definedValue("tinygo");
 		final tinyGoTargetDefine = Context.definedValue("tinygo.target");
@@ -78,6 +79,9 @@ class Init {
             if (runGoDefine != null) {
                 command += " -D run-go";
             }
+			if (formatGoDefine != null) {
+				command += " -D format-go";
+			}
 			if (buildGoDefine != null) {
                 command += " -D build-go";
             }
@@ -93,7 +97,7 @@ class Init {
             if (installDepDefine != null) {
                 command += " -D install-dep-go";
             }
-            std.Sys.command(command);
+            Sys.exit(std.Sys.command(command));
         });
     }
 }

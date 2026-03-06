@@ -6,3 +6,8 @@ function main() {
     Sys.println(String.fromCharCode(42));
     Sys.println(new String("hi"));
 }
+
+class X<T> {
+    public function new() {}
+    public var x:T;
+}

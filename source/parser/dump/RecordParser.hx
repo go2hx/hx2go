@@ -473,7 +473,7 @@ class RecordParser {
         for (p in params) {
             map.set(
                 p.get("class"),
-                p.get("name")
+                RecordTools.prefixParam(p.get("name"))
             );
         }
 

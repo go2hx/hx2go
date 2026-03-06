@@ -1,29 +1,8 @@
-@:analyzer(ignore)
-class Test {
+function main() {
+    Sys.println([10].map(f -> f));
+}
 
-    static function main() {
-        var arr: Dynamic = [5, 10, 20];
-
-        Sys.println(arr);
-        arr[2] = arr[0] * arr[1];
-        Sys.println(arr);
-        arr[10] = 100;
-        Sys.println(arr);
-
-        var obj: Dynamic = {
-            foo: {
-                bar: {
-                    array: arr
-                }
-            }
-        }
-
-        Sys.println(obj.foo.bar.array[10]);
-        obj.foo.bar.array[5] = 3;
-
-        var arr_typed: Array<Dynamic> = obj.foo.bar.array;
-        Sys.println(obj.foo.bar.array);
-        Sys.println(arr_typed);
-    }
-
+class X<T> {
+    public function new() {}
+    public var x:T;
 }

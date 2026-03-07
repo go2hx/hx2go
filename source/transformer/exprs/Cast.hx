@@ -36,6 +36,27 @@ function transformCast(t:Transformer, e:HaxeExpr, inner: HaxeExpr, type:ComplexT
     }
 
     switch [from, to] {
+        case [nF, TPath({ name: "Null", pack: [], params: [nT] })] if (!nF.match(TPath({ name: "Null", pack: [] }))):
+            final ct = switch (nT) {
+                case TPType(x): x;
+                case _: null;
+            }
+
+            if (ct == null) {
+                return;
+            }
+
+            t.transformComplexType(ct);
+
+            e.def = EGoCode('struct{ Value ${t.module.translator.translateComplexType(ct)}; HasValue bool }{ {0}, true }', [inner]); // TODO: if type is nillable, we should check if it is.
+            t.transformExpr(e);
+            return;
+
+        case [TPath({ name: "Null", pack: [], params: [nF] }), nT] if (!nT.match(TPath({ name: "Null", pack: [] }))):
+            e.def = EGoCode('{0}.Value', [inner]);
+            t.transformExpr(e);
+            return;
+
         case [TFunction(fArgs, fRet), TFunction(tArgs, tRet)]: {
             var fromIsVoid = isVoid(fRet);
             var toIsVoid = isVoid(tRet);
@@ -90,27 +111,6 @@ function transformCast(t:Transformer, e:HaxeExpr, inner: HaxeExpr, type:ComplexT
             inner.def = t.createCallStatic("runtime.HxDynamic", "ensureInterface", [inner.copy()]);
             inner.flags = 0;
             t.transformExpr(inner);
-
-        case [nF, TPath({ name: "Null", pack: [], params: [nT] })] if (!nF.match(TPath({ name: "Null", pack: [] }))):
-            final ct = switch (nT) {
-                case TPType(x): x;
-                case _: null;
-            }
-
-            if (ct == null) {
-                return;
-            }
-
-            t.transformComplexType(ct);
-
-            e.def = EGoCode('struct{ Value ${t.module.translator.translateComplexType(ct)}; IsNull bool }{ {0}, false }', [inner]); // TODO: if type is nillable, we should check if it is.
-            t.transformExpr(e);
-            return;
-
-        case [TPath({ name: "Null", pack: [], params: [nF] }), nT] if (!nT.match(TPath({ name: "Null", pack: [] }))):
-            e.def = EGoCode('{0}.Value', [inner]);
-            t.transformExpr(e);
-            return;
 
         case _: null;
     }

@@ -22,7 +22,7 @@ function transformConst(t:Transformer, e:HaxeExpr) {
             }
 
             t.transformComplexType(p);
-            e.def = EGoCode('struct{ Value ${t.module.translator.translateComplexType(p)}; IsNull bool }{ IsNull: true }', []);
+            e.def = EGoCode('struct{ Value ${t.module.translator.translateComplexType(p)}; HasValue bool }{}', []);
 
         case [EConst(CIdent("null")), _]:
             e.def = EConst(CIdent("nil"));

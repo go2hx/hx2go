@@ -1,13 +1,31 @@
 function main() {
-    var x:String = "ho";
-    Sys.println(x.charAt(1) + x.charCodeAt(0));
-    Sys.println(x.indexOf("o"));
-    Sys.println(x.split(""));
-    Sys.println(String.fromCharCode(42));
-    Sys.println(new String("hi"));
-}
+    var x: Null<Int> = null;
+    Sys.println(x);
 
-class X<T> {
-    public function new() {}
-    public var x:T;
+    x = 3;
+    Sys.println(x);
+
+    x = null;
+    Sys.println(x);
+
+    if (x == null) {
+        Sys.println('x is null!');
+    }
+
+    if (x == 0) {
+        Sys.println('x is zero!');
+    }
+
+    var y: Int = x;
+    Sys.println(y);
+
+    y = 3;
+    Sys.println(y);
+
+    y = x;
+    Sys.println(y);
+
+    if (y == 0) {
+        Sys.println('y is zero!');
+    }
 }

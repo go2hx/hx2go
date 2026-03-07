@@ -233,7 +233,7 @@ class Transformer {
             case "Dynamic": "any";
             case "Array": '*[]${transformComplexTypeParam(p.params, 0)}';
             case "String": "string";
-            case "Null": '${transformComplexTypeParam(p.params, 0)}'; // TODO: implement Null<T>, currently just bypass
+            case "Null": 'struct{ Value ${transformComplexTypeParam(p.params, 0)}; IsNull bool }'; // TODO: implement Null<T>, currently just bypass
             case "Class": "*Hx_runtime_hxclass_Obj";
             case "go.Result", "go.ResultKind": {
                 resultToTuple(p);

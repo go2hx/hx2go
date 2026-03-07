@@ -174,7 +174,7 @@ class Translator {
 
         final className = 'Hx_${modulePathToPrefix(def.name)}_Obj';
 
-        buf.add('var ${className}_ClassType *Hx_runtime_hxclass_Obj = Hx_runtime_hxclass_Obj_CreateInstance("${def.name}", ${def.superClass != null ? 'Hx_${modulePathToPrefix(def.superClass)}_Obj_ClassType' : 'nil'})\n');
+        buf.add('var ${className}_ClassType *Hx_runtime_hxclass_Obj = Hx_runtime_hxclass_Obj_CreateInstance("${def.name}", ${def.superClass != null ? 'Hx_${modulePathToPrefix(def.superClass)}_Obj_ClassType' : 'struct{ Value *Hx_runtime_hxclass_Obj; IsNull bool }{ IsNull: true }'})\n');
         buf.add('type ${className}_VTable${typeParamDeclStr} interface {\n');
 
         var vTableAssignmentBuf = new StringBuf();

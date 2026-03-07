@@ -28,4 +28,10 @@ function main() {
     if (y == 0) {
         Sys.println('y is zero!');
     }
+
+    // TODO: field access on Nullable
+    // TODO: array access on Nullable
+    // TODO: dynamic on null
+    // TODO: binop / unop on nullable
+    // TODO: Null<Null<T>> (nested nullable)
 }

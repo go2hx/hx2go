@@ -1,5 +1,3 @@
-import haxe.Rest;
-
 function main() {
    var x = new X<Int>();
    Sys.println(x.a);

@@ -1,5 +1,7 @@
 package transformer.exprs;
 
+import haxe.macro.Expr.TypeParam;
+import haxe.macro.Expr.ComplexType;
 import HaxeExpr;
 import transformer.Transformer;
 import translator.TranslatorTools;
@@ -19,6 +21,7 @@ function transformNew(t:Transformer, e:HaxeExpr, tpath: TypePath, params: Array<
     var isNative = false;
     var transformName = false;
     var name = ''; // TODO: default name
+    var setParams:Array<TypeParam> = [];
 
     switch tpath {
         case { pack: [], name: "Array", params: [TPType(ct)] }:
@@ -28,6 +31,8 @@ function transformNew(t:Transformer, e:HaxeExpr, tpath: TypePath, params: Array<
         case { pack: [], name: "String"}:
             e.def = params[0].def;
             return;
+        case {pack: _, name: _, params: params} if (params != null && params.length > 0):
+            setParams = params;
         case _: null;
     }
 
@@ -71,9 +76,18 @@ function transformNew(t:Transformer, e:HaxeExpr, tpath: TypePath, params: Array<
     }
 
     var className = 'Hx_${modulePathToPrefix(td.name)}_Obj';
+
+    for (param in setParams) {
+        switch param {
+            case TPType(param):
+                t.transformComplexType(param);
+            default:
+        }
+    }
+
     e.def = ECall({
         t: e.t,
-        def: EConst(CIdent('${className}_CreateInstance'))
+        def: EConst(CIdent('${className}_CreateInstance' + t.module.translator.translateComplexTypeParams(setParams)))
     }, params);
 
     for (p in params) {

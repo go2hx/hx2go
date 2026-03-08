@@ -142,11 +142,20 @@ class Translator {
     }
 
     public function translateParamDecl(params: Array<TypeParamDecl>): String {
-        return params.length > 0 ? '[${params.map(p -> '${p.name} any').join(', ')}]' : '';
+        return params.length > 0 ? '[${params.map(p -> p.name + " any").join(', ')}]' : '';
     }
 
     public function translateParamUse(params: Array<TypeParamDecl>): String {
-        return params.length > 0 ? '[${params.map(p -> '${p.name}').join(', ')}]' : '';
+        return params.length > 0 ? '[${params.map(p -> p.name).join(', ')}]' : '';
+    }
+
+    public function translateComplexTypeParams(params:Array<TypeParam>):String {
+        return params.length > 0 ? '[${params.map(p -> switch p {
+            case TPType(p):
+                translateComplexType(p);
+            case _:
+                throw "invalid TPExpr";
+        }).join(', ')}]' : '';
     }
 
     public function translateTypeDef(def: HaxeTypeDefinition, ct:ComplexType):String {

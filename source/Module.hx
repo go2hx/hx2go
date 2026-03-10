@@ -1,3 +1,4 @@
+import haxe.macro.Expr.ComplexType;
 import preprocessor.Preprocessor;
 import translator.TranslatorTools.toCamelCase;
 import sys.io.File;
@@ -90,5 +91,28 @@ class Module {
     public function getFile():Context.ContextFile {
         // TODO
         throw "not implemented yet";
+    }
+
+
+    public function follow(ct:ComplexType):ComplexType {
+        return switch ct {
+            case TPath({pack: [], name: "Null", params: [TPType(ct)]}):
+                follow(ct);
+            case TPath(p):
+                final td = resolveClass(p.pack, p.name, path);
+                if (td == null) {
+                    ct;
+                }else{
+                    // trace(td.name);
+                    switch td.kind {
+                        case TDType(ct):
+                            follow(ct);
+                        case _:
+                            ct;
+                    }
+                }
+            default:
+                ct;
+        }
     }
 }

@@ -1,4 +1,3 @@
-# DO NOT EDIT. Generated from scripts/github-action
 name: build
 
 on: [push, pull_request]
@@ -28,6 +27,8 @@ jobs:
       - uses: krdlab/setup-haxe@v2.0.2
         with:
           haxe-version: ${{ matrix.haxe-version }}
+      - name: Haxe version
+        run: haxe --version
       # Get the cores 
       - name: Get number of cores (Ubuntu)
         if: startsWith(runner.os, 'Linux')

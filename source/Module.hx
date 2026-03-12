@@ -1,3 +1,4 @@
+import haxe.macro.Expr.ComplexType;
 import preprocessor.Preprocessor;
 import translator.TranslatorTools.toCamelCase;
 import sys.io.File;
@@ -18,7 +19,7 @@ class Module {
     public var context:Context;
 
     public function resolveClass(pack:Array<String>, name:String, origin:String): HaxeTypeDefinition {
-        final path = pack.join(".") + (pack.length > 0 ? "." : "") + name;
+        final path = (pack != null ? pack.join(".") + (pack.length > 0 ? "." : "") : "") + name;
         final module = context.getModule(path);
         if (module == null) {
             return null;
@@ -26,7 +27,7 @@ class Module {
 
         for (def in module.defs) {
             switch def.kind {
-                case TDClass:
+                case TDClass, TDType(_):
                     if (def.name.split(".").pop() == name) {
                         if (!def.usages.exists(origin)) {
                             def.usages[origin] = 0;
@@ -90,5 +91,28 @@ class Module {
     public function getFile():Context.ContextFile {
         // TODO
         throw "not implemented yet";
+    }
+
+
+    public function follow(ct:ComplexType):ComplexType {
+        return switch ct {
+            case TPath({pack: [], name: "Null", params: [TPType(ct)]}):
+                follow(ct);
+            case TPath(p):
+                final td = resolveClass(p.pack, p.name, path);
+                if (td == null) {
+                    ct;
+                }else{
+                    // trace(td.name);
+                    switch td.kind {
+                        case TDType(ct):
+                            follow(ct);
+                        case _:
+                            ct;
+                    }
+                }
+            default:
+                ct;
+        }
     }
 }

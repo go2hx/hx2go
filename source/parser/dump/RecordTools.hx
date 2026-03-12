@@ -72,6 +72,21 @@ function recordToHaxeTypeDefinition(record: RecordEntry):HaxeTypeDefinition {
 
         case RType:
             var t = record.toType();
+            if (t.params == null)
+                t.params = [];
+
+            for (param in t.params) {
+                params.push(recordTypeParamToParamDecl(record.record_debug_path, param));
+            }
+            
+            var remapping: Map<String, String> = [];
+            for (param in t.params) {
+                remapping.set(param.get("class"), prefixParam(param.get("name")));
+            }
+
+            final ctString = remapType(parseAstType(t.type), remapping);
+            final ct = HaxeExprTools.stringToComplexType(ctString);
+            kind = TDType(ct);
         case REnum:
             var t = record.toEnum();
         case RUnknown:
@@ -133,8 +148,12 @@ private function getMeta(list:Array<String>):Array<MetadataEntry> {
 
 private function recordTypeParamToParamDecl(record_debug_path:String, param: Map<String, Dynamic>): TypeParamDecl {
     return {
-        name: param["name"],
+        name: prefixParam(param["name"]),
     };
+}
+
+function prefixParam(s: String): String {
+    return 'Hx_Param__$s';
 }
 
 function parseAstType(t: String): String {
@@ -211,10 +230,10 @@ function parseAstType(t: String): String {
                 }
 
                 '$argStr->$ret';
-
-            case "TDynamic" | "TAnon": // mikaib: i think TAnon is OK like this?
+            case "TAnon":
+                "{}";
+            case "TDynamic":
                 "Dynamic";
-
             case "TLazy":
                 Logging.recordParser.warn('TLazy in field type, inside of ast type: "$t"');
                 "Dynamic";
@@ -243,7 +262,7 @@ private function recordClassFieldToHaxeField(record_debug_path:String, field:Rec
             final params:Array<TypeParamDecl> = [];
             for (param in field.params) {
                 params.push({
-                    name: param.get("name"),
+                    name: prefixParam(param.get("name")),
                 });
             }
             FFun({args: [], params: params});
@@ -263,11 +282,11 @@ private function recordClassFieldToHaxeField(record_debug_path:String, field:Rec
     var remapping: Map<String, String> = [];
 
     for (param in field.params) {
-        remapping.set(param.get("class"), param.get("name"));
+        remapping.set(param.get("class"), prefixParam(param.get("name")));
     }
 
     for (param in defParams) {
-        remapping.set(param.get("class"), param.get("name"));
+        remapping.set(param.get("class"), prefixParam(param.get("name")));
     }
 
     return {

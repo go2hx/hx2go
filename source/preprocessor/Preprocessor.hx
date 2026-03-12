@@ -206,6 +206,13 @@ class Preprocessor {
                 ensureBlock(body);
                 iterateExprPost(e, scope.copy());
 
+            // ensure array index type is correct
+            case EArray(e1, e2):
+                Semantics.ensure(e, [e1, e2], this, scope);
+                e.t = e1.t;
+
+                iterateExprPost(e, scope);
+
             // default
             case _: iterateExprPost(e, scope);
         }

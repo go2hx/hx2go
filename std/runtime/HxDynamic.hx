@@ -404,6 +404,8 @@ class HxDynamic {
 			);
 		}
 
+		// TODO: throw when Null<T> is supported.
+
 		return value;
 	}
 
@@ -447,6 +449,71 @@ class HxDynamic {
 
 			value.setMapIndex(fn, ensureValue(v));
 		}
+
+		// TODO: throw when Null<T> is supported.
+	}
+
+	public static function setArrayIndex(dyn: Dynamic, index: Int, v: Dynamic): Void {
+		var value = ensureValue(dyn);
+		var kind = value.kind();
+
+		if (isNull(value)) {
+			throw "runtime.HxDynamic.setArrayIndex null array access";
+		}
+
+		if (kind == Reflect.Interface) {
+			value = getArrayIndex(value.elem(), index);
+		}
+
+		if (kind == Reflect.Ptr) {
+			value = value.elem();
+			kind = value.kind();
+		}
+
+		if (kind == Reflect.Slice || kind == Reflect.Array) {
+			var length = value.len();
+			if (index >= length) {
+				if (kind == Reflect.Array) {
+					throw "runtime.HxDynamic.setArrayIndex out of bounds exception, cannot grow go array";
+				}
+
+				value.grow(index - length + 1);
+				value.setLen(index + 1);
+			}
+
+			var item = value.index(index);
+			item.set(
+				ensureValue(v)
+			);
+		}
+
+		// TODO: throw when Null<T> is supported.
+	}
+
+	public static function getArrayIndex(dyn: Dynamic, index: Int): Dynamic {
+		var value = ensureValue(dyn);
+		var kind = value.kind();
+
+		if (isNull(value)) {
+			throw "runtime.HxDynamic.getArrayIndex null array access";
+		}
+
+		if (kind == Reflect.Ptr || kind == Reflect.Interface) {
+			value = getArrayIndex(value.elem(), index);
+		}
+
+		if (kind == Reflect.Slice || kind == Reflect.Array) {
+			var length = value.len();
+			if (index >= length) {
+				throw "runtime.HxDynamic.getArrayIndex out of bounds exception";
+			}
+
+			value = value.index(index);
+		}
+
+		// TODO: throw when Null<T> is supported.
+
+		return value;
 	}
 
 	// given the type of dyn, if it is reflect.Value we return that, otherwise we use reflect.valueOf
@@ -478,4 +545,19 @@ class HxDynamic {
 		return v;
 	}
 
+	public static function ensureInterface(dyn: Dynamic): Dynamic {
+		var ok: Bool = false;
+		var value: Value = Null;
+		Syntax.code("{0}, {1} = {2}.(reflect.Value)", value, ok, dyn);
+
+		if (!ok) {
+			return dyn;
+		}
+
+		if (!value.canInterface()) {
+			throw "runtime.HxDynamic.ensureInterface cannot convert to iface";
+		}
+
+		return value.iface();
+	}
 }

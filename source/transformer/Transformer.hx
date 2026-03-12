@@ -32,6 +32,23 @@ class Transformer {
         p.params.resize(1);
     }
 
+    public function createFieldAccess(path: String, trimBy: Int = 0) {
+        var parts = path.split('.');
+        var e: HaxeExprDef = EConst(CIdent(parts[0]));
+        for (i in trimBy...parts.length) {
+            e = EField({ t: null, def: e }, parts[i]);
+        }
+
+        return e;
+    }
+    public function createCallStatic(path: String, funcName: String, params: Array<HaxeExpr>, returnType: String = "Dynamic"): HaxeExprDef {
+        return ECall({
+            t: returnType,
+            def: EField({ t: null, def: createFieldAccess(path, 1) }, funcName),
+            special: FStatic(path, funcName)
+        }, params);
+    }
+
     public function transformExpr(e:HaxeExpr, ?parent:HaxeExpr, ?parentIdx:Int) {
         if (e == null || e.def == null) {
             return;
@@ -131,12 +148,18 @@ class Transformer {
 
                     case _: {
                         handleCoreTypeName(p, td.name);
-
                         if (!processTypeMetadata(p, td)) {
                             var clsName = 'Hx_${modulePathToPrefix(td.name)}_Obj';
                             p.pack = [];
-                            p.name = '*${clsName}${p.params.length > 0 ? '[${p.params.map(p -> switch p {
+                            final isPointer = switch td.kind {
+                                case TDClass:
+                                    true;
+                                case _:
+                                    false;
+                            }
+                            p.name = (isPointer ? '*' : '') + '${clsName}${p.params.length > 0 ? '[${p.params.map(p -> switch p {
                                 case TPType(TPath(p)): p.name;
+                                case TPType(TAnonymous(_)): 'map[string]any';
                                 case _: '';
                             }).join(', ')}]' : ""}';
                         }
@@ -310,6 +333,14 @@ class Transformer {
     }
 
     public function transformDef(def:HaxeTypeDefinition) {
+        switch def.kind {
+            case TDType(ct):
+                def.isExtern = processTypeMetadata({name: def.name, pack: []}, def);
+                if (!def.isExtern)
+                    transformComplexType(ct);
+            default:
+        }
+        
         if (def.fields == null) {
             return;
         }

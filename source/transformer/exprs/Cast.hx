@@ -86,6 +86,11 @@ function transformCast(t:Transformer, e:HaxeExpr, inner: HaxeExpr, type:ComplexT
             return;
         }
 
+        case [TPath({ name: "Dynamic", pack: [] }), to] if (!to.match(TPath({ name: "Value", pack: ["go", "reflect"] }))): // if we desire a value, we shouldn't ensure the interface
+            inner.def = t.createCallStatic("runtime.HxDynamic", "ensureInterface", [inner.copy()]);
+            inner.flags = 0;
+            t.transformExpr(inner);
+
         case _: null;
     }
 
@@ -120,7 +125,7 @@ function transformCast(t:Transformer, e:HaxeExpr, inner: HaxeExpr, type:ComplexT
         }
     }
 
-    if (fromTd.kind == toTd.kind && fromTd.kind == TDClass && !hasNative) {
+    if (fromTd.kind == toTd.kind && (fromTd.kind == TDClass || fromTd.kind.match(TDType(_))) && !hasNative) {
         e.def = EGoCode("(&{0})", [{ t: null, def: EField(inner.copy(), 'Hx_${modulePathToPrefix(toTd.name)}_Obj') }]);
     }
 }

@@ -44,6 +44,7 @@ class Dump implements IParser {
             final def = RecordTools.recordToHaxeTypeDefinition(record);
             final module = if (!cache.exists(record.path)) {
                 var module: Module = {
+                    buf: null,
                     path: record.module,
                     translator: {},
                     transformer: {},

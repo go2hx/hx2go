@@ -105,9 +105,6 @@ class Context {
         // sets context cache
         _parser.run("");
 
-        var buf = new StringBuf();
-        buf.add("package main\n\n");
-
         for (module in _cache.iterator()) {
             if (module.path == options.entryPoint) {
                 module.mainBool = true;
@@ -149,20 +146,23 @@ class Context {
 
         var imports = [];
         for (mod in _cache.iterator()) {
+            mod.buf = new StringBuf();
+
+            mod.buf.add("package main\n\n");
+
             if (!compileList.contains(mod.path)) continue;
 
-            for (def in mod.defs) {
-                for (imp in def.goImports) {
-                    if (!imports.contains(imp)) {
-                        imports.push(imp);
-                        buf.add('import "' + imp + '"\n');
-                    }
+            for (imp in mod.goImports) {
+                if (!imports.contains(imp)) {
+                    imports.push(imp);
+                    mod.buf.add('import "' + imp + '"\n');
                 }
             }
         }
 
-        if (imports.length > 0) {
-            buf.add('\n');
+
+        if (!FileSystem.exists(options.output)) {
+            FileSystem.createDirectory(options.output);
         }
 
         var entryPointPath = options.entryPoint;
@@ -182,30 +182,24 @@ class Context {
                 if (isMain)
                     entryPointPath = obj.key;
             }
+
             for (def in mod.defs) {
-                if (def.isExtern) continue;
-                buf.add(def.buf.toString());
+                if (def.isExtern) 
+                    continue;
+                mod.buf.add(def.buf.toString());
+            }
+            if (mod.defs.length != 0 || mod.goImports.length != 0) {
+                final file = mod.getFile();
+                final outPath = Path.join([ options.output, file.path + ".go"]);
+                File.saveContent(outPath, file.content);
             }
         }
 
-        buf.add('func Hx_Boot() {\n');
-        buf.add('\tHx_${modulePathToPrefix(entryPointPath)}_Main_Field()\n');
-        buf.add('}\n\n');
-
-        buf.add('func main() {\n');
-        buf.add('\tHx_Boot()\n');
-        buf.add('}\n');
-
-        final outPath = Path.join([ options.output ]);
-        final dir = Path.directory(outPath);
-
-        if (!FileSystem.exists(dir)) {
-            FileSystem.createDirectory(dir);
-        }
+        File.saveContent(Path.join([options.output, "hx_boot.go"]), createMain(entryPointPath));
 
         final cwd = Sys.getCwd();
-        File.saveContent(outPath, buf.toString());
-        Sys.setCwd(dir);
+        
+        Sys.setCwd(options.output);
 
         if (!FileSystem.exists("go.mod")) {
             Sys.command("go mod init hx2go");
@@ -273,6 +267,20 @@ class Context {
         Sys.setCwd(cwd);
         // TODO add in context results
         return [];
+    }
+
+    function createMain(entryPointPath:String):String {
+        final buf = new StringBuf();
+        buf.add('package main\n\n');
+        buf.add('func Hx_Boot() {\n');
+        buf.add('\tHx_${modulePathToPrefix(entryPointPath)}_Main_Field()\n');
+        buf.add('}\n\n');
+
+        buf.add('func main() {\n');
+        buf.add('\tHx_Boot()\n');
+        buf.add('}\n');
+
+        return buf.toString();
     }
 
 }

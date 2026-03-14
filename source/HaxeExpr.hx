@@ -244,18 +244,6 @@ enum HaxeExprDef {
 
 @:structInit
 class HaxeTypeDefinition {
-	public var goImports: Array<String> = [];
-    /**
-     * Adds an import to the go output, duplicates are removed.
-     * @param imp The stdlib name or package URL
-     */
-    public function addGoImport(imp: String): Void {
-        if (goImports.contains(imp)) {
-            return;
-        }
-
-        goImports.push(imp);
-    }
 	public var name:String;
 	public var module:String;
 	public var isExtern:Bool;

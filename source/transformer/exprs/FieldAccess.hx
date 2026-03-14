@@ -160,7 +160,7 @@ function processImports(t:Transformer, expr:Expr) {
     }
 
     for (v in values) {
-        t.def.addGoImport(t.exprToString(v));
+        t.module.addGoImport(t.exprToString(v));
     }
 }
 
@@ -235,7 +235,7 @@ function handleFieldTransform(t:Transformer, e:HaxeExpr, ct:ComplexType, e2:Haxe
 
         case TPath({ name: 'String', pack: [] }) if (field == "length"):
             e.def = EGoCode('utf8.RuneCountInString({0})', [e2]);
-            t.def.addGoImport('unicode/utf8');
+            t.module.addGoImport('unicode/utf8');
             true;
 
         case TPath({ name: 'Dynamic', pack: [] }):

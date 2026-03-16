@@ -79,10 +79,19 @@ class Dump implements IParser {
                 continue;
             for (fileName in files) {
                 final imp = pathToModule[fileName];
-                // assume import is null means the compiler is fine to skip it and is only in eval
-                if (imp == null)
+                final importedModule = cache.get(imp);
+                if (importedModule == null)
                     continue;
-                // module.addImport(imp, fileNameToModulePath[fileName]);
+                // set to parent
+                importedModule.transformer.module = module;
+
+                for (td in importedModule.defs) {
+                    for (meta in td.meta()) {
+                        if (meta.name == ":go.TypeAccess") {
+                            var result = transformer.exprs.FieldAccess.processStructAccessMeta(importedModule.transformer, meta, "");
+                        }
+                    }
+                }
             }
         }
     }

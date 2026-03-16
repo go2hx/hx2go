@@ -151,12 +151,11 @@ class Context {
             mod.buf.add("package main\n\n");
 
             if (!compileList.contains(mod.path)) continue;
-
             for (imp in mod.goImports) {
                 if (!imports.contains(imp)) {
                     imports.push(imp);
-                    mod.buf.add('import "' + imp + '"\n');
                 }
+                mod.buf.add('import "' + imp + '"\n');
             }
         }
 
@@ -188,7 +187,7 @@ class Context {
                     continue;
                 mod.buf.add(def.buf.toString());
             }
-            if (mod.defs.length != 0 || mod.goImports.length != 0) {
+            if (mod.defs.length != 0 && !(mod.defs.length == 1 && mod.defs[0].isExtern)) {
                 final file = mod.getFile();
                 final outPath = Path.join([ options.output, file.path + ".go"]);
                 File.saveContent(outPath, file.content);

@@ -124,6 +124,14 @@ function recordToHaxeTypeDefinition(record: RecordEntry):HaxeTypeDefinition {
         }
     }
 
+    var abstractImpl: String = null;
+    if (record.record_kind == RAbstract) {
+        var abs = record.toAbstract();
+        if (abs.impl != null && abs.impl != "None") {
+            abstractImpl = abs.impl;
+        }
+    }
+
     return {
         name: record.path,
         module: record.module,
@@ -133,7 +141,8 @@ function recordToHaxeTypeDefinition(record: RecordEntry):HaxeTypeDefinition {
         constructor: constructor,
         kind: kind,
         superClass: superClass,
-        params: params
+        params: params,
+        abstractImpl: abstractImpl
     };
 }
 

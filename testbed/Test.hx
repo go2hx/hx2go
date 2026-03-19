@@ -1,8 +1,12 @@
 class Test {
 	static function main() {
-		var code = Sys.command("echo", ["Hello,", "World!"]);
-		Sys.println(code);
-		var code = Sys.command("beep", null); // this should fail since beep is not a real command
-		Sys.println(code);
+		var str: String = "Hello World";
+		var abs: CoolString = str;
+		abs.logIt();
+
+		trace('charAt abstract', abs.charAt(0));
+
+		var str2: String = abs;
+		trace('charAt str', str2.charAt(0));
 	}
 }

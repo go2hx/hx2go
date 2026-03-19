@@ -24,12 +24,13 @@ class Module {
         final path = (pack != null ? pack.join(".") + (pack.length > 0 ? "." : "") : "") + name;
         final module = context.getModule(path);
         if (module == null) {
+            Logging.module.warn('module not found: $path');
             return null;
         }
 
         for (def in module.defs) {
             switch def.kind {
-                case TDClass, TDType(_):
+                case TDClass, TDType(_), TDAbstract:
                     if (def.name.split(".").pop() == name) {
                         if (!def.usages.exists(origin)) {
                             def.usages[origin] = 0;

@@ -22,6 +22,7 @@ class Transformer {
 
     public var module:Module = null;
     public var def:HaxeTypeDefinition = null;
+    public var retStack:Array<ComplexType> = [];
 
     public static function resultToTuple(p: TypePath): Void {
         p.name = "Tuple";
@@ -30,6 +31,10 @@ class Transformer {
             { name: "error", pos: null, kind: FVar(HaxeExprTools.typeOfParam(p.params[1])) }
         ]));
         p.params.resize(1);
+    }
+
+    public function getCurrentReturnType(): ComplexType {
+        return HaxeExprTools.copyType(retStack[retStack.length - 1]);
     }
 
     public function createFieldAccess(path: String, trimBy: Int = 0) {
@@ -89,7 +94,9 @@ class Transformer {
             case EArray(e1, e2):
                 transformer.exprs.ArrayAccess.transformArrayAccess(this, e, e1, e2);
             case EFunction(_, f):
+                retStack.push(HaxeExprTools.copyType(f.ret));
                 transformer.exprs.Function.transformFunction(this, f, "");
+                retStack.pop();
             case EObjectDecl(fields):
                 final ct = HaxeExprTools.stringToComplexType(e.t);
                 e.def = transformer.exprs.ObjectDeclaration.transformObjectDeclaration(this, fields, ct);
@@ -103,6 +110,8 @@ class Transformer {
                 transformer.exprs.Call.transformCall(this, e, e0, params);
             case EUnop(op, postFix, e0):
                 transformer.exprs.UnopExpr.transformUnop(this, e, op, postFix, e0);
+            case EReturn(e0):
+                transformer.exprs.Return.transformReturn(this, e, e0);
             default:
                 iterateExpr(e);
         }
@@ -233,7 +242,7 @@ class Transformer {
             case "Dynamic": "any";
             case "Array": '*[]${transformComplexTypeParam(p.params, 0)}';
             case "String": "string";
-            case "Null": '${transformComplexTypeParam(p.params, 0)}'; // TODO: implement Null<T>, currently just bypass
+            case "Null": 'struct{ Value ${transformComplexTypeParam(p.params, 0)}; HasValue bool }'; // TODO: implement Null<T>, currently just bypass
             case "Class": "*Hx_runtime_hxclass_Obj";
             case "go.Result", "go.ResultKind": {
                 resultToTuple(p);
@@ -352,7 +361,9 @@ class Transformer {
                         case EFunction(kind, f):
                             // pass on the params
                             f.params = params;
+                            retStack.push(HaxeExprTools.copyType(f.ret));
                             transformer.exprs.Function.transformFunction(this, f, field.name);
+                            retStack.pop();
                             continue;
                         default:
                     }

@@ -4,46 +4,29 @@ import haxe.macro.Expr.ComplexType;
 import haxe.macro.Expr.Constant;
 
 function transformConst(t:Transformer, e:HaxeExpr) {
-    switch e.def {
-        case EConst(c):
-            switch c {
-                // TODO: proper handle Null type, for now null bypass
-                case CIdent("null"):
-                    final ct = HaxeExprTools.stringToComplexType(e.t);
-                    e.def = EConst(CIdent(switch ct {
-                        case TPath({pack: [], name: "Null", params: [TPType(t)]}):
-                            if (isUnknown(t)) {
-                                "any(nil)";
-                            } else {
-                                defaultConst(c);
-                            }
-                        default:
-                            "nil";
-                    }));
-                default:
+    if (e?.t == null) {
+        return;
+    }
+
+    final ct = HaxeExprTools.stringToComplexType(e.t);
+
+    switch [e.def, ct] {
+        case [EConst(CIdent("null")), TPath({ name: "Null", pack: [], params: [nT] })]:
+            final p = switch (nT) {
+                case TPType(x): x;
+                case _: null;
             }
-        default:
-    }
-}
 
-private function isUnknown(ct:ComplexType) {
-    return switch ct {
-        case TPath({sub: null, pack: [], name: "Unknown", params: _}):
-            true;
-        default:
-            false;
-    }
-}
+            if (p == null) {
+                return;
+            }
 
-private function defaultConst(c:Constant) {
-    return switch c {
-        case CInt(_, _):
-            "0";
-        case CFloat(_, _):
-            "0.0";
-        case CString(_, _):
-            '""';
+            t.transformComplexType(p);
+            e.def = EGoCode('struct{ Value ${t.module.translator.translateComplexType(p)}; HasValue bool }{}', []);
+
+        case [EConst(CIdent("null")), _]:
+            e.def = EConst(CIdent("nil"));
+
         default:
-            "nil";
     }
 }

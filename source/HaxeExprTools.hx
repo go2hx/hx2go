@@ -148,6 +148,10 @@ class HaxeExprTools {
 		}
 	}
 	public static function copyType(t: ComplexType): ComplexType {
+		if (t == null) {
+			return null;
+		}
+
 		return HaxeExprTools.stringToComplexType(ComplexTypeTools.toString(t)); // mikaib: evil hack, sorry :(
 	}
 	public static function compareType(a: ComplexType, b: ComplexType): Bool {

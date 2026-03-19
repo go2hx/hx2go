@@ -5,7 +5,7 @@ import HaxeExpr;
 import haxe.macro.Expr.ComplexType;
 
 function translateArrayDeclaration(t:Translator, e:HaxeExpr, values:Array<HaxeExpr>, ct:ComplexType):String {
-    return if (isMap(ct)) {
+    return if (isMap(t, ct)) {
         translateArrayDeclMap(t, values, ct);
     }else{
         final ctStr = t.translateComplexType(ct);
@@ -48,9 +48,8 @@ function getTypeParams(ct:ComplexType):Array<ComplexType> {
     }
 }
 
-function isMap(ct:ComplexType) {
-    // TODO Context.follow needed in case it's a named alias
-    return switch ct {
+function isMap(t:Translator, ct:ComplexType) {
+    return switch t.module.follow(ct) {
         // anon type -> map[string]any
         case TAnonymous(_):
             true;

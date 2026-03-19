@@ -307,7 +307,7 @@ class Transformer {
                     }
 
                     for (v in values) {
-                        def.addGoImport(exprToString(v));
+                        module.addGoImport(exprToString(v));
                     }
 
                 case _:

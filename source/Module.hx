@@ -1,3 +1,4 @@
+import haxe.macro.Expr.ComplexType;
 import preprocessor.Preprocessor;
 import translator.TranslatorTools.toCamelCase;
 import sys.io.File;
@@ -11,10 +12,12 @@ import translator.Translator;
 class Module {
     public var mainBool:Bool = false;
     public var path:String;
+    public var goImports:Array<String> = [];
     public var defs:Array<HaxeTypeDefinition> = [];
     public var preprocessor:Preprocessor;
     public var transformer:Transformer;
     public var translator:Translator;
+    public var buf:StringBuf;
     public var context:Context;
 
     public function resolveClass(pack:Array<String>, name:String, origin:String): HaxeTypeDefinition {
@@ -43,6 +46,18 @@ class Module {
 
         Logging.module.warn('def not found in module: $name at $pack');
         return null;
+    }
+
+    /**
+     * Adds an import to the go output, duplicates are removed.
+     * @param imp The stdlib name or package URL
+     */
+    public function addGoImport(imp: String): Void {
+        if (goImports.contains(imp)) {
+            return;
+        }
+
+        goImports.push(imp);
     }
 
     public function addDef(def:HaxeTypeDefinition) {
@@ -88,7 +103,33 @@ class Module {
     }
 
     public function getFile():Context.ContextFile {
-        // TODO
-        throw "not implemented yet";
+        return {
+            path: path.toLowerCase().split(".").join("_"),
+            content: buf.toString(),
+            module: this,
+        }
+    }
+
+
+    public function follow(ct:ComplexType):ComplexType {
+        return switch ct {
+            case TPath({pack: [], name: "Null", params: [TPType(ct)]}):
+                follow(ct);
+            case TPath(p):
+                final td = resolveClass(p.pack, p.name, path);
+                if (td == null) {
+                    ct;
+                }else{
+                    // trace(td.name);
+                    switch td.kind {
+                        case TDType(ct):
+                            follow(ct);
+                        case _:
+                            ct;
+                    }
+                }
+            default:
+                ct;
+        }
     }
 }

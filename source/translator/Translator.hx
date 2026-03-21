@@ -98,7 +98,7 @@ class Translator {
         var buf = new StringBuf();
 
         for (field in def.fields) {
-            final name = field.isStatic ? 'Hx_${modulePathToPrefix(def.name)}_${toPascalCase(field.name)}_Field' : toPascalCase(field.name);
+            final name = field.isStatic ? 'Hx_${modulePathToPrefix(def.module)}_${toPascalCase(field.name)}_Field' : toPascalCase(field.name);
             final expr:HaxeExpr = field.expr;
 
             switch field.kind {

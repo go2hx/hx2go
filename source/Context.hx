@@ -263,11 +263,15 @@ class Context {
 
         } else {
             if (options.buildAfterCompilation) {
-                Sys.command('go build .');
+                final code = Sys.command('go build .');
+                if (code != 0)
+                    Sys.exit(code);
             }
 
             if (options.runAfterCompilation) {
-                Sys.command('go run .');
+                final code = Sys.command('go run .');
+                if (code != 0)
+                    Sys.exit(code);
             }
         }
 

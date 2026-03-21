@@ -72,6 +72,7 @@ class Context {
     public var options: ContextOptions;
     
     private var _parser: IParser = null;
+    private var _pathToModule:Map<String,String> = [];
     private var _cache: Map<String, Module> = [];
 
     public function new(options: ContextOptions) {
@@ -85,7 +86,11 @@ class Context {
      * @return A module or null if not found.
      */
     public function getModule(path: String): Null<Module> {
-        return _cache[path];
+        final modulePath = _pathToModule[path];
+        if (modulePath == null) {
+            return null;
+        }
+        return _cache[modulePath];
     }
 
     /**
@@ -95,6 +100,9 @@ class Context {
     public inline function getCache(): Map<String, Module> {
         return _cache;
     }
+
+    public inline function getPathToModule():Map<String, String>
+        return _pathToModule;
 
     /**
      * Runs the hx2go transpiler.
@@ -283,3 +291,5 @@ class Context {
     }
 
 }
+
+final outMap:Map<String,Bool> = [];

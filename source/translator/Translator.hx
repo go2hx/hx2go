@@ -162,7 +162,7 @@ class Translator {
         if (def.isExtern) {
             return "";
         }
-        final className = 'Hx_${modulePathToPrefix(def.name)}_Obj';
+        final className = 'Hx_${modulePathToPrefix(def.module)}_Obj';
         var typeParamDeclStr = translateParamDecl(def.params);
         final t = translateComplexType(ct);
         return 'type ${className}${typeParamDeclStr} ${t}\n';
@@ -181,7 +181,7 @@ class Translator {
         var typeParamDeclStr = translateParamDecl(def.params);
         var typeParamUsageStr = translateParamUse(def.params);
 
-        final className = 'Hx_${modulePathToPrefix(def.name)}_Obj';
+        final className = 'Hx_${modulePathToPrefix(def.module)}_Obj';
 
         buf.add('var ${className}_ClassType *Hx_runtime_hxclass_Obj = Hx_runtime_hxclass_Obj_CreateInstance("${def.name}", ${def.superClass != null ? 'Hx_${modulePathToPrefix(def.superClass)}_Obj_ClassType' : 'struct{ Value *Hx_runtime_hxclass_Obj; HasValue bool }{}'})\n');
         buf.add('type ${className}_VTable${typeParamDeclStr} interface {\n');
@@ -279,7 +279,7 @@ class Translator {
                     var typeStr = translateComplexType(ct);
                     var fieldName = toPascalCase(field.name);
 
-                    staticsBuf.add('var Hx_${modulePathToPrefix(def.name)}_${fieldName}_Field ${typeStr}');
+                    staticsBuf.add('var Hx_${modulePathToPrefix(def.module)}_${fieldName}_Field ${typeStr}');
 
                     if (field.expr != null) {
                         var body: Array<HaxeExpr> = [];

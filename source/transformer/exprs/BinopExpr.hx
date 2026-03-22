@@ -77,13 +77,16 @@ function handleResultBinop(t:Transformer, e:HaxeExpr, op:Binop, side:HaxeExpr, o
     return true;
 }
 
-function unpackNull(ct: ComplexType) { // avoid usage of this if you can...
-    if (ct == null) {
-        return null;
-    }
-
+function isNull(ct: ComplexType): Bool {
     return switch ct {
-        case TPath({ pack: [], name: "Null", params: [TPType(inner)] }): inner;
+        case TPath({ name: "Null", pack: [] }): true;
+        case _: false;
+    }
+}
+
+function unpackNull(ct: ComplexType): ComplexType {
+    return switch ct {
+        case TPath({ name: "Null", pack: [], params: [TPType(inner)] }): inner;
         case _: ct;
     }
 }
@@ -103,8 +106,12 @@ function promoteBinop(t: Transformer, e1:HaxeExpr, e2:HaxeExpr, e:HaxeExpr, op: 
     }
 
     final resultCt = HaxeExprTools.stringToComplexType(e.t);
-    final leftCt = unpackNull(e1.t != null ? HaxeExprTools.stringToComplexType(e1.t) : null);
-    final rightCt = unpackNull(e2.t != null ? HaxeExprTools.stringToComplexType(e2.t) : null);
+    final leftCt = e1.t != null ? HaxeExprTools.stringToComplexType(e1.t) : null;
+    final rightCt = e2.t != null ? HaxeExprTools.stringToComplexType(e2.t) : null;
+    final leftIsNull = isNull(leftCt);
+    final rightIsNull = isNull(rightCt);
+    final unpackedLeftCt = unpackNull(leftCt);
+    final unpackedRightCt = unpackNull(rightCt);
 
     // TODO: review whenever we properly introduce Null<T>
 
@@ -116,7 +123,7 @@ function promoteBinop(t: Transformer, e1:HaxeExpr, e2:HaxeExpr, e:HaxeExpr, op: 
         return ComplexTypeTools.toString(a) == ComplexTypeTools.toString(b);
     }
 
-    switch [leftCt, rightCt] {
+    switch [unpackedLeftCt, unpackedRightCt] {
         case [TPath({ pack: [], name: "Dynamic" }), _] | [_, TPath({ pack: [], name: "Dynamic" })]: // cast if any type is dynamic, regardless of result type
             var dyn = toDynamicOp(e1, e2, op);
 
@@ -129,6 +136,20 @@ function promoteBinop(t: Transformer, e1:HaxeExpr, e2:HaxeExpr, e:HaxeExpr, op: 
 
             t.transformExpr(e);
             return;
+
+        case _:
+    }
+
+    switch [leftIsNull, rightIsNull] {
+        case [true, false]:
+            e1.def = ECast(e1.copy(), unpackedLeftCt);
+            e1.t = ComplexTypeTools.toString(unpackedLeftCt);
+            t.transformExpr(e1);
+
+        case [false, true]:
+            e2.def = ECast(e2.copy(), unpackedRightCt);
+            e2.t = ComplexTypeTools.toString(unpackedRightCt);
+            t.transformExpr(e2);
 
         case _:
     }

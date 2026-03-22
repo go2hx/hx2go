@@ -46,6 +46,7 @@ class Transformer {
 
         return e;
     }
+
     public function createCallStatic(path: String, funcName: String, params: Array<HaxeExpr>, returnType: String = "Dynamic"): HaxeExprDef {
         return ECall({
             t: returnType,

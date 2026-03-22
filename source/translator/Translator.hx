@@ -89,8 +89,14 @@ class Translator {
                     Throw.translateThrow(this, e);
                 case EContinue:
                     Continue.translateContinue(this);
+                case ESwitch(e, cases, edef):
+                    Switch.translateSwitch(this, e, cases, edef);
+                case EGoEnumIndex(e):
+                    EnumIndex.translateEnumIndex(this, e);
+                case EGoEnumParameter(e, kind, index):
+                    EnumParameter.translateEnumParameter(this, e, kind, index);
                 default:
-                    // trace("UNKNOWN EXPR TO TRANSLATE:" + e.def);
+                    trace("UNKNOWN EXPR TO TRANSLATE:" + e.def);
                     "_ = 0";
             }
         return "";

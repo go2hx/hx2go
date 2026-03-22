@@ -177,17 +177,14 @@ class Context {
             final mod = obj.value;
             if (!compileList.contains(mod.path)) continue;
             if (mod.path == options.entryPoint) {
-                var isMain = false;
                 for (def in mod.defs) {
                     for (field in def.fields) {
                         if (field.name == "main") {
-                            isMain = true;
+                            entryPointPath = def.name;
                             break;
                         }
                     }
                 }
-                if (isMain)
-                    entryPointPath = obj.key;
             }
 
             for (def in mod.defs) {

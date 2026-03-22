@@ -30,7 +30,6 @@ function recordToHaxeTypeDefinition(record: RecordEntry):HaxeTypeDefinition {
     var fields:Array<HaxeField> = [];
     var params:Array<TypeParamDecl> = [];
     var isExtern = false;
-
     switch record.record_kind {
         case RClass:
             var cls = record.toClass();
@@ -89,6 +88,7 @@ function recordToHaxeTypeDefinition(record: RecordEntry):HaxeTypeDefinition {
             kind = TDType(ct);
         case REnum:
             var t = record.toEnum();
+            kind = TDEnum(t.constrs);
         case RUnknown:
             Logging.recordParser.warn('record_kind should not be unknown: ' + record.module + ' in ' + record.record_debug_path);
     }

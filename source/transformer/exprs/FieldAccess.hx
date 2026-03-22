@@ -49,7 +49,9 @@ function transformFieldAccess(t:Transformer, e:HaxeExpr) {
                         case FStatic(tstr, _): EConst(CIdent('Hx_${modulePathToPrefix(tstr)}_${field}_Field'));
                         case FEnum(inst, field):
                             final fieldName:HaxeExpr = {def: EConst(CIdent('Hx_' + modulePathToPrefix(inst) + "_" + field + '_EnumConstructor')), t: ""};
-                            EGoCode('Hx_runtime_hxenumvalue_Obj_CreateInstance({0}, &[]any{})', [fieldName]);
+                            final callField:HaxeExpr = {def:EConst(CIdent("Hx_runtime_hxenumvalue_Obj_CreateInstance")), t: ""};
+                            final slice:HaxeExpr = {def: EArrayDecl([], TPath({pack: [], name: "any"})), t: ""};
+                            ECall(callField, [fieldName, slice]);
                             // final createExpr:HaxeExpr = {def: EConst(CIdent('Hx_runtime_hxenum_CreateEnumIndex_Field')), t: ""};
                             // final instExpr:HaxeExpr = {def: EConst(CString(inst)), t: ""};
                             // ECall(createExpr, [instExpr]);

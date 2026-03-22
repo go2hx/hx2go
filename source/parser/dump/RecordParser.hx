@@ -1,5 +1,6 @@
 package parser.dump;
 
+import HaxeExpr.HaxeEnumConstructor;
 import haxe.macro.Expr;
 
 using StringTools;
@@ -58,7 +59,9 @@ class RecordType extends RecordEntry {
     public var type:String = "";
 }
 
-class RecordEnum extends RecordEntry {}
+class RecordEnum extends RecordEntry {
+    public var constrs:Array<HaxeEnumConstructor> = [];
+}
 
 class RecordAbstract extends RecordEntry {
     public var ops: Array<Dynamic> = [];
@@ -179,7 +182,10 @@ class RecordParser {
                     var result = parseDoc(lines, line, value);
                     line = result.lastLine;
                     result.value;
-
+                case _ if (key == "e_constrs"):
+                    var result = parseList(lines, line, value);
+                    line = result.lastLine;
+                    result.value.map(item -> mapConcrete(item, HaxeEnumConstructor));
                 case _ if (key == "cl_ordered_statics" || key == "cl_ordered_fields"):
                     var result = parseList(lines, line, value);
                     line = result.lastLine;
@@ -531,6 +537,9 @@ class RecordParser {
             case _ if (block.exists("t_path")):
                 recordKind  = RType;
                 mapConcrete(block, RecordType);
+            case _ if (block.exists("e_path")):
+                recordKind = REnum;
+                mapConcrete(block, RecordEnum);
             case _:
                 recordKind = RUnknown;
                 mapConcrete(block, RecordEntry);

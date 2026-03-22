@@ -32,7 +32,8 @@ class Dump implements IParser {
 
         final depsMap = Deps.run("./dump/go/dependencies.dump");
         final fileNameToModulePath:Map<String,Array<String>> = [];
-        final pathToModule:Map<String, String> = [];
+        final pathToModule = _context.getPathToModule();
+        final fileNameToModule:Map<String,String> = [];
         final cache = _context.getCache();
 
         for (record in records) {
@@ -42,7 +43,7 @@ class Dump implements IParser {
             }
 
             final def = RecordTools.recordToHaxeTypeDefinition(record);
-            final module = if (!cache.exists(record.path)) {
+            final module = if (!cache.exists(record.module)) {
                 var module: Module = {
                     buf: null,
                     path: record.module,
@@ -52,11 +53,11 @@ class Dump implements IParser {
                     context: _context,
                 };
 
-                cache.set(record.path, module);
+                cache.set(record.module, module);
                 module;
             }else{
                 // module already exists, add a new def to it
-                cache.get(record.path);
+                cache.get(record.module);
             }
             module.addDef(def);
             // add to deps module key map
@@ -65,7 +66,7 @@ class Dump implements IParser {
             }
 
             fileNameToModulePath[record.name_pos.file].push(record.path);
-            pathToModule[record.name_pos.file] = record.module;
+            pathToModule[record.path] = record.module;
         }
 
         for (fileName => files in depsMap) {

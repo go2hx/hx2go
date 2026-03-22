@@ -72,6 +72,7 @@ class Context {
     public var options: ContextOptions;
     
     private var _parser: IParser = null;
+    private var _pathToModule:Map<String,String> = [];
     private var _cache: Map<String, Module> = [];
 
     public function new(options: ContextOptions) {
@@ -85,7 +86,11 @@ class Context {
      * @return A module or null if not found.
      */
     public function getModule(path: String): Null<Module> {
-        return _cache[path];
+        final modulePath = _pathToModule[path];
+        if (modulePath == null) {
+            return null;
+        }
+        return _cache[modulePath];
     }
 
     /**
@@ -95,6 +100,9 @@ class Context {
     public inline function getCache(): Map<String, Module> {
         return _cache;
     }
+
+    public inline function getPathToModule():Map<String, String>
+        return _pathToModule;
 
     /**
      * Runs the hx2go transpiler.
@@ -169,17 +177,14 @@ class Context {
             final mod = obj.value;
             if (!compileList.contains(mod.path)) continue;
             if (mod.path == options.entryPoint) {
-                var isMain = false;
                 for (def in mod.defs) {
                     for (field in def.fields) {
                         if (field.name == "main") {
-                            isMain = true;
+                            entryPointPath = def.name;
                             break;
                         }
                     }
                 }
-                if (isMain)
-                    entryPointPath = obj.key;
             }
 
             for (def in mod.defs) {
@@ -255,11 +260,15 @@ class Context {
 
         } else {
             if (options.buildAfterCompilation) {
-                Sys.command('go build .');
+                final code = Sys.command('go build .');
+                if (code != 0)
+                    Sys.exit(code);
             }
 
             if (options.runAfterCompilation) {
-                Sys.command('go run .');
+                final code = Sys.command('go run .');
+                if (code != 0)
+                    Sys.exit(code);
             }
         }
 
@@ -283,3 +292,5 @@ class Context {
     }
 
 }
+
+final outMap:Map<String,Bool> = [];

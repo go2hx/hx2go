@@ -39,14 +39,16 @@ extern class String {
         }
     }
     inline function lastIndexOf(str:String, ?startIndex:Int):Int {
-        final s = if (startIndex != null) {
-            if (startIndex >= this.length)
+        if (startIndex >= this.length) {
                 return -1;
-            Syntax.code("string(([]rune)({0})[{1}:])", this, startIndex);
         }else{
-            this;
+            final s = if (startIndex != null) {
+                Syntax.code("string(([]rune)({0})[{1}:])", this, startIndex);
+            }else{
+                this;
+            }
+            return Strings.lastIndex(s, str);
         }
-        return Strings.lastIndex(s, str);
     }
     inline function split(delimiter:String):Array<String> {
         return Strings.split(this, delimiter);

@@ -78,8 +78,15 @@ function recordToHaxeTypeDefinition(record: RecordEntry):HaxeTypeDefinition {
             for (param in t.params) {
                 params.push(recordTypeParamToParamDecl(record.record_debug_path, param));
             }
-            // isExtern = t.meta
-            kind = TDType(HaxeExprTools.stringToComplexType(parseAstType(t.type)));
+            
+            var remapping: Map<String, String> = [];
+            for (param in t.params) {
+                remapping.set(param.get("class"), prefixParam(param.get("name")));
+            }
+
+            final ctString = remapType(parseAstType(t.type), remapping);
+            final ct = HaxeExprTools.stringToComplexType(ctString);
+            kind = TDType(ct);
         case REnum:
             var t = record.toEnum();
         case RUnknown:

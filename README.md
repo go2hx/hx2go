@@ -18,7 +18,7 @@ haxelib git haxeparser https://github.com/HaxeCheckstyle/haxeparser
 -D run-go
 -D build-go
 # set the output directory
---custom-target go=export/output.go
+--custom-target go=export
 ```
 
 ### Quick testing within hx2go repo

@@ -4,7 +4,7 @@ import haxe.macro.Expr.ComplexType;
 import HaxeExpr.HaxeVar;
 
 function transformArrayAccess(t:Transformer, e: HaxeExpr, e1:HaxeExpr, e2:HaxeExpr) {
-    final ct = HaxeExprTools.stringToComplexType(e1.t);
+    final ct = t.module.follow(HaxeExprTools.stringToComplexType(e1.t));
     switch (ct) {
         case TPath(p):
             switch [p.name, p.pack, p.params] {

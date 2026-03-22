@@ -9,6 +9,7 @@ import translator.exprs.Function;
 function transformCast(t:Transformer, e:HaxeExpr, inner: HaxeExpr, type:ComplexType) {
     switch type {
         case TPath({ pack: [], name: "String" }): {
+            t.module.addGoImport('fmt');
             e.def = EGoCode("fmt.Sprint({0})", [inner.copy()]);
         }
 

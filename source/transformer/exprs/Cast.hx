@@ -147,7 +147,7 @@ function transformCast(t:Transformer, e:HaxeExpr, inner: HaxeExpr, type:ComplexT
         }
     }
 
-    if (fromTd.kind == toTd.kind && (fromTd.kind == TDClass || fromTd.kind.match(TDType(_))) && !hasNative) {
+    if (fromTd.kind == toTd.kind && (fromTd.kind == TDClass || fromTd.kind.match(TDType(_)) || fromTd.kind.match(TDEnum(_))) && !hasNative) {
         e.def = EGoCode("(&{0})", [{ t: null, def: EField(inner.copy(), 'Hx_${modulePathToPrefix(toTd.name)}_Obj') }]);
     }
 }

@@ -29,7 +29,7 @@ class Module {
 
         for (def in module.defs) {
             switch def.kind {
-                case TDClass, TDType(_):
+                case TDClass, TDType(_), TDEnum(_):
                     if (def.name.split(".").pop() == name) {
                         if (!def.usages.exists(origin)) {
                             def.usages[origin] = 0;

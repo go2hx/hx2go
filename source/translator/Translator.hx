@@ -1,5 +1,6 @@
 package translator;
 
+import HaxeExpr.HaxeEnumConstructor;
 import sys.FileSystem;
 import haxe.io.Path;
 import sys.io.File;
@@ -90,8 +91,12 @@ class Translator {
                     Continue.translateContinue(this);
                 case ESwitch(e, cases, edef):
                     Switch.translateSwitch(this, e, cases, edef);
+                case EGoEnumIndex(e):
+                    EnumIndex.translateEnumIndex(this, e);
+                case EGoEnumParameter(e, kind, index):
+                    EnumParameter.translateEnumParameter(this, e, kind, index);
                 default:
-                    //trace("UNKNOWN EXPR TO TRANSLATE:" + e.def);
+                    trace("UNKNOWN EXPR TO TRANSLATE:" + e.def);
                     "_ = 0";
             }
         return "";
@@ -135,6 +140,8 @@ class Translator {
                     buf.add(translateClassDef(def)); // TODO: support interfaces
                 case TDType(ct):
                     buf.add(translateTypeDef(def, ct));
+                case TDEnum(constructors):
+                    buf.add(translateEnum(def, constructors));
                 case _:
                 // ignore
             }
@@ -168,6 +175,28 @@ class Translator {
         var typeParamDeclStr = translateParamDecl(def.params);
         final t = translateComplexType(ct);
         return 'type ${className}${typeParamDeclStr} ${t}\n';
+    }
+
+    public function translateEnum(def:HaxeTypeDefinition, constructors:Array<HaxeEnumConstructor>):String {
+        if (def.isExtern) {
+            return "";
+        }
+        var buf = new StringBuf();
+        final className = modulePathToPrefix(def.name);
+        final fieldNames:Array<String> = [];
+        final enumName = 'Hx_${className}_EnumType';
+        for (c in constructors) {
+            final fieldName = 'Hx_' + className + "_" + c.name + '_EnumConstructor';
+            fieldNames.push(fieldName);
+            buf.add('var $fieldName *Hx_runtime_hxenumconstructor_Obj = &Hx_runtime_hxenumconstructor_Obj{\n');
+            buf.add('Name: "' + c.name + '",\n');
+            buf.add('Index: ' + c.index + ',\n');
+            buf.add('}\n');
+        }
+        buf.add('var $enumName *Hx_runtime_hxenum_Obj = Hx_runtime_hxenum_Obj_CreateInstance("${def.name}", &[]*Hx_runtime_hxenumconstructor_Obj{${fieldNames.join(", ")}})\n');
+        final enumTypeName = 'Hx_${className}_Obj';
+        buf.add('type $enumTypeName = *Hx_runtime_hxenumvalue_Obj\n');
+        return buf.toString();
     }
 
     public function translateClassDef(def: HaxeTypeDefinition): String {

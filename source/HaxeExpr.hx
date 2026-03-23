@@ -55,6 +55,7 @@ enum SpecialExprDef {
 	Arg(info:String);
 	FInstance(inst:String);
 	FClosure(inst:String, field:String);
+	FEnum(inst:String, field:String);
 	FDynamic(field:String);
 	Local;
 	DArray;
@@ -263,6 +264,17 @@ enum HaxeTypeDefinitionKind {
 	TDAbstract;
 	TDFields;
 	TDType(ct:ComplexType);
+	TDEnum(constructors:Array<HaxeEnumConstructor>);
+}
+
+@:structInit
+class HaxeEnumConstructor {
+	public var name:String;
+	public var pos:Position;
+	public var t:String;
+	public var index:Int;
+	public var params:Array<TypeParamDecl>;
+	public var meta:Array<MetadataEntry>;
 }
 
 @:structInit

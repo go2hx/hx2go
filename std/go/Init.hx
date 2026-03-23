@@ -16,7 +16,7 @@ class Init {
 			sys: true,
 			capturePolicy: None,
 			padNulls: true,
-			addFinalReturn: true,
+			addFinalReturn: false,
 			overloadFunctions: true,
 			reservedTypePaths: [],
 			supportsFunctionEquality: true,

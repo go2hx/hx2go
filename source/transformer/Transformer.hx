@@ -244,6 +244,8 @@ class Transformer {
             case "String": "string";
             case "Null": 'struct{ Value ${transformComplexTypeParam(p.params, 0)}; HasValue bool }'; // TODO: implement Null<T>, currently just bypass
             case "Class": "*Hx_runtime_hxclass_Obj";
+            case "Enum": "*Hx_runtime_hxenum_Obj";
+            case "EnumValue": "*Hx_runtime_hxenumvalue_Obj";
             case "go.Result", "go.ResultKind": {
                 resultToTuple(p);
                 handleTuple(p);

@@ -155,7 +155,7 @@ class ExprParser {
                 EField(e, field);
             case TYPEEXPR:
                 EConst(CIdent(object.subType));
-            case FSTATIC | FINSTANCE | FCLOSURE:
+            case FSTATIC | FINSTANCE | FCLOSURE | FENUM:
                 // [FStatic:(s : String) -> Void]
                 // 			fmt
 				// 			println:(s : String) -> Void
@@ -166,14 +166,15 @@ class ExprParser {
                     Logging.exprParser.warn('Object objects length: ${object.objects.length}');
                     Logging.exprParser.warn('First object string: ${object.objects[0].string()}');
                 }
-
                 var field = object.objects[1].string();
                 var path = object.objects[0].string();
 
-                final colonIndex = field.indexOf(":");
-                if (colonIndex == -1)
-                    throw "colon not found: " + field;
-                field = field.substr(0, colonIndex);
+                if (object.def != FENUM) {
+                    final colonIndex = field.indexOf(":");
+                    if (colonIndex == -1)
+                        throw "colon not found: " + field;
+                    field = field.substr(0, colonIndex);
+                }
 
                 specialDef = switch object.def {
                     case FSTATIC:
@@ -182,6 +183,8 @@ class ExprParser {
                         FInstance(path);
                     case FCLOSURE:
                         FClosure(path, field); // TODO: implement if we need it...
+                    case FENUM:
+                        FEnum(path, field);
                     case _:
                         null;
                 };

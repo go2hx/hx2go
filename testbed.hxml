@@ -7,7 +7,7 @@ extraParams.hxml
 -D build-go
 -D install-dep-go
 # set the output directory
---custom-target go=export/output.go
+--custom-target go=export
 # disable unroll
 -D loop-unroll-max-cost=0
 # optimises output

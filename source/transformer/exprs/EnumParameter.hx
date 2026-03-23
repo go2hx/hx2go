@@ -8,12 +8,16 @@ function transformEnumParameter(t:Transformer, expr: HaxeExpr, on:HaxeExpr, kind
         case _: on;
     }
 
-    switch HaxeExprTools.stringToComplexType(on.t) { // NOTE: e.t is ResultKind<R, E> with Unknown<n> as params, use inner if we care about types.
-        case TPath({ pack: ["go"], name: "ResultKind" }): transformResultAccess(expr, inner, kind);
-        case _: null;
-    }
 
-    t.iterateExpr(expr);
+    switch HaxeExprTools.stringToComplexType(on.t) { // NOTE: e.t is ResultKind<R, E> with Unknown<n> as params, use inner if we care about types.
+        case TPath({ pack: ["go"], name: "ResultKind" }): 
+            transformResultAccess(expr, inner, kind);
+            t.iterateExpr(expr);
+        case _:
+            final tct = HaxeExprTools.stringToComplexType(expr.t);
+            expr.def = ECast({def: EArray({def: EField(on.copy(), "params"), t: "Array<Dynamic>"}, {def: EConst(CInt("" + index)), t: "Int"}), t: "Dynamic"}, tct);
+            t.transformExpr(expr);
+    }
 }
 
 function transformResultAccess(outer: HaxeExpr, inner:HaxeExpr, kind:String) {

@@ -195,7 +195,7 @@ class Translator {
         }
         buf.add('var $enumName *Hx_runtime_hxenum_Obj = Hx_runtime_hxenum_Obj_CreateInstance("${def.name}", &[]*Hx_runtime_hxenumconstructor_Obj{${fieldNames.join(", ")}})\n');
         final enumTypeName = 'Hx_${className}_Obj';
-        buf.add('type $enumTypeName *Hx_runtime_hxenumvalue_Obj\n');
+        buf.add('type $enumTypeName = *Hx_runtime_hxenumvalue_Obj\n');
         return buf.toString();
     }
 

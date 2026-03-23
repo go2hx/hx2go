@@ -283,6 +283,22 @@ class ExprParser {
             case SWITCH:
                 var cases = object.objects.copy(); // [on, case, case]
                 var on = objectToExpr(cases.shift()); // on, [case, case]
+                final lastCase = if (cases.length > 0) {
+                    cases.pop();
+                }else{
+                    null;
+                }
+
+                final defaultCase = if(lastCase != null && lastCase.def == DEFAULT) {
+                    objectToExpr(lastCase.objects[0]);
+                }else{
+                    // put back
+                    if (lastCase != null)
+                        cases.push(lastCase);
+                    // no default case
+                    null;
+                }
+
 
                 // mikaib: haxe seems to be very eager on reordering switch cases, so thus far I've been unable to get a dump which defines a guard or more than 1 value per case.
                 // it may only be generated in very specific situations, or perhaps the dump is in a form where that info is lost.
@@ -298,7 +314,7 @@ class ExprParser {
                         guard: emptyExpr(),
                         expr: c.objects.length > 1 ? objectToExpr(c.objects[1]) : emptyExpr(),
                     }
-                }), null);
+                }), defaultCase);
 
             case THROW:
                 EThrow(objectToExpr(object.objects[0]));
@@ -358,6 +374,7 @@ class ExprParser {
                 });
                 //objectToExpr(object.objects[object.objects.length - 1]).def;
             default:
+                Logging.exprParser.warn("not implemented expr def: " + object.def);
                 //throw "not implemented expr: " + object.def;
                 if (!nonImpl.contains(object.def)) nonImpl.push(object.def);
                 EConst(CIdent("#objectToExpr_" + object.string()));

@@ -88,6 +88,8 @@ class Translator {
                     Throw.translateThrow(this, e);
                 case EContinue:
                     Continue.translateContinue(this);
+                case ESwitch(e, cases, edef):
+                    Switch.translateSwitch(this, e, cases, edef);
                 default:
                     //trace("UNKNOWN EXPR TO TRANSLATE:" + e.def);
                     "_ = 0";

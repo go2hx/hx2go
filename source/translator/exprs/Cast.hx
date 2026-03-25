@@ -16,7 +16,7 @@ function translateCast(t:Translator, e:HaxeExpr, type:ComplexType) {
     var eStr = t.translateExpr(e);
     switch e.t {
         case "Dynamic": { 
-            return '(' + eStr + '.(' + tStr + '))';
+            return '((' + eStr + ').(' + tStr + '))';
         }
         default:
     }
@@ -27,7 +27,7 @@ function translateCast(t:Translator, e:HaxeExpr, type:ComplexType) {
         // array access
         case _ if (path != null && tStr.startsWith('[')): '((' + tStr + ')(' + eStr + '))';
         // no params type
-        case _ if (path == null || (path.params == null || path.params.length == 0)): tStr + '(' + eStr + ')';
+        case _ if (path == null || (path.params == null || path.params.length == 0)): '(' + tStr + ')(' + eStr + ')';
         // default case
         case _: '((' + tStr + ')(' + eStr + '))';
     };

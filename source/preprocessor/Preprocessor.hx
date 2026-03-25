@@ -114,7 +114,7 @@ class Preprocessor {
                                     // TODO: handle Rest arguments
                                     for (i in 0...params.length) {
                                         params[i].def = ECast(params[i].copy(), args[i]);
-                                        params[i].t = new haxe.macro.Printer().printComplexType(args[i]);
+                                        params[i].t = ComplexTypeTools.toString(args[i]);
                                     }
                                 default:
                             }

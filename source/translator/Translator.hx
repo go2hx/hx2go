@@ -33,6 +33,8 @@ class Translator {
                 "map[string]any";
             case TNamed(_, t):
                 translateComplexType(t);
+            case TOptional(t):
+                translateComplexType(TPath({pack: [], name: "Null", params: [TPType(t)]}));
             default:
                 throw "unknown ct for translateComplexType: " + ct;
         }
@@ -97,6 +99,11 @@ class Translator {
         return "";
     }
     public function translateDef(def:HaxeTypeDefinition):String {
+        // Do not generate certain modules
+        switch def.module {
+            case "haxe.Rest":
+                return "";
+        }
         var buf = new StringBuf();
 
         for (field in def.fields) {

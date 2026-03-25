@@ -62,7 +62,7 @@ class Preprocessor {
                 iterateExprPost(e, scope);
 
             // ensure tuple/result + semantics
-            case ECall(_, params): {
+            case ECall(call, params): {
                 Semantics.ensure(e, params, this, scope);
 
                 final ct = HaxeExprTools.stringToComplexType(e.t);
@@ -105,7 +105,20 @@ class Preprocessor {
 
                         handleTuple(e, ct, scope, ["result", "error"]);
 
-                    case _: null;
+                    case _:
+                        var info = Semantics.analyzeFunctionCall(this, e);
+                        if (!info.isExtern && !info.failed) {
+                            final ct = HaxeExprTools.stringToComplexType(call.t);
+                            switch ct {
+                                case TFunction(args, ret) if (params.length == args.length):
+                                    // TODO: handle Rest arguments
+                                    for (i in 0...params.length) {
+                                        params[i].def = ECast(params[i].copy(), args[i]);
+                                        params[i].t = ComplexTypeTools.toString(args[i]);
+                                    }
+                                default:
+                            }
+                        }
                 }
             }
 

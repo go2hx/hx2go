@@ -110,9 +110,20 @@ class Module {
         }
     }
 
+     public function followNoNull(ct:ComplexType):ComplexType {
+        return switch ct {
+            case TPath({pack: [], name: "Null", params: [TPType(_)]}):
+                ct;
+            default:
+                follow(ct);
+        }
+    }
+
 
     public function follow(ct:ComplexType):ComplexType {
         return switch ct {
+            case TNamed(_, t):
+                follow(t);
             case TPath({pack: [], name: "Null", params: [TPType(ct)]}):
                 follow(ct);
             case TPath(p):

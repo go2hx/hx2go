@@ -228,6 +228,15 @@ function handleCallTransform(t:Transformer, e:HaxeExpr, params:Array<HaxeExpr>, 
 }
 
 function handleFieldTransform(t:Transformer, e:HaxeExpr, ct:ComplexType, e2:HaxeExpr, field:String):Bool {
+    switch t.module.followNoNull(ct) {
+        case TPath({ name: "Null", pack: [], params: [TPType(_)]}):
+            switch e2.def {
+                case EConst(CIdent(s)):
+                    e2.def = EConst(CIdent(s + ".Value"));
+                default:
+            }
+        default:
+    }
     var transformed = switch t.module.follow(ct) {
         case TPath({ name: "Array", pack: [] }) if (field == "length"):
             e.def = EGoCode('len(*{0})', [e2]);

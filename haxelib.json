@@ -1,0 +1,12 @@
+{
+  "name": "hx2go",
+  "url" : "https://github.com/go2hx/hx2go",
+  "license": "MIT",
+  "tags": ["target", "hx2go", "compiler"],
+  "description": "Go target for Haxe.",
+  "version": "1.0.0",
+  "classPath": "Source/",
+  "releasenote": "initial release",
+  "contributors": ["PXShadow", "ElliottStoneham", "mikaib"],
+  "dependencies": {}
+}

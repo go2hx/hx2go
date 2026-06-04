@@ -1,0 +1,4 @@
+-cp testbed
+-main Main
+-L hx2go
+--custom-target hx2go=Output

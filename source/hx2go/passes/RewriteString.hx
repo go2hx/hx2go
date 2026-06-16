@@ -1,6 +1,6 @@
 package hx2go.passes;
 
-import hxb.Typed.HxbTypedExpr;
+import hx2go.hxb.Typed.HxbTypedExpr;
 
 class RewriteString implements ICompilerPass {
 

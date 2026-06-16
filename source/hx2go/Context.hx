@@ -1,12 +1,14 @@
 package hx2go;
 
+using StringTools;
+
 import haxe.io.Path;
 import sys.FileSystem;
 import sys.io.File;
-import hxb.HxbModuleType;
-import hxb.Typed.HxbTypedExpr;
-import hxb.tools.TypedExprTools;
-import hxb.print.TypedExprPrinter;
+import hx2go.hxb.Typed.HxbTypedExpr;
+import hx2go.util.OutputBuffer;
+import hx2go.hxb.HxbModuleType;
+import hx2go.hxb.tools.TypedExprTools;
 
 class Context {
 
@@ -14,12 +16,14 @@ class Context {
     private var outputDirectory: String;
     private var topLevelPackage: String;
     private var passes: Array<ICompilerPass>;
+    private var writer: Writer;
 
     public function new(outputDirectory: String) {
         this.types = [];
         this.outputDirectory = outputDirectory;
         this.topLevelPackage = Path.normalize(outputDirectory).split("/").pop();
         this.passes = createPasses();
+        this.writer = new Writer(this);
     }
 
     private function createPasses(): Array<ICompilerPass> {
@@ -38,7 +42,7 @@ class Context {
         for (t in types) {
             var infos = switch t {
                 case MClass(p): {
-                    module: p.path.moduleName,
+                    module: p.path.moduleDotPath(),
                     name: p.path.name
                 };
 
@@ -51,22 +55,27 @@ class Context {
                 typesByModule.set(infos.module, []);
             }
 
+            if (infos.module.startsWith("hx2go")) {
+                continue;
+            }
+
             typesByModule[infos.module].push({ type: t, name: infos.name, module: infos.module });
         }
 
         for (module in typesByModule) {
-            var buf = new StringBuf();
+            if (module.length == 0) {
+                continue;
+            }
+
+            var buf = new OutputBuffer();
 
             var path = module[0].module.split('.');
             var name = path.pop();
 
-            buf.add('package ${path[path.length - 1] ?? topLevelPackage}\n\n');
+            buf.add('package ${path[path.length - 1] ?? topLevelPackage}\n');
 
             for (entry in module) {
-                buf.add(
-                    '// ${entry.module} -> ${entry.name}' +
-                    writeType(entry.type) + '\n\n'
-                );
+                buf.addBuffer(writer.types.writeModuleType(entry.type));
             }
 
             writeFile(path.join("/"), name, buf.toString());
@@ -150,10 +159,6 @@ class Context {
         for (x in from) {
             to.push(x);
         }
-    }
-
-    private function writeType(type: HxbModuleType): String {
-        return "";
     }
 
 }

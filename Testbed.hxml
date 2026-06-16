@@ -1,4 +1,4 @@
+-L hx2go
 -cp testbed
 -main Main
---hxb ./output/program.hxb
---cmd haxelib run hx2go ./output/program.hxb ./output/out
+--custom-target hx2go=output

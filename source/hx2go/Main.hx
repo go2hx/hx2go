@@ -2,8 +2,8 @@ package hx2go;
 
 import haxe.io.Path;
 import sys.FileSystem;
-import hxb.HxbModuleType;
-import hxb.Hxb;
+import hx2go.hxb.HxbModuleType;
+import hx2go.hxb.Hxb;
 
 class Main {
 
@@ -17,18 +17,26 @@ class Main {
         var absoluteOutput = Path.join([ root, relativeOutput ]);
         var absoluteInput = Path.join([ root, relativeInput ]);
 
-        var arc = Hxb.loadArchive(absoluteInput);
+        exec(absoluteInput, absoluteOutput);
+    }
+
+    public static function exec(input: String, output: String): Void {
+        var arc = Hxb.loadArchive(input);
         var entries = arc.modules();
         var types = [];
 
         for (ref in entries) {
+            if (ref.target != "hx2go") { // hxb can contain multiple targets (like macro) and we only want the hx2go target
+                continue;
+            }
+
             var module = arc.decode(ref);
             for (type in module.types) {
                 types.push(type);
             }
         }
 
-        generate(types, absoluteOutput);
+        generate(types, output);
     }
 
     public static function generate(types: Array<HxbModuleType>, absoluteOutput: String): Void {

@@ -9,7 +9,5 @@
   "main": "hx2go.Main",
   "releasenote": "initial release",
   "contributors": ["PXShadow", "ElliottStoneham", "mikaib"],
-  "dependencies": {
-    "hxb":""
-  }
+  "dependencies": {}
 }

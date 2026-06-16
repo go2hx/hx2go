@@ -1,4 +1,0 @@
-package out
-
-// EnumValueMap -> EnumValueMap
-

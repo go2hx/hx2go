@@ -1,4 +1,0 @@
-package out
-
-// ObjectMap -> ObjectMap
-

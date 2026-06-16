@@ -1,7 +1,9 @@
+import go.fmt.Fmt;
+
 class Main {
 
     public static function main() {
-        Sys.println("Hello, World!");
+        Fmt.println("Hello, World!");
     }
 
 }

@@ -2,7 +2,7 @@ package hx2go.passes;
 
 import hx2go.hxb.Typed.HxbTypedExpr;
 
-class RewriteString implements ICompilerPass {
+class AppendSmileyToString implements ICompilerPass {
 
     private var context: Context;
 
@@ -18,7 +18,10 @@ class RewriteString implements ICompilerPass {
     }
 
     public function execute(expr: HxbTypedExpr): Void {
-        expr.expr = TConst(TString("Cool String!!"));
+        expr.expr = switch expr.expr {
+            case TConst(TString(existing)): TConst(TString('$existing :D'));
+            case _: expr.expr;
+        }
     }
 
 }

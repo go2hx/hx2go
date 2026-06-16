@@ -28,7 +28,8 @@ class Context {
 
     private function createPasses(): Array<ICompilerPass> {
         return [
-            new hx2go.passes.RewriteString(this)
+            new hx2go.passes.RewriteString(this),
+            new hx2go.passes.AppendSmileyToString(this)
         ];
     }
 

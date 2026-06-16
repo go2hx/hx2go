@@ -15,6 +15,7 @@
       <sourceFolder url="file://$MODULE_DIR$/testbed" isTestSource="false" />
     </content>
     <orderEntry type="jdk" jdkName="Haxe 5.0.0" jdkType="Haxe toolkit" />
+    <orderEntry type="library" name="hxb" level="project" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>

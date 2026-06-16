@@ -1,38 +1,50 @@
 package hx2go;
 
-import haxe.macro.Type;
 import haxe.io.Path;
-import sys.io.File;
 import sys.FileSystem;
+import sys.io.File;
+import hxb.HxbModuleType;
+import hxb.Typed.HxbTypedExpr;
+import hxb.tools.TypedExprTools;
 
 class Context {
 
-    private var types: Array<Type>;
+    private var types: Array<HxbModuleType>;
     private var outputDirectory: String;
     private var topLevelPackage: String;
+    private var passes: Array<ICompilerPass>;
 
     public function new(outputDirectory: String) {
         this.types = [];
         this.outputDirectory = outputDirectory;
         this.topLevelPackage = Path.normalize(outputDirectory).split("/").pop();
+        this.passes = createPasses();
     }
 
-    public function add(type: Type) {
+    private function createPasses(): Array<ICompilerPass> {
+        return [
+            new hx2go.passes.RewriteString(this)
+        ];
+    }
+
+    public function add(type: HxbModuleType) {
         types.push(type);
     }
 
     public function build(): Void {
-        var typesByModule: Map<String, Array<{ type: Type, name: String, module: String }>> = [];
+        var typesByModule: Map<String, Array<{ type: HxbModuleType, name: String, module: String }>> = [];
 
         for (t in types) {
             var infos = switch t {
-                case TInst(p, _): {
-                    module: p.get().module,
-                    name: p.get().name
+                case MClass(p): {
+                    module: p.path.moduleName,
+                    name: p.path.name
                 };
 
                 case _: continue;
             }
+
+            transformType(t);
 
             if (!typesByModule.exists(infos.module)) {
                 typesByModule.set(infos.module, []);
@@ -84,7 +96,62 @@ class Context {
         }
     }
 
-    private function writeType(type: Type): String {
+    private function transformType(type: HxbModuleType): Void {
+        var exprs: Array<HxbTypedExpr> = [];
+
+        switch type {
+            case MClass(def):
+                appendTo(def.fields.map(f -> f.expr?.expr).filter(f -> f != null), exprs);
+                appendTo(def.statics.map(f -> f.expr?.expr).filter(f -> f != null), exprs);
+
+                if (def.constructor?.expr != null) {
+                    exprs.push(def.constructor.expr?.expr);
+                }
+
+            case _: null;
+        }
+
+        for (e in exprs) {
+            if (e == null) return;
+            e.t = null;
+        }
+
+        for (e in exprs) {
+            if (e == null) continue;
+
+            var pending: Map<ICompilerPass, Array<HxbTypedExpr>> = [];
+            var match: HxbTypedExpr -> Void;
+
+            for (p in passes) {
+                pending[p] = [];
+            }
+
+            match = e -> {
+                for (p in passes) {
+                    if (!p.match(e)) continue;
+                    pending[p].push(e);
+                }
+
+                TypedExprTools.iter(e, match);
+            };
+
+            match(e);
+
+            for (p in passes) {
+                for (e in pending[p]) {
+                    p.execute(e);
+                }
+            }
+        }
+    }
+
+    private function appendTo<T>(from: Array<T>, to: Array<T>): Void {
+        for (x in from) {
+            to.push(x);
+        }
+    }
+
+    private function writeType(type: HxbModuleType): String {
         return "";
     }
 

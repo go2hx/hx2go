@@ -1,8 +1,8 @@
 package hx2go;
 
-import haxe.macro.Type.TypedExpr;
+import hxb.Typed.HxbTypedExpr;
 
 interface ICompilerPass {
-    public function match(expr: TypedExpr): Bool;
-    public function execute(expr: TypedExpr): TypedExpr;
+    public function match(expr: HxbTypedExpr): Bool;
+    public function execute(expr: HxbTypedExpr): Void;
 }

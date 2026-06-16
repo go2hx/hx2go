@@ -1,4 +1,0 @@
-package Output
-
-// EReg -> EReg
-

@@ -6,6 +6,7 @@ import sys.io.File;
 import hxb.HxbModuleType;
 import hxb.Typed.HxbTypedExpr;
 import hxb.tools.TypedExprTools;
+import hxb.print.TypedExprPrinter;
 
 class Context {
 

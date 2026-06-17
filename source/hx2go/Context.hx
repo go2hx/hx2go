@@ -12,24 +12,6 @@ import hx2go.hxb.tools.TypedExprTools;
 import hx2go.hxb.TypePath;
 import hx2go.util.StringConversions;
 
-private class PipelineFrame {
-    public var passes: Array<ICompilerPass>;
-    public var pending: Map<ICompilerPass, Array<HxbTypedExpr>>;
-    public var currentPassIndex: Int;
-    public var type: HxbModuleType;
-
-    public function new(passes: Array<ICompilerPass>, type: HxbModuleType) {
-        this.passes = passes;
-        this.type = type;
-        this.pending = [];
-        this.currentPassIndex = -1;
-
-        for (p in passes) {
-            this.pending[p] = [];
-        }
-    }
-}
-
 class Context {
 
     private var types: Map<String, HxbModuleType>;
@@ -38,7 +20,7 @@ class Context {
     private var topLevelPackage: String;
     private var passes: Array<ICompilerPass>;
     private var writer: Writer;
-    private var pipelineStack: Array<PipelineFrame>;
+    private var contextStack: Array<ContextFrame>;
 
     public function new(outputDirectory: String) {
         this.types = [];
@@ -47,14 +29,14 @@ class Context {
         this.topLevelPackage = Path.normalize(outputDirectory).split("/").pop();
         this.passes = createPasses();
         this.writer = new Writer(this);
-        this.pipelineStack = [];
+        this.contextStack = [];
     }
 
     private function createPasses(): Array<ICompilerPass> {
         return [
             new hx2go.passes.BinopTypeNormaliser(this),
-            new hx2go.passes.RewriteExternAccess(this),
-            new hx2go.passes.StringificationCast(this)
+            new hx2go.passes.StringificationCast(this),
+            new hx2go.passes.RewriteExternAccess(this)
         ];
     }
 
@@ -181,9 +163,9 @@ class Context {
     }
 
     public function submitNode(child: HxbTypedExpr, recursive: Bool = false): Void {
-        if (child == null || pipelineStack.length == 0) return;
+        if (child == null || contextStack.length == 0) return;
 
-        var frame = pipelineStack[pipelineStack.length - 1];
+        var frame = contextStack[contextStack.length - 1];
         var startIndex = frame.currentPassIndex < 0 ? 0 : frame.currentPassIndex;
 
         var enqueue = (node: HxbTypedExpr) -> {
@@ -209,9 +191,9 @@ class Context {
     }
 
     public function desubmitNode(child: HxbTypedExpr, recursive: Bool = false): Void {
-        if (child == null || pipelineStack.length == 0) return;
+        if (child == null || contextStack.length == 0) return;
 
-        var frame = pipelineStack[pipelineStack.length - 1];
+        var frame = contextStack[contextStack.length - 1];
         var startIndex = frame.currentPassIndex < 0 ? 0 : frame.currentPassIndex;
 
         var dequeue = (node: HxbTypedExpr) -> {
@@ -262,8 +244,8 @@ class Context {
         for (e in exprs) {
             if (e == null) continue;
 
-            var frame = new PipelineFrame(passes, type);
-            pipelineStack.push(frame);
+            var frame = new ContextFrame(passes, type);
+            contextStack.push(frame);
 
             var match: HxbTypedExpr -> Void;
 
@@ -290,7 +272,7 @@ class Context {
                 }
             }
 
-            pipelineStack.pop();
+            contextStack.pop();
         }
     }
 

@@ -4,6 +4,7 @@ import hx2go.hxb.Typed.HxbTypedExpr;
 import hx2go.hxb.HxbModuleType;
 import hx2go.hxb.Typed.HxbTypedExprDef;
 import hx2go.hxb.HxbType;
+import hx2go.util.ExprHelper;
 
 class StringificationCast implements ICompilerPass {
 
@@ -24,7 +25,12 @@ class StringificationCast implements ICompilerPass {
     }
 
     public function execute(expr: HxbTypedExpr, type: HxbModuleType): Void {
-        trace(expr);
+        context.defineImport(type, "fmt");
+
+        expr.expr = switch expr.expr {
+            case TCast(e, _): ExprHelper.createUntyped(context, 'fmt.Sprintf("%v", {0})', [e]).expr;
+            case _: expr.expr;
+        }
     }
 
 }

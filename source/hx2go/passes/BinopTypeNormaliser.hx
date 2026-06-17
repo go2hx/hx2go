@@ -5,6 +5,7 @@ import hx2go.hxb.HxbModuleType;
 import hx2go.util.TypeHelper;
 import hx2go.hxb.HxbType;
 import hx2go.util.ExprHelper;
+import hx2go.hxb.Ast.HxbBinop;
 
 class BinopTypeNormaliser implements ICompilerPass {
 
@@ -14,16 +15,16 @@ class BinopTypeNormaliser implements ICompilerPass {
         this.context = context;
     }
 
-    private function checkTypes(left: HxbTypedExpr, right: HxbTypedExpr): Void {
-        var result: { from: HxbTypedExpr, to: HxbTypedExpr } = switch [left.t, right.t] {
+    private function checkTypes(self: HxbTypedExpr, op: HxbBinop, left: HxbTypedExpr, right: HxbTypedExpr, swapped: Bool): Void {
+        var result: { left: HxbTypedExpr, right: HxbTypedExpr } = switch [left.t, right.t] {
             case [TInt, TFloat]: {
-                from: left,
-                to: ExprHelper.createCast(context, left, TFloat)
+                left: ExprHelper.createCast(context, left, TFloat),
+                right: right
             };
 
             case [_, TString]: {
-                from: left,
-                to: ExprHelper.createCast(context, left, TString)
+                left: ExprHelper.createCast(context, left, TString),
+                right: right
             };
 
             case _: null;
@@ -33,8 +34,7 @@ class BinopTypeNormaliser implements ICompilerPass {
             return;
         }
 
-        result.from.expr = result.to.expr;
-        result.from.t = result.to.t;
+        self.expr = swapped ? TBinop(op, result.right, result.left) : TBinop(op, result.left, result.right);
     }
 
     public function match(expr: HxbTypedExpr): Bool {
@@ -45,17 +45,26 @@ class BinopTypeNormaliser implements ICompilerPass {
     }
 
     public function execute(expr: HxbTypedExpr, type: HxbModuleType): Void {
-        var exprs = switch expr.expr {
-            case TBinop(op, left, right): [left, right];
+        var op: HxbBinop = OpAdd;
+        var left: HxbTypedExpr = null;
+        var right: HxbTypedExpr = null;
+
+        switch expr.expr {
+            case TBinop(b_op, b_left, b_right): {
+                op = b_op;
+                left = b_left;
+                right = b_right;
+            }
+
             case _: null;
         }
 
-        if (exprs == null) {
+        if (left == null || right == null) {
             return;
         }
 
-        checkTypes(exprs[0], exprs[1]); // x + y
-        checkTypes(exprs[1], exprs[0]); // y + x
+        checkTypes(expr, op, left, right, false); // x + y
+        checkTypes(expr, op, right, left, true); // y + x
     }
 
 }

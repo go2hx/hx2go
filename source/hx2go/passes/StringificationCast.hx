@@ -20,6 +20,7 @@ class StringificationCast implements ICompilerPass {
                 TCast(_, _),
                 TString | TAbstract({ name: "String", moduleName: "String", pack: [] }, _)
             ]: true;
+
             case _: false;
         }
     }
@@ -28,7 +29,9 @@ class StringificationCast implements ICompilerPass {
         context.defineImport(type, "fmt");
 
         expr.expr = switch expr.expr {
-            case TCast(e, _): ExprHelper.createUntyped(context, 'fmt.Sprintf("%v", {0})', [e]).expr;
+            case TCast(e, _):
+                ExprHelper.createUntyped(context, 'fmt.Sprintf("%v", {0})', [e]).expr;
+
             case _: expr.expr;
         }
     }

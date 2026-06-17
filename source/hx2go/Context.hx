@@ -109,6 +109,7 @@ class Context {
             }
 
             if (path.length == 0 && name == "Main") {
+                buf.add('');
                 buf.add('func main() {');
                 buf.add('${StringConversions.typePathFieldName("main", StringConversions.pathToLossyTypePath(mainClass))}()', 1);
                 buf.add('}');

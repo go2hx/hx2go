@@ -14,6 +14,7 @@ import hx2go.hxb.Typed.HxbTypedExpr;
 import hx2go.hxb.Typed.HxbTypedExprDef.TConst;
 import hx2go.hxb.Ast.HxbBinop;
 import hx2go.util.TypeHelper;
+import hx2go.hxb.Ast.HxbUnop;
 
 class ExprWriter extends WriterImpl {
 
@@ -30,6 +31,10 @@ class ExprWriter extends WriterImpl {
             case TIdent(v): writeIdent(expr, v);
             case TCast(e, ref): writeCast(expr, e, ref);
             case TVar(v, e): writeVarDecl(expr, v, e);
+            case TUnop(op, postFix, e): writeUnop(expr, op, postFix, e);
+            case TParenthesis(e): writeParenthesis(expr, e);
+            case TWhile(econd, ebody, normal): writeWhile(expr, econd, ebody, normal);
+            case TIf(econd, eif, eelse): writeIfStmt(expr, econd, eif, eelse);
             case TBinop(op, left, right): writeBinop(expr, op, left, right);
             case _: new OutputBuffer();
         }
@@ -47,7 +52,7 @@ class ExprWriter extends WriterImpl {
             buf.addBuffer(writeExpr(e), 1);
         }
 
-        buf.add("}");
+        buf.addInline("}");
 
         return buf;
     }
@@ -56,6 +61,41 @@ class ExprWriter extends WriterImpl {
         var buf = new OutputBuffer();
 
         buf.addBufferInline(writer.types.writeHxbType(expr.t));
+        buf.addInline('(');
+        buf.addBufferInline(writeExpr(e));
+        buf.addInline(')');
+
+        return buf;
+    }
+
+    public function writeIfStmt(expr: HxbTypedExpr, econd: HxbTypedExpr, eif: HxbTypedExpr, eelse: Null<HxbTypedExpr>): OutputBuffer {
+        var buf = new OutputBuffer();
+
+        buf.addInline('if ');
+        buf.addBufferInline(writeExpr(econd));
+        buf.addBufferInline(writeExpr(eif));
+
+        if (eelse != null) {
+            buf.addInline(' else ');
+            buf.addBufferInline(writeExpr(eelse));
+        }
+
+        return buf;
+    }
+
+    public function writeWhile(expr: HxbTypedExpr, econd: HxbTypedExpr, ebody: HxbTypedExpr, normalWhile: Bool): OutputBuffer {
+        var buf = new OutputBuffer(); // TODO: handle normalWhile (do {} while(...) vs while (...) {})
+
+        buf.addInline('for ');
+        buf.addBufferInline(writeExpr(econd));
+        buf.addBufferInline(writeExpr(ebody));
+
+        return buf;
+    }
+
+    public function writeParenthesis(expr: HxbTypedExpr, e: HxbTypedExpr): OutputBuffer {
+        var buf = new OutputBuffer();
+
         buf.addInline('(');
         buf.addBufferInline(writeExpr(e));
         buf.addInline(')');
@@ -124,12 +164,12 @@ class ExprWriter extends WriterImpl {
             case OpBoolOr: "||";
             case OpShl: "<<";
             case OpShr: ">>";
-            case OpUShr: ">>>"; // TODO: preprocess as this isn't valid
+            case OpUShr: throw "OpUShr not supported"; // TODO: preprocess as this isn't valid
             case OpMod: "%";
-            case OpInterval: "..";  // TODO: preprocess as this isn't valid
-            case OpArrow: "->"; // TODO: preprocess as this isn't valid
-            case OpIn: "in"; // TODO: preprocess as this isn't valid
-            case OpNullCoal: "??"; // TODO: preprocess as this isn't valid
+            case OpInterval: throw "OpInterval not supported";  // TODO: preprocess as this isn't valid
+            case OpArrow: throw "OpArrow not supported"; // TODO: preprocess as this isn't valid
+            case OpIn: throw "OpIn not supported"; // TODO: preprocess as this isn't valid
+            case OpNullCoal: throw "OpNullCoal not supported"; // TODO: preprocess as this isn't valid
 
             case OpAssignOp(inner):
                 switch (inner) {
@@ -142,7 +182,7 @@ class ExprWriter extends WriterImpl {
                     case OpXor: "^=";
                     case OpShl: "<<=";
                     case OpShr: ">>=";
-                    case OpUShr: ">>>=";  // TODO: preprocess as this isn't valid
+                    case OpUShr: throw "OpUShr not supported";  // TODO: preprocess as this isn't valid
                     case OpMod: "%=";
                     default:
                         throw 'Unsupported assignment operator: $inner';
@@ -152,6 +192,27 @@ class ExprWriter extends WriterImpl {
         buf.addBufferInline(writeExpr(left));
         buf.addInline(' $opStr ');
         buf.addBufferInline(writeExpr(right));
+
+        return buf;
+    }
+
+    public function writeUnop(expr: HxbTypedExpr, op: HxbUnop, postFix: Bool, e: HxbTypedExpr): OutputBuffer {
+        if (!postFix) {
+            trace("prefix not supported, did the transformer not run?");
+        }
+
+        var buf = new OutputBuffer();
+        var op = switch op {
+            case OpIncrement: "++";
+            case OpDecrement: "--";
+            case OpNot: "!";
+            case OpNeg: "-";
+            case OpNegBits: "^";
+            case OpSpread: throw "OpSpread not supported"; // TODO: preprocess as this isn't valid
+        }
+
+        buf.addBufferInline(writeExpr(e));
+        buf.addInline(op);
 
         return buf;
     }

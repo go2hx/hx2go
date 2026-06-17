@@ -15,11 +15,13 @@ class Main {
             Fmt.println("Sum is between 3 and 5 inclusive");
         }
 
+        var count = 0;
         while (sum > 0) {
-            sum = sum - 1;
+            sum = sum - 1.2;
+            count++;
         }
 
-        Fmt.println("Result is: " + sum);
+        Fmt.println("Result is: " + sum + " and the count is: " + count);
     }
 
 }

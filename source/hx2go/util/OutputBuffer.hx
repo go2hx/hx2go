@@ -1,5 +1,7 @@
 package hx2go.util;
 
+using StringTools;
+
 class OutputBuffer {
 
     private var content: String;
@@ -45,6 +47,10 @@ class OutputBuffer {
 
     public function addBufferInline(buffer: OutputBuffer): Void {
         content += buffer.toString();
+    }
+
+    public function endedWithBlock(): Bool {
+        return content.trim().endsWith("}");
     }
 
     public function clear(): Void {

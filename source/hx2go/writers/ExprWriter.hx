@@ -51,6 +51,10 @@ class ExprWriter extends WriterImpl {
         buf.add("{");
 
         for (e in exprs) {
+            if (buf.endedWithBlock()) {
+                buf.add(''); // makes code more readable when you deal with nesting
+            }
+
             buf.addBuffer(writeExpr(e), 1);
         }
 
@@ -75,6 +79,7 @@ class ExprWriter extends WriterImpl {
 
         buf.addInline('if ');
         buf.addBufferInline(writeExpr(econd));
+        buf.addInline(' ');
         buf.addBufferInline(writeExpr(eif));
 
         if (eelse != null) {
@@ -90,6 +95,7 @@ class ExprWriter extends WriterImpl {
 
         buf.addInline('for ');
         buf.addBufferInline(writeExpr(econd));
+        buf.addInline(' ');
         buf.addBufferInline(writeExpr(ebody));
 
         return buf;

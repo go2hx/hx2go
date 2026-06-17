@@ -9,10 +9,12 @@ import hx2go.hxb.Typed.HxbTypedExpr;
 import hx2go.util.OutputBuffer;
 import hx2go.hxb.HxbModuleType;
 import hx2go.hxb.tools.TypedExprTools;
+import hx2go.hxb.TypePath;
 
 class Context {
 
-    private var types: Array<HxbModuleType>;
+    private var types: Map<String, HxbModuleType>;
+    private var imports: Map<String, Array<String>>;
     private var outputDirectory: String;
     private var topLevelPackage: String;
     private var passes: Array<ICompilerPass>;
@@ -20,6 +22,7 @@ class Context {
 
     public function new(outputDirectory: String) {
         this.types = [];
+        this.imports = [];
         this.outputDirectory = outputDirectory;
         this.topLevelPackage = Path.normalize(outputDirectory).split("/").pop();
         this.passes = createPasses();
@@ -28,13 +31,23 @@ class Context {
 
     private function createPasses(): Array<ICompilerPass> {
         return [
-            new hx2go.passes.RewriteString(this),
-            new hx2go.passes.AppendSmileyToString(this)
+            new hx2go.passes.RewriteExternAccess(this),
         ];
     }
 
+    private function getPath(type: HxbModuleType, modulePath: Bool = false): String {
+        var p = switch type {
+            case MClass(v): v.path;
+            case MEnum(v): v.path;
+            case MAbstract(v): v.path;
+            case MTypedef(v): v.path;
+        };
+
+        return modulePath ? p.moduleDotPath() : p.dotPath();
+    }
+
     public function add(type: HxbModuleType) {
-        types.push(type);
+        types.set(getPath(type), type);
     }
 
     public function build(): Void {
@@ -72,8 +85,21 @@ class Context {
 
             var path = module[0].module.split('.');
             var name = path.pop();
+            var imports = imports.get(getPath(module[0].type, true)) ?? [];
 
-            buf.add('package ${path[path.length - 1] ?? topLevelPackage}\n');
+            buf.add('package ${path[path.length - 1] ?? topLevelPackage}');
+
+            if (imports.length > 0) {
+                buf.add("");
+            }
+
+            for (imp in imports) {
+                buf.add('import "$imp"');
+            }
+
+            if (imports.length > 0) {
+                buf.add("");
+            }
 
             for (entry in module) {
                 buf.addBuffer(writer.types.writeModuleType(entry.type));
@@ -81,6 +107,10 @@ class Context {
 
             writeFile(path.join("/"), name, buf.toString());
         }
+    }
+
+    public function resolve(tp: TypePath): HxbModuleType {
+        return types.get(tp.dotPath());
     }
 
     private function writeFile(directory: String, fileName: String, content: String): Void {
@@ -150,9 +180,21 @@ class Context {
 
             for (p in passes) {
                 for (e in pending[p]) {
-                    p.execute(e);
+                    p.execute(e, type);
                 }
             }
+        }
+    }
+
+    public function defineImport(module: HxbModuleType, goImport: String): Void {
+        var path = getPath(module, true);
+        if (!imports.exists(path)) {
+            imports.set(path, []);
+        }
+
+        var imports = imports[path];
+        if (!imports.contains(goImport)) {
+            imports.push(goImport);
         }
     }
 

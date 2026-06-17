@@ -1,5 +1,7 @@
 package hx2go.writers;
 
+using StringTools;
+
 import hx2go.hxb.Typed.HxbTypedExpr;
 import hx2go.util.OutputBuffer;
 import hx2go.hxb.Typed.HxbTFunc;
@@ -9,6 +11,7 @@ import hx2go.util.StringConversions;
 import hx2go.hxb.Typed.HxbVar;
 import hx2go.hxb.Typed.HxbModuleTypeRef;
 import hx2go.hxb.Typed.HxbTypedExpr;
+import hx2go.hxb.Typed.HxbTypedExprDef.TConst;
 
 class ExprWriter extends WriterImpl {
 
@@ -22,6 +25,7 @@ class ExprWriter extends WriterImpl {
             case TLocal(v): writeLocalAccess(expr, v);
             case TTypeExpr(ref): writeTypeAccess(expr, ref);
             case TMeta(m, e): writeExpr(e);
+            case TIdent(v): writeIdent(expr, v);
             case _: new OutputBuffer();
         }
     }
@@ -45,7 +49,14 @@ class ExprWriter extends WriterImpl {
 
     public function writeCall(expr: HxbTypedExpr, ecall: HxbTypedExpr, args: Array<HxbTypedExpr>): OutputBuffer {
         var buf = new OutputBuffer();
-        buf.addBufferInline(writeExpr(ecall));
+        var estr = writeExpr(ecall);
+
+        if (estr.toString() == "__go__") { // untyped __go__();
+            var cpy = args.copy();
+            return writeRaw(cpy.shift(), cpy);
+        }
+
+        buf.addBufferInline(estr);
         buf.addInline("(");
 
         for (argIdx in 0...args.length) {
@@ -103,6 +114,23 @@ class ExprWriter extends WriterImpl {
         return new OutputBuffer(
             StringConversions.typePathClassName(tp)
         );
+    }
+
+    public function writeRaw(template: HxbTypedExpr, args: Array<HxbTypedExpr>): OutputBuffer {
+        var tmpstr = switch template?.expr {
+            case TConst(TString(x)): x;
+            case _: "";
+        }
+
+        for (idx in 0...args.length) {
+            tmpstr = tmpstr.replace('{$idx}', writeExpr(args[idx]).toString());
+        }
+
+        return new OutputBuffer(tmpstr);
+    }
+
+    public function writeIdent(expr: HxbTypedExpr, ident: String): OutputBuffer {
+        return new OutputBuffer(ident);
     }
 
 }

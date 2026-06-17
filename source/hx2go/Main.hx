@@ -26,7 +26,7 @@ class Main {
         var types = [];
 
         for (ref in entries) {
-            if (ref.target != "hx2go") { // hxb can contain multiple targets (like macro) and we only want the hx2go target
+            if (ref.target != "go") { // hxb can contain multiple targets (like macro) and we only want the hx2go target
                 continue;
             }
 

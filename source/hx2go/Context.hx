@@ -11,6 +11,7 @@ import hx2go.hxb.HxbModuleType;
 import hx2go.hxb.tools.TypedExprTools;
 import hx2go.hxb.TypePath;
 import hx2go.util.StringConversions;
+import hx2go.preprocessor.Preprocessor;
 
 class Context {
 
@@ -242,8 +243,7 @@ class Context {
         }
 
         for (e in roots) {
-            if (e == null) return;
-            e.t = null;
+            Preprocessor.run(e, {}, this);
         }
 
         for (e in roots) {

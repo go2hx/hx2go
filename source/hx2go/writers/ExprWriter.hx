@@ -36,6 +36,8 @@ class ExprWriter extends WriterImpl {
             case TWhile(econd, ebody, normal): writeWhile(expr, econd, ebody, normal);
             case TIf(econd, eif, eelse): writeIfStmt(expr, econd, eif, eelse);
             case TBinop(op, left, right): writeBinop(expr, op, left, right);
+            case TBreak: new OutputBuffer("break");
+            case TContinue: new OutputBuffer("continue");
             case _: new OutputBuffer();
         }
     }

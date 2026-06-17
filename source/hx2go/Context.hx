@@ -40,7 +40,7 @@ class Context {
             // passes
             new hx2go.passes.BinopTypeNormaliser(this),
             new hx2go.passes.StringificationCast(this),
-            new hx2go.passes.RewriteExternAccess(this)
+            new hx2go.passes.RewriteExternAccess(this),
         ];
     }
 
@@ -227,26 +227,26 @@ class Context {
     }
 
     private function transformType(type: HxbModuleType): Void {
-        var exprs: Array<HxbTypedExpr> = [];
+        var roots: Array<HxbTypedExpr> = [];
 
         switch type {
             case MClass(def):
-                appendTo(def.fields.map(f -> f.expr?.expr).filter(f -> f != null), exprs);
-                appendTo(def.statics.map(f -> f.expr?.expr).filter(f -> f != null), exprs);
+                roots = roots.concat(def.fields.map(f -> f.expr?.expr).filter(f -> f != null));
+                roots = roots.concat(def.statics.map(f -> f.expr?.expr).filter(f -> f != null));
 
                 if (def.constructor?.expr != null) {
-                    exprs.push(def.constructor.expr?.expr);
+                    roots.push(def.constructor.expr?.expr);
                 }
 
             case _: null;
         }
 
-        for (e in exprs) {
+        for (e in roots) {
             if (e == null) return;
             e.t = null;
         }
 
-        for (e in exprs) {
+        for (e in roots) {
             if (e == null) continue;
 
             var frame = new ContextFrame(passes, type);
@@ -290,12 +290,6 @@ class Context {
         var imports = imports[path];
         if (!imports.contains(goImport)) {
             imports.push(goImport);
-        }
-    }
-
-    private function appendTo<T>(from: Array<T>, to: Array<T>): Void {
-        for (x in from) {
-            to.push(x);
         }
     }
 

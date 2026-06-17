@@ -16,13 +16,7 @@ private enum ExternKind {
     ExModule;
 }
 
-class RewriteExternAccess implements ICompilerPass {
-
-    private var context: Context;
-
-    public function new(context: Context) {
-        this.context = context;
-    }
+class RewriteExternAccess extends CompilerPass {
 
     private function getExternInfo(expr: HxbTypedExpr): { kind: ExternKind, ?options: HxbExpr, ?left: HxbTypedExpr, ?right: String } {
         return switch expr.expr {

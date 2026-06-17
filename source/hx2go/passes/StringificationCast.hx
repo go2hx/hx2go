@@ -6,13 +6,7 @@ import hx2go.hxb.Typed.HxbTypedExprDef;
 import hx2go.hxb.HxbType;
 import hx2go.util.ExprHelper;
 
-class StringificationCast implements ICompilerPass {
-
-    private var context: Context;
-
-    public function new(context: Context) {
-        this.context = context;
-    }
+class StringificationCast extends CompilerPass {
 
     public function match(expr: HxbTypedExpr): Bool {
         return switch [expr.expr, expr.t] {

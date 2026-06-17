@@ -7,13 +7,7 @@ import hx2go.hxb.HxbType;
 import hx2go.util.ExprHelper;
 import hx2go.hxb.Ast.HxbBinop;
 
-class BinopTypeNormaliser implements ICompilerPass {
-
-    private var context: Context;
-
-    public function new(context: Context) {
-        this.context = context;
-    }
+class BinopTypeNormaliser extends CompilerPass {
 
     private function checkTypes(self: HxbTypedExpr, op: HxbBinop, left: HxbTypedExpr, right: HxbTypedExpr, swapped: Bool): Void {
         var result: { left: HxbTypedExpr, right: HxbTypedExpr } = switch [left.t, right.t] {

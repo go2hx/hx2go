@@ -4,13 +4,7 @@ import hx2go.hxb.Typed.HxbTypedExpr;
 import hx2go.hxb.HxbModuleType;
 import hx2go.hxb.Typed.HxbTypedExprDef;
 
-class EnsureBlockAndParen implements ICompilerPass {
-
-    private var context: Context;
-
-    public function new(context: Context) {
-        this.context = context;
-    }
+class EnsureBlockAndParen extends CompilerPass {
 
     private function ensureBlock(expr: HxbTypedExpr): HxbTypedExpr {
         if (expr == null) {
@@ -60,7 +54,6 @@ class EnsureBlockAndParen implements ICompilerPass {
 
             case _: expr.expr;
         }
-
     }
 
 }

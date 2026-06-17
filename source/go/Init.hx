@@ -82,7 +82,10 @@ class Init {
 
 			if (!FileSystem.exists(goModOutput)) {
 				Sys.setCwd(sourceOutput);
-				new Process("go", ["mod", "init", "main"]).exitCode(true);
+
+				var ps = new Process("go", ["mod", "init", "main"]);
+				ps.exitCode(true);
+				ps.close();
 			}
 		});
     }

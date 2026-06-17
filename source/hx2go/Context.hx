@@ -34,6 +34,10 @@ class Context {
 
     private function createPasses(): Array<ICompilerPass> {
         return [
+            // preprocessor
+            new hx2go.passes.EnsureBlockAndParen(this),
+
+            // passes
             new hx2go.passes.BinopTypeNormaliser(this),
             new hx2go.passes.StringificationCast(this),
             new hx2go.passes.RewriteExternAccess(this)

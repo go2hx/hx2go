@@ -12,6 +12,8 @@ import hx2go.hxb.Typed.HxbVar;
 import hx2go.hxb.Typed.HxbModuleTypeRef;
 import hx2go.hxb.Typed.HxbTypedExpr;
 import hx2go.hxb.Typed.HxbTypedExprDef.TConst;
+import hx2go.hxb.Ast.HxbBinop;
+import hx2go.util.TypeHelper;
 
 class ExprWriter extends WriterImpl {
 
@@ -26,6 +28,9 @@ class ExprWriter extends WriterImpl {
             case TTypeExpr(ref): writeTypeAccess(expr, ref);
             case TMeta(m, e): writeExpr(e);
             case TIdent(v): writeIdent(expr, v);
+            case TCast(e, ref): writeCast(expr, e, ref);
+            case TVar(v, e): writeVarDecl(expr, v, e);
+            case TBinop(op, left, right): writeBinop(expr, op, left, right);
             case _: new OutputBuffer();
         }
     }
@@ -43,6 +48,17 @@ class ExprWriter extends WriterImpl {
         }
 
         buf.add("}");
+
+        return buf;
+    }
+
+    public function writeCast(expr: HxbTypedExpr, e: HxbTypedExpr, ref: HxbModuleTypeRef): OutputBuffer {
+        var buf = new OutputBuffer();
+
+        buf.addBufferInline(writer.types.writeHxbType(expr.t));
+        buf.addInline('(');
+        buf.addBufferInline(writeExpr(e));
+        buf.addInline(')');
 
         return buf;
     }
@@ -69,6 +85,73 @@ class ExprWriter extends WriterImpl {
         }
 
         buf.addInline(")");
+
+        return buf;
+    }
+
+    public function writeVarDecl(expr: HxbTypedExpr, v: HxbVar, vexpr: HxbTypedExpr): OutputBuffer {
+        var buf = new OutputBuffer();
+        buf.addInline('var ${v.name} ');
+        buf.addBufferInline(writer.types.writeHxbType(v.type));
+
+        if (vexpr != null) {
+            buf.addInline(' = ');
+            buf.addBufferInline(writeExpr(vexpr));
+        }
+
+        buf.addInline('; _ = ${v.name}');
+        return buf;
+    }
+
+    public function writeBinop(expr: HxbTypedExpr, op: HxbBinop, left: HxbTypedExpr, right: HxbTypedExpr): OutputBuffer {
+        var buf = new OutputBuffer();
+        var opStr = switch (op) {
+            case OpAdd: "+";
+            case OpSub: "-";
+            case OpMult: "*";
+            case OpDiv: "/";
+            case OpAssign: "=";
+            case OpEq: "==";
+            case OpNotEq: "!=";
+            case OpGt: ">";
+            case OpGte: ">=";
+            case OpLt: "<";
+            case OpLte: "<=";
+            case OpAnd: "&";
+            case OpOr: "|";
+            case OpXor: "^";
+            case OpBoolAnd: "&&";
+            case OpBoolOr: "||";
+            case OpShl: "<<";
+            case OpShr: ">>";
+            case OpUShr: ">>>"; // TODO: preprocess as this isn't valid
+            case OpMod: "%";
+            case OpInterval: "..";  // TODO: preprocess as this isn't valid
+            case OpArrow: "->"; // TODO: preprocess as this isn't valid
+            case OpIn: "in"; // TODO: preprocess as this isn't valid
+            case OpNullCoal: "??"; // TODO: preprocess as this isn't valid
+
+            case OpAssignOp(inner):
+                switch (inner) {
+                    case OpAdd: "+=";
+                    case OpSub: "-=";
+                    case OpMult: "*=";
+                    case OpDiv: "/=";
+                    case OpAnd: "&=";
+                    case OpOr: "|=";
+                    case OpXor: "^=";
+                    case OpShl: "<<=";
+                    case OpShr: ">>=";
+                    case OpUShr: ">>>=";  // TODO: preprocess as this isn't valid
+                    case OpMod: "%=";
+                    default:
+                        throw 'Unsupported assignment operator: $inner';
+                }
+        };
+
+        buf.addBufferInline(writeExpr(left));
+        buf.addInline(' $opStr ');
+        buf.addBufferInline(writeExpr(right));
 
         return buf;
     }

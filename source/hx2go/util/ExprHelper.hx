@@ -2,6 +2,9 @@ package hx2go.util;
 
 import hx2go.hxb.Typed.HxbTypedExpr;
 import hx2go.hxb.Typed.HxbTypedExprDef;
+import haxe.runtime.Copy;
+import hx2go.hxb.HxbType;
+import hx2go.hxb.Typed.HxbModuleTypeRef;
 
 class ExprHelper {
 
@@ -12,6 +15,16 @@ class ExprHelper {
                 [ new HxbTypedExpr(TConst(TString(template)), null, null) ].concat(params)
             ),
             null, null
+        );
+    }
+
+    public static function createCast(context: Context, expr: HxbTypedExpr, type: HxbType): HxbTypedExpr {
+        var copy = Copy.copy(expr);
+
+        return new HxbTypedExpr(
+            TCast(copy, null),
+            type,
+            null
         );
     }
 

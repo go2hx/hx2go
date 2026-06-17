@@ -31,6 +31,7 @@ class Context {
 
     private function createPasses(): Array<ICompilerPass> {
         return [
+            new hx2go.passes.BinopTypeNormaliser(this),
             new hx2go.passes.RewriteExternAccess(this),
         ];
     }
@@ -102,7 +103,7 @@ class Context {
             }
 
             for (entry in module) {
-                buf.addBuffer(writer.types.writeModuleType(entry.type));
+                buf.addBuffer(writer.types.writeModuleTypeDecl(entry.type));
             }
 
             writeFile(path.join("/"), name, buf.toString());
@@ -110,7 +111,7 @@ class Context {
     }
 
     public function resolve(tp: TypePath): HxbModuleType {
-        return types.get(tp.dotPath());
+        return tp != null ? types.get(tp.dotPath()) : null;
     }
 
     private function writeFile(directory: String, fileName: String, content: String): Void {

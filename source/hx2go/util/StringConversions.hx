@@ -10,6 +10,17 @@ class StringConversions {
         return input.charAt(0).toUpperCase() + input.substr(1).toLowerCase();
     }
 
+    public static function pathToLossyTypePath(path: String): TypePath {
+        var parts = path.split(".");
+        var name = parts.pop();
+
+        return {
+            name: name,
+            moduleName: name,
+            pack: parts
+        };
+    }
+
     public static function typePathFieldName(fieldName: String, tp: TypePath): String {
         return 'Hx_Field_${tp.dotPath().toLowerCase().replace(".", "_")}_${fieldName}';
     }

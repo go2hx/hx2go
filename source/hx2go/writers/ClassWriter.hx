@@ -11,11 +11,11 @@ class ClassWriter extends WriterImpl {
         var buf = new OutputBuffer();
 
         for (f in cls.statics) {
-            buf.addBuffer(writeStaticClassField(f, cls));
+            buf.addBufferInline(writeStaticClassField(f, cls));
         }
 
         for (f in cls.fields) {
-            buf.addBuffer(writeMemberClassField(f, cls));
+            buf.addBufferInline(writeMemberClassField(f, cls));
         }
 
         return buf;
@@ -38,6 +38,7 @@ class ClassWriter extends WriterImpl {
     public function writeStaticClassFunction(field: HxbClassField, kind: HxbMethodKind, cls: HxbClass): OutputBuffer {
         var buf = new OutputBuffer();
 
+        buf.add("");
         buf.addInline('func ${StringConversions.typePathFieldName(field.name, cls.path)}() ');
 
         if (field.expr?.expr != null) buf.addBuffer(writer.exprs.writeExpr(field.expr.expr))

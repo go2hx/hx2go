@@ -10,6 +10,7 @@ import hx2go.util.OutputBuffer;
 import hx2go.hxb.HxbModuleType;
 import hx2go.hxb.tools.TypedExprTools;
 import hx2go.hxb.TypePath;
+import hx2go.util.StringConversions;
 
 class Context {
 
@@ -51,7 +52,7 @@ class Context {
         types.set(getPath(type), type);
     }
 
-    public function build(): Void {
+    public function build(mainClass: String): Void {
         var typesByModule: Map<String, Array<{ type: HxbModuleType, name: String, module: String }>> = [];
 
         for (t in types) {
@@ -77,6 +78,8 @@ class Context {
             typesByModule[infos.module].push({ type: t, name: infos.name, module: infos.module });
         }
 
+        var mainWritten = false;
+
         for (module in typesByModule) {
             if (module.length == 0) {
                 continue;
@@ -98,15 +101,33 @@ class Context {
                 buf.add('import "$imp"');
             }
 
-            if (imports.length > 0) {
-                buf.add("");
+            for (entry in module) {
+                buf.addBufferInline(writer.types.writeModuleTypeDecl(entry.type));
             }
 
-            for (entry in module) {
-                buf.addBuffer(writer.types.writeModuleTypeDecl(entry.type));
+            if (path.length == 0 && name == "Main") {
+                buf.add('func main() {');
+                buf.add('${StringConversions.typePathFieldName("main", StringConversions.pathToLossyTypePath(mainClass))}()', 1);
+                buf.add('}');
+
+                mainWritten = true;
             }
 
             writeFile(path.join("/"), name, buf.toString());
+        }
+
+        if (!mainWritten) {
+            var buf = new OutputBuffer();
+
+            buf.add('package ${topLevelPackage}');
+            buf.add('');
+            buf.add('func main() {');
+            buf.add('${StringConversions.typePathFieldName("main", StringConversions.pathToLossyTypePath(mainClass))}()', 1);
+            buf.add('}');
+
+            // TODO: import file containing main
+
+            writeFile("", "Main", buf.toString());
         }
     }
 

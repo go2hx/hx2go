@@ -13,14 +13,15 @@ class Main {
 
         var relativeInput = args[0] ?? "output.hxb";
         var relativeOutput = args[1] ?? ".";
+        var mainClass = args[2] ?? "Main";
 
         var absoluteOutput = Path.join([ root, relativeOutput ]);
         var absoluteInput = Path.join([ root, relativeInput ]);
 
-        exec(absoluteInput, absoluteOutput);
+        exec(absoluteInput, absoluteOutput, mainClass);
     }
 
-    public static function exec(input: String, output: String): Void {
+    public static function exec(input: String, output: String, mainClass: String): Void {
         var arc = Hxb.loadArchive(input);
         var entries = arc.modules();
         var types = [];
@@ -36,10 +37,10 @@ class Main {
             }
         }
 
-        generate(types, output);
+        generate(types, output, mainClass);
     }
 
-    public static function generate(types: Array<HxbModuleType>, absoluteOutput: String): Void {
+    public static function generate(types: Array<HxbModuleType>, absoluteOutput: String, mainClass: String): Void {
         if (!FileSystem.exists(absoluteOutput)) {
             FileSystem.createDirectory(absoluteOutput);
         }
@@ -49,7 +50,7 @@ class Main {
             ctx.add(t);
         }
 
-        ctx.build();
+        ctx.build(mainClass);
     }
 
 }

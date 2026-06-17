@@ -77,7 +77,8 @@ class Init {
 				throw "cannot find HXB! something went wrong, perhaps the onAfterGenerate callback fired too early?";
 			}
 
-			hx2go.Main.exec(archiveOutput, sourceOutput);
+			final mainClass = Compiler.getConfiguration().mainClass;
+			hx2go.Main.exec(archiveOutput, sourceOutput, mainClass.pack.length > 0 ? '${mainClass.pack.join(".")}.${mainClass.name}' : '${mainClass.name}');
 
 			if (!FileSystem.exists(goModOutput)) {
 				Sys.setCwd(sourceOutput);

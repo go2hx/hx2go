@@ -21,6 +21,11 @@ class BinopTypeNormaliser implements ICompilerPass {
                 to: ExprHelper.createCast(context, left, TFloat)
             };
 
+            case [_, TString]: {
+                from: left,
+                to: ExprHelper.createCast(context, left, TString)
+            };
+
             case _: null;
         }
 

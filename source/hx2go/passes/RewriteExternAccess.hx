@@ -101,7 +101,7 @@ class RewriteExternAccess implements ICompilerPass {
                     fieldName = StringConversions.toPascalCase(fieldName);
                 }
 
-                expr.expr = ExprHelper.createUntyped('$typeName.$fieldName', []).expr;
+                expr.expr = ExprHelper.createUntyped(context, '$typeName.$fieldName', []).expr;
             }
 
             case _: null;

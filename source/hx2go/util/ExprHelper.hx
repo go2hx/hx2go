@@ -8,24 +8,34 @@ import hx2go.hxb.Typed.HxbModuleTypeRef;
 
 class ExprHelper {
 
-    public static function createUntyped(template: String, params: Array<HxbTypedExpr>): HxbTypedExpr {
-        return new HxbTypedExpr(
+    public static function createUntyped(context: Context, template: String, params: Array<HxbTypedExpr>): HxbTypedExpr {
+        var expr = new HxbTypedExpr(
             TCall(
                 new HxbTypedExpr(TIdent("__go__"), null, null),
-                [ new HxbTypedExpr(TConst(TString(template)), null, null) ].concat(params)
+                [
+                    new HxbTypedExpr(TConst(TString(template)), null, null)
+                ].concat(params)
             ),
             null, null
         );
+
+        context.submitNode(expr, true);
+
+        return expr;
     }
 
     public static function createCast(context: Context, expr: HxbTypedExpr, type: HxbType): HxbTypedExpr {
-        var copy = Copy.copy(expr);
+        context.desubmitNode(expr, true);
 
-        return new HxbTypedExpr(
-            TCast(copy, null),
+        var castExpr = new HxbTypedExpr(
+            TCast(Copy.copy(expr), null),
             type,
             null
         );
+
+        context.submitNode(castExpr, true);
+
+        return castExpr;
     }
 
 }

@@ -12,6 +12,24 @@ import hx2go.hxb.tools.TypedExprTools;
 import hx2go.hxb.TypePath;
 import hx2go.util.StringConversions;
 
+private class PipelineFrame {
+    public var passes: Array<ICompilerPass>;
+    public var pending: Map<ICompilerPass, Array<HxbTypedExpr>>;
+    public var currentPassIndex: Int;
+    public var type: HxbModuleType;
+
+    public function new(passes: Array<ICompilerPass>, type: HxbModuleType) {
+        this.passes = passes;
+        this.type = type;
+        this.pending = [];
+        this.currentPassIndex = -1;
+
+        for (p in passes) {
+            this.pending[p] = [];
+        }
+    }
+}
+
 class Context {
 
     private var types: Map<String, HxbModuleType>;
@@ -20,6 +38,7 @@ class Context {
     private var topLevelPackage: String;
     private var passes: Array<ICompilerPass>;
     private var writer: Writer;
+    private var pipelineStack: Array<PipelineFrame>;
 
     public function new(outputDirectory: String) {
         this.types = [];
@@ -28,12 +47,14 @@ class Context {
         this.topLevelPackage = Path.normalize(outputDirectory).split("/").pop();
         this.passes = createPasses();
         this.writer = new Writer(this);
+        this.pipelineStack = [];
     }
 
     private function createPasses(): Array<ICompilerPass> {
         return [
             new hx2go.passes.BinopTypeNormaliser(this),
             new hx2go.passes.RewriteExternAccess(this),
+            new hx2go.passes.StringificationCast(this)
         ];
     }
 
@@ -159,6 +180,65 @@ class Context {
         }
     }
 
+    public function submitNode(child: HxbTypedExpr, recursive: Bool = false): Void {
+        if (child == null || pipelineStack.length == 0) return;
+
+        var frame = pipelineStack[pipelineStack.length - 1];
+        var startIndex = frame.currentPassIndex < 0 ? 0 : frame.currentPassIndex;
+
+        var enqueue = (node: HxbTypedExpr) -> {
+            for (i in startIndex...frame.passes.length) {
+                var p = frame.passes[i];
+                if (p.match(node)) {
+                    frame.pending[p].push(node);
+                }
+            }
+        };
+
+        if (recursive) {
+            var walk: HxbTypedExpr -> Void = null;
+            walk = node -> {
+                if (node == null) return;
+                enqueue(node);
+                TypedExprTools.iter(node, walk);
+            };
+            walk(child);
+        } else {
+            enqueue(child);
+        }
+    }
+
+    public function desubmitNode(child: HxbTypedExpr, recursive: Bool = false): Void {
+        if (child == null || pipelineStack.length == 0) return;
+
+        var frame = pipelineStack[pipelineStack.length - 1];
+        var startIndex = frame.currentPassIndex < 0 ? 0 : frame.currentPassIndex;
+
+        var dequeue = (node: HxbTypedExpr) -> {
+            for (i in startIndex...frame.passes.length) {
+                var queue = frame.pending[frame.passes[i]];
+                var idx = queue.indexOf(node);
+
+                while (idx != -1) {
+                    queue.splice(idx, 1);
+                    idx = queue.indexOf(node);
+                }
+            }
+        };
+
+        if (recursive) {
+            var walk: HxbTypedExpr -> Void = null;
+            walk = node -> {
+                if (node == null) return;
+                dequeue(node);
+                TypedExprTools.iter(node, walk);
+            };
+            walk(child);
+        } else {
+            dequeue(child);
+        }
+    }
+
     private function transformType(type: HxbModuleType): Void {
         var exprs: Array<HxbTypedExpr> = [];
 
@@ -182,29 +262,35 @@ class Context {
         for (e in exprs) {
             if (e == null) continue;
 
-            var pending: Map<ICompilerPass, Array<HxbTypedExpr>> = [];
+            var frame = new PipelineFrame(passes, type);
+            pipelineStack.push(frame);
+
             var match: HxbTypedExpr -> Void;
 
-            for (p in passes) {
-                pending[p] = [];
-            }
-
-            match = e -> {
-                for (p in passes) {
-                    if (!p.match(e)) continue;
-                    pending[p].push(e);
+            match = node -> {
+                for (p in frame.passes) {
+                    if (!p.match(node)) continue;
+                    frame.pending[p].push(node);
                 }
 
-                TypedExprTools.iter(e, match);
+                TypedExprTools.iter(node, match);
             };
 
             match(e);
 
-            for (p in passes) {
-                for (e in pending[p]) {
-                    p.execute(e, type);
+            for (i in 0...frame.passes.length) {
+                frame.currentPassIndex = i;
+
+                var p = frame.passes[i];
+                var queue = frame.pending[p];
+                var idx = 0;
+                while (idx < queue.length) {
+                    p.execute(queue[idx], type);
+                    idx++;
                 }
             }
+
+            pipelineStack.pop();
         }
     }
 

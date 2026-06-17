@@ -2,6 +2,9 @@ package hx2go.preprocessor;
 
 import hx2go.hxb.Typed.HxbTypedExpr;
 import hx2go.hxb.tools.TypedExprTools;
+import hx2go.hxb.Typed.HxbTypedExprDef;
+import haxe.runtime.Copy;
+import hx2go.hxb.HxbType;
 
 class Preprocessor {
 
@@ -41,7 +44,11 @@ class Preprocessor {
     }
 
     public function toStmt(expr: HxbTypedExpr, scope: Scope, ancestor: Null<Ancestor>): Void {
-        trace('conv to stmt: $expr');
+        expr.expr = TBinop(
+            OpAssign,
+            new HxbTypedExpr(TIdent('_'), TVoid, null),
+            Copy.copy(expr)
+        );
     }
 
 }

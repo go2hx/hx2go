@@ -48,7 +48,7 @@ class Preprocessor {
             OpAssign,
             new HxbTypedExpr(TIdent('_'), TVoid, null),
             Copy.copy(expr)
-        );
+        ); // TODO: if no side effects, it may be omitted.
     }
 
 }

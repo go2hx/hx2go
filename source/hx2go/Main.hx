@@ -31,29 +31,25 @@ class Main {
         var arc = Hxb.loadArchive(input);
         var types = [];
         var walked: Map<String, Bool> = [];
-        var walk: HxbImport -> Void;
+        var walk: String -> Void;
 
-        walk = (imp: HxbImport) -> {
-            var dot = importToPath(imp);
-            if (walked.exists(dot)) {
+        walk = (imp: String) -> {
+            if (walked.exists(imp)) {
                 return;
             }
 
-            var ref = arc.findModule(dot, 'go');
+            var ref = arc.findModule(imp, 'go');
             var mod = arc.decode(ref);
 
             for (child in mod.imports) {
-                walk(child);
+                walk(importToPath(child));
             }
 
             types = types.concat(mod.types);
-            walked.set(dot, true);
+            walked.set(imp, true);
         };
 
-        var pack = mainClass.split(".");
-        var name = pack.pop();
-
-        walk({ pack: pack, name: name });
+        walk(mainClass);
 
         generate(types, output, mainClass);
     }

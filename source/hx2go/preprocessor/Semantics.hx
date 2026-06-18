@@ -97,7 +97,17 @@ class Semantics {
     }
 
     public static function hasSideEffects(e: HxbTypedExpr): Bool {
-        return true; // TODO: impl
+        return switch e.expr {
+            case TConst(_) | TLocal(_) | TTypeExpr(_) | TIdent(_): false;
+            case TParenthesis(e1) | TMeta(_, e1) | TCast(e1, _) | TEnumIndex(e1) | TEnumParameter(e1, _, _): hasSideEffects(e1);
+            case TBinop(OpAssign | OpAssignOp(_), _, _): true;
+            case TBinop(_, a, b): hasSideEffects(a) || hasSideEffects(b);
+            case TUnop(OpIncrement | OpDecrement, _, _): true;
+            case TUnop(_, _, e1): hasSideEffects(e1);
+            case TField(e1, _): hasSideEffects(e1); // TODO: check; getters/setters
+            case TArray(a, b): hasSideEffects(a) || hasSideEffects(b); // TODO: check; arrayAccess meta
+            case _: true; // conservative assumption
+        };
     }
 
     public static function ensure(parent: HxbTypedExpr, children: Array<HxbTypedExpr>, preprocessor: Preprocessor, scope: Scope, ancestor: Null<Ancestor>): Void {
@@ -140,8 +150,22 @@ class Semantics {
             case _: // f(x, y) -> z = x; w = y; f(z, w);
                 var ca: Ancestor = { up: ancestor, node: parent, scope: scope };
 
-                for (child in children) {
-                    if (!goingToMutate(child, parent) && !isConstant(child)) child.expr = scope.temp(parent, Copy.copy(child), preprocessor, scope, ca).expr;
+                var lastImpure = -1;
+                for (i in 0...children.length) {
+                    var c = children[i];
+                    if (c.expr != null && (hasSideEffects(c) || goingToMutate(c, parent))) {
+                        lastImpure = i;
+                    }
+                }
+
+                for (i in 0...children.length) {
+                    var child = children[i];
+                    if (child.expr == null) {
+                        continue;
+                    }
+
+                    if (goingToMutate(child, parent)) preprocessor.processExpr(child, scope, ca);
+                    else if (i < lastImpure && !isConstant(child)) child.expr = scope.temp(parent, Copy.copy(child), preprocessor, scope, ca).expr;
                     else preprocessor.processExpr(child, scope, ca);
                 }
         }

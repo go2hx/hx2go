@@ -78,7 +78,7 @@ class Preprocessor {
             case TArray(e1, e2):
                 return Semantics.ensure(expr, [e1, e2], this, scope, ancestor);
 
-            case TWhile(econd, ebody, normalWhile) if (Semantics.goingToMutate(econd, expr) || Semantics.hasSideEffects(expr)): {  // while (cond) { body } -> while (true) { if (!cond) break; body; }
+            case TWhile(econd, ebody, normalWhile) if (Semantics.goingToMutate(econd, expr) || Semantics.hasSideEffects(econd)): {  // while (cond) { body } -> while (true) { if (!cond) break; body; }
                 var block = ensureBlock(ebody);
                 var exprs = switch block.expr {
                     case TBlock(x): x;
@@ -132,9 +132,9 @@ class Preprocessor {
                 scope.insert(expr, Copy.copy(expr), this, scope, ancestor);
                 scope.temp(expr, left, this, scope, ancestor);
 
-            case TUnop(op, postFix, e): {
+            case TUnop(op, postFix, e) if (op.match(OpIncrement | OpDecrement)): {
                 var inc = new HxbTypedExpr(TBinop(
-                    OpAssignOp(OpAdd),
+                    OpAssignOp(op.match(OpIncrement) ? OpAdd : OpSub),
                     Copy.copy(e),
                     new HxbTypedExpr(TConst(TInt(1)), e.t, e.pos)
                 ), null, null);

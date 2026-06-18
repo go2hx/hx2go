@@ -52,7 +52,7 @@ class StringConversions {
     }
 
     public static function moduleTypeGetFileName(mt: HxbModuleType): String {
-        return moduleTypeGetTypePath(mt).moduleDotPath().replace(".", "_");
+        return 'Hx_${moduleTypeGetTypePath(mt).moduleDotPath().replace(".", "_")}'; // if starting with _ it's ignored
     }
 
     public static function quoteString(str: String): String {

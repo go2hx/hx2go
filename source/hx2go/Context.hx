@@ -12,6 +12,7 @@ import hx2go.hxb.tools.TypedExprTools;
 import hx2go.hxb.TypePath;
 import hx2go.util.StringConversions;
 import hx2go.preprocessor.Preprocessor;
+import hx2go.hxb.Typed.HxbModuleTypeRef;
 
 class Context {
 

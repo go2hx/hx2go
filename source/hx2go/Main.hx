@@ -4,6 +4,8 @@ import haxe.io.Path;
 import sys.FileSystem;
 import hx2go.hxb.HxbModuleType;
 import hx2go.hxb.Hxb;
+import hx2go.hxb.Typed.HxbModuleTypeRef;
+import hx2go.hxb.HxbModule.HxbImport;
 
 class Main {
 
@@ -21,21 +23,37 @@ class Main {
         exec(absoluteInput, absoluteOutput, mainClass);
     }
 
+    public static function importToPath(imp: HxbImport): String {
+        return imp.pack.length > 0 ? '${imp.pack.join(".")}.${imp.name}' : imp.name;
+    }
+
     public static function exec(input: String, output: String, mainClass: String): Void {
         var arc = Hxb.loadArchive(input);
-        var entries = arc.modules();
         var types = [];
+        var walked: Map<String, Bool> = [];
+        var walk: HxbImport -> Void;
 
-        for (ref in entries) {
-            if (ref.target != "go") { // hxb can contain multiple targets (like macro) and we only want the hx2go target
-                continue;
+        walk = (imp: HxbImport) -> {
+            var dot = importToPath(imp);
+            if (walked.exists(dot)) {
+                return;
             }
 
-            var module = arc.decode(ref);
-            for (type in module.types) {
-                types.push(type);
+            var ref = arc.findModule(dot, 'go');
+            var mod = arc.decode(ref);
+
+            for (child in mod.imports) {
+                walk(child);
             }
-        }
+
+            types = types.concat(mod.types);
+            walked.set(dot, true);
+        };
+
+        var pack = mainClass.split(".");
+        var name = pack.pop();
+
+        walk({ pack: pack, name: name });
 
         generate(types, output, mainClass);
     }

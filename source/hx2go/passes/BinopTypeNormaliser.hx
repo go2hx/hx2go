@@ -9,8 +9,8 @@ import hx2go.hxb.Ast.HxbBinop;
 
 class BinopTypeNormaliser extends CompilerPass {
 
-    private function checkTypes(self: HxbTypedExpr, op: HxbBinop, left: HxbTypedExpr, right: HxbTypedExpr, swapped: Bool): Void {
-        var result: { left: HxbTypedExpr, right: HxbTypedExpr } = switch [left.t, right.t] {
+    private function checkTypes(self: HxbTypedExpr, op: HxbBinop, left: HxbTypedExpr, right: HxbTypedExpr, leftType: HxbType, rightType: HxbType, swapped: Bool): Bool {
+        var result: { left: HxbTypedExpr, right: HxbTypedExpr } = switch [leftType, rightType] {
             case [TInt, TFloat]: {
                 left: ExprHelper.createCast(context, left, TFloat),
                 right: right
@@ -21,14 +21,26 @@ class BinopTypeNormaliser extends CompilerPass {
                 right: right
             };
 
-            case _: null;
+            case [TType(tpl, _), TType(tpr, _)]: {
+                left: ExprHelper.createCast(context, left, self.t),
+                right: ExprHelper.createCast(context, right, self.t)
+            }
+
+            case [_, TType(tp, _)]: {
+                left: ExprHelper.createCast(context, left, rightType),
+                right: right
+            }
+
+            case _:  null;
         }
 
         if (result == null) {
-            return;
+            return false;
         }
 
         self.expr = swapped ? TBinop(op, result.right, result.left) : TBinop(op, result.left, result.right);
+
+        return true;
     }
 
     public function match(expr: HxbTypedExpr): Bool {
@@ -57,8 +69,8 @@ class BinopTypeNormaliser extends CompilerPass {
             return;
         }
 
-        checkTypes(expr, op, left, right, false); // x + y
-        checkTypes(expr, op, right, left, true); // y + x
+        if (checkTypes(expr, op, left, right, left.t, right.t, false)) return; // x + y
+        if (checkTypes(expr, op, right, left, right.t, left.t, true)) return; // y + x
     }
 
 }

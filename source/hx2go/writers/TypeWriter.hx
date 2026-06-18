@@ -32,24 +32,20 @@ class TypeWriter extends WriterImpl {
             case _: null;
         }
 
-        return name;
+        return name; // TODO: import used module
     }
 
     public function writeModuleType(type: TypePath): String {
         switch writer.context.resolve(type) {
-            case MTypedef(info): {
-                for (meta in info.meta) {
-                    switch meta.name {
-                        case ":go.Type":
-                            return writeExternType(meta);
+            case MTypedef({ meta: meta }) | MClass({ meta: meta }) | MEnum({ meta: meta }) | MAbstract({ meta: meta }): {
+                for (m in meta) {
+                    switch m.name {
+                        case ":go.Type": return writeExternType(m);
                     }
                 }
 
                 return StringConversions.typePathTypedefName(type);
             }
-
-            case _:
-                return "any";
         }
 
         return "any";

@@ -11,9 +11,6 @@ class Main {
             x + y;
         };
 
-        10 + 20;
-
-        /*
         var resB = {
             var x: Int = 20;
             var y: Float = 40.0;
@@ -58,14 +55,6 @@ class Main {
         }
         Fmt.println(shadow);
 
-        // Test: Pointers
-        var valA: Int = 5;
-        var ptrA: go.Pointer<Int> = go.Pointer.addressOf(valA);
-        var valB: Int = ptrA.value;
-        ptrA.value += 10;
-        var valC: Int = ptrA.value;
-        Fmt.println(ptrA, valA, valB, valC);
-
         // Test: Basic If
         var ifOutA = 0;
         if ({
@@ -90,10 +79,6 @@ class Main {
         var score = 75;
         var passed = score > 70 ? "you passed" : "you failed";
 
-        // Test: null coal
-        var strA: String = null;
-        var strB: String = strA ?? "null coal works!";
-
         // Test: If as expr
         var grade = if (score == 100) {
             "A+";
@@ -109,7 +94,7 @@ class Main {
             "F";
         }
 
-        Fmt.println(score, passed, grade, strB);
+         Fmt.println(score, passed, grade);
 
         // Test: EUnop(...) / OpAssignOp precedence
         var newCount = 0;
@@ -149,12 +134,11 @@ class Main {
 
         // Test: Short circuiting (or)
         var s3 = 0;
-        var s4 = 0;
+        var s4 = 1;
         if (s3 < s4 || s4++ < 100) {
             Fmt.println("OR branch reached");
         }
 
         Fmt.println("s4 value", s4);
-         */
     }
 }

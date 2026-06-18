@@ -165,15 +165,15 @@ class HxbVar {
 	public var pos:Pos;
 	public var extra:Null<HxbVarExtra>;
 
-	public function new(id, name, kind, flags, meta, pos) {
+	public function new(id, name, kind, flags, meta, pos, type = null, extra = null) {
 		this.id = id;
 		this.name = name;
 		this.kind = kind;
 		this.flags = flags;
 		this.meta = meta;
 		this.pos = pos;
-		this.type = null;
-		this.extra = null;
+		this.type = type;
+		this.extra = extra;
 	}
 
 	public function toString():String

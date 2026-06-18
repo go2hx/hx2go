@@ -205,10 +205,6 @@ class ExprWriter extends WriterImpl {
     }
 
     public function writeUnop(expr: HxbTypedExpr, op: HxbUnop, postFix: Bool, e: HxbTypedExpr): OutputBuffer {
-        if (!postFix) {
-            trace("prefix not supported, did the transformer not run?");
-        }
-
         var buf = new OutputBuffer();
         var op = switch op {
             case OpIncrement: "++";
@@ -219,8 +215,15 @@ class ExprWriter extends WriterImpl {
             case OpSpread: throw "OpSpread not supported"; // TODO: preprocess as this isn't valid
         }
 
+        if (!postFix) {
+            buf.addInline(op);
+        }
+
         buf.addBufferInline(writeExpr(e));
-        buf.addInline(op);
+
+        if (postFix) {
+            buf.addInline(op);
+        }
 
         return buf;
     }

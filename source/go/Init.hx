@@ -31,7 +31,7 @@ class Init {
 			thisBeforeSuper: false,
 			supportsThreads: true,
 			supportsUnicode: true,
-			supportsRestArgs: false, // change to true if needed
+			supportsRestArgs: true, // we should change this if we run into issues that are difficult to solve
 			exceptions: {
 				nativeThrows: [anyPath],
 				nativeCatches: [anyPath],

@@ -3,6 +3,8 @@ package hx2go.preprocessor;
 import hx2go.hxb.Typed.HxbTypedExpr;
 import hx2go.hxb.tools.TypedExprTools;
 import hx2go.hxb.Ast.HxbBinop;
+import haxe.runtime.Copy;
+import hx2go.hxb.Typed.HxbTypedExprDef;
 
 class Semantics {
 
@@ -96,6 +98,53 @@ class Semantics {
 
     public static function hasSideEffects(e: HxbTypedExpr): Bool {
         return true; // TODO: impl
+    }
+
+    public static function ensure(parent: HxbTypedExpr, children: Array<HxbTypedExpr>, preprocessor: Preprocessor, scope: Scope, ancestor: Null<Ancestor>): Void {
+        var willMutate = false;
+        for (child in children) {
+            if (child.expr == null) {
+                continue;
+            }
+
+            willMutate = willMutate || hasSideEffects(child) || goingToMutate(child, parent);
+        }
+
+        if (!willMutate) {
+            return preprocessor.iterateExpr(parent, scope, ancestor);
+        }
+
+        switch parent.expr {
+            case TBinop(OpBoolAnd, left, right): // x && y -> if (x) y else false
+                parent.expr = TIf(
+                    left,
+                    right,
+                    new HxbTypedExpr(TConst(
+                        TBool(false)
+                    ), TBool, null)
+                );
+
+                preprocessor.processExpr(parent, scope, ancestor);
+
+            case TBinop(OpBoolOr, left, right): // x || y -> if (x) true else y
+                parent.expr = TIf(
+                    left,
+                    new HxbTypedExpr(TConst(
+                        TBool(true)
+                    ), TBool, null),
+                    right
+                );
+
+                preprocessor.processExpr(parent, scope, ancestor);
+
+            case _: // f(x, y) -> z = x; w = y; f(z, w);
+                var ca: Ancestor = { up: ancestor, node: parent, scope: scope };
+
+                for (child in children) {
+                    if (!goingToMutate(child, parent) && !isConstant(child)) child.expr = scope.temp(parent, Copy.copy(child), preprocessor, scope, ca).expr;
+                    else preprocessor.processExpr(child, scope, ca);
+                }
+        }
     }
 
 }

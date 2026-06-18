@@ -29,7 +29,7 @@ class Main {
         };
 
         // Test: shifts
-        var two = untyped __go__("2");
+        var two = untyped __go__("2"); // forcing it to assume side effects, otherwise the haxe compiler still folds it lol
         var shr  = -8 >>  two;
         var shl  = -8 <<  two;
         var ushr = -8 >>> two;

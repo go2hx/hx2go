@@ -3,16 +3,18 @@ import go.Syntax;
 
 class Main {
 
+    public static function say(s: String): Void {
+        var i = 0;
+        while (i < 5) {
+            Sys.sleep(1);
+            Fmt.println(s + ", with index: " + i);
+            i++;
+        }
+    }
+
     public static function main() {
-        var x = 10;
-        var y = 20;
-
-        Syntax.defer(() -> {
-            Fmt.println("result is:");
-            Fmt.println(x + y);
-        });
-
-        Syntax.code("fmt.Println({0})", "B");
+        Syntax.go(() -> say("world"));
+        say("hello");
     }
 
 }

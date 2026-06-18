@@ -40,7 +40,8 @@ class Context {
             new hx2go.passes.StringificationCast(this),
             new hx2go.passes.RewriteExternAccess(this),
             new hx2go.passes.RewriteSyntaxCode(this),
-            new hx2go.passes.RewriteSyntaxDefer(this)
+            new hx2go.passes.RewriteSyntaxDefer(this),
+            new hx2go.passes.RewriteSyntaxGo(this)
         ];
     }
 
@@ -130,7 +131,7 @@ class Context {
     }
 
     public function resolve(tp: TypePath): HxbModuleType {
-        return tp != null ? types.get(tp.dotPath()) : null;
+        return tp != null ? (types.get(tp.dotPath()) ?? types.get(tp.moduleDotPath())) : null;
     }
 
     private function writeFile(directory: String, fileName: String, content: String): Void {

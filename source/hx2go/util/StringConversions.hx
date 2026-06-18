@@ -35,6 +35,10 @@ class StringConversions {
         return 'Hx_Cls_${tp.dotPath().toLowerCase().replace(".", "_")}';
     }
 
+    public static function typePathTypedefName(tp: TypePath): String {
+        return 'Hx_Typedef_${tp.dotPath().toLowerCase().replace(".", "_")}';
+    }
+
     public static function moduleTypeGetTypePath(mt: HxbModuleType): TypePath {
         var p = switch mt {
             case MClass(v): v.path;

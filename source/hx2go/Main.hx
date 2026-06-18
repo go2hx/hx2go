@@ -30,7 +30,7 @@ class Main {
     public static function exec(input: String, output: String, mainClass: String): Void {
         var arc = Hxb.loadArchive(input);
         var types = [];
-        var walked: Map<String, Bool> = [];
+        /* var walked: Map<String, Bool> = [];
         var walk: String -> Void;
 
         walk = imp -> {
@@ -49,7 +49,12 @@ class Main {
             walked.set(imp, true);
         };
 
-        walk(mainClass);
+        walk(mainClass); */
+
+        var refs = arc.modulesOf("go");
+        for (ref in refs) {
+            types = types.concat(arc.decode(ref).types);
+        }
 
         generate(types, output, mainClass);
     }

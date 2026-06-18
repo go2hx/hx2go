@@ -1,5 +1,6 @@
 package hx2go;
 
+import sys.io.Process;
 using StringTools;
 
 import haxe.io.Path;
@@ -137,6 +138,26 @@ class Context {
             // TODO: import file containing main
 
             writeFile("", "Main", buf.toString());
+        }
+        installGoDeps(imports);
+    }
+
+    function installGoDeps(imports:Map<String, Array<String>>) {
+        var processList:Array<Process> = [];
+        for (_ => deps in imports) {
+            for (dep in deps) {
+                if (dep.contains(".")) {
+                    processList.push(new Process("go", ["get", dep]));
+                }
+            }
+        }
+        while (processList.length > 0) {
+            for (ps in processList) {
+                final exitCode = ps.exitCode(false);
+                if (exitCode != null)
+                    processList.remove(ps);
+            }
+            Sys.sleep(0.1);
         }
     }
 

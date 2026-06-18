@@ -39,6 +39,8 @@ class Context {
             new hx2go.passes.BinopTypeNormaliser(this),
             new hx2go.passes.StringificationCast(this),
             new hx2go.passes.RewriteExternAccess(this),
+            new hx2go.passes.RewriteSyntaxCode(this),
+            new hx2go.passes.RewriteSyntaxDefer(this)
         ];
     }
 

@@ -33,7 +33,7 @@ class Main {
         var walked: Map<String, Bool> = [];
         var walk: String -> Void;
 
-        walk = (imp: String) -> {
+        walk = imp -> {
             if (walked.exists(imp)) {
                 return;
             }

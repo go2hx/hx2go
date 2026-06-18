@@ -1,151 +1,18 @@
 import go.fmt.Fmt;
+import go.Syntax;
 
-@:dce(ignore)
-@:analyzer(ignore)
 class Main {
+
     public static function main() {
-        // Test: Blocks
-        var resA = {
-            var x: Int = 5;
-            var y: Float = 10.0;
-            x + y;
-        };
+        var x = 10;
+        var y = 20;
 
-        var resB = {
-            var x: Int = 20;
-            var y: Float = 40.0;
-            x + y;
-        };
+        Syntax.defer(() -> {
+            Fmt.println("result is:");
+            Fmt.println(x + y);
+        });
 
-        // Test: Nested Blocks
-        var resC = {
-            var x: Int = 5;
-            var y: Float = {
-                var z: Int = 10;
-                var w: Float = 20;
-                z * w;
-            }
-            x + y;
-        };
-
-        // Test: shifts
-        var two = untyped __go__("2"); // forcing it to assume side effects, otherwise the haxe compiler still folds it lol
-        var shr  = -8 >>  two;
-        var shl  = -8 <<  two;
-        var ushr = -8 >>> two;
-        Fmt.println(shr, shl, ushr);
-
-        // Test: While Conditional Block
-        var count = 0;
-        while ({
-            var curr = count;
-            var max = 10;
-            curr < max;
-        }) count++;
-
-        // Test: Processing in while conditional
-        var idx = 0;
-        while (idx++ < 10) {}
-
-        // Test: Conditional without special transformations
-        var q = 0;
-        while (q < 10) q++;
-
-        // Test: Shadowing
-        var shadow = 5; shadow = 0;
-        var shadow = 8; shadow = 3;
-        var shadow = false; shadow = true;
-        var shadow = {
-            var shadow = 0; shadow = 5;
-            var shadow = 3; shadow = 8;
-            var shadow = true; shadow = false;
-        }
-        Fmt.println(shadow);
-
-        // Test: Basic If
-        var ifOutA = 0;
-        if ({
-            var a = 5;
-            var b = 10;
-            a > b;
-        }) {
-            ifOutA = 1;
-        } else if ({
-            var x = 10;
-            var y = 5;
-            x != y;
-        }) {
-            ifOutA = 2;
-        } else {
-            ifOutA = 3;
-        }
-
-        Fmt.println(ifOutA);
-
-        // Test: Ternary
-        var score = 75;
-        var passed = score > 70 ? "you passed" : "you failed";
-
-        // Test: If as expr
-        var grade = if (score == 100) {
-            "A+";
-        } else if (score >= 90) {
-            "A";
-        } else if (score >= 80) {
-            "B";
-        } else if (score >= 70) {
-            "C";
-        } else if (score >= 60) {
-            "D";
-        } else {
-            "F";
-        }
-
-         Fmt.println(score, passed, grade);
-
-        // Test: EUnop(...) / OpAssignOp precedence
-        var newCount = 0;
-        var newCountA = newCount++;
-        var newCountB = ++newCount;
-        var newCountC = (newCount += 10);
-        var newCountD = newCount++ * ++newCount + newCount++;
-        Fmt.println(newCount, newCountA, newCountB, newCountC, newCountD);
-
-        // Test: EUnop(...) as Stmt vs Expr
-        var k = 0;
-        k++;
-        ++k;
-        var k0 = k++;
-        var k1 = ++k;
-
-        // Test: extracting `l` in `l = l + ...` if right-side is extracted
-        var l = 5;
-        var r = 3;
-        l = l + (r = l + r) * (l = l + r);
-        Fmt.println(l, r);
-
-        // Test: ensuring semantics in calls
-        var n = 5; Fmt.println(n, n = n + 3, n);
-        n = 5; Fmt.println(n, n++, n);
-        n = 5; Fmt.println(n, n += 5, n);
-        n = 5; Fmt.println(n, n + 5, n);
-
-        // Test: Short circuiting (and)
-        var s1 = 0;
-        var s2 = 0;
-        if (s1 == 100 && ++s2 < 100) {
-            Fmt.println("AND branch reached");
-        }
-
-        Fmt.println("should be zero", s2);
-
-        // Test: Short circuiting (or)
-        var s3 = 0;
-        var s4 = 1;
-        if (s3 < s4 || s4++ < 100) {
-            Fmt.println("OR branch reached");
-        }
-
-        Fmt.println("s4 value", s4);
+        Syntax.code("fmt.Println({0})", "B");
     }
+
 }

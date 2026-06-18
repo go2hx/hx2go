@@ -12,7 +12,7 @@ class StringificationCast extends CompilerPass {
         return switch [expr.expr, expr.t] {
             case [
                 TCast(_, _),
-                TString | TAbstract({ name: "String", moduleName: "String", pack: [] }, _)
+                TString | TAbstract({ name: "String", pack: [] }, _)
             ]: true;
 
             case _: false;

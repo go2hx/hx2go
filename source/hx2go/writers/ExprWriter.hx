@@ -36,6 +36,7 @@ class ExprWriter extends WriterImpl {
             case TWhile(econd, ebody, normal): writeWhile(expr, econd, ebody, normal);
             case TIf(econd, eif, eelse): writeIfStmt(expr, econd, eif, eelse);
             case TBinop(op, left, right): writeBinop(expr, op, left, right);
+            case TReturn(e): writeReturn(e);
             case TBreak: new OutputBuffer("break");
             case TContinue: new OutputBuffer("continue");
             case _: new OutputBuffer();
@@ -44,6 +45,17 @@ class ExprWriter extends WriterImpl {
 
     public function writeFunction(expr: HxbTypedExpr, func: HxbTFunc): OutputBuffer {
         return writeExpr(func.expr);
+    }
+
+    public function writeReturn(expr: Null<HxbTypedExpr>): OutputBuffer {
+        var buf = new OutputBuffer("return");
+
+        if (expr != null) {
+            buf.addInline(' ');
+            buf.addBufferInline(writeExpr(expr));
+        }
+
+        return buf;
     }
 
     public function writeBlock(expr: HxbTypedExpr, exprs: Array<HxbTypedExpr>): OutputBuffer {

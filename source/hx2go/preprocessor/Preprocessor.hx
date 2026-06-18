@@ -44,6 +44,17 @@ class Preprocessor {
         }
     }
 
+    public function ensureShift(expr: HxbTypedExpr, left: HxbTypedExpr, right: HxbTypedExpr, op: HxbBinop, signed: Bool, scope: Scope, ancestor: Null<Ancestor>): Void {
+        left.expr = switch left.expr {
+            case TLocal(_) | TConst(_): left.expr;
+            case _: scope.temp(expr, Copy.copy(left), this, scope, ancestor).expr;
+        }
+
+        // TODO: ensure casting to signed/unsigned int types to make OpShr and OpUShr work.
+
+        expr.expr = TBinop(op == OpUShr ? OpShr : op, left, right);
+    }
+
     public function processExpr(expr: HxbTypedExpr, scope: Scope, ancestor: Null<Ancestor>): Void {
         if (ancestor != null && !Semantics.canHold(ancestor.node, expr)) {
             switch Semantics.getExprKind(expr) {
@@ -64,6 +75,9 @@ class Preprocessor {
             }
 
             case TBinop(op, left, right): // TODO: ensure OpShr / OpUShr
+                if (op.match(OpShr) || op.match(OpShl)) ensureShift(expr, left, right, op, true, scope, ancestor);
+                else if (op.match(OpUShr)) ensureShift(expr, left, right, op, false, scope, ancestor);
+
                 return Semantics.ensure(expr, [left, right], this, scope, ancestor);
 
             case TObjectDecl(fields):

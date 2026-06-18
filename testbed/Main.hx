@@ -28,6 +28,13 @@ class Main {
             x + y;
         };
 
+        // Test: shifts
+        var two = untyped __go__("2");
+        var shr  = -8 >>  two;
+        var shl  = -8 <<  two;
+        var ushr = -8 >>> two;
+        Fmt.println(shr, shl, ushr);
+
         // Test: While Conditional Block
         var count = 0;
         while ({

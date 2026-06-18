@@ -44,15 +44,32 @@ class Preprocessor {
         }
     }
 
-    public function ensureShift(expr: HxbTypedExpr, left: HxbTypedExpr, right: HxbTypedExpr, op: HxbBinop, signed: Bool, scope: Scope, ancestor: Null<Ancestor>): Void {
+    public function ensureShift(expr: HxbTypedExpr, left: HxbTypedExpr, right: HxbTypedExpr, op: HxbBinop, scope: Scope, ancestor: Null<Ancestor>): Void {
         left.expr = switch left.expr {
-            case TLocal(_) | TConst(_): left.expr;
+            case TLocal(_): left.expr;
             case _: scope.temp(expr, Copy.copy(left), this, scope, ancestor).expr;
         }
 
-        // TODO: ensure casting to signed/unsigned int types to make OpShr and OpUShr work.
+        var exprSigned = Semantics.getIntegerSigned(left.t);
+        var opSigned = op != OpUShr;
 
         expr.expr = TBinop(op == OpUShr ? OpShr : op, left, right);
+
+        if (exprSigned != opSigned) {
+            var lhsWidth: Int = switch left.t {
+                // getIntegerWidth returns 64, because that is usually what go's "int" is (we assume the wider type)
+                // but semantically, haxe expects int to behave like a 32-bit one, we must force it to do OpUShr on a 32-bit unsigned value.
+                case TAbstract({ name: "Int" | "UInt", pack: [] }, _) | TInt: 32;
+                case _: Semantics.getIntegerWidth(left.t);
+            }
+
+            var lhsName: String = '${opSigned ? "" : "U"}Int${lhsWidth}';
+            var lhsType: HxbType = TAbstract({ pack: ['go'], name: lhsName, moduleName: lhsName }, []);
+
+            left.t = lhsType; // will force cast to lhsType, as "m" of TCast is ignored.
+            left.expr = TCast(Copy.copy(left), null);
+            expr.expr = TCast(Copy.copy(expr), null); // expr.t is already the desired type.
+        }
     }
 
     public function processExpr(expr: HxbTypedExpr, scope: Scope, ancestor: Null<Ancestor>): Void {
@@ -75,10 +92,12 @@ class Preprocessor {
             }
 
             case TBinop(op, left, right): // TODO: ensure OpShr / OpUShr
-                if (op.match(OpShr) || op.match(OpShl)) ensureShift(expr, left, right, op, true, scope, ancestor);
-                else if (op.match(OpUShr)) ensureShift(expr, left, right, op, false, scope, ancestor);
+                Semantics.ensure(expr, [left, right], this, scope, ancestor);
 
-                return Semantics.ensure(expr, [left, right], this, scope, ancestor);
+                if (op.match(OpShr) || op.match(OpShl)) ensureShift(expr, left, right, op, scope, ancestor);
+                else if (op.match(OpUShr)) ensureShift(expr, left, right, op, scope, ancestor);
+
+                return;
 
             case TObjectDecl(fields):
                 return Semantics.ensure(expr, fields.map(f -> f.expr), this, scope, ancestor);
@@ -123,7 +142,7 @@ class Preprocessor {
                 }
 
             case TUnop(op, false, e) if (op.match(OpIncrement | OpDecrement)):
-                expr.expr = TUnop(op, true, e);
+                expr.expr = TUnop(op, true, e); // at this point it is guarenteed to be used as a stmt, so we can just use x++
 
             case TLocal(v):
                 expr.expr = scope.getLocal(v);

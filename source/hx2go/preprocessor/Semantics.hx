@@ -5,6 +5,7 @@ import hx2go.hxb.tools.TypedExprTools;
 import hx2go.hxb.Ast.HxbBinop;
 import haxe.runtime.Copy;
 import hx2go.hxb.Typed.HxbTypedExprDef;
+import hx2go.hxb.HxbType;
 
 class Semantics {
 
@@ -171,4 +172,51 @@ class Semantics {
         }
     }
 
+    public static function getIntegerSigned(t: HxbType): Bool {
+        return switch t {
+            case TAbstract({ pack: [], name: "Int" | "Dynamic" }, _) | TAbstract({ pack: ["go"], name: "GoInt" | "Int8" | "Int16" | "Int32" | "Int64" }, _) | TInt | TDynamicAny | TDynamic(_): true;
+            case TAbstract({ pack: [], name: "UInt" }, _) | TAbstract({ pack: ["go"], name: "GoUInt" | "UInt8" | "UInt16" | "UInt32" | "UInt64" | "Rune" | "Byte"  }, _): false;
+            case _: true; // abstract should not cause this code path anyway.
+        }
+    }
+
+    public static function getIntegerWidth(t: HxbType): Int {
+        return switch t {
+            case TAbstract({ pack: [], name: "Int" | "Dynamic" | "UInt" }, _) | TAbstract({ pack: ["go"], name: "Int" | "UInt" | "GoInt" | "GoUInt" }, _) | TInt | TDynamicAny | TDynamic(_): 64; // for GoInt I assume the wider type, i could add special handling but that is extra complexity for little (to no) gain.
+            case TAbstract({ pack: ["go"], name: "Int8" | "UInt8" | "Rune" | "Byte" }, _): 8;
+            case TAbstract({ pack: ["go"], name: "Int16" | "UInt16" }, _): 16;
+            case TAbstract({ pack: ["go"], name: "Int32" | "UInt32" }, _): 32;
+            case TAbstract({ pack: ["go"], name: "Int64" | "UInt64" }, _): 64;
+            case _: 64; // abstract should not cause this code path anyway.
+        }
+    }
+    
+    public static function isFloatType(t: HxbType): Bool {
+        return switch t {
+            case TAbstract({ pack: [], name: "Float" }, _) | TAbstract({ pack: ["go"], name: "Float32" | "Float64" }, _) | TFloat: true;
+            case _: false;
+        }
+    }
+    
+    public static function isBoolType(t: HxbType): Bool {
+        return switch t {
+            case TAbstract({ pack: [], name: "Bool" }, _) | TBool: true;
+            case _: false;
+        }
+    }
+    
+    public static function isIntegerType(t: HxbType): Bool {
+        return switch t {
+            case TAbstract({ pack: [], name: "Int" | "UInt" }, _) | TAbstract({ pack: ["go"], name: "GoInt" | "GoUInt" | "Int8" | "UInt8" | "Int16" | "UInt16" | "Int32" | "UInt32" | "Int64" | "UInt64" | "Rune" |  "Byte" }, _) | TInt: true;
+            case _: false;
+        }
+    }
+    
+    public static function isStringType(t: HxbType): Bool {
+        return switch t {
+            case TAbstract({ pack: [], name: "String" }, _) | TString: true;
+            case _: false;
+        }
+    }
+    
 }

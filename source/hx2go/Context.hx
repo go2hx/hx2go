@@ -41,19 +41,8 @@ class Context {
         ];
     }
 
-    private function getPath(type: HxbModuleType, modulePath: Bool = false): String {
-        var p = switch type {
-            case MClass(v): v.path;
-            case MEnum(v): v.path;
-            case MAbstract(v): v.path;
-            case MTypedef(v): v.path;
-        };
-
-        return modulePath ? p.moduleDotPath() : p.dotPath();
-    }
-
     public function add(type: HxbModuleType) {
-        types.set(getPath(type), type);
+        types.set(StringConversions.moduleTypeGetDotPath(type), type);
     }
 
     public function build(mainClass: String): Void {
@@ -93,9 +82,10 @@ class Context {
 
             var path = module[0].module.split('.');
             var name = path.pop();
-            var imports = imports.get(getPath(module[0].type, true)) ?? [];
+            var imports = imports.get(StringConversions.moduleTypeGetDotPath(module[0].type, true)) ?? [];
 
-            buf.add('package ${path[path.length - 1] ?? topLevelPackage}');
+            // legacy: buf.add('package ${path[path.length - 1] ?? topLevelPackage}');
+            buf.add('package $topLevelPackage');
 
             if (imports.length > 0) {
                 buf.add("");
@@ -118,7 +108,7 @@ class Context {
                 mainWritten = true;
             }
 
-            writeFile(path.join("/"), name, buf.toString());
+            writeFile("/", StringConversions.moduleTypeGetFileName(module[0].type), buf.toString());
         }
 
         if (!mainWritten) {
@@ -278,7 +268,7 @@ class Context {
     }
 
     public function defineImport(module: HxbModuleType, goImport: String): Void {
-        var path = getPath(module, true);
+        var path = StringConversions.moduleTypeGetDotPath(module, true);
         if (!imports.exists(path)) {
             imports.set(path, []);
         }

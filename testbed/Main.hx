@@ -13,7 +13,7 @@ class Main {
     }
 
     public static function test(): Void {
-        Fmt.println("Test!!");
+        Fmt.println("Test!!", "Cool!!");
     }
 
     public static function main() {

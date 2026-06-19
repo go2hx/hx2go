@@ -12,7 +12,8 @@ class Sys {
     }
 
     public static function sleep(seconds: Float): Void {
-        Time.sleep(seconds * 1000 * Time.millisecond);
+        var d = seconds * 1000 * Time.millisecond;
+        Time.sleep(d);
     }
 
 }

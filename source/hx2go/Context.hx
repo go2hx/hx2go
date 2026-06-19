@@ -15,6 +15,8 @@ import hx2go.preprocessor.Preprocessor;
 import hx2go.hxb.Typed.HxbModuleTypeRef;
 import hx2go.hxb.HxbArchive;
 import hx2go.hxb.ModuleRef;
+import hx2go.hxb.flags.HxbClassFlag;
+import haxe.CallStack;
 
 class Context {
 

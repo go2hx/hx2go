@@ -13,6 +13,10 @@ class ClassWriter extends WriterImpl {
     public function writeClass(cls: HxbClass): OutputBuffer {
         var buf = new OutputBuffer();
 
+        if (cls.flags & HxbClassFlag.CExtern != 0) {
+            return buf;
+        }
+
         for (f in cls.statics) {
             buf.addBufferInline(writeStaticClassField(f, cls));
         }
@@ -25,6 +29,10 @@ class ClassWriter extends WriterImpl {
     }
 
     public function writeStaticClassField(field: HxbClassField, cls: HxbClass): OutputBuffer {
+        if (field.flags & HxbClassFieldFlag.CfExtern != 0) {
+            return new OutputBuffer();
+        }
+
         return switch field.kind {
             case KMethod(kind): writeStaticClassFunction(field, kind, cls);
             case KVar(read, write): writeStaticClassVar(field, read, write, cls);
@@ -65,7 +73,7 @@ class ClassWriter extends WriterImpl {
         var buf = new OutputBuffer();
         var fTypes = writeFunctionArgs(field.type);
 
-        if ((field.flags & HxbClassFieldFlag.CfExtern != 0) || (cls.flags & HxbClassFlag.CExtern != 0)) {
+        if (field.flags & HxbClassFieldFlag.CfExtern != 0 || (cls.flags & HxbClassFlag.CExtern != 0)) {
             return buf;
         }
 

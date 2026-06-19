@@ -4,6 +4,7 @@ import hx2go.util.OutputBuffer;
 import hx2go.hxb.HxbModuleType.HxbClass;
 import hx2go.hxb.HxbClassField;
 import hx2go.util.StringConversions;
+import hx2go.hxb.HxbType;
 
 class ClassWriter extends WriterImpl {
 
@@ -35,11 +36,37 @@ class ClassWriter extends WriterImpl {
         }
     }
 
+    public function writeFunctionArgs(type: HxbType): { buf: OutputBuffer, returnType: HxbType } {
+        var buf = new OutputBuffer();
+        var ret: HxbType = TVoid;
+
+        switch type {
+            case TFun(args, returnType):
+                for (idx in 0...args.length) {
+                    var arg = args[idx];
+                    buf.addInline('${arg.name} ${writer.types.writeHxbType(arg.t)}'); // TODO: optional args
+
+                    if (idx < args.length - 1) {
+                        buf.addInline(', ');
+                    }
+                }
+
+                ret = returnType;
+
+            case _: null;
+        }
+
+        return { buf: buf, returnType: ret };
+    }
+
     public function writeStaticClassFunction(field: HxbClassField, kind: HxbMethodKind, cls: HxbClass): OutputBuffer {
         var buf = new OutputBuffer();
+        var fTypes = writeFunctionArgs(field.type);
 
         buf.add("");
-        buf.addInline('func ${StringConversions.typePathFieldName(field.name, cls.path)}() ');
+        buf.addInline('func ${StringConversions.typePathFieldName(field.name, cls.path)}(');
+        buf.addBufferInline(fTypes.buf);
+        buf.addInline(') ');
 
         if (field.expr?.expr != null) buf.addBuffer(writer.exprs.writeExpr(field.expr.expr))
         else buf.add("{}");

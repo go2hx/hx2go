@@ -5,6 +5,8 @@ import hx2go.hxb.HxbModuleType.HxbClass;
 import hx2go.hxb.HxbClassField;
 import hx2go.util.StringConversions;
 import hx2go.hxb.HxbType;
+import hx2go.hxb.flags.HxbClassFieldFlag;
+import hx2go.hxb.flags.HxbClassFlag;
 
 class ClassWriter extends WriterImpl {
 
@@ -63,10 +65,19 @@ class ClassWriter extends WriterImpl {
         var buf = new OutputBuffer();
         var fTypes = writeFunctionArgs(field.type);
 
+        if ((field.flags & HxbClassFieldFlag.CfExtern != 0) || (cls.flags & HxbClassFlag.CExtern != 0)) {
+            return buf;
+        }
+
         buf.add("");
         buf.addInline('func ${StringConversions.typePathFieldName(field.name, cls.path)}(');
         buf.addBufferInline(fTypes.buf);
         buf.addInline(') ');
+
+        if (fTypes.returnType != TVoid) {
+            buf.addBufferInline(writer.types.writeHxbType(fTypes.returnType));
+            buf.addInline(' ');
+        }
 
         if (field.expr?.expr != null) buf.addBuffer(writer.exprs.writeExpr(field.expr.expr))
         else buf.add("{}");

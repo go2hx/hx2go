@@ -36,8 +36,37 @@ class TypeWriter extends WriterImpl {
     }
 
     public function writeModuleType(type: TypePath): String {
-        switch writer.context.resolve(type) {
-            case MTypedef({ meta: meta }) | MClass({ meta: meta }) | MEnum({ meta: meta }) | MAbstract({ meta: meta }): {
+        var mod = writer.context.resolve(type);
+        if (mod == null ){
+            return "any";
+        }
+
+        var builtin: Null<String> = switch type {
+            case { name: "Void", pack: [] }: "void";
+            case { name: "Int", pack: [] } | { name: "GoInt", pack: ['go'] }: "int";
+            case { name: "UInt", pack: [] } | { name: "GoUInt", pack: ['go'] }: "uint";
+            case { name: "Int8", pack: ['go'] }: "int8";
+            case { name: "Int16", pack: ['go'] }: "int16";
+            case { name: "Int32", pack: ['go'] }: "int32";
+            case { name: "Int64", pack: ['go'] }: "int64";
+            case { name: "UInt8", pack: ['go'] }: "uint8";
+            case { name: "UInt16", pack: ['go'] }: "uint16";
+            case { name: "UInt32", pack: ['go'] }: "uint32";
+            case { name: "UInt64", pack: ['go'] }: "uint64";
+            case { name: "Float", pack: [] } | { name: "Float64", pack: ['go'] }: "float64";
+            case { name: "Bool", pack: [] }: "bool";
+            case { name: "Single", pack: [] } | { name: "Float32", pack: ['go'] }: "float32";
+            case { name: "Null", pack: [] }: "any"; // TODO: nullable types
+            case { name: "String", pack: [] }: "string";
+            case _: null;
+        }
+
+        if (builtin != null) {
+            return builtin;
+        }
+
+        switch mod {
+            case MTypedef({ meta: meta }): {
                 for (m in meta) {
                     switch m.name {
                         case ":go.Type": return writeExternType(m);
@@ -45,6 +74,36 @@ class TypeWriter extends WriterImpl {
                 }
 
                 return StringConversions.typePathTypedefName(type);
+            }
+
+            case MClass({ meta: meta }): {
+                for (m in meta) {
+                    switch m.name {
+                        case ":go.Type": return writeExternType(m);
+                    }
+                }
+
+                return StringConversions.typePathClassInstanceName(type);
+            }
+
+            case MEnum({ meta: meta }): {
+                for (m in meta) {
+                    switch m.name {
+                        case ":go.Type": return writeExternType(m);
+                    }
+                }
+
+                return StringConversions.typePathEnumName(type);
+            }
+
+            case MAbstract({ meta: meta }): {
+                for (m in meta) {
+                    switch m.name {
+                        case ":go.Type": return writeExternType(m);
+                    }
+                }
+
+                return StringConversions.typePathAbstractName(type);
             }
         }
 
@@ -57,21 +116,10 @@ class TypeWriter extends WriterImpl {
         }
 
         return new OutputBuffer(switch type {
-            case TVoid | TAbstract({ name: "Void", pack: [] }, _): "void";
-            case TInt | TAbstract({ name: "Int", pack: [] }, _) | TAbstract({ name: "GoInt", pack: ['go'] }, _): "int";
-            case TAbstract({ name: "UInt", pack: [] }, _) | TAbstract({ name: "GoUInt", pack: ['go'] }, _): "uint";
-            case TAbstract({ name: "Int8", pack: ['go'] }, _): "int8";
-            case TAbstract({ name: "Int16", pack: ['go'] }, _): "int16";
-            case TAbstract({ name: "Int32", pack: ['go'] }, _): "int32";
-            case TAbstract({ name: "Int64", pack: ['go'] }, _): "int64";
-            case TAbstract({ name: "UInt8", pack: ['go'] }, _): "uint8";
-            case TAbstract({ name: "UInt16", pack: ['go'] }, _): "uint16";
-            case TAbstract({ name: "UInt32", pack: ['go'] }, _): "uint32";
-            case TAbstract({ name: "UInt64", pack: ['go'] }, _): "uint64";
-            case TFloat | TAbstract({ name: "Float", pack: [] }, _): "float64";
-            case TBool | TAbstract({ name: "Bool", pack: [] }, _): "bool";
-            case TAbstract({ name: "Single", pack: [] }, _): "float32";
-            case TAbstract({ name: "Null", pack: [] }, _): "any"; // TODO: nullable types
+            case TVoid: "void";
+            case TInt: "int";
+            case TFloat: "float64";
+            case TBool: "bool";
             case TString: "string";
             case TAbstract(tp, _) | TInst(tp, _) | TType(tp, _) | TEnum(tp, _): writeModuleType(tp);
             case _: "any";

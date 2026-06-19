@@ -279,7 +279,7 @@ class ExprWriter extends WriterImpl {
         }
 
         return new OutputBuffer(
-            StringConversions.typePathClassName(tp)
+            StringConversions.typePathClassInstanceName(tp)
         );
     }
 

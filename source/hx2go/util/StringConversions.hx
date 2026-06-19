@@ -27,16 +27,24 @@ class StringConversions {
         return 'Hx_Field_${tp.dotPath().toLowerCase().replace(".", "_")}_${fieldName}';
     }
 
-    public static function typePathInstanceName(tp: TypePath): String {
-        return 'Hx_Obj_${tp.dotPath().toLowerCase().replace(".", "_")}';
+    public static function typePathClassStaticName(tp: TypePath): String {
+        return 'Hx_Cls_${tp.dotPath().toLowerCase().replace(".", "_")}';
     }
 
-    public static function typePathClassName(tp: TypePath): String {
-        return 'Hx_Cls_${tp.dotPath().toLowerCase().replace(".", "_")}';
+    public static function typePathClassInstanceName(tp: TypePath): String {
+        return 'Hx_Obj_${tp.dotPath().toLowerCase().replace(".", "_")}';
     }
 
     public static function typePathTypedefName(tp: TypePath): String {
         return 'Hx_Typedef_${tp.dotPath().toLowerCase().replace(".", "_")}';
+    }
+
+    public static function typePathEnumName(tp: TypePath): String {
+        return 'Hx_Enum_${tp.dotPath().toLowerCase().replace(".", "_")}';
+    }
+
+    public static function typePathAbstractName(tp: TypePath): String {
+        return 'Hx_Abstract_${tp.dotPath().toLowerCase().replace(".", "_")}';
     }
 
     public static function moduleTypeGetTypePath(mt: HxbModuleType): TypePath {

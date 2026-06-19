@@ -6,6 +6,7 @@ import hx2go.hxb.HxbModuleType;
 import hx2go.hxb.Hxb;
 import hx2go.hxb.Typed.HxbModuleTypeRef;
 import hx2go.hxb.HxbModule.HxbImport;
+import hx2go.hxb.HxbArchive;
 
 class Main {
 
@@ -29,46 +30,16 @@ class Main {
 
     public static function exec(input: String, output: String, mainClass: String): Void {
         var arc = Hxb.loadArchive(input);
-        var types = [];
-        /* var walked: Map<String, Bool> = [];
-        var walk: String -> Void;
 
-        walk = imp -> {
-            if (walked.exists(imp)) {
-                return;
-            }
-
-            var ref = arc.findModule(imp, 'go');
-            var mod = arc.decode(ref);
-
-            for (child in mod.imports) {
-                walk(importToPath(child));
-            }
-
-            types = types.concat(mod.types);
-            walked.set(imp, true);
-        };
-
-        walk(mainClass); */
-
-        var refs = arc.modulesOf("go");
-        for (ref in refs) {
-            types = types.concat(arc.decode(ref).types);
-        }
-
-        generate(types, output, mainClass);
+        generate(arc, output, mainClass);
     }
 
-    public static function generate(types: Array<HxbModuleType>, absoluteOutput: String, mainClass: String): Void {
+    public static function generate(archive: HxbArchive, absoluteOutput: String, mainClass: String): Void {
         if (!FileSystem.exists(absoluteOutput)) {
             FileSystem.createDirectory(absoluteOutput);
         }
 
-        var ctx = new hx2go.Context(absoluteOutput);
-        for (t in types) {
-            ctx.add(t);
-        }
-
+        var ctx = new hx2go.Context(archive, absoluteOutput);
         ctx.build(mainClass);
     }
 

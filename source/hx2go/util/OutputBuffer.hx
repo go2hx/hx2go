@@ -53,6 +53,10 @@ class OutputBuffer {
         return content.trim().endsWith("}");
     }
 
+    public function isEmpty(): Bool {
+        return content.trim() == "";
+    }
+
     public function clear(): Void {
         content = "";
     }

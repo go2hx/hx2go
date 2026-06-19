@@ -12,8 +12,14 @@ class Main {
         }
     }
 
+    public static function test(): Void {
+        Fmt.println("Test!!");
+    }
+
     public static function main() {
         Syntax.go(() -> say("world"));
+        Syntax.defer(test);
+
         say("hello");
     }
 

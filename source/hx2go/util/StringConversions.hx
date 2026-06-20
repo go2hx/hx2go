@@ -9,7 +9,7 @@ import hx2go.hxb.HxbModuleType;
 class StringConversions {
 
     public static function toPascalCase(input: String): String {
-        return input.charAt(0).toUpperCase() + input.substr(1).toLowerCase();
+        return input.charAt(0).toUpperCase() + input.substr(1);
     }
 
     public static function pathToLossyTypePath(path: String): TypePath {

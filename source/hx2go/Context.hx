@@ -161,7 +161,8 @@ class Context {
     }
 
     function installGoDeps(imports:Map<String, Array<String>>) {
-        var processList:Array<Process> = [];
+        final previousCwd = Sys.getCwd();
+        Sys.setCwd(outputDirectory);
         for (_ => deps in imports) {
             for (dep in deps) {
                 if (dep.contains(".")) {
@@ -171,12 +172,11 @@ class Context {
         }
         while (processList.length > 0) {
             for (ps in processList) {
-                final exitCode = ps.exitCode(false);
-                if (exitCode != null)
-                    processList.remove(ps);
+                ps.exitCode(); 
+                ps.close();
             }
-            Sys.sleep(0.1);
         }
+        Sys.setCwd(previousCwd);
     }
 
     public function resolve(tp: TypePath): HxbModuleType {

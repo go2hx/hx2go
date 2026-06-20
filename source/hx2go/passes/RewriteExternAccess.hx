@@ -10,6 +10,8 @@ import hx2go.hxb.Ast.HxbExprDef.EArrayDecl;
 import hx2go.hxb.HxbModuleType;
 import hx2go.util.ExprHelper;
 import hx2go.util.StringConversions;
+import hx2go.hxb.Ast.HxbObjectField;
+import hx2go.util.ObjectFieldHelper;
 
 private enum ExternKind {
     ExNone;
@@ -34,7 +36,7 @@ class RewriteExternAccess extends CompilerPass {
 
                         for (m in cls.meta) {
                             switch m.name {
-                                case ":go.Module": return { kind: ExModule, options: m.params[0], left: left, right: ref.name };
+                                case ":go.Type": return { kind: ExModule, options: m.params[0], left: left, right: ref.name };
                                 case _: null;
                             }
                         }
@@ -59,32 +61,22 @@ class RewriteExternAccess extends CompilerPass {
             case { kind: ExModule, options: { expr: EObjectDecl(options) }, right: fieldName }: {
                 var typeName = "";
                 var pascalCase = true;
+                var topLevel = false;
 
                 for (opt in options) {
                     switch opt.name {
                         case "name":
-                            typeName = switch opt.expr?.expr {
-                                case EConst(CString(x, _)): x;
-                                case _: "";
-                            }
+                            typeName = ObjectFieldHelper.readString(opt);
 
                         case "pascalCase":
-                            pascalCase = switch opt.expr?.expr {
-                                case EConst(CIdent(x)): pascalCase = (x == "true");
-                                case _: null;
-                            }
+                            pascalCase = ObjectFieldHelper.readBool(opt, pascalCase);
+
+                        case "topLevel":
+                            topLevel = ObjectFieldHelper.readBool(opt, topLevel);
 
                         case "imports":
-                            switch opt.expr?.expr {
-                                case EArrayDecl(imports):
-                                    for (imp in imports) {
-                                        context.defineImport(type, switch imp?.expr {
-                                            case EConst(CString(x, _)): x;
-                                            case _: null;
-                                        });
-                                    }
-
-                                case _: null;
+                            for (imp in ObjectFieldHelper.readStringList(opt)) {
+                                context.defineImport(type, imp);
                             }
 
                         case _: null;
@@ -95,7 +87,7 @@ class RewriteExternAccess extends CompilerPass {
                     fieldName = StringConversions.toPascalCase(fieldName);
                 }
 
-                expr.expr = ExprHelper.createUntyped(context, '$typeName.$fieldName', []).expr;
+                expr.expr = ExprHelper.createUntyped(context, (topLevel ? '' : '$typeName.') + fieldName, []).expr;
             }
 
             case _: null;

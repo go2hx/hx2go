@@ -8,6 +8,24 @@ import hx2go.hxb.HxbModuleType;
 
 class TypeHelper {
 
+    public static function follow(context: Context, type: HxbType): HxbType {
+        return switch type {
+            case TType(tp, _): {
+                var mod = context.resolve(tp);
+                if (mod == null) {
+                    return type;
+                }
+
+                switch mod {
+                    case MTypedef(info): info.type;
+                    case _: type;
+                }
+            }
+
+            case _: type;
+        }
+    }
+
     public static function compare(a: HxbType, b: HxbType): Bool {
         return switch [a, b] {
             case [TMono(i1), TMono(i2)]:

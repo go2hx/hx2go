@@ -4,6 +4,9 @@ import haxe.io.Path;
 import sys.FileSystem;
 import hx2go.hxb.HxbModuleType;
 import hx2go.hxb.Hxb;
+import hx2go.hxb.Typed.HxbModuleTypeRef;
+import hx2go.hxb.HxbModule.HxbImport;
+import hx2go.hxb.HxbArchive;
 
 class Main {
 
@@ -21,35 +24,22 @@ class Main {
         exec(absoluteInput, absoluteOutput, mainClass);
     }
 
-    public static function exec(input: String, output: String, mainClass: String): Void {
-        var arc = Hxb.loadArchive(input);
-        var entries = arc.modules();
-        var types = [];
-
-        for (ref in entries) {
-            if (ref.target != "go") { // hxb can contain multiple targets (like macro) and we only want the hx2go target
-                continue;
-            }
-
-            var module = arc.decode(ref);
-            for (type in module.types) {
-                types.push(type);
-            }
-        }
-
-        generate(types, output, mainClass);
+    public static function importToPath(imp: HxbImport): String {
+        return imp.pack.length > 0 ? '${imp.pack.join(".")}.${imp.name}' : imp.name;
     }
 
-    public static function generate(types: Array<HxbModuleType>, absoluteOutput: String, mainClass: String): Void {
+    public static function exec(input: String, output: String, mainClass: String): Void {
+        var arc = Hxb.loadArchive(input);
+
+        generate(arc, output, mainClass);
+    }
+
+    public static function generate(archive: HxbArchive, absoluteOutput: String, mainClass: String): Void {
         if (!FileSystem.exists(absoluteOutput)) {
             FileSystem.createDirectory(absoluteOutput);
         }
 
-        var ctx = new hx2go.Context(absoluteOutput);
-        for (t in types) {
-            ctx.add(t);
-        }
-
+        var ctx = new hx2go.Context(archive, absoluteOutput);
         ctx.build(mainClass);
     }
 

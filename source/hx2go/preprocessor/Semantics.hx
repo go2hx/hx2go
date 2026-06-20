@@ -3,6 +3,9 @@ package hx2go.preprocessor;
 import hx2go.hxb.Typed.HxbTypedExpr;
 import hx2go.hxb.tools.TypedExprTools;
 import hx2go.hxb.Ast.HxbBinop;
+import haxe.runtime.Copy;
+import hx2go.hxb.Typed.HxbTypedExprDef;
+import hx2go.hxb.HxbType;
 
 class Semantics {
 
@@ -95,7 +98,125 @@ class Semantics {
     }
 
     public static function hasSideEffects(e: HxbTypedExpr): Bool {
-        return true; // TODO: impl
+        return switch e.expr {
+            case TConst(_) | TLocal(_) | TTypeExpr(_) | TIdent(_): false;
+            case TParenthesis(e1) | TMeta(_, e1) | TCast(e1, _) | TEnumIndex(e1) | TEnumParameter(e1, _, _): hasSideEffects(e1);
+            case TBinop(OpAssign | OpAssignOp(_), _, _): true;
+            case TBinop(_, a, b): hasSideEffects(a) || hasSideEffects(b);
+            case TUnop(OpIncrement | OpDecrement, _, _): true;
+            case TUnop(_, _, e1): hasSideEffects(e1);
+            case TField(e1, _): hasSideEffects(e1); // TODO: check; getters/setters
+            case TArray(a, b): hasSideEffects(a) || hasSideEffects(b); // TODO: check; arrayAccess meta
+            case _: true; // conservative assumption
+        };
     }
 
+    public static function ensure(parent: HxbTypedExpr, children: Array<HxbTypedExpr>, preprocessor: Preprocessor, scope: Scope, ancestor: Null<Ancestor>): Void {
+        var willMutate = false;
+        for (child in children) {
+            if (child.expr == null) {
+                continue;
+            }
+
+            willMutate = willMutate || hasSideEffects(child) || goingToMutate(child, parent);
+        }
+
+        if (!willMutate) {
+            return preprocessor.iterateExpr(parent, scope, ancestor);
+        }
+
+        switch parent.expr {
+            case TBinop(OpBoolAnd, left, right): // x && y -> if (x) y else false
+                parent.expr = TIf(
+                    left,
+                    right,
+                    new HxbTypedExpr(TConst(
+                        TBool(false)
+                    ), TBool, null)
+                );
+
+                preprocessor.processExpr(parent, scope, ancestor);
+
+            case TBinop(OpBoolOr, left, right): // x || y -> if (x) true else y
+                parent.expr = TIf(
+                    left,
+                    new HxbTypedExpr(TConst(
+                        TBool(true)
+                    ), TBool, null),
+                    right
+                );
+
+                preprocessor.processExpr(parent, scope, ancestor);
+
+            case _: // f(x, y) -> z = x; w = y; f(z, w);
+                var ca: Ancestor = { up: ancestor, node: parent, scope: scope };
+
+                var lastImpure = -1;
+                for (i in 0...children.length) {
+                    var c = children[i];
+                    if (c.expr != null && (hasSideEffects(c) || goingToMutate(c, parent))) {
+                        lastImpure = i;
+                    }
+                }
+
+                for (i in 0...children.length) {
+                    var child = children[i];
+                    if (child.expr == null) {
+                        continue;
+                    }
+
+                    if (goingToMutate(child, parent)) preprocessor.processExpr(child, scope, ca);
+                    else if (i < lastImpure && !isConstant(child)) child.expr = scope.temp(parent, Copy.copy(child), preprocessor, scope, ca).expr;
+                    else preprocessor.processExpr(child, scope, ca);
+                }
+        }
+    }
+
+    public static function getIntegerSigned(t: HxbType): Bool {
+        return switch t {
+            case TAbstract({ pack: [], name: "Int" | "Dynamic" }, _) | TAbstract({ pack: ["go"], name: "GoInt" | "Int8" | "Int16" | "Int32" | "Int64" }, _) | TInt | TDynamicAny | TDynamic(_): true;
+            case TAbstract({ pack: [], name: "UInt" }, _) | TAbstract({ pack: ["go"], name: "GoUInt" | "UInt8" | "UInt16" | "UInt32" | "UInt64" | "Rune" | "Byte"  }, _): false;
+            case _: true; // abstract should not cause this code path anyway.
+        }
+    }
+
+    public static function getIntegerWidth(t: HxbType): Int {
+        return switch t {
+            case TAbstract({ pack: [], name: "Int" | "Dynamic" | "UInt" }, _) | TAbstract({ pack: ["go"], name: "Int" | "UInt" | "GoInt" | "GoUInt" }, _) | TInt | TDynamicAny | TDynamic(_): 64; // for GoInt I assume the wider type, i could add special handling but that is extra complexity for little (to no) gain.
+            case TAbstract({ pack: ["go"], name: "Int8" | "UInt8" | "Rune" | "Byte" }, _): 8;
+            case TAbstract({ pack: ["go"], name: "Int16" | "UInt16" }, _): 16;
+            case TAbstract({ pack: ["go"], name: "Int32" | "UInt32" }, _): 32;
+            case TAbstract({ pack: ["go"], name: "Int64" | "UInt64" }, _): 64;
+            case _: 64; // abstract should not cause this code path anyway.
+        }
+    }
+    
+    public static function isFloatType(t: HxbType): Bool {
+        return switch t {
+            case TAbstract({ pack: [], name: "Float" }, _) | TAbstract({ pack: ["go"], name: "Float32" | "Float64" }, _) | TFloat: true;
+            case _: false;
+        }
+    }
+    
+    public static function isBoolType(t: HxbType): Bool {
+        return switch t {
+            case TAbstract({ pack: [], name: "Bool" }, _) | TBool: true;
+            case _: false;
+        }
+    }
+    
+    public static function isIntegerType(t: HxbType): Bool {
+        return switch t {
+            case TAbstract({ pack: [], name: "Int" | "UInt" }, _) | TAbstract({ pack: ["go"], name: "GoInt" | "GoUInt" | "Int8" | "UInt8" | "Int16" | "UInt16" | "Int32" | "UInt32" | "Int64" | "UInt64" | "Rune" |  "Byte" }, _) | TInt: true;
+            case _: false;
+        }
+    }
+    
+    public static function isStringType(t: HxbType): Bool {
+        return switch t {
+            case TAbstract({ pack: [], name: "String" }, _) | TString: true;
+            case _: false;
+        }
+    }
+    
 }

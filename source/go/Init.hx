@@ -31,7 +31,7 @@ class Init {
 			thisBeforeSuper: false,
 			supportsThreads: true,
 			supportsUnicode: true,
-			supportsRestArgs: false, // change to true if needed
+			supportsRestArgs: true, // we should change this if we run into issues that are difficult to solve
 			exceptions: {
 				nativeThrows: [anyPath],
 				nativeCatches: [anyPath],
@@ -77,8 +77,12 @@ class Init {
 				throw "cannot find HXB! something went wrong, perhaps the onAfterGenerate callback fired too early?";
 			}
 
+			final start = Sys.time();
 			final mainClass = Compiler.getConfiguration().mainClass;
 			hx2go.Main.exec(archiveOutput, sourceOutput, mainClass.pack.length > 0 ? '${mainClass.pack.join(".")}.${mainClass.name}' : '${mainClass.name}');
+			final end = Sys.time();
+
+			Sys.println('hx2go took ${Std.string(Math.round((end - start) * 100000) / 100)}ms');
 
 			if (!FileSystem.exists(goModOutput)) {
 				Sys.setCwd(sourceOutput);

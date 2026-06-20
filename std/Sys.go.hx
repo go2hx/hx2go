@@ -1,0 +1,19 @@
+import go.fmt.Fmt;
+import go.time.Time;
+
+class Sys {
+
+    public static function println(v: Dynamic): Void {
+        Fmt.println(v);
+    }
+
+    public static function print(v: Dynamic): Void {
+        Fmt.print(v);
+    }
+
+    public static function sleep(seconds: Float): Void {
+        var d = seconds * 1000 * Time.millisecond;
+        Time.sleep(d);
+    }
+
+}

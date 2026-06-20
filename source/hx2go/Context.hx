@@ -13,18 +13,26 @@ import hx2go.hxb.tools.TypedExprTools;
 import hx2go.hxb.TypePath;
 import hx2go.util.StringConversions;
 import hx2go.preprocessor.Preprocessor;
+import hx2go.hxb.Typed.HxbModuleTypeRef;
+import hx2go.hxb.HxbArchive;
+import hx2go.hxb.ModuleRef;
+import hx2go.hxb.flags.HxbClassFlag;
+import haxe.CallStack;
 
 class Context {
 
     private var types: Map<String, HxbModuleType>;
+    private var archive: HxbArchive;
     private var imports: Map<String, Array<String>>;
     private var outputDirectory: String;
     private var topLevelPackage: String;
     private var passes: Array<ICompilerPass>;
     private var writer: Writer;
     private var contextStack: Array<ContextFrame>;
+    private var typesByModule: Map<String, Array<{ type: HxbModuleType, name: String, module: String }>>;
+    private var typeQueue: Array<String>;
 
-    public function new(outputDirectory: String) {
+    public function new(archive: HxbArchive, outputDirectory: String) {
         this.types = [];
         this.imports = [];
         this.outputDirectory = outputDirectory;
@@ -32,75 +40,75 @@ class Context {
         this.passes = createPasses();
         this.writer = new Writer(this);
         this.contextStack = [];
+        this.archive = archive;
     }
 
     private function createPasses(): Array<ICompilerPass> {
         return [
-            // preprocessor
-            new hx2go.passes.EnsureBlockAndParen(this),
-
-            // passes
-            new hx2go.passes.BinopTypeNormaliser(this),
+            new hx2go.passes.TypeNormaliserBinop(this),
+            new hx2go.passes.TypeNormaliserCall(this),
             new hx2go.passes.StringificationCast(this),
             new hx2go.passes.RewriteExternAccess(this),
+            new hx2go.passes.RewriteSyntaxCode(this),
+            new hx2go.passes.RewriteSyntaxDefer(this),
+            new hx2go.passes.RewriteSyntaxGo(this)
         ];
     }
 
-    private function getPath(type: HxbModuleType, modulePath: Bool = false): String {
-        var p = switch type {
-            case MClass(v): v.path;
-            case MEnum(v): v.path;
-            case MAbstract(v): v.path;
-            case MTypedef(v): v.path;
-        };
+    public function buildType(t: HxbModuleType, ref: ModuleRef): Void {
+        var infos = switch t {
+            case MClass(def): {
+                module: def.path.moduleDotPath(),
+                name: def.path.name
+            };
 
-        return modulePath ? p.moduleDotPath() : p.dotPath();
-    }
+            case MTypedef(def): {
+                module: def.path.moduleDotPath(),
+                name: def.path.name
+            };
 
-    public function add(type: HxbModuleType) {
-        types.set(getPath(type), type);
+            case MEnum(def): {
+                module: def.path.moduleDotPath(),
+                name: def.path.name
+            };
+
+            case MAbstract(def): {
+                module: def.path.moduleDotPath(),
+                name: def.path.name
+            };
+
+            case _: return;
+        }
+
+        if (!typesByModule.exists(infos.module)) {
+            typesByModule.set(infos.module, []);
+        }
+
+        typesByModule[infos.module].push({ type: t, name: infos.name, module: infos.module });
+        typeQueue.push(infos.module);
+        types.set(ref.dotPath(), t);
+
+        transformType(t);
     }
 
     public function build(mainClass: String): Void {
-        var typesByModule: Map<String, Array<{ type: HxbModuleType, name: String, module: String }>> = [];
+        typesByModule = [];
+        typeQueue = [];
 
-        for (t in types) {
-            var infos = switch t {
-                case MClass(p): {
-                    module: p.path.moduleDotPath(),
-                    name: p.path.name
-                };
-
-                case _: continue;
-            }
-
-            transformType(t);
-
-            if (!typesByModule.exists(infos.module)) {
-                typesByModule.set(infos.module, []);
-            }
-
-            if (infos.module.startsWith("hx2go")) {
-                continue;
-            }
-
-            typesByModule[infos.module].push({ type: t, name: infos.name, module: infos.module });
-        }
+        resolve(StringConversions.pathToLossyTypePath(mainClass));
 
         var mainWritten = false;
-
-        for (module in typesByModule) {
+        while (typeQueue.length != 0) {
+            var module = typesByModule[typeQueue.pop()];
             if (module.length == 0) {
                 continue;
             }
 
             var buf = new OutputBuffer();
+            var path = StringConversions.moduleTypeGetDotPath(module[0].type, true);
+            var imports = imports.get(path) ?? [];
 
-            var path = module[0].module.split('.');
-            var name = path.pop();
-            var imports = imports.get(getPath(module[0].type, true)) ?? [];
-
-            buf.add('package ${path[path.length - 1] ?? topLevelPackage}');
+            buf.add('package $topLevelPackage');
 
             if (imports.length > 0) {
                 buf.add("");
@@ -110,11 +118,17 @@ class Context {
                 buf.add('import "$imp"');
             }
 
+            var hasWrittenSomething = false;
             for (entry in module) {
-                buf.addBufferInline(writer.types.writeModuleTypeDecl(entry.type));
+                var localBuf = writer.types.writeModuleTypeDecl(entry.type);
+                if (!localBuf.isEmpty()) {
+                    hasWrittenSomething = true;
+                }
+
+                buf.addBufferInline(localBuf);
             }
 
-            if (path.length == 0 && name == "Main") {
+            if (path == mainClass) {
                 buf.add('');
                 buf.add('func main() {');
                 buf.add('${StringConversions.typePathFieldName("main", StringConversions.pathToLossyTypePath(mainClass))}()', 1);
@@ -123,7 +137,11 @@ class Context {
                 mainWritten = true;
             }
 
-            writeFile(path.join("/"), name, buf.toString());
+            if (!hasWrittenSomething) {
+                continue;
+            }
+
+            writeFile("/", StringConversions.moduleTypeGetFileName(module[0].type), buf.toString());
         }
 
         if (!mainWritten) {
@@ -162,7 +180,21 @@ class Context {
     }
 
     public function resolve(tp: TypePath): HxbModuleType {
-        return tp != null ? types.get(tp.dotPath()) : null;
+        var res = archive.findModule(tp.dotPath(), "go");
+        if (res == null) {
+            return null;
+        }
+
+        if (types.exists(res.dotPath())) {
+            return types[res.dotPath()];
+        }
+
+        var mod = archive.decode(res);
+        for (type in mod.types) {
+            buildType(type, res);
+        }
+
+        return types[res.dotPath()];
     }
 
     private function writeFile(directory: String, fileName: String, content: String): Void {
@@ -303,7 +335,7 @@ class Context {
     }
 
     public function defineImport(module: HxbModuleType, goImport: String): Void {
-        var path = getPath(module, true);
+        var path = StringConversions.moduleTypeGetDotPath(module, true);
         if (!imports.exists(path)) {
             imports.set(path, []);
         }

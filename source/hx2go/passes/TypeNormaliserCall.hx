@@ -31,7 +31,9 @@ class TypeNormaliserCall extends CompilerPass {
                         return;
                     }
 
-                    trace('${arg.t} -> ${toType} (${arg.expr})');
+                    var o = ExprHelper.createCast(context, arg, toType);
+                    arg.expr = o.expr;
+                    arg.t = o.t;
                 }
             };
 

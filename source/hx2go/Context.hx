@@ -173,11 +173,11 @@ class Context {
             }
         }
         while (processList.length > 0) {
-            for (ps in processList) {
-                ps.exitCode(); 
-                ps.close();
-            }
+            var ps = processList.pop();
+            ps.exitCode();
+            ps.close();
         }
+
         Sys.setCwd(previousCwd);
     }
 

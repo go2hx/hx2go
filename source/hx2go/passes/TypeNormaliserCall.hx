@@ -17,7 +17,7 @@ class TypeNormaliserCall extends CompilerPass {
     }
 
     public function execute(expr: HxbTypedExpr, type: HxbModuleType): Void {
-        trace(expr);
+
     }
 
 }

@@ -78,10 +78,23 @@ class ExprWriter extends WriterImpl {
     public function writeCast(expr: HxbTypedExpr, e: HxbTypedExpr, ref: HxbModuleTypeRef): OutputBuffer {
         var buf = new OutputBuffer();
 
-        buf.addBufferInline(writer.types.writeHxbType(expr.t));
-        buf.addInline('(');
-        buf.addBufferInline(writeExpr(e));
-        buf.addInline(')');
+        trace(expr, expr.t);
+
+        switch e.t {
+            case TDynamic(_) | TDynamicAny:
+                buf.addInline('(');
+                buf.addBufferInline(writeExpr(e));
+                buf.addInline(').(');
+                buf.addBufferInline(writer.types.writeHxbType(expr.t));
+                buf.addInline(')');
+
+            case _:
+                buf.addBufferInline(writer.types.writeHxbType(expr.t));
+                buf.addInline('(');
+                buf.addBufferInline(writeExpr(e));
+                buf.addInline(')');
+
+        }
 
         return buf;
     }

@@ -87,7 +87,7 @@ class RewriteExternAccess extends CompilerPass {
                     fieldName = StringConversions.toPascalCase(fieldName);
                 }
 
-                expr.expr = ExprHelper.createUntyped(context, (topLevel ? '' : '$typeName.') + fieldName, []).expr;
+                expr.expr = ExprHelper.createUntyped((topLevel ? '' : '$typeName.') + fieldName, []).expr;
             }
 
             case _: null;

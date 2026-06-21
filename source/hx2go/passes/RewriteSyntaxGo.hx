@@ -19,8 +19,8 @@ class RewriteSyntaxGo extends CompilerPass {
         expr.expr = switch expr.expr {
             case TCall({ expr: TField(_, FStatic({ name: 'Syntax', pack: ['go'] }, { name: 'go' })) }, params): {
                 switch params[0].expr {
-                    case TFunction({ expr: e}): ExprHelper.createUntyped(context, 'go func() {0}()', [ e ]).expr;
-                    case TField(_) | TLocal(_): ExprHelper.createUntyped(context, 'go {0}()', [ params[0] ]).expr;
+                    case TFunction({ expr: e}): ExprHelper.createUntyped('go func() {0}()', [ e ]).expr;
+                    case TField(_) | TLocal(_): ExprHelper.createUntyped('go {0}()', [ params[0] ]).expr;
                     case _: return;
                 }
             }

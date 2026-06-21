@@ -19,8 +19,8 @@ class RewriteSyntaxDefer extends CompilerPass {
        expr.expr = switch expr.expr {
            case TCall({ expr: TField(_, FStatic({ name: 'Syntax', pack: ['go'] }, { name: 'defer' })) }, params): {
                switch params[0].expr {
-                   case TFunction({ expr: e}): ExprHelper.createUntyped(context, 'defer func() {0}()', [ e ]).expr;
-                   case TField(_) | TLocal(_): ExprHelper.createUntyped(context, 'defer {0}()', [ params[0] ]).expr;
+                   case TFunction({ expr: e}): ExprHelper.createUntyped('defer func() {0}()', [ e ]).expr;
+                   case TField(_) | TLocal(_): ExprHelper.createUntyped('defer {0}()', [ params[0] ]).expr;
                    case _: return;
                }
            }

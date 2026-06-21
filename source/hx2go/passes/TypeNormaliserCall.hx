@@ -28,12 +28,13 @@ class TypeNormaliserCall extends CompilerPass {
                     };
 
                     if (toType.match(TDynamicAny | TDynamic(_)) || TypeHelper.compare(arg.t, toType)) {
-                        return;
+                        continue;
                     }
 
-                    var o = ExprHelper.createCast(context, arg, toType);
+                    var o = ExprHelper.createCast(arg, toType);
                     arg.expr = o.expr;
                     arg.t = o.t;
+                    context.submitNode(arg, true);
                 }
             };
 

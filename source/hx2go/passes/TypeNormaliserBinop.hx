@@ -31,15 +31,17 @@ class TypeNormaliserBinop extends CompilerPass {
         }
 
         if (!TypeHelper.compare(left.t, expr.t)) {
-            var o = ExprHelper.createCast(context, left, expr.t);
+            var o = ExprHelper.createCast(left, expr.t);
             left.expr = o.expr;
             left.t = o.t;
+            context.submitNode(left, true);
         }
 
         if (!TypeHelper.compare(right.t, expr.t)) {
-            var o = ExprHelper.createCast(context, right, expr.t);
+            var o = ExprHelper.createCast(right, expr.t);
             right.expr = o.expr;
             right.t = o.t;
+            context.submitNode(right, true);
         }
     }
 

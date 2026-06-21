@@ -24,7 +24,7 @@ class StringificationCast extends CompilerPass {
 
         expr.expr = switch expr.expr {
             case TCast(e, _):
-                ExprHelper.createUntyped(context, 'fmt.Sprintf("%v", {0})', [e]).expr;
+                ExprHelper.createUntyped('fmt.Sprintf("%v", {0})', [e]).expr;
 
             case _: expr.expr;
         }

@@ -4,11 +4,11 @@ import go.Syntax;
 class Main {
 
     public static function say(s: String): Void {
-        var i = 0;
-        while (i < 5) {
+        var say_index = 0;
+        while (say_index < 5) {
             Sys.sleep(1);
-            Fmt.println(s + ", with index: " + i);
-            i++;
+            Fmt.println(s + ", with index: " + say_index);
+            say_index++;
         }
     }
 

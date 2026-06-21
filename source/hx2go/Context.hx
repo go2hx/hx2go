@@ -31,6 +31,7 @@ class Context {
     private var contextStack: Array<ContextFrame>;
     private var typesByModule: Map<String, Array<{ type: HxbModuleType, name: String, module: String }>>;
     private var typeQueue: Array<String>;
+    private var processList: Array<Process>;
 
     public function new(archive: HxbArchive, outputDirectory: String) {
         this.types = [];
@@ -40,6 +41,7 @@ class Context {
         this.passes = createPasses();
         this.writer = new Writer(this);
         this.contextStack = [];
+        this.processList = [];
         this.archive = archive;
     }
 

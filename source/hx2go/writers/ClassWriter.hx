@@ -97,7 +97,7 @@ class ClassWriter extends WriterImpl {
             buf.addInline(' ');
         }
 
-        if (field.expr?.expr != null) buf.addBuffer(writer.exprs.writeExpr(field.expr.expr))
+        if (field.expr?.expr != null) buf.addBuffer(writer.exprs.writeExpr(field.expr.expr, true))
         else buf.add("{}");
 
         return buf;
@@ -121,7 +121,7 @@ class ClassWriter extends WriterImpl {
 
             buf.add(' = ${initName}()');
             buf.addInline('func ${initName}() ${writer.types.writeHxbType(field.type)} ');
-            buf.addBuffer(writer.exprs.writeExpr(initExpr));
+            buf.addBuffer(writer.exprs.writeExpr(initExpr, true));
         } else buf.add("");
 
         return buf;

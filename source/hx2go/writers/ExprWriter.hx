@@ -17,12 +17,13 @@ import hx2go.util.TypeHelper;
 import hx2go.hxb.Ast.HxbUnop;
 import hx2go.hxb.Typed.HxbTypedExprDef;
 import hx2go.hxb.Typed.HxbTObjectField;
+import hx2go.hxb.HxbType;
 
 class ExprWriter extends WriterImpl {
 
-    public function writeExpr(expr: HxbTypedExpr): OutputBuffer {
+    public function writeExpr(expr: HxbTypedExpr, topLevel: Bool = false): OutputBuffer {
         return switch expr.expr {
-            case TFunction(func): writeFunction(expr, func);
+            case TFunction(func): writeFunction(expr, func, topLevel);
             case TBlock(exprs): writeBlock(expr, exprs);
             case TCall(e, args): writeCall(expr, e, args);
             case TConst(c): writeConst(expr, c);
@@ -67,8 +68,21 @@ class ExprWriter extends WriterImpl {
         return buf;
     }
 
-    public function writeFunction(expr: HxbTypedExpr, func: HxbTFunc): OutputBuffer {
-        return writeExpr(func.expr);
+    public function writeFunction(expr: HxbTypedExpr, func: HxbTFunc, topLevel: Bool): OutputBuffer {
+        if (topLevel) return writeExpr(func.expr);
+        else {
+            var buf = new OutputBuffer();
+            var returnType: HxbType = TVoid;
+
+            switch expr.t {
+                case TFun(params, ret): buf.addInline('func(${params.map(p -> '${p.name} ${writer.types.writeHxbType(p.t)}').join(', ')})${ret == TVoid ? '' : ' ${writer.types.writeHxbType(ret)}'}');
+                case _: null;
+            }
+
+            buf.addBufferInline(writeExpr(func.expr));
+
+            return buf;
+        }
     }
 
     public function writeReturn(expr: Null<HxbTypedExpr>): OutputBuffer {

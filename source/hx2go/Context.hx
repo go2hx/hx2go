@@ -51,6 +51,7 @@ class Context {
             new hx2go.passes.TypeNormaliserBinop(this),
             new hx2go.passes.StringificationCast(this),
             new hx2go.passes.RewriteExternAccess(this),
+            new hx2go.passes.RewriteAnonAccess(this),
             new hx2go.passes.RewriteSyntaxCode(this),
             new hx2go.passes.RewriteSyntaxDefer(this),
             new hx2go.passes.RewriteSyntaxGo(this)
@@ -133,7 +134,7 @@ class Context {
             if (path == mainClass) {
                 buf.add('');
                 buf.add('func main() {');
-                buf.add('${StringConversions.typePathFieldName("main", StringConversions.pathToLossyTypePath(mainClass))}()', 1);
+                buf.add('${StringConversions.typePathStaticFieldName("main", StringConversions.pathToLossyTypePath(mainClass))}()', 1);
                 buf.add('}');
 
                 mainWritten = true;
@@ -152,7 +153,7 @@ class Context {
             buf.add('package ${topLevelPackage}');
             buf.add('');
             buf.add('func main() {');
-            buf.add('${StringConversions.typePathFieldName("main", StringConversions.pathToLossyTypePath(mainClass))}()', 1);
+            buf.add('${StringConversions.typePathStaticFieldName("main", StringConversions.pathToLossyTypePath(mainClass))}()', 1);
             buf.add('}');
 
             // TODO: import file containing main

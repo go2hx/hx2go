@@ -1,26 +1,33 @@
-import go.fmt.Fmt;
-import go.Syntax;
-
 class Main {
 
-    public static function say(s: String): Void {
-        var say_index = 0;
-        while (say_index < 5) {
-            Sys.sleep(1);
-            Fmt.println(s + ", with index: " + say_index);
-            say_index++;
-        }
-    }
-
-    public static function test(): Void {
-        Fmt.println("Test!!", "Cool!!");
-    }
-
     public static function main() {
-        Syntax.go(() -> say("world"));
-        Syntax.defer(test);
+        var obj = {
+            int: 1,
+            float: 2.3,
+            string: "Hello",
+            bool: false,
+            nest: {
+                int_nested: 5,
+                bool_nested: true
+            }
+        };
 
-        say("hello");
+        Sys.println(obj);
+        Sys.println(obj.int);
+        Sys.println(obj.string);
+        Sys.println(obj.bool);
+        Sys.println(obj.nest);
+        Sys.println(obj.nest.int_nested);
+        Sys.println(obj.nest.bool_nested);
+//
+//        var as_dyn: Dynamic = obj;
+//        Sys.println(obj);
+//        Sys.println(as_dyn.int);
+//        Sys.println(as_dyn.string);
+//        Sys.println(as_dyn.bool);
+//        Sys.println(as_dyn.nest);
+//        Sys.println(as_dyn.nest.int_nested);
+//        Sys.println(as_dyn.nest.bool_nested);
     }
 
 }

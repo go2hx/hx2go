@@ -78,7 +78,7 @@ class ClassWriter extends WriterImpl {
         }
 
         buf.add("");
-        buf.addInline('func ${StringConversions.typePathFieldName(field.name, cls.path)}(');
+        buf.addInline('func ${StringConversions.typePathStaticFieldName(field.name, cls.path)}(');
         buf.addBufferInline(fTypes.buf);
         buf.addInline(') ');
 

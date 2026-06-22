@@ -51,6 +51,18 @@ class HxbClassField {
 		this.expr = null;
 	}
 
+	public function shallowCopy(): HxbClassField {
+		var cf = new HxbClassField(name, pos, namePos, meta, overloads);
+		cf.doc = doc;
+		cf.type = type;
+		cf.kind = kind;
+		cf.params = params;
+		cf.flags = flags;
+		cf.expr = expr;
+
+		return cf;
+	}
+
 	public function toString():String
 		return name;
 }

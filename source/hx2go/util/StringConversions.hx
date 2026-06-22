@@ -23,7 +23,7 @@ class StringConversions {
         };
     }
 
-    public static function typePathFieldName(fieldName: String, tp: TypePath): String {
+    public static function typePathStaticFieldName(fieldName: String, tp: TypePath): String {
         return 'Hx_Field_${tp.dotPath().toLowerCase().replace(".", "_")}_${fieldName}';
     }
 
@@ -45,6 +45,10 @@ class StringConversions {
 
     public static function typePathAbstractName(tp: TypePath): String {
         return 'Hx_Abstract_${tp.dotPath().toLowerCase().replace(".", "_")}';
+    }
+
+    public static function nameToFieldName(name: String): String {
+        return 'Hx_Field_${name}';
     }
 
     public static function moduleTypeGetTypePath(mt: HxbModuleType): TypePath {

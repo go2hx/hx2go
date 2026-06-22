@@ -15,6 +15,8 @@ import hx2go.hxb.Typed.HxbTypedExprDef.TConst;
 import hx2go.hxb.Ast.HxbBinop;
 import hx2go.util.TypeHelper;
 import hx2go.hxb.Ast.HxbUnop;
+import hx2go.hxb.Typed.HxbTypedExprDef;
+import hx2go.hxb.Typed.HxbTObjectField;
 
 class ExprWriter extends WriterImpl {
 
@@ -37,10 +39,32 @@ class ExprWriter extends WriterImpl {
             case TIf(econd, eif, eelse): writeIfStmt(expr, econd, eif, eelse);
             case TBinop(op, left, right): writeBinop(expr, op, left, right);
             case TReturn(e): writeReturn(e);
+            case TObjectDecl(fields): writeObjectDecl(expr, fields);
             case TBreak: new OutputBuffer("break");
             case TContinue: new OutputBuffer("continue");
             case _: new OutputBuffer();
         }
+    }
+
+    public function writeObjectDecl(expr: HxbTypedExpr, fields: Array<HxbTObjectField>): OutputBuffer {
+        var buf = new OutputBuffer();
+        buf.addBufferInline(writer.types.writeHxbType(expr.t));
+        buf.addInline('{ ');
+
+        for (i in 0...fields.length) {
+            var field = fields[i];
+
+            buf.addInline('${StringConversions.nameToFieldName(field.name)}: ');
+            buf.addBufferInline(writeExpr(field.expr));
+
+            if (i < fields.length - 1) {
+                buf.addInline(', ');
+            }
+        }
+
+        buf.addInline(' }');
+
+        return buf;
     }
 
     public function writeFunction(expr: HxbTypedExpr, func: HxbTFunc): OutputBuffer {
@@ -269,7 +293,7 @@ class ExprWriter extends WriterImpl {
         var estr = writeExpr(e);
         var str = switch fa {
             case FInstance(c, params, cf): '${estr}.${cf.name}';
-            case FStatic(c, cf):  StringConversions.typePathFieldName(cf.name, c);
+            case FStatic(c, cf):  StringConversions.typePathStaticFieldName(cf.name, c);
             case FAnon(cf): '${estr}.${cf.name}';
             case FClosureInstance(c, params, cf): '${estr}.${cf.name}';
             case FClosureAnon(cf): '${estr}.${cf.name}';

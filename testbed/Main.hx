@@ -19,6 +19,8 @@ class Main {
         Sys.println(obj.nest);
         Sys.println(obj.nest.int_nested);
         Sys.println(obj.nest.bool_nested);
+
+        var x = 3 + "Hello";
 //
 //        var as_dyn: Dynamic = obj;
 //        Sys.println(obj);

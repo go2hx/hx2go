@@ -4,4 +4,5 @@ package go.fmt;
 extern class Fmt {
     static function println(...v: Dynamic): Void;
     static function print(...v: Dynamic): Void;
+    static function sprintf(template: String, ...params: Dynamic): String;
 }

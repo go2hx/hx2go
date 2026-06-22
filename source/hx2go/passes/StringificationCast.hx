@@ -20,14 +20,17 @@ class StringificationCast extends CompilerPass {
     }
 
     public function execute(expr: HxbTypedExpr, type: HxbModuleType): Void {
-        context.defineImport(type, "fmt");
-
-        expr.expr = switch expr.expr {
+        var o = switch expr.expr {
             case TCast(e, _):
-                ExprHelper.createUntyped('fmt.Sprintf("%v", {0})', [e]).expr;
+                ExprHelper.createCallStatic(context, { pack: [], name: 'Std', moduleName: 'Std' }, 'string', [e]);
 
-            case _: expr.expr;
+            case _: expr;
         }
+
+        expr.expr = o.expr;
+        expr.t = o.t;
+
+        context.submitNode(expr, true);
     }
 
 }

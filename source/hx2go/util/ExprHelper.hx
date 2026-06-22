@@ -5,6 +5,8 @@ import hx2go.hxb.Typed.HxbTypedExprDef;
 import haxe.runtime.Copy;
 import hx2go.hxb.HxbType;
 import hx2go.hxb.Typed.HxbModuleTypeRef;
+import hx2go.hxb.TypePath;
+import hx2go.hxb.Typed.HxbFieldAccess;
 
 class ExprHelper {
 
@@ -24,6 +26,45 @@ class ExprHelper {
         return new HxbTypedExpr(
             TCast(Copy.copy(expr), null),
             type,
+            null
+        );
+    }
+
+    public static function createCallStatic(context: Context, type: TypePath, typeField: String, params: Array<HxbTypedExpr>): HxbTypedExpr {
+        var mod = context.resolve(type);
+        if (mod == null) {
+            throw 'could not resolve static call on $type as module was not found';
+        }
+
+        var field = switch mod {
+            case MClass(cls): cls.statics.filter(f -> f.name == typeField)[0];
+            case _:
+                throw 'static call on unsupported module type $mod';
+        }
+
+        if (field == null) {
+            throw 'field $typeField not found on $mod';
+        }
+
+        var fun = switch field.type {
+            case TFun(params, ret): { params: params, ret: ret };
+            case _: throw '$field on $mod is not a function';
+        }
+
+        return new HxbTypedExpr(
+            TCall(new HxbTypedExpr(
+                TField(
+                    new HxbTypedExpr(
+                        TTypeExpr(MTClass(type)),
+                        null,
+                        null
+                    ),
+                    FStatic(type, { owner: type, name: typeField, kind: FRStatic, depth: 0 })
+                ),
+                null,
+                null
+            ), params),
+            fun.ret,
             null
         );
     }

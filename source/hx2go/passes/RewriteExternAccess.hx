@@ -12,6 +12,8 @@ import hx2go.util.ExprHelper;
 import hx2go.util.StringConversions;
 import hx2go.hxb.Ast.HxbObjectField;
 import hx2go.util.ObjectFieldHelper;
+import hx2go.hxb.Typed.HxbTypedExprDef;
+import hx2go.hxb.Ast.HxbExprDef;
 
 private enum ExternKind {
     ExNone;
@@ -34,9 +36,24 @@ class RewriteExternAccess extends CompilerPass {
                             return { kind: ExNone };
                         }
 
+                        var name = ref.name;
+                        var info = cls.statics.concat(cls.fields).filter(x -> x.name == ref.name)[0];
+
+                        for (fm in info.meta) {
+                            switch fm.name {
+                                case ":native":
+                                    name = switch fm.params[0].expr {
+                                        case EConst(CString(s, _)): s;
+                                        case _: name;
+                                    }
+
+                                case _: null;
+                            }
+                        }
+
                         for (m in cls.meta) {
                             switch m.name {
-                                case ":go.Type": return { kind: ExModule, options: m.params[0], left: left, right: ref.name };
+                                case ":go.Type": return { kind: ExModule, options: m.params[0], left: left, right: name };
                                 case _: null;
                             }
                         }

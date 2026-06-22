@@ -7,8 +7,18 @@ import hx2go.util.StringConversions;
 import hx2go.hxb.HxbType;
 import hx2go.hxb.flags.HxbClassFieldFlag;
 import hx2go.hxb.flags.HxbClassFlag;
+import hx2go.hxb.Typed.HxbTypedExpr;
+import hx2go.preprocessor.Preprocessor;
+import hx2go.preprocessor.Preprocessor.Preprocessor.run;
 
 class ClassWriter extends WriterImpl {
+
+    public function ensureBody(expr: HxbTypedExpr): HxbTypedExpr {
+        return switch expr.expr {
+            case TBlock(_): expr;
+            case _: new HxbTypedExpr(TBlock([ expr ]), null, null);
+        }
+    }
 
     public function writeClass(cls: HxbClass): OutputBuffer {
         var buf = new OutputBuffer();
@@ -94,7 +104,27 @@ class ClassWriter extends WriterImpl {
     }
 
     public function writeStaticClassVar(field: HxbClassField, read: HxbVarAccess, write: HxbVarAccess, cls: HxbClass): OutputBuffer {
-        return new OutputBuffer();
+        var buf = new OutputBuffer();
+
+        if (field.flags & HxbClassFieldFlag.CfExtern != 0 || cls.flags & HxbClassFlag.CExtern != 0 || field.kind.match(KVar(AccCall, _)) || field.kind.match(KVar(_, AccCall))) {
+            return buf;
+        }
+
+        buf.add("");
+        buf.addInline('var ${StringConversions.typePathStaticFieldName(field.name, cls.path)} ${writer.types.writeHxbType(field.type)}');
+
+        if (field.expr?.expr != null) {
+            trace(field.expr.expr);
+            var initName = 'Hx_Init_${StringConversions.typePathStaticFieldName(field.name, cls.path)}';
+            var initExpr = ensureBody(new HxbTypedExpr(TReturn(field.expr.expr), null, null));
+            Preprocessor.run(initExpr, {}, writer.context); // TODO: bit hacky, will do for now.
+
+            buf.add(' = ${initName}()');
+            buf.addInline('func ${initName}() ${writer.types.writeHxbType(field.type)} ');
+            buf.addBuffer(writer.exprs.writeExpr(initExpr));
+        } else buf.add("");
+
+        return buf;
     }
 
     public function writeMemberClassFunction(field: HxbClassField, kind: HxbMethodKind, cls: HxbClass): OutputBuffer {

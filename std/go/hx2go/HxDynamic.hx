@@ -116,7 +116,7 @@ class HxDynamic {
             return name;
         }
 
-        return Strings.toUpper(Syntax.code("{0}[:1]", name)) + Syntax.code("{0}[1:]", name);
+        return 'Hx_Field_$name';
     }
 
     public static function isNull(x: Dynamic): Bool {

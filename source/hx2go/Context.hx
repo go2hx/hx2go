@@ -18,6 +18,7 @@ import hx2go.hxb.HxbArchive;
 import hx2go.hxb.ModuleRef;
 import hx2go.hxb.flags.HxbClassFlag;
 import haxe.CallStack;
+import hx2go.hxb.HxbClassField;
 
 class Context {
 
@@ -53,7 +54,9 @@ class Context {
             new hx2go.passes.StringificationCast(this),
             new hx2go.passes.RewriteExternAccess(this),
             new hx2go.passes.RewriteAnonAccess(this),
+            new hx2go.passes.RewriteDynamicAccess(this),
             new hx2go.passes.RewriteSliceCreation(this),
+            new hx2go.passes.RewriteStringLength(this),
             new hx2go.passes.RewriteSyntaxCode(this),
             new hx2go.passes.RewriteSyntaxDefer(this),
             new hx2go.passes.RewriteSyntaxGo(this)
@@ -290,26 +293,26 @@ class Context {
     }
 
     private function transformType(type: HxbModuleType): Void {
-        var roots: Array<HxbTypedExpr> = [];
+        var roots: Array<HxbClassField> = [];
 
         switch type {
             case MClass(def):
-                roots = roots.concat(def.fields.map(f -> f.expr?.expr).filter(f -> f != null));
-                roots = roots.concat(def.statics.map(f -> f.expr?.expr).filter(f -> f != null));
+                roots = roots.concat(def.fields);
+                roots = roots.concat(def.statics);
 
                 if (def.constructor?.expr != null) {
-                    roots.push(def.constructor.expr?.expr);
+                    roots.push(def.constructor);
                 }
 
             case _: null;
         }
 
-        for (e in roots) {
-            Preprocessor.run(e, {}, this);
+        for (f in roots.filter(f -> f.kind.match(KMethod(_)) && f.expr?.expr != null)) {
+            Preprocessor.run(f.expr.expr, {}, this);
         }
 
-        for (e in roots) {
-            if (e == null) continue;
+        for (f in roots) {
+            if (f.expr?.expr == null) continue;
 
             var frame = new ContextFrame(passes, type);
             contextStack.push(frame);
@@ -325,7 +328,7 @@ class Context {
                 TypedExprTools.iter(node, match);
             };
 
-            match(e);
+            match(f.expr.expr);
 
             for (i in 0...frame.passes.length) {
                 frame.currentPassIndex = i;

@@ -1,6 +1,7 @@
 import go.Slice;
 import go.fmt.Fmt;
 import go.hx2go.HxDynamic;
+
 class Main {
 
     public static function main() {
@@ -25,13 +26,12 @@ class Main {
 
         var as_dyn: Dynamic = obj;
         Sys.println(as_dyn);
-        Sys.println(HxDynamic.getField(as_dyn, 'int'));
-//        Sys.println(as_dyn.int);
-//        Sys.println(as_dyn.string);
-//        Sys.println(as_dyn.bool);
-//        Sys.println(as_dyn.nest);
-//        Sys.println(as_dyn.nest.int_nested);
-//        Sys.println(as_dyn.nest.bool_nested);
+        Sys.println(as_dyn.int);
+        Sys.println(as_dyn.string);
+        Sys.println(as_dyn.bool);
+        Sys.println(as_dyn.nest);
+        Sys.println(as_dyn.nest.int_nested);
+        Sys.println(as_dyn.nest.bool_nested);
     }
 
 }

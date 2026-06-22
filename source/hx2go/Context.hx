@@ -49,13 +49,19 @@ class Context {
         return [
             new hx2go.passes.TypeNormaliserCall(this),
             new hx2go.passes.TypeNormaliserBinop(this),
+            new hx2go.passes.RewriteThrow(this),
             new hx2go.passes.StringificationCast(this),
             new hx2go.passes.RewriteExternAccess(this),
             new hx2go.passes.RewriteAnonAccess(this),
+            new hx2go.passes.RewriteSliceCreation(this),
             new hx2go.passes.RewriteSyntaxCode(this),
             new hx2go.passes.RewriteSyntaxDefer(this),
             new hx2go.passes.RewriteSyntaxGo(this)
         ];
+    }
+
+    public function getWriter(): Writer {
+        return writer;
     }
 
     public function buildType(t: HxbModuleType, ref: ModuleRef): Void {

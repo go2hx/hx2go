@@ -22,7 +22,7 @@ class RewriteExternAccess extends CompilerPass {
 
     private function getExternInfo(expr: HxbTypedExpr): { kind: ExternKind, ?options: HxbExpr, ?left: HxbTypedExpr, ?right: String } {
         return switch expr.expr {
-            case TField(left, FStatic(tp, ref)): {
+            case TField(left, FStatic(tp, ref) | FInstance(tp, _, ref)): {
                 var mt = context.resolve(tp);
                 if (mt == null) {
                     return { kind: ExNone };
@@ -87,7 +87,11 @@ class RewriteExternAccess extends CompilerPass {
                     fieldName = StringConversions.toPascalCase(fieldName);
                 }
 
-                expr.expr = ExprHelper.createUntyped((topLevel ? '' : '$typeName.') + fieldName, []).expr;
+                expr.expr = switch expr.expr {
+                    case TField(_, FStatic(_)): ExprHelper.createUntyped((topLevel ? '' : '$typeName.') + fieldName, []).expr;
+                    case TField(e, FInstance(_)): ExprHelper.createUntyped((topLevel ? '' : '{0}.') + fieldName, [e]).expr;
+                    case _: expr.expr;
+                }
             }
 
             case _: null;

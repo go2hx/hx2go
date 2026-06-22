@@ -1,3 +1,6 @@
+import go.Slice;
+import go.fmt.Fmt;
+import go.hx2go.HxDynamic;
 class Main {
 
     public static function main() {
@@ -20,10 +23,9 @@ class Main {
         Sys.println(obj.nest.int_nested);
         Sys.println(obj.nest.bool_nested);
 
-        var x = 3 + "Hello";
-//
-//        var as_dyn: Dynamic = obj;
-//        Sys.println(obj);
+        var as_dyn: Dynamic = obj;
+        Sys.println(as_dyn);
+        Sys.println(HxDynamic.getField(as_dyn, 'int'));
 //        Sys.println(as_dyn.int);
 //        Sys.println(as_dyn.string);
 //        Sys.println(as_dyn.bool);

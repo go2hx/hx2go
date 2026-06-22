@@ -97,6 +97,7 @@ class Semantics {
         }
     }
 
+    // TODO: check purity status for TCall
     public static function hasSideEffects(e: HxbTypedExpr): Bool {
         return switch e.expr {
             case TConst(_) | TLocal(_) | TTypeExpr(_) | TIdent(_): false;

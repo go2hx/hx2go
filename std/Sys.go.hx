@@ -4,11 +4,11 @@ import go.time.Time;
 class Sys {
 
     public static function println(v: Dynamic): Void {
-        Fmt.println(v);
+        Fmt.println(Std.string(v));
     }
 
     public static function print(v: Dynamic): Void {
-        Fmt.print(v);
+        Fmt.print(Std.string(v));
     }
 
     public static function sleep(seconds: Float): Void {

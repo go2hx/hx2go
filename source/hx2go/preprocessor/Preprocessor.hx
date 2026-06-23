@@ -82,7 +82,19 @@ class Preprocessor {
         }
 
         switch expr.expr {
-            case TBinop(OpAssign | OpAssignOp(_), _, _): null;
+            case TBinop(OpAssign, _, _):
+                null;
+
+            case TBinop(OpAssignOp(op), left, right):
+                expr.expr = TBinop(
+                    OpAssign,
+                    left,
+                    new HxbTypedExpr(TBinop(
+                        op,
+                        left,
+                        right
+                    ), expr.t, null)
+                );
 
             case TBlock(_): {
                 var local = scope.copy();

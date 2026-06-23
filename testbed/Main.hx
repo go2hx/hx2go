@@ -8,6 +8,8 @@ class Main {
         var sum = i + i_dyn;
         var mut = sum * i_dyn;
 
+        i_dyn *= mut;
+
         Fmt.println(i, i_dyn, sum, mut);
     }
 

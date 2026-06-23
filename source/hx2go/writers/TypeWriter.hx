@@ -123,6 +123,7 @@ class TypeWriter extends WriterImpl {
             case TFloat: "float64";
             case TBool: "bool";
             case TString: "string";
+            case TAbstract({ pack: [], name: 'Null' }, params): '${writeHxbType(params[0])}'; // TODO: null types
             case TInst({ pack: [], name: 'Array' }, params): '*[]${writeHxbType(params[0])}';
             case TAbstract({ pack: ['go'], name: 'Slice' }, params): '[]${writeHxbType(params[0])}';
             case TAnon(anon): 'struct { ${anon.fields.map(f -> '${StringConversions.nameToFieldName(f.name)} ${writeHxbType(f.type)}').join('; ') } }'; // TODO: anon.stauts, aka openness?

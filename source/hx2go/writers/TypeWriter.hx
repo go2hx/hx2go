@@ -70,7 +70,6 @@ class TypeWriter extends WriterImpl {
             case { name: "Float", pack: [] } | { name: "Float64", pack: ['go'] }: "float64";
             case { name: "Bool", pack: [] }: "bool";
             case { name: "Single", pack: [] } | { name: "Float32", pack: ['go'] }: "float32";
-            case { name: "Null", pack: [] }: "any"; // TODO: nullable types
             case { name: "String", pack: [] }: "string";
             case _: null;
         }
@@ -135,7 +134,7 @@ class TypeWriter extends WriterImpl {
             case TFloat: "float64";
             case TBool: "bool";
             case TString: "string";
-            case TAbstract({ pack: [], name: 'Null' }, params): '${writeHxbType(params[0])}'; // TODO: null types
+            case TAbstract({ pack: [], name: 'Null' }, params): 'struct { Value ${writeHxbType(params[0])}; Valid bool }'; // TODO: null types
             case TInst({ pack: [], name: 'Array' }, params): '*[]${writeHxbType(params[0])}';
             case TAbstract({ pack: ['go'], name: 'Slice' }, params): '[]${writeHxbType(params[0])}';
             case TAnon(anon): 'struct { ${anon.fields.map(f -> '${StringConversions.nameToFieldName(f.name)} ${writeHxbType(f.type)}').join('; ') } }'; // TODO: anon.stauts, aka openness?

@@ -32,6 +32,7 @@ class TypeNormaliserBinop extends CompilerPass {
             return;
         }
 
+        // NOTE: this also handles OpAssign, since the resulting type of the assign expr always equals the left side, only RHS will be casted if needed.
         if (!TypeHelper.compare(left.t, expr.t)) {
             var o = ExprHelper.createCast(left, expr.t);
             left.expr = o.expr;

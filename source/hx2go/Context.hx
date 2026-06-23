@@ -50,8 +50,10 @@ class Context {
         return [
             new hx2go.passes.TypeNormaliserCall(this),
             new hx2go.passes.TypeNormaliserBinop(this),
+            new hx2go.passes.TypeNormaliserVar(this),
+            new hx2go.passes.CastString(this),
+            new hx2go.passes.CastClosure(this),
             new hx2go.passes.RewriteThrow(this),
-            new hx2go.passes.StringificationCast(this),
             new hx2go.passes.RewriteExternAccess(this),
             new hx2go.passes.RewriteAnonAccess(this),
             new hx2go.passes.RewriteDynamicAccess(this),

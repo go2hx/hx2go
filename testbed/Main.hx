@@ -77,14 +77,23 @@ class Main {
         Sys.println(count_b());
         Sys.println(count_b());
 
-        var f_sub = (a: Float, b: Float) -> {
+        var x: Float = 3;
+        x = 14;
+
+        var fff_sub = (a: Float, b: Float) -> {
             return a - b;
         }
 
-        var i_sub: (Int, Int) -> Float = f_sub;
+        var iif_sub: (Int, Int) -> Float = fff_sub;
 
-        Sys.println(f_sub(10.8, 0.7));
-        Sys.println(i_sub(10, 1));
+        var iii_sub = (a: Int, b: Int) -> {
+            return a + b;
+        }
+
+        iif_sub = iii_sub;
+
+        Sys.println(fff_sub(10.8, 0.7));
+        Sys.println(iif_sub(10, 1));
 
     }
 

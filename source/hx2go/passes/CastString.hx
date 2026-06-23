@@ -6,7 +6,7 @@ import hx2go.hxb.Typed.HxbTypedExprDef;
 import hx2go.hxb.HxbType;
 import hx2go.util.ExprHelper;
 
-class StringificationCast extends CompilerPass {
+class CastString extends CompilerPass {
 
     public function match(expr: HxbTypedExpr): Bool {
         return switch [expr.expr, expr.t] {

@@ -19,22 +19,27 @@ class CastDynamic extends CompilerPass {
         }
     }
 
+    public function makeDynamicCall(expr: HxbTypedExpr, inner: HxbTypedExpr, call: String): HxbTypedExprDef {
+        return ExprHelper.createCast(
+            ExprHelper.createCallStatic(
+                context,
+                {
+                    name: 'HxDynamic',
+                    moduleName: 'HxDynamic',
+                    pack: ['go', 'hx2go']
+                },
+                call,
+                [inner]
+            )
+            , expr.t).expr;
+    }
+
     public function execute(expr: HxbTypedExpr, type: HxbModuleType): Void {
         expr.expr = switch expr.expr {
-            case TCast(e, _) if (Semantics.isIntegerType(expr.t)):
-                ExprHelper.createCast(
-                    ExprHelper.createCallStatic(
-                        context,
-                        {
-                            name: 'HxDynamic',
-                            moduleName: 'HxDynamic',
-                            pack: ['go', 'hx2go']
-                        },
-                        'valueToInt',
-                        [e]
-                    )
-                , expr.t).expr;
-
+            case TCast(e, _) if (Semantics.isIntegerType(expr.t)): makeDynamicCall(expr, e, 'toInt');
+            case TCast(e, _) if (Semantics.isFloatType(expr.t)): makeDynamicCall(expr, e, 'toFloat');
+            case TCast(e, _) if (Semantics.isBoolType(expr.t)): makeDynamicCall(expr, e, 'toBool');
+            case TCast(e, _) if (Semantics.isStringType(expr.t)): makeDynamicCall(expr, e, 'toString');
             case _: expr.expr;
         }
     }

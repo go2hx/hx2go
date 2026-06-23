@@ -18,7 +18,7 @@ extern class Go {
    @:pure static function int64(x: Dynamic): Int64;
    @:pure static function float32(x: Dynamic): Float32;
    @:pure static function float64(x: Dynamic): Float64;
-   static function panic(v: Any): Void;
+   static function panic(v: Dynamic): Void;
    @:pure static function len<T>(v: T): GoInt;
    static function append<T>(s: Slice<T>, v: haxe.Rest<T>): Slice<T>;
    static function copy<T>(dst: Slice<T>, src: Slice<T>): GoInt;

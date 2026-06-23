@@ -88,7 +88,7 @@ class Preprocessor {
             case TBinop(OpAssignOp(op), left, right):
                 expr.expr = TBinop(
                     OpAssign,
-                    left,
+                    Copy.copy(left),
                     new HxbTypedExpr(TBinop(
                         op,
                         left,

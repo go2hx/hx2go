@@ -41,10 +41,53 @@ class ExprWriter extends WriterImpl {
             case TBinop(op, left, right): writeBinop(expr, op, left, right);
             case TReturn(e): writeReturn(e);
             case TObjectDecl(fields): writeObjectDecl(expr, fields);
+            case TArrayDecl(elements): writeArrayDecl(expr, elements);
+            case TArray(e, idx): writeArrayAccess(expr, e, idx);
             case TBreak: new OutputBuffer("break");
             case TContinue: new OutputBuffer("continue");
             case _: new OutputBuffer();
         }
+    }
+
+    public function writeArrayDecl(expr: HxbTypedExpr, elements: Array<HxbTypedExpr>): OutputBuffer {
+        var buf = new OutputBuffer();
+
+        buf.addInline("&([]");
+        buf.addBufferInline(switch expr.t {
+            case TInst(_, params): writer.types.writeHxbType(params[0]);
+            case _: throw "type is not array type for arrayDecl?";
+        });
+
+        if (elements.length == 0) buf.addInline('{}');
+        else {
+            buf.addInline('{ ');
+
+            for (idx in 0...elements.length) {
+                buf.addBufferInline(writeExpr(elements[idx]));
+                if (idx < elements.length - 1) {
+                    buf.addInline(', ');
+                }
+            }
+
+            buf.addInline(' }');
+        }
+
+        buf.addInline(')');
+
+        return buf;
+    }
+
+    public function writeArrayAccess(expr: HxbTypedExpr, e: HxbTypedExpr, eidx: HxbTypedExpr): OutputBuffer {
+        var buf = new OutputBuffer();
+
+        buf.addInline('(*');
+        buf.addBufferInline(writeExpr(e));
+        buf.addInline(')');
+        buf.addInline('[');
+        buf.addBufferInline(writeExpr(eidx));
+        buf.addInline(']');
+
+        return buf;
     }
 
     public function writeObjectDecl(expr: HxbTypedExpr, fields: Array<HxbTObjectField>): OutputBuffer {
@@ -115,6 +158,10 @@ class ExprWriter extends WriterImpl {
 
     public function writeCast(expr: HxbTypedExpr, e: HxbTypedExpr, ref: HxbModuleTypeRef): OutputBuffer {
         var buf = new OutputBuffer();
+
+        if (e.t == null) {
+            return writeExpr(e);
+        }
 
         switch e.t {
             case TDynamic(_) | TDynamicAny:

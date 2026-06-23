@@ -61,6 +61,7 @@ class Context {
             new hx2go.passes.FieldAccessDynamic(this),
             new hx2go.passes.RewriteSliceCreation(this),
             new hx2go.passes.RewriteStringLength(this),
+            new hx2go.passes.RewriteArrayLength(this),
             new hx2go.passes.RewriteSyntaxCode(this),
             new hx2go.passes.RewriteSyntaxDefer(this),
             new hx2go.passes.RewriteSyntaxGo(this)
@@ -244,6 +245,10 @@ class Context {
         var startIndex = frame.currentPassIndex < 0 ? 0 : frame.currentPassIndex;
 
         var enqueue = (node: HxbTypedExpr) -> {
+            if (node?.expr == null) {
+                return;
+            }
+
             for (i in startIndex...frame.passes.length) {
                 var p = frame.passes[i];
                 if (p.match(node)) {

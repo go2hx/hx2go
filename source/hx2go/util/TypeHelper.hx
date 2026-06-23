@@ -27,6 +27,10 @@ class TypeHelper {
     }
 
     public static function compare(a: HxbType, b: HxbType): Bool {
+        if (a == null || b == null) {
+            return false;
+        }
+
         return switch [a, b] {
             case [TMono(i1), TMono(i2)]:
                 i1 == i2;

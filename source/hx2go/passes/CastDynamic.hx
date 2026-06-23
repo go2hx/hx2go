@@ -13,6 +13,10 @@ import hx2go.preprocessor.Semantics;
 class CastDynamic extends CompilerPass {
 
     public function match(expr: HxbTypedExpr): Bool {
+        if (expr.t == null) {
+            return false;
+        }
+
         return switch expr.expr {
             case TCast({ t: TDynamicAny | TDynamic(_) }, _): true;
             case _: false;

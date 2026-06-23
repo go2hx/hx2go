@@ -111,6 +111,8 @@ class TypeWriter extends WriterImpl {
     }
 
     public function writeHxbType(type: HxbType): OutputBuffer {
+        trace(type);
+
         if (type == null) {
             return new OutputBuffer("any");
         }
@@ -121,6 +123,7 @@ class TypeWriter extends WriterImpl {
             case TFloat: "float64";
             case TBool: "bool";
             case TString: "string";
+            case TInst({ pack: [], name: 'Array' }, params): '*[]${writeHxbType(params[0])}';
             case TAbstract({ pack: ['go'], name: 'Slice' }, params): '[]${writeHxbType(params[0])}';
             case TAnon(anon): 'struct { ${anon.fields.map(f -> '${StringConversions.nameToFieldName(f.name)} ${writeHxbType(f.type)}').join('; ') } }'; // TODO: anon.stauts, aka openness?
             case TAbstract(tp, _) | TInst(tp, _) | TType(tp, _) | TEnum(tp, _): writeModuleType(tp);

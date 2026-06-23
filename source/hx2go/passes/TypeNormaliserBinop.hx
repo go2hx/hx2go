@@ -19,11 +19,13 @@ class TypeNormaliserBinop extends CompilerPass {
     public function execute(expr: HxbTypedExpr, type: HxbModuleType): Void {
         var left: HxbTypedExpr = null;
         var right: HxbTypedExpr = null;
+        var op: HxbBinop = null;
 
         switch expr.expr {
-            case TBinop(_, b_left, b_right):
+            case TBinop(b_op, b_left, b_right):
                 left = b_left;
                 right = b_right;
+                op = b_op;
 
             case _: null;
         }
@@ -32,14 +34,14 @@ class TypeNormaliserBinop extends CompilerPass {
             return;
         }
 
-        // NOTE: this also handles OpAssign, since the resulting type of the assign expr always equals the left side, only RHS will be casted if needed.
-        if (!TypeHelper.compare(left.t, expr.t)) {
+        if (!TypeHelper.compare(left.t, expr.t) && op != OpAssign) {
             var o = ExprHelper.createCast(left, expr.t);
             left.expr = o.expr;
             left.t = o.t;
             context.submitNode(left, true);
         }
 
+        // NOTE: this also handles OpAssign, since the resulting type of the assign expr always equals the left side, only RHS will be casted if needed.
         if (!TypeHelper.compare(right.t, expr.t)) {
             var o = ExprHelper.createCast(right, expr.t);
             right.expr = o.expr;

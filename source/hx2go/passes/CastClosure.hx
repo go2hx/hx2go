@@ -12,6 +12,10 @@ import hx2go.util.TypeHelper;
 class CastClosure extends CompilerPass {
 
     public function match(expr: HxbTypedExpr): Bool {
+        if (expr.t == null) {
+            return false;
+        }
+
         return switch [expr.expr, expr.t] {
             case [
                 TCast(_, _),

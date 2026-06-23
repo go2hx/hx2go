@@ -1,1 +1,2 @@
 -cp std
+--macro include('go.hx2go', true)

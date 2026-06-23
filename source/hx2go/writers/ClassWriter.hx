@@ -114,7 +114,6 @@ class ClassWriter extends WriterImpl {
         buf.addInline('var ${StringConversions.typePathStaticFieldName(field.name, cls.path)} ${writer.types.writeHxbType(field.type)}');
 
         if (field.expr?.expr != null) {
-            trace(field.expr.expr);
             var initName = 'Hx_Init_${StringConversions.typePathStaticFieldName(field.name, cls.path)}';
             var initExpr = ensureBody(new HxbTypedExpr(TReturn(field.expr.expr), null, null));
             Preprocessor.run(initExpr, {}, writer.context); // TODO: bit hacky, will do for now.

@@ -13,7 +13,7 @@ import hx2go.util.StringConversions;
 import hx2go.hxb.Ast.HxbObjectField;
 import hx2go.util.ObjectFieldHelper;
 
-class RewriteAnonAccess extends CompilerPass {
+class FieldAccessAnon extends CompilerPass {
 
     public function match(expr: HxbTypedExpr): Bool {
         return switch expr.expr {

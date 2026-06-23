@@ -20,7 +20,7 @@ private enum ExternKind {
     ExModule;
 }
 
-class RewriteExternAccess extends CompilerPass {
+class FieldAccessExtern extends CompilerPass {
 
     private function getExternInfo(expr: HxbTypedExpr): { kind: ExternKind, ?options: HxbExpr, ?left: HxbTypedExpr, ?right: String } {
         return switch expr.expr {

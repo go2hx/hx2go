@@ -49,9 +49,9 @@ class Context {
     private function createPasses(): Array<ICompilerPass> {
         return [
             new hx2go.passes.TypeNormaliserCall(this),
+            new hx2go.passes.RewriteDynamicBinop(this),
             new hx2go.passes.TypeNormaliserBinop(this),
             new hx2go.passes.TypeNormaliserVar(this),
-            new hx2go.passes.RewriteDynamicBinop(this),
             new hx2go.passes.CastClosure(this),
             new hx2go.passes.CastString(this),
             new hx2go.passes.CastDynamic(this),

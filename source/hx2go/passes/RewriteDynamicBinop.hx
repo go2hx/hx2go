@@ -67,7 +67,7 @@ class RewriteDynamicBinop extends CompilerPass {
                 }
 
                 if (!right.t.match(TDynamic(_) | TDynamicAny)) {
-                    var o = ExprHelper.createCast(left, TDynamicAny);
+                    var o = ExprHelper.createCast(right, TDynamicAny);
                     right.expr = o.expr;
                     right.t = o.t;
                 }

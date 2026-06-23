@@ -52,6 +52,8 @@ class Context {
             new hx2go.passes.RewriteDynamicBinop(this),
             new hx2go.passes.NullableCompare(this),
             new hx2go.passes.NullableConst(this),
+            new hx2go.passes.NullableField(this),
+            new hx2go.passes.NullableIndex(this),
             new hx2go.passes.TypeNormaliserBinop(this),
             new hx2go.passes.TypeNormaliserVar(this),
             new hx2go.passes.CastClosure(this),

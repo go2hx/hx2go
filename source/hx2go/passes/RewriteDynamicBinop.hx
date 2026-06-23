@@ -64,12 +64,14 @@ class RewriteDynamicBinop extends CompilerPass {
                     var o = ExprHelper.createCast(left, TDynamicAny);
                     left.expr = o.expr;
                     left.t = o.t;
+                    context.submitNode(left, true);
                 }
 
                 if (!right.t.match(TDynamic(_) | TDynamicAny)) {
                     var o = ExprHelper.createCast(right, TDynamicAny);
                     right.expr = o.expr;
                     right.t = o.t;
+                    context.submitNode(right, true);
                 }
 
                 var opName = toOperationFunction(op);
@@ -77,12 +79,11 @@ class RewriteDynamicBinop extends CompilerPass {
 
                 if (!expr.t.match(TDynamic(_) | TDynamicAny)) {
                     o = ExprHelper.createCast(o, expr.t);
+                    context.submitNode(o, true);
                 }
 
                 expr.expr = o.expr;
                 expr.t = o.t;
-
-                context.submitNode(expr, true);
             }
 
             case _: null;

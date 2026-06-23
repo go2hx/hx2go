@@ -30,7 +30,6 @@ class FieldAccessDynamic extends CompilerPass {
 
         expr.expr = o.expr;
         expr.t = o.t;
-        context.submitNode(o);
     }
 
 }

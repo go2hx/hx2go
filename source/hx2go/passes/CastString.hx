@@ -33,8 +33,6 @@ class CastString extends CompilerPass {
 
         expr.expr = o.expr;
         expr.t = o.t;
-
-        context.submitNode(expr, true);
     }
 
 }

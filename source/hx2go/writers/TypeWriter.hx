@@ -14,8 +14,22 @@ class TypeWriter extends WriterImpl {
     public function writeModuleTypeDecl(type: HxbModuleType): OutputBuffer {
         return switch type {
             case MClass(v): writer.classes.writeClass(v);
+            case MTypedef(t): writer.types.writeTypedef(t);
             case _: new OutputBuffer();
         }
+    }
+
+    public function writeTypedef(t: HxbTypedef): OutputBuffer {
+        var buf = new OutputBuffer();
+
+        for (m in t.meta) {
+            if (m.name == ":go.Type") return buf; // skip externs
+        }
+
+        buf.add("");
+        buf.add('type ${StringConversions.typePathTypedefName(t.path)} = ${writeHxbType(t.type)}');
+
+        return buf;
     }
 
     public function writeExternType(meta: HxbMetaEntry): String {
@@ -111,8 +125,6 @@ class TypeWriter extends WriterImpl {
     }
 
     public function writeHxbType(type: HxbType): OutputBuffer {
-        trace(type);
-
         if (type == null) {
             return new OutputBuffer("any");
         }

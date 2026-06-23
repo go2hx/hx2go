@@ -75,7 +75,7 @@ class ExprWriter extends WriterImpl {
             var returnType: HxbType = TVoid;
 
             switch expr.t {
-                case TFun(params, ret): buf.addInline('func(${params.map(p -> '${p.name} ${writer.types.writeHxbType(p.t)}').join(', ')})${ret == TVoid ? '' : ' ${writer.types.writeHxbType(ret)}'}');
+                case TFun(params, ret): buf.addInline('func(${params.map(p -> '${p.name} ${writer.types.writeHxbType(p.t)}').join(', ')}) ${ret == TVoid ? '' : ' ${writer.types.writeHxbType(ret)}'}');
                 case _: null;
             }
 

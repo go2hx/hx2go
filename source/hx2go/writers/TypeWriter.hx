@@ -124,7 +124,7 @@ class TypeWriter extends WriterImpl {
             case TAbstract({ pack: ['go'], name: 'Slice' }, params): '[]${writeHxbType(params[0])}';
             case TAnon(anon): 'struct { ${anon.fields.map(f -> '${StringConversions.nameToFieldName(f.name)} ${writeHxbType(f.type)}').join('; ') } }'; // TODO: anon.stauts, aka openness?
             case TAbstract(tp, _) | TInst(tp, _) | TType(tp, _) | TEnum(tp, _): writeModuleType(tp);
-            case TFun(params, ret): 'func(${params.map(p -> writeHxbType(p.t)).join(', ')})${ret == TVoid ? '' : ' ${writeHxbType(ret)}'}';
+            case TFun(params, ret): 'func(${params.map(p -> writeHxbType(p.t)).join(', ')}) ${ret == TVoid ? '' : ' ${writeHxbType(ret)}'}';
             case _: "any";
         });
     }

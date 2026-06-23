@@ -76,6 +76,16 @@ class Main {
         Sys.println(count_a());
         Sys.println(count_b());
         Sys.println(count_b());
+
+        var f_sub = (a: Float, b: Float) -> {
+            return a - b;
+        }
+
+        var i_sub: (Int, Int) -> Float = f_sub;
+
+        Sys.println(f_sub(10.8, 0.7));
+        Sys.println(i_sub(10, 1));
+
     }
 
 }

@@ -20,7 +20,7 @@ class CastDynamic extends CompilerPass {
     }
 
     public function makeDynamicCall(expr: HxbTypedExpr, inner: HxbTypedExpr, call: String): HxbTypedExprDef {
-        return ExprHelper.createCast(
+        return ExprHelper.createCast( // NOTE: extra cast if it is a specialized type (so not int, but int8 for example)
             ExprHelper.createCallStatic(
                 context,
                 {

@@ -65,7 +65,7 @@ class CastClosure extends CompilerPass {
                     e_call = new HxbTypedExpr(TCast(e_call, null), ret, null);
                 }
 
-                context.submitNode(e_call);
+                context.submitNode(e_call, true);
 
                 expr.expr = TFunction({
                     args: new_params.map(v -> {

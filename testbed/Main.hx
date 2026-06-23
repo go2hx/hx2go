@@ -1,11 +1,14 @@
+import go.fmt.Fmt;
+
 class Main {
 
     public static function main() {
-        var x_int: Int = 10;
-        var x_dyn: Dynamic = x_int;
-        var x_dyn_int: Int = x_dyn;
-        var x_dyn_float: Float = x_dyn;
+        var i: Int = 32;
+        var i_dyn: Dynamic = i;
+        var sum = i + i_dyn;
+        var mut = sum * i_dyn;
 
+        Fmt.println(i, i_dyn, sum, mut);
     }
 
 }

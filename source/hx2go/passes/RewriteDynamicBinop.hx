@@ -1,0 +1,92 @@
+package hx2go.passes;
+
+import hx2go.hxb.Typed.HxbTypedExpr;
+import hx2go.hxb.HxbModuleType;
+import hx2go.hxb.Typed.HxbTypedExprDef;
+import hx2go.util.ExprHelper;
+import hx2go.hxb.HxbType;
+import hx2go.hxb.Ast.HxbBinop;
+
+class RewriteDynamicBinop extends CompilerPass {
+
+    public function match(expr: HxbTypedExpr): Bool {
+        return switch expr.expr {
+            case TBinop(OpAssign, _, _): false;
+            case TBinop(_, { t: TDynamicAny | TDynamic(_) }, _) |
+                 TBinop(_, _ , { t: TDynamicAny | TDynamic(_) }): true;
+            case _: false;
+        }
+    }
+
+    function toOperationFunction(op: HxbBinop): String {
+        return switch op {
+            case OpAdd: "add";
+            case OpMult: "multiply";
+            case OpDiv: "divide";
+            case OpSub: "subtract";
+            case OpEq: "equals";
+            case OpNotEq: "nequals";
+            case OpGt: "gt";
+            case OpGte: "gtequals";
+            case OpLt: "lt";
+            case OpLte: "ltequals";
+            case OpAnd: "bitand";
+            case OpOr: "bitor";
+            case OpXor: "bitxor";
+            case OpBoolAnd: "and";
+            case OpBoolOr: "or";
+            case OpShl: "lbitshift";
+            case OpShr: "rbitshift";
+            case OpUShr: "urbitshift";
+            case OpMod: "modulo";
+            case OpAssign, OpInterval, OpArrow, OpIn, OpNullCoal: throw "Invalid promoteBinop with Dynamic (toDynamicOp)";
+            case OpAssignOp(op): toOperationFunction(op);
+        }
+    }
+
+    public function makeDynamicCall(left: HxbTypedExpr, right: HxbTypedExpr, call: String): HxbTypedExpr {
+        return ExprHelper.createCallStatic(
+            context,
+            {
+                name: 'HxDynamic',
+                moduleName: 'HxDynamic',
+                pack: ['go', 'hx2go']
+            },
+            call,
+            [left, right]
+        );
+    }
+
+    public function execute(expr: HxbTypedExpr, type: HxbModuleType): Void {
+        switch expr.expr {
+            case TBinop(op, left, right): {
+                if (!left.t.match(TDynamic(_) | TDynamicAny)) {
+                    var o = ExprHelper.createCast(left, TDynamicAny);
+                    left.expr = o.expr;
+                    left.t = o.t;
+                }
+
+                if (!right.t.match(TDynamic(_) | TDynamicAny)) {
+                    var o = ExprHelper.createCast(left, TDynamicAny);
+                    right.expr = o.expr;
+                    right.t = o.t;
+                }
+
+                var opName = toOperationFunction(op);
+                var o = makeDynamicCall(left, right, opName);
+
+                if (!expr.t.match(TDynamic(_) | TDynamicAny)) {
+                    o = ExprHelper.createCast(o, expr.t);
+                }
+
+                expr.expr = o.expr;
+                expr.t = o.t;
+
+                context.submitNode(expr, true);
+            }
+
+            case _: null;
+        }
+    }
+
+}

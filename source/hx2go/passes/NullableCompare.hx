@@ -13,8 +13,8 @@ class NullableCompare extends CompilerPass {
 
     public function match(expr: HxbTypedExpr): Bool {
         return switch expr.expr {
-            case TBinop(OpEq, { t: TAbstract({ pack: [], name: 'Null' }, _) }, _) |
-                 TBinop(OpEq, _, { t: TAbstract({ pack: [], name: 'Null' }, _) }): true;
+            case TBinop(OpEq | OpNotEq, { t: TAbstract({ pack: [], name: 'Null' }, _) }, _) |
+                 TBinop(OpEq | OpNotEq, _, { t: TAbstract({ pack: [], name: 'Null' }, _) }): true;
 
             case _: false;
         }

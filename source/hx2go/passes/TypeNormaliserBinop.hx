@@ -11,7 +11,7 @@ class TypeNormaliserBinop extends CompilerPass {
 
     public function match(expr: HxbTypedExpr): Bool {
         return switch expr.expr {
-            case TBinop(op, left, right): !TypeHelper.compare(left.t, right.t) || op == OpDiv;
+            case TBinop(op, left, right): !TypeHelper.compare(left.t, expr.t) || !TypeHelper.compare(right.t, expr.t) || op == OpDiv;
             case _: false;
         }
     }

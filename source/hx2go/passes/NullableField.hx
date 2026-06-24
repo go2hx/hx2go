@@ -20,7 +20,7 @@ class NullableField extends CompilerPass {
 
     public function match(expr: HxbTypedExpr): Bool {
         return switch expr.expr {
-            case TField({ t: TAbstract({ name: 'Null', pack: [] }, _) }, _): true;
+            case TField(e, _) if (e.t != null && e.t.match(TAbstract({ name: 'Null', pack: [] }, _))): true;
             case _: false;
         }
     }

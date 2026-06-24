@@ -1,7 +1,6 @@
 class Main {
 
     public static function main() {
-        trace("hi!");
         var x: Int = 0;
         var x_null: Null<Int> = x;
         Sys.println('x_null is null? ' + (x_null == null));
@@ -30,16 +29,28 @@ class Main {
         y_int = y_null;
         Sys.println('y value is ' + y_int);
 
-//        var z: Int = 3;
-//        var z_null: Null<Int> = z;
-//        var z_dyn: Dynamic = z_null;
-//        Sys.println('z_dyn is null? ' + (z_dyn == null));
-//
-//        var z_dyn_int: Int = z_dyn;
-//        Sys.println('z_dyn_int value ' + z_dyn_int);
-//
-//        var z_dyn_null_int: Null<Int> = z_dyn;
-//        Sys.println('z_dyn_null_int value' + z_dyn_null_int);
+        var z: Int = 3;
+        var z_null: Null<Int> = z;
+        var z_dyn: Dynamic = z_null;
+        Sys.println('z_dyn is null? ' + (z_dyn == null));
+
+        var z_dyn_int: Int = z_dyn;
+        Sys.println('z_dyn_int value ' + z_dyn_int);
+
+        var z_dyn_null_int: Null<Int> = z_dyn;
+        Sys.println('z_dyn_null_int value ' + z_dyn_null_int);
+        Sys.println('z_dyn_null_int is null? ' + (z_dyn_null_int == null));
+
+        z_null = null;
+        z_dyn = z_null;
+        Sys.println('z_dyn is null? ' + (z_dyn == null));
+
+        z_dyn_int = z_dyn;
+        Sys.println('z_dyn_int value ' + z_dyn_int);
+
+        z_dyn_null_int = z_dyn;
+        Sys.println('z_dyn_null_int value ' + z_dyn_null_int);
+        Sys.println('z_dyn_null_int is null? ' + (z_dyn_null_int == null));
     }
 
 }

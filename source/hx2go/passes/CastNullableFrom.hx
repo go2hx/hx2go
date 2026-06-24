@@ -32,9 +32,13 @@ class CastNullableFrom extends CompilerPass {
                     case _: e.t;
                 }
 
-                if (!TypeHelper.compare(type, expr.t)) {
-                    o.t = type;
+                o.t = type;
+
+                if (expr.t.match(TDynamic(_) | TDynamicAny)) {
+                    o = ExprHelper.createUntyped('(map[bool]any{true: {0}.Value, false: nil})[{0}.Valid]', [e]);
+                } else if (!TypeHelper.compare(type, expr.t)) {
                     o = ExprHelper.createCast(o, expr.t);
+                    context.submitNode(o, true);
                 }
 
                 expr.expr = o.expr;

@@ -12,7 +12,7 @@ import hx2go.hxb.HxbModuleType;
 import hx2go.hxb.tools.TypedExprTools;
 import hx2go.hxb.TypePath;
 import hx2go.util.StringConversions;
-import hx2go.preprocessor.Preprocessor;
+import hx2go.normaliser.Normaliser;
 import hx2go.hxb.Typed.HxbModuleTypeRef;
 import hx2go.hxb.HxbArchive;
 import hx2go.hxb.ModuleRef;
@@ -48,6 +48,7 @@ class Context {
 
     private function createPasses(): Array<ICompilerPass> {
         return [
+            new hx2go.passes.FieldAccessGeneric(this),
             new hx2go.passes.TypeNormaliserCall(this),
             new hx2go.passes.RewriteDynamicBinop(this),
             new hx2go.passes.NullableCompare(this),
@@ -247,6 +248,7 @@ class Context {
 
     public function submitNode(child: HxbTypedExpr, recursive: Bool = false, passOffset: Int = 0): Void {
         if (child == null || contextStack.length == 0) return;
+        prepass(child);
 
         var frame = contextStack[contextStack.length - 1];
         var startIndex = frame.currentPassIndex < 0 ? 0 : frame.currentPassIndex + passOffset;
@@ -308,6 +310,14 @@ class Context {
         }
     }
 
+    private function prepass(expr: HxbTypedExpr): Void {
+        if (expr.t != null && expr.t.match(TTypeParam(_) | TUnboundTypeParam(_))) {
+            expr.t = TDynamicAny;
+        }
+
+        TypedExprTools.iter(expr, prepass);
+    }
+
     private function transformType(type: HxbModuleType): Void {
         var roots: Array<HxbClassField> = [];
 
@@ -340,6 +350,7 @@ class Context {
                 TypedExprTools.iter(node, match);
             };
 
+            prepass(f.expr.expr);
             match(f.expr.expr);
 
             for (i in 0...frame.passes.length) {
@@ -358,7 +369,7 @@ class Context {
         }
 
         for (f in roots.filter(f -> f.kind.match(KMethod(_)) && f.expr?.expr != null)) {
-            Preprocessor.run(f.expr.expr, {}, this);
+            Normaliser.run(f.expr.expr, {}, this);
         }
     }
 

@@ -1,4 +1,4 @@
-package hx2go.preprocessor;
+package hx2go.normaliser;
 
 import hx2go.hxb.Typed.HxbTypedExpr;
 

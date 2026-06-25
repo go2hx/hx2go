@@ -36,6 +36,13 @@ class TypeNormaliserCall extends CompilerPass {
                     arg.t = o.t;
                     context.submitNode(arg, true);
                 }
+
+                if (!TypeHelper.compare(expr.t, ret)) {
+                    var o = ExprHelper.createCast(expr, ret);
+                    expr.expr = o.expr;
+                    expr.t = o.t;
+                    context.submitNode(expr, true, 1);
+                }
             };
 
             case _: null;

@@ -1,4 +1,4 @@
-package hx2go.preprocessor;
+package hx2go.normaliser;
 
 import hx2go.hxb.Typed.HxbTypedExpr;
 import hx2go.hxb.tools.TypedExprTools;
@@ -9,10 +9,10 @@ import hx2go.hxb.Typed.HxbTConstant;
 import hx2go.hxb.Ast.HxbUnop;
 import hx2go.hxb.Ast.HxbBinop;
 
-class Preprocessor {
+class Normaliser {
 
     public static function run(expr: HxbTypedExpr, scope: Scope, context: Context): Void {
-        new Preprocessor(context).processExpr(expr, scope, null);
+        new Normaliser(context).processExpr(expr, scope, null);
     }
 
     private var context: Context;

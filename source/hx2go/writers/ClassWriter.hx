@@ -8,8 +8,8 @@ import hx2go.hxb.HxbType;
 import hx2go.hxb.flags.HxbClassFieldFlag;
 import hx2go.hxb.flags.HxbClassFlag;
 import hx2go.hxb.Typed.HxbTypedExpr;
-import hx2go.preprocessor.Preprocessor;
-import hx2go.preprocessor.Preprocessor.Preprocessor.run;
+import hx2go.normaliser.Normaliser;
+import hx2go.normaliser.Normaliser.Normaliser.run;
 
 class ClassWriter extends WriterImpl {
 
@@ -116,7 +116,7 @@ class ClassWriter extends WriterImpl {
         if (field.expr?.expr != null) {
             var initName = 'Hx_Init_${StringConversions.typePathStaticFieldName(field.name, cls.path)}';
             var initExpr = ensureBody(new HxbTypedExpr(TReturn(field.expr.expr), null, null));
-            Preprocessor.run(initExpr, {}, writer.context); // TODO: bit hacky, will do for now.
+            Normaliser.run(initExpr, {}, writer.context); // TODO: bit hacky, will do for now.
 
             buf.add(' = ${initName}()');
             buf.addInline('func ${initName}() ${writer.types.writeHxbType(field.type)} ');

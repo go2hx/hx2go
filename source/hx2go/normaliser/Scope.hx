@@ -1,4 +1,4 @@
-package hx2go.preprocessor;
+package hx2go.normaliser;
 
 import hx2go.hxb.Typed.HxbTypedExpr;
 import hx2go.hxb.Typed.HxbTypedExprDef;
@@ -16,7 +16,7 @@ class Scope {
     public var variableIterations: Map<String, Int> = [];
     public var tmpId: Int = 0;
 
-    public function temp(before: HxbTypedExpr, expr: HxbTypedExpr, preprocessor: Preprocessor, scope: Scope, ancestor: Ancestor, ?explicitType: HxbType): HxbTypedExpr {
+    public function temp(before: HxbTypedExpr, expr: HxbTypedExpr, preprocessor: Normaliser, scope: Scope, ancestor: Ancestor, ?explicitType: HxbType): HxbTypedExpr {
         var varInfo: HxbVar = {
             id: -1,
             kind: VUser(TVOLocalVariable),
@@ -38,7 +38,7 @@ class Scope {
         return new HxbTypedExpr(TLocal(varInfo), explicitType ?? expr.t, expr?.pos);
     }
 
-    public function insert(before: HxbTypedExpr, expr: HxbTypedExpr, preprocessor: Preprocessor, scope: Scope, ancestor: Ancestor): Void {
+    public function insert(before: HxbTypedExpr, expr: HxbTypedExpr, preprocessor: Normaliser, scope: Scope, ancestor: Ancestor): Void {
         var stmt = ancestor;
         var parent = ancestor;
 
@@ -68,7 +68,7 @@ class Scope {
         preprocessor.processExpr(expr, parent.scope, parent);
     }
 
-    public function hoist(exprs: Array<HxbTypedExpr>, preprocessor: Preprocessor, scope: Scope, ancestor: Ancestor): HxbTypedExpr {
+    public function hoist(exprs: Array<HxbTypedExpr>, preprocessor: Normaliser, scope: Scope, ancestor: Ancestor): HxbTypedExpr {
         var last = exprs.pop();
 
         for (e in exprs) {

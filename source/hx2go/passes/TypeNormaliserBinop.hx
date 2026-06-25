@@ -4,7 +4,7 @@ import hx2go.hxb.Typed.HxbTypedExpr;
 import hx2go.hxb.HxbModuleType;
 import hx2go.util.TypeHelper;
 import hx2go.util.ExprHelper;
-import hx2go.preprocessor.Semantics;
+import hx2go.normaliser.Semantics;
 import hx2go.hxb.Ast.HxbBinop;
 
 class TypeNormaliserBinop extends CompilerPass {

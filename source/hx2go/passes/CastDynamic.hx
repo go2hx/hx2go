@@ -8,7 +8,7 @@ import hx2go.util.ExprHelper;
 import hx2go.hxb.Typed.HxbVarKind;
 import hx2go.hxb.Typed.HxbVar;
 import hx2go.util.TypeHelper;
-import hx2go.preprocessor.Semantics;
+import hx2go.normaliser.Semantics;
 
 class CastDynamic extends CompilerPass {
 

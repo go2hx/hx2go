@@ -1,4 +1,4 @@
-package hx2go.preprocessor;
+package hx2go.normaliser;
 
 import hx2go.hxb.Typed.HxbTypedExpr;
 import hx2go.hxb.tools.TypedExprTools;
@@ -112,7 +112,7 @@ class Semantics {
         };
     }
 
-    public static function ensure(parent: HxbTypedExpr, children: Array<HxbTypedExpr>, preprocessor: Preprocessor, scope: Scope, ancestor: Null<Ancestor>): Void {
+    public static function ensure(parent: HxbTypedExpr, children: Array<HxbTypedExpr>, preprocessor: Normaliser, scope: Scope, ancestor: Null<Ancestor>): Void {
         var willMutate = false;
         for (child in children) {
             if (child.expr == null) {

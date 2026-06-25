@@ -324,10 +324,6 @@ class Context {
             case _: null;
         }
 
-        for (f in roots.filter(f -> f.kind.match(KMethod(_)) && f.expr?.expr != null)) {
-            Preprocessor.run(f.expr.expr, {}, this);
-        }
-
         for (f in roots) {
             if (f.expr?.expr == null) continue;
 
@@ -360,6 +356,10 @@ class Context {
             }
 
             contextStack.pop();
+        }
+
+        for (f in roots.filter(f -> f.kind.match(KMethod(_)) && f.expr?.expr != null)) {
+            Preprocessor.run(f.expr.expr, {}, this);
         }
     }
 

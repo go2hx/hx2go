@@ -83,35 +83,34 @@ class Context {
     public function buildType(t: HxbModuleType, ref: ModuleRef): Void {
         var infos = switch t {
             case MClass(def): {
-                module: def.path.moduleDotPath(),
-                name: def.path.name
+                path: def.path
             };
 
             case MTypedef(def): {
-                module: def.path.moduleDotPath(),
-                name: def.path.name
+                path: def.path
             };
 
             case MEnum(def): {
-                module: def.path.moduleDotPath(),
-                name: def.path.name
+                path: def.path
             };
 
             case MAbstract(def): {
-                module: def.path.moduleDotPath(),
-                name: def.path.name
+                path: def.path
             };
 
             case _: return;
         }
 
-        if (!typesByModule.exists(infos.module)) {
-            typesByModule.set(infos.module, []);
+        var modulePath = ref.dotPath();
+        var typePath = infos.path.dotPath() == ref.dotPath() ? ref.dotPath() : ref.dotPath() + '.' + infos.path.name;
+
+        if (!typesByModule.exists(modulePath)) {
+            typesByModule.set(modulePath, []);
         }
 
-        typesByModule[infos.module].push({ type: t, name: infos.name, module: infos.module });
-        typeQueue.push(infos.module);
-        types.set(ref.dotPath(), t);
+        typesByModule[modulePath].push({ type: t, name: infos.path.name, module: infos.path.moduleDotPath() });
+        if (!typeQueue.contains(modulePath)) typeQueue.push(modulePath);
+        types.set(typePath, t);
 
         transformType(t);
     }
@@ -205,13 +204,13 @@ class Context {
     }
 
     public function resolve(tp: TypePath): HxbModuleType {
-        var res = archive.findModule(tp.dotPath(), "go");
-        if (res == null) {
-            return null;
+        if (types.exists(tp.dotPath())) {
+            return types[tp.dotPath()];
         }
 
-        if (types.exists(res.dotPath())) {
-            return types[res.dotPath()];
+        var res = archive.findModule(tp.moduleDotPath(), "go");
+        if (res == null) {
+            return null;
         }
 
         var mod = archive.decode(res);
@@ -219,7 +218,7 @@ class Context {
             buildType(type, res);
         }
 
-        return types[res.dotPath()];
+        return types[tp.dotPath()];
     }
 
     private function writeFile(directory: String, fileName: String, content: String): Void {

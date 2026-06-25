@@ -21,7 +21,7 @@ class CastAnon extends CompilerPass {
 
         return switch [expr.expr, expr.t] {
             case [TCast({ t: fromT}, _), toT]:
-                TypeHelper.follow(context, fromT).match(TAnon(_)) &&
+                TypeHelper.follow(context, fromT).match(TAnon(_) | TDynamicAny | TDynamic(_)) &&
                 TypeHelper.follow(context, toT).match(TAnon(_));
 
             case _: false;
@@ -38,6 +38,7 @@ class CastAnon extends CompilerPass {
 
                 var fromFields = switch TypeHelper.follow(context, fromT) {
                     case TAnon(x): x.fields;
+                    case TDynamic(_) | TDynamicAny: [];
                     case _: null;
                 }
 
@@ -66,15 +67,15 @@ class CastAnon extends CompilerPass {
 
                 for (to in toFields) {
                     var from = fromFields.filter(f -> f.name == to.name)[0];
-                    var o = new HxbTypedExpr(TField(temp_ident, FAnon(from)), from.type, null);
+                    var o = new HxbTypedExpr(TField(temp_ident, from == null ? FDynamic(to.name) : FAnon(from)), from?.type ?? TDynamicAny, null);
 
-                    if (!TypeHelper.compare(to.type, from.type)) {
+                    if (from?.type == null || !TypeHelper.compare(to.type, from.type)) {
                         o = ExprHelper.createCast(o, to.type); // NOTE: no submit since it's done later
                     }
 
                     newFields.push({
-                        name: from.name,
-                        pos: from.pos,
+                        name: to.name,
+                        pos: to.pos,
                         quotes: NoQuotes,
                         expr: o
                     });

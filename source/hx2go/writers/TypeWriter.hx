@@ -55,6 +55,7 @@ class TypeWriter extends WriterImpl {
             return "any";
         }
 
+        var tp = StringConversions.moduleTypeGetTypePath(mod);
         var builtin: Null<String> = switch type {
             case { name: "Void", pack: [] }: "void";
             case { name: "Int", pack: [] } | { name: "GoInt", pack: ['go'] }: "int";
@@ -86,7 +87,7 @@ class TypeWriter extends WriterImpl {
                     }
                 }
 
-                return StringConversions.typePathTypedefName(type);
+                return StringConversions.typePathTypedefName(tp);
             }
 
             case MClass({ meta: meta }): {
@@ -96,7 +97,7 @@ class TypeWriter extends WriterImpl {
                     }
                 }
 
-                return StringConversions.typePathClassInstanceName(type);
+                return StringConversions.typePathClassInstanceName(tp);
             }
 
             case MEnum({ meta: meta }): {
@@ -106,7 +107,7 @@ class TypeWriter extends WriterImpl {
                     }
                 }
 
-                return StringConversions.typePathEnumName(type);
+                return StringConversions.typePathEnumName(tp);
             }
 
             case MAbstract({ meta: meta }): {
@@ -116,7 +117,7 @@ class TypeWriter extends WriterImpl {
                     }
                 }
 
-                return StringConversions.typePathAbstractName(type);
+                return StringConversions.typePathAbstractName(tp);
             }
         }
 

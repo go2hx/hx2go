@@ -16,7 +16,7 @@ class TypeNormaliserCall extends CompilerPass {
         }
     }
 
-    public function execute(expr: HxbTypedExpr, type: HxbModuleType): Void {
+    public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
         switch expr.expr {
             case TCall({ t: TFun(params, ret) }, args): {
                 for (idx in 0...args.length) {

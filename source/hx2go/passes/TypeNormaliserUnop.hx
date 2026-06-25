@@ -25,7 +25,7 @@ class TypeNormaliserUnop extends CompilerPass {
         }
     }
 
-    public function execute(expr: HxbTypedExpr, type: HxbModuleType): Void {
+    public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
         switch expr.expr {
             case TUnop(_, _, e): {
                 if (!TypeHelper.compare(e.t, expr.t)) {

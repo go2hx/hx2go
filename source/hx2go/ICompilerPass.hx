@@ -5,5 +5,5 @@ import hx2go.hxb.HxbModuleType;
 
 interface ICompilerPass {
     public function match(expr: HxbTypedExpr): Bool;
-    public function execute(expr: HxbTypedExpr, type: HxbModuleType): Void;
+    public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void;
 }

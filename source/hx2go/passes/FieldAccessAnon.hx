@@ -22,7 +22,7 @@ class FieldAccessAnon extends CompilerPass {
         }
     }
 
-    public function execute(expr: HxbTypedExpr, type: HxbModuleType): Void {
+    public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
         expr.expr = switch expr.expr {
             case TField(e, FAnon(cf)): {
                 var localCf = cf.shallowCopy();

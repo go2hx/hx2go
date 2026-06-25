@@ -19,7 +19,7 @@ class NullableConst extends CompilerPass {
         }
     }
 
-    public function execute(expr: HxbTypedExpr, type: HxbModuleType): Void {
+    public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
         expr.expr = switch expr.expr {
             case TConst(TNull): ExprHelper.createUntyped('${context.getWriter().types.writeHxbType(expr.t)}{}', []).expr;
             case _: expr.expr; // this guard is required because of the comparison pass

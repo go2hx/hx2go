@@ -73,7 +73,7 @@ class FieldAccessExtern extends CompilerPass {
         return getExternInfo(expr).kind != ExNone;
     }
 
-    public function execute(expr: HxbTypedExpr, type: HxbModuleType): Void {
+    public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
         switch getExternInfo(expr) {
             case { kind: ExModule, options: { expr: EObjectDecl(options) }, right: fieldName }: {
                 var typeName = "";
@@ -93,7 +93,7 @@ class FieldAccessExtern extends CompilerPass {
 
                         case "imports":
                             for (imp in ObjectFieldHelper.readStringList(opt)) {
-                                context.defineImport(type, imp);
+                                context.defineImport(frame.type, imp);
                             }
 
                         case _: null;

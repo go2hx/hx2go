@@ -42,7 +42,7 @@ class CastDynamic extends CompilerPass {
         return o.expr;
     }
 
-    public function execute(expr: HxbTypedExpr, type: HxbModuleType): Void {
+    public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
         expr.expr = switch expr.expr {
             case TCast(e, _) if (Semantics.isIntegerType(expr.t)): makeDynamicCall(expr, e, 'toInt');
             case TCast(e, _) if (Semantics.isFloatType(expr.t)): makeDynamicCall(expr, e, 'toFloat');

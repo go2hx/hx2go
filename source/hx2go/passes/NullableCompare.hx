@@ -20,7 +20,7 @@ class NullableCompare extends CompilerPass {
         }
     }
 
-    public function execute(expr: HxbTypedExpr, type: HxbModuleType): Void {
+    public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
         var left: HxbTypedExpr = null;
         var right: HxbTypedExpr = null;
 

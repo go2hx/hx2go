@@ -16,7 +16,7 @@ class TypeNormaliserVar extends CompilerPass {
         }
     }
 
-    public function execute(expr: HxbTypedExpr, type: HxbModuleType): Void {
+    public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
         switch expr.expr {
             case TVar(v, e): {
                 if (TypeHelper.compare(v.type, e.t)) {

@@ -25,7 +25,7 @@ class NullableField extends CompilerPass {
         }
     }
 
-    public function execute(expr: HxbTypedExpr, type: HxbModuleType): Void {
+    public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
         switch expr.expr {
             case TField(e, _): {
                 var local = Copy.copy(e);

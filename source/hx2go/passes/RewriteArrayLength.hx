@@ -22,7 +22,7 @@ class RewriteArrayLength extends CompilerPass {
         }
     }
 
-    public function execute(expr: HxbTypedExpr, type: HxbModuleType): Void {
+    public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
         var o = switch expr.expr {
             case TField(e, FInstance({ name: 'Array', pack: [] }, _, { name: 'length' })): ExprHelper.createUntyped('len(*{0})', [e]);
             case _: expr;

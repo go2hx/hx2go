@@ -58,6 +58,7 @@ class Context {
             new hx2go.passes.TypeNormaliserUnop(this),
             new hx2go.passes.TypeNormaliserBinop(this),
             new hx2go.passes.TypeNormaliserVar(this),
+            new hx2go.passes.TypeNormaliserReturn(this),
             new hx2go.passes.CastAnon(this),
             new hx2go.passes.CastNullableTo(this),
             new hx2go.passes.CastNullableFrom(this),
@@ -336,7 +337,7 @@ class Context {
         for (f in roots) {
             if (f.expr?.expr == null) continue;
 
-            var frame = new ContextFrame(passes, type);
+            var frame = new ContextFrame(passes, type, f);
             contextStack.push(frame);
 
             var match: HxbTypedExpr -> Void;
@@ -360,7 +361,7 @@ class Context {
                 var queue = frame.pending[p];
                 var idx = 0;
                 while (idx < queue.length) {
-                    p.execute(queue[idx], type);
+                    p.execute(queue[idx], frame);
                     idx++;
                 }
             }

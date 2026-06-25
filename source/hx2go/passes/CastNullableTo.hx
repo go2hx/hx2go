@@ -24,7 +24,7 @@ class CastNullableTo extends CompilerPass {
         }
     }
 
-    public function execute(expr: HxbTypedExpr, type: HxbModuleType): Void {
+    public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
         var ot = switch expr.t {
             case TAbstract(_, p): p[0];
             case _: expr.t;

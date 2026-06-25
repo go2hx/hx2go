@@ -22,8 +22,8 @@ class RewriteStringLength extends CompilerPass {
         }
     }
 
-    public function execute(expr: HxbTypedExpr, type: HxbModuleType): Void {
-        context.defineImport(type, "unicode/utf8");
+    public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
+        context.defineImport(frame.type, "unicode/utf8");
 
         var o = switch expr.expr {
             case TField(e, FInstance({ name: 'String', pack: [] }, _, { name: 'length' })): ExprHelper.createUntyped('utf8.RuneCountInString({0})', [e]);

@@ -57,7 +57,7 @@ class RewriteDynamicBinop extends CompilerPass {
         );
     }
 
-    public function execute(expr: HxbTypedExpr, type: HxbModuleType): Void {
+    public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
         switch expr.expr {
             case TBinop(op, left, right): {
                 if (!left.t.match(TDynamic(_) | TDynamicAny)) {

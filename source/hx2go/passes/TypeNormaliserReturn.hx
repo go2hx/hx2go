@@ -14,25 +14,25 @@ import hx2go.hxb.Ast.HxbObjectField;
 import hx2go.util.ObjectFieldHelper;
 import hx2go.hxb.HxbType;
 import haxe.runtime.Copy;
+import hx2go.util.TypeHelper;
 
-// NOTE: identical to NullableField, but separate for clarity
-class NullableIndex extends CompilerPass {
+class TypeNormaliserReturn extends CompilerPass {
 
     public function match(expr: HxbTypedExpr): Bool {
         return switch expr.expr {
-            case TArray({ t: TAbstract({ name: 'Null', pack: [] }, _) }, _): true;
+            case TReturn(e): true;
             case _: false;
         }
     }
 
     public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
-        switch expr.expr {
-            case TArray(e, _): {
-                var local = Copy.copy(e);
-                context.submitNode(local, true);
+        switch [expr.expr, frame.field.type] {
+            case [TReturn(e), TFun(_, want)] if (e?.t != null && !TypeHelper.compare(e.t, want)):
+                var o = ExprHelper.createCast(e, want);
+                context.submitNode(o, true);
 
-                e.expr = ExprHelper.createUntyped('{0}.Value', [local]).expr;
-            }
+                expr.expr = TReturn(o);
+
             case _: null;
         }
     }

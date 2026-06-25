@@ -26,7 +26,7 @@ class CastClosure extends CompilerPass {
         }
     }
 
-    public function execute(expr: HxbTypedExpr, type: HxbModuleType): Void {
+    public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
         // old[(a, b) -> c] to new[(x, y) -> z]
         /*
         new = func ($1 x, $2 y) z {

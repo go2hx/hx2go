@@ -15,7 +15,7 @@ class RewriteSliceCreation extends CompilerPass {
         }
     }
 
-    public function execute(expr: HxbTypedExpr, type: HxbModuleType): Void {
+    public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
         var o = ExprHelper.createUntyped('${context.getWriter().types.writeHxbType(expr.t)}{}', []);
         expr.expr = o.expr;
         expr.t = o.t;

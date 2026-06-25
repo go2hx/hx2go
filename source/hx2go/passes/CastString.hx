@@ -23,7 +23,7 @@ class CastString extends CompilerPass {
         }
     }
 
-    public function execute(expr: HxbTypedExpr, type: HxbModuleType): Void {
+    public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
         var o = switch expr.expr {
             case TCast(e, _):
                 ExprHelper.createCallStatic(context, { pack: [], name: 'Std', moduleName: 'Std' }, 'string', [e]);

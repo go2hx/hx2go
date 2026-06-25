@@ -16,7 +16,7 @@ class RewriteThrow extends CompilerPass {
         }
     }
 
-    public function execute(expr: HxbTypedExpr, type: HxbModuleType): Void {
+    public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
         var o = switch expr.expr {
             case TThrow(e): ExprHelper.createCallStatic(context, { name: 'Go', moduleName: 'Go', pack: ['go'] }, 'panic', [ Copy.copy(e) ]);
             case _: expr;

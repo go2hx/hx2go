@@ -28,7 +28,7 @@ class CastAnon extends CompilerPass {
         }
     }
 
-    public function execute(expr: HxbTypedExpr, type: HxbModuleType): Void {
+    public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
         switch [expr.expr, expr.t] {
             case [TCast(e, _), toT]: {
                 var fromT = e.t;

@@ -26,6 +26,10 @@ class CastNullableFrom extends CompilerPass {
     public function execute(expr: HxbTypedExpr, type: HxbModuleType): Void {
         switch expr.expr {
             case TCast(e, _) if (!expr.t.match(TAbstract({ pack: [], name: "Null" }, _))): {
+                if (e.t == null) {
+                    return;
+                }
+
                 var o = ExprHelper.createUntyped('{0}.Value', [e]);
                 var type = switch e.t {
                     case TAbstract(_, p): p[0];

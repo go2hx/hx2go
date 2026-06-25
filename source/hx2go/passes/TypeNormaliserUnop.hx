@@ -16,7 +16,7 @@ import hx2go.hxb.HxbType;
 import haxe.runtime.Copy;
 import hx2go.util.TypeHelper;
 
-class CastUnop extends CompilerPass {
+class TypeNormaliserUnop extends CompilerPass {
 
     public function match(expr: HxbTypedExpr): Bool {
         return switch expr.expr {

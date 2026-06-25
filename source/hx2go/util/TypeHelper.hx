@@ -17,10 +17,13 @@ class TypeHelper {
                 }
 
                 switch mod {
-                    case MTypedef(info): info.type;
+                    case MTypedef(info): TypeHelper.follow(context, info.type);
                     case _: type;
                 }
             }
+
+            case TAbstract({ name: "Null", pack: [] }, p):
+                TypeHelper.follow(context, p[0]);
 
             case _: type;
         }

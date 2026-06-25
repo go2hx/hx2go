@@ -29,9 +29,13 @@ class Main {
     }
 
     public static function exec(input: String, output: String, mainClass: String): Void {
-        var arc = Hxb.loadArchive(input);
+        final start = Sys.time();
 
+        var arc = Hxb.loadArchive(input);
         generate(arc, output, mainClass);
+
+        final end = Sys.time();
+        Sys.println('hx2go took ${Std.string(Math.round((end - start) * 100000) / 100)}ms');
     }
 
     public static function generate(archive: HxbArchive, absoluteOutput: String, mainClass: String): Void {

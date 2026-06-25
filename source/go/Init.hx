@@ -77,12 +77,8 @@ class Init {
 				throw "cannot find HXB! something went wrong, perhaps the onAfterGenerate callback fired too early?";
 			}
 
-			final start = Sys.time();
 			final mainClass = Compiler.getConfiguration().mainClass;
 			hx2go.Main.exec(archiveOutput, sourceOutput, mainClass.pack.length > 0 ? '${mainClass.pack.join(".")}.${mainClass.name}' : '${mainClass.name}');
-			final end = Sys.time();
-
-			Sys.println('hx2go took ${Std.string(Math.round((end - start) * 100000) / 100)}ms');
 
 			if (!FileSystem.exists(goModOutput)) {
 				Sys.setCwd(sourceOutput);

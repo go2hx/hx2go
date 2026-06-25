@@ -46,7 +46,6 @@ class CastNullableFrom extends CompilerPass {
                 }
 
                 expr.expr = o.expr;
-                expr.t = o.t;
             }
 
             case _: null;

@@ -70,7 +70,6 @@ class CastNullableTo extends CompilerPass {
         }
 
         expr.expr = o.expr;
-        expr.t = o.t;
     }
 
 }

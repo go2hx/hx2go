@@ -8,6 +8,9 @@ import hx2go.util.ExprHelper;
 import hx2go.hxb.Typed.HxbVarKind;
 import hx2go.hxb.Typed.HxbVar;
 import hx2go.util.TypeHelper;
+import hx2go.hxb.Typed.HxbTObjectField;
+import hx2go.hxb.Typed.HxbFieldAccess;
+import haxe.runtime.Copy;
 
 class CastAnon extends CompilerPass {
 
@@ -27,7 +30,12 @@ class CastAnon extends CompilerPass {
 
     public function execute(expr: HxbTypedExpr, type: HxbModuleType): Void {
         switch [expr.expr, expr.t] {
-            case [TCast({ t: fromT}, _), toT]: {
+            case [TCast(e, _), toT]: {
+                var fromT = e.t;
+                if (fromT == null) {
+                    return;
+                }
+
                 var fromFields = switch TypeHelper.follow(context, fromT) {
                     case TAnon(x): x.fields;
                     case _: null;
@@ -42,10 +50,50 @@ class CastAnon extends CompilerPass {
                     return;
                 }
 
+                var original = new HxbVar(
+                    -1,
+                    'hx_anon',
+                    VUser(TVOLocalVariable),
+                    0,
+                    [],
+                    expr.pos,
+                    fromT
+                );
+
+                var newFields: Array<HxbTObjectField> = [];
+                var temp: HxbTypedExpr = new HxbTypedExpr(TVar(original, Copy.copy(e)), null, null);
+                var temp_ident: HxbTypedExpr = new HxbTypedExpr(TLocal(original), null, null);
+
                 for (to in toFields) {
                     var from = fromFields.filter(f -> f.name == to.name)[0];
-                    trace(from.name, from.type, to.name, to.type);
+                    var o = new HxbTypedExpr(TField(temp_ident, FAnon(from)), from.type, null);
+
+                    if (!TypeHelper.compare(to.type, from.type)) {
+                        o = ExprHelper.createCast(o, to.type); // NOTE: no submit since it's done later
+                    }
+
+                    newFields.push({
+                        name: from.name,
+                        pos: from.pos,
+                        quotes: NoQuotes,
+                        expr: o
+                    });
                 }
+
+                var followed = TypeHelper.follow(context, toT);
+                expr.t = followed;
+                expr.expr = TBlock([
+                    temp,
+                    new HxbTypedExpr(TObjectDecl(newFields), followed, null)
+                ]);
+
+                if (!TypeHelper.compare(followed, toT)) {
+                    var o = ExprHelper.createCast(expr, toT);
+                    expr.expr = o.expr;
+                    expr.t = o.t;
+                }
+
+                context.submitNode(expr, true, 1);
             }
 
             case _: null;

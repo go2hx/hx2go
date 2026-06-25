@@ -57,12 +57,12 @@ class Context {
             new hx2go.passes.TypeNormaliserUnop(this),
             new hx2go.passes.TypeNormaliserBinop(this),
             new hx2go.passes.TypeNormaliserVar(this),
+            new hx2go.passes.CastAnon(this),
             new hx2go.passes.CastNullableTo(this),
             new hx2go.passes.CastNullableFrom(this),
             new hx2go.passes.CastClosure(this),
             new hx2go.passes.CastString(this),
             new hx2go.passes.CastDynamic(this),
-            new hx2go.passes.CastAnon(this),
             new hx2go.passes.RewriteThrow(this),
             new hx2go.passes.FieldAccessExtern(this),
             new hx2go.passes.FieldAccessAnon(this),
@@ -246,11 +246,11 @@ class Context {
         }
     }
 
-    public function submitNode(child: HxbTypedExpr, recursive: Bool = false): Void {
+    public function submitNode(child: HxbTypedExpr, recursive: Bool = false, passOffset: Int = 0): Void {
         if (child == null || contextStack.length == 0) return;
 
         var frame = contextStack[contextStack.length - 1];
-        var startIndex = frame.currentPassIndex < 0 ? 0 : frame.currentPassIndex;
+        var startIndex = frame.currentPassIndex < 0 ? 0 : frame.currentPassIndex + passOffset;
 
         var enqueue = (node: HxbTypedExpr) -> {
             if (node?.expr == null) {

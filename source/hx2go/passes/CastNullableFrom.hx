@@ -9,6 +9,8 @@ import hx2go.hxb.Ast.HxbBinop;
 import hx2go.hxb.HxbType;
 import haxe.runtime.Copy;
 import hx2go.hxb.Typed.HxbTypedExprDef;
+import hx2go.hxb.Typed.HxbVar;
+import hx2go.hxb.Typed.HxbVarKind;
 
 class CastNullableFrom extends CompilerPass {
 
@@ -39,7 +41,54 @@ class CastNullableFrom extends CompilerPass {
                 o.t = type;
 
                 if (expr.t.match(TDynamic(_) | TDynamicAny)) {
-                    o = ExprHelper.createUntyped('(map[bool]any{true: {0}.Value, false: nil})[{0}.Valid]', [e]);
+                    var tmp = new HxbVar(
+                        -1,
+                        'hx_nullable',
+                        VUser(TVOLocalVariable),
+                        0,
+                        [],
+                        e.pos,
+                        e.t
+                    );
+
+                    var tmp_local = new HxbTypedExpr(
+                        TLocal(tmp),
+                        e.t,
+                        e.pos
+                    );
+
+                    o = new HxbTypedExpr(TBlock([
+                        new HxbTypedExpr(
+                            TVar(tmp, e),
+                            e.t,
+                            expr.pos
+                        ),
+                        new HxbTypedExpr(
+                            TIf(
+                                new HxbTypedExpr(
+                                    TBinop(
+                                        OpEq,
+                                        ExprHelper.createUntyped('{0}.Valid', [tmp_local]),
+                                        new HxbTypedExpr(
+                                            TConst(TBool(true)),
+                                            TBool,
+                                            expr.pos
+                                        )
+                                    ),
+                                    TBool,
+                                    expr.pos
+                                ),
+                                ExprHelper.createUntyped('{0}.Value', [tmp_local]),
+                                new HxbTypedExpr(
+                                    TConst(TNull),
+                                    expr.t,
+                                    expr.pos
+                                )
+                            ),
+                            expr.t,
+                            expr.pos
+                        )
+                    ]), expr.t, expr.pos);
                 } else if (!TypeHelper.compare(type, expr.t)) {
                     o = ExprHelper.createCast(o, expr.t);
                     context.submitNode(o, true);

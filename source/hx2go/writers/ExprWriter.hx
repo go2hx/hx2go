@@ -280,7 +280,7 @@ class ExprWriter extends WriterImpl {
             case OpBoolOr: "||";
             case OpShl: "<<";
             case OpShr: ">>";
-            case OpUShr: throw "OpUShr not supported"; // TODO: preprocess as this isn't valid
+            case OpUShr: ""; // throw "OpUShr not supported"; // TODO: preprocess as this isn't valid
             case OpMod: "%";
             case OpInterval: throw "OpInterval not supported";  // TODO: preprocess as this isn't valid
             case OpArrow: throw "OpArrow not supported"; // TODO: preprocess as this isn't valid

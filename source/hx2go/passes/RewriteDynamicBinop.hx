@@ -45,7 +45,7 @@ class RewriteDynamicBinop extends CompilerPass {
     }
 
     public function makeDynamicCall(left: HxbTypedExpr, right: HxbTypedExpr, call: String): HxbTypedExpr {
-        return ExprHelper.createCallStatic(
+        var e = ExprHelper.createCallStatic(
             context,
             {
                 name: 'HxDynamic',
@@ -55,6 +55,9 @@ class RewriteDynamicBinop extends CompilerPass {
             call,
             [left, right]
         );
+        e.t = TDynamicAny;
+
+        return e;
     }
 
     public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
@@ -80,6 +83,14 @@ class RewriteDynamicBinop extends CompilerPass {
                 if (!expr.t.match(TDynamic(_) | TDynamicAny)) {
                     o = ExprHelper.createCast(o, expr.t);
                     context.submitNode(o, true);
+                }
+
+                if (op.match(OpAssignOp(_))) {
+                    o = new HxbTypedExpr(
+                        TBinop(OpAssign, left, o),
+                        left.t,
+                        left.pos
+                    );
                 }
 
                 expr.expr = o.expr;

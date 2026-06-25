@@ -34,6 +34,10 @@ class TypeNormaliserBinop extends CompilerPass {
             return;
         }
 
+        if (TypeHelper.compare(expr.t, TBool)) {
+            return;
+        }
+
         if (!TypeHelper.compare(left.t, expr.t) && op != OpAssign) {
             var o = ExprHelper.createCast(left, expr.t);
             left.expr = o.expr;

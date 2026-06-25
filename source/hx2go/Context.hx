@@ -108,7 +108,7 @@ class Context {
             typesByModule.set(modulePath, []);
         }
 
-        typesByModule[modulePath].push({ type: t, name: infos.path.name, module: infos.path.moduleDotPath() });
+        typesByModule[modulePath].push({ type: t, name: infos.path.name, module: modulePath });
         if (!typeQueue.contains(modulePath)) typeQueue.push(modulePath);
         types.set(typePath, t);
 
@@ -129,7 +129,7 @@ class Context {
             }
 
             var buf = new OutputBuffer();
-            var path = StringConversions.moduleTypeGetDotPath(module[0].type, true);
+            var path = module[0].module;
             var imports = imports.get(path) ?? [];
 
             buf.add('package $topLevelPackage');
@@ -165,7 +165,7 @@ class Context {
                 continue;
             }
 
-            writeFile("/", StringConversions.moduleTypeGetFileName(module[0].type), buf.toString());
+            writeFile("/", StringConversions.stringPathGetFileName(module[0].module), buf.toString());
         }
 
         if (!mainWritten) {
@@ -368,9 +368,9 @@ class Context {
             imports.set(path, []);
         }
 
-        var imports = imports[path];
-        if (!imports.contains(goImport)) {
-            imports.push(goImport);
+        var localImports = imports[path];
+        if (!localImports.contains(goImport)) {
+            localImports.push(goImport);
         }
     }
 

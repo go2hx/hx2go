@@ -67,8 +67,8 @@ class StringConversions {
         return modulePath ? p.moduleDotPath() : p.dotPath();
     }
 
-    public static function moduleTypeGetFileName(mt: HxbModuleType): String {
-        return 'Hx_${moduleTypeGetTypePath(mt).moduleDotPath().replace(".", "_")}'; // if starting with _ it's ignored
+    public static function stringPathGetFileName(sp: String): String {
+        return 'Hx_${sp.replace(".", "_")}'; // if starting with _ it's ignored
     }
 
     public static function quoteString(str: String): String {

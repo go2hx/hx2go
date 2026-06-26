@@ -18,6 +18,7 @@ import hx2go.hxb.Ast.HxbUnop;
 import hx2go.hxb.Typed.HxbTypedExprDef;
 import hx2go.hxb.Typed.HxbTObjectField;
 import hx2go.hxb.HxbType;
+import hx2go.hxb.TypePath;
 
 class ExprWriter extends WriterImpl {
 
@@ -43,10 +44,32 @@ class ExprWriter extends WriterImpl {
             case TObjectDecl(fields): writeObjectDecl(expr, fields);
             case TArrayDecl(elements): writeArrayDecl(expr, elements);
             case TArray(e, idx): writeArrayAccess(expr, e, idx);
+            case TNew(tp, params, el): writeNew(expr, tp, params, el);
             case TBreak: new OutputBuffer("break");
             case TContinue: new OutputBuffer("continue");
             case _: new OutputBuffer();
         }
+    }
+
+    public function writeNew(expr: HxbTypedExpr, tp: TypePath, params: Array<HxbType>, el: Array<HxbTypedExpr>): OutputBuffer {
+        var buf = new OutputBuffer();
+        var mod = writer.context.resolve(tp);
+        var path = StringConversions.moduleTypeGetTypePath(mod);
+
+        buf.addInline('${StringConversions.typePathClassInstanceName(path)}_CreateInstance(');
+
+        for (argIdx in 0...el.length) {
+            var arg = el[argIdx];
+            buf.addBufferInline(writeExpr(arg));
+
+            if (argIdx != el.length - 1) {
+                buf.addInline(", ");
+            }
+        }
+
+        buf.addInline(')');
+
+        return buf;
     }
 
     public function writeArrayDecl(expr: HxbTypedExpr, elements: Array<HxbTypedExpr>): OutputBuffer {

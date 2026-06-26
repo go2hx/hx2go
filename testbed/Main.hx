@@ -98,6 +98,10 @@ class Sample extends Sound implements IResource {
 
 class Main {
 
+    public static function announce(name: String): Void {
+        trace('$name has been announced');
+    }
+
     public static function main() {
         var vehicle = new Vehicle('A Rock', 0);
         vehicle.honk();
@@ -133,6 +137,17 @@ class Main {
             res.dispose();
         }
 
+        var stat_closure = announce;
+        var stat_closure_bound = stat_closure.bind("Bob");
+
+        stat_closure("Elisa");
+        stat_closure_bound();
+
+        var foo: Car = truck;
+        var bar = foo.drive;
+        foo = car;
+
+        bar();
     }
 
 }

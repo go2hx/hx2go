@@ -1,15 +1,52 @@
-class Test {
+class Vehicle {
 
-    public var name: String;
-    public var age: Null<Int>;
+    public var model: String;
+    public var hp: Null<Int>;
 
-    public function new(name: String, ?age: Int) {
-        this.name = name;
-        this.age = age;
+    public function new(model: String, ?hp: Int) {
+        this.model = model;
+        this.hp = hp;
     }
 
-    public function greet(): Void {
-        trace('Hello, $name. You are $age years old.');
+    public function honk() {
+        trace('$model makes an unknown sound! what could it be?!');
+    }
+
+}
+
+class Car extends Vehicle {
+
+    public var fuel: Int;
+
+    public function new(model: String, ?hp: Int, ?fuel: Int) {
+        super(model, hp);
+        this.fuel = fuel;
+    }
+
+    override public function honk() {
+        trace('$model does *honk*');
+    }
+
+    public function drive() {
+        trace('$model is driving with $hp HP and $fuel L of fuel');
+    }
+
+}
+
+class Truck extends Car {
+
+    override public function drive() {
+        trace('$model is driving, but it sure takes a while...');
+    }
+
+}
+
+class Bicycle extends Vehicle {
+
+    override public function honk() {
+        trace('$model does *ring*');
+        trace('trying super');
+        super.honk();
     }
 
 }
@@ -17,11 +54,12 @@ class Test {
 class Main {
 
     public static function main() {
-        var john = new Test('John');
-        john.greet();
-
-        var jane = new Test('Jane', 24);
-        jane.greet();
+        var vehicle = new Vehicle('A Rock', 0);
+        var car = new Car('Mitsubishi EVO', 1000, 30);
+        var truck = new Truck('Volvo FH16', 500, 150);
+        var bicycle = new Bicycle('Rusted unnamed bike', 1);
+        truck.drive();
+        truck.honk();
     }
 
 }

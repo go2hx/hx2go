@@ -30,17 +30,37 @@ class ClassWriter extends WriterImpl {
         buf.add('');
         buf.add('type ${StringConversions.typePathClassVTableName(cls.path)} interface {');
 
-        for (f in cls.fields.filter(f -> f.kind.match(KMethod(_)))) {
+        var fields: Map<String, HxbClassField> = [];
+        var current: HxbClass = cls;
+
+        while (current != null) {
+            for (f in current.fields.filter(f -> f.kind.match(KMethod(_)) && !fields.exists(f.name))) {
+                fields.set(f.name, f);
+            }
+
+            if (current?.superClass?.t == null) {
+                break;
+            }
+
+            var mod = writer.context.resolve(current.superClass.t);
+
+            current = switch mod {
+                case MClass(x): x;
+                case _: null;
+            }
+        }
+
+        for (f in fields) {
             var vBuf = new OutputBuffer();
             var fTypes = writeFunctionArgs(f.type);
 
             vBuf.addInline('${StringConversions.nameToFieldName(f.name)}(');
             vBuf.addBufferInline(fTypes.buf);
-            vBuf.addInline(') ');
+            vBuf.addInline(')');
 
             if (fTypes.returnType != TVoid) {
-                vBuf.addBufferInline(writer.types.writeHxbType(fTypes.returnType));
                 vBuf.addInline(' ');
+                vBuf.addBufferInline(writer.types.writeHxbType(fTypes.returnType));
             }
 
             buf.addBuffer(vBuf, 1);
@@ -50,6 +70,13 @@ class ClassWriter extends WriterImpl {
         buf.add('');
 
         buf.add('type ${StringConversions.typePathClassInstanceName(cls.path)} struct {');
+
+        if (cls.superClass != null) {
+            var mod = writer.context.resolve(cls.superClass.t);
+            var tp = StringConversions.moduleTypeGetTypePath(mod);
+            buf.add(StringConversions.typePathClassInstanceName(tp), 1);
+        }
+
         buf.add('VTable ${StringConversions.typePathClassVTableName(cls.path)}', 1);
 
         for (f in cls.fields.filter(f -> f.kind.match(KVar(_)))) {

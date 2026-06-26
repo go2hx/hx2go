@@ -3,6 +3,7 @@ package go.reflect;
 @:go.Type({name: "reflect.Value", imports: ["reflect"] })
 extern class Value {
     function type():Type;
+    function addr(): Value;
     function kind():Kind;
     function elem():Value;
     function isValid(): Bool;

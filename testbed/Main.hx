@@ -151,11 +151,21 @@ class Main {
         var test = {
             fn: () -> {
                 trace("hello!!");
-            }
+            },
+            cool: 5,
         };
 
+        test.cool = 10;
         var test2 = test.fn;
         test2();
+
+        var truck_dyn: Dynamic = truck;
+        var dyn_to_car: Car = truck_dyn;
+        dyn_to_car.drive();
+        dyn_to_car.model = "Mercedes Truck";
+        truck_dyn.model = "cheese";
+
+        truck.drive();
     }
 
 }

@@ -383,6 +383,31 @@ class HxDynamic {
         return valueToFloat(dV);
     }
 
+    static function valueToClass(value: Value, className: String): Value {
+        var kind = value.kind();
+
+        if (isNull(value)) {
+            throw "runtime.HxDynamic.toClass: dynamic is null, cannot cast to " + className;
+        }
+
+        if (kind == Reflect.Ptr || kind == Reflect.Interface) {
+            value = valueToClass(value.elem(), className);
+        }
+
+        if (kind == Reflect.Struct && value.type().name() != className) {
+            value = value.fieldByName(className);
+        }
+
+        return value;
+    }
+
+    public static function toClass(d: Dynamic, className: String): Dynamic {
+        var value = ensureValue(d);
+        var cls = valueToClass(value, className);
+
+        return cls.addr().iface();
+    }
+
     // read field access on dynamic (class, anon, etc)
     public static function getField(dyn: Dynamic, fieldName: String): Dynamic {
         var value = ensureValue(dyn);

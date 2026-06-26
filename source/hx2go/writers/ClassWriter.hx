@@ -31,6 +31,7 @@ class ClassWriter extends WriterImpl {
         buf.add('type ${StringConversions.typePathClassVTableName(cls.path)} interface {');
 
         var fields: Map<String, HxbClassField> = [];
+        var vtables: Array<String> = [];
         var current: HxbClass = cls;
 
         while (current != null) {
@@ -48,6 +49,12 @@ class ClassWriter extends WriterImpl {
                 case MClass(x): x;
                 case _: null;
             }
+
+            if (current == null) {
+                break;
+            }
+
+            vtables.push('obj.${StringConversions.typePathClassInstanceName(current.path)}.VTable = obj');
         }
 
         for (f in fields) {
@@ -99,6 +106,11 @@ class ClassWriter extends WriterImpl {
         buf.add('func ${StringConversions.typePathClassInstanceName(cls.path)}_CreateEmptyInstance() *${StringConversions.typePathClassInstanceName(cls.path)} {');
         buf.add('obj := &${StringConversions.typePathClassInstanceName(cls.path)}{}', 1);
         buf.add('obj.VTable = obj', 1);
+
+        for (v in vtables) {
+            buf.add(v, 1);
+        }
+
         buf.add('return obj', 1);
         buf.add('}');
 

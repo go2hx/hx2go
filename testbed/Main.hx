@@ -45,8 +45,8 @@ class Bicycle extends Vehicle {
 
     override public function honk() {
         trace('$model does *ring*');
-        // trace('trying super');
-        // super.honk();
+        trace('trying super');
+        super.honk();
     }
 
 }

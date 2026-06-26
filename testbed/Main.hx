@@ -45,8 +45,8 @@ class Bicycle extends Vehicle {
 
     override public function honk() {
         trace('$model does *ring*');
-        trace('trying super');
-        super.honk();
+        // trace('trying super');
+        // super.honk();
     }
 
 }
@@ -55,11 +55,18 @@ class Main {
 
     public static function main() {
         var vehicle = new Vehicle('A Rock', 0);
+        vehicle.honk();
+
         var car = new Car('Mitsubishi EVO', 1000, 30);
+        car.honk();
+        car.drive();
+
         var truck = new Truck('Volvo FH16', 500, 150);
-        var bicycle = new Bicycle('Rusted unnamed bike', 1);
-        truck.drive();
         truck.honk();
+        truck.drive();
+
+        var bicycle = new Bicycle('Rusted unnamed bike', 1);
+        bicycle.honk();
     }
 
 }

@@ -56,6 +56,46 @@ class Bicycle extends Vehicle {
 
 }
 
+interface IResource{
+    public function dispose(): Void;
+}
+
+class Texture implements IResource {
+
+    public var path: String;
+
+    public function new(path: String) {
+        this.path = path;
+    }
+
+    public function dispose(): Void {
+        trace('texture disposed');
+    }
+
+}
+
+class Sound implements IResource {
+
+    public var path: String;
+
+    public function new(path: String) {
+        this.path = path;
+    }
+
+    public function dispose(): Void {
+        trace('sound disposed');
+    }
+
+}
+
+class Sample extends Sound implements IResource {
+
+    override public function dispose(): Void {
+        trace('sample disposed');
+    }
+
+}
+
 class Main {
 
     public static function main() {
@@ -82,6 +122,18 @@ class Main {
         vehicle_dyn_vehicle.honk();
 
         trace(bicycle.kw);
+
+        var texture = new Texture("image.png");
+        var sound = new Sound("audio.mp3");
+        var sample = new Sample("sfx.wav");
+
+        var texture_res: IResource = texture;
+        var sound_res: IResource = sound;
+        var sample_res: IResource = sample;
+
+        texture_res.dispose();
+        sound_res.dispose();
+        sample_res.dispose();
     }
 
 }

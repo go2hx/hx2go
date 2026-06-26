@@ -33,6 +33,7 @@ class ClassWriter extends WriterImpl {
         var fields: Map<String, HxbClassField> = [];
         var vtables: Array<String> = [];
         var current: HxbClass = cls;
+        var hasInterfaces: Map<String, Bool> = [];
 
         while (current != null) {
             for (f in current.fields.filter(f -> f.kind.match(KMethod(_)) && !fields.exists(f.name))) {
@@ -52,6 +53,20 @@ class ClassWriter extends WriterImpl {
 
             if (current == null) {
                 break;
+            }
+
+            for (iface in current.interfaces) {
+                var dot = iface.t.dotPath();
+                if (hasInterfaces.exists(dot)) {
+                    continue;
+                }
+
+                hasInterfaces.set(dot, true);
+
+                var im = writer.context.resolve(iface.t);
+                var ip = StringConversions.moduleTypeGetTypePath(im);
+
+                vtables.push('obj.${StringConversions.typePathClassInstanceName(ip)}.VTable = obj');
             }
 
             vtables.push('obj.${StringConversions.typePathClassInstanceName(current.path)}.VTable = obj');
@@ -82,6 +97,15 @@ class ClassWriter extends WriterImpl {
             var mod = writer.context.resolve(cls.superClass.t);
             var tp = StringConversions.moduleTypeGetTypePath(mod);
             buf.add(StringConversions.typePathClassInstanceName(tp), 1);
+        }
+
+        for (iface in cls.interfaces.filter(i -> !hasInterfaces.exists(i.t.dotPath()))) {
+            var mod = writer.context.resolve(iface.t);
+            var tp = StringConversions.moduleTypeGetTypePath(mod);
+            var ifName = StringConversions.typePathClassInstanceName(tp);
+
+            buf.add(ifName, 1);
+            vtables.push('obj.${ifName}.VTable = obj');
         }
 
         buf.add('VTable ${StringConversions.typePathClassVTableName(cls.path)}', 1);

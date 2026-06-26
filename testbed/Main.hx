@@ -1,4 +1,5 @@
 import go.fmt.Fmt;
+import haxe.iterators.ArrayIterator;
 
 typedef IVec2 = {
     x: Int,
@@ -71,6 +72,14 @@ class Main {
         var null_int: Null<Int> = null;
         var null_float: Null<Float> = null_int;
         Fmt.println(null_int, null_float);
+
+        var arr = [1, 2, 3];
+        var iter = new ArrayIterator(arr);
+
+        while (iter.hasNext()) {
+            trace(iter.next());
+        }
+
         // TODO: test dynamic set, test dynamic unop, test dynamic field unop, test dyanmic opassignop, test dynamic field opassignop
     }
 

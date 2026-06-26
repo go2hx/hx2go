@@ -56,7 +56,7 @@ class Bicycle extends Vehicle {
 
 }
 
-interface IResource{
+interface IResource {
     public function dispose(): Void;
 }
 
@@ -146,8 +146,16 @@ class Main {
         var foo: Car = truck;
         var bar = foo.drive;
         foo = car;
-
         bar();
+
+        var test = {
+            fn: () -> {
+                trace("hello!!");
+            }
+        };
+
+        var test2 = test.fn;
+        test2();
     }
 
 }

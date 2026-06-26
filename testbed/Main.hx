@@ -116,10 +116,11 @@ class Main {
         var bicycle_as_vehicle: Vehicle = bicycle;
         bicycle_as_vehicle.honk();
 
-        var vehicle_dyn: Dynamic = bicycle_as_vehicle;
-        var vehicle_dyn_vehicle: Vehicle = vehicle_dyn;
+        var vehicle_dyn: Dynamic = bicycle;
+        var vehicle_dyn_vehicle: Bicycle = vehicle_dyn;
 
         vehicle_dyn_vehicle.honk();
+        trace(vehicle_dyn.model, vehicle_dyn.hp);
 
         trace(bicycle.kw);
 
@@ -131,6 +132,7 @@ class Main {
         for (res in resources) {
             res.dispose();
         }
+
     }
 
 }

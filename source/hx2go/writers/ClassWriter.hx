@@ -110,7 +110,12 @@ class ClassWriter extends WriterImpl {
 
         buf.add('VTable ${StringConversions.typePathClassVTableName(cls.path)}', 1);
 
-        for (f in cls.fields.filter(f -> f.kind.match(KVar(_)))) {
+        for (f in cls.fields) {
+            switch f.kind {
+                case KVar(AccCall, _) | KVar(_, AccCall): continue;
+                case KVar(_): null;
+                case _: continue;
+            }
             var vBuf = new OutputBuffer();
             vBuf.addInline(StringConversions.nameToFieldName(f.name));
             vBuf.addInline(' ');

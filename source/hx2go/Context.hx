@@ -60,6 +60,7 @@ class Context {
             new hx2go.passes.TypeNormaliserVar(this),
             new hx2go.passes.TypeNormaliserReturn(this),
             new hx2go.passes.TypeNormaliserNew(this),
+            new hx2go.passes.TypeNormaliserArray(this),
             new hx2go.passes.SuperCtor(this),
             new hx2go.passes.CastAnon(this),
             new hx2go.passes.CastNullableTo(this),

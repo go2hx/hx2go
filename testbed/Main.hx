@@ -127,13 +127,10 @@ class Main {
         var sound = new Sound("audio.mp3");
         var sample = new Sample("sfx.wav");
 
-        var texture_res: IResource = texture;
-        var sound_res: IResource = sound;
-        var sample_res: IResource = sample;
-
-        texture_res.dispose();
-        sound_res.dispose();
-        sample_res.dispose();
+        var resources: Array<IResource> = [texture, sound, sample];
+        for (res in resources) {
+            res.dispose();
+        }
     }
 
 }

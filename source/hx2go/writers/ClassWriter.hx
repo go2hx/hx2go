@@ -27,12 +27,79 @@ class ClassWriter extends WriterImpl {
             return buf;
         }
 
-        for (f in cls.statics) {
-            buf.addBufferInline(writeStaticClassField(f, cls));
+        buf.add('');
+        buf.add('type ${StringConversions.typePathClassVTableName(cls.path)} interface {');
+
+        for (f in cls.fields.filter(f -> f.kind.match(KMethod(_)))) {
+            var vBuf = new OutputBuffer();
+            var fTypes = writeFunctionArgs(f.type);
+
+            vBuf.addInline('${StringConversions.nameToFieldName(f.name)}(');
+            vBuf.addBufferInline(fTypes.buf);
+            vBuf.addInline(') ');
+
+            if (fTypes.returnType != TVoid) {
+                vBuf.addBufferInline(writer.types.writeHxbType(fTypes.returnType));
+                vBuf.addInline(' ');
+            }
+
+            buf.addBuffer(vBuf, 1);
         }
 
-        for (f in cls.fields) {
-            buf.addBufferInline(writeMemberClassField(f, cls));
+        buf.add('}');
+        buf.add('');
+
+        buf.add('type ${StringConversions.typePathClassInstanceName(cls.path)} struct {');
+        buf.add('VTable ${StringConversions.typePathClassVTableName(cls.path)}', 1);
+
+        for (f in cls.fields.filter(f -> f.kind.match(KVar(_)))) {
+            var vBuf = new OutputBuffer();
+            vBuf.addInline(StringConversions.nameToFieldName(f.name));
+            vBuf.addInline(' ');
+            vBuf.addBufferInline(writer.types.writeHxbType(f.type));
+            buf.addBuffer(vBuf, 1);
+        }
+
+        buf.add('}');
+
+        var ctor = cls.constructor != null ? writeFunctionArgs(cls.constructor.type) : {
+            buf: new OutputBuffer(),
+            returnType: TVoid,
+            args: []
+        };
+
+        buf.add('');
+        buf.add('func ${StringConversions.typePathClassInstanceName(cls.path)}_CreateEmptyInstance() *${StringConversions.typePathClassInstanceName(cls.path)} {');
+        buf.add('obj := &${StringConversions.typePathClassInstanceName(cls.path)}{}', 1);
+        buf.add('obj.VTable = obj', 1);
+        buf.add('return obj', 1);
+        buf.add('}');
+
+        buf.add('');
+        buf.add('func ${StringConversions.typePathClassInstanceName(cls.path)}_CreateInstance(${ctor.buf.toString()}) *${StringConversions.typePathClassInstanceName(cls.path)} {');
+        buf.add('obj := ${StringConversions.typePathClassInstanceName(cls.path)}_CreateEmptyInstance()', 1);
+
+        if (cls.constructor != null) {
+            buf.add('obj.Hx_New(${ctor.args.map(a -> a.name).join(", ")})', 1);
+        }
+
+        buf.add('return obj', 1);
+        buf.add('}');
+
+        if (cls.constructor != null) {
+            buf.add('');
+            buf.addInline('func (this *${StringConversions.typePathClassInstanceName(cls.path)}) Hx_New(${ctor.buf.toString()}) ');
+            buf.addBufferInline(writer.exprs.writeExpr(cls.constructor.expr.expr, true));
+            buf.add('');
+        }
+
+        for (f in cls.statics) {
+            var res = writeStaticClassField(f, cls);
+            if (res.isEmpty()) {
+                continue;
+            }
+
+            buf.addBuffer(res);
         }
 
         return buf;
@@ -56,8 +123,9 @@ class ClassWriter extends WriterImpl {
         }
     }
 
-    public function writeFunctionArgs(type: HxbType): { buf: OutputBuffer, returnType: HxbType } {
+    public function writeFunctionArgs(type: HxbType): { buf: OutputBuffer, returnType: HxbType, args: Array<HxbFunArg> } {
         var buf = new OutputBuffer();
+        var fArgs: Array<HxbFunArg> = [];
         var ret: HxbType = TVoid;
 
         switch type {
@@ -69,6 +137,8 @@ class ClassWriter extends WriterImpl {
                     if (idx < args.length - 1) {
                         buf.addInline(', ');
                     }
+
+                    fArgs.push(arg);
                 }
 
                 ret = returnType;
@@ -76,7 +146,7 @@ class ClassWriter extends WriterImpl {
             case _: null;
         }
 
-        return { buf: buf, returnType: ret };
+        return { buf: buf, returnType: ret, args: fArgs };
     }
 
     public function writeStaticClassFunction(field: HxbClassField, kind: HxbMethodKind, cls: HxbClass): OutputBuffer {
@@ -97,8 +167,8 @@ class ClassWriter extends WriterImpl {
             buf.addInline(' ');
         }
 
-        if (field.expr?.expr != null) buf.addBuffer(writer.exprs.writeExpr(field.expr.expr, true))
-        else buf.add("{}");
+        if (field.expr?.expr != null) buf.addBufferInline(writer.exprs.writeExpr(field.expr.expr, true))
+        else buf.addInline("{}");
 
         return buf;
     }
@@ -120,8 +190,8 @@ class ClassWriter extends WriterImpl {
 
             buf.add(' = ${initName}()');
             buf.addInline('func ${initName}() ${writer.types.writeHxbType(field.type)} ');
-            buf.addBuffer(writer.exprs.writeExpr(initExpr, true));
-        } else buf.add("");
+            buf.addBufferInline(writer.exprs.writeExpr(initExpr, true));
+        } else buf.addInline("");
 
         return buf;
     }

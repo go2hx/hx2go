@@ -35,6 +35,10 @@ class StringConversions {
         return 'Hx_Obj_${tp.dotPath().toLowerCase().replace(".", "_")}';
     }
 
+    public static function typePathClassVTableName(tp: TypePath): String {
+        return 'Hx_Obj_VTable_${tp.dotPath().toLowerCase().replace(".", "_")}';
+    }
+
     public static function typePathTypedefName(tp: TypePath): String {
         return 'Hx_Typedef_${tp.dotPath().toLowerCase().replace(".", "_")}';
     }

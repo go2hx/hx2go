@@ -97,7 +97,7 @@ class TypeWriter extends WriterImpl {
                     }
                 }
 
-                return StringConversions.typePathClassInstanceName(tp);
+                return '*' + StringConversions.typePathClassInstanceName(tp);
             }
 
             case MEnum({ meta: meta }): {

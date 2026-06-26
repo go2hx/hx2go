@@ -67,6 +67,9 @@ class Main {
 
         var bicycle = new Bicycle('Rusted unnamed bike', 1);
         bicycle.honk();
+
+        var bicycle_as_vehicle: Vehicle = bicycle;
+        bicycle_as_vehicle.honk();
     }
 
 }

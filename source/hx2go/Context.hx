@@ -67,6 +67,7 @@ class Context {
             new hx2go.passes.CastClosure(this),
             new hx2go.passes.CastString(this),
             new hx2go.passes.CastDynamic(this),
+            new hx2go.passes.CastClass(this),
             new hx2go.passes.RewriteThrow(this),
             new hx2go.passes.FieldAccessSuper(this),
             new hx2go.passes.FieldAccessExtern(this),

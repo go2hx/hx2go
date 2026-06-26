@@ -2,6 +2,7 @@ class Vehicle {
 
     public var model: String;
     public var hp: Null<Int>;
+    public var kw(get, never): Null<Float>;
 
     public function new(model: String, ?hp: Int) {
         this.model = model;
@@ -10,6 +11,10 @@ class Vehicle {
 
     public function honk() {
         trace('$model makes an unknown sound! what could it be?!');
+    }
+
+    public function get_kw(): Null<Float> {
+        return hp != null ? hp * 0.745 : null;
     }
 
 }
@@ -70,6 +75,13 @@ class Main {
 
         var bicycle_as_vehicle: Vehicle = bicycle;
         bicycle_as_vehicle.honk();
+
+        var vehicle_dyn: Dynamic = bicycle_as_vehicle;
+        var vehicle_dyn_vehicle: Vehicle = vehicle_dyn;
+
+        vehicle_dyn_vehicle.honk();
+
+        trace(bicycle.kw);
     }
 
 }

@@ -67,6 +67,7 @@ class Context {
             new hx2go.passes.CastDynamic(this),
             new hx2go.passes.RewriteThrow(this),
             new hx2go.passes.FieldAccessExtern(this),
+            new hx2go.passes.FieldAccessInstance(this),
             new hx2go.passes.FieldAccessAnon(this),
             new hx2go.passes.FieldAccessDynamic(this),
             new hx2go.passes.RewriteSliceCreation(this),

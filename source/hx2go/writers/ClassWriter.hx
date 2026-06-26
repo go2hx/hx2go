@@ -93,6 +93,15 @@ class ClassWriter extends WriterImpl {
             buf.add('');
         }
 
+        for (f in cls.fields.filter(f -> f.kind.match(KMethod(_)))) {
+            var res = writeMemberClassField(f, cls);
+            if (res.isEmpty()) {
+                continue;
+            }
+
+            buf.addBuffer(res);
+        }
+
         for (f in cls.statics) {
             var res = writeStaticClassField(f, cls);
             if (res.isEmpty()) {
@@ -197,7 +206,27 @@ class ClassWriter extends WriterImpl {
     }
 
     public function writeMemberClassFunction(field: HxbClassField, kind: HxbMethodKind, cls: HxbClass): OutputBuffer {
-        return new OutputBuffer();
+        var buf = new OutputBuffer();
+        var fTypes = writeFunctionArgs(field.type);
+
+        if (field.flags & HxbClassFieldFlag.CfExtern != 0 || (cls.flags & HxbClassFlag.CExtern != 0)) {
+            return buf;
+        }
+
+        buf.add("");
+        buf.addInline('func (this *${StringConversions.typePathClassInstanceName(cls.path)}) ${StringConversions.nameToFieldName(field.name)}(');
+        buf.addBufferInline(fTypes.buf);
+        buf.addInline(') ');
+
+        if (fTypes.returnType != TVoid) {
+            buf.addBufferInline(writer.types.writeHxbType(fTypes.returnType));
+            buf.addInline(' ');
+        }
+
+        if (field.expr?.expr != null) buf.addBufferInline(writer.exprs.writeExpr(field.expr.expr, true))
+        else buf.addInline("{}");
+
+        return buf;
     }
 
     public function writeMemberClassVar(field: HxbClassField, read: HxbVarAccess, write: HxbVarAccess, cls: HxbClass): OutputBuffer {

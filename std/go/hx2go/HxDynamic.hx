@@ -453,7 +453,6 @@ class HxDynamic {
 
         if (kind == Reflect.Struct) {
             var field = value.fieldByName(formatField(fieldName));
-
             if (!field.isValid()) {
                 throw 'runtime.HxDynamic.setField field "$fieldName" not present on "$value"';
             }

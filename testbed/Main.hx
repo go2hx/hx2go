@@ -1,3 +1,4 @@
+import go.Syntax;
 class Vehicle {
 
     public var model: String;
@@ -98,6 +99,10 @@ class Sample extends Sound implements IResource {
 
 class Main {
 
+    public static function value(): Int {
+        return Syntax.code('5');
+    }
+
     public static function announce(name: String): Void {
         trace('$name has been announced');
     }
@@ -148,23 +153,12 @@ class Main {
         foo = car;
         bar();
 
-        var test = {
-            fn: () -> {
-                trace("hello!!");
-            },
-            cool: 5,
-        };
-
-        test.cool = 10;
-        var test2 = test.fn;
-        test2();
-
         var truck_dyn: Dynamic = truck;
-        var dyn_to_car: Car = truck_dyn;
-        dyn_to_car.drive();
-        dyn_to_car.model = "Mercedes Truck";
-        truck_dyn.model = "cheese";
+        truck_dyn.model = "Mercedes Truck";
+        truck.drive();
 
+        var dyn_to_car: Car = truck_dyn;
+        dyn_to_car.model = "Ford Truck";
         truck.drive();
     }
 

@@ -12,29 +12,34 @@ import hx2go.util.ExprHelper;
 import hx2go.util.StringConversions;
 import hx2go.hxb.Ast.HxbObjectField;
 import hx2go.util.ObjectFieldHelper;
+import hx2go.hxb.HxbType;
+import haxe.runtime.Copy;
+import hx2go.util.TypeHelper;
 
-class FieldAccessAnon extends CompilerPass {
+class TypeNormaliserObject extends CompilerPass {
 
     public function match(expr: HxbTypedExpr): Bool {
         return switch expr.expr {
-            case TField(_, FAnon(_)): true;
+            case TObjectDecl(_): true;
             case _: false;
         }
     }
 
     public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
-        switch expr.expr {
-            case TField(e, FAnon(cf)):
-                expr.t = TDynamicAny;
-
-                var o = ExprHelper.createCast(expr, cf.type);
-                expr.expr = o.expr;
-                expr.t = o.t;
-
-                context.submitNode(expr, true, 1);
-
-            case _: null;
+        var fields = switch expr.expr {
+            case TObjectDecl(x): x;
+            case _: return;
         }
+
+       for (f in fields) {
+           if (!f.expr.t.match(TDynamic(_) | TDynamicAny)) {
+               var o = ExprHelper.createCast(f.expr, TDynamicAny);
+               f.expr.expr = o.expr;
+               f.expr.t = o.t;
+
+               context.submitNode(f.expr, true);
+           }
+       }
     }
 
 }

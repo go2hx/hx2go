@@ -6,6 +6,8 @@ import hx2go.hxb.Typed.HxbTypedExprDef;
 import hx2go.hxb.HxbType;
 import hx2go.util.ExprHelper;
 import hx2go.util.TypeHelper;
+import hx2go.hxb.Typed.HxbVar;
+import hx2go.hxb.Typed.HxbVarKind;
 
 class CastNullableTo extends CompilerPass {
 
@@ -39,20 +41,66 @@ class CastNullableTo extends CompilerPass {
         var o = switch expr.expr {
             case TCast(e, _): switch e.t {
                 case TAbstract({ name: "Null", pack: [] }, _): {
-                    var o = ExprHelper.createCast(e, ot);
+                    var tmp = new HxbVar(
+                        -1,
+                        "hx_nullable",
+                        VUser(TVOLocalVariable),
+                        0,
+                        [],
+                        e.pos,
+                        e.t
+                    );
 
+                    var tmp_ident = new HxbTypedExpr(
+                        TLocal(tmp),
+                        tmp.type,
+                        e.pos
+                    );
+
+                    var o = ExprHelper.createCast(tmp_ident, ot);
                     context.submitNode(o, true);
-                    ExprHelper.createUntyped('${context.getWriter().types.writeHxbType(expr.t)}{ Value: {0}, Valid: true }', [o]);
+
+                    new HxbTypedExpr(TBlock([
+                        new HxbTypedExpr(TVar(tmp, e), TVoid, e.pos),
+                        ExprHelper.createUntyped('${context.getWriter().types.writeHxbType(expr.t)}{ Value: {0}, Valid: {1}.Valid }', [o, tmp_ident])
+                    ]), expr.t, expr.pos);
                 }
 
                 case TDynamic(_) | TDynamicAny: {
-                    var o = e;
+                    var tmp = new HxbVar(
+                        -1,
+                        "hx_nullable",
+                        VUser(TVOLocalVariable),
+                        0,
+                        [],
+                        e.pos,
+                        e.t
+                    );
+
+                    var tmp_ident = new HxbTypedExpr(
+                        TLocal(tmp),
+                        tmp.type,
+                        e.pos
+                    );
+
+                    var o = tmp_ident;
                     if (!TypeHelper.compare(o.t, ot)) {
                         o = ExprHelper.createCast(o, ot);
                         context.submitNode(o, true);
                     }
 
-                    ExprHelper.createUntyped('${context.getWriter().types.writeHxbType(expr.t)}{ Value: {0}, Valid: {1} != nil }', [o, e]);
+                    new HxbTypedExpr(TBlock([
+                        new HxbTypedExpr(TVar(tmp, e), TVoid, e.pos),
+                        new HxbTypedExpr(TIf(
+                            new HxbTypedExpr(TBinop(
+                                OpEq,
+                                e,
+                                new HxbTypedExpr(TConst(TNull), expr.t, expr.pos)
+                            ), TBool, expr.pos),
+                            ExprHelper.createUntyped('${context.getWriter().types.writeHxbType(expr.t)}{}', []),
+                            ExprHelper.createUntyped('${context.getWriter().types.writeHxbType(expr.t)}{ Value: {0}, Valid: true }', [o])
+                        ), expr.t, expr.pos)
+                    ]), expr.t, expr.pos);
                 }
 
                 case _: {

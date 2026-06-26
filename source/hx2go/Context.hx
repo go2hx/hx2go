@@ -59,6 +59,7 @@ class Context {
             new hx2go.passes.TypeNormaliserBinop(this),
             new hx2go.passes.TypeNormaliserVar(this),
             new hx2go.passes.TypeNormaliserReturn(this),
+            new hx2go.passes.TypeNormaliserNew(this),
             new hx2go.passes.CastAnon(this),
             new hx2go.passes.CastNullableTo(this),
             new hx2go.passes.CastNullableFrom(this),

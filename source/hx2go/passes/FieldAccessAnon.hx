@@ -23,14 +23,18 @@ class FieldAccessAnon extends CompilerPass {
     }
 
     public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
-        expr.expr = switch expr.expr {
-            case TField(e, FAnon(cf)): {
-                var localCf = cf.shallowCopy();
-                localCf.name = StringConversions.nameToFieldName(cf.name);
+        switch expr.expr {
+            case TField(e, FAnon(cf)) if (!expr.t.match(TDynamic(_) | TDynamicAny)):
+                var t = expr.t;
+                expr.t = TDynamicAny;
 
-                TField(e, FAnon(localCf));
-            }
-            case _: expr.expr;
+                var o = ExprHelper.createCast(expr, t);
+                expr.expr = o.expr;
+                expr.t = o.t;
+
+                context.submitNode(expr, true, 1);
+
+            case _: null;
         }
     }
 

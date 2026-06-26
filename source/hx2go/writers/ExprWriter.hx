@@ -121,7 +121,7 @@ class ExprWriter extends WriterImpl {
         for (i in 0...fields.length) {
             var field = fields[i];
 
-            buf.addInline('${StringConversions.nameToFieldName(field.name)}: ');
+            buf.addInline('"${field.name}": ');
             buf.addBufferInline(writeExpr(field.expr));
 
             if (i < fields.length - 1) {
@@ -380,7 +380,7 @@ class ExprWriter extends WriterImpl {
         var str = switch fa {
             case FInstance(c, params, cf): '${estr}.${cf.name}';
             case FStatic(c, cf):  StringConversions.typePathStaticFieldName(cf.name, c);
-            case FAnon(cf): '${estr}.${cf.name}';
+            case FAnon(cf): '${estr}["${cf.name}"]';
             case FClosureInstance(c, params, cf): '${estr}.${cf.name}';
             case FClosureAnon(cf): '${estr}.${cf.name}';
             case FEnum(e, ef): '${estr}.${ef.name}';

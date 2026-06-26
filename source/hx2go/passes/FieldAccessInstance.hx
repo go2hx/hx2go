@@ -20,6 +20,7 @@ class FieldAccessInstance extends CompilerPass {
     public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
         switch expr.expr {
             case TField(e, FInstance(tp, params, cf)): {
+
                 var mt = context.resolve(tp);
                 if (mt == null) {
                     return;
@@ -47,14 +48,12 @@ class FieldAccessInstance extends CompilerPass {
                     return;
                 }
 
-                cf.name = StringConversions.nameToFieldName(cf.name);
-
                 switch field.type {
                     case TFun(_): {
                         e.expr = TField(Copy.copy(e), FInstance(tp, params, {
+                            name: 'VTable',
                             owner: cf.owner,
                             kind: cf.kind,
-                            name: 'VTable',
                             depth: cf.depth
                         }));
 
@@ -63,6 +62,13 @@ class FieldAccessInstance extends CompilerPass {
 
                     case _: null;
                 }
+
+                expr.expr = TField(e, FInstance(tp, params, {
+                    name: StringConversions.nameToFieldName(cf.name),
+                    owner: cf.owner,
+                    kind: cf.kind,
+                    depth: cf.depth
+                }));
             }
 
             case _: null;

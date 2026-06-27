@@ -21,7 +21,6 @@ class FieldAccessDynamicSet extends CompilerPass {
     public function match(expr: HxbTypedExpr): Bool {
         return switch expr.expr {
             case TBinop(OpAssign | OpAssignOp(_), { expr: TField(_, FDynamic(_)) }, _): true;
-            case TUnop(OpIncrement | OpDecrement, _, { expr: TField(_, FDynamic(_)) }): true;
             case _: false;
         }
     }

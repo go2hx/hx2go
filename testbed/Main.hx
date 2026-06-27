@@ -85,7 +85,7 @@ class Main {
         Fmt.println(-dyn_prim_i, -dyn_null_i);
         Fmt.println(!dyn_prim_b, !dyn_null_b);
 
-        var values = {
+        var values: Dynamic  = {
             prim_b: false,
             prim_i: 5,
             null_b: (null : Null<Bool>),
@@ -95,6 +95,16 @@ class Main {
         Fmt.println(-values.prim_i, -values.null_i);
         Fmt.println(!values.prim_b, !values.null_b);
         Fmt.println(values);
+
+        values.prim_i++;
+        values.prim_i += 10;
+        values.null_b = true;
+
+        Fmt.println(values);
+
+        Fmt.println(values.prim_i);
+        Fmt.println(values.prim_i++);
+        Fmt.println(++values.prim_i);
 
         // TODO: test dynamic field unop, test dyanmic opassignop, test dynamic field opassignop
     }

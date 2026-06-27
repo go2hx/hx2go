@@ -437,13 +437,12 @@ class HxDynamic {
     }
 
     // write field access on dynamic (class, anon, etc)
-    public static function setField(dyn: Dynamic, fieldName: String, v: Dynamic): Void {
+    public static function setField(dyn: Dynamic, fieldName: String, v: Dynamic): Dynamic {
         var value = ensureValue(dyn);
         var kind = value.kind();
 
         if (kind == Reflect.Interface) {
-            setField(value.elem(), fieldName, v);
-            return;
+            return setField(value.elem(), fieldName, v);
         }
 
         if (kind == Reflect.Ptr) {
@@ -476,6 +475,7 @@ class HxDynamic {
             value.setMapIndex(fn, ensureValue(v));
         }
 
+        return v;
         // TODO: throw when Null<T> is supported.
     }
 

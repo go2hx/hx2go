@@ -73,14 +73,30 @@ class Main {
         var null_float: Null<Float> = null_int;
         Fmt.println(null_int, null_float);
 
-        var arr = [1, 2, 3];
-        var iter = new ArrayIterator(arr);
+        var prim_i: Int = 5;
+        var dyn_prim_i: Dynamic = prim_i;
+        var prim_b: Bool = false;
+        var dyn_prim_b: Dynamic = prim_b;
+        var null_i: Null<Int> = null;
+        var dyn_null_i: Dynamic = null_i;
+        var null_b: Null<Bool> = null;
+        var dyn_null_b: Dynamic = null_b;
 
-        while (iter.hasNext()) {
-            trace(iter.next());
-        }
+        Fmt.println(-dyn_prim_i, -dyn_null_i);
+        Fmt.println(!dyn_prim_b, !dyn_null_b);
 
-        // TODO: test dynamic set, test dynamic unop, test dynamic field unop, test dyanmic opassignop, test dynamic field opassignop
+        var values = {
+            prim_b: false,
+            prim_i: 5,
+            null_b: (null : Null<Bool>),
+            null_i: (null: Null<Int>)
+        };
+
+        Fmt.println(-values.prim_i, -values.null_i);
+        Fmt.println(!values.prim_b, !values.null_b);
+        Fmt.println(values);
+
+        // TODO: test dynamic field unop, test dyanmic opassignop, test dynamic field opassignop
     }
 
 }

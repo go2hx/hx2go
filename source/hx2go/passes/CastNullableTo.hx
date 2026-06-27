@@ -28,8 +28,8 @@ class CastNullableTo extends CompilerPass {
 
     public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
         var ot = switch expr.t {
-            case TAbstract(_, p): p[0];
-            case _: expr.t;
+            case TAbstract({ name: "Null", pack: [] }, p): p[0];
+            case _: return;
         };
 
         var eValid = new HxbTypedExpr(

@@ -66,11 +66,6 @@ class StringConversions {
         return p;
     }
 
-    public static function moduleTypeGetDotPath(mt: HxbModuleType, modulePath: Bool = false): String {
-        var p = moduleTypeGetTypePath(mt);
-        return modulePath ? p.moduleDotPath() : p.dotPath();
-    }
-
     public static function stringPathGetFileName(sp: String): String {
         return 'Hx_${sp.replace(".", "_")}'; // if starting with _ it's ignored
     }

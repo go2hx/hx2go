@@ -93,7 +93,7 @@ class FieldAccessExtern extends CompilerPass {
 
                         case "imports":
                             for (imp in ObjectFieldHelper.readStringList(opt)) {
-                                context.defineImport(frame.type, imp);
+                                context.defineImport(frame, imp);
                             }
 
                         case _: null;

@@ -1,5 +1,6 @@
 package hx2go;
 
+import hx2go.hxb.HxbModule;
 import sys.io.Process;
 using StringTools;
 
@@ -124,14 +125,21 @@ class Context {
         if (!typeQueue.contains(modulePath)) typeQueue.push(modulePath);
         types.set(typePath, t);
 
-        transformType(t);
+        transformType(t, modulePath);
     }
 
     public function build(mainClass: String): Void {
         typesByModule = [];
         typeQueue = [];
 
-        resolve(StringConversions.pathToLossyTypePath(mainClass));
+        var mod = resolveModule(StringConversions.pathToLossyTypePath(mainClass));
+        var cls = mod.classes();
+        for (cl in cls) {
+            if (cl.path.name == "Main_Fields_") { 
+                mainClass = cl.path.dotPath();
+                break;
+            }
+        }
 
         var mainWritten = false;
         while (typeQueue.length != 0) {
@@ -220,7 +228,16 @@ class Context {
             return types[tp.dotPath()];
         }
 
-        var res = archive.findModule(tp.moduleDotPath(), "go");
+        var mod = resolveModule(tp);
+        if (mod == null) {
+            return null;
+        }
+
+        return types[tp.dotPath()];
+    }
+
+    public function resolveModule(tp: TypePath): Null<HxbModule> {
+         var res = archive.findModule(tp.moduleDotPath(), "go");
         if (res == null) {
             return null;
         }
@@ -229,8 +246,7 @@ class Context {
         for (type in mod.types) {
             buildType(type, res);
         }
-
-        return types[tp.dotPath()];
+        return mod;
     }
 
     private function writeFile(directory: String, fileName: String, content: String): Void {
@@ -335,7 +351,7 @@ class Context {
         TypedExprTools.iter(expr, prepass);
     }
 
-    private function transformType(type: HxbModuleType): Void {
+    private function transformType(type: HxbModuleType, moduleKey: String): Void {
         var roots: Array<HxbClassField> = [];
 
         switch type {
@@ -353,7 +369,7 @@ class Context {
         for (f in roots) {
             if (f.expr?.expr == null) continue;
 
-            var frame = new ContextFrame(passes, type, f);
+            var frame = new ContextFrame(passes, type, moduleKey, f);
             contextStack.push(frame);
 
             var match: HxbTypedExpr -> Void;
@@ -390,13 +406,12 @@ class Context {
         }
     }
 
-    public function defineImport(module: HxbModuleType, goImport: String): Void {
-        var path = StringConversions.moduleTypeGetDotPath(module, true);
-        if (!imports.exists(path)) {
-            imports.set(path, []);
+    public function defineImport(module: ContextFrame, goImport: String): Void {
+        if (!imports.exists(module.moduleKey)) {
+            imports.set(module.moduleKey, []);
         }
 
-        var localImports = imports[path];
+        var localImports = imports[module.moduleKey];
         if (!localImports.contains(goImport)) {
             localImports.push(goImport);
         }

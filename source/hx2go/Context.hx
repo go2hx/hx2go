@@ -56,7 +56,6 @@ class Context {
             new hx2go.passes.NullableConst(this),
             new hx2go.passes.NullableField(this),
             new hx2go.passes.NullableIndex(this),
-            new hx2go.passes.FieldAccessAnon(this),
             new hx2go.passes.TypeNormaliserUnop(this),
             new hx2go.passes.TypeNormaliserBinop(this),
             new hx2go.passes.TypeNormaliserVar(this),
@@ -64,7 +63,10 @@ class Context {
             new hx2go.passes.TypeNormaliserNew(this),
             new hx2go.passes.TypeNormaliserArray(this),
             new hx2go.passes.TypeNormaliserObject(this),
+            new hx2go.passes.ArrayAccessDynamicGet(this),
+            new hx2go.passes.FieldAccessAnon(this),
             new hx2go.passes.SuperCtor(this),
+            new hx2go.passes.CastArray(this),
             new hx2go.passes.CastNullableTo(this),
             new hx2go.passes.CastNullableFrom(this),
             new hx2go.passes.CastClosure(this),
@@ -320,8 +322,14 @@ class Context {
     }
 
     private function prepass(expr: HxbTypedExpr): Void {
-        if (expr.t != null && expr.t.match(TTypeParam(_) | TUnboundTypeParam(_))) {
-            expr.t = TDynamicAny;
+        if (expr.t != null) {
+            if (expr.t.match(TTypeParam(_) | TUnboundTypeParam(_) | TAnon(_))) {
+                expr.t = TDynamicAny;
+            }
+
+            if (expr.t.match(TInst({ name: 'Array', pack: [] }, [ TDynamicAny | TDynamic(_) ]))) {
+                expr.t = TDynamicAny;
+            }
         }
 
         TypedExprTools.iter(expr, prepass);

@@ -1,17 +1,8 @@
 package hx2go.passes;
 
 import hx2go.hxb.Typed.HxbTypedExpr;
-import hx2go.hxb.flags.HxbClassFlag;
 import hx2go.hxb.Typed.HxbFieldAccess;
-import hx2go.hxb.Ast.HxbExpr;
-import hx2go.hxb.Ast.HxbExprDef.EObjectDecl;
-import hx2go.hxb.Ast.HxbExprDef.EConst;
-import hx2go.hxb.Ast.HxbExprDef.EArrayDecl;
-import hx2go.hxb.HxbModuleType;
-import hx2go.util.ExprHelper;
-import hx2go.util.StringConversions;
-import hx2go.hxb.Ast.HxbObjectField;
-import hx2go.util.ObjectFieldHelper;
+import haxe.runtime.Copy;
 
 class FieldAccessAnon extends CompilerPass {
 
@@ -25,13 +16,9 @@ class FieldAccessAnon extends CompilerPass {
     public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
         switch expr.expr {
             case TField(e, FAnon(cf)):
+                expr.expr = TField(Copy.copy(e), FDynamic(cf.name));
                 expr.t = TDynamicAny;
-
-                var o = ExprHelper.createCast(expr, cf.type);
-                expr.expr = o.expr;
-                expr.t = o.t;
-
-                context.submitNode(expr, true, 1);
+                context.submitNode(expr, true);
 
             case _: null;
         }

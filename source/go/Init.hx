@@ -81,9 +81,7 @@ class Init {
 			hx2go.Main.exec(archiveOutput, sourceOutput, mainClass.pack.length > 0 ? '${mainClass.pack.join(".")}.${mainClass.name}' : '${mainClass.name}');
 
 			if (!FileSystem.exists(goModOutput)) {
-				Sys.setCwd(sourceOutput);
-
-				var ps = new Process("go", ["mod", "init", "main"]);
+				var ps = new Process("go", ["-C", sourceOutput, "mod", "init", "main"]);
 				ps.exitCode(true);
 				ps.close();
 			}

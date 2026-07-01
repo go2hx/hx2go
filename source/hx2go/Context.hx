@@ -325,7 +325,13 @@ class Context {
         return switch (t) {
             case TAbstract({ name: "Null", pack: [], moduleName: mName }, [inner]):
                 var n = normalize(inner);
-                TAbstract({ name: "Null", moduleName: mName, pack: [] }, [n]);
+
+                switch (n) {
+                    case TDynamicAny | TDynamic(_):
+                        TDynamicAny;
+                    case _:
+                        TAbstract({ name: "Null", moduleName: mName, pack: [] }, [n]);
+                }
 
             case TInst({ name: "Array", pack: [] }, [inner]):
                 var n = normalize(inner);

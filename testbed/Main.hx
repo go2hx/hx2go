@@ -19,6 +19,13 @@ class Main {
         var test_dyn_null_arr: Array<Null<Dynamic>> = test;
         var test_null_dyn_obj: Null<Dynamic> = test;
         Fmt.println(test_null_dyn_arr, test_dyn_null_arr, test_null_dyn_obj);
+
+        Fmt.println(test[0], test.length);
+        Fmt.println(test_dyn_arr[0], test_dyn_arr.length);
+        Fmt.println(test_dyn_obj[0], test_dyn_obj.length);
+        Fmt.println(test_null_dyn_arr[0], test_null_dyn_arr.length);
+        Fmt.println(test_dyn_null_arr[0], test_dyn_null_arr.length);
+        Fmt.println(test_null_dyn_obj[0], test_null_dyn_obj.length);
     }
 
     public static function printAll<T>(iter: ArrayIterator<T>): Void {

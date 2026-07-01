@@ -51,7 +51,6 @@ class Context {
             new hx2go.passes.RewriteDynamicUnop(this),
             new hx2go.passes.FieldAccessGeneric(this),
             new hx2go.passes.TypeNormaliserCall(this),
-            new hx2go.passes.RewriteDynamicBinop(this),
             new hx2go.passes.NullableCompare(this),
             new hx2go.passes.NullableConst(this),
             new hx2go.passes.NullableField(this),
@@ -63,8 +62,9 @@ class Context {
             new hx2go.passes.TypeNormaliserNew(this),
             new hx2go.passes.TypeNormaliserArray(this),
             new hx2go.passes.TypeNormaliserObject(this),
-            new hx2go.passes.ArrayAccessDynamicGet(this),
-            new hx2go.passes.FieldAccessAnon(this),
+            new hx2go.passes.FieldAccessDynamicSet(this),
+            new hx2go.passes.FieldAccessDynamicGet(this),
+            new hx2go.passes.RewriteDynamicBinop(this),
             new hx2go.passes.SuperCtor(this),
             new hx2go.passes.CastArray(this),
             new hx2go.passes.CastNullableTo(this),
@@ -74,11 +74,10 @@ class Context {
             new hx2go.passes.CastDynamic(this),
             new hx2go.passes.CastClass(this),
             new hx2go.passes.RewriteThrow(this),
+            new hx2go.passes.ArrayAccessDynamicGet(this),
             new hx2go.passes.FieldAccessSuper(this),
             new hx2go.passes.FieldAccessExtern(this),
             new hx2go.passes.FieldAccessInstance(this),
-            new hx2go.passes.FieldAccessDynamicSet(this),
-            new hx2go.passes.FieldAccessDynamicGet(this),
             new hx2go.passes.RewriteSliceCreation(this),
             new hx2go.passes.RewriteStringLength(this),
             new hx2go.passes.RewriteArrayLength(this),
@@ -333,6 +332,19 @@ class Context {
         }
 
         TypedExprTools.iter(expr, prepass);
+
+        switch expr.expr {
+            case TField(e, FAnon(fa)): {
+                expr.expr = TField(e, FDynamic(fa.name));
+                expr.t = TDynamicAny;
+            }
+
+            case TField(e, FDynamic(_)): {
+                expr.t = TDynamicAny;
+            }
+
+            case _: null;
+        }
     }
 
     private function transformType(type: HxbModuleType): Void {

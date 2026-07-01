@@ -5,6 +5,7 @@ import go.strings.Strings;
 import go.reflect.Value;
 import go.reflect.Kind;
 import go.Syntax;
+import go.fmt.Fmt;
 
 // HxDynamic implements Dynamic runtime manipulation required by Haxe
 // using go.reflect.Reflect and naming from http://haxedev.wikidot.com/article:operator-overloading
@@ -386,7 +387,7 @@ class HxDynamic {
     static function valueToClass(value: Value, className: String): Value {
         var kind = value.kind();
 
-        if (isNull(value)) {
+        if (isNull(value) || !value.isValid()) {
             throw "runtime.HxDynamic.toClass: dynamic is null, cannot cast to " + className;
         }
 
@@ -413,7 +414,7 @@ class HxDynamic {
         var value = ensureValue(dyn);
         var kind = value.kind();
 
-        if (isNull(value)) {
+        if (isNull(dyn) || !value.isValid()) {
             throw "runtime.HxDynamic.field null field access: " + fieldName;
         }
 
@@ -483,7 +484,7 @@ class HxDynamic {
         var value = ensureValue(dyn);
         var kind = value.kind();
 
-        if (isNull(value)) {
+        if (isNull(dyn) || !value.isValid()) {
             throw "runtime.HxDynamic.setArrayIndex null array access";
         }
 
@@ -520,7 +521,7 @@ class HxDynamic {
         var value = ensureValue(dyn);
         var kind = value.kind();
 
-        if (isNull(value)) {
+        if (isNull(dyn) || !value.isValid()) {
             throw "runtime.HxDynamic.getArrayIndex null array access";
         }
 
@@ -540,6 +541,25 @@ class HxDynamic {
         // TODO: throw when Null<T> is supported.
 
         return value;
+    }
+
+    public static function getArrayLength(dyn: Dynamic): Int {
+        var value = ensureValue(dyn);
+        var kind = value.kind();
+
+        if (isNull(value) || !value.isValid()) {
+            return 0;
+        }
+
+        if (kind == Reflect.Ptr || kind == Reflect.Interface) {
+            return getArrayLength(value.elem());
+        }
+
+        if (kind == Reflect.Slice || kind == Reflect.Array) {
+            return value.len();
+        }
+
+        throw "runtime.HxDynamic.getArrayLength invalid type";
     }
 
     // given the type of dyn, if it is reflect.Value we return that, otherwise we use reflect.valueOf

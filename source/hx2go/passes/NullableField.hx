@@ -14,6 +14,7 @@ import hx2go.hxb.Ast.HxbObjectField;
 import hx2go.util.ObjectFieldHelper;
 import hx2go.hxb.HxbType;
 import haxe.runtime.Copy;
+import hx2go.util.TypeHelper;
 
 // NOTE: identical to NullableIndex, but separate for clarity
 class NullableField extends CompilerPass {
@@ -29,9 +30,11 @@ class NullableField extends CompilerPass {
         switch expr.expr {
             case TField(e, _): {
                 var local = Copy.copy(e);
-                context.submitNode(local, true);
+                var o = ExprHelper.createUntyped('{0}.Value', [local]);
 
-                e.expr = ExprHelper.createUntyped('{0}.Value', [local]).expr;
+                e.expr = o.expr;
+                e.t = TypeHelper.follow(context, e.t);
+                context.submitNode(expr, true);
             }
             case _: null;
         }

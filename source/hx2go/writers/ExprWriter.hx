@@ -19,6 +19,7 @@ import hx2go.hxb.Typed.HxbTypedExprDef;
 import hx2go.hxb.Typed.HxbTObjectField;
 import hx2go.hxb.HxbType;
 import hx2go.hxb.TypePath;
+import hx2go.hxb.tools.TypedExprTools;
 
 class ExprWriter extends WriterImpl {
 
@@ -78,6 +79,7 @@ class ExprWriter extends WriterImpl {
         buf.addInline("&([]");
         buf.addBufferInline(switch expr.t {
             case TInst(_, params): writer.types.writeHxbType(params[0]);
+            case TDynamic(_) | TDynamicAny: writer.types.writeHxbType(expr.t);
             case _: throw "type is not array type for arrayDecl?";
         });
 

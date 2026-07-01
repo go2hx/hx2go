@@ -12,6 +12,8 @@ import hx2go.hxb.Ast.HxbBinop;
 
 class RewriteDynamicUnop extends CompilerPass { // only for OpIncrement / OpDecrement
 
+    private static var unopId: Int = 0;
+
     public function match(expr: HxbTypedExpr): Bool {
         return switch expr.expr {
             case TUnop(OpIncrement | OpDecrement, _, { t: TDynamic(_) | TDynamicAny }): true;
@@ -30,7 +32,7 @@ class RewriteDynamicUnop extends CompilerPass { // only for OpIncrement / OpDecr
     public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
         var tmp = new HxbVar(
             -1,
-            "hx_dyn_unop",
+            'hx_dyn_unop_${unopId++}',
             VUser(TVOLocalVariable),
             0,
             [],

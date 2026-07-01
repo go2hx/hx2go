@@ -46,19 +46,19 @@ class Main {
 
         var test_dyn_arr: Array<Dynamic> = test;
         var test_dyn_obj: Dynamic = test;
-        Fmt.println(test_dyn_arr, test_dyn_obj);
+        trace(test_dyn_arr, test_dyn_obj);
 
         var test_null_dyn_arr: Null<Array<Dynamic>> = test;
         var test_dyn_null_arr: Array<Null<Dynamic>> = test;
         var test_null_dyn_obj: Null<Dynamic> = test;
-        Fmt.println(test_null_dyn_arr, test_dyn_null_arr, test_null_dyn_obj);
+        trace(test_null_dyn_arr, test_dyn_null_arr, test_null_dyn_obj);
 
-        Fmt.println(test[0], test.length);
-        Fmt.println(test_dyn_arr[0], test_dyn_arr.length);
-        Fmt.println(test_dyn_obj[0], test_dyn_obj.length);
-        Fmt.println(test_null_dyn_arr[0], test_null_dyn_arr.length);
-        Fmt.println(test_dyn_null_arr[0], test_dyn_null_arr.length);
-        Fmt.println(test_null_dyn_obj[0], test_null_dyn_obj.length);
+        trace(test[0], test.length);
+        trace(test_dyn_arr[0], test_dyn_arr.length);
+        trace(test_dyn_obj[0], test_dyn_obj.length);
+        trace(test_null_dyn_arr[0], test_null_dyn_arr.length);
+        trace(test_dyn_null_arr[0], test_dyn_null_arr.length);
+        trace(test_null_dyn_obj[0], test_null_dyn_obj.length);
 
         var arr_mat3: Array<Mat3> = [
             {
@@ -72,12 +72,12 @@ class Main {
         var arr_dyn: Array<Dynamic> = arr_mat3;
         var arr_mat2: Array<Mat2> = arr_mat3;
 
-        Fmt.println(arr_mat3);
-        Fmt.println(arr_mat2);
-        Fmt.println(obj_dyn);
-        Fmt.println(arr_dyn);
-        Fmt.println(arr_dyn[0].m0.x);
-        Fmt.println(obj_dyn[0].m1.y);
+        trace(arr_mat3);
+        trace(arr_mat2);
+        trace(obj_dyn);
+        trace(arr_dyn);
+        trace(arr_dyn[0].m0.x);
+        trace(obj_dyn[0].m1.y);
 
         var anon = {
             x: 3,
@@ -91,7 +91,7 @@ class Main {
         var anon_dyn: Dynamic = anon;
         anon_dyn.x = 100;
 
-        Fmt.println(anon, anon.x + anon.y);
+        trace(anon, anon.x + anon.y);
 
         var vec: IVec3 = {
             x: 10,
@@ -99,7 +99,7 @@ class Main {
             z: 1000
         };
 
-        Fmt.println(vec);
+        trace(vec);
 
         var v1: Null<Int> = null;
         var v2: Int = 5;
@@ -112,19 +112,19 @@ class Main {
         var nulled_dyn: Dynamic = nulled;
         nulled_dyn.z = null;
 
-        Fmt.println(v1);
-        Fmt.println(v2);
-        Fmt.println(nulled.x);
-        Fmt.println(nulled.y);
-        Fmt.println(nulled.z);
-        Fmt.println(nulled);
+        trace(v1);
+        trace(v2);
+        trace(nulled.x);
+        trace(nulled.y);
+        trace(nulled.z);
+        trace(nulled);
 
         trace("A");
         trace("A", "B", "C");
 
         var null_int: Null<Int> = null;
         var null_float: Null<Float> = null_int;
-        Fmt.println(null_int, null_float);
+        trace(null_int, null_float);
 
         var prim_i: Int = 5;
         var dyn_prim_i: Dynamic = prim_i;
@@ -135,8 +135,8 @@ class Main {
         var null_b: Null<Bool> = null;
         var dyn_null_b: Dynamic = null_b;
 
-        Fmt.println(-dyn_prim_i, -dyn_null_i);
-        Fmt.println(!dyn_prim_b, !dyn_null_b);
+        trace(-dyn_prim_i, -dyn_null_i);
+        trace(!dyn_prim_b, !dyn_null_b);
 
         dyn_prim_i++;
         ++dyn_prim_i;
@@ -149,20 +149,20 @@ class Main {
             null_i: (null: Null<Int>)
         };
 
-        Fmt.println(-values.prim_i, -values.null_i);
-        Fmt.println(!values.prim_b, !values.null_b);
-        Fmt.println(values);
+        trace(-values.prim_i, -values.null_i);
+        trace(!values.prim_b, !values.null_b);
+        trace(values);
 
         values.prim_i++;
         values.prim_i += 10;
         values.null_b = true;
 
-        Fmt.println(values);
+        trace(values);
 
-        Fmt.println(values.prim_i);
-        Fmt.println(values.prim_i++);
-        Fmt.println(++values.prim_i);
-        Fmt.println(values.prim_i += 10);
+        trace(values.prim_i);
+        trace(values.prim_i++);
+        trace(++values.prim_i);
+        trace(values.prim_i += 10);
 
         var x: Int = 3;
         var y: Int = 5;
@@ -176,54 +176,54 @@ class Main {
 
         var x: Int = 0;
         var x_null: Null<Int> = x;
-        Sys.println('x_null is null? ' + (x_null == null));
+        trace('x_null is null? ' + (x_null == null));
         var x_int: Int = x;
-        Sys.println('x value was ' + x + ' now ' + x_int);
+        trace('x value was ' + x + ' now ' + x_int);
         x_null = null;
-        Sys.println('nullable x is ' + x_null);
+        trace('nullable x is ' + x_null);
         x_int = x_null;
-        Sys.println('x value is now ' + x_int);
+        trace('x value is now ' + x_int);
 
         var y: Int = 5;
         var y_null: Null<Int> = y;
-        Sys.println('y_null is null? ' + (y_null == null));
-        Sys.println('nullable y is ' + y_null);
+        trace('y_null is null? ' + (y_null == null));
+        trace('nullable y is ' + y_null);
 
         var y_float: Float = y_null;
-        Sys.println('nullable y casted to float is ' + y_float);
+        trace('nullable y casted to float is ' + y_float);
         var y_null_float: Null<Float> = y_null;
-        Sys.println('nullable y casted to nullable float is ' + y_null_float);
+        trace('nullable y casted to nullable float is ' + y_null_float);
 
         var y_int: Int = y;
-        Sys.println('y value is ' + y_int);
+        trace('y value is ' + y_int);
         y_null = null;
-        Sys.println('y_null is null? ' + (y_null == null));
-        Sys.println('nullable y is ' + y_null);
+        trace('y_null is null? ' + (y_null == null));
+        trace('nullable y is ' + y_null);
         y_int = y_null;
-        Sys.println('y value is ' + y_int);
+        trace('y value is ' + y_int);
 
         var z: Int = 3;
         var z_null: Null<Int> = z;
         var z_dyn: Dynamic = z_null;
-        Sys.println('z_dyn is null? ' + (z_dyn == null));
+        trace('z_dyn is null? ' + (z_dyn == null));
 
         var z_dyn_int: Int = z_dyn;
-        Sys.println('z_dyn_int value ' + z_dyn_int);
+        trace('z_dyn_int value ' + z_dyn_int);
 
         var z_dyn_null_int: Null<Int> = z_dyn;
-        Sys.println('z_dyn_null_int value ' + z_dyn_null_int);
-        Sys.println('z_dyn_null_int is null? ' + (z_dyn_null_int == null));
+        trace('z_dyn_null_int value ' + z_dyn_null_int);
+        trace('z_dyn_null_int is null? ' + (z_dyn_null_int == null));
 
         z_null = null;
         z_dyn = z_null;
-        Sys.println('z_dyn is null? ' + (z_dyn == null));
+        trace('z_dyn is null? ' + (z_dyn == null));
 
         z_dyn_int = z_dyn;
-        Sys.println('z_dyn_int value ' + z_dyn_int);
+        trace('z_dyn_int value ' + z_dyn_int);
 
         z_dyn_null_int = z_dyn;
-        Sys.println('z_dyn_null_int value ' + z_dyn_null_int);
-        Sys.println('z_dyn_null_int is null? ' + (z_dyn_null_int == null));
+        trace('z_dyn_null_int value ' + z_dyn_null_int);
+        trace('z_dyn_null_int is null? ' + (z_dyn_null_int == null));
     }
 
     public static function printAll<T>(iter: ArrayIterator<T>): Void {

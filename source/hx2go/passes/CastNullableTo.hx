@@ -11,6 +11,8 @@ import hx2go.hxb.Typed.HxbVarKind;
 
 class CastNullableTo extends CompilerPass {
 
+    public static var nullableId: Int = 0;
+
     public function match(expr: HxbTypedExpr): Bool {
         if (expr.t == null) {
             return false;
@@ -43,7 +45,7 @@ class CastNullableTo extends CompilerPass {
                 case TAbstract({ name: "Null", pack: [] }, _): {
                     var tmp = new HxbVar(
                         -1,
-                        "hx_nullable",
+                        'hx_nullable_t${nullableId++}',
                         VUser(TVOLocalVariable),
                         0,
                         [],
@@ -69,7 +71,7 @@ class CastNullableTo extends CompilerPass {
                 case TDynamic(_) | TDynamicAny: {
                     var tmp = new HxbVar(
                         -1,
-                        "hx_nullable",
+                        'hx_nullable_t${nullableId++}',
                         VUser(TVOLocalVariable),
                         0,
                         [],

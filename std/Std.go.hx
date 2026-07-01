@@ -10,7 +10,7 @@ class Std {
             return "null";
         }
 
-        var value = HxDynamic.ensureValue(s);
+        var value = HxDynamic.ensureConcreteValue(s);
         if (!value.isValid()) {
             return "null";
         }

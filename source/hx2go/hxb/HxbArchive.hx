@@ -222,9 +222,10 @@ class HxbArchive {
 		optionally restricted to a target. Returns the first match or `null`.
 	**/
 	public function findModule(dotPath:String, ?target:String):Null<ModuleRef> {
-		for (m in modules())
+		for (m in modules()) {
 			if (m.dotPath() == dotPath && (target == null || m.target == target))
 				return m;
+		}
 		return null;
 	}
 

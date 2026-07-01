@@ -10,11 +10,13 @@ class ContextFrame {
     public var pending: Map<ICompilerPass, Array<HxbTypedExpr>>;
     public var currentPassIndex: Int;
     public var type: HxbModuleType;
+    public var moduleKey: String;
     public var field: HxbClassField;
 
-    public function new(passes: Array<ICompilerPass>, type: HxbModuleType, ?field: HxbClassField) {
+    public function new(passes: Array<ICompilerPass>, type: HxbModuleType, moduleKey: String, ?field: HxbClassField) {
         this.passes = passes;
         this.type = type;
+        this.moduleKey = moduleKey;
         this.pending = [];
         this.currentPassIndex = -1;
         this.field = field;

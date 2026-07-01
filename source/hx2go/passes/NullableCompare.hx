@@ -20,6 +20,21 @@ class NullableCompare extends CompilerPass {
         }
     }
 
+    public function executeSide(right: HxbTypedExpr, left: HxbTypedExpr): Void {
+        if (right.expr.match(TConst(_))) {
+            var local_cmp = Copy.copy(left);
+            left.expr = switch left.t {
+                case TAbstract({ pack: [], name: 'Null' }, _):  ExprHelper.createUntyped("{0}.Valid", [local_cmp]).expr;
+                case _:  ExprHelper.createUntyped("{0} != nil", [local_cmp]).expr;
+            }
+
+            left.t = TBool;
+            right.expr = TConst(TBool(false));
+            right.t = TBool;
+            context.submitNode(local_cmp, true);
+        }
+    }
+
     public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
         var left: HxbTypedExpr = null;
         var right: HxbTypedExpr = null;
@@ -32,19 +47,8 @@ class NullableCompare extends CompilerPass {
             case _: return;
         }
 
-        if (left.expr.match(TConst(_))) {
-            var local_cmp = Copy.copy(right);
-            right.expr = ExprHelper.createUntyped("{0}.Valid", [local_cmp]).expr;
-            left.expr = TConst(TBool(false));
-            context.submitNode(local_cmp, true);
-        }
-
-        if (right.expr.match(TConst(_))) {
-            var local_cmp = Copy.copy(left);
-            left.expr = ExprHelper.createUntyped("{0}.Valid", [local_cmp]).expr;
-            right.expr = TConst(TBool(false));
-            context.submitNode(local_cmp, true);
-        }
+        executeSide(left, right);
+        executeSide(right, left);
     }
 
 }

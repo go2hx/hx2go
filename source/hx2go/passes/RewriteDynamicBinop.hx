@@ -60,6 +60,15 @@ class RewriteDynamicBinop extends CompilerPass {
         return e;
     }
 
+    function returnsBool(op: HxbBinop): Bool {
+        return switch (op) {
+            case OpEq, OpNotEq, OpGt, OpGte, OpLt, OpLte, OpOr, OpAnd:
+                true;
+            case _:
+                false;
+        }
+    }
+
     public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
         switch expr.expr {
             case TBinop(op, left, right): {
@@ -80,7 +89,7 @@ class RewriteDynamicBinop extends CompilerPass {
                 var opName = toOperationFunction(op);
                 var o = makeDynamicCall(left, right, opName);
 
-                if (!expr.t.match(TDynamic(_) | TDynamicAny)) {
+                if (!expr.t.match(TDynamic(_) | TDynamicAny) && !returnsBool(op)) {
                     o = ExprHelper.createCast(o, expr.t);
                     context.submitNode(o, true);
                 }

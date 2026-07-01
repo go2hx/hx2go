@@ -20,6 +20,7 @@ import hx2go.hxb.ModuleRef;
 import hx2go.hxb.flags.HxbClassFlag;
 import haxe.CallStack;
 import hx2go.hxb.HxbClassField;
+import hx2go.hxb.HxbType;
 
 class Context {
 
@@ -52,11 +53,13 @@ class Context {
             new hx2go.passes.RewriteDynamicUnop(this),
             new hx2go.passes.FieldAccessGeneric(this),
             new hx2go.passes.TypeNormaliserCall(this),
-            new hx2go.passes.RewriteDynamicBinop(this),
             new hx2go.passes.NullableCompare(this),
             new hx2go.passes.NullableConst(this),
             new hx2go.passes.NullableField(this),
             new hx2go.passes.NullableIndex(this),
+            new hx2go.passes.RewriteDynamicBinop(this),
+            new hx2go.passes.FieldAccessDynamicSet(this),
+            new hx2go.passes.FieldAccessDynamicGet(this),
             new hx2go.passes.TypeNormaliserUnop(this),
             new hx2go.passes.TypeNormaliserBinop(this),
             new hx2go.passes.TypeNormaliserVar(this),
@@ -64,8 +67,6 @@ class Context {
             new hx2go.passes.TypeNormaliserNew(this),
             new hx2go.passes.TypeNormaliserArray(this),
             new hx2go.passes.TypeNormaliserObject(this),
-            new hx2go.passes.ArrayAccessDynamicGet(this),
-            new hx2go.passes.FieldAccessAnon(this),
             new hx2go.passes.SuperCtor(this),
             new hx2go.passes.CastArray(this),
             new hx2go.passes.CastNullableTo(this),
@@ -75,11 +76,10 @@ class Context {
             new hx2go.passes.CastDynamic(this),
             new hx2go.passes.CastClass(this),
             new hx2go.passes.RewriteThrow(this),
+            new hx2go.passes.ArrayAccessDynamicGet(this),
             new hx2go.passes.FieldAccessSuper(this),
             new hx2go.passes.FieldAccessExtern(this),
             new hx2go.passes.FieldAccessInstance(this),
-            new hx2go.passes.FieldAccessDynamicSet(this),
-            new hx2go.passes.FieldAccessDynamicGet(this),
             new hx2go.passes.RewriteSliceCreation(this),
             new hx2go.passes.RewriteStringLength(this),
             new hx2go.passes.RewriteArrayLength(this),
@@ -337,18 +337,64 @@ class Context {
         }
     }
 
+    function normalize(t: HxbType): HxbType {
+        return switch (t) {
+            case TAbstract({ name: "Null", pack: [], moduleName: mName }, [inner]):
+                var n = normalize(inner);
+
+                switch (n) {
+                    case TDynamicAny | TDynamic(_):
+                        TDynamicAny;
+                    case _:
+                        TAbstract({ name: "Null", moduleName: mName, pack: [] }, [n]);
+                }
+
+            case TInst({ name: "Array", pack: [] }, [inner]):
+                var n = normalize(inner);
+
+                switch (n) {
+                    case TDynamicAny | TDynamic(_):
+                        TDynamicAny;
+                    case _:
+                        TInst({ name: "Array", moduleName: "Array", pack: [] }, [n]);
+                }
+
+            case TTypeParam(_) | TUnboundTypeParam(_) | TAnon(_):
+                TDynamicAny;
+
+            case TInst(path, params):
+                TInst(path, params.map(normalize));
+
+            case TType(path, params):
+                TType(path, params.map(normalize));
+
+            case TAbstract(path, params):
+                TAbstract(path, params.map(normalize));
+
+            case _:
+                t;
+        }
+    }
+
     private function prepass(expr: HxbTypedExpr): Void {
         if (expr.t != null) {
-            if (expr.t.match(TTypeParam(_) | TUnboundTypeParam(_) | TAnon(_))) {
-                expr.t = TDynamicAny;
-            }
-
-            if (expr.t.match(TInst({ name: 'Array', pack: [] }, [ TDynamicAny | TDynamic(_) ]))) {
-                expr.t = TDynamicAny;
-            }
+            expr.t = normalize(expr.t);
         }
 
         TypedExprTools.iter(expr, prepass);
+
+        switch expr.expr {
+            case TField(e, FAnon(fa)): {
+                expr.expr = TField(e, FDynamic(fa.name));
+                expr.t = TDynamicAny;
+            }
+
+            case TField(e, FDynamic(_)): {
+                expr.t = TDynamicAny;
+            }
+
+            case _: null;
+        }
     }
 
     private function transformType(type: HxbModuleType, moduleKey: String): Void {

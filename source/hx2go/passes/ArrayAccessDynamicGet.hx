@@ -12,12 +12,14 @@ import hx2go.util.ExprHelper;
 import hx2go.util.StringConversions;
 import hx2go.hxb.Ast.HxbObjectField;
 import hx2go.util.ObjectFieldHelper;
+import hx2go.hxb.HxbType;
+import hx2go.util.TypeHelper;
 
 class ArrayAccessDynamicGet extends CompilerPass {
 
     public function match(expr: HxbTypedExpr): Bool {
-        return switch expr.expr {
-            case TArray({ t: TDynamic(_) | TDynamicAny }, _): true;
+        return switch [expr.expr, TypeHelper.follow(context, expr.t)] {
+            case [TArray(_), TInst({ name: "Array", pack: [] }, [TDynamic(_) | TDynamicAny]) | TDynamic(_) | TDynamicAny]: true;
             case _: false;
         }
     }

@@ -9,6 +9,10 @@ import hx2go.hxb.HxbModuleType;
 class TypeHelper {
 
     public static function follow(context: Context, type: HxbType): HxbType {
+        if (type == null) {
+            return null;
+        }
+
         return switch type {
             case TType(tp, _): {
                 var mod = context.resolve(tp);

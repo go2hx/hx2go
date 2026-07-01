@@ -432,7 +432,10 @@ class HxDynamic {
             );
         }
 
-        // TODO: throw when Null<T> is supported.
+        if (fieldName == "length") {
+            if (kind == Reflect.Array || kind == Reflect.Slice) value = ensureValue(getArrayLength(dyn));
+            if (kind == Reflect.String) value = ensureValue(toString(dyn).length);
+        }
 
         return value;
     }
@@ -563,7 +566,7 @@ class HxDynamic {
     }
 
     // given the type of dyn, if it is reflect.Value we return that, otherwise we use reflect.valueOf
-    private static function ensureValue(dyn: Dynamic): Value {
+    public static function ensureValue(dyn: Dynamic): Value {
         var ok: Bool = false;
         var value: Value = Null;
         Syntax.code("{0}, {1} = {2}.(reflect.Value)", value, ok, dyn);
@@ -579,7 +582,7 @@ class HxDynamic {
     // in cases like operations (add, sub, etc) we need to work with the underlying type.
     // as dynamic field access always returns interface{}, we need to fetch the underlying value.
     // for field access (w/ ensureValue) we don't want to get the underlying value as that may destroy setability.
-    private static function ensureConcreteValue(dyn: Dynamic): Value {
+    public static function ensureConcreteValue(dyn: Dynamic): Value {
         var v = ensureValue(dyn);
         var k = v.kind();
 

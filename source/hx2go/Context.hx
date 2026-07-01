@@ -19,6 +19,7 @@ import hx2go.hxb.ModuleRef;
 import hx2go.hxb.flags.HxbClassFlag;
 import haxe.CallStack;
 import hx2go.hxb.HxbClassField;
+import hx2go.hxb.HxbType;
 
 class Context {
 
@@ -320,15 +321,42 @@ class Context {
         }
     }
 
+    function normalize(t: HxbType): HxbType {
+        return switch (t) {
+            case TAbstract({ name: "Null", pack: [], moduleName: mName }, [inner]):
+                var n = normalize(inner);
+                TAbstract({ name: "Null", moduleName: mName, pack: [] }, [n]);
+
+            case TInst({ name: "Array", pack: [] }, [inner]):
+                var n = normalize(inner);
+
+                switch (n) {
+                    case TDynamicAny | TDynamic(_):
+                        TDynamicAny;
+                    case _:
+                        TInst({ name: "Array", moduleName: "Array", pack: [] }, [n]);
+                }
+
+            case TTypeParam(_) | TUnboundTypeParam(_) | TAnon(_):
+                TDynamicAny;
+
+            case TInst(path, params):
+                TInst(path, params.map(normalize));
+
+            case TType(path, params):
+                TType(path, params.map(normalize));
+
+            case TAbstract(path, params):
+                TAbstract(path, params.map(normalize));
+
+            case _:
+                t;
+        }
+    }
+
     private function prepass(expr: HxbTypedExpr): Void {
         if (expr.t != null) {
-            if (expr.t.match(TTypeParam(_) | TUnboundTypeParam(_) | TAnon(_))) {
-                expr.t = TDynamicAny;
-            }
-
-            if (expr.t.match(TInst({ name: 'Array', pack: [] }, [ TDynamicAny | TDynamic(_) ]))) {
-                expr.t = TDynamicAny;
-            }
+            expr.t = normalize(expr.t);
         }
 
         TypedExprTools.iter(expr, prepass);

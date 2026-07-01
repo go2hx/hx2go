@@ -129,14 +129,14 @@ class TypeWriter extends WriterImpl {
             return new OutputBuffer("any");
         }
 
-        return new OutputBuffer(switch type {
+        var buf = new OutputBuffer(switch type {
             case TVoid: "void";
             case TInt: "int";
             case TFloat: "float64";
             case TBool: "bool";
             case TString: "string";
             case TAbstract({ pack: [], name: 'Null' }, params): 'struct { Value ${writeHxbType(params[0])}; Valid bool }'; // TODO: null types
-            case TInst({ pack: [], name: 'Array' }, [ TDynamic(_) | TDynamicAny ]): 'any';
+            case TInst({ pack: [], name: 'Array' }, [ TDynamic(_) | TDynamicAny | TTypeParam(_) | TUnboundTypeParam(_) ]): 'any';
             case TInst({ pack: [], name: 'Array' }, params): '*[]${writeHxbType(params[0])}';
             case TAbstract({ pack: ['go'], name: 'Slice' }, params): '[]${writeHxbType(params[0])}';
             case TAnon(anon): 'any'; // TODO: anon.stauts, aka openness?
@@ -144,6 +144,8 @@ class TypeWriter extends WriterImpl {
             case TFun(params, ret): 'func(${params.map(p -> writeHxbType(p.t)).join(', ')})${ret == TVoid ? '' : ' ${writeHxbType(ret)}'}';
             case _: "any";
         });
+
+        return buf;
     }
 
 }

@@ -24,6 +24,15 @@ class CastClass extends CompilerPass {
     public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
         switch expr {
             case { expr: TCast(e, _), t: TInst(tp, _) }:
+                switch e.t {
+                    case TInst(ftp, _) if (ftp.dotPath() == tp.dotPath()): {
+                        expr.expr = e.expr;
+                        return;
+                    }
+
+                    case _: null;
+                }
+
                 var m = context.resolve(tp);
                 if (m == null) {
                     return;

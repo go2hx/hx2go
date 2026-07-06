@@ -13,4 +13,7 @@ function main() {
     };
 
     z(50, 50);
+
+    var w: Null<Dynamic> = z;
+    w(50, 100);
 }

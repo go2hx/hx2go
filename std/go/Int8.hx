@@ -180,6 +180,9 @@ extern abstract Int8 {
    @:from public static inline function fromInt(x: Int): Int8 {
        return Go.int8(x);
    }
+   @:from public static inline function fromByte(x: Byte): Int8 {
+      return Go.int8(x);
+   }
    @:from public static inline function fromGoInt(x: GoInt): Int8 {
        return Go.int8(x);
    }

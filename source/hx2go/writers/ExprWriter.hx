@@ -392,7 +392,7 @@ class ExprWriter extends WriterImpl {
                 var tp = StringConversions.moduleTypeGetTypePath(m);
                 StringConversions.typePathStaticFieldName(cf.name, tp);
             }
-            case FAnon(cf): '${estr}["${cf.name}"]';
+            case FAnon(cf): '${estr}.${StringConversions.toPascalCase(cf.name)}';
             case FClosureInstance(c, params, cf): '${estr}.${cf.name}';
             case FClosureAnon(cf): '${estr}.${cf.name}';
             case FEnum(e, ef): '${estr}.${ef.name}';

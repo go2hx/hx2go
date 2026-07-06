@@ -368,6 +368,13 @@ class Context {
             case TInst(path, params):
                 TInst(path, params.map(normalize));
 
+            case TType(path, [TAnon(anon)]) if (path.dotPath() == "go.Tuple"):
+                TType(path, [ TAnon(new HxbAnon(AClosed, anon.fields.map(f -> {
+                    var v = f.shallowCopy();
+                    v.type = normalize(f.type);
+                    v;
+                }) )) ]);
+
             case TType(path, params):
                 var fwd = TypeHelper.followTypedef(this, t);
                 var fwdNorm = normalize(fwd);
@@ -394,6 +401,10 @@ class Context {
         TypedExprTools.iter(expr, prepass);
 
         switch expr.expr {
+            case TField(e, FAnon(fa)) if (e.t.match(TType({ name: 'Tuple', pack: ['go'] }, _))): {
+                // we don't want to do anything.
+            }
+
             case TField(e, FAnon(fa)): {
                 expr.expr = TField(e, FDynamic(fa.name));
                 expr.t = TDynamicAny;

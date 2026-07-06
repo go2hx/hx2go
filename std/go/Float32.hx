@@ -158,6 +158,9 @@ extern abstract Float32 {
    @:from public static inline function fromInt8(x: Int8): Float32 {
        return Go.float32(x);
    }
+   @:from public static inline function fromByte(x: Byte): Float32 {
+      return Go.float32(x);
+   }
    @:from public static inline function fromInt16(x: Int16): Float32 {
        return Go.float32(x);
    }

@@ -198,6 +198,9 @@ extern abstract UInt16 {
    @:from public static inline function fromInt8(x: Int8): UInt16 {
        return Go.uint16(x);
    }
+   @:from public static inline function fromByte(x: Byte): UInt16 {
+      return Go.uint16(x);
+   }
    @:from public static inline function fromInt32(x: Int32): UInt16 {
        return Go.uint16(x);
    }

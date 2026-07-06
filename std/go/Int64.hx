@@ -198,6 +198,9 @@ extern abstract Int64 {
    @:from public static inline function fromInt8(x: Int8): Int64 {
        return Go.int64(x);
    }
+   @:from public static inline function fromByte(x: Byte): Int64 {
+      return Go.int64(x);
+   }
    @:from public static inline function fromInt16(x: Int16): Int64 {
        return Go.int64(x);
    }

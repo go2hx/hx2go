@@ -6,6 +6,7 @@ package go;
 
 @:go.Type({ topLevel: true, pascalCase: false })
 extern class Go {
+   @:pure static function byte(x: Dynamic): Byte;
    @:pure static function int(x: Dynamic): GoInt;
    @:pure static function uint(x: Dynamic): GoUInt;
    @:pure static function uint8(x: Dynamic): UInt8;

@@ -73,6 +73,7 @@ class TypeWriter extends WriterImpl {
             case { name: "Bool", pack: [] }: "bool";
             case { name: "Single", pack: [] } | { name: "Float32", pack: ['go'] }: "float32";
             case { name: "String", pack: [] }: "string";
+            case { name: "Byte", pack: ['go'] }: "byte";
             case _: null;
         }
 
@@ -137,6 +138,7 @@ class TypeWriter extends WriterImpl {
             case TFloat: "float64";
             case TBool: "bool";
             case TString: "string";
+            case TType({ pack: ['go'], name: 'Tuple'}, [TAnon(anon)]): 'struct { ${anon.fields.map(f -> '${StringConversions.toPascalCase(f.name)} ${writeHxbType(f.type)}').join('; ')} }';
             case TAbstract({ pack: [], name: 'Null' }, params): 'struct { Value ${writeHxbType(params[0])}; Valid bool }';
             case TInst({ pack: [], name: 'Array' }, params): '*[]${writeHxbType(params[0])}';
             case TAbstract({ pack: ['go'], name: 'Slice' }, params): '[]${writeHxbType(params[0])}';

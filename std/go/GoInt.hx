@@ -195,6 +195,9 @@ extern abstract GoInt {
    @:from public static inline function fromInt8(x: Int8): GoInt {
        return Go.int(x);
    }
+   @:from public static inline function fromByte(x: Byte): GoInt {
+      return Go.int(x);
+   }
    @:from public static inline function fromInt16(x: Int16): GoInt {
        return Go.int(x);
    }

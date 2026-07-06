@@ -11,13 +11,8 @@ extern class Time {
     static var hour: Duration;
     static var local: Pointer<Location>;
 
-    static function now(): Time;
+    static function now(): TimeInstance;
     static function sleep(d: Duration): Void;
     static function loadLocation(name: String): Result<Pointer<Location>>;
-
-    function unix(): Int64;
-    function unixMilli(): Int64;
-    function unixMicro(): Int64;
-    function unixNano(): Int64;
 
 }

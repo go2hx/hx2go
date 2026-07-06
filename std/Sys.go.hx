@@ -2,6 +2,14 @@ import go.fmt.Fmt;
 import go.time.Time;
 import go.os.Os;
 import go.hx2go.HxArray;
+import go.runtime.Runtime;
+import go.Slice;
+import go.Error;
+import go.Byte;
+import go.Syntax;
+import go.Go;
+import go.Pointer;
+import go.os.exec.ExitError;
 
 class Sys {
 
@@ -52,24 +60,80 @@ class Sys {
     public static function setCwd(s: String): Void {
         Os.chdir(s).sure();
     }
-//    public static function systemName():String;
-//    public static function command(cmd:String, ?args:Array<String>):Int;
-//    public static function exit(code:Int):Void;
+
+    public static function systemName(): String {
+        if (Runtime.GOOS == "windows")
+            return "Windows";
+
+        if (Runtime.GOOS == "linux" || Runtime.GOOS == "android")
+            return "Linux";
+
+        if (Runtime.GOOS == "freebsd" || Runtime.GOOS == "netbsd" || Runtime.GOOS == "openbsd")
+            return "BSD";
+
+        if (Runtime.GOOS == "darwin")
+            return "Mac";
+
+        return Runtime.GOOS; // otherwise return the go name
+    }
+
+    public static function command(cmd: String, ?args: Array<String>): Int {
+        var arg: Slice<String> = args != null ? Slice.fromArray(args) : new Slice();
+        var err: Error = null;
+        var output: Slice<Byte> = null;
+
+        Syntax.code('{0}, {1} = exec.Command({2}, {3}...).Output()', output, err, cmd, arg);
+
+        var exitCode: Int = 0;
+        var exitError: Pointer<ExitError> = null;
+        var ok: Bool = false;
+
+        if (err != null) {
+            Syntax.code("{0}, {1} = {2}.(*exec.ExitError)", exitError, ok, err);
+
+            if (ok) {
+                Syntax.code("{0} = {1}.ProcessState.ExitCode()", exitCode, exitError);
+            } else {
+                exitCode = -1; // failed to run
+            }
+        } else {
+            Fmt.println(Go.string(output)); // TODO: pipe output rather than printing at the end
+        }
+
+        return 0;
+    }
+
+    public static function exit(code: Int): Void {
+        Os.exit(code);
+    }
 
     public static function time(): Float {
+        var tn = Time.now();
+        var sec = tn.unixNano() / Time.second;
+        var tup = tn.local().zone();
+        sec += tup.offset;
+
         return Time.now().unixNano() / Time.second;
     }
 
-//    public static function cpuTime():Float;
-//    @:deprecated("Use programPath instead") public static function executablePath():String;
-//    public static function programPath():String;
-//    public static function getChar(echo:Bool):Int;
+    public static function cpuTime(): Float {
+        return Sys.time(); // TODO: impl
+    }
+
+    @:deprecated("Use programPath instead") public static function executablePath(): String {
+        return Sys.programPath();
+    }
+
+    public static function programPath(): String {
+        return Os.Args[0];
+    }
 
     /*
     public static function environment():Map<String, String>;
     public static function stdin():haxe.io.Input;
     public static function stdout():haxe.io.Output;
     public static function stderr():haxe.io.Output;
-     */
+    public static function getChar(echo:Bool):Int;
+    */
 
 }

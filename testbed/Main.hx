@@ -1,7 +1,8 @@
 class Main {
 
    public static function main(): Void {
-       trace(Sys.time());
+       Sys.command("fastfetch");
+       Sys.command("echo", ["Hello, World!"]);
    }
 
 }

@@ -360,17 +360,19 @@ class HxDynamic {
     }
 
     static function convertToType(v: Value, t: Type): Value {
+        var cv = ensureConcreteValue(v.iface());
         var k = t.kind();
-        if (k == Reflect.Int) return Reflect.valueOf(valueToInt(v));
-        if (k == Reflect.Float64) return Reflect.valueOf(valueToFloat(v));
-        if (k == Reflect.String) return Reflect.valueOf(toString(v.iface()));
-        if (k == Reflect.Bool) return Reflect.valueOf(toBool(v));
-        return v;
+
+        if (k == Reflect.Int) return Reflect.valueOf(valueToInt(cv));
+        if (k == Reflect.Float64) return Reflect.valueOf(valueToFloat(cv));
+        if (k == Reflect.String) return Reflect.valueOf(toString(cv.iface()));
+        if (k == Reflect.Bool) return Reflect.valueOf(toBool(cv));
+
+        return cv;
     }
 
     public static function call(fn: Dynamic, args: Array<Dynamic>): Dynamic {
         var fV = ensureConcreteValue(fn);
-
         if (isNull(fn) || !fV.isValid()) {
             throw "runtime.HxDynamic.call null function value";
         }

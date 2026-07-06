@@ -16,7 +16,7 @@ class RewriteDynamicCall extends CompilerPass {
         }
     }
 
-    public function makeDynamicCall(on: HxbTypedExpr, params: HxbTypedExpr, call: String): HxbTypedExpr {
+    public function makeDynamicCall(params: Array<HxbTypedExpr>, call: String): HxbTypedExpr {
         var e = ExprHelper.createCallStatic(
             context,
             {
@@ -25,7 +25,7 @@ class RewriteDynamicCall extends CompilerPass {
                 pack: ['go', 'hx2go']
             },
             call,
-            [on, params]
+            params
         );
         e.t = TDynamicAny;
 
@@ -34,8 +34,14 @@ class RewriteDynamicCall extends CompilerPass {
 
     public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
         switch expr.expr {
+//            case TCall({ expr: TField(e, FDynamic(field)) }, params) if (e.t != null && e.t.match(TDynamic(_) | TDynamicAny)): {
+//                var o = makeDynamicCall([e, new HxbTypedExpr(TConst(TString(field)), TString, expr.pos), new HxbTypedExpr(TArrayDecl(params), TInst({ name: "Array", moduleName: "Array", pack: [] }, [TDynamicAny]), expr.pos)], 'callMethod');
+//                expr.expr = o.expr;
+//                expr.t = o.t;
+//            }
+
             case TCall(e, params): {
-                var o = makeDynamicCall(e, new HxbTypedExpr(TArrayDecl(params), TInst({ name: "Array", moduleName: "Array", pack: [] }, [TDynamicAny]), expr.pos), 'call');
+                var o = makeDynamicCall([e, new HxbTypedExpr(TArrayDecl(params), TInst({ name: "Array", moduleName: "Array", pack: [] }, [TDynamicAny]), expr.pos)], 'call');
                 expr.expr = o.expr;
                 expr.t = o.t;
             }

@@ -383,7 +383,15 @@ class ExprWriter extends WriterImpl {
         var estr = writeExpr(e);
         var str = switch fa {
             case FInstance(c, params, cf): '${estr}.${cf.name}';
-            case FStatic(c, cf):  StringConversions.typePathStaticFieldName(cf.name, c);
+            case FStatic(c, cf): {
+                var m = writer.context.resolve(c);
+                if (m == null) {
+                    throw 'Could not resolve module for type path: ${c}';
+                }
+
+                var tp = StringConversions.moduleTypeGetTypePath(m);
+                StringConversions.typePathStaticFieldName(cf.name, tp);
+            }
             case FAnon(cf): '${estr}["${cf.name}"]';
             case FClosureInstance(c, params, cf): '${estr}.${cf.name}';
             case FClosureAnon(cf): '${estr}.${cf.name}';

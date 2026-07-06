@@ -359,6 +359,19 @@ class HxDynamic {
         return 0;
     }
 
+    static function isClass(v: Value): Bool {
+        var kind = v.kind();
+        if (kind == Reflect.Ptr || kind == Reflect.Interface) {
+            return isClass(v.elem());
+        }
+
+        if (kind != Reflect.Struct) {
+            return false;
+        }
+
+        return v.fieldByName("VTable").isValid();
+    }
+
     static function convertToType(v: Value, t: Type): Value {
         var cv = ensureConcreteValue(v.iface());
         var k = t.kind();

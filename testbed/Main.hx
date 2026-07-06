@@ -1,16 +1,24 @@
-import go.fmt.Fmt;
-typedef Point2D = {
-    x: Float,
-    y: Float
-};
+import go.Tuple;
+import go.Error;
 
-typedef Point3D = Point2D & {
-    z: Float
-};
+@:go.Type({ name: "bytes", imports: ["bytes"] })
+extern class Bytes {}
 
-function main(): Void {
-    var vec3: Point3D = { x: 1.0, y: 2.0, z: 3.0 };
-    var vec2: Point2D = vec3;
+@:go.Type({ name: "os", imports: ["os"] })
+extern class Os {
+    @:go.Tuple("file", "err")
+    static function readFile(name: String): Tuple<{ file: Bytes, err: Error }>;
+}
 
-    Fmt.println(vec2, vec3);
+class Main {
+
+   public static function main(): Void {
+       var v = Os.readFile("./test.txt");
+       if (v.err != null) {
+           trace("error when opening file", v.err);
+       }
+
+       trace("file contents", v.file);
+   }
+
 }

@@ -46,4 +46,5 @@ function main() {
 
     var mul_dyn: Dynamic = Test.mul;
     trace(mul_dyn(10, 15));
+    trace(mul_dyn(5, 5.5));
 }

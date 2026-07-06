@@ -1,0 +1,43 @@
+package hx2go.passes;
+
+import hx2go.hxb.Typed.HxbTypedExpr;
+import hx2go.hxb.flags.HxbClassFlag;
+import hx2go.hxb.Typed.HxbFieldAccess;
+import hx2go.hxb.Ast.HxbExpr;
+import hx2go.hxb.Ast.HxbExprDef.EObjectDecl;
+import hx2go.hxb.Ast.HxbExprDef.EConst;
+import hx2go.hxb.Ast.HxbExprDef.EArrayDecl;
+import hx2go.hxb.HxbModuleType;
+import hx2go.util.ExprHelper;
+import hx2go.util.StringConversions;
+import hx2go.hxb.Ast.HxbObjectField;
+import hx2go.util.ObjectFieldHelper;
+import hx2go.hxb.HxbType;
+import haxe.runtime.Copy;
+import hx2go.util.TypeHelper;
+
+// NOTE: identical to NullableIndex, but separate for clarity
+class NullableCall extends CompilerPass {
+
+    public function match(expr: HxbTypedExpr): Bool {
+        return switch expr.expr {
+            case TCall(e, _) if (e.t != null && e.t.match(TAbstract({ name: 'Null', pack: [] }, _))): true;
+            case _: false;
+        }
+    }
+
+    public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
+        switch expr.expr {
+            case TCall(e, _): {
+                var local = Copy.copy(e);
+                var o = ExprHelper.createUntyped('{0}.Value', [local]);
+
+                e.expr = o.expr;
+                e.t = TypeHelper.follow(context, e.t);
+                context.submitNode(expr, true);
+            }
+            case _: null;
+        }
+    }
+
+}

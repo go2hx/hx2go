@@ -1,50 +1,16 @@
-import go.hx2go.HxDynamic;
-class Test {
-
-    public function new() {}
-
-    public function foo() {
-        trace("Foo");
-    }
-
-    public function bar() {
-        trace("Bar");
-    }
-
-    public static function mul(a: Int, b: Int): Float {
-        return a * b;
-    }
-
-}
-
-typedef Sub = {
-    public function foo(): Void;
-}
-
 function main() {
-    var v: Test = new Test();
-    v.foo();
-    v.bar();
-
-    var s: Sub = v;
-    s.foo();
-
-    var d: Dynamic = v;
-    d.foo();
-    d.bar();
-
-    var hello: Void->Void = () -> {
-        trace("Hello");
+    var x: Void->Void = () -> {
+        trace("Hellooow!");
     }
 
-    hello();
+    var y: Null<Void->Void> = x;
 
-    var hello_dyn: Dynamic = hello;
-    hello_dyn();
+    x();
+    y();
 
-    trace(Test.mul(10, 15));
+    var z: Null<Int->Int->Void> = (x, y) -> {
+        trace("Sum is", x + y);
+    };
 
-    var mul_dyn: Dynamic = Test.mul;
-    trace(mul_dyn(10, 15));
-    trace(mul_dyn(5, 5.5));
+    z(50, 50);
 }

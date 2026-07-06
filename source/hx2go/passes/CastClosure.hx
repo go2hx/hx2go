@@ -77,7 +77,7 @@ class CastClosure extends CompilerPass {
                         value: null
                     }),
                     expr: new HxbTypedExpr(TBlock([
-                        new HxbTypedExpr(TReturn(
+                        ret == TVoid ? e_call : new HxbTypedExpr(TReturn(
                             e_call
                         ), null, null)
                     ]), null, null),

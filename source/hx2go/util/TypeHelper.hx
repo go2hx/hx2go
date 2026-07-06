@@ -33,6 +33,28 @@ class TypeHelper {
         }
     }
 
+    public static function followTypedef(context: Context, type: HxbType): HxbType {
+        if (type == null) {
+            return null;
+        }
+
+        return switch type {
+            case TType(tp, _): {
+                var mod = context.resolve(tp);
+                if (mod == null) {
+                    return type;
+                }
+
+                switch mod {
+                    case MTypedef(info): info.type;
+                    case _: type;
+                }
+            }
+
+            case _: type;
+        }
+    }
+
     public static function compare(a: HxbType, b: HxbType): Bool {
         if (a == null || b == null) {
             return false;

@@ -21,6 +21,7 @@ import hx2go.hxb.flags.HxbClassFlag;
 import haxe.CallStack;
 import hx2go.hxb.HxbClassField;
 import hx2go.hxb.HxbType;
+import hx2go.util.TypeHelper;
 
 class Context {
 
@@ -73,7 +74,7 @@ class Context {
             new hx2go.passes.CastNullableFrom(this),
             new hx2go.passes.CastClosure(this),
             new hx2go.passes.CastString(this),
-            new hx2go.passes.CastDynamic(this),
+            new hx2go.passes.CastDynamicFrom(this),
             new hx2go.passes.CastClass(this),
             new hx2go.passes.RewriteThrow(this),
             new hx2go.passes.ArrayAccessDynamicGet(this),
@@ -85,7 +86,7 @@ class Context {
             new hx2go.passes.RewriteArrayLength(this),
             new hx2go.passes.RewriteSyntaxCode(this),
             new hx2go.passes.RewriteSyntaxDefer(this),
-            new hx2go.passes.RewriteSyntaxGo(this)
+            new hx2go.passes.RewriteSyntaxGo(this),
         ];
     }
 
@@ -337,7 +338,7 @@ class Context {
         }
     }
 
-    function normalize(t: HxbType): HxbType {
+    public function normalize(t: HxbType): HxbType {
         return switch (t) {
             case TAbstract({ name: "Null", pack: [], moduleName: mName }, [inner]):
                 var n = normalize(inner);
@@ -366,7 +367,14 @@ class Context {
                 TInst(path, params.map(normalize));
 
             case TType(path, params):
-                TType(path, params.map(normalize));
+                var fwd = TypeHelper.followTypedef(this, t);
+                var fwdNorm = normalize(fwd);
+
+                if (fwdNorm.match(TDynamic(_) | TDynamicAny)) {
+                    TDynamicAny;
+                } else {
+                    TType(path, params.map(normalize));
+                }
 
             case TAbstract(path, params):
                 TAbstract(path, params.map(normalize));

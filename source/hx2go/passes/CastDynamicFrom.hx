@@ -10,7 +10,7 @@ import hx2go.hxb.Typed.HxbVar;
 import hx2go.util.TypeHelper;
 import hx2go.normaliser.Semantics;
 
-class CastDynamic extends CompilerPass {
+class CastDynamicFrom extends CompilerPass {
 
     public function match(expr: HxbTypedExpr): Bool {
         if (expr.t == null) {

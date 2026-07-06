@@ -187,8 +187,11 @@ class ExprWriter extends WriterImpl {
             return writeExpr(e);
         }
 
-        switch e.t {
-            case TDynamic(_) | TDynamicAny:
+        switch [e.t, expr.t] {
+            case [TDynamic(_) | TDynamicAny, TDynamic(_) | TDynamicAny]:
+                buf.addBufferInline(writeExpr(e));
+
+            case [TDynamic(_) | TDynamicAny, _]:
                 buf.addInline('(');
                 buf.addBufferInline(writeExpr(e));
                 buf.addInline(').(');

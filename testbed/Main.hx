@@ -1,19 +1,16 @@
-function main() {
-    var x: Void->Void = () -> {
-        trace("Hellooow!");
-    }
+import go.fmt.Fmt;
+typedef Point2D = {
+    x: Float,
+    y: Float
+};
 
-    var y: Null<Void->Void> = x;
+typedef Point3D = Point2D & {
+    z: Float
+};
 
-    x();
-    y();
+function main(): Void {
+    var vec3: Point3D = { x: 1.0, y: 2.0, z: 3.0 };
+    var vec2: Point2D = vec3;
 
-    var z: Null<Int->Int->Void> = (x, y) -> {
-        trace("Sum is", x + y);
-    };
-
-    z(50, 50);
-
-    var w: Null<Dynamic> = z;
-    w(50, 100);
+    Fmt.println(vec2, vec3);
 }

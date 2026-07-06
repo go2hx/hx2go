@@ -17,6 +17,11 @@ class Main {
            trace("error when opening file", v.err);
        }
 
+//       v = Os.readFile("./other.txt");
+//       if (v.err != null) {
+//           trace("error when opening another file", v.err);
+//       }
+
        trace("file contents", v.file);
    }
 

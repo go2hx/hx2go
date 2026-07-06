@@ -5,7 +5,7 @@ import go.hx2go.HxArray;
 
 class Std {
 
-    public static function string(s:Dynamic):String {
+    public static function string(s: Dynamic): String {
         if (s == null) {
             return "null";
         }
@@ -24,7 +24,7 @@ class Std {
             var buf = new StringBuf();
 
             buf.add('[');
-            buf.add(HxArray.map(value.iface(), string).join(", "));
+            buf.add(HxArray.map(value.iface(), string).join(","));
             buf.add(']');
 
             return buf.toString();

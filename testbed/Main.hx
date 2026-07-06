@@ -13,7 +13,7 @@ class Main {
        var v = Os.readFile("./test.txt");
        var t = v.tuple();
        trace(t.result, t.error);
-       trace(v.sure());
+       trace(v.sure(), v!);
    }
 
 }

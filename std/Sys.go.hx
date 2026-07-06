@@ -15,4 +15,8 @@ class Sys {
         Time.sleep(seconds * 1000 * Time.millisecond);
     }
 
+    public static function time(): Float {
+        return Time.now().unixNano() / Time.second;
+    }
+
 }

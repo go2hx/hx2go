@@ -30,5 +30,7 @@ extern class Value {
     function setMapIndex(key: Value, element: Value): Void;
     function mapKeys(): Slice<Value>;
     function fieldByName(n: String): Value;
+    function methodByName(n: String): Value;
     function convert(t: Type): Value;
+    function call(args: Slice<Value>): Slice<Value>;
 }

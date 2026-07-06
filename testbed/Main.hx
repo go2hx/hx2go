@@ -1,17 +1,27 @@
-typedef MyDyn = Dynamic;
+import go.hx2go.HxDynamic;
+class Test {
 
-class Main {
+    public function new() {}
 
-    public static function main(): Void {
-        var test: Array<MyDyn> = [1, 2, 3];
-        var test_dyn_arr: Array<MyDyn> = test;
-        var test_dyn_obj: MyDyn = test;
-        trace(test_dyn_arr, test_dyn_obj);
-
-        var test_null_dyn_arr: Null<Array<MyDyn>> = test;
-        var test_dyn_null_arr: Array<Null<MyDyn>> = test;
-        var test_null_dyn_obj: Null<MyDyn> = test;
-        trace(test_null_dyn_arr, test_dyn_null_arr, test_null_dyn_obj);
+    public function foo() {
+        trace("Foo");
     }
 
+    public function bar() {
+        trace("Bar");
+    }
+
+}
+
+typedef Sub = {
+    public function foo(): Void;
+}
+
+function main() {
+    var v: Test = new Test();
+    v.foo();
+    v.bar();
+
+    var s: Sub = v;
+    s.foo();
 }

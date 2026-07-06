@@ -4,6 +4,7 @@ import go.reflect.Reflect;
 import go.strings.Strings;
 import go.reflect.Value;
 import go.reflect.Kind;
+import go.reflect.Type;
 import go.Syntax;
 import go.fmt.Fmt;
 
@@ -358,6 +359,46 @@ class HxDynamic {
         return 0;
     }
 
+    static function convertToType(v: Value, t: Type): Value {
+        var k = t.kind();
+        if (k == Reflect.Int) return Reflect.valueOf(valueToInt(v));
+        if (k == Reflect.Float64) return Reflect.valueOf(valueToFloat(v));
+        if (k == Reflect.String) return Reflect.valueOf(toString(v.iface()));
+        if (k == Reflect.Bool) return Reflect.valueOf(toBool(v));
+        return v;
+    }
+
+    public static function call(fn: Dynamic, args: Array<Dynamic>): Dynamic {
+        var fV = ensureConcreteValue(fn);
+
+        if (isNull(fn) || !fV.isValid()) {
+            throw "runtime.HxDynamic.call null function value";
+        }
+
+        if (fV.kind() != Reflect.Func) {
+            throw "runtime.HxDynamic.call value not callable: " + Std.string(fn);
+        }
+
+        var fType = fV.type();
+        var numIn = fType.numIn();
+        var isVariadic = fType.isVariadic();
+        var argVals: Array<Value> = [];
+
+        for (i in 0...numIn) {
+            if (isVariadic && i == numIn - 1) break;
+            var pt = fType.inType(i);
+            var av = i < args.length ? args[i] : null;
+            argVals.push(convertToType(ensureValue(av), pt));
+        }
+
+        var results = fV.call(argVals);
+        if (results.length == 0) {
+            return null;
+        }
+
+        return ensureInterface(results[0]);
+    }
+
     public static function toInt(d:Dynamic):Int {
         var dV = ensureConcreteValue(d);
         return valueToInt(dV);
@@ -423,7 +464,15 @@ class HxDynamic {
         }
 
         if (kind == Reflect.Struct) {
-            value = value.fieldByName(formatField(fieldName));
+            var f = value.fieldByName(formatField(fieldName));
+            if (!f.isValid()) {
+                var vtable = value.fieldByName("VTable");
+                if (vtable.isValid()) {
+                    f = vtable.methodByName(formatField(fieldName));
+                }
+            }
+
+            value = f;
         }
 
         if (kind == Reflect.Map) {
@@ -432,9 +481,12 @@ class HxDynamic {
             );
         }
 
-        if (fieldName == "length") {
-            if (kind == Reflect.Array || kind == Reflect.Slice) value = ensureValue(getArrayLength(dyn));
-            if (kind == Reflect.String) value = ensureValue(toString(dyn).length);
+        if (kind == Reflect.Array || kind == Reflect.Slice) {
+            if (fieldName == "length") value = ensureValue(getArrayLength(dyn));
+        }
+
+        if (kind == Reflect.String) {
+            if (fieldName == "length") value = ensureValue(toString(dyn).length);
         }
 
         return value;

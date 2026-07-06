@@ -13,4 +13,9 @@ extern class Time {
     static function now(): Time;
     static function sleep(d: Duration): Void;
 
+    function unix(): Int64;
+    function unixMilli(): Int64;
+    function unixMicro(): Int64;
+    function unixNano(): Int64;
+
 }

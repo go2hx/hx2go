@@ -29,12 +29,14 @@ class RewriteResultSwitch extends CompilerPass {
         switch expr.expr {
             case TSwitch({ expr: TParenthesis({ expr: TEnumIndex(e) }) }, cases, edef): {
                 var head = edef;
+                var idx = 0;
+
                 for (c in cases) {
                     if (c.patterns.length > 1) {
                         throw "Result switch case may only have one pattern";
                     }
 
-                    head = new HxbTypedExpr(TIf(
+                    head = idx == 0 && cases.length > 1 ? c.expr : new HxbTypedExpr(TIf(
                         new HxbTypedExpr(TBinop(
                             c.patterns[0].expr.match(TConst(TInt(0))) ? OpEq : OpNotEq,
                             ExprHelper.createUntyped('{0}.Error', [ Copy.copy(e) ]),
@@ -43,6 +45,8 @@ class RewriteResultSwitch extends CompilerPass {
                         c.expr,
                         head
                     ), expr.t, expr.pos);
+
+                    idx++;
                 }
 
                 expr.expr = head.expr;

@@ -2,8 +2,13 @@ import go.fmt.Fmt;
 import go.hx2go.HxDynamic;
 import go.reflect.Reflect;
 import go.hx2go.HxArray;
+import go.Go;
 
 class Std {
+
+    public static function int(x: Float): Int {
+        return Go.int(x);
+    }
 
     public static function string(s: Dynamic): String {
         if (s == null) {

@@ -93,6 +93,7 @@ class Context {
             new hx2go.passes.RewriteSyntaxCode(this),
             new hx2go.passes.RewriteSyntaxDefer(this),
             new hx2go.passes.RewriteSyntaxGo(this),
+            new hx2go.passes.ResolveVarDecl(this)
         ];
     }
 

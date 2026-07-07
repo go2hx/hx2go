@@ -6,12 +6,29 @@ abstract Foo(Int) from Int {
 
 }
 
+abstract Bar<T>(Array<T>) from Array<T> to Array<T> {
+
+    public function logAll(): Void {
+        for (item in this) {
+            trace(item);
+        }
+    }
+
+    public function toArray(): Array<T> {
+        return this;
+    }
+
+}
+
 class Main {
 
    public static function main(): Void {
-       var x: Int = 5;
-       var y: Foo = x;
-       y.log();
+       var arr: Array<Int> = [1, 2, 3];
+       var abs1: Bar<Int> = arr;
+       var abs2: Bar<Foo> = abs1;
+       abs2.logAll();
+       var arr = abs2.toArray();
+       arr[0].log();
    }
 
 }

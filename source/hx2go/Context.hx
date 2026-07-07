@@ -87,6 +87,7 @@ class Context {
             new hx2go.passes.RewriteResultSwitchParam(this),
             new hx2go.passes.FieldAccessExtern(this),
             new hx2go.passes.FieldAccessInstance(this),
+            new hx2go.passes.RewriteAbstractThis(this),
             new hx2go.passes.RewriteSliceCreation(this),
             new hx2go.passes.RewriteStringLength(this),
             new hx2go.passes.RewriteArrayLength(this),

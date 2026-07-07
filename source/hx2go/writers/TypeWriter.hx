@@ -35,12 +35,17 @@ class TypeWriter extends WriterImpl {
 
     public function writeExternType(meta: HxbMetaEntry): String {
         var name = "any";
+        var hasInstanceName: Bool = false;
 
         switch meta.params[0]?.expr {
             case EObjectDecl(options): for (opt in options) {
                 switch opt.name {
-                    case "name":
+                    case "name" if (!hasInstanceName):
                         name = ObjectFieldHelper.readString(opt);
+
+                    case "instanceName":
+                        name = ObjectFieldHelper.readString(opt);
+                        hasInstanceName = true;
                 }
             }
 

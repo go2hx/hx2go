@@ -48,7 +48,7 @@ class Sys {
             return false;
         }
 
-        Time.local = locale.sure();
+        Time.localPtr = locale.sure();
 
         return true;
     }

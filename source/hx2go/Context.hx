@@ -245,7 +245,7 @@ class Context {
     }
 
     public function resolveModule(tp: TypePath): Null<HxbModule> {
-         var res = archive.findModule(tp.moduleDotPath(), "go");
+        var res = archive.findModule(tp.moduleDotPath(), "go");
         if (res == null) {
             return null;
         }
@@ -254,6 +254,7 @@ class Context {
         for (type in mod.types) {
             buildType(type, res);
         }
+
         return mod;
     }
 
@@ -381,7 +382,7 @@ class Context {
                 }) )) ]);
 
             case TType(path, params):
-                var fwd = TypeHelper.followTypedef(this, t);
+                var fwd = TypeHelper.followToDef(this, t);
                 var fwdNorm = normalize(fwd);
 
                 if (fwdNorm.match(TDynamic(_) | TDynamicAny)) {
@@ -391,7 +392,17 @@ class Context {
                 }
 
             case TAbstract(path, params):
-                TAbstract(path, params.map(normalize));
+                var mt = resolve(path);
+                if (mt == null) {
+                    return TAbstract(path, params.map(normalize));
+                }
+
+                switch mt {
+                    case MAbstract({ meta: meta }) if (meta.filter(m -> m.name == ':coreType' || m.name == ":go.AbstractNoGenericErasure").length != 0): t;
+                    case MAbstract({ underlyingThis: TAbstract(uPath, _) }) if (TypeHelper.comparePath(path, uPath)): TAbstract(path, params.map(normalize));
+                    case MAbstract(a): normalize(a.underlyingThis);
+                    case _: TAbstract(path, params.map(normalize));
+                }
 
             case _:
                 t;

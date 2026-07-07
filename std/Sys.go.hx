@@ -82,6 +82,8 @@ class Sys {
         var err: Error = null;
         var output: Slice<Byte> = null;
 
+        err.sure();
+
         Syntax.code('{0}, {1} = exec.Command({2}, {3}...).Output()', output, err, cmd, arg);
 
         var exitCode: Int = 0;

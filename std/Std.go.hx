@@ -68,4 +68,9 @@ class Std {
 
         return Fmt.sprintf("%v", value.iface());
     }
+
+    public static function isOfType(v: Dynamic, t: Dynamic): Bool {
+        return false; // TODO: impl
+    }
+
 }

@@ -33,7 +33,7 @@ class TypeHelper {
         }
     }
 
-    public static function followTypedef(context: Context, type: HxbType): HxbType {
+    public static function followToDef(context: Context, type: HxbType): HxbType {
         if (type == null) {
             return null;
         }
@@ -118,7 +118,7 @@ class TypeHelper {
         };
     }
 
-    static function comparePath(a: TypePath, b: TypePath): Bool {
+    public static function comparePath(a: TypePath, b: TypePath): Bool {
         if (a.name != b.name) return false;
         if (a.moduleName != b.moduleName) return false;
         if (a.pack.length != b.pack.length) return false;
@@ -130,7 +130,7 @@ class TypeHelper {
         return true;
     }
 
-    static function compareTypes(a: Array<HxbType>, b: Array<HxbType>): Bool {
+    public static function compareTypes(a: Array<HxbType>, b: Array<HxbType>): Bool {
         if (a.length != b.length) return false;
 
         for (i in 0...a.length) {
@@ -140,7 +140,7 @@ class TypeHelper {
         return true;
     }
 
-    static function compareFunArgs(a: Array<HxbFunArg>, b: Array<HxbFunArg>): Bool {
+    public static function compareFunArgs(a: Array<HxbFunArg>, b: Array<HxbFunArg>): Bool {
         if (a.length != b.length) return false;
 
         for (i in 0...a.length) {

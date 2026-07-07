@@ -11,4 +11,8 @@ extern class Error {
         }
     }
 
+    public inline extern function as<T : Error>(v: T): T {
+        return Syntax.code('{0}, {1} = {2}.(*exec.ExitError)');
+    }
+
 }

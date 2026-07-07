@@ -1,5 +1,6 @@
 package go;
 
+@:go.AbstractNoGenericErasure
 abstract Result<R, E = Error>(ResultKind<R, E>) from ResultKind<R, E> to ResultKind<R, E> {
 
     @:op(a!)

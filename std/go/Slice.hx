@@ -1,4 +1,5 @@
 package go;
+import haxe.Rest;
 
 @:coreType
 @:runtimeValue

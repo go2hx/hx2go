@@ -1,10 +1,24 @@
-import go.fmt.Fmt;
+import go.Syntax;
+
+function foo() {
+    trace('bar');
+}
+
+function log(x) {
+    trace(x);
+}
 
 function main() {
-    var arr: Array<Int> = [1, 2, 3];
-    var arr_dyn: Dynamic = arr;
+    Syntax.defer(() -> {
+        trace('a');
+    });
 
-    trace(arr_dyn);
-    arr_dyn.length();
-    trace(arr_dyn);
+    Syntax.defer(foo);
+    Syntax.defer(log.bind("Hello, World!"));
+
+    Syntax.go(() -> {
+        trace('b');
+    });
+
+    Syntax.go(foo);
 }

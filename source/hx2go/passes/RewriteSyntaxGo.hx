@@ -5,6 +5,8 @@ import hx2go.hxb.HxbModuleType;
 import hx2go.hxb.Typed.HxbTypedExprDef;
 import hx2go.hxb.Typed.HxbFieldAccess;
 import hx2go.util.ExprHelper;
+import haxe.runtime.Copy;
+import haxe.runtime.Copy.Copy.copy;
 
 class RewriteSyntaxGo extends CompilerPass {
 
@@ -16,16 +18,17 @@ class RewriteSyntaxGo extends CompilerPass {
     }
 
     public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
-        expr.expr = switch expr.expr {
+        switch expr.expr {
             case TCall({ expr: TField(_, FStatic({ name: 'Syntax', pack: ['go'] }, { name: 'go' })) }, params): {
-                switch params[0].expr {
-                    case TFunction({ expr: e}): ExprHelper.createUntyped('go func() {0}()', [ e ]).expr;
-                    case TField(_) | TLocal(_): ExprHelper.createUntyped('go {0}()', [ params[0] ]).expr;
-                    case _: return;
-                }
+                var o = ExprHelper.createUntyped('go {0}', [
+                    new HxbTypedExpr(TCall(Copy.copy(params[0]), []), params[0].t, expr.pos)
+                ]);
+
+                expr.expr = o.expr;
+                context.submitNode(expr, true);
             }
 
-            case _: expr.expr;
+            case _: null;
         }
     }
 

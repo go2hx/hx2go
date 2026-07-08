@@ -1,7 +1,7 @@
 import go.fmt.Fmt;
-import go.hx2go.HxDynamic;
+import go.haxe.HxDynamic;
 import go.reflect.Reflect;
-import go.hx2go.HxArray;
+import go.haxe.HxArray;
 import go.Go;
 
 class Std {

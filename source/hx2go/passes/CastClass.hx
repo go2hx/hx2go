@@ -52,7 +52,7 @@ class CastClass extends CompilerPass {
                     var o = ExprHelper.createCast(ExprHelper.createCallStatic(context, {
                         name: "HxDynamic",
                         moduleName: "HxDynamic",
-                        pack: ["go", "hx2go"]
+                        pack: ["go", "haxe"]
                     }, "toClass", [e, new HxbTypedExpr(TConst(TString(StringConversions.typePathClassInstanceName(cls.path))), TString, null)]), expr.t);
 
                     expr.expr = o.expr;

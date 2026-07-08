@@ -30,7 +30,7 @@ class CastDynamicFrom extends CompilerPass {
                 {
                     name: 'HxDynamic',
                     moduleName: 'HxDynamic',
-                    pack: ['go', 'hx2go']
+                    pack: ['go', 'haxe']
                 },
                 call,
                 [inner]

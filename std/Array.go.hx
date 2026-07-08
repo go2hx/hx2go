@@ -1,5 +1,5 @@
 import haxe.iterators.ArrayKeyValueIterator;
-import go.hx2go.HxArray;
+import go.haxe.HxArray;
 
 @:coreType
 extern class Array<T> {

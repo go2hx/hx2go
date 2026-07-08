@@ -1,7 +1,7 @@
 import go.fmt.Fmt;
 import go.time.Time;
 import go.os.Os;
-import go.hx2go.HxArray;
+import go.haxe.HxArray;
 import go.runtime.Runtime;
 import go.Slice;
 import go.Error;

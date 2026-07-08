@@ -1,4 +1,4 @@
-package go.hx2go;
+package go.haxe;
 
 import haxe.Rest;
 import go.Syntax;

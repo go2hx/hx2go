@@ -26,7 +26,7 @@ class FieldAccessDynamicSet extends CompilerPass {
     }
 
     public function setField(on: HxbTypedExpr, field: String, value: HxbTypedExpr): HxbTypedExpr {
-        return ExprHelper.createCallStatic(context, { name: 'HxDynamic', moduleName: 'HxDynamic', pack: ['go', 'hx2go'] }, 'setField', [on, new HxbTypedExpr(TConst(TString(field)), TString, null), value]);
+        return ExprHelper.createCallStatic(context, { name: 'HxDynamic', moduleName: 'HxDynamic', pack: ['go', 'haxe'] }, 'setField', [on, new HxbTypedExpr(TConst(TString(field)), TString, null), value]);
     }
 
     public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {

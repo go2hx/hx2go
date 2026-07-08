@@ -1,4 +1,4 @@
-package go.hx2go;
+package go.haxe;
 
 import go.reflect.Reflect;
 import go.strings.Strings;
@@ -469,6 +469,7 @@ class HxDynamic {
     public static function getField(dyn: Dynamic, fieldName: String): Dynamic {
         var value = ensureValue(dyn);
         var kind = value.kind();
+        var found = false;
 
         if (isNull(dyn) || !value.isValid()) {
             throw "runtime.HxDynamic.field null field access: " + fieldName;
@@ -476,6 +477,7 @@ class HxDynamic {
 
         if (kind == Reflect.Ptr || kind == Reflect.Interface) {
             value = getField(value.elem(), fieldName);
+            found = true;
         }
 
         if (kind == Reflect.Struct) {
@@ -484,6 +486,7 @@ class HxDynamic {
                 var vtable = value.fieldByName("VTable");
                 if (vtable.isValid()) {
                     f = vtable.methodByName(formatField(fieldName));
+                    found = true;
                 }
             }
 
@@ -491,20 +494,27 @@ class HxDynamic {
         }
 
         if (kind == Reflect.Map) {
+            found = true;
             value = value.mapIndex(
                 ensureValue(fieldName)
             );
         }
 
         if (kind == Reflect.Array || kind == Reflect.Slice) {
-            if (fieldName == "length") value = ensureValue(getArrayLength(dyn));
+            if (fieldName == "length") {
+                value = ensureValue(getArrayLength(dyn));
+                found = true;
+            }
         }
 
         if (kind == Reflect.String) {
-            if (fieldName == "length") value = ensureValue(toString(dyn).length);
+            if (fieldName == "length") {
+                value = ensureValue(toString(dyn).length);
+                found = true;
+            }
         }
 
-        return value;
+        return found ? value : null;
     }
 
     // write field access on dynamic (class, anon, etc)

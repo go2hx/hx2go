@@ -28,8 +28,10 @@ class TypeNormaliserReturn extends CompilerPass {
     public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
         switch [expr.expr, frame.field.type] {
             case [TReturn(e), TFun(_, want)] if (e?.t != null && !TypeHelper.compare(e.t, want)):
-                var o = ExprHelper.createCast(e, want);
-                expr.expr = TReturn(o);
+                if (want != TVoid) {
+                    var o = ExprHelper.createCast(e, want);
+                    expr.expr = TReturn(o);
+                }
 
                 context.submitNode(expr, true, 1);
 

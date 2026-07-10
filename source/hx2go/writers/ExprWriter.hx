@@ -296,7 +296,10 @@ class ExprWriter extends WriterImpl {
             buf.addBufferInline(writeExpr(vexpr));
         }
 
-        buf.addInline('; _ = ${v.name}');
+        if (v.name != "_") {
+            buf.addInline('; _ = ${v.name}');
+        }
+        
         return buf;
     }
 

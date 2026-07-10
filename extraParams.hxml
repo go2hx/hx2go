@@ -1,2 +1,3 @@
 -cp std
+-D go
 --macro include('go.haxe', true)

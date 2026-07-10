@@ -1,3 +1,4 @@
+import haxe.PosInfos;
 private enum Colour {
     Red;
     Green;
@@ -5,10 +6,44 @@ private enum Colour {
     RGBA(r: Float, g: Float, b: Float, a: Float);
 }
 
+class Foo {
+
+    public function new() {}
+
+    public static dynamic function foo() {
+        trace("Foo");
+    }
+
+    public dynamic function bar() {
+        trace("Bar");
+    }
+
+}
+
 function main() {
+    haxe.Log.trace = (v: Dynamic, ?posInfos: PosInfos) -> {
+        Sys.println('overwritten :D -> ' + haxe.Log.formatOutput(v, posInfos));
+    }
+
     var c1: Colour = Red;
     var c2: Colour = RGBA(1, 0, 0, 1);
     var c3: EnumValue = c2;
 
     trace(c1, c2, c3);
+
+    var v = new Foo();
+
+    Foo.foo();
+    v.bar();
+
+    Foo.foo = () -> {
+        trace('overwritten Foo');
+    }
+
+//    v.bar = () -> {
+//        trace('overwritten Bar');
+//    }
+
+    Foo.foo();
+    v.bar();
 }

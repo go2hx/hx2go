@@ -241,9 +241,16 @@ class ClassWriter extends WriterImpl {
         }
         
         buf.add("");
-        buf.addInline('func ${StringConversions.typePathStaticFieldName(field.name, cls.path)}(');
-        buf.addBufferInline(fTypes.buf);
-        buf.addInline(') ');
+
+        if (kind == MethDynamic) {
+            buf.addInline('var ${StringConversions.typePathStaticFieldName(field.name, cls.path)} = func (');
+            buf.addBufferInline(fTypes.buf);
+            buf.addInline(') ');
+        } else {
+            buf.addInline('func ${StringConversions.typePathStaticFieldName(field.name, cls.path)}(');
+            buf.addBufferInline(fTypes.buf);
+            buf.addInline(') ');
+        }
 
         if (fTypes.returnType != TVoid) {
             buf.addBufferInline(writer.types.writeHxbType(fTypes.returnType));

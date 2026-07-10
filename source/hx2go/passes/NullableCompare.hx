@@ -21,7 +21,7 @@ class NullableCompare extends CompilerPass {
     }
 
     public function executeSide(right: HxbTypedExpr, left: HxbTypedExpr): Void {
-        if (right.expr.match(TConst(_))) {
+        if (right.expr.match(TConst(TNull))) {
             var local_cmp = Copy.copy(left);
             left.expr = switch left.t {
                 case TAbstract({ pack: [], name: 'Null' }, _):  ExprHelper.createUntyped("{0}.Valid", [local_cmp]).expr;

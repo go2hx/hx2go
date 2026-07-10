@@ -70,16 +70,19 @@ class Std {
             var v = value.iface();
 
             var valid = HxDynamic.ensureValue(v.Valid);
-            if (!valid.isValid() || valid.iface() == false) {
-                return "null";
+            if (valid.isValid()) {
+                return valid.iface() == false || !HxDynamic.ensureValue(v.Value).isValid() ? "null" : string(v.Value);
             }
 
-            var inner = HxDynamic.ensureValue(v.Value);
-            if (!inner.isValid()) {
-                return "null";
+            var vt = value.fieldByName("VTable");
+            if (vt.isValid()) {
+                var toStr = vt.methodByName("Hx_Field_toString");
+                if (toStr.isValid()) {
+                    return string(toStr.call([])[0]);
+                }
             }
 
-            return string(inner.iface());
+            return Fmt.sprintf("%v", value.iface());
         }
 
         if (kind == Reflect.Interface && value.isNil()) {

@@ -12,5 +12,6 @@ extern class Os {
     static function environ(): Slice<String>;
     static function setenv(key: String, value: String): Error;
     static function unsetenv(key: String): Error;
-
+    static function readFile(name: String): Result<go.Slice<Byte>>;
+    
 }

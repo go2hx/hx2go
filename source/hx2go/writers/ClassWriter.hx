@@ -236,6 +236,10 @@ class ClassWriter extends WriterImpl {
             return buf;
         }
 
+        if (field.expr == null) {
+            return buf;
+        }
+        
         buf.add("");
         buf.addInline('func ${StringConversions.typePathStaticFieldName(field.name, cls.path)}(');
         buf.addBufferInline(fTypes.buf);

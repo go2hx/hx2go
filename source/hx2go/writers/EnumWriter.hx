@@ -28,13 +28,16 @@ class EnumWriter extends WriterImpl {
         for (cs in e.constructors) {
             var ctorName = '${StringConversions.typePathEnumName(e.path)}_${cs.name}';
             var ctorArgCount = 0;
+            var ctorArgVars: Array<String> = [];
             buf.add('');
 
             switch cs.type {
                 case TFun(params, _): {
                     buf.add('type ${ctorName} struct {');
                     for (p in params) {
-                        buf.add('${StringConversions.nameToFieldName(p.name)} ${writer.types.writeHxbType(p.t)}', 1);
+                        var pName = StringConversions.nameToFieldName(p.name);
+                        buf.add('${pName} ${writer.types.writeHxbType(p.t)}', 1);
+                        ctorArgVars.push(pName);
                     }
                     buf.add('}');
 
@@ -48,7 +51,7 @@ class EnumWriter extends WriterImpl {
             buf.add('func (${ctorName}) M_${StringConversions.typePathEnumName(e.path)}() {}');
             buf.add('func (${ctorName}) Hx_Field_enumIndex() int { return ${cs.index} }');
             buf.add('func (${ctorName}) Hx_Field_enumType() *Hx_Obj_go_haxe_hxenum { return ${StringConversions.typePathEnumName(e.path)}_Desc }');
-            buf.add('func (${ctorName}) Hx_Field_enumParams() any { return &([]any{ }) }');
+            buf.add('func (this ${ctorName}) Hx_Field_enumParams() any { return &([]any{ ${ctorArgCount == 0 ? "" : ctorArgVars.map(v -> 'any(this.$v)').join(", ") + " " }}) }');
 
             counts[cs.name] = ctorArgCount;
         }

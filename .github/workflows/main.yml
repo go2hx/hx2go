@@ -37,6 +37,6 @@ jobs:
         if: startsWith(runner.os, 'macOS')
         run: echo "CORES=$(sysctl -n hw.logicalcpu)" >> $GITHUB_ENV
       - name: Run testbed
-        run: haxe testbed.hxml
+        run: haxe Testbed.hxml
       - name: Run tests
-        run: haxe tests.hxml
+        run: haxe Tests.hxml

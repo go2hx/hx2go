@@ -36,6 +36,8 @@ jobs:
       - name: Get number of cores (macOS)
         if: startsWith(runner.os, 'macOS')
         run: echo "CORES=$(sysctl -n hw.logicalcpu)" >> $GITHUB_ENV
+      - name: Setup hx2go dev
+        run: haxelib dev hx2go .
       - name: Run testbed
         run: haxe Testbed.hxml
       - name: Run tests

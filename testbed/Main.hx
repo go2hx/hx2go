@@ -1,10 +1,9 @@
 import go.Syntax;
 
 function main() {
-    var x: Dynamic = 5;
-    var y: String = switch Syntax.type(x) {
-        case Int: "int";
-        case Float: "float";
-        case _: "other";
-    }
+    var x: Array<Dynamic> = [true, "Test"];
+    var y: Array<Int> = [1, 2];
+
+    var x2 = x.copy();
+    var y2 = y.copy();
 }

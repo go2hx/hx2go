@@ -55,7 +55,6 @@ class Context {
 
     private function createPasses(): Array<ICompilerPass> {
         return [
-            new hx2go.passes.RewriteTypeSwitch(this),
             new hx2go.passes.RewriteDynamicUnop(this),
             new hx2go.passes.FieldAccessGeneric(this),
             new hx2go.passes.TypeNormaliserCall(this),
@@ -100,6 +99,8 @@ class Context {
             new hx2go.passes.RewriteSyntaxDefer(this),
             new hx2go.passes.RewriteSyntaxGo(this),
             new hx2go.passes.ResolveVarDecl(this),
+            new hx2go.passes.RewriteArrayGetData(this),
+            new hx2go.passes.RewriteArraySetData(this)
         ];
     }
 

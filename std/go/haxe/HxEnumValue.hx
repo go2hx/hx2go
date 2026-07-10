@@ -8,6 +8,6 @@ private interface _HxEnumValue {
     public function enumType(): HxEnum;
 }
 
-@:coreType
+@:forward
 @:go.Type({ name: 'Hx_Obj_VTable_go_haxe__hxenumvalue__hxenumvalue' })
-extern abstract HxEnumValue from _HxEnumValue to _HxEnumValue {}
+extern abstract HxEnumValue(_HxEnumValue) from _HxEnumValue to _HxEnumValue {}

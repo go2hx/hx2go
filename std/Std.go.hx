@@ -3,6 +3,9 @@ import go.haxe.HxDynamic;
 import go.reflect.Reflect;
 import go.haxe.HxArray;
 import go.Go;
+import go.haxe.HxEnumValue;
+import go.haxe.HxEnum;
+import go.Syntax;
 
 class Std {
 
@@ -47,6 +50,23 @@ class Std {
         }
 
         if (kind == Reflect.Struct) {
+            var enumIndexMethod = value.methodByName("Hx_Field_enumIndex");
+            var enumTypeMethod = value.methodByName("Hx_Field_enumType");
+
+            if (enumIndexMethod.isValid() && enumTypeMethod.isValid()) {
+                var enumIndex: Int = enumIndexMethod.call([])[0].iface();
+                var enumType: HxEnum = enumTypeMethod.call([])[0].iface();
+                var enumCtorName: String = enumType.constructorNames[enumIndex];
+                var enumCtorCount: Int = enumType.constructorArgCounts[enumIndex];
+                var values: Array<String> = [];
+
+                for (i in 0...value.numField()) {
+                    values.push(string(value.field(i)));
+                }
+
+                return enumCtorCount == 0 ? enumCtorName : '${enumCtorName}(${values.join(",")})';
+            }
+
             var v = value.iface();
 
             var valid = HxDynamic.ensureValue(v.Valid);

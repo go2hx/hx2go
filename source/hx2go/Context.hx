@@ -400,6 +400,7 @@ class Context {
 
                 switch mt {
                     case MAbstract({ meta: meta }) if (meta.filter(m -> m.name == ':coreType' || m.name == ":go.AbstractNoGenericErasure").length != 0): t;
+                    case MAbstract({ isExtern: true }): t;
                     case MAbstract({ underlyingThis: TAbstract(uPath, _) }) if (TypeHelper.comparePath(path, uPath)): TAbstract(path, params.map(normalize));
                     case MAbstract(a): normalize(a.underlyingThis);
                     case _: TAbstract(path, params.map(normalize));

@@ -27,6 +27,8 @@ class ExprWriter extends WriterImpl {
         return switch expr.expr {
             case TFunction(func): writeFunction(expr, func, topLevel);
             case TBlock(exprs): writeBlock(expr, exprs);
+            case TCall({ expr: TField({ expr: TTypeExpr(MTEnum(_)) }, FEnum(tp, ref)) }, params): writeEnumConstructor(tp, ref.name, params);
+            case TField({ expr: TTypeExpr(MTEnum(_)) }, FEnum(tp, ref)): writeEnumConstructor(tp, ref.name, []);
             case TCall(e, args): writeCall(expr, e, args);
             case TConst(c): writeConst(expr, c);
             case TField(e, fa): writeField(expr, e, fa);
@@ -50,6 +52,18 @@ class ExprWriter extends WriterImpl {
             case TContinue: new OutputBuffer("continue");
             case _: new OutputBuffer();
         }
+    }
+
+    public function writeEnumConstructor(tp: TypePath, name: String, params: Array<HxbTypedExpr>): OutputBuffer {
+        var mt = writer.context.resolve(tp);
+        var path = StringConversions.moduleTypeGetTypePath(mt);
+        var ctorName = '${StringConversions.typePathEnumName(path)}_${name}';
+
+        return new OutputBuffer(
+            params.length > 0 ?
+            '$ctorName{ ${params.map(p -> writeExpr(p).toString()).join(", ") } }' :
+            '$ctorName{}'
+        );
     }
 
     public function writeNew(expr: HxbTypedExpr, tp: TypePath, params: Array<HxbType>, el: Array<HxbTypedExpr>): OutputBuffer {

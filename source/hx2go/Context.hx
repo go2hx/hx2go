@@ -409,6 +409,13 @@ class Context {
                     case _: TAbstract(path, params.map(normalize));
                 }
 
+            case TFun(args, ret):
+                TFun(args.map(a -> new HxbFunArg(
+                    a.name,
+                    a.opt,
+                    normalize(a.t)
+                )), normalize(ret));
+
             case _:
                 t;
         }
@@ -456,6 +463,7 @@ class Context {
 
         for (f in roots) {
             if (f.expr?.expr == null) continue;
+            f.type = normalize(f.type);
 
             var frame = new ContextFrame(passes, type, moduleKey, f);
             contextStack.push(frame);

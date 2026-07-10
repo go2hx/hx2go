@@ -29,9 +29,9 @@ class TypeNormaliserReturn extends CompilerPass {
         switch [expr.expr, frame.field.type] {
             case [TReturn(e), TFun(_, want)] if (e?.t != null && !TypeHelper.compare(e.t, want)):
                 var o = ExprHelper.createCast(e, want);
-                context.submitNode(o, true);
-
                 expr.expr = TReturn(o);
+
+                context.submitNode(expr, true, 1);
 
             case _: null;
         }

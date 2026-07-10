@@ -133,8 +133,6 @@ class Context {
         typesByModule[modulePath].push({ type: t, name: infos.path.name, module: modulePath });
         if (!typeQueue.contains(modulePath)) typeQueue.push(modulePath);
         types.set(typePath, t);
-
-        transformType(t, modulePath);
     }
 
     public function build(mainClass: String): Void {
@@ -252,8 +250,13 @@ class Context {
         }
 
         var mod = archive.decode(res);
+
         for (type in mod.types) {
             buildType(type, res);
+        }
+
+        for (type in mod.types) {
+            transformType(type, res.dotPath());
         }
 
         return mod;

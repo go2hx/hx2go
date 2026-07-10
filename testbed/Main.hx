@@ -1,12 +1,7 @@
 function main() {
-    var val: Int = 0;
-    var dyn: Dynamic = val;
+    var x: Int = 5;
+    var x_null: Null<Int> = x;
 
-    var a = val * val;
-    var b = dyn * val;
-    var c = val * dyn;
-    var d = val * val;
-
-//    var t: HxbTypedExpr = new HxbTypedExpr(TBlock([]), null, null);
-//    trace(t);
+    trace(x_null == null);
+    trace(x_null == 3);
 }

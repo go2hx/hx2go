@@ -8,7 +8,7 @@ class OutputBuffer {
     private var indentLevel: Int;
 
     private static function indent(str: String, by: Int): String {
-        var pad = StringTools.rpad("", "    ", by);
+        var pad = StringTools.rpad("", "    ", by * 4);
 
         return str
             .split("\n")

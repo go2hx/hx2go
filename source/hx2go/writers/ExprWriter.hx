@@ -425,9 +425,7 @@ class ExprWriter extends WriterImpl {
             case MTClass(x) | MTEnum(x) | MTAbstract(x) | MTTypedef(x) | MTUnknown(x): x;
         }
 
-        return new OutputBuffer(
-            StringConversions.typePathClassInstanceName(tp)
-        );
+        return new OutputBuffer(writer.types.writeModuleType(tp));
     }
 
     public function writeRaw(template: HxbTypedExpr, args: Array<HxbTypedExpr>): OutputBuffer {

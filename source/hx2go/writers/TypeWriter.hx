@@ -64,6 +64,7 @@ class TypeWriter extends WriterImpl {
 
         var tp = StringConversions.moduleTypeGetTypePath(mod);
         var builtin: Null<String> = switch type {
+            case { name: "EnumValue", pack: [] }: "Hx_Obj_VTable_go_haxe__hxenumvalue__hxenumvalue";
             case { name: "Void", pack: [] }: "void";
             case { name: "Int", pack: [] } | { name: "GoInt", pack: ['go'] }: "int";
             case { name: "UInt", pack: [] } | { name: "GoUInt", pack: ['go'] }: "uint";
@@ -144,7 +145,6 @@ class TypeWriter extends WriterImpl {
             case TFloat: "float64";
             case TBool: "bool";
             case TString: "string";
-            case TAbstract({ pack: [], name: 'EnumValue' }, _): 'Hx_Obj_VTable_go_haxe__hxenumvalue__hxenumvalue';
             case TAbstract({ pack: ['go'], name: 'Pointer' }, params): '*${writeHxbType(params[0])}';
             case TAbstract({ pack: ['go'], name: 'Result'}, params) | TEnum({ pack: ['go'], name: 'ResultKind'}, params): 'struct { Error ${writeHxbType(params[1])}; Result ${writeHxbType(params[0])} }';
             case TType({ pack: ['go'], name: 'Tuple'}, [TAnon(anon)]): 'struct { ${anon.fields.map(f -> '${StringConversions.toPascalCase(f.name)} ${writeHxbType(f.type)}').join('; ')} }';

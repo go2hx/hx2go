@@ -171,7 +171,6 @@ class Context {
             }
         }
 
-        var mainWritten = false;
         while (typeQueue.length != 0) {
             var module = typesByModule[typeQueue.pop()];
             if (module.length == 0) {
@@ -202,15 +201,6 @@ class Context {
                 buf.addBufferInline(localBuf);
             }
 
-            if (path == mainClass) {
-                buf.add('');
-                buf.add('func main() {');
-                buf.add('${StringConversions.typePathStaticFieldName("main", StringConversions.pathToLossyTypePath(mainClass))}()', 1);
-                buf.add('}');
-
-                mainWritten = true;
-            }
-
             if (!hasWrittenSomething) {
                 continue;
             }
@@ -218,19 +208,16 @@ class Context {
             writeFile("/", StringConversions.stringPathGetFileName(module[0].module), buf.toString());
         }
 
-        if (!mainWritten) {
-            var buf = new OutputBuffer();
+        var buf = new OutputBuffer();
 
-            buf.add('package ${topLevelPackage}');
-            buf.add('');
-            buf.add('func main() {');
-            buf.add('${StringConversions.typePathStaticFieldName("main", StringConversions.pathToLossyTypePath(mainClass))}()', 1);
-            buf.add('}');
+        buf.add('package ${topLevelPackage}');
+        buf.add('');
+        buf.add('func main() {');
+        buf.add('${StringConversions.typePathStaticFieldName("main", StringConversions.pathToLossyTypePath(mainClass))}()', 1);
+        buf.add('}');
 
-            // TODO: import file containing main
+        writeFile("", "Main", buf.toString());
 
-            writeFile("", "Main", buf.toString());
-        }
         installGoDeps(imports);
     }
 

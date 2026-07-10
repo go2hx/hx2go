@@ -19,4 +19,9 @@ extern class Syntax {
     **/
     public extern static function go(code: Void -> Void): Void;
 
+    /**
+       Type switch in go
+    **/
+    public extern static function type(v: Dynamic): Dynamic;
+
 }

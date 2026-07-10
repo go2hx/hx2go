@@ -43,11 +43,8 @@ class Init {
 				scope: BlockScope,
 				flags: [
 					VarHoisting,
-					NoShadowing,
-					ReserveNames([
-						"func"
-					]
-				)], // TODO: review
+					NoShadowing
+				], // TODO: review
 			},
 			supportsAtomics: true
 		}

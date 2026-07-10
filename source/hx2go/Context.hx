@@ -25,6 +25,10 @@ import hx2go.util.TypeHelper;
 
 class Context {
 
+    private static final _reserved: Map<String, Bool> = [
+        "func" => true
+    ];
+
     private var types: Map<String, HxbModuleType>;
     private var archive: HxbArchive;
     private var imports: Map<String, Array<String>>;
@@ -100,6 +104,10 @@ class Context {
 
     public function getWriter(): Writer {
         return writer;
+    }
+
+    public function sanitiseString(v: String): String {
+        return v; // _reserved.exists(v) ? '_hx_reserved_$v' : v;
     }
 
     public function buildType(t: HxbModuleType, ref: ModuleRef): Void {
@@ -411,7 +419,7 @@ class Context {
 
             case TFun(args, ret):
                 TFun(args.map(a -> new HxbFunArg(
-                    a.name,
+                    sanitiseString(a.name),
                     a.opt,
                     normalize(a.t)
                 )), normalize(ret));
@@ -441,6 +449,9 @@ class Context {
             case TField(e, FDynamic(_)): {
                 expr.t = TDynamicAny;
             }
+
+            case TVar(v, _) | TLocal(v):
+                v.name = sanitiseString(v.name);
 
             case _: null;
         }

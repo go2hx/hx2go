@@ -125,49 +125,51 @@ class ClassWriter extends WriterImpl {
 
         buf.add('}');
 
-        var ctor = cls.constructor != null ? writeFunctionArgs(cls.constructor.type) : {
-            buf: new OutputBuffer(),
-            returnType: TVoid,
-            args: []
-        };
+        if ((cls.flags & HxbClassFlag.CInterface) == 0) {
+            var ctor = cls.constructor != null ? writeFunctionArgs(cls.constructor.type) : {
+                buf: new OutputBuffer(),
+                returnType: TVoid,
+                args: []
+            };
 
-        buf.add('');
-        buf.add('func ${StringConversions.typePathClassInstanceName(cls.path)}_CreateEmptyInstance() *${StringConversions.typePathClassInstanceName(cls.path)} {');
-        buf.add('obj := &${StringConversions.typePathClassInstanceName(cls.path)}{}', 1);
-        buf.add('obj.VTable = obj', 1);
-
-        for (v in vtables) {
-            buf.add(v, 1);
-        }
-
-        buf.add('return obj', 1);
-        buf.add('}');
-
-        buf.add('');
-        buf.add('func ${StringConversions.typePathClassInstanceName(cls.path)}_CreateInstance(${ctor.buf.toString()}) *${StringConversions.typePathClassInstanceName(cls.path)} {');
-        buf.add('obj := ${StringConversions.typePathClassInstanceName(cls.path)}_CreateEmptyInstance()', 1);
-
-        if (cls.constructor != null) {
-            buf.add('obj.Hx_New(${ctor.args.map(a -> a.name).join(", ")})', 1);
-        }
-
-        buf.add('return obj', 1);
-        buf.add('}');
-
-        if (cls.constructor != null) {
             buf.add('');
-            buf.addInline('func (this *${StringConversions.typePathClassInstanceName(cls.path)}) Hx_New(${ctor.buf.toString()}) ');
-            buf.addBufferInline(writer.exprs.writeExpr(cls.constructor.expr.expr, true));
-            buf.add('');
-        }
+            buf.add('func ${StringConversions.typePathClassInstanceName(cls.path)}_CreateEmptyInstance() *${StringConversions.typePathClassInstanceName(cls.path)} {');
+            buf.add('obj := &${StringConversions.typePathClassInstanceName(cls.path)}{}', 1);
+            buf.add('obj.VTable = obj', 1);
 
-        for (f in cls.fields.filter(f -> f.kind.match(KMethod(_)))) {
-            var res = writeMemberClassField(f, cls);
-            if (res.isEmpty()) {
-                continue;
+            for (v in vtables) {
+                buf.add(v, 1);
             }
 
-            buf.addBuffer(res);
+            buf.add('return obj', 1);
+            buf.add('}');
+
+            buf.add('');
+            buf.add('func ${StringConversions.typePathClassInstanceName(cls.path)}_CreateInstance(${ctor.buf.toString()}) *${StringConversions.typePathClassInstanceName(cls.path)} {');
+            buf.add('obj := ${StringConversions.typePathClassInstanceName(cls.path)}_CreateEmptyInstance()', 1);
+
+            if (cls.constructor != null) {
+                buf.add('obj.Hx_New(${ctor.args.map(a -> a.name).join(", ")})', 1);
+            }
+
+            buf.add('return obj', 1);
+            buf.add('}');
+
+            if (cls.constructor != null) {
+                buf.add('');
+                buf.addInline('func (this *${StringConversions.typePathClassInstanceName(cls.path)}) Hx_New(${ctor.buf.toString()}) ');
+                buf.addBufferInline(writer.exprs.writeExpr(cls.constructor.expr.expr, true));
+                buf.add('');
+            }
+
+            for (f in cls.fields.filter(f -> f.kind.match(KMethod(_)))) {
+                var res = writeMemberClassField(f, cls);
+                if (res.isEmpty()) {
+                    continue;
+                }
+
+                buf.addBuffer(res);
+            }
         }
 
         for (f in cls.statics) {

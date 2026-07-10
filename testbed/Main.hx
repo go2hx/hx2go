@@ -1,24 +1,13 @@
-import go.Syntax;
-
-function foo() {
-    trace('bar');
-}
-
-function log(x) {
-    trace(x);
+enum Colour {
+    Red;
+    Green;
+    Blue;
+    RGBA(r: Float, g: Float, b: Float, a: Float);
 }
 
 function main() {
-    Syntax.defer(() -> {
-        trace('a');
-    });
+    var c1 = Red;
+    var c2 = RGBA(1, 0, 0, 1);
 
-    Syntax.defer(foo);
-    Syntax.defer(log.bind("Hello, World!"));
-
-    Syntax.go(() -> {
-        trace('b');
-    });
-
-    Syntax.go(foo);
+    trace(c1, c2);
 }

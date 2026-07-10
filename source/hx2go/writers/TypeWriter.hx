@@ -16,6 +16,7 @@ class TypeWriter extends WriterImpl {
         return switch type {
             case MClass(v): writer.classes.writeClass(v);
             case MTypedef(t): writer.types.writeTypedef(t);
+            case MEnum(e): writer.enums.writeEnum(e);
             case _: new OutputBuffer();
         }
     }

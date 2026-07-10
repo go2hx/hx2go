@@ -1,0 +1,8 @@
+-cp tests
+-m TestAll
+-L hx2go
+-D run-go
+extraParams.hxml
+-D analyzer-no-module
+--custom-target go=output
+--cmd go -C ./output/main run .

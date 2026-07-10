@@ -127,8 +127,10 @@ class HxDynamic {
 
     public static function equals(a:Dynamic, b:Dynamic):Bool {
         // null == special case
-        var aN = isNull(a);
-        var bN = isNull(b);
+        var aV = ensureConcreteValue(a);
+        var bV = ensureConcreteValue(b);
+        var aN = !aV.isValid();
+        var bN = !bV.isValid();
 
         if (aN || bN) {
             if (aN && bN)
@@ -137,8 +139,6 @@ class HxDynamic {
                 return false; // null only ever equals null
         }
 
-        var aV = ensureConcreteValue(a);
-        var bV = ensureConcreteValue(b);
         var aK = aV.kind();
         var bK = bV.kind();
 

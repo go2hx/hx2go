@@ -52,6 +52,16 @@ class EnumWriter extends WriterImpl {
             buf.add('func (this ${ctorName}) Hx_Field_enumIndex() int { return ${cs.index} }');
             buf.add('func (this ${ctorName}) Hx_Field_enumType() *Hx_Obj_go_haxe_hxenum { return ${StringConversions.typePathEnumName(e.path)}_Desc }');
             buf.add('func (this ${ctorName}) Hx_Field_enumParams() any { return &([]any{ ${ctorArgCount == 0 ? "" : ctorArgVars.map(v -> 'any(this.$v)').join(", ") + " " }}) }');
+            buf.add('func (this ${ctorName}) Hx_Field_enumParameter(index int) any {');
+            buf.add('switch index {', 1);
+
+            for (i in 0...ctorArgCount) {
+                buf.add('case ${i}: return any(this.${ctorArgVars[i]})', 2);
+            }
+
+            buf.add('default: return nil', 2);
+            buf.add('}', 1);
+            buf.add('}');
 
             counts[cs.name] = ctorArgCount;
         }

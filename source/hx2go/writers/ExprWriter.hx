@@ -20,6 +20,7 @@ import hx2go.hxb.Typed.HxbTObjectField;
 import hx2go.hxb.HxbType;
 import hx2go.hxb.TypePath;
 import hx2go.hxb.tools.TypedExprTools;
+import hx2go.hxb.EnumFieldRef;
 
 class ExprWriter extends WriterImpl {
 
@@ -48,10 +49,31 @@ class ExprWriter extends WriterImpl {
             case TArrayDecl(elements): writeArrayDecl(expr, elements);
             case TArray(e, idx): writeArrayAccess(expr, e, idx);
             case TNew(tp, params, el): writeNew(expr, tp, params, el);
+            case TEnumIndex(e): writeEnumIndex(expr, e);
+            case TEnumParameter(e, ef, index): writeEnumParameter(expr, e, ef, index);
             case TBreak: new OutputBuffer("break");
             case TContinue: new OutputBuffer("continue");
             case _: new OutputBuffer();
         }
+    }
+
+    public function writeEnumParameter(expr: HxbTypedExpr, e: HxbTypedExpr, ef: EnumFieldRef, index: Int): OutputBuffer {
+        var buf = new OutputBuffer();
+
+        buf.addInline('(');
+        buf.addBufferInline(writeExpr(e));
+        buf.addInline('.Hx_Field_enumParameter($index)).(${writer.types.writeHxbType(expr.t)})');
+
+        return buf;
+    }
+
+    public function writeEnumIndex(expr: HxbTypedExpr, e: HxbTypedExpr): OutputBuffer {
+        var buf = new OutputBuffer();
+
+        buf.addBufferInline(writeExpr(e));
+        buf.addInline('.Hx_Field_enumIndex()');
+
+        return buf;
     }
 
     public function writeEnumConstructor(tp: TypePath, name: String, params: Array<HxbTypedExpr>): OutputBuffer {

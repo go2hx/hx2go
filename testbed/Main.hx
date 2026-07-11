@@ -14,5 +14,10 @@ function main() {
         ), TVoid, null)
     }), TFun([], TInt), null);
 
-    trace(x);
+    switch x.expr {
+        case TFunction({ expr: { expr: TReturn(ret) }}) if (ret != null): trace('ret', ret);
+        case TFunction({ expr: expr }): trace('expr', expr);
+        case TFunction(f): trace('func', f);
+        case _: trace('base', x);
+    }
 }

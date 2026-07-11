@@ -6,6 +6,7 @@ private interface _HxEnumValue {
     public function enumIndex(): Int;
     public function enumParams(): Array<Dynamic>;
     public function enumType(): HxEnum;
+    public function enumParameter(index: Int): Dynamic;
 }
 
 @:forward

@@ -22,6 +22,7 @@ import haxe.CallStack;
 import hx2go.hxb.HxbClassField;
 import hx2go.hxb.HxbType;
 import hx2go.util.TypeHelper;
+import hx2go.hxb.flags.HxbClassFieldFlag;
 
 class Context {
 
@@ -97,6 +98,7 @@ class Context {
             new hx2go.passes.CastDynamicFrom(this),
             new hx2go.passes.CastClass(this),
             new hx2go.passes.RewriteThrow(this),
+            new hx2go.passes.ArrayAccessDynamicSet(this),
             new hx2go.passes.ArrayAccessDynamicGet(this),
             new hx2go.passes.FieldAccessSuper(this),
             new hx2go.passes.RewriteTupleAssign(this),
@@ -521,6 +523,10 @@ class Context {
     public function defineImport(module: ContextFrame, goImport: String): Void {
         if (!imports.exists(module.moduleKey)) {
             imports.set(module.moduleKey, []);
+        }
+
+        if (module.field.flags & HxbClassFieldFlag.CfExtern != 0) {
+            return;
         }
 
         var localImports = imports[module.moduleKey];

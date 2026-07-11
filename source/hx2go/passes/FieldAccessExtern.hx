@@ -18,11 +18,12 @@ import hx2go.hxb.Ast.HxbExprDef;
 private enum ExternKind {
     ExNone;
     ExModule;
+    ExTemplate;
 }
 
 class FieldAccessExtern extends CompilerPass {
 
-    private function getExternInfo(expr: HxbTypedExpr): { kind: ExternKind, ?options: HxbExpr, ?left: HxbTypedExpr, ?right: String } {
+    public static function getExternInfo(context: Context, expr: HxbTypedExpr): { kind: ExternKind, ?options: HxbExpr, ?left: HxbTypedExpr, ?right: String } {
         return switch expr.expr {
             case TField(left, FStatic(tp, ref) | FInstance(tp, _, ref)): {
                 var mt = context.resolve(tp);
@@ -58,7 +59,7 @@ class FieldAccessExtern extends CompilerPass {
                             }
                         }
 
-                        return { kind: ExNone };
+                        return { kind: ExTemplate };
                     }
 
                     case _: { kind: ExNone };
@@ -70,11 +71,11 @@ class FieldAccessExtern extends CompilerPass {
     }
 
     public function match(expr: HxbTypedExpr): Bool {
-        return getExternInfo(expr).kind != ExNone;
+        return getExternInfo(context, expr).kind != ExNone;
     }
 
     public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
-        switch getExternInfo(expr) {
+        switch getExternInfo(context, expr) {
             case { kind: ExModule, options: { expr: EObjectDecl(options) }, right: fieldName }: {
                 var typeName = "";
                 var pascalCase = true;

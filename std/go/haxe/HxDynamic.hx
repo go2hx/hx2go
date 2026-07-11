@@ -113,6 +113,17 @@ class HxDynamic {
         return Reflect.Invalid;
     }
 
+    public static function toAnySlice(v: Dynamic): Slice<Dynamic> {
+        var len: Int = getArrayLength(v);
+        var slice: Slice<Dynamic> = new Slice();
+
+        for (i in 0...len) {
+            slice = slice.append(getArrayIndex(v, i));
+        }
+
+        return slice;
+    }
+
     public static function formatField(name: String): String {
         if (name.length == 0) {
             return name;

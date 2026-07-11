@@ -13,9 +13,9 @@ class ExprHelper {
     public static function createUntyped(template: String, params: Array<HxbTypedExpr>): HxbTypedExpr {
         return new HxbTypedExpr(
             TCall(
-                new HxbTypedExpr(TIdent("__go__"), null, null),
+                new HxbTypedExpr(TIdent("__go__"), TVoid, null),
                 [
-                    new HxbTypedExpr(TConst(TString(template)), null, null)
+                    new HxbTypedExpr(TConst(TString(template)), TString, null)
                 ].concat(params)
             ),
             null, null
@@ -38,6 +38,7 @@ class ExprHelper {
 
         var field = switch mod {
             case MClass(cls): cls.statics.filter(f -> f.name == typeField)[0];
+            case MAbstract(a): return createCallStatic(context, a.impl, typeField, params);
             case _:
                 throw 'static call on unsupported module type $mod';
         }
@@ -61,7 +62,7 @@ class ExprHelper {
                     ),
                     FStatic(type, { owner: type, name: typeField, kind: FRStatic, depth: 0 })
                 ),
-                null,
+                field.type,
                 null
             ), params),
             fun.ret,

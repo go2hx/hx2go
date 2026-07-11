@@ -153,6 +153,7 @@ class TypeWriter extends WriterImpl {
             case TAbstract({ pack: [], name: 'Class' }, _) | TAbstract({ pack: [], name: 'Enum' }, _): 'any';
             case TInst({ pack: [], name: 'Array' }, params): '*[]${writeHxbType(params[0])}';
             case TAbstract({ pack: ['go'], name: 'Slice' }, params): '[]${writeHxbType(params[0])}';
+            case TAbstract({ pack: ['haxe'], name: 'Rest' }, params): 'any';
             case TAnon(anon): 'any'; // TODO: anon.stauts, aka openness?
             case TAbstract(tp, _) | TInst(tp, _) | TType(tp, _) | TEnum(tp, _): writeModuleType(tp);
             case TFun(params, ret): 'func(${params.map(p -> writeHxbType(p.t)).join(', ')})${ret == TVoid ? '' : ' ${writeHxbType(ret)}'}';

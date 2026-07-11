@@ -89,7 +89,6 @@ class Context {
             new hx2go.passes.TypeNormaliserObject(this),
             new hx2go.passes.TypeNormaliserIf(this),
             new hx2go.passes.SuperCtor(this),
-            new hx2go.passes.CastRestTo(this),
             new hx2go.passes.CastArray(this),
             new hx2go.passes.CastNullableTo(this),
             new hx2go.passes.CastNullableFrom(this),
@@ -416,7 +415,7 @@ class Context {
                 }
 
                 switch mt {
-                    case MAbstract({ meta: meta }) if (meta.filter(m -> m.name == ':coreType' || m.name == ":go.AbstractNoGenericErasure").length != 0): t;
+                    case MAbstract({ meta: meta }) if (meta.filter(m -> m.name == ':coreApi' || m.name == ':coreType' || m.name == ":go.AbstractNoGenericErasure").length != 0): t;
                     case MAbstract({ isExtern: true }): t;
                     case MAbstract({ underlyingThis: TAbstract(uPath, _) }) if (TypeHelper.comparePath(path, uPath)): TAbstract(path, params.map(normalize));
                     case MAbstract(a): normalize(a.underlyingThis);

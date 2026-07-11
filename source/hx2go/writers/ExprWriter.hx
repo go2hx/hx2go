@@ -366,7 +366,7 @@ class ExprWriter extends WriterImpl {
             case OpNot: "!";
             case OpNeg: "-";
             case OpNegBits: "^";
-            case OpSpread: "...";
+            case OpSpread: "";
         }
 
         if (!postFix) {

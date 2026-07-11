@@ -30,12 +30,12 @@ extern abstract Slice<T> {
 
     // note: marked as extern to force inline
     @:arrayAccess @:pure private extern inline function get(index: Int): T {
-        return Syntax.code("{0}[{1}]", (this : Slice<T>), index);
+        return Syntax.code("{0}[{1}]", (this : Slice<T>), (index : Int));
     }
 
     // note: marked as extern to force inline
     @:arrayAccess private extern inline overload function set(index: Int, value: T): T {
-        Syntax.code("{0}[{1}] = {2}", (this : Slice<T>), index, value);
+        Syntax.code("{0}[{1}] = {2}", (this : Slice<T>), (index : Int), (value : T));
         return value; // statement cannot be used as expression
     }
 

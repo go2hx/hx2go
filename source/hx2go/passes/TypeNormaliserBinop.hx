@@ -43,7 +43,7 @@ class TypeNormaliserBinop extends CompilerPass {
             }
 
             if (Semantics.isNullableType(right.t)) {
-                var o = ExprHelper.createCast(left, Semantics.getNullableType(right.t));
+                var o = ExprHelper.createCast(right, Semantics.getNullableType(right.t));
                 right.expr = o.expr;
                 right.t = o.t;
                 context.submitNode(right, true);

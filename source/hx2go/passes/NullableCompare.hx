@@ -36,9 +36,13 @@ class NullableCompare extends CompilerPass {
 
             case TConst(_):
                 var local_cmp = Copy.copy(left);
-                left.expr = switch left.t {
-                    case TAbstract({ pack: [], name: 'Null' }, _):  ExprHelper.createUntyped("{0}.Value", [local_cmp]).expr;
-                    case _:  local_cmp.expr;
+                switch left.t {
+                    case TAbstract({ pack: [], name: 'Null' }, p):
+                        left.expr = ExprHelper.createUntyped("{0}.Value", [local_cmp]).expr;
+                        left.t = p[0];
+
+                    case _:
+                        left.expr = local_cmp.expr;
                 }
                 context.submitNode(local_cmp, true);
 

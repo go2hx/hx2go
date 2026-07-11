@@ -1,71 +1,24 @@
-import haxe.PosInfos;
-
-private enum Colour {
-    Red;
-    Green;
-    Blue;
-    RGBA(r: Float, g: Float, b: Float, a: Float);
-}
-
-class Foo {
-
-    public function new() {}
-
-    public static dynamic function foo() {
-        trace("Foo");
-    }
-
-    public dynamic function bar() {
-        trace("Bar");
-    }
-
-}
-
-class Bar extends Foo {
-
-    public dynamic function baz(): Void {
-        trace("Baz");
-    }
-
-}
+import go.Map;
 
 function main() {
-    haxe.Log.trace = (v: Dynamic, ?posInfos: PosInfos) -> {
-        Sys.println('overwritten :D -> ' + haxe.Log.formatOutput(v, posInfos));
+    var m: Map<String, Int> = new Map();
+    m["John"] = 25;
+    m["Alice"] = 30;
+
+    for (name in m.keys().toArray()) {
+        trace(name, 'is', m[name], 'years old');
     }
 
-    var c1: Colour = Red;
-    var c2: Colour = RGBA(1, 0, 0, 1);
-    var c3: EnumValue = c2;
-
-    trace(c1, c2, c3);
-
-    var v = new Foo();
-    var v2 = new Bar();
-
-    Foo.foo();
-    v.bar();
-    v2.bar();
-    v2.baz();
-
-    Foo.foo = () -> {
-        trace('overwritten Foo on Static');
+    for (v in m.values().toArray()) {
+        trace('age', v);
     }
 
-    v.bar = () -> {
-        trace('overwritten Bar on Foo');
-    }
+    trace(m.exists("John"));
+    trace(m.exists("Bob"));
 
-    v2.bar = () -> {
-        trace('overwritten Bar on Bar');
-    }
-
-    v2.baz = () -> {
-        trace("overwritten Baz on Bar");
-    }
-
-    Foo.foo();
-    v.bar();
-    v2.bar();
-    v2.baz();
+    trace(m, m.size());
+    m.remove("Alice");
+    trace(m, m.size());
+    m.clear();
+    trace(m, m.size());
 }

@@ -30,7 +30,7 @@ class RewriteArrayLength extends CompilerPass {
         }
 
         expr.expr = o.expr;
-        expr.t = o.t;
+        expr.t = TInt;
         context.submitNode(expr, true);
     }
 

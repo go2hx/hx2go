@@ -26,13 +26,17 @@ class NullableCompare extends CompilerPass {
                 var local_cmp = Copy.copy(left);
                 left.expr = switch left.t {
                     case TAbstract({ pack: [], name: 'Null' }, _):  ExprHelper.createUntyped("{0}.Valid", [local_cmp]).expr;
-                    case _:  ExprHelper.createUntyped("{0} != nil", [local_cmp]).expr;
+                    case _: new HxbTypedExpr(TBinop(
+                        OpNotEq,
+                        local_cmp,
+                        new HxbTypedExpr(TConst(TNull), local_cmp.t, local_cmp.pos)
+                    ), TBool, left.pos).expr;
                 }
 
                 left.t = TBool;
                 right.expr = TConst(TBool(false));
                 right.t = TBool;
-                context.submitNode(local_cmp, true);
+                context.submitNode(left, true);
 
             case TConst(_):
                 var local_cmp = Copy.copy(left);
@@ -44,7 +48,8 @@ class NullableCompare extends CompilerPass {
                     case _:
                         left.expr = local_cmp.expr;
                 }
-                context.submitNode(local_cmp, true);
+
+                context.submitNode(left, true);
 
             case _: null;
         }

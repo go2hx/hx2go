@@ -1,24 +1,14 @@
 import go.Map;
+import go.Slice;
+
+function command(cmd: String, ?args: Array<String>): Int {
+    var arg: Slice<String> = Slice.fromArray(args ?? []);
+    trace(arg);
+
+    return 0;
+}
 
 function main() {
-    var m: Map<String, Int> = new Map();
-    m["John"] = 25;
-    m["Alice"] = 30;
-
-    for (name in m.keys()) {
-        trace(name, 'is', m[name], 'years old');
-    }
-
-    for (v in m.values()) {
-        trace('age', v);
-    }
-
-    trace(m.exists("John"));
-    trace(m.exists("Bob"));
-
-    trace(m, m.size());
-    m.remove("Alice");
-    trace(m, m.size());
-    m.clear();
-    trace(m, m.size());
+    command("hello");
+    command("hello", ["world"]);
 }

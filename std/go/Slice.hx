@@ -30,12 +30,12 @@ extern abstract Slice<T> {
 
     // note: marked as extern to force inline
     @:arrayAccess @:pure private extern inline function get(index: Int): T {
-        return Syntax.code("{0}[{1}]", this, index);
+        return Syntax.code("{0}[{1}]", (this : Slice<T>), index);
     }
 
     // note: marked as extern to force inline
     @:arrayAccess private extern inline overload function set(index: Int, value: T): T {
-        Syntax.code("{0}[{1}] = {2}", this, index, value);
+        Syntax.code("{0}[{1}] = {2}", (this : Slice<T>), index, value);
         return value; // statement cannot be used as expression
     }
 
@@ -44,23 +44,23 @@ extern abstract Slice<T> {
     }
 
     @:pure public inline extern overload function slice(low: GoInt, high: GoInt, max: GoInt): Slice<T> {
-        return Syntax.code("{0}[{1}:{2}:{3}]", this, low, high, max);
+        return Syntax.code("{0}[{1}:{2}:{3}]", (this : Slice<T>), (low : GoInt), (high : GoInt), (max : GoInt));
     }
 
     @:pure public inline extern overload function slice(low: GoInt, high: GoInt): Slice<T> {
-        return Syntax.code("{0}[{1}:{2}]", this, low, high);
+        return Syntax.code("{0}[{1}:{2}]", (this : Slice<T>), (low : GoInt), (high : GoInt));
     }
 
     @:pure public inline extern overload function slice(low: GoInt): Slice<T> {
-        return Syntax.code("{0}[{1}:]", this, low);
+        return Syntax.code("{0}[{1}:]", (this : Slice<T>), (low : GoInt));
     }
 
     @:pure public inline extern overload function sliceEnd(high: GoInt): Slice<T> {
-        return Syntax.code("{0}[:{1}]", this, high);
+        return Syntax.code("{0}[:{1}]", (this : Slice<T>), (high : GoInt));
     }
 
     @:to public inline function toArray(): Array<T> {
-        return Syntax.code("(&{0})", this);
+        return Syntax.code("(&{0})", (this : Slice<T>));
     }
 
     @:from public static inline function fromArray<T>(arr: Array<T>): Slice<T> {

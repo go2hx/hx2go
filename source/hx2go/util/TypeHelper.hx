@@ -33,14 +33,6 @@ class TypeHelper {
         }
     }
 
-    public static function commonType(context: Context, a: HxbType, b: HxbType): HxbType {
-        return switch [TypeHelper.follow(context, a), TypeHelper.follow(context, b)] {
-            case [TFloat, _]: a;
-            case [_, TFloat]: b;
-            case _: a;
-        }
-    }
-
     public static function followToDef(context: Context, type: HxbType): HxbType {
         if (type == null) {
             return null;

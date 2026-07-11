@@ -28,7 +28,7 @@ class HxString {
             if (startIndex >= s.length) {
                 return -1;
             }
-            s = Syntax.code("string(([]rune)({0})[{1}:])", s, startIndex);
+            s = Syntax.code("string(([]rune)({0})[{1}:])", s, (startIndex : Int));
         }
         return Strings.index(s, str);
     }
@@ -37,7 +37,7 @@ class HxString {
             if (startIndex >= s.length) {
                 return -1;
             }
-            s = Syntax.code("string(([]rune)({0})[{1}:])", s, startIndex);
+            s = Syntax.code("string(([]rune)({0})[{1}:])", s, (startIndex : Int));
         }
         return Strings.lastIndex(s, str);
     }
@@ -64,7 +64,7 @@ class HxString {
         if (end > s.length)
             end = s.length;
 
-        return Syntax.code("string(([]rune)({0})[{1}:{2}])", s, startIndex, end);
+        return Syntax.code("string(([]rune)({0})[{1}:{2}])", s, startIndex, (end : Int));
     }
     public static function substring(s: String, startIndex:Int, ?endIndex:Int):String {
         if (endIndex == null)
@@ -87,7 +87,7 @@ class HxString {
         // If the (possibly swapped) startIndex exceeds s.length, the empty String "" is returned.
         if (startIndex > s.length)
             return "";
-        return Syntax.code("string(([]rune)({0})[{1}:{2}])", s, startIndex, endIndex);
+        return Syntax.code("string(([]rune)({0})[{1}:{2}])", s, startIndex, (endIndex : Int));
     }
     @:pure public static function toString(s:String):String {
         return s;

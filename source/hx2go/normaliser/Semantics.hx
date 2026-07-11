@@ -221,5 +221,19 @@ class Semantics {
             case _: false;
         }
     }
+
+    public static function isNullableType(t: HxbType): Bool {
+        return switch t {
+            case TAbstract({ pack: [], name: "Null" }, _): true;
+            case _: false;
+        }
+    }
+
+    public static function getNullableType(t: HxbType): HxbType {
+        return switch t {
+            case TAbstract({ pack: [], name: "Null" }, p): p[0];
+            case _: null;
+        }
+    }
     
 }

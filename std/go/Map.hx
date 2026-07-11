@@ -49,7 +49,7 @@ abstract Map<K, V> {
     }
 
     public inline extern function clear(): Void {
-        Syntax.code("{0} = {1}", this, (_create() : Map<K, V>));
+        Syntax.code("clear({0})", this);
     }
 
 }

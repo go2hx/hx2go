@@ -171,7 +171,7 @@ class ClassWriter extends WriterImpl {
             buf.add('return obj', 1);
             buf.add('}');
 
-            if (cls.constructor != null) {
+            if (cls.constructor?.expr != null) {
                 buf.add('');
                 buf.addInline('func (this *${StringConversions.typePathClassInstanceName(cls.path)}) Hx_New(${ctor.buf.toString()}) ');
                 buf.addBufferInline(writer.exprs.writeExpr(cls.constructor.expr.expr, true));

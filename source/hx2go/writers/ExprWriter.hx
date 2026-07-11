@@ -384,7 +384,10 @@ class ExprWriter extends WriterImpl {
 
     public function writeConst(expr: HxbTypedExpr, c: HxbTConstant): OutputBuffer {
         var str = switch c {
-            case TNull: "nil";
+            case TNull: trace(expr); switch expr.t {
+                case TString: "``";
+                case _: "nil";
+            }
             case TThis: "this";
             case TSuper: "super";
             case TBool(v): Std.string(v);

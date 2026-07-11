@@ -6,11 +6,20 @@ import go.Go;
 import go.haxe.HxEnumValue;
 import go.haxe.HxEnum;
 import go.Syntax;
+import go.strconv.Strconv;
 
 class Std {
 
     public static function int(x: Float): Int {
         return Go.int(x);
+    }
+
+    public static function parseInt(x: String):Int {
+        return Strconv.atoi(x).sure();
+    }
+
+    public static function parseFloat(x: String):Float {
+        return Strconv.parseFloat(x, 64).sure();
     }
 
     public static function string(s: Dynamic): String {

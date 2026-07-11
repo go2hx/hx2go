@@ -117,8 +117,8 @@ class Normaliser {
             case TArrayDecl(values):
                 return Semantics.ensure(expr, values, this, scope, ancestor);
 
-            case TCall({ expr: TIdent("__go__") }, _):
-                return; // skip
+            /* case TCall({ expr: TIdent("__go__") }, _):
+                return; // skip */
 
             case TCall(_, params):
                 return Semantics.ensure(expr, params, this, scope, ancestor);

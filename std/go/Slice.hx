@@ -64,8 +64,7 @@ extern abstract Slice<T> {
     }
 
     @:from public static inline function fromArray<T>(arr: Array<T>): Slice<T> {
-        var v: Array<T> = arr;
-        return Syntax.code("(*{0})", v);
+        return Syntax.code("(*{0})", (arr : Array<T>));
     }
 
 }

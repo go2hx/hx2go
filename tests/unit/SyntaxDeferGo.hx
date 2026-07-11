@@ -5,17 +5,11 @@ import go.fmt.Fmt;
 import go.Syntax;
 
 function main() {
-    var x = 10;
-    var y = 20;
+    var flag = false;
 
     Syntax.defer(() -> {
-        assert(y == 10);
+        assert(flag == true);
     });
 
-    Syntax.defer(() -> {
-        Fmt.println("deferred result:", x + y);
-        y = 10;
-    });
-
-    Syntax.code("fmt.Println({0})", "code injection");
+    Syntax.code("{0} = {1}", flag, true);
 }

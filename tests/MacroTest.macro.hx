@@ -14,11 +14,9 @@ class MacroTest {
         final expr = macro {
             var name = $v{name};
             if ($comparison) {
-                @:pos(pos) trace('  ${TestAll.green("[OK]")} $name');
-                TestAll.passed++;
+                @:pos(pos) TestAll.logOk(name);
             } else {
-                @:pos(pos) trace('  ${TestAll.red("[FAIL]")} $name');
-                TestAll.failed++;
+                @:pos(pos) TestAll.logFail(name);
             }
         };
         return expr;

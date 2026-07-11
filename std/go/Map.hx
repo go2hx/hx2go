@@ -15,6 +15,7 @@ abstract Map<K, V> {
     }
 
     @:arrayAccess
+    @:pure
     public inline extern function get(key: K): V {
         return Syntax.code("{0}[{1}]", this, key);
     }

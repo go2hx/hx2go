@@ -39,6 +39,10 @@ extern abstract Slice<T> {
         return value; // statement cannot be used as expression
     }
 
+    public inline function iterator(): Iterator<T> {
+        return toArray().iterator();
+    }
+
     @:pure public inline extern overload function slice(low: GoInt, high: GoInt, max: GoInt): Slice<T> {
         return Syntax.code("{0}[{1}:{2}:{3}]", this, low, high, max);
     }

@@ -5,11 +5,11 @@ function main() {
     m["John"] = 25;
     m["Alice"] = 30;
 
-    for (name in m.keys().toArray()) {
+    for (name in m.keys()) {
         trace(name, 'is', m[name], 'years old');
     }
 
-    for (v in m.values().toArray()) {
+    for (v in m.values()) {
         trace('age', v);
     }
 

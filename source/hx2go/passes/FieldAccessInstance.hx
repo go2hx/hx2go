@@ -48,7 +48,7 @@ class FieldAccessInstance extends CompilerPass {
                 }
 
                 switch field.kind {
-                    case KMethod(_): {
+                    case KMethod(_) if (!context.omitVTable(cls)): {
                         e.expr = TField(Copy.copy(e), FInstance(tp, params, {
                             name: 'VTable',
                             owner: cf.owner,

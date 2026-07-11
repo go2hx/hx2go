@@ -53,7 +53,9 @@ class Context {
     private var contextStack: Array<ContextFrame>;
     private var typesByModule: Map<String, Array<{ type: HxbModuleType, name: String, module: String }>>;
     private var typeQueue: Array<String>;
+    private var pendingTransforms: Array<{ type: HxbModuleType, moduleKey: String }>;
     private var processList: Array<Process>;
+    private var canOmitVTable: Map<String, Bool> = [];
 
     public function new(archive: HxbArchive, outputDirectory: String) {
         this.types = [];
@@ -65,6 +67,10 @@ class Context {
         this.contextStack = [];
         this.processList = [];
         this.archive = archive;
+    }
+
+    public function omitVTable(c: HxbClass): Bool {
+        return canOmitVTable.exists(c.path.dotPath()) && canOmitVTable[c.path.dotPath()];
     }
 
     private function createPasses(): Array<ICompilerPass> {
@@ -166,14 +172,21 @@ class Context {
     public function build(mainClass: String): Void {
         typesByModule = [];
         typeQueue = [];
+        pendingTransforms = [];
 
         var mod = resolveModule(StringConversions.pathToLossyTypePath(mainClass));
         var cls = mod.classes();
         for (cl in cls) {
-            if (cl.path.name == "Main_Fields_") { 
+            if (cl.path.name == "Main_Fields_") {
                 mainClass = cl.path.dotPath();
                 break;
             }
+        }
+
+        computeCanOmitVTable();
+
+        for (entry in pendingTransforms) {
+            runPasses(entry.type, entry.moduleKey);
         }
 
         while (typeQueue.length != 0) {
@@ -226,6 +239,35 @@ class Context {
         installGoDeps(imports);
     }
 
+    function computeCanOmitVTable(): Void {
+        var classDefs: Map<String, HxbClass> = [];
+        var hasSubclass: Map<String, Bool> = [];
+
+        for (module in typesByModule) {
+            for (entry in module) {
+                switch entry.type {
+                    case MClass(def):
+                        var path = def.path.dotPath();
+                        classDefs.set(path, def);
+
+                        if (def.superClass != null) {
+                            hasSubclass.set(def.superClass.t.dotPath(), true);
+                        }
+
+                    case _: null;
+                }
+            }
+        }
+
+        for (path => def in classDefs) {
+            var isInterface = def.flags & HxbClassFlag.CInterface != 0;
+            var implementsInterface = def.interfaces != null && def.interfaces.length > 0;
+            var isSubclassed = hasSubclass.exists(path);
+
+            canOmitVTable.set(path, !isInterface && !implementsInterface && !isSubclassed);
+        }
+    }
+
     function installGoDeps(imports:Map<String, Array<String>>) {
         final previousCwd = Sys.getCwd();
         Sys.setCwd(outputDirectory);
@@ -260,9 +302,7 @@ class Context {
 
     public function resolveModule(tp: TypePath): Null<HxbModule> {
         var res = archive.findModule(tp.moduleDotPath(), "go");
-        if (res == null) {
-            return null;
-        }
+        if (res == null) return null;
 
         var mod = archive.decode(res);
 
@@ -271,10 +311,70 @@ class Context {
         }
 
         for (type in mod.types) {
-            transformType(type, res.dotPath());
+            discoverType(type, res.dotPath());
         }
 
         return mod;
+    }
+
+    private function fieldRoots(type: HxbModuleType): Array<HxbClassField> {
+        return switch type {
+            case MClass(def):
+                var roots = def.fields.concat(def.statics);
+                if (def.constructor?.expr != null) roots.push(def.constructor);
+                roots;
+
+            case _: [];
+        }
+    }
+
+    private function discoverType(type: HxbModuleType, moduleKey: String): Void {
+        for (f in fieldRoots(type)) {
+            if (f.expr?.expr == null) continue;
+            f.type = normalize(f.type);
+            prepass(f.expr.expr);
+        }
+
+        pendingTransforms.push({ type: type, moduleKey: moduleKey });
+    }
+
+    private function runPasses(type: HxbModuleType, moduleKey: String): Void {
+        var roots = fieldRoots(type);
+
+        for (f in roots) {
+            if (f.expr?.expr == null) continue;
+
+            var frame = new ContextFrame(passes, type, moduleKey, f);
+            contextStack.push(frame);
+
+            var match: HxbTypedExpr -> Void;
+            match = node -> {
+                for (p in frame.passes) {
+                    if (!p.match(node)) continue;
+                    frame.pending[p].push(node);
+                }
+                TypedExprTools.iter(node, match);
+            };
+
+            match(f.expr.expr);
+
+            for (i in 0...frame.passes.length) {
+                frame.currentPassIndex = i;
+                var p = frame.passes[i];
+                var queue = frame.pending[p];
+                var idx = 0;
+                while (idx < queue.length) {
+                    p.execute(queue[idx], frame);
+                    idx++;
+                }
+            }
+
+            contextStack.pop();
+        }
+
+        for (f in roots.filter(f -> f.kind.match(KMethod(_)) && f.expr?.expr != null)) {
+            Normaliser.run(f.expr.expr, {}, this);
+        }
     }
 
     private function writeFile(directory: String, fileName: String, content: String): Void {
@@ -461,62 +561,6 @@ class Context {
                 v.name = sanitiseString(v.name);
 
             case _: null;
-        }
-    }
-
-    private function transformType(type: HxbModuleType, moduleKey: String): Void {
-        var roots: Array<HxbClassField> = [];
-
-        switch type {
-            case MClass(def):
-                roots = roots.concat(def.fields);
-                roots = roots.concat(def.statics);
-
-                if (def.constructor?.expr != null) {
-                    roots.push(def.constructor);
-                }
-
-            case _: null;
-        }
-
-        for (f in roots) {
-            if (f.expr?.expr == null) continue;
-            f.type = normalize(f.type);
-
-            var frame = new ContextFrame(passes, type, moduleKey, f);
-            contextStack.push(frame);
-
-            var match: HxbTypedExpr -> Void;
-
-            match = node -> {
-                for (p in frame.passes) {
-                    if (!p.match(node)) continue;
-                    frame.pending[p].push(node);
-                }
-
-                TypedExprTools.iter(node, match);
-            };
-
-            prepass(f.expr.expr);
-            match(f.expr.expr);
-
-            for (i in 0...frame.passes.length) {
-                frame.currentPassIndex = i;
-
-                var p = frame.passes[i];
-                var queue = frame.pending[p];
-                var idx = 0;
-                while (idx < queue.length) {
-                    p.execute(queue[idx], frame);
-                    idx++;
-                }
-            }
-
-            contextStack.pop();
-        }
-
-        for (f in roots.filter(f -> f.kind.match(KMethod(_)) && f.expr?.expr != null)) {
-            Normaliser.run(f.expr.expr, {}, this);
         }
     }
 

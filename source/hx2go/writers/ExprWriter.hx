@@ -349,11 +349,11 @@ class ExprWriter extends WriterImpl {
                 }
         };
 
-        // if (op != OpAssign) buf.addInline('(');
+         if (op != OpAssign) buf.addInline('(');
         buf.addBufferInline(writeExpr(left));
         buf.addInline(' $opStr ');
         buf.addBufferInline(writeExpr(right));
-        // if (op != OpAssign) buf.addInline(')');
+         if (op != OpAssign) buf.addInline(')');
 
         return buf;
     }

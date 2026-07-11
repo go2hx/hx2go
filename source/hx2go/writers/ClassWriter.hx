@@ -29,73 +29,77 @@ class ClassWriter extends WriterImpl {
             return buf;
         }
 
-        buf.add('');
-        buf.add('type ${StringConversions.typePathClassVTableName(cls.path)} interface {');
-
         var fields: Map<String, HxbClassField> = [];
         var vtables: Array<String> = [];
         var current: HxbClass = cls;
         var hasInterfaces: Map<String, Bool> = [];
         var dynMethods: Array<{ inst: HxbClass, field: HxbClassField }> = [];
+        var canOmitVTable: Bool = writer.context.omitVTable(cls);
 
-        while (current != null) {
-            for (f in current.fields.filter(f -> f.kind.match(KMethod(_)) && !fields.exists(f.name))) {
-                if (f.kind.match(KMethod(MethDynamic))) {
-                    dynMethods.push({ inst: current, field: f });
+        if (!canOmitVTable) {
+            buf.add('');
+            buf.add('type ${StringConversions.typePathClassVTableName(cls.path)} interface {');
+
+            while (current != null) {
+                for (f in current.fields.filter(f -> f.kind.match(KMethod(_)) && !fields.exists(f.name))) {
+                    if (f.kind.match(KMethod(MethDynamic))) {
+                        dynMethods.push({ inst: current, field: f });
+                    }
+
+                    fields.set(f.name, f);
                 }
 
-                fields.set(f.name, f);
-            }
-
-            if (current?.superClass?.t == null) {
-                break;
-            }
-
-            var mod = writer.context.resolve(current.superClass.t);
-
-            current = switch mod {
-                case MClass(x): x;
-                case _: null;
-            }
-
-            if (current == null) {
-                break;
-            }
-
-            for (iface in current.interfaces) {
-                var dot = iface.t.dotPath();
-                if (hasInterfaces.exists(dot)) {
-                    continue;
+                if (current?.superClass?.t == null) {
+                    break;
                 }
 
-                hasInterfaces.set(dot, true);
+                var mod = writer.context.resolve(current.superClass.t);
 
-                var im = writer.context.resolve(iface.t);
-                var ip = StringConversions.moduleTypeGetTypePath(im);
+                current = switch mod {
+                    case MClass(x): x;
+                    case _: null;
+                }
 
-                vtables.push('obj.${StringConversions.typePathClassInstanceName(ip)}.VTable = obj');
+                if (current == null) {
+                    break;
+                }
+
+                for (iface in current.interfaces) {
+                    var dot = iface.t.dotPath();
+                    if (hasInterfaces.exists(dot)) {
+                        continue;
+                    }
+
+                    hasInterfaces.set(dot, true);
+
+                    var im = writer.context.resolve(iface.t);
+                    var ip = StringConversions.moduleTypeGetTypePath(im);
+
+                    vtables.push('obj.${StringConversions.typePathClassInstanceName(ip)}.VTable = obj');
+                }
+
+                vtables.push('obj.${StringConversions.typePathClassInstanceName(current.path)}.VTable = obj');
             }
 
-            vtables.push('obj.${StringConversions.typePathClassInstanceName(current.path)}.VTable = obj');
-        }
+            for (f in fields) {
+                var vBuf = new OutputBuffer();
+                var fTypes = writeFunctionArgs(f.type);
 
-        for (f in fields) {
-            var vBuf = new OutputBuffer();
-            var fTypes = writeFunctionArgs(f.type);
+                vBuf.addInline('${StringConversions.nameToFieldName(f.name)}(');
+                vBuf.addBufferInline(fTypes.buf);
+                vBuf.addInline(')');
 
-            vBuf.addInline('${StringConversions.nameToFieldName(f.name)}(');
-            vBuf.addBufferInline(fTypes.buf);
-            vBuf.addInline(')');
+                if (fTypes.returnType != TVoid) {
+                    vBuf.addInline(' ');
+                    vBuf.addBufferInline(writer.types.writeHxbType(fTypes.returnType));
+                }
 
-            if (fTypes.returnType != TVoid) {
-                vBuf.addInline(' ');
-                vBuf.addBufferInline(writer.types.writeHxbType(fTypes.returnType));
+                buf.addBuffer(vBuf, 1);
             }
 
-            buf.addBuffer(vBuf, 1);
+            buf.add('}');
         }
 
-        buf.add('}');
         buf.add('');
 
         buf.add('type ${StringConversions.typePathClassInstanceName(cls.path)} struct {');
@@ -115,7 +119,9 @@ class ClassWriter extends WriterImpl {
             vtables.push('obj.${ifName}.VTable = obj');
         }
 
-        buf.add('VTable ${StringConversions.typePathClassVTableName(cls.path)}', 1);
+        if (!canOmitVTable) {
+            buf.add('VTable ${StringConversions.typePathClassVTableName(cls.path)}', 1);
+        }
 
         for (f in cls.fields) {
             var fRes: { name: String, type: HxbType } = switch f.kind {
@@ -144,7 +150,10 @@ class ClassWriter extends WriterImpl {
             buf.add('');
             buf.add('func ${StringConversions.typePathClassInstanceName(cls.path)}_CreateEmptyInstance() *${StringConversions.typePathClassInstanceName(cls.path)} {');
             buf.add('obj := &${StringConversions.typePathClassInstanceName(cls.path)}{}', 1);
-            buf.add('obj.VTable = obj', 1);
+
+            if (!canOmitVTable) {
+                buf.add('obj.VTable = obj', 1);
+            }
 
             for (f in dynMethods) {
                 var local = Copy.copy(f.field.expr.expr);

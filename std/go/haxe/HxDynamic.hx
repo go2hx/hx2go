@@ -118,7 +118,7 @@ class HxDynamic {
         var slice: Slice<Dynamic> = new Slice();
 
         for (i in 0...len) {
-            slice = slice.append(getArrayIndex(v, i));
+            slice = slice.append(ensureInterface(getArrayIndex(v, i)));
         }
 
         return slice;

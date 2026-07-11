@@ -15,4 +15,9 @@ function foo(x: Int, y: Rest<Int>) {
 
 function bar(v: Rest<Dynamic>): Void {
     trace(v);
+
+    var v1 = v.prepend(-1000);
+    var v2 = v.append(1000);
+
+    trace(v, v1, v2);
 }

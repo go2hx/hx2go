@@ -12,7 +12,7 @@ class TestAll {
     public static function gray(s:String):String return colorEnabled ? '\033[90m$s\033[0m' : s;
 
     static function line(tag:String, name:String, pos:PosInfos):String {
-        var left = '  $tag $name';
+        var left = '$tag $name';
         var gap = Std.int(Math.max(2, 100 - left.length));
 
         var pad = new StringBuf();

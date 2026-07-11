@@ -34,20 +34,17 @@ class TypeNormaliserBinop extends CompilerPass {
             return;
         }
 
-        if (TypeHelper.compare(expr.t, TBool)) {
-            return;
-        }
-
-        if (!TypeHelper.compare(left.t, expr.t) && op != OpAssign) {
-            var o = ExprHelper.createCast(left, expr.t);
+        var toType = TypeHelper.compare(expr.t, TBool) ? TypeHelper.commonType(context, left.t, right.t) : expr.t;
+        if (!TypeHelper.compare(left.t, toType) && op != OpAssign) {
+            var o = ExprHelper.createCast(left, toType);
             left.expr = o.expr;
             left.t = o.t;
             context.submitNode(left, true);
         }
 
         // NOTE: this also handles OpAssign, since the resulting type of the assign expr always equals the left side, only RHS will be casted if needed.
-        if (!TypeHelper.compare(right.t, expr.t)) {
-            var o = ExprHelper.createCast(right, expr.t);
+        if (!TypeHelper.compare(right.t, toType)) {
+            var o = ExprHelper.createCast(right, toType);
             right.expr = o.expr;
             right.t = o.t;
             context.submitNode(right, true);

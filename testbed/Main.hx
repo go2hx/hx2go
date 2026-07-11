@@ -1,14 +1,7 @@
-import go.Map;
-import go.Slice;
-
-function command(cmd: String, ?args: Array<String>): Int {
-    var arg: Slice<String> = Slice.fromArray(args ?? []);
-    trace(arg);
-
-    return 0;
-}
-
 function main() {
-    command("hello");
-    command("hello", ["world"]);
+    var v: String = "Hello, World!";
+    var v_null: Null<String> = v;
+    var l = v_null.length;
+
+    trace(v.length, v_null.length);
 }

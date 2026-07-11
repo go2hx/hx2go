@@ -1,4 +1,3 @@
-import go.fmt.Fmt;
 import haxe.PosInfos;
 
 private enum Colour {
@@ -13,11 +12,19 @@ class Foo {
     public function new() {}
 
     public static dynamic function foo() {
-        Fmt.println("Foo");
+        trace("Foo");
     }
 
     public dynamic function bar() {
-        Fmt.println("Bar");
+        trace("Bar");
+    }
+
+}
+
+class Bar extends Foo {
+
+    public dynamic function baz(): Void {
+        trace("Baz");
     }
 
 }
@@ -31,21 +38,34 @@ function main() {
     var c2: Colour = RGBA(1, 0, 0, 1);
     var c3: EnumValue = c2;
 
-    Fmt.println(c1, c2, c3);
+    trace(c1, c2, c3);
 
     var v = new Foo();
+    var v2 = new Bar();
 
     Foo.foo();
     v.bar();
+    v2.bar();
+    v2.baz();
 
     Foo.foo = () -> {
-        Fmt.println('overwritten Foo');
+        trace('overwritten Foo on Static');
     }
 
-//    v.bar = () -> {
-//        Fmt.println('overwritten Bar');
-//    }
+    v.bar = () -> {
+        trace('overwritten Bar on Foo');
+    }
+
+    v2.bar = () -> {
+        trace('overwritten Bar on Bar');
+    }
+
+    v2.baz = () -> {
+        trace("overwritten Baz on Bar");
+    }
 
     Foo.foo();
     v.bar();
+    v2.bar();
+    v2.baz();
 }

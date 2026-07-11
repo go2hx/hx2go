@@ -102,6 +102,7 @@ class Context {
             new hx2go.passes.RewriteResultAssign(this),
             new hx2go.passes.RewriteResultSwitch(this),
             new hx2go.passes.RewriteResultSwitchParam(this),
+            new hx2go.passes.RewriteMethodAssign(this),
             new hx2go.passes.FieldAccessExtern(this),
             new hx2go.passes.FieldAccessInstance(this),
             new hx2go.passes.RewriteAbstractThis(this),
@@ -113,7 +114,7 @@ class Context {
             new hx2go.passes.RewriteSyntaxGo(this),
             new hx2go.passes.ResolveVarDecl(this),
             new hx2go.passes.RewriteArrayGetData(this),
-            new hx2go.passes.RewriteArraySetData(this)
+            new hx2go.passes.RewriteArraySetData(this),
         ];
     }
 

@@ -20,7 +20,6 @@ class FieldAccessInstance extends CompilerPass {
     public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
         switch expr.expr {
             case TField(e, FInstance(tp, params, cf) | FClosureInstance(tp, params, cf)): {
-
                 var mt = context.resolve(tp);
                 if (mt == null) {
                     return;

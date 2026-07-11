@@ -10,6 +10,8 @@ import hx2go.hxb.flags.HxbClassFlag;
 import hx2go.hxb.Typed.HxbTypedExpr;
 import hx2go.normaliser.Normaliser;
 import hx2go.normaliser.Normaliser.Normaliser.run;
+import haxe.runtime.Copy;
+import hx2go.hxb.TypePath;
 
 class ClassWriter extends WriterImpl {
 
@@ -34,9 +36,14 @@ class ClassWriter extends WriterImpl {
         var vtables: Array<String> = [];
         var current: HxbClass = cls;
         var hasInterfaces: Map<String, Bool> = [];
+        var dynMethods: Array<{ inst: HxbClass, field: HxbClassField }> = [];
 
         while (current != null) {
             for (f in current.fields.filter(f -> f.kind.match(KMethod(_)) && !fields.exists(f.name))) {
+                if (f.kind.match(KMethod(MethDynamic))) {
+                    dynMethods.push({ inst: current, field: f });
+                }
+
                 fields.set(f.name, f);
             }
 
@@ -111,15 +118,17 @@ class ClassWriter extends WriterImpl {
         buf.add('VTable ${StringConversions.typePathClassVTableName(cls.path)}', 1);
 
         for (f in cls.fields) {
-            switch f.kind {
+            var fRes: { name: String, type: HxbType } = switch f.kind {
                 case KVar(AccCall, _) | KVar(_, AccCall): continue;
-                case KVar(_): null;
+                case KVar(_): { name: StringConversions.nameToFieldName(f.name), type: f.type };
+                case KMethod(MethDynamic): { name: StringConversions.nameToFieldName(f.name) + "_Dyn", type: appendThis(f.type, cls) };
                 case _: continue;
             }
+
             var vBuf = new OutputBuffer();
-            vBuf.addInline(StringConversions.nameToFieldName(f.name));
+            vBuf.addInline(fRes.name);
             vBuf.addInline(' ');
-            vBuf.addBufferInline(writer.types.writeHxbType(f.type));
+            vBuf.addBufferInline(writer.types.writeHxbType(fRes.type));
             buf.addBuffer(vBuf, 1);
         }
 
@@ -136,6 +145,13 @@ class ClassWriter extends WriterImpl {
             buf.add('func ${StringConversions.typePathClassInstanceName(cls.path)}_CreateEmptyInstance() *${StringConversions.typePathClassInstanceName(cls.path)} {');
             buf.add('obj := &${StringConversions.typePathClassInstanceName(cls.path)}{}', 1);
             buf.add('obj.VTable = obj', 1);
+
+            for (f in dynMethods) {
+                var local = Copy.copy(f.field.expr.expr);
+                local.t = appendThis(local.t, f.inst);
+
+                buf.add('obj.${StringConversions.nameToFieldName(f.field.name)}_Dyn = ${writer.exprs.writeExpr(local)}', 1);
+            }
 
             for (v in vtables) {
                 buf.add(v, 1);
@@ -182,6 +198,17 @@ class ClassWriter extends WriterImpl {
         }
 
         return buf;
+    }
+
+    public function appendThis(t: HxbType, c: HxbClass): HxbType {
+        return switch t {
+            case TFun(args, ret): TFun([({
+                name: "this",
+                opt: false,
+                t: TInst(c.path, [])
+            } : HxbFunArg)].concat(args), ret);
+            case _: t;
+        }
     }
 
     public function writeStaticClassField(field: HxbClassField, cls: HxbClass): OutputBuffer {
@@ -304,8 +331,15 @@ class ClassWriter extends WriterImpl {
             buf.addInline(' ');
         }
 
-        if (field.expr?.expr != null) buf.addBufferInline(writer.exprs.writeExpr(field.expr.expr, true))
-        else buf.addInline("{}");
+        if (kind == MethDynamic) {
+            buf.add('{');
+            if (fTypes.returnType != TVoid) buf.add("return ", 1, false);
+            buf.add('this.${StringConversions.nameToFieldName(field.name)}_Dyn(${["this"].concat(fTypes.args.map(a -> a.name)).join(", ")})', fTypes.returnType != TVoid ? 0 : 1);
+            buf.addInline('}');
+        } else {
+            if (field.expr?.expr != null) buf.addBufferInline(writer.exprs.writeExpr(field.expr.expr, true))
+            else buf.addInline("{}");
+        }
 
         return buf;
     }

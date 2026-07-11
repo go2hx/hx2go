@@ -89,10 +89,12 @@ class Semantics {
         return res;
     }
 
-    public static function isConstant(e: HxbTypedExpr):Bool {
+    public static function isConstant(e: HxbTypedExpr): Bool {
         return switch e.expr {
             case TConst(TThis | TSuper): false;
             case TConst(_): true;
+            case TParenthesis(e1) | TMeta(_, e1) | TCast(e1, _): isConstant(e1);
+            case TUnop(OpNeg | OpNegBits, _, e1): isConstant(e1);
             case _: false;
         }
     }

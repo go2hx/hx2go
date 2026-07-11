@@ -58,8 +58,8 @@ class TypeWriter extends WriterImpl {
 
     public function writeModuleType(type: TypePath): String {
         var mod = writer.context.resolve(type);
-        if (mod == null ){
-            return "any";
+        if (mod == null) {
+            return '*' + StringConversions.typePathClassInstanceName(type);
         }
 
         var tp = StringConversions.moduleTypeGetTypePath(mod);

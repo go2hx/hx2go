@@ -149,6 +149,7 @@ class TypeWriter extends WriterImpl {
             case TAbstract({ pack: ['go'], name: 'Result'}, params) | TEnum({ pack: ['go'], name: 'ResultKind'}, params): 'struct { Error ${writeHxbType(params[1])}; Result ${writeHxbType(params[0])} }';
             case TType({ pack: ['go'], name: 'Tuple'}, [TAnon(anon)]): 'struct { ${anon.fields.map(f -> '${StringConversions.toPascalCase(f.name)} ${writeHxbType(f.type)}').join('; ')} }';
             case TAbstract({ pack: [], name: 'Null' }, params): 'struct { Value ${writeHxbType(params[0])}; Valid bool }';
+            case TAbstract({ pack: [], name: 'Class' }, _) | TAbstract({ pack: [], name: 'Enum' }, _): 'any';
             case TInst({ pack: [], name: 'Array' }, params): '*[]${writeHxbType(params[0])}';
             case TAbstract({ pack: ['go'], name: 'Slice' }, params): '[]${writeHxbType(params[0])}';
             case TAnon(anon): 'any'; // TODO: anon.stauts, aka openness?

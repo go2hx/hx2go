@@ -1,20 +1,15 @@
-class Foo<K, V> {
-    public function new() {}
-    public function add(a: K, b: V) {
-        return (a: Dynamic) + (b: Dynamic);
-    }
+interface Foo<K, V> {
+    public function add(a: K, b: V): Dynamic;
 }
 
-class Bar<T> extends Foo<String, T> {
-    override public function add(a: String, b: T) {
+class Bar<T> implements Foo<String, T> {
+    public function new() {}
+    public function add(a: String, b: T) {
         return (a: Dynamic) + (b: Dynamic);
     }
 }
 
 function main() {
-    var f = new Foo<Int, Int>();
-    var b = new Bar<Int>();
-
-    trace(f.add(10, 20));
-    trace(b.add("Hello", 50));
+    var v = new Bar<Int>();
+    trace(v.add("hello", 10));
 }

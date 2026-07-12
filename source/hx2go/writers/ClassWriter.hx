@@ -37,6 +37,7 @@ class ClassWriter extends WriterImpl {
         var fields: Map<String, HxbClassField> = [];
         var vtables: Array<String> = [];
         var current: HxbClass = cls;
+        var isTop: Bool = true;
         var hasInterfaces: Map<String, Bool> = [];
         var dynMethods: Array<{ inst: HxbClass, field: HxbClassField }> = [];
         var canOmitVTable: Bool = writer.context.omitVTable(cls);
@@ -60,6 +61,31 @@ class ClassWriter extends WriterImpl {
                     fields.set(f.name, f);
                 }
 
+                for (iface in current.interfaces) {
+                    var dot = iface.t.dotPath();
+                    var im = writer.context.resolve(iface.t);
+                    var ip = StringConversions.moduleTypeGetTypePath(im);
+                    var iface = switch im {
+                        case MClass(x): x;
+                        case _: null;
+                    }
+
+                    for (f in iface.fields) {
+                        fields.set(f.name, f);
+                    }
+
+                    if (isTop) {
+                        continue;
+                    }
+
+                    if (hasInterfaces.exists(dot)) {
+                        continue;
+                    }
+
+                    hasInterfaces.set(dot, true);
+                    vtables.push('obj.${StringConversions.typePathClassInstanceName(ip)}.VTable = obj');
+                }
+
                 if (current?.superClass?.t == null) {
                     break;
                 }
@@ -71,22 +97,10 @@ class ClassWriter extends WriterImpl {
                     case _: null;
                 }
 
+                isTop = false;
+
                 if (current == null) {
                     break;
-                }
-
-                for (iface in current.interfaces) {
-                    var dot = iface.t.dotPath();
-                    if (hasInterfaces.exists(dot)) {
-                        continue;
-                    }
-
-                    hasInterfaces.set(dot, true);
-
-                    var im = writer.context.resolve(iface.t);
-                    var ip = StringConversions.moduleTypeGetTypePath(im);
-
-                    vtables.push('obj.${StringConversions.typePathClassInstanceName(ip)}.VTable = obj');
                 }
 
                 vtables.push('obj.${StringConversions.typePathClassInstanceName(current.path)}.VTable = obj');

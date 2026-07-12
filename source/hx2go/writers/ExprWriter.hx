@@ -483,11 +483,12 @@ class ExprWriter extends WriterImpl {
     }
 
     public function writeTypeAccess(expr: HxbTypedExpr, ref: HxbModuleTypeRef): OutputBuffer {
-        var tp = switch ref {
-            case MTClass(x) | MTEnum(x) | MTAbstract(x) | MTTypedef(x) | MTUnknown(x): x;
+        var str = switch ref {
+            case MTEnum(x) | MTAbstract(x) | MTTypedef(x) | MTUnknown(x): writer.types.writeModuleType(tp);
+            case MTClass(x): '${StringConversions.typePathClassInstanceName(x)}'
         }
 
-        return new OutputBuffer(writer.types.writeModuleType(tp));
+        return new OutputBuffer(str);
     }
 
     public function writeRaw(template: HxbTypedExpr, args: Array<HxbTypedExpr>): OutputBuffer {

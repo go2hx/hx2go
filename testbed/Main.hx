@@ -1,5 +1,9 @@
 function main() {
-    var v = new String("Hello!!");
-    var a = new Array<Int>();
-
+    bar(Foo);
 }
+
+function bar(d:Dynamic) {
+    trace(d);
+}
+
+class Foo {}

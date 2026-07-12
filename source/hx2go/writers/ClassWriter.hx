@@ -23,6 +23,8 @@ class ClassWriter extends WriterImpl {
     }
 
     public function writeClass(cls: HxbClass): OutputBuffer {
+        writer.context.resolve({ pack: ['go', 'haxe'], name: "HxClass", moduleName: "HxClass" });
+
         var buf = new OutputBuffer();
 
         if (cls.flags & HxbClassFlag.CExtern != 0) {
@@ -35,6 +37,11 @@ class ClassWriter extends WriterImpl {
         var hasInterfaces: Map<String, Bool> = [];
         var dynMethods: Array<{ inst: HxbClass, field: HxbClassField }> = [];
         var canOmitVTable: Bool = writer.context.omitVTable(cls);
+
+        buf.add('');
+        buf.add('var ${StringConversions.typePathClassInstanceName(cls.path)}_RTTI = Hx_Obj_go_haxe_hxclass_CreateInstance(');
+        buf.add('"${cls.path.dotPath()}",', 1);
+        buf.add(')');
 
         if (!canOmitVTable) {
             buf.add('');

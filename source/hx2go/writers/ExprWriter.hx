@@ -21,6 +21,7 @@ import hx2go.hxb.HxbType;
 import hx2go.hxb.TypePath;
 import hx2go.hxb.tools.TypedExprTools;
 import hx2go.hxb.EnumFieldRef;
+import hx2go.hxb.Typed.HxbTCase;
 
 class ExprWriter extends WriterImpl {
 
@@ -51,10 +52,38 @@ class ExprWriter extends WriterImpl {
             case TNew(tp, params, el): writeNew(expr, tp, params, el);
             case TEnumIndex(e): writeEnumIndex(expr, e);
             case TEnumParameter(e, ef, index): writeEnumParameter(expr, e, ef, index);
+            case TSwitch(subject, cases, edef): writeSwitch(expr, subject, cases, edef);
             case TBreak: new OutputBuffer("break");
             case TContinue: new OutputBuffer("continue");
             case _: new OutputBuffer();
         }
+    }
+
+    public function writeSwitch(expr: HxbTypedExpr, subject: HxbTypedExpr, cases: Array<HxbTCase>, edef: Null<HxbTypedExpr>): OutputBuffer {
+        var buf = new OutputBuffer();
+
+        buf.addInline('switch ');
+        buf.addBufferInline(writeExpr(subject));
+        buf.addInline(' {');
+
+        for (c in cases) {
+            buf.add('');
+            buf.add('case ', 1, false);
+            buf.addInline(c.patterns.map(p -> writeExpr(p).toString()).join(' | '));
+            buf.add(':');
+            buf.addBuffer(writeExpr(c.expr), 2);
+        }
+
+        if (edef != null) {
+            buf.add('');
+            buf.add('default: ', 1);
+            buf.addBuffer(writeExpr(edef), 2, false);
+        }
+
+        buf.add('');
+        buf.addInline('}');
+
+        return buf;
     }
 
     public function writeEnumParameter(expr: HxbTypedExpr, e: HxbTypedExpr, ef: EnumFieldRef, index: Int): OutputBuffer {

@@ -2,7 +2,7 @@ package unit;
 
 import go.Syntax;
 
-enum Colour {
+private enum Colour {
     HEX(v: String);
     RGB(r: Float, g: Float, b: Float);
     RGBA(r: Float, g: Float, b: Float, a: Float);
@@ -15,9 +15,9 @@ function main() {
     var f1: Enum<Dynamic> = cast a;
     var f2: Enum<Dynamic> = cast b;
 
-    assert(getName(f1) == "unit.Colour");
-    assert(getName(f2) == "unit.Colour");
-    assert(getName(Colour) == "unit.Colour");
+    assert(getName(f1) == "unit._EnumType.Colour");
+    assert(getName(f2) == "unit._EnumType.Colour");
+    assert(getName(Colour) == "unit._EnumType.Colour");
 }
 
 function getName<T>(f: Enum<T>): String {

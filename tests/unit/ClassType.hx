@@ -10,19 +10,19 @@ function main() {
     var f2: Class<Dynamic> = cast foo;
     var f3: Class<Dynamic> = cast dyn;
 
-    assert(getName(f1) == "unit.Bar");
-    assert(getName(f2) == "unit.Bar");
-    assert(getName(f3) == "unit.Bar");
-    assert(getName(Foo) == "unit.Foo");
-    assert(getName(Bar) == "unit.Bar");
+    assert(getName(f1) == "unit._ClassType.Bar");
+    assert(getName(f2) == "unit._ClassType.Bar");
+    assert(getName(f3) == "unit._ClassType.Bar");
+    assert(getName(Foo) == "unit._ClassType.Foo");
+    assert(getName(Bar) == "unit._ClassType.Bar");
 }
 
 function getName<T>(f: Class<T>): String {
     return Syntax.code("{0}.Hx_Field_name", f);
 }
 
-class Foo {
+private class Foo {
     public function new() {}
 }
 
-class Bar extends Foo {}
+private class Bar extends Foo {}

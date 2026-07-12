@@ -23,7 +23,7 @@ private class Vehicle {
     }
 }
 
-class Car extends Vehicle {
+private class Car extends Vehicle {
     public var fuel: Int;
 
     public function new(model: String, ?hp: Int, ?fuel: Int) {
@@ -36,7 +36,7 @@ class Car extends Vehicle {
     }
 }
 
-class Truck extends Car {
+private class Truck extends Car {
     override public function drive(): String {
         return '$model is driving, but it sure takes a while...';
     }

@@ -1,10 +1,7 @@
+import haxe.ds.StringMap;
+
 function main() {
-    var v: Class<Foo> = Foo;
-    bar(v);
+    var x = new StringMap<Int>(); // ["ten" => 10];
+    x.set("ten", 10);
+    trace(x.get("ten"));
 }
-
-function bar(d:Dynamic) {
-    trace(d);
-}
-
-class Foo {}

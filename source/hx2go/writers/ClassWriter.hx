@@ -12,6 +12,9 @@ import hx2go.normaliser.Normaliser;
 import hx2go.normaliser.Normaliser.Normaliser.run;
 import haxe.runtime.Copy;
 import hx2go.hxb.TypePath;
+import hx2go.util.TypeHelper;
+import hx2go.util.ExprHelper;
+import hx2go.hxb.Typed.HxbTypedExprDef;
 
 class ClassWriter extends WriterImpl {
 
@@ -49,7 +52,7 @@ class ClassWriter extends WriterImpl {
             buf.add('type ${StringConversions.typePathClassVTableName(cls.path)} interface {');
 
             while (current != null) {
-                for (f in current.fields.filter(f -> f.kind.match(KMethod(_)) && !fields.exists(f.name))) {
+                for (f in current.fields.filter(f -> f.kind.match(KMethod(_)))) {
                     if (f.kind.match(KMethod(MethDynamic))) {
                         dynMethods.push({ inst: current, field: f });
                     }
@@ -91,7 +94,7 @@ class ClassWriter extends WriterImpl {
 
             for (f in fields) {
                 var vBuf = new OutputBuffer();
-                var fTypes = writeFunctionArgs(f.type);
+                var fTypes = writeFunctionArgs(f.type, f.type);
 
                 vBuf.addInline('${StringConversions.nameToFieldName(f.name)}(');
                 vBuf.addBufferInline(fTypes.buf);
@@ -153,7 +156,7 @@ class ClassWriter extends WriterImpl {
         buf.add('}');
 
         if (!isInterface) {
-            var ctor = cls.constructor != null ? writeFunctionArgs(cls.constructor.type) : {
+            var ctor = cls.constructor != null ? writeFunctionArgs(cls.constructor.type, cls.constructor.type) : {
                 buf: new OutputBuffer(),
                 returnType: TVoid,
                 args: []
@@ -205,7 +208,7 @@ class ClassWriter extends WriterImpl {
             buf.add('}');
 
             for (f in cls.fields.filter(f -> f.kind.match(KMethod(_)))) {
-                var res = writeMemberClassField(f, cls);
+                var res = writeMemberClassField(f, cls, fields);
                 if (res.isEmpty()) {
                     continue;
                 }
@@ -248,23 +251,30 @@ class ClassWriter extends WriterImpl {
         }
     }
 
-    public function writeMemberClassField(field: HxbClassField, cls: HxbClass): OutputBuffer {
+    public function writeMemberClassField(field: HxbClassField, cls: HxbClass, fields: Map<String, HxbClassField>): OutputBuffer {
         return switch field.kind {
-            case KMethod(kind): writeMemberClassFunction(field, kind, cls);
+            case KMethod(kind): writeMemberClassFunction(field, kind, cls, fields);
             case KVar(read, write): writeMemberClassVar(field, read, write, cls);
         }
     }
 
-    public function writeFunctionArgs(type: HxbType): { buf: OutputBuffer, returnType: HxbType, args: Array<HxbFunArg> } {
+    public function writeFunctionArgs(type: HxbType, exp: HxbType): { buf: OutputBuffer, returnType: HxbType, args: Array<HxbFunArg>, toAssign: Array<HxbTypedExpr> } {
         var buf = new OutputBuffer();
         var fArgs: Array<HxbFunArg> = [];
         var ret: HxbType = TVoid;
+        var toAssign: Array<HxbTypedExpr> = [];
 
-        switch type {
-            case TFun(args, returnType):
+        switch [type, exp] {
+            case [TFun(args, returnType), TFun(e_args, e_returnType)]:
                 for (idx in 0...args.length) {
                     var arg = args[idx];
-                    buf.addInline('${arg.name} ${writer.types.writeHxbType(arg.t)}'); // TODO: optional args
+                    var e_arg = e_args[idx];
+
+                    if (TypeHelper.compare(arg.t, e_arg.t)) buf.addInline('${arg.name} ${writer.types.writeHxbType(arg.t)}');
+                    else {
+                        toAssign.push(ExprHelper.createUntyped('${arg.name} := _hx_param_${arg.name}.(${writer.types.writeHxbType(e_arg.t)})', []));
+                        buf.addInline('_hx_param_${arg.name} ${writer.types.writeHxbType(arg.t)}');
+                    }
 
                     if (idx < args.length - 1) {
                         buf.addInline(', ');
@@ -278,12 +288,12 @@ class ClassWriter extends WriterImpl {
             case _: null;
         }
 
-        return { buf: buf, returnType: ret, args: fArgs };
+        return { buf: buf, returnType: ret, args: fArgs, toAssign: toAssign };
     }
 
     public function writeStaticClassFunction(field: HxbClassField, kind: HxbMethodKind, cls: HxbClass): OutputBuffer {
         var buf = new OutputBuffer();
-        var fTypes = writeFunctionArgs(field.type);
+        var fTypes = writeFunctionArgs(field.type, field.type);
 
         if (field.flags & HxbClassFieldFlag.CfExtern != 0 || (cls.flags & HxbClassFlag.CExtern != 0)) {
             return buf;
@@ -339,9 +349,10 @@ class ClassWriter extends WriterImpl {
         return buf;
     }
 
-    public function writeMemberClassFunction(field: HxbClassField, kind: HxbMethodKind, cls: HxbClass): OutputBuffer {
+    public function writeMemberClassFunction(field: HxbClassField, kind: HxbMethodKind, cls: HxbClass, fields: Map<String, HxbClassField>): OutputBuffer {
         var buf = new OutputBuffer();
-        var fTypes = writeFunctionArgs(field.type);
+        var globField = fields[field.name];
+        var fTypes = writeFunctionArgs(globField.type, field.type);
 
         if (field.flags & HxbClassFieldFlag.CfExtern != 0 || (cls.flags & HxbClassFlag.CExtern != 0)) {
             return buf;
@@ -363,7 +374,18 @@ class ClassWriter extends WriterImpl {
             buf.add('this.${StringConversions.nameToFieldName(field.name)}_Dyn(${["this"].concat(fTypes.args.map(a -> a.name)).join(", ")})', fTypes.returnType != TVoid ? 0 : 1);
             buf.addInline('}');
         } else {
-            if (field.expr?.expr != null) buf.addBufferInline(writer.exprs.writeExpr(field.expr.expr, true))
+            var e = switch field.expr.expr.expr {
+                case TFunction({ args: args, t: t, expr: { expr: TBlock(exprs), t: blockT } }) if (fTypes.toAssign.length != 0): {
+                    new HxbTypedExpr(TFunction({
+                        args: args,
+                        t: t,
+                        expr: new HxbTypedExpr(TBlock(fTypes.toAssign.concat(exprs)), blockT, null)
+                    }), field.expr.expr.t, field.expr.expr.pos);
+                }
+
+                case _: field.expr.expr;
+            }
+            if (field.expr?.expr != null) buf.addBufferInline(writer.exprs.writeExpr(e, true))
             else buf.addInline("{}");
         }
 

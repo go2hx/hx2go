@@ -23,6 +23,8 @@ import hx2go.hxb.HxbClassField;
 import hx2go.hxb.HxbType;
 import hx2go.util.TypeHelper;
 import hx2go.hxb.flags.HxbClassFieldFlag;
+import hx2go.util.ExprHelper;
+import hx2go.hxb.Typed.HxbTypedExprDef;
 
 class Context {
 
@@ -478,6 +480,7 @@ class Context {
 
     private function transformType(type: HxbModuleType, moduleKey: String): Void {
         var roots: Array<HxbClassField> = [];
+        var baseInstFields: Map<String, HxbClassField> = [];
 
         switch type {
             case MClass(def):
@@ -488,11 +491,93 @@ class Context {
                     roots.push(def.constructor);
                 }
 
+                var queue: Array<HxbClass> = [def];
+
+                while (queue.length > 0) {
+                    var curr = queue.pop();
+
+                    for (f in curr.fields) {
+                        baseInstFields.set(f.name, f);
+                    }
+
+                    for (iface in curr.interfaces) {
+                        var m = resolve(iface.t);
+                        if (m == null) {
+                            continue;
+                        }
+
+                        switch m {
+                            case MClass(x): queue.push(x);
+                            case _: continue;
+                        }
+                    }
+
+                    if (curr.superClass == null) {
+                        continue;
+                    }
+
+                    var m = resolve(curr.superClass.t);
+                    if (m == null) {
+                        continue;
+                    }
+
+                    switch m {
+                        case MClass(x): queue.push(x);
+                        case _: continue;
+                    }
+                }
+
             case _: null;
         }
 
         for (f in roots) {
             if (f.expr?.expr == null) continue;
+
+            if (baseInstFields.exists(f.name)) {
+                var base = baseInstFields.get(f.name);
+                var assign: Array<HxbTypedExpr> = [];
+                var args: Array<HxbFunArg> = [];
+
+                if (!TypeHelper.compare(base.type, f.type)) {
+                    f.type = switch [f.type, base.type] {
+                        case [
+                            TFun(f_args, f_ret),
+                            TFun(b_args, b_ret)
+                        ]: {
+                            for (idx in 0...b_args.length) {
+                                var farg = f_args[idx];
+                                var barg = b_args[idx];
+                                var name = '_hx_param_' + farg.name;
+
+                                assign.push(
+                                    ExprHelper.createUntyped('${farg.name} := ${name}.(${writer.types.writeHxbType(farg.t)})', [])
+                                );
+
+                                args.push({
+                                    name: name,
+                                    opt: b_args[idx].opt,
+                                    t: b_args[idx].t,
+                                });
+                            }
+
+                            TFun(args, b_ret);
+                        }
+
+                        case _: f.type;
+                    }
+
+                    f.expr.expr.expr = switch f.expr.expr.expr {
+                        case TFunction({ args: args, t: t, expr: { expr: TBlock(exprs), t: blockt, pos: blockpos } }) if (assign.length > 0): TFunction({
+                            args: args,
+                            t: t,
+                            expr: new HxbTypedExpr(TBlock(assign.concat(exprs)), blockt, blockpos)
+                        });
+
+                        case _: f.expr.expr.expr;
+                    }
+                }
+            }
+
             f.type = normalize(f.type);
 
             var frame = new ContextFrame(passes, type, moduleKey, f);

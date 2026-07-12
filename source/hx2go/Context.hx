@@ -108,6 +108,7 @@ class Context {
             new hx2go.passes.RewriteResultAssign(this),
             new hx2go.passes.RewriteResultSwitch(this),
             new hx2go.passes.RewriteResultSwitchParam(this),
+            new hx2go.passes.FloatMod(this),
             new hx2go.passes.RewriteMethodAssign(this),
             new hx2go.passes.FieldAccessExtern(this),
             new hx2go.passes.FieldAccessInstance(this),

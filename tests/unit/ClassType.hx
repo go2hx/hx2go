@@ -13,6 +13,8 @@ function main() {
     assert(getName(f1) == "unit.Bar");
     assert(getName(f2) == "unit.Bar");
     assert(getName(f3) == "unit.Bar");
+    assert(getName(Foo) == "unit.Foo");
+    assert(getName(Bar) == "unit.Bar");
 }
 
 function getName<T>(f: Class<T>): String {

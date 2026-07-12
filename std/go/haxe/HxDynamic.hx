@@ -498,6 +498,12 @@ class HxDynamic {
                 if (vtable.isValid()) {
                     f = vtable.methodByName(formatField(fieldName));
                     found = true;
+                } else {
+                    var m = value.methodByName(formatField(fieldName));
+                    if (m.isValid()) {
+                        f = m;
+                        found = true;
+                    }
                 }
             }
 

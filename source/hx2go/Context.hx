@@ -78,6 +78,7 @@ class Context {
             new hx2go.passes.NullableIndex(this),
             new hx2go.passes.NullableCall(this),
             new hx2go.passes.CastInstToClass(this),
+            new hx2go.passes.CastInstToEnum(this),
             new hx2go.passes.RewriteDynamicBinop(this),
             new hx2go.passes.RewriteDynamicCall(this),
             new hx2go.passes.FieldAccessDynamicSet(this),

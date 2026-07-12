@@ -50,7 +50,7 @@ class EnumWriter extends WriterImpl {
             buf.add('');
             buf.add('func (this ${ctorName}) M_${StringConversions.typePathEnumName(e.path)}() {}');
             buf.add('func (this ${ctorName}) Hx_Field_enumIndex() int { return ${cs.index} }');
-            buf.add('func (this ${ctorName}) Hx_Field_enumType() *Hx_Obj_go_haxe_hxenum { return ${StringConversions.typePathEnumName(e.path)}_Desc }');
+            buf.add('func (this ${ctorName}) Hx_Field_enumType() *Hx_Obj_go_haxe_hxenum { return ${StringConversions.typePathEnumName(e.path)}_RTTI }');
             buf.add('func (this ${ctorName}) Hx_Field_enumParams() any { return &([]any{ ${ctorArgCount == 0 ? "" : ctorArgVars.map(v -> 'any(this.$v)').join(", ") + " " }}) }');
             buf.add('func (this ${ctorName}) Hx_Field_enumParameter(index int) any {');
             buf.add('switch index {', 1);
@@ -67,7 +67,7 @@ class EnumWriter extends WriterImpl {
         }
 
         buf.add('');
-        buf.add('var ${StringConversions.typePathEnumName(e.path)}_Desc = Hx_Obj_go_haxe_hxenum_CreateInstance(');
+        buf.add('var ${StringConversions.typePathEnumName(e.path)}_RTTI = Hx_Obj_go_haxe_hxenum_CreateInstance(');
         buf.add('"${e.path.toString()}",', 1);
         buf.add('&([]string{ ${e.names.map(n -> '"$n"').join(", ")} }),', 1);
         buf.add('&([]int{ ${e.names.map(n -> counts[n]).join(", ") } }),', 1);

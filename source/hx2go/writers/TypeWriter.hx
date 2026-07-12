@@ -65,6 +65,7 @@ class TypeWriter extends WriterImpl {
         var tp = StringConversions.moduleTypeGetTypePath(mod);
         var builtin: Null<String> = switch type {
             case { name: "EnumValue", pack: [] }: "Hx_Obj_VTable_go_haxe__hxenumvalue__hxenumvalue";
+            case { name: "Enum", pack: [] }: "*Hx_Obj_go_haxe_hxenum";
             case { name: "Void", pack: [] }: "void";
             case { name: "Int", pack: [] } | { name: "GoInt", pack: ['go'] }: "int";
             case { name: "UInt", pack: [] } | { name: "GoUInt", pack: ['go'] }: "uint";
@@ -157,6 +158,8 @@ class TypeWriter extends WriterImpl {
             case TAnon(anon): 'any'; // TODO: anon.stauts, aka openness?
             case TAbstract(tp, _) | TInst(tp, _) | TType(tp, _) | TEnum(tp, _): writeModuleType(tp);
             case TFun(params, ret): 'func(${params.map(p -> writeHxbType(p.t)).join(', ')})${ret == TVoid ? '' : ' ${writeHxbType(ret)}'}';
+            case TEnumStatic(_): "*Hx_Obj_go_haxe_hxenum";
+            case TClassStatic(_): "*Hx_Obj_go_haxe_hxclass";
             case _: "any";
         });
 

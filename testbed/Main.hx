@@ -10,8 +10,5 @@ class Bar<T> implements Foo<String, T> {
 }
 
 function main() {
-    var v = new Bar<Int>();
-    var s = v.add("hello", 10);
-
-    trace(s);
+    trace((10 : haxe.Int64));
 }

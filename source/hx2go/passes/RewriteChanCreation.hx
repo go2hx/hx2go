@@ -17,7 +17,7 @@ class RewriteChanCreation extends CompilerPass {
 
     public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
         var o = switch expr.expr {
-            case TCall(_ , el): 
+            case TCall({ expr: TField(_, FStatic({ name: 'Chan_Impl_', moduleName: 'Chan', pack: ['go'] }, { name: '_create' })) }, el):
                 ExprHelper.createUntyped('make(${context.getWriter().types.writeHxbType(expr.t)}, {0})', el);
             case _:
                 expr;

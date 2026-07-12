@@ -2,7 +2,7 @@ package go;
 
 @:coreType
 @:runtimeValue
-extern abstract Chan<T> {
+abstract Chan<T> {
     @:pure private extern static function _create<T>(length: Int): T;
 
     public inline function new(?length: Int) {

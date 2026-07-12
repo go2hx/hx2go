@@ -183,7 +183,7 @@ class Normaliser {
             case TUnop(op, postFix, e) if (op.match(OpIncrement | OpDecrement)): {
                 var inc = new HxbTypedExpr(TBinop(
                     OpAssignOp(op.match(OpIncrement) ? OpAdd : OpSub),
-                    Copy.copy(e),
+                    removeCast(Copy.copy(e)),
                     new HxbTypedExpr(TConst(TInt(1)), e.t, e.pos)
                 ), null, null);
 
@@ -221,6 +221,15 @@ class Normaliser {
 
         expr.expr = result.expr;
         expr.t = result.t;
+    }
+
+    public function removeCast(expr: HxbTypedExpr):HxbTypedExpr {
+        return switch expr.expr {
+            case TCast(e, m):
+                removeCast(e);
+            default:
+                expr;
+        }
     }
 
     public function toStmt(expr: HxbTypedExpr, scope: Scope, ancestor: Null<Ancestor>): Void {

@@ -3,10 +3,10 @@ package go;
 @:coreType
 @:runtimeValue
 extern abstract Chan<T> {
-    @:pure private extern static function _create<T>(): T;
+    @:pure private extern static function _create<T>(length:Int): T;
 
-    public inline function new() {
-        this = _create();
+    public inline function new(?length:Int) {
+        this = _create(length ?? 0);
     }
 
     @:pure public extern inline function send(v:T) {

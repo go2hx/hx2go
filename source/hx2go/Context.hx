@@ -114,6 +114,7 @@ class Context {
             new hx2go.passes.FieldAccessInstance(this),
             new hx2go.passes.RewriteAbstractThis(this),
             new hx2go.passes.RewriteSliceCreation(this),
+            new hx2go.passes.RewriteChanCreation(this),
             new hx2go.passes.RewriteMapCreation(this),
             new hx2go.passes.RewriteStringLength(this),
             new hx2go.passes.RewriteArrayLength(this),

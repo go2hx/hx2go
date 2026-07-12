@@ -269,9 +269,13 @@ class ExprWriter extends WriterImpl {
                 buf.addInline(')');
 
             case _:
+                buf.addInline('(');
+                buf.addInline('(');
                 buf.addBufferInline(writer.types.writeHxbType(expr.t));
+                buf.addInline(')');
                 buf.addInline('(');
                 buf.addBufferInline(writeExpr(e));
+                buf.addInline(')');
                 buf.addInline(')');
 
         }
@@ -484,8 +488,15 @@ class ExprWriter extends WriterImpl {
 
     public function writeTypeAccess(expr: HxbTypedExpr, ref: HxbModuleTypeRef): OutputBuffer {
         var str = switch ref {
-            case MTEnum(x) | MTAbstract(x) | MTTypedef(x) | MTUnknown(x): writer.types.writeModuleType(tp);
-            case MTClass(x): '${StringConversions.typePathClassInstanceName(x)}'
+            case MTEnum(tp) | MTAbstract(tp) | MTTypedef(tp) | MTUnknown(tp): writer.types.writeModuleType(tp);
+            case MTClass(tp): {
+                var m = writer.context.resolve(tp);
+                if (m == null ) ""
+                else {
+                    var ntp = StringConversions.moduleTypeGetTypePath(m);
+                    '${StringConversions.typePathClassInstanceName(ntp)}_RTTI';
+                }
+            }
         }
 
         return new OutputBuffer(str);

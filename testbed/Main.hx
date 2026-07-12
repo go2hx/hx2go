@@ -1,5 +1,6 @@
 function main() {
-    bar(Foo);
+    var v: Class<Foo> = Foo;
+    bar(v);
 }
 
 function bar(d:Dynamic) {

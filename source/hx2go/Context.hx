@@ -433,9 +433,9 @@ class Context {
 
             case TFun(args, ret):
                 TFun(args.map(a -> new HxbFunArg(
-                sanitiseString(a.name),
-                a.opt,
-                normalize(a.t)
+                    sanitiseString(a.name),
+                    a.opt,
+                    normalize(a.t)
                 )), normalize(ret));
 
             case _:

@@ -38,7 +38,7 @@ class CastInstToClass extends CompilerPass {
                             name: "Hx_Field__RTTI",
                             depth: 0
                         })),
-                        TDynamicAny, // don't care
+                        TFun([], TInst({ name: "HxClass", moduleName: "HxClass", pack: ['go', 'haxe'] }, [])),
                         expr.pos
                     ),
                     []

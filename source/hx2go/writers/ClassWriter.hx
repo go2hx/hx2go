@@ -37,6 +37,7 @@ class ClassWriter extends WriterImpl {
         var hasInterfaces: Map<String, Bool> = [];
         var dynMethods: Array<{ inst: HxbClass, field: HxbClassField }> = [];
         var canOmitVTable: Bool = writer.context.omitVTable(cls);
+        var isInterface = cls.flags & HxbClassFlag.CInterface != 0;
 
         buf.add('');
         buf.add('var ${StringConversions.typePathClassInstanceName(cls.path)}_RTTI = Hx_Obj_go_haxe_hxclass_CreateInstance(');
@@ -104,6 +105,10 @@ class ClassWriter extends WriterImpl {
                 buf.addBuffer(vBuf, 1);
             }
 
+            if (!isInterface) {
+                buf.add('Hx_Field__RTTI() *Hx_Obj_go_haxe_hxclass', 1);
+            }
+
             buf.add('}');
         }
 
@@ -147,7 +152,7 @@ class ClassWriter extends WriterImpl {
 
         buf.add('}');
 
-        if ((cls.flags & HxbClassFlag.CInterface) == 0) {
+        if (!isInterface) {
             var ctor = cls.constructor != null ? writeFunctionArgs(cls.constructor.type) : {
                 buf: new OutputBuffer(),
                 returnType: TVoid,
@@ -193,6 +198,11 @@ class ClassWriter extends WriterImpl {
                 buf.addBufferInline(writer.exprs.writeExpr(cls.constructor.expr.expr, true));
                 buf.add('');
             }
+
+            buf.add('');
+            buf.add('func (this *${StringConversions.typePathClassInstanceName(cls.path)}) Hx_Field__RTTI() *Hx_Obj_go_haxe_hxclass {');
+            buf.add('return ${StringConversions.typePathClassInstanceName(cls.path)}_RTTI', 1);
+            buf.add('}');
 
             for (f in cls.fields.filter(f -> f.kind.match(KMethod(_)))) {
                 var res = writeMemberClassField(f, cls);

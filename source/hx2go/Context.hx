@@ -77,6 +77,7 @@ class Context {
             new hx2go.passes.NullableField(this),
             new hx2go.passes.NullableIndex(this),
             new hx2go.passes.NullableCall(this),
+            new hx2go.passes.CastInstToClass(this),
             new hx2go.passes.RewriteDynamicBinop(this),
             new hx2go.passes.RewriteDynamicCall(this),
             new hx2go.passes.FieldAccessDynamicSet(this),
@@ -121,7 +122,7 @@ class Context {
             new hx2go.passes.RewriteArrayGetData(this),
             new hx2go.passes.RewriteArraySetData(this),
             new hx2go.passes.RewriteArrayCreation(this),
-            new hx2go.passes.RewriteStringCreation(this)
+            new hx2go.passes.RewriteStringCreation(this),
         ];
     }
 

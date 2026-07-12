@@ -35,7 +35,7 @@ class CastInstToClass extends CompilerPass {
                         }, [], {
                             owner: null,
                             kind: FRMember,
-                            name: "Hx_Field__RTTI",
+                            name: "_RTTI",
                             depth: 0
                         })),
                         TFun([], TInst({ name: "HxClass", moduleName: "HxClass", pack: ['go', 'haxe'] }, [])),

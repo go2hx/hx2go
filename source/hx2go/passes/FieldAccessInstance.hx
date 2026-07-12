@@ -38,6 +38,28 @@ class FieldAccessInstance extends CompilerPass {
                     return;
                 }
 
+                if (cf.name == "_RTTI") { // special case for RTTI
+                    if (!context.omitVTable(cls)) {
+                        e.expr = TField(Copy.copy(e), FInstance(tp, params, {
+                            name: 'VTable',
+                            owner: cf.owner,
+                            kind: cf.kind,
+                            depth: cf.depth
+                        }));
+
+                        context.submitNode(e, true);
+                    }
+
+                    expr.expr = TField(e, FInstance(tp, params, {
+                        name: StringConversions.nameToFieldName(cf.name),
+                        owner: cf.owner,
+                        kind: cf.kind,
+                        depth: cf.depth
+                    }));
+
+                    return;
+                }
+
                 var field = cls.fields.filter(f -> f.name == cf.name)[0];
                 if (field == null) {
                     return;

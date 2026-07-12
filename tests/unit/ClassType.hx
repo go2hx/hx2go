@@ -1,4 +1,5 @@
 package unit;
+import go.Syntax;
 
 function main() {
     var bar: Bar = new Bar();
@@ -9,9 +10,13 @@ function main() {
     var f2: Class<Dynamic> = cast foo;
     var f3: Class<Dynamic> = cast dyn;
 
-    assert(f1 != null);
-    assert(f2 != null);
-    assert(f3 != null);
+    assert(getName(f1) == "unit.Bar");
+    assert(getName(f2) == "unit.Bar");
+    assert(getName(f3) == "unit.Bar");
+}
+
+function getName<T>(f: Class<T>): String {
+    return Syntax.code("{0}.Hx_Field_name", f);
 }
 
 class Foo {

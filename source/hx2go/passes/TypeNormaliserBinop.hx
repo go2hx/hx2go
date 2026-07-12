@@ -66,6 +66,13 @@ class TypeNormaliserBinop extends CompilerPass {
             right.t = o.t;
             context.submitNode(right, true);
         }
+
+        if (op == OpDiv) {
+            var o = ExprHelper.createCast(expr, TFloat);
+            expr.expr = o.expr;
+            expr.t = o.t;
+            context.submitNode(expr, true, 1);
+        }
     }
 
 }

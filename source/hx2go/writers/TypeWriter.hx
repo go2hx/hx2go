@@ -148,6 +148,7 @@ class TypeWriter extends WriterImpl {
             case TFloat: "float64";
             case TBool: "bool";
             case TString: "string";
+            case TAbstract({pack: ['go'], name: 'Chan'}, params): 'chan ${writeHxbType(params[0])}';
             case TAbstract({ pack: ['go'], name: 'Map' }, params): 'map[${writeHxbType(params[0])}]${writeHxbType(params[1])}';
             case TAbstract({ pack: ['go'], name: 'Pointer' }, params): '*${writeHxbType(params[0])}';
             case TAbstract({ pack: ['go'], name: 'Result'}, params) | TEnum({ pack: ['go'], name: 'ResultKind'}, params): 'struct { Error ${writeHxbType(params[1])}; Result ${writeHxbType(params[0])} }';

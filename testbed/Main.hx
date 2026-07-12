@@ -1,17 +1,7 @@
-interface Foo<K, V> {
-    public function add(a: K, b: V): Dynamic;
-}
-
-class Bar<T> implements Foo<String, T> {
-    public function new() {}
-    public function add(a: String, b: T) {
-        return a + (b: Dynamic);
-    }
-}
+import haxe.ds.StringMap;
 
 function main() {
-    var v = new Bar<Int>();
-    var s = v.add("hello", 10);
-
-    trace(s);
+    var m = new StringMap<Int>();
+    m.set("ten", 10);
+    trace(m.get("ten"));
 }

@@ -81,6 +81,18 @@ class TypeNormaliserCall extends CompilerPass {
                 }
 
                 if (!TypeHelper.compare(expr.t, ret)) {
+                    if (ext.field?.type != null) {
+                        var v = switch ext.field.type {
+                            case TFun(_, x): x;
+                            case _: ext.field.type;
+                        }
+
+                        if (TypeHelper.compare(ret, v)) { // in this case, something transformed the field type, and the return type reported by haxe is wrong.
+                            expr.t = ret;
+                            return;
+                        }
+                    }
+
                     var o = ExprHelper.createCast(expr, ret);
                     expr.expr = o.expr;
                     expr.t = o.t;

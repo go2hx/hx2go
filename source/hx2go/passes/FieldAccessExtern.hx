@@ -14,6 +14,7 @@ import hx2go.hxb.Ast.HxbObjectField;
 import hx2go.util.ObjectFieldHelper;
 import hx2go.hxb.Typed.HxbTypedExprDef;
 import hx2go.hxb.Ast.HxbExprDef;
+import hx2go.hxb.HxbClassField;
 
 private enum ExternKind {
     ExNone;
@@ -23,7 +24,7 @@ private enum ExternKind {
 
 class FieldAccessExtern extends CompilerPass {
 
-    public static function getExternInfo(context: Context, expr: HxbTypedExpr): { kind: ExternKind, ?options: HxbExpr, ?left: HxbTypedExpr, ?right: String } {
+    public static function getExternInfo(context: Context, expr: HxbTypedExpr): { kind: ExternKind, ?options: HxbExpr, ?left: HxbTypedExpr, ?right: String, ?field: HxbClassField } {
         return switch expr.expr {
             case TField(left, FStatic(tp, ref) | FInstance(tp, _, ref)): {
                 var mt = context.resolve(tp);
@@ -33,12 +34,12 @@ class FieldAccessExtern extends CompilerPass {
 
                 return switch mt {
                     case MClass(cls): {
-                        if ((cls.flags & HxbClassFlag.CExtern) == 0) {
-                            return { kind: ExNone };
-                        }
-
                         var name = ref.name;
                         var info = cls.statics.concat(cls.fields).filter(x -> x.name == ref.name)[0];
+
+                        if ((cls.flags & HxbClassFlag.CExtern) == 0) {
+                            return { kind: ExNone, field: info };
+                        }
 
                         for (fm in info.meta) {
                             switch fm.name {
@@ -54,12 +55,12 @@ class FieldAccessExtern extends CompilerPass {
 
                         for (m in cls.meta) {
                             switch m.name {
-                                case ":go.Type": return { kind: ExModule, options: m.params[0], left: left, right: name };
+                                case ":go.Type": return { kind: ExModule, options: m.params[0], left: left, right: name, field: info };
                                 case _: null;
                             }
                         }
 
-                        return { kind: ExTemplate };
+                        return { kind: ExTemplate, field: info };
                     }
 
                     case _: { kind: ExNone };

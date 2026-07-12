@@ -56,9 +56,10 @@ class StringMap<T> implements haxe.Constraints.IMap<String, T> {
 		@:privateAccess h.set(key, value);
 	}
 
-	public function get(key:String):Null<T> {
+	public function get(key:String): Null<T> {
 		if (key == null)
 			return null;
+
 		return @:privateAccess h.get(key);
 	}
 

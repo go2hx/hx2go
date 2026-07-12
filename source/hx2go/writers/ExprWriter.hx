@@ -22,6 +22,7 @@ import hx2go.hxb.TypePath;
 import hx2go.hxb.tools.TypedExprTools;
 import hx2go.hxb.EnumFieldRef;
 import hx2go.hxb.Typed.HxbTCase;
+import hx2go.normaliser.Semantics;
 
 class ExprWriter extends WriterImpl {
 
@@ -78,6 +79,10 @@ class ExprWriter extends WriterImpl {
             buf.add('');
             buf.add('default: ', 1);
             buf.addBuffer(writeExpr(edef), 2, false);
+        } else if (Semantics.allPathsReturn(expr)) {
+            buf.add('');
+            buf.add('default: ', 1);
+            buf.add('panic("exhaustiveness check mismatch, you shouldn\'t be able to reach this! please report!")', 2, false);
         }
 
         buf.add('');

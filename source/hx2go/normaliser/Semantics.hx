@@ -235,5 +235,38 @@ class Semantics {
             case _: null;
         }
     }
+
+    public static function allPathsReturn(e: HxbTypedExpr): Bool {
+        return switch e.expr {
+            case TReturn(_) | TThrow(_): true;
+
+            case TBlock(exprs):
+                exprs.length > 0 && allPathsReturn(exprs[exprs.length - 1]);
+
+            case TIf(_, eif, eelse):
+                eelse != null && allPathsReturn(eif) && allPathsReturn(eelse);
+
+            case TSwitch(_, cases, edef):
+                var ok = cases.length > 0;
+                for (c in cases) ok = ok && allPathsReturn(c.expr);
+                if (edef != null) ok = ok && allPathsReturn(edef);
+                ok;
+
+            case TTry(e1, catches):
+                if (!allPathsReturn(e1)) false;
+                else {
+                    var ok = true;
+                    for (c in catches) ok = ok && allPathsReturn(c.expr);
+                    ok;
+                }
+
+            case TWhile(econd, e1, true) if (isConstant(econd) && econd.expr.match(TConst(TBool(true)))):
+                allPathsReturn(e1);
+
+            case TParenthesis(e1) | TMeta(_, e1): allPathsReturn(e1);
+
+            case _: false;
+        }
+    }
     
 }

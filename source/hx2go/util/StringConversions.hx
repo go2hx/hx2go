@@ -71,7 +71,10 @@ class StringConversions {
     }
 
     public static function quoteString(str: String): String {
-        return '"' + str.replace('"', '\\"').replace("\n", "\\n") + '"';
+        var s = str.split("\\").join("\\\\");
+        s = s.split('"').join('\\"');
+        s = s.split("\n").join("\\n");
+        return '"' + s + '"';
     }
 
 }

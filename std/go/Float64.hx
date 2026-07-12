@@ -156,9 +156,6 @@ extern abstract Float64 {
    @:from public static inline function fromInt8(x: Int8): Float64 {
        return Go.float64(x);
    }
-   @:from public static inline function fromByte(x: Byte): Float64 {
-      return Go.float64(x);
-   }
    @:from public static inline function fromInt16(x: Int16): Float64 {
        return Go.float64(x);
    }
@@ -166,6 +163,12 @@ extern abstract Float64 {
        return Go.float64(x);
    }
    @:from public static inline function fromInt64(x: Int64): Float64 {
+       return Go.float64(x);
+   }
+   @:from public static inline function fromByte(x: Byte): Float64 {
+       return Go.float64(x);
+   }
+   @:from public static inline function fromRune(x: Rune): Float64 {
        return Go.float64(x);
    }
    @:from public static inline function fromFloat(x: Float): Float64 {

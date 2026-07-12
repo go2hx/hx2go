@@ -35,19 +35,17 @@ extern abstract Float32 {
    @:op(A * B) @:commutative private inline function hx_mul_b(other: Int): Float32 {
        return this * Go.float32(other);
    }
-   @:op(A / B) private inline function div(other: Float32): Float64 {
-       return (this:Float64) / (other:Float64);
-   }
-   @:op(A / B) private inline static function hx_div_a(a: Float, b: Float32): Float64 {
+   @:op(A / B) private function div(other: Float32): Float32;
+   @:op(A / B) private inline static function hx_div_a(a: Float, b: Float32): Float32 {
        return Go.float32(a) / b;
    }
-   @:op(A / B) private inline static function hx_div_b(a: Float32, b: Float): Float64 {
+   @:op(A / B) private inline static function hx_div_b(a: Float32, b: Float): Float32 {
        return a / Go.float32(b);
    }
-   @:op(A / B) private inline static function hx_div_c(a: Int, b: Float32): Float64 {
+   @:op(A / B) private inline static function hx_div_c(a: Int, b: Float32): Float32 {
        return Go.float32(a) / b;
    }
-   @:op(A / B) private inline static function hx_div_d(a: Float32, b: Int): Float64 {
+   @:op(A / B) private inline static function hx_div_d(a: Float32, b: Int): Float32 {
        return a / Go.float32(b);
    }
    @:op(A % B) private function mod(other: Float32): Float32;
@@ -158,9 +156,6 @@ extern abstract Float32 {
    @:from public static inline function fromInt8(x: Int8): Float32 {
        return Go.float32(x);
    }
-   @:from public static inline function fromByte(x: Byte): Float32 {
-      return Go.float32(x);
-   }
    @:from public static inline function fromInt16(x: Int16): Float32 {
        return Go.float32(x);
    }
@@ -168,6 +163,12 @@ extern abstract Float32 {
        return Go.float32(x);
    }
    @:from public static inline function fromInt64(x: Int64): Float32 {
+       return Go.float32(x);
+   }
+   @:from public static inline function fromByte(x: Byte): Float32 {
+       return Go.float32(x);
+   }
+   @:from public static inline function fromRune(x: Rune): Float32 {
        return Go.float32(x);
    }
    @:from public static inline function fromFloat(x: Float): Float32 {

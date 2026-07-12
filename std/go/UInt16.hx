@@ -35,19 +35,17 @@ extern abstract UInt16 {
    @:op(A * B) @:commutative private inline function hx_mul_b(other: Int): UInt16 {
        return this * Go.uint16(other);
    }
-   @:op(A / B) private inline function div(other: UInt16): Float64 {
-       return (this:Float64) / (other:Float64);
-   }
-   @:op(A / B) private inline static function hx_div_a(a: Float, b: UInt16): Float64 {
+   @:op(A / B) private function div(other: UInt16): UInt16;
+   @:op(A / B) private inline static function hx_div_a(a: Float, b: UInt16): UInt16 {
        return Go.uint16(a) / b;
    }
-   @:op(A / B) private inline static function hx_div_b(a: UInt16, b: Float): Float64 {
+   @:op(A / B) private inline static function hx_div_b(a: UInt16, b: Float): UInt16 {
        return a / Go.uint16(b);
    }
-   @:op(A / B) private inline static function hx_div_c(a: Int, b: UInt16): Float64 {
+   @:op(A / B) private inline static function hx_div_c(a: Int, b: UInt16): UInt16 {
        return Go.uint16(a) / b;
    }
-   @:op(A / B) private inline static function hx_div_d(a: UInt16, b: Int): Float64 {
+   @:op(A / B) private inline static function hx_div_d(a: UInt16, b: Int): UInt16 {
        return a / Go.uint16(b);
    }
    @:op(A % B) private function mod(other: UInt16): UInt16;
@@ -198,13 +196,16 @@ extern abstract UInt16 {
    @:from public static inline function fromInt8(x: Int8): UInt16 {
        return Go.uint16(x);
    }
-   @:from public static inline function fromByte(x: Byte): UInt16 {
-      return Go.uint16(x);
-   }
    @:from public static inline function fromInt32(x: Int32): UInt16 {
        return Go.uint16(x);
    }
    @:from public static inline function fromInt64(x: Int64): UInt16 {
+       return Go.uint16(x);
+   }
+   @:from public static inline function fromByte(x: Byte): UInt16 {
+       return Go.uint16(x);
+   }
+   @:from public static inline function fromRune(x: Rune): UInt16 {
        return Go.uint16(x);
    }
    @:to public inline function toFloat(): Float {

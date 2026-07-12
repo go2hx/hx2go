@@ -35,19 +35,17 @@ extern abstract GoInt {
    @:op(A * B) @:commutative private inline function hx_mul_b(other: Int): GoInt {
        return this * Go.int(other);
    }
-   @:op(A / B) private inline function div(other: GoInt): Float64 {
-       return (this:Float64) / (other:Float64);
-   }
-   @:op(A / B) private inline static function hx_div_a(a: Float, b: GoInt): Float64 {
+   @:op(A / B) private function div(other: GoInt): GoInt;
+   @:op(A / B) private inline static function hx_div_a(a: Float, b: GoInt): GoInt {
        return Go.int(a) / b;
    }
-   @:op(A / B) private inline static function hx_div_b(a: GoInt, b: Float): Float64 {
+   @:op(A / B) private inline static function hx_div_b(a: GoInt, b: Float): GoInt {
        return a / Go.int(b);
    }
-   @:op(A / B) private inline static function hx_div_c(a: Int, b: GoInt): Float64 {
+   @:op(A / B) private inline static function hx_div_c(a: Int, b: GoInt): GoInt {
        return Go.int(a) / b;
    }
-   @:op(A / B) private inline static function hx_div_d(a: GoInt, b: Int): Float64 {
+   @:op(A / B) private inline static function hx_div_d(a: GoInt, b: Int): GoInt {
        return a / Go.int(b);
    }
    @:op(A % B) private function mod(other: GoInt): GoInt;
@@ -194,9 +192,6 @@ extern abstract GoInt {
    }
    @:from public static inline function fromInt8(x: Int8): GoInt {
        return Go.int(x);
-   }
-   @:from public static inline function fromByte(x: Byte): GoInt {
-      return Go.int(x);
    }
    @:from public static inline function fromInt16(x: Int16): GoInt {
        return Go.int(x);

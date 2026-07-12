@@ -8,6 +8,7 @@ import hx2go.hxb.HxbType;
 import hx2go.hxb.Typed.HxbTConstant;
 import hx2go.hxb.Ast.HxbUnop;
 import hx2go.hxb.Ast.HxbBinop;
+import hx2go.util.ExprHelper;
 
 class Normaliser {
 
@@ -133,8 +134,13 @@ class Normaliser {
                     case _: [];
                 }
 
+                var c = econd;
+                if (!econd.t.match(TBool)) {
+                    c = ExprHelper.createCallStatic(context, { name: "HxDynamic", moduleName: "HxDynamic", pack: ['go', 'haxe'] }, "toBool", [Copy.copy(econd)]);
+                }
+
                 exprs.unshift(new HxbTypedExpr(TIf(
-                    ensureParen(new HxbTypedExpr(TUnop(OpNot, false, Copy.copy(econd)), null, null)),
+                    ensureParen(new HxbTypedExpr(TUnop(OpNot, false, Copy.copy(c)), null, null)),
                     ensureBlock(new HxbTypedExpr(TBreak, null, null)),
                     null
                     ), null, null

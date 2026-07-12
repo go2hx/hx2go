@@ -71,7 +71,6 @@ class Context {
 
     private function createPasses(): Array<ICompilerPass> {
         return [
-            new hx2go.passes.RewriteDynamicUnop(this),
             new hx2go.passes.FieldAccessGeneric(this),
             new hx2go.passes.TypeNormaliserCall(this),
             new hx2go.passes.NullableCompare(this),
@@ -81,8 +80,9 @@ class Context {
             new hx2go.passes.NullableCall(this),
             new hx2go.passes.CastInstToClass(this),
             new hx2go.passes.CastInstToEnum(this),
-            new hx2go.passes.RewriteDynamicBinop(this),
             new hx2go.passes.RewriteDynamicCall(this),
+            new hx2go.passes.RewriteDynamicUnop(this),
+            new hx2go.passes.RewriteDynamicBinop(this),
             new hx2go.passes.FieldAccessDynamicSet(this),
             new hx2go.passes.FieldAccessDynamicGet(this),
             new hx2go.passes.TypeNormaliserUnop(this),
@@ -471,8 +471,14 @@ class Context {
                 expr.t = TDynamicAny;
             }
 
+            case TCall({ t: TDynamic(_) | TDynamicAny }, _):
+                expr.t = TDynamicAny;
+
             case TVar(v, _) | TLocal(v):
                 v.name = sanitiseString(v.name);
+
+            case TParenthesis(e):
+                expr.t = e.t; // update paren type
 
             case _: null;
         }

@@ -127,7 +127,7 @@ class Normaliser {
             case TArray(e1, e2):
                 return Semantics.ensure(expr, [e1, e2], this, scope, ancestor);
 
-            case TWhile(econd, ebody, normalWhile) if (Semantics.goingToMutate(econd, expr) || Semantics.hasSideEffects(econd)): {  // while (cond) { body } -> while (true) { if (!cond) break; body; }
+            case TWhile(econd, ebody, normalWhile) if (Semantics.goingToMutate(econd, expr) || Semantics.hasSideEffects(econd) || !normalWhile): {  // while (cond) { body } -> while (true) { if (!cond) break; body; }
                 var block = ensureBlock(ebody);
                 var exprs = switch block.expr {
                     case TBlock(x): x;
@@ -139,12 +139,14 @@ class Normaliser {
                     c = ExprHelper.createCallStatic(context, { name: "HxDynamic", moduleName: "HxDynamic", pack: ['go', 'haxe'] }, "toBool", [Copy.copy(econd)]);
                 }
 
-                exprs.unshift(new HxbTypedExpr(TIf(
+                var newCond = new HxbTypedExpr(TIf(
                     ensureParen(new HxbTypedExpr(TUnop(OpNot, false, Copy.copy(c)), null, null)),
                     ensureBlock(new HxbTypedExpr(TBreak, null, null)),
                     null
-                    ), null, null
-                ));
+                ), null, null);
+
+                if (normalWhile) exprs.unshift(newCond);
+                else exprs.push(newCond);
 
                 ebody.expr = TBlock(exprs);
                 econd.expr = ensureParen(new HxbTypedExpr(TConst(TBool(true)), null, null)).expr;

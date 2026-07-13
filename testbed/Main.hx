@@ -1,8 +1,4 @@
-import haxe.ds.StringMap;
-
 function main() {
-    var m = new StringMap<Int>();
-    m.set("ten", 10);
-    trace(m.get("ten"));
-    trace((10 : haxe.Int64));
+    trace(new haxe.ds.Vector<Int>(10).get(4) == 0);
+    trace(new haxe.ds.Vector<String>(10).get(7) == "");
 }

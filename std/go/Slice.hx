@@ -4,7 +4,7 @@ import haxe.Rest;
 @:coreType
 @:runtimeValue
 extern abstract Slice<T> {
-    @:pure private extern static function _create<T>(): T;
+    @:pure private extern static function _create<T>(length:Int): T;
 
     public var length(get, never): GoInt;
     private inline function get_length(): GoInt {
@@ -16,8 +16,8 @@ extern abstract Slice<T> {
         return Go.cap(this);
     }
 
-    public inline function new() {
-        this = _create();
+    public inline function new(?length:Int) {
+        this = _create(length ?? 0);
     }
 
     public inline function append(v: T): Slice<T> {

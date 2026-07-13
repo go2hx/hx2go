@@ -586,7 +586,8 @@ class HxDynamic {
         }
 
         if (kind == Reflect.Interface) {
-            value = getArrayIndex(value.elem(), index);
+            value = value.elem();
+            kind = value.kind();
         }
 
         if (kind == Reflect.Ptr) {
@@ -623,7 +624,7 @@ class HxDynamic {
         }
 
         if (kind == Reflect.Ptr || kind == Reflect.Interface) {
-            value = getArrayIndex(value.elem(), index);
+            return getArrayIndex(value.elem(), index);
         }
 
         if (kind == Reflect.Slice || kind == Reflect.Array) {
@@ -632,12 +633,12 @@ class HxDynamic {
                 throw "runtime.HxDynamic.getArrayIndex out of bounds exception";
             }
 
-            value = value.index(index);
+            return value.index(index).iface();
         }
 
         // TODO: throw when Null<T> is supported.
 
-        return value;
+        return value.iface();
     }
 
     public static function getArrayLength(dyn: Dynamic): Int {

@@ -18,20 +18,28 @@ import hx2go.util.TypeHelper;
 class ArrayAccessDynamicGet extends CompilerPass {
 
     public function match(expr: HxbTypedExpr): Bool {
-        return switch [expr.expr, TypeHelper.follow(context, expr.t)] {
-            case [TArray(_), TInst({ name: "Array", pack: [] }, [TDynamic(_) | TDynamicAny]) | TDynamic(_) | TDynamicAny]: true;
+        return switch expr.expr {
+            case TArray(e, _):
+                switch TypeHelper.follow(context, e.t) {
+                    case TDynamic(_) | TDynamicAny: true;
+                    case _: false;
+                }
             case _: false;
         }
     }
 
     public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
         var o = switch expr.expr {
-            case TArray(e, eidx): ExprHelper.createCallStatic(context, { name: 'HxDynamic', moduleName: 'HxDynamic', pack: ['go', 'haxe'] }, 'getArrayIndex', [e, eidx]);
+            case TArray(e, eidx):
+                var call = ExprHelper.createCallStatic(context, { name: 'HxDynamic', moduleName: 'HxDynamic', pack: ['go', 'haxe'] }, 'getArrayIndex', [e, eidx]);
+                ExprHelper.createCast(call, expr.t);
             case _: expr;
         }
 
         expr.expr = o.expr;
         expr.t = o.t;
+        
+        context.submitNode(expr, true);
     }
 
 }

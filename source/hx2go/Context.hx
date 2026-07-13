@@ -471,9 +471,6 @@ class Context {
                 expr.t = TDynamicAny;
             }
 
-            case TCall({ t: TDynamic(_) | TDynamicAny }, _):
-                expr.t = TDynamicAny;
-
             case TVar(v, _) | TLocal(v):
                 v.name = sanitiseString(v.name);
 

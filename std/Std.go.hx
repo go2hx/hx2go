@@ -76,11 +76,12 @@ class Std {
                 return enumCtorCount == 0 ? enumCtorName : '${enumCtorName}(${values.join(",")})';
             }
 
-            var v = value.iface();
-
-            var valid = HxDynamic.ensureValue(v.Valid);
+            // Null<T> value types compile to a Go struct { Value T; Valid bool }; read those
+            // raw Go fields via reflection (dynamic access would mangle them to Hx_Field_*).
+            var valid = value.fieldByName("Valid");
             if (valid.isValid()) {
-                return valid.iface() == false || !HxDynamic.ensureValue(v.Value).isValid() ? "null" : string(v.Value);
+                var val = value.fieldByName("Value");
+                return valid.iface() == false || !val.isValid() ? "null" : string(val.iface());
             }
 
             var vt = value.fieldByName("VTable");

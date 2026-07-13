@@ -1,7 +1,7 @@
 package unit;
 
 function main() {
-    trace(get(97) == 'a');
+    assert(get(97) == 'a');
 }
 
 inline function get(c) {

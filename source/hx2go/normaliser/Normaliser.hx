@@ -150,11 +150,21 @@ class Normaliser {
 
                 ebody.expr = TBlock(exprs);
                 econd.expr = ensureParen(new HxbTypedExpr(TConst(TBool(true)), null, null)).expr;
+
+                var local = scope.copy();
+                local.activeLoop = expr;
+
+                return iterateExpr(expr, local, ancestor);
             }
 
             case TWhile(econd, ebody, normalWhile):
+                var local = scope.copy();
+
                 econd.expr = ensureParen(econd).expr;
                 ebody.expr = ensureBlock(ebody).expr;
+                local.activeLoop = expr;
+
+                return iterateExpr(expr, local, ancestor);
 
             case TIf(econd, eif, eelse):
                 econd.expr = ensureParen(econd).expr;
@@ -172,6 +182,23 @@ class Normaliser {
 
             case TVar(v, e):
                 expr.expr = scope.defineLocal(v, e);
+
+            case TSwitch(_):
+                var local = scope.copy();
+                local.activeSwitch = expr;
+
+                return iterateExpr(expr, local, ancestor);
+
+            case TBreak if (scope.activeSwitch != null && scope.activeLoop != null):
+                if (scope.activeLoopLabel == null) {
+                    scope.activeLoopLabel = '_hx_outer_${scope.labelId++}';
+                    scope.activeLoop.expr = ExprHelper.createUntyped('${scope.activeLoopLabel}:\n{0}', [ switch scope.activeLoop.expr {
+                        case TWhile(econd, e, norm): new HxbTypedExpr(TWhile(econd, e, norm), scope.activeLoop.t, scope.activeLoop.pos);
+                        case _: Copy.copy(scope.activeLoop);
+                    } ]).expr;
+                }
+
+                expr.expr = ExprHelper.createUntyped('break ${scope.activeLoopLabel}', []).expr;
 
             case _: null;
         }

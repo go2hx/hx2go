@@ -14,7 +14,11 @@ class Scope {
     public var lastValidBlock: HxbTypedExpr = null;
     public var variableAliases: Map<String, String> = [];
     public var variableIterations: Map<String, Int> = [];
+    public var activeLoop: HxbTypedExpr = null;
+    public var activeSwitch: HxbTypedExpr = null;
+    public var activeLoopLabel: Null<String> = null;
     public var tmpId: Int = 0;
+    public var labelId: Int = 0;
 
     public function temp(before: HxbTypedExpr, expr: HxbTypedExpr, preprocessor: Normaliser, scope: Scope, ancestor: Ancestor, ?explicitType: HxbType): HxbTypedExpr {
         var varInfo: HxbVar = {
@@ -117,7 +121,11 @@ class Scope {
             lastValidBlock: lastValidBlock,
             variableAliases: variableAliases.copy(),
             variableIterations: variableIterations.copy(),
-            tmpId: tmpId
+            activeLoop: activeLoop,
+            activeSwitch: activeSwitch,
+            activeLoopLabel: activeLoopLabel,
+            tmpId: tmpId,
+            labelId: labelId
         };
     }
 

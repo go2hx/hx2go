@@ -124,19 +124,19 @@ import go.time.Time;
         // The first two formats expressed a date in local time. The third is a time relative to the UTC epoch.
 		var d:Date = createEmpty();
 		
-		var res = Time.parse("YYYY-MM-DD hh:mm:ss", s);
+		var res = Time.parse(Time.dateTime, s);
 		if (res.isOk()) {
 			d.t = res.sure();
 			return d;
 		}
 
-		res = Time.parse("YYYY-MM-DD", s);
+		res = Time.parse(Time.dateOnly, s);
 		if (res.isOk()) {
 			d.t = res.sure();
 			return d;
 		}
 
-		res = Time.parse("hh:mm:ss", s);
+		res = Time.parse(Time.timeOnly, s);
 		if (res.isOk()) {
 			d.t = res.sure();
 			return d;

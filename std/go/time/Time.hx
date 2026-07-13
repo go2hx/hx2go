@@ -3,6 +3,10 @@ package go.time;
 @:go.Type({ name: "time", instanceName: "time.Time", imports: ["time"] })
 extern class Time {
 
+    static var dateTime: String;
+    static var dateOnly: String;
+    static var timeOnly: String;
+
     static var nanosecond: Duration;
     static var microsecond: Duration;
     static var millisecond: Duration;

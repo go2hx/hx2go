@@ -14,4 +14,9 @@ function main() {
     var arr3: Array<Float> = [1.1, 2.2, 3.3];
     assert(arr3[0] == 1.1);
     assert(arr3.length == 3);
+    assert(get(arr3, 1) == 2.2);
+}
+
+function get(x:Dynamic, index:Int) {
+    return x[index];
 }

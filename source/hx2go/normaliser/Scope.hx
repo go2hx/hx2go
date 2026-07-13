@@ -18,7 +18,6 @@ class Scope {
     public var activeSwitch: HxbTypedExpr = null;
     public var activeLoopLabel: Null<String> = null;
     public var tmpId: Int = 0;
-    public var labelId: Int = 0;
 
     public function temp(before: HxbTypedExpr, expr: HxbTypedExpr, preprocessor: Normaliser, scope: Scope, ancestor: Ancestor, ?explicitType: HxbType): HxbTypedExpr {
         var varInfo: HxbVar = {
@@ -124,8 +123,7 @@ class Scope {
             activeLoop: activeLoop,
             activeSwitch: activeSwitch,
             activeLoopLabel: activeLoopLabel,
-            tmpId: tmpId,
-            labelId: labelId
+            tmpId: tmpId
         };
     }
 

@@ -17,6 +17,7 @@ class Normaliser {
     }
 
     private var context: Context;
+    private var labelId: Int = 0;
 
     public function new(context: Context) {
         this.context = context;
@@ -191,7 +192,7 @@ class Normaliser {
 
             case TBreak if (scope.activeSwitch != null && scope.activeLoop != null):
                 if (scope.activeLoopLabel == null) {
-                    scope.activeLoopLabel = '_hx_outer_${scope.labelId++}';
+                    scope.activeLoopLabel = 'hx_label_${labelId++}';
                     scope.activeLoop.expr = ExprHelper.createUntyped('${scope.activeLoopLabel}:\n{0}', [ switch scope.activeLoop.expr {
                         case TWhile(econd, e, norm): new HxbTypedExpr(TWhile(econd, e, norm), scope.activeLoop.t, scope.activeLoop.pos);
                         case _: Copy.copy(scope.activeLoop);

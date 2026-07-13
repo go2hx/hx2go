@@ -15,5 +15,15 @@ function main() {
         break;
     }
 
+    switch Syntax.code("{0}", x) {
+        case 0:
+            while (true) {
+                trace('f');
+                break;
+            }
+
+        case 1:
+            trace(1);
+    }
     trace(end);
 }

@@ -1,8 +1,16 @@
-import haxe.ds.StringMap;
-
+import go.Syntax;
 function main() {
-    var m = new StringMap<Int>();
-    m.set("ten", 10);
-    trace(m.get("ten"));
-    trace((10 : haxe.Int64));
+    var x = 0;
+    var end = false;
+    while (true) {
+        switch Syntax.code("{0}", x) {
+            case 0:
+                break;
+            case 1:
+                trace(1);
+        }
+        end = true;
+        break;
+    }
+    trace(end);
 }

@@ -480,6 +480,10 @@ class Context {
             case TParenthesis(e):
                 expr.t = e.t; // update paren type
 
+            case TMeta(_, e):
+                expr.expr = e.expr;
+                expr.t = e.t;
+
             case _: null;
         }
     }

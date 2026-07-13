@@ -41,10 +41,13 @@ class Semantics {
                  TEnumParameter(_) |
                  TIdent(_) |
                  TLocal(_) |
-                 TMeta(_) |
                  TTypeExpr(_): KExpr;
 
-            case TCall(_): KEither;
+            case TMeta(_, e):
+                getExprKind(e);
+
+            case TCall(_):
+                KEither;
         }
     }
 

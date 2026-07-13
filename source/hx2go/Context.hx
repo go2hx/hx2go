@@ -29,6 +29,7 @@ import hx2go.hxb.Typed.HxbTypedExprDef;
 class Context {
 
     private static final _reserved: Map<String, Bool> = [
+        "_" => true,
         "break" => true, "default" => true, "func" => true, "interface" => true, "select" => true,
         "case" => true, "defer" => true, "go" => true, "map" => true, "struct" => true,
         "chan" => true, "else" => true, "goto" => true, "package" => true, "switch" => true,

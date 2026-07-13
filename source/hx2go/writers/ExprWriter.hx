@@ -45,6 +45,7 @@ class ExprWriter extends WriterImpl {
             case TParenthesis(e): writeParenthesis(expr, e);
             case TWhile(econd, ebody, normal): writeWhile(expr, econd, ebody, normal);
             case TIf(econd, eif, eelse): writeIfStmt(expr, econd, eif, eelse);
+            case TTry(e, catches): writeTry(e, catches);
             case TBinop(op, left, right): writeBinop(expr, op, left, right);
             case TReturn(e): writeReturn(e);
             case TObjectDecl(fields): writeObjectDecl(expr, fields);
@@ -280,6 +281,23 @@ class ExprWriter extends WriterImpl {
 
         }
 
+        return buf;
+    }
+
+    public function writeTry(e: HxbTypedExpr, catches:Array<hx2go.hxb.Typed.HxbTCatch>):OutputBuffer {
+        var buf = new OutputBuffer();
+        buf.addInline('func() {\n');
+
+        for (c in catches) {
+            buf.addInline('defer func() {');
+            var catchName = Context.sanitiseString(c.v.name);
+            buf.addInline('if ${catchName} := recover(); ${catchName} != nil');
+            buf.addBufferInline(writeExpr(c.expr));
+            buf.addInline('}()');
+        }
+        buf.addInline('\n');
+        buf.addBufferInline(writeExpr(e));
+        buf.addInline('}()');
         return buf;
     }
 

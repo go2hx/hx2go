@@ -187,9 +187,49 @@ class Normaliser {
             case TSwitch(_):
                 var local = scope.copy();
                 local.activeSwitch = expr;
-
                 return iterateExpr(expr, local, ancestor);
+            case TFunction(tfunc):
+                scope.activeFunction = expr;
+                return iterateExpr(expr, scope, ancestor);
+            case TTry(_, _):
+                var local = scope.copy();
+                if (local.activeTry != null) {
+                    local.activeFunction = local.activeTry;
+                }
+                local.activeTry = expr;
+                var allPathsReturn = local.activeSwitchAllPathsReturn ? local.activeSwitchAllPathsReturn : Semantics.allPathsReturn(expr);
+                local.activeSwitchAllPathsReturn = Semantics.allPathsReturn(expr);
+                iterateExpr(expr, local, ancestor);
 
+
+                var returnHandlerStringBuf = new StringBuf();
+                var tryNode = expr;
+                if (local.activeFunction != null) {
+                    switch local.activeFunction.expr {
+                        case TFunction(tfunc):
+                            var varStringBuf = new StringBuf();
+
+                            if (allPathsReturn) {
+                                returnHandlerStringBuf.add('\nreturn __ret');
+                            } else if (!tfunc.t.match(TVoid)) {
+                                returnHandlerStringBuf.add('if __state == 1 {\nreturn __ret\n}');
+                            }
+                            if (!tfunc.t.match(TVoid)) {
+                                varStringBuf.add('var __ret ${context.getWriter().types.writeHxbType(tfunc.t)}\n_ = __ret\n');
+                            }
+                            varStringBuf.add('var __state int\n;_ = __state\n');
+                            var vars = ExprHelper.createUntyped(varStringBuf.toString(), []);
+                            tryNode.expr = ExprHelper.createUntyped('{0}\n{1}', [vars, Copy.copy(tryNode)]).expr;
+                        default:
+                    }
+                }
+
+                if (scope.activeLoop != null)
+                    returnHandlerStringBuf.add('\nif __state == 2 {\nbreak\n}\nif __state == 3 {\ncontinue\n}');
+
+                var returnHandler = ExprHelper.createUntyped(returnHandlerStringBuf.toString(), []);
+                tryNode.expr = ExprHelper.createUntyped('{0}\n{1}', [Copy.copy(tryNode), returnHandler]).expr;
+                return;
             case TBreak if (scope.activeSwitch != null && scope.activeLoop != null):
                 if (scope.activeLoopLabel == null) {
                     scope.activeLoopLabel = 'hx_label_${labelId++}';
@@ -200,7 +240,12 @@ class Normaliser {
                 }
 
                 expr.expr = ExprHelper.createUntyped('break ${scope.activeLoopLabel}', []).expr;
-
+            case TReturn(e) if (scope.activeTry != null):
+                expr.expr = ExprHelper.createUntyped('__state = 1; __ret = {0}', [Copy.copy(e)]).expr;
+            case TBreak if (scope.activeTry != null):
+                expr.expr = ExprHelper.createUntyped('__state = 2', []).expr;
+            case TContinue if (scope.activeTry != null):
+                expr.expr = ExprHelper.createUntyped('__state = 3', []).expr;
             case _: null;
         }
 

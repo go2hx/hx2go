@@ -12,6 +12,12 @@ import sys.io.Process;
 
 class Init {
 
+	public static function addStd() {
+		var self = Context.resolvePath("go/Init.hx");
+		var path = Path.join([ Path.directory(self), '..', '..', 'std' ]);
+		Compiler.addClassPath(path);
+	}
+
     public static function init() {
         var anyPath = {
             pack: ["go"],

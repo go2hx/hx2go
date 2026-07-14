@@ -1,10 +1,9 @@
-import go.Chan;
-import go.Syntax;
-import go.ReceiveChan;
-import go.SendChan;
-import haxe.io.Bytes;
+import go.fmt.Fmt;
+
+function test(...v: Int) {
+    Fmt.println(...v);
+}
 
 function main() {
-    var bytes = Bytes.alloc(128);
-    trace(bytes);
+    test(1, 2, 3);
 }

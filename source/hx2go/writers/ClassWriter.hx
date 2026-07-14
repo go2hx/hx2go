@@ -90,6 +90,10 @@ class ClassWriter extends WriterImpl {
             }
 
             for (f in fields) {
+                if (f.flags & HxbClassFieldFlag.CfExtern != 0) {
+                    continue;
+                }
+
                 var vBuf = new OutputBuffer();
                 var fTypes = writeFunctionArgs(f.type);
 
@@ -137,7 +141,7 @@ class ClassWriter extends WriterImpl {
 
         for (f in cls.fields) {
             var fRes: { name: String, type: HxbType } = switch f.kind {
-                case KVar(AccCall, _) | KVar(_, AccCall): continue;
+                case _ if (!shouldGenVar(f.kind)): continue;
                 case KVar(_): { name: StringConversions.nameToFieldName(f.name), type: f.type };
                 case KMethod(MethDynamic): { name: StringConversions.nameToFieldName(f.name) + "_Dyn", type: appendThis(f.type, cls) };
                 case _: continue;
@@ -316,10 +320,16 @@ class ClassWriter extends WriterImpl {
         return buf;
     }
 
+    public function shouldGenVar(k: HxbFieldKind): Bool {
+        return switch k {
+            case KVar(AccCall, AccNormal | AccNo) | KVar(AccNormal | AccNo, AccCall): true;
+            case KVar(AccCall, _) | KVar(_, AccCall): false;
+            case _: true;
+        }
+    }
     public function writeStaticClassVar(field: HxbClassField, read: HxbVarAccess, write: HxbVarAccess, cls: HxbClass): OutputBuffer {
         var buf = new OutputBuffer();
-
-        if (field.flags & HxbClassFieldFlag.CfExtern != 0 || cls.flags & HxbClassFlag.CExtern != 0 || field.kind.match(KVar(AccCall, _)) || field.kind.match(KVar(_, AccCall))) {
+        if (field.flags & HxbClassFieldFlag.CfExtern != 0 || cls.flags & HxbClassFlag.CExtern != 0 || !shouldGenVar(field.kind)) {
             return buf;
         }
 

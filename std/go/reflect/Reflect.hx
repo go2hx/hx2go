@@ -41,5 +41,6 @@ extern class Reflect {
     static function valueOf(i:Dynamic):Value;
     static function indirect(ptr:Value):Value;
     static function makeSlice(t:Type, len:Int, cap:Int):Value;
+    static function deepEqual(x:Dynamic,y:Dynamic):Bool;
 
 }

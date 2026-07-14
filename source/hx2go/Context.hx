@@ -479,6 +479,9 @@ class Context {
             case TParenthesis(e):
                 expr.t = e.t; // update paren type
 
+            case TCall({ t: TDynamic(_) | TDynamicAny }, _):
+                expr.t = TDynamicAny;
+
             case TMeta(_, e):
                 expr.expr = e.expr;
                 expr.t = e.t;

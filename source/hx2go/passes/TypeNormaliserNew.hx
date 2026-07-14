@@ -33,17 +33,31 @@ class TypeNormaliserNew extends CompilerPass {
                     return;
                 }
 
-                var ctor = switch mt {
-                    case MClass(x): x.constructor;
+                var cls = switch mt {
+                    case MClass(x): x;
                     case _: null;
                 }
 
-                if (ctor == null) {
+                if (cls == null) {
                     return;
                 }
 
-                switch ctor.type {
+                if (cls.constructor == null) {
+                    return;
+                }
+
+                switch cls.constructor.type {
                     case TFun(params, _):
+                        if (cls.flags & HxbClassFlag.CExtern != 0 && cls.meta.filter(m -> m.name == ":structInit").length != 0) {
+                            var argStr = [];
+                            for (idx in 0...el.length) {
+                                argStr.push('${StringConversions.toPascalCase(params[idx].name)}: {${idx}}');
+                            }
+
+                            expr.expr = ExprHelper.createUntyped('${context.getWriter().types.writeModuleType(tp)}{ ${argStr.join(", ")} }', el).expr;
+                            return;
+                        }
+
                         for (idx in 0...el.length) {
                             var param = params[idx];
                             var arg = el[idx];

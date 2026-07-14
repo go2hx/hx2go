@@ -112,8 +112,7 @@ class Sys {
     public static function time(): Float {
         var tn = Time.now();
         var sec = tn.unixNano() / Time.second;
-        var tup = tn.local().zone();
-        sec += tup.offset;
+        sec += tn.local().zone().offset;
 
         return Time.now().unixNano() / Time.second;
     }

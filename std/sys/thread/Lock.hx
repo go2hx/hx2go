@@ -22,9 +22,8 @@
 
 package sys.thread;
 
-#if (!target.threaded)
-#error "This class is not available on this target"
-#end
+import go.time.Time;
+import go.Syntax;
 
 /**
 	A Lock allows blocking execution until it has been unlocked. It keeps track
@@ -58,11 +57,14 @@ package sys.thread;
 **/
 @:coreApi
 class Lock {
-    var m: go.sync.Mutex;
+    var c: go.Chan<Bool>;
 	/**
 		Creates a new Lock which is initially locked.
 	**/
-	public function new():Void {}
+	public function new():Void {
+		c = new go.Chan(1);
+		c.send(true);
+	}
 
 	/**
 		Waits for the lock to be released, or `timeout` (in seconds)
@@ -70,17 +72,19 @@ class Lock {
 		if a time-out occurs.
 	**/
 	public function wait(?timeout:Float):Bool {
-        if (timeout == null)
-            return m.tryLock();
-
-        var stamp = Sys.cpuTime();
-        while (true) {
-            if (m.tryLock())
-                return true;
-            if (Sys.cpuTime() - stamp > timeout)
-                return false;
-            Sys.sleep(0.01);
-        }
+        if (timeout == null) {
+            return c.tryReceive().ok;
+		}
+		
+		Syntax.select(
+			Select.receive(c, () -> {
+				return true;
+			}),
+			Select.receive(Time.after(timeout * Time.second), () -> {
+				return false;
+			})
+		);
+		return false;
     }
 
 	/**
@@ -91,6 +95,6 @@ class Lock {
 		to execute.
 	**/
 	public function release():Void {
-        m.unlock();
+        c.send(true);
     }
 }

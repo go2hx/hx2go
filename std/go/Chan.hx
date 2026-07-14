@@ -16,4 +16,9 @@ abstract Chan<T> {
     public extern inline function receive(): T {
         return Syntax.code("<- {0}", (this : Chan<T>));
     }
+
+    @:go.Tuple("value", "ok") public extern inline function tryReceive(): Tuple<{value:T, ok:Bool}> {
+        Syntax.code("return <- {0}", (this : Chan<T>));
+        throw "unreachable";
+    }
 }

@@ -481,7 +481,7 @@ class Context {
             case TParenthesis(e):
                 expr.t = e.t; // update paren type
 
-            case TCall({ t: TDynamic(_) | TDynamicAny }, _):
+            case TCall(e, _) if (e.t != null && e.t.match(TDynamic(_) | TDynamicAny)):
                 expr.t = TDynamicAny;
 
             case TMeta(_, e):

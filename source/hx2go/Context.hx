@@ -25,6 +25,8 @@ import hx2go.util.TypeHelper;
 import hx2go.hxb.flags.HxbClassFieldFlag;
 import hx2go.util.ExprHelper;
 import hx2go.hxb.Typed.HxbTypedExprDef;
+import hx2go.normaliser.Semantics;
+import hx2go.passes.RewriteDynamicBinop;
 
 class Context {
 
@@ -485,6 +487,12 @@ class Context {
             case TMeta(_, e):
                 expr.expr = e.expr;
                 expr.t = e.t;
+
+            case TBinop(OpAssign, _, _):
+                // skip
+
+            case TBinop(op, left, right) if (left.t != null && right.t != null && (left.t.match(TDynamic(_) | TDynamicAny) || right.t.match(TDynamic(_) | TDynamicAny))):
+                expr.t = RewriteDynamicBinop.returnsBool(op) ? TBool : TDynamicAny;
 
             case _: null;
         }

@@ -24,6 +24,7 @@ extern class Time {
     static function date(year: Int, month: Month, day: Int, hour: Int, min: Int, sec: Int, nsec: Int, loc: Pointer<Location>): Time;
     static function sleep(d: Duration): Void;
     static function loadLocation(name: String): Result<Pointer<Location>>;
+    static function after(d: Duration): ReceiveChan<Time>;
 
     function unix(): Int64;
     function unixMilli(): Int64;

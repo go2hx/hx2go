@@ -303,7 +303,9 @@ class ExprWriter extends WriterImpl {
         var buf = new OutputBuffer(); // TODO: handle normalWhile (do {} while(...) vs while (...) {})
 
         buf.addInline('for ');
-        buf.addBufferInline(writeExpr(econd));
+        if (!econd.expr.match(TParenthesis({expr: TConst(TBool(true))}))) {
+            buf.addBufferInline(writeExpr(econd));
+        }
         buf.addInline(' ');
         buf.addBufferInline(writeExpr(ebody));
 

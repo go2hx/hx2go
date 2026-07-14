@@ -137,7 +137,7 @@ class Context {
         return writer;
     }
 
-    public function sanitiseString(v: String): String {
+    public static function sanitiseString(v: String): String {
         return _reserved.exists(v) ? '_hx_reserved_$v' : v;
     }
 

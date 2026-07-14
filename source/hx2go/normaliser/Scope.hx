@@ -16,6 +16,9 @@ class Scope {
     public var variableIterations: Map<String, Int> = [];
     public var activeLoop: HxbTypedExpr = null;
     public var activeSwitch: HxbTypedExpr = null;
+    public var activeFunction: HxbTypedExpr = null;
+    public var activeSwitchAllPathsReturn: Bool = false;
+    public var activeTry: HxbTypedExpr = null;
     public var activeLoopLabel: Null<String> = null;
     public var tmpId: Int = 0;
 
@@ -122,6 +125,9 @@ class Scope {
             variableIterations: variableIterations.copy(),
             activeLoop: activeLoop,
             activeSwitch: activeSwitch,
+            activeFunction: activeFunction,
+            activeSwitchAllPathsReturn: activeSwitchAllPathsReturn,
+            activeTry: activeTry,
             activeLoopLabel: activeLoopLabel,
             tmpId: tmpId
         };

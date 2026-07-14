@@ -65,6 +65,7 @@ class Semantics {
                  TIf(_) |
                  TSwitch(_) |
                  TFunction(_) |
+                 TTry(_) |
                  TWhile(_): true;
 
             case _: false;
@@ -239,9 +240,18 @@ class Semantics {
         }
     }
 
+    static function isPanicCall(e: HxbTypedExpr): Bool {
+        return switch e.expr {
+            case TCall({ expr: TCall({ expr: TIdent("__go__") }, args) }, _)
+                if (args.length > 0 && args[0].expr.match(TConst(TString("panic")))): true;
+            case _: false;
+        }
+    }
+
     public static function allPathsReturn(e: HxbTypedExpr): Bool {
         return switch e.expr {
             case TReturn(_) | TThrow(_): true;
+            case TCall(_) if (isPanicCall(e)): true;
 
             case TBlock(exprs):
                 exprs.length > 0 && allPathsReturn(exprs[exprs.length - 1]);

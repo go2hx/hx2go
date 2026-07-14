@@ -23,7 +23,6 @@ function main() {
         throw "impossible";
     }
 
-
     for (i in 0...4) {
         try {
             if (x) {

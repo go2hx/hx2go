@@ -286,18 +286,20 @@ class ExprWriter extends WriterImpl {
 
     public function writeTry(e: HxbTypedExpr, catches:Array<hx2go.hxb.Typed.HxbTCatch>):OutputBuffer {
         var buf = new OutputBuffer();
-        buf.addInline('func() {\n');
+        buf.add('func() {');
 
         for (c in catches) {
-            buf.addInline('defer func() {');
+            buf.add('defer func() {', 1);
             var catchName = Context.sanitiseString(c.v.name);
-            buf.addInline('if ${catchName} := recover(); ${catchName} != nil');
-            buf.addBufferInline(writeExpr(c.expr));
-            buf.addInline('}()');
+            buf.add('if ${catchName} := recover(); ${catchName} != nil ', 2, false);
+            buf.addBuffer(writeExpr(c.expr), 2);
+            buf.add('}()', 1, false);
         }
-        buf.addInline('\n');
-        buf.addBufferInline(writeExpr(e));
+
+        buf.add('');
+        buf.addBuffer(writeExpr(e), 1);
         buf.addInline('}()');
+
         return buf;
     }
 

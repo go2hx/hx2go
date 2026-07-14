@@ -58,8 +58,14 @@ class HxString {
         var end = if (len != null) {
             startIndex + len;
         }else{
-            s.length - startIndex;
+            s.length;
         }
+
+        // if len is negative
+        if (len != null && len < 0) {
+            return "";
+        }
+
         // If the calculated position + len exceeds s.length, the characters from that position to the end of s String are returned.
         if (end > s.length)
             end = s.length;

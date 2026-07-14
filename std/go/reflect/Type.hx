@@ -6,5 +6,6 @@ extern class Type {
     function kind():Kind;
     function numIn(): Int;
     function isVariadic(): Bool;
+    function string():String;
     @:native("in") function inType(i: Int): Type;
 }

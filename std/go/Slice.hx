@@ -60,11 +60,13 @@ extern abstract Slice<T> {
     }
 
     @:to public inline function toArray(): Array<T> {
-        return Syntax.code("(&{0})", (this : Slice<T>));
+        var self: Slice<T> = this;
+        return Syntax.code("(&{0})", self);
     }
 
     @:from public static inline function fromArray<T>(arr: Array<T>): Slice<T> {
-        return Syntax.code("(*{0})", (arr : Array<T>));
+        var self: Array<T> = arr;
+        return Syntax.code("(*{0})", self);
     }
 
 }

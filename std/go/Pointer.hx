@@ -6,6 +6,7 @@ abstract Pointer<T> {
 
     public var value(get, set): T;
 
+    @:from
     @:pure public static extern inline function addressOf<T>(x: T): Pointer<T> { // TODO: add AsVar<T>
         return Syntax.code("(&{0})", x);
     }

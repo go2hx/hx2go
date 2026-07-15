@@ -34,8 +34,8 @@ class TypeNormaliserBinop extends CompilerPass {
             return;
         }
 
-        if (TypeHelper.compare(expr.t, TBool)) {
-            if (Semantics.isNullableType(left.t) && op != OpAssign) {
+        if (TypeHelper.compare(expr.t, TBool) && op != OpAssign) {
+            if (Semantics.isNullableType(left.t)) {
                 var o = ExprHelper.createCast(left, Semantics.getNullableType(left.t));
                 left.expr = o.expr;
                 left.t = o.t;

@@ -263,7 +263,7 @@ class ExprWriter extends WriterImpl {
                 buf.addBufferInline(writeExpr(e));
 
             case [(TDynamic(_) | TDynamicAny), _]:
-                buf.addInline('(');
+                buf.addInline(expr.pos.file.endsWith("HxDynamic.hx") ? '(' : 'Hx_Field_go_haxe_hxdynamic_ensureInterface('); // this is a really bad hack, I know...
                 buf.addBufferInline(writeExpr(e));
                 buf.addInline(').(');
                 buf.addBufferInline(writer.types.writeHxbType(expr.t));
@@ -373,7 +373,7 @@ class ExprWriter extends WriterImpl {
         buf.addInline('var ${v.name} ');
         buf.addBufferInline(writer.types.writeHxbType(v.type));
 
-        if (vexpr != null) {
+        if (vexpr != null && !vexpr.expr.match(TConst(TNull))) {
             buf.addInline(' = ');
             buf.addBufferInline(writeExpr(vexpr));
         }

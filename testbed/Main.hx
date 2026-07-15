@@ -4,7 +4,7 @@ class Foo {
 
     public function new() {}
     public function foo() {
-        trace()
+        trace("");
     }
 }
 function main() {

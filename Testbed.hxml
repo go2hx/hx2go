@@ -2,4 +2,4 @@
 -cp testbed
 -main Main
 --custom-target go=output
---cmd go -C ./output/main run .
+--cmd go run ./output/main

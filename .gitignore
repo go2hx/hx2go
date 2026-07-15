@@ -1,2 +1,5 @@
+.DS_Store
+*.txt
+go.work.sum
 output
 .idea

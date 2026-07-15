@@ -155,6 +155,7 @@ class TypeWriter extends WriterImpl {
             case TAbstract({ pack: [], name: 'Null' }, params): 'struct { Value ${writeHxbType(params[0])}; Valid bool }';
             case TInst({ pack: [], name: 'Array' }, params): '*[]${writeHxbType(params[0])}';
             case TAbstract({ pack: ['go'], name: 'Slice' }, params): '[]${writeHxbType(params[0])}';
+            case TAbstract({ pack: ['go'], name: 'GoArray' }, params): '[${writeHxbType(params[1])}]${writeHxbType(params[0])}';
             case TAbstract({ pack: ['go'], name: 'Chan' }, params): 'chan ${writeHxbType(params[0])}';
             case TAbstract({ pack: ['go'], name: 'SendChan' }, params): 'chan<- ${writeHxbType(params[0])}';
             case TAbstract({ pack: ['go'], name: 'ReceiveChan' }, params): '<-chan ${writeHxbType(params[0])}';
@@ -163,6 +164,7 @@ class TypeWriter extends WriterImpl {
             case TFun(params, ret): 'func(${params.map(p -> writeHxbType(p.t)).join(', ')})${ret == TVoid ? '' : ' ${writeHxbType(ret)}'}';
             case TEnumStatic(_): "*Hx_Obj_go_haxe_hxenum";
             case TClassStatic(_): "*Hx_Obj_go_haxe_hxclass";
+            case TExprType({ expr: EConst(CInt(v, _)) }): v;
             case _: "any";
         });
 

@@ -1,10 +1,9 @@
 package unit;
 
-
 import go.Slice;
 import go.Byte;
 import go.Result;
-import go.os.Os;
+import go.Os;
 
 function main() {
     var v = Os.readFile("./test.txt");

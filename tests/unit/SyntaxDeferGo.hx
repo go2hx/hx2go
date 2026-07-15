@@ -1,7 +1,7 @@
 package unit;
 
 
-import go.fmt.Fmt;
+import go.Fmt;
 import go.Syntax;
 
 function main() {

@@ -98,7 +98,6 @@ class Context {
             new hx2go.passes.TypeNormaliserIf(this),
             new hx2go.passes.TypeNormaliserSwitch(this),
             new hx2go.passes.SuperCtor(this),
-            new hx2go.passes.ErasePointerCast(this),
             new hx2go.passes.CastArray(this),
             new hx2go.passes.CastNullableTo(this),
             new hx2go.passes.CastNullableFrom(this),
@@ -106,6 +105,7 @@ class Context {
             new hx2go.passes.CastString(this),
             new hx2go.passes.CastDynamicFrom(this),
             new hx2go.passes.CastClass(this),
+            new hx2go.passes.CastPointerInterface(this),
             new hx2go.passes.RewriteThrow(this),
             new hx2go.passes.ArrayAccessDynamicSet(this),
             new hx2go.passes.ArrayAccessDynamicGet(this),
@@ -134,6 +134,8 @@ class Context {
             new hx2go.passes.RewriteArrayCreation(this),
             new hx2go.passes.RewriteChanCreation(this),
             new hx2go.passes.RewriteStringCreation(this),
+            new hx2go.passes.RewritePointerCastFrom(this),
+            new hx2go.passes.RewritePointerCastTo(this),
             new hx2go.passes.ResolveVarDecl(this),
             new hx2go.passes.ResolveCast(this),
         ];
@@ -422,7 +424,7 @@ class Context {
                 }) )) ]);
 
             case TType(path, params):
-                var fwd = TypeHelper.followToDef(this, t);
+                var fwd = TypeHelper.followToDef(this, t, true);
                 var fwdNorm = normalize(fwd);
 
                 if (fwdNorm.match(TDynamic(_) | TDynamicAny)) {

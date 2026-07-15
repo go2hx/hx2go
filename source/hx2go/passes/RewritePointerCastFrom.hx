@@ -8,7 +8,7 @@ import hx2go.util.ExprHelper;
 import hx2go.util.TypeHelper;
 import haxe.runtime.Copy;
 
-class ErasePointerCast extends CompilerPass {
+class RewritePointerCastFrom extends CompilerPass {
 
     public function match(expr: HxbTypedExpr): Bool {
         if (expr.t == null) {
@@ -22,13 +22,15 @@ class ErasePointerCast extends CompilerPass {
     }
 
     public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
+        if (!match(expr)) {
+            return;
+        }
+
         switch expr.expr {
             case TCast(e, _): {
-                var o = Copy.copy(e);
+                var o = ExprHelper.createUntyped("(*{0})", [e]);
                 expr.expr = o.expr;
                 expr.t = o.t;
-
-                context.submitNode(expr, true);
             }
 
             case _: null;

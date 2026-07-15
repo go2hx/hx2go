@@ -1,0 +1,41 @@
+package hx2go.passes;
+
+import hx2go.hxb.Typed.HxbTypedExpr;
+import hx2go.hxb.HxbModuleType;
+import hx2go.hxb.Typed.HxbTypedExprDef;
+import hx2go.hxb.HxbType;
+import hx2go.util.ExprHelper;
+import hx2go.util.TypeHelper;
+import haxe.runtime.Copy;
+
+class CastPointerInterface extends CompilerPass {
+
+    public function match(expr: HxbTypedExpr): Bool {
+        if (expr.t == null) {
+            return false;
+        }
+
+        return switch expr.expr {
+            case TCast({ expr: TCast({ t: TAbstract({ name: "Pointer", pack: ["go"] }, [t1]) }, _), t: t2 }, _) if (TypeHelper.compare(t1, t2) && !TypeHelper.compare(t1, expr.t) && expr.t.match(TType(_))): {
+                true;
+            }
+
+            case _: false;
+        }
+    }
+
+    public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
+        switch expr.expr {
+            case TCast({ expr: TCast(inner, _), t: t2 }, _): {
+                var o = ExprHelper.createCast(inner, expr.t);
+                expr.expr = o.expr;
+                expr.t = o.t;
+
+                context.submitNode(expr, true);
+            }
+
+            case _: null;
+        }
+    }
+
+}

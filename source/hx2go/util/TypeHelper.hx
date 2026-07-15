@@ -33,7 +33,7 @@ class TypeHelper {
         }
     }
 
-    public static function followToDef(context: Context, type: HxbType): HxbType {
+    public static function followToDef(context: Context, type: HxbType, supportsExtern: Bool = false): HxbType {
         if (type == null) {
             return null;
         }
@@ -46,7 +46,15 @@ class TypeHelper {
                 }
 
                 switch mod {
-                    case MTypedef(info): info.type;
+                    case MTypedef(info): {
+                        var m = info.meta.filter(m -> m.name == ":go.Type")[0];
+                        if (m != null && supportsExtern){
+                            return TInst(info.path, []);
+                        }
+
+                        return info.type;
+                    }
+
                     case _: type;
                 }
             }

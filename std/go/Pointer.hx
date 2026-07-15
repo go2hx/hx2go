@@ -2,7 +2,6 @@ package go;
 
 @:runtimeValue
 @:forward
-@:forward.variance
 @:forwardStatics
 @:go.AbstractNoGenericErasure
 abstract Pointer<T>(T) {
@@ -11,12 +10,12 @@ abstract Pointer<T>(T) {
 
     @:from
     @:pure public static extern inline function addressOf<T>(x: T): Pointer<T> { // TODO: add AsVar<T>
-        return Syntax.code("(&{0})", x);
+        return cast x;
     }
 
     @:to
     @:pure private extern inline function get_value(): T {
-        return Syntax.code("(*{0})", this);
+        return cast this;
     }
 
     private extern inline function set_value(x: T): T {

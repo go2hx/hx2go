@@ -51,6 +51,21 @@ class RewriteResultAssign extends CompilerPass {
                 }
             }
 
+            case TField({ t: TType(tp, _) }, FAnon(ref)): {
+                var mt = context.resolve(tp);
+                if (mt == null) {
+                    return false;
+                }
+
+                return switch mt {
+                    case MTypedef({ type: TAnon(anon) }): { // context will collapse this if it is actual anon struct, so it *must* be extern
+                        true; // since we check if return type was Result<R, E> we can assume it is extern
+                    }
+
+                    case _: false;
+                }
+            }
+
             case _: false;
         }
     }

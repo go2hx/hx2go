@@ -12,6 +12,8 @@ import hx2go.util.TypeHelper;
 
 class TypeWriter extends WriterImpl {
 
+    public var importTarget: String = "";
+
     public function writeModuleTypeDecl(type: HxbModuleType): OutputBuffer {
         return switch type {
             case MClass(v): writer.classes.writeClass(v);
@@ -47,13 +49,22 @@ class TypeWriter extends WriterImpl {
                     case "instanceName":
                         name = ObjectFieldHelper.readString(opt);
                         hasInstanceName = true;
+
+                    case "imports":
+                        for (imp in ObjectFieldHelper.readStringList(opt)) {
+                            if (importTarget == "") {
+                                throw "blank import target";
+                            }
+
+                            writer.context.defineImportOnModule(importTarget, imp);
+                        }
                 }
             }
 
             case _: null;
         }
 
-        return name; // TODO: import used module
+        return name;
     }
 
     public function writeModuleType(type: TypePath): String {

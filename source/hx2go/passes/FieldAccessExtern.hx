@@ -127,6 +127,7 @@ class FieldAccessExtern extends CompilerPass {
                 var typeName = "";
                 var pascalCase = true;
                 var topLevel = false;
+                var imports = [];
 
                 for (opt in options) {
                     switch opt.name {
@@ -140,9 +141,7 @@ class FieldAccessExtern extends CompilerPass {
                             topLevel = ObjectFieldHelper.readBool(opt, topLevel);
 
                         case "imports":
-                            for (imp in ObjectFieldHelper.readStringList(opt)) {
-                                context.defineImport(frame, imp);
-                            }
+                            imports = ObjectFieldHelper.readStringList(opt);
 
                         case _: null;
                     }
@@ -153,7 +152,14 @@ class FieldAccessExtern extends CompilerPass {
                 }
 
                 expr.expr = switch expr.expr {
-                    case TField(_, FStatic(_)): ExprHelper.createUntyped((topLevel ? '' : '$typeName.') + fieldName, []).expr;
+                    case TField(_, FStatic(_)): {
+                        for (imp in imports) {
+                            context.defineImport(frame, imp);
+                        }
+
+                        ExprHelper.createUntyped((topLevel ? '' : '$typeName.') + fieldName, []).expr;
+                    }
+
                     case TField(e, FInstance(_) | FAnon(_)): ExprHelper.createUntyped((topLevel ? '' : '{0}.') + fieldName, [e]).expr;
                     case _: expr.expr;
                 }

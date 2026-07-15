@@ -136,8 +136,8 @@ class Context {
             new hx2go.passes.RewriteStringCreation(this),
             new hx2go.passes.RewritePointerCastFrom(this),
             new hx2go.passes.RewritePointerCastTo(this),
-            new hx2go.passes.ResolveVarDecl(this),
-            new hx2go.passes.ResolveCast(this),
+//            new hx2go.passes.ResolveVarDecl(this),
+//            new hx2go.passes.ResolveCast(this),
         ];
     }
 
@@ -201,35 +201,40 @@ class Context {
                 continue;
             }
 
-            var buf = new OutputBuffer();
+            var file = new OutputBuffer();
+            var header = new OutputBuffer();
+
             var path = module[0].module;
             var imports = imports.get(path) ?? [];
 
-            buf.add('package $topLevelPackage');
-
-            if (imports.length > 0) {
-                buf.add("");
-            }
-
-            for (imp in imports) {
-                buf.add('import "$imp"');
-            }
-
             var hasWrittenSomething = false;
             for (entry in module) {
+                var old = writer.types.importTarget;
+                writer.types.importTarget = entry.module;
                 var localBuf = writer.types.writeModuleTypeDecl(entry.type);
+                writer.types.importTarget = old;
+
                 if (!localBuf.isEmpty()) {
                     hasWrittenSomething = true;
                 }
 
-                buf.addBufferInline(localBuf);
+                file.addBufferInline(localBuf);
             }
 
-            if (!hasWrittenSomething) {
-                continue;
+            header.add('package $topLevelPackage');
+
+            if (imports.length > 0) {
+                header.add("");
             }
 
-            writeFile("/", StringConversions.stringPathGetFileName(module[0].module), buf.toString());
+            for (imp in imports) {
+                header.add('import "$imp"');
+            }
+
+            if (!hasWrittenSomething) continue;
+            else header.add(file.toString());
+
+            writeFile("/", StringConversions.stringPathGetFileName(module[0].module), header.toString());
         }
 
         var buf = new OutputBuffer();
@@ -616,6 +621,7 @@ class Context {
 
             var frame = new ContextFrame(passes, type, moduleKey, f);
             contextStack.push(frame);
+            writer.types.importTarget = moduleKey;
 
             var match: HxbTypedExpr -> Void;
 
@@ -644,10 +650,22 @@ class Context {
             }
 
             contextStack.pop();
+            writer.types.importTarget = contextStack[contextStack.length - 1]?.moduleKey ?? "";
         }
 
         for (f in roots.filter(f -> f.kind.match(KMethod(_)) && f.expr?.expr != null)) {
             Normaliser.run(f.expr.expr, {}, this);
+        }
+    }
+
+    public function defineImportOnModule(moduleKey: String, goImport: String): Void {
+        if (!imports.exists(moduleKey)) {
+            imports.set(moduleKey, []);
+        }
+
+        var localImports = imports[moduleKey];
+        if (!localImports.contains(goImport)) {
+            localImports.push(goImport);
         }
     }
 

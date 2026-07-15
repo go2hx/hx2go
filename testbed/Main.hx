@@ -1,5 +1,5 @@
-import haxe.crypto.Sha256;
+import haxe.io.Bytes;
 
 function main() {
-    trace(Sha256.encode("hello"));
+    trace(new haxe.crypto.Hmac(SHA256).make(Bytes.ofString("secret"), Bytes.ofString("Hello")).toHex());
 }

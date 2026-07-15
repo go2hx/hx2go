@@ -13,5 +13,7 @@ extern class Os {
     static function setenv(key: String, value: String): Error;
     static function unsetenv(key: String): Error;
     static function readFile(name: String): Result<go.Slice<Byte>>;
+    static function mkdirAll(path: String, perm: Int): Error;
+    static function writeFile(name: String, content: Slice<Byte>, perm: Int): Error;
     
 }

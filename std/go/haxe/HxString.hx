@@ -15,11 +15,12 @@ class HxString {
     public static function charAt(s: String, index:Int):String {
         return "".toLowerCase() + Syntax.code("string(([]rune)({0})[{1}])", s, index);
     }
-    public static function charCodeAt(s: String, index:Int):Null<Int> {
+    public static function charCodeAt(s: String, index:Int): Null<Int> {
         // If index is negative or exceeds s.length, null is returned.
         if (index < 0 || index > s.length) {
             return null;
         }
+
         var code:go.Int32 = Syntax.code("([]rune)({0})[{1}]", s, index);
         return code;
     }

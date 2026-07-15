@@ -15,5 +15,5 @@ extern class Os {
     static function readFile(name: String): Result<go.Slice<Byte>>;
     static function mkdirAll(path: String, perm: Int): Error;
     static function writeFile(name: String, content: Slice<Byte>, perm: Int): Error;
-    
+
 }

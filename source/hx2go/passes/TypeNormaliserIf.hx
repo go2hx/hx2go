@@ -28,9 +28,17 @@ class TypeNormaliserIf extends CompilerPass {
 
     public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
         switch expr.expr {
-            case TIf(_, eif, eelse): {
+            case TIf(econd, eif, eelse): {
                 if (expr.t.match(TVoid)) {
                     return;
+                }
+
+                if (econd.t.match(TDynamic(_) | TDynamicAny)) {
+                    var o = ExprHelper.createCast(econd, TBool);
+                    econd.expr = o.expr;
+                    econd.t = o.t;
+
+                    context.submitNode(econd, true);
                 }
 
                 if (!TypeHelper.compare(eif.t, expr.t)) {

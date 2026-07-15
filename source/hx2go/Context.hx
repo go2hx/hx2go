@@ -454,9 +454,9 @@ class Context {
 
             case TFun(args, ret):
                 TFun(args.map(a -> new HxbFunArg(
-                    sanitiseString(a.name),
-                    a.opt,
-                    normalize(a.t)
+                sanitiseString(a.name),
+                a.opt,
+                normalize(a.t)
                 )), normalize(ret));
 
             case _:
@@ -508,7 +508,7 @@ class Context {
                 expr.t = e.t;
 
             case TBinop(OpAssign, _, _):
-                // skip
+            // skip
 
             case TBinop(op, left, right) if (left.t != null && right.t != null && (left.t.match(TDynamic(_) | TDynamicAny) || right.t.match(TDynamic(_) | TDynamicAny))):
                 expr.t = RewriteDynamicBinop.returnsBool(op) ? TBool : TDynamicAny;
@@ -569,6 +569,9 @@ class Context {
             case _: null;
         }
 
+        var old = writer.types.importTarget;
+        writer.types.importTarget = moduleKey;
+
         for (f in roots) {
             if (f.expr?.expr == null) continue;
 
@@ -580,8 +583,8 @@ class Context {
                 if (!TypeHelper.compare(base.type, f.type)) {
                     f.type = switch [f.type, base.type] {
                         case [
-                            TFun(f_args, f_ret),
-                            TFun(b_args, b_ret)
+                        TFun(f_args, f_ret),
+                        TFun(b_args, b_ret)
                         ]: {
                             for (idx in 0...b_args.length) {
                                 var farg = f_args[idx];
@@ -621,7 +624,6 @@ class Context {
 
             var frame = new ContextFrame(passes, type, moduleKey, f);
             contextStack.push(frame);
-            writer.types.importTarget = moduleKey;
 
             var match: HxbTypedExpr -> Void;
 
@@ -650,12 +652,13 @@ class Context {
             }
 
             contextStack.pop();
-            writer.types.importTarget = contextStack[contextStack.length - 1]?.moduleKey ?? "";
         }
 
         for (f in roots.filter(f -> f.kind.match(KMethod(_)) && f.expr?.expr != null)) {
             Normaliser.run(f.expr.expr, {}, this);
         }
+
+        writer.types.importTarget = old;
     }
 
     public function defineImportOnModule(moduleKey: String, goImport: String): Void {

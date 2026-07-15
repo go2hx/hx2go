@@ -1,8 +1,11 @@
 package go;
 
-@:coreType
 @:runtimeValue
-abstract Pointer<T> {
+@:forward
+@:forward.variance
+@:forwardStatics
+@:go.AbstractNoGenericErasure
+abstract Pointer<T>(T) {
 
     public var value(get, set): T;
 

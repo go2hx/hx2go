@@ -1,5 +1,13 @@
 import haxe.io.Bytes;
 
+class Foo {
+
+    public function new() {}
+    public function foo() {
+        trace()
+    }
+}
 function main() {
-    trace(new haxe.crypto.Hmac(SHA256).make(Bytes.ofString("secret"), Bytes.ofString("Hello")).toHex());
+    var a: Int = 5;
+
 }

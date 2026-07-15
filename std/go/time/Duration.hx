@@ -1,5 +1,4 @@
 package go.time;
 
-@:go.Type({ name: "time.Duration", imports: ["time"] })
-extern typedef Duration = Int64;
-
+@:go.Type({ name: "Duration", instanceName: "time.Duration", imports: ["time"] })
+extern typedef Duration = go.Int64

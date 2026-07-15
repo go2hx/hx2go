@@ -1,6 +1,4 @@
 package go.reflect;
 
-@:go.Type({name: "reflect.Kind", imports: ["reflect"]})
-extern class Kind {
-    function string():String;
-}
+@:go.Type({ name: "Kind", instanceName: "reflect.Kind", imports: ["reflect"] })
+extern typedef Kind = go.GoUInt

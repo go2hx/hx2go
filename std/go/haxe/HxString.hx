@@ -1,6 +1,6 @@
 package go.haxe;
 
-import go.strings.Strings;
+import go.Strings;
 
 class HxString {
     // TODO: remove comment, templ

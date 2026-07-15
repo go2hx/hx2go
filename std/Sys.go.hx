@@ -1,8 +1,8 @@
-import go.fmt.Fmt;
-import go.time.Time;
-import go.os.Os;
+import go.Fmt;
+import go.Time;
+import go.Os;
 import go.haxe.HxArray;
-import go.runtime.Runtime;
+import go.Runtime;
 import go.Slice;
 import go.Error;
 import go.Byte;
@@ -39,7 +39,7 @@ class Sys {
     }
 
     public static function sleep(seconds: Float): Void {
-        Time.sleep(seconds * 1000 * Time.millisecond);
+        Time.sleep(seconds * 1000 * Time.Millisecond);
     }
 
     public static function setTimeLocale(loc: String): Bool {
@@ -48,7 +48,7 @@ class Sys {
             return false;
         }
 
-        Time.localPtr = locale.sure();
+        Time.Local = locale.sure();
 
         return true;
     }
@@ -111,10 +111,10 @@ class Sys {
 
     public static function time(): Float {
         var tn = Time.now();
-        var sec = tn.unixNano() / Time.second;
+        var sec = tn.unixNano() / Time.Second;
         sec += tn.local().zone().offset;
 
-        return Time.now().unixNano() / Time.second;
+        return Time.now().unixNano() / Time.Second;
     }
 
     public static function cpuTime(): Float {

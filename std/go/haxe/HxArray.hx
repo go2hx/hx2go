@@ -380,7 +380,7 @@ class HxArray {
             setData(arr, data.slice(0, length));
         } else if (length > dataLength) {
             var v = HxDynamic.ensureConcreteValue(arr);
-            var newData: Slice<T> = go.reflect.Reflect.makeSlice(v.elem().type(), length, length).iface();
+            var newData: Slice<T> = go.Reflect.makeSlice(v.elem().type(), length, length).iface();
             Go.copy(newData, data);
             setData(arr, newData);
         }

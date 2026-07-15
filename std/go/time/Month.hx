@@ -1,4 +1,4 @@
 package go.time;
 
-@:go.Type({ name: "time.Month", imports: ["time"] })
-extern typedef Month = Int64;
+@:go.Type({ name: "Month", instanceName: "time.Month", imports: ["time"] })
+extern typedef Month = go.GoInt

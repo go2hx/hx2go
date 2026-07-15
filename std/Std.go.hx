@@ -1,12 +1,12 @@
-import go.fmt.Fmt;
+import go.Fmt;
 import go.haxe.HxDynamic;
-import go.reflect.Reflect;
+import go.Reflect;
 import go.haxe.HxArray;
 import go.Go;
 import go.haxe.HxEnumValue;
 import go.haxe.HxEnum;
 import go.Syntax;
-import go.strconv.Strconv;
+import go.Strconv;
 
 class Std {
 

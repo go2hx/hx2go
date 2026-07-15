@@ -1,4 +1,9 @@
 package go.time;
 
-@:go.Type({ name: "time.Location", imports: ["time"] })
-extern class Location {}
+@:structInit
+@:go.Type({ name: "Location", instanceName: "time.Location", imports: ["time"] })
+extern class Location {
+
+    @:native("String") function string(): String;
+
+}

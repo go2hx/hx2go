@@ -1,12 +1,12 @@
 package go.haxe;
 
-import go.reflect.Reflect;
-import go.strings.Strings;
+import go.Reflect;
+import go.Strings;
 import go.reflect.Value;
 import go.reflect.Kind;
 import go.reflect.Type;
 import go.Syntax;
-import go.fmt.Fmt;
+import go.Fmt;
 
 // HxDynamic implements Dynamic runtime manipulation required by Haxe
 // using go.reflect.Reflect and naming from http://haxedev.wikidot.com/article:operator-overloading
@@ -365,8 +365,9 @@ class HxDynamic {
         } else if (dV.canInt()) {
             return (dV.int() : Int);
         } else if (dV.canFloat()) {
-            return Math.round((dV.float() : Float)); // no right way to do this, round rather than floor
+            return Std.int(go.Math.floor(dV.float()));
         }
+
         return 0;
     }
 
@@ -412,7 +413,7 @@ class HxDynamic {
 
         for (i in 0...numIn) {
             if (isVariadic && i == numIn - 1) break;
-            var pt = fType.inType(i);
+            var pt = fType._in(i);
             var av = i < args.length ? args[i] : null;
             argVals.push(convertToType(ensureValue(av), pt));
         }

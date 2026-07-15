@@ -1,0 +1,96 @@
+package go.internal.trace;
+
+@:go.Type({ name: "tracev2", instanceName: "tracev2.tracev2", imports: ["internal/trace/tracev2"] })
+extern class Tracev2 {
+
+    @:native("AllocFree") static var AllocFree: go.internal.trace.tracev2.Experiment;
+    @:native("EvCPUSample") static var EvCPUSample: go.internal.trace.tracev2.EventType;
+    @:native("EvCPUSamples") static var EvCPUSamples: go.internal.trace.tracev2.EventType;
+    @:native("EvClockSnapshot") static var EvClockSnapshot: go.internal.trace.tracev2.EventType;
+    @:native("EvEndOfGeneration") static var EvEndOfGeneration: go.internal.trace.tracev2.EventType;
+    @:native("EvEventBatch") static var EvEventBatch: go.internal.trace.tracev2.EventType;
+    @:native("EvExperimentalBatch") static var EvExperimentalBatch: go.internal.trace.tracev2.EventType;
+    @:native("EvFrequency") static var EvFrequency: go.internal.trace.tracev2.EventType;
+    @:native("EvGCActive") static var EvGCActive: go.internal.trace.tracev2.EventType;
+    @:native("EvGCBegin") static var EvGCBegin: go.internal.trace.tracev2.EventType;
+    @:native("EvGCEnd") static var EvGCEnd: go.internal.trace.tracev2.EventType;
+    @:native("EvGCMarkAssistActive") static var EvGCMarkAssistActive: go.internal.trace.tracev2.EventType;
+    @:native("EvGCMarkAssistBegin") static var EvGCMarkAssistBegin: go.internal.trace.tracev2.EventType;
+    @:native("EvGCMarkAssistEnd") static var EvGCMarkAssistEnd: go.internal.trace.tracev2.EventType;
+    @:native("EvGCSweepActive") static var EvGCSweepActive: go.internal.trace.tracev2.EventType;
+    @:native("EvGCSweepBegin") static var EvGCSweepBegin: go.internal.trace.tracev2.EventType;
+    @:native("EvGCSweepEnd") static var EvGCSweepEnd: go.internal.trace.tracev2.EventType;
+    @:native("EvGoBlock") static var EvGoBlock: go.internal.trace.tracev2.EventType;
+    @:native("EvGoCreate") static var EvGoCreate: go.internal.trace.tracev2.EventType;
+    @:native("EvGoCreateBlocked") static var EvGoCreateBlocked: go.internal.trace.tracev2.EventType;
+    @:native("EvGoCreateSyscall") static var EvGoCreateSyscall: go.internal.trace.tracev2.EventType;
+    @:native("EvGoDestroy") static var EvGoDestroy: go.internal.trace.tracev2.EventType;
+    @:native("EvGoDestroySyscall") static var EvGoDestroySyscall: go.internal.trace.tracev2.EventType;
+    @:native("EvGoLabel") static var EvGoLabel: go.internal.trace.tracev2.EventType;
+    @:native("EvGoStart") static var EvGoStart: go.internal.trace.tracev2.EventType;
+    @:native("EvGoStatus") static var EvGoStatus: go.internal.trace.tracev2.EventType;
+    @:native("EvGoStatusStack") static var EvGoStatusStack: go.internal.trace.tracev2.EventType;
+    @:native("EvGoStop") static var EvGoStop: go.internal.trace.tracev2.EventType;
+    @:native("EvGoSwitch") static var EvGoSwitch: go.internal.trace.tracev2.EventType;
+    @:native("EvGoSwitchDestroy") static var EvGoSwitchDestroy: go.internal.trace.tracev2.EventType;
+    @:native("EvGoSyscallBegin") static var EvGoSyscallBegin: go.internal.trace.tracev2.EventType;
+    @:native("EvGoSyscallEnd") static var EvGoSyscallEnd: go.internal.trace.tracev2.EventType;
+    @:native("EvGoSyscallEndBlocked") static var EvGoSyscallEndBlocked: go.internal.trace.tracev2.EventType;
+    @:native("EvGoUnblock") static var EvGoUnblock: go.internal.trace.tracev2.EventType;
+    @:native("EvGoroutineStack") static var EvGoroutineStack: go.internal.trace.tracev2.EventType;
+    @:native("EvGoroutineStackAlloc") static var EvGoroutineStackAlloc: go.internal.trace.tracev2.EventType;
+    @:native("EvGoroutineStackFree") static var EvGoroutineStackFree: go.internal.trace.tracev2.EventType;
+    @:native("EvHeapAlloc") static var EvHeapAlloc: go.internal.trace.tracev2.EventType;
+    @:native("EvHeapGoal") static var EvHeapGoal: go.internal.trace.tracev2.EventType;
+    @:native("EvHeapObject") static var EvHeapObject: go.internal.trace.tracev2.EventType;
+    @:native("EvHeapObjectAlloc") static var EvHeapObjectAlloc: go.internal.trace.tracev2.EventType;
+    @:native("EvHeapObjectFree") static var EvHeapObjectFree: go.internal.trace.tracev2.EventType;
+    @:native("EvNone") static var EvNone: go.internal.trace.tracev2.EventType;
+    @:native("EvProcStart") static var EvProcStart: go.internal.trace.tracev2.EventType;
+    @:native("EvProcStatus") static var EvProcStatus: go.internal.trace.tracev2.EventType;
+    @:native("EvProcSteal") static var EvProcSteal: go.internal.trace.tracev2.EventType;
+    @:native("EvProcStop") static var EvProcStop: go.internal.trace.tracev2.EventType;
+    @:native("EvProcsChange") static var EvProcsChange: go.internal.trace.tracev2.EventType;
+    @:native("EvSTWBegin") static var EvSTWBegin: go.internal.trace.tracev2.EventType;
+    @:native("EvSTWEnd") static var EvSTWEnd: go.internal.trace.tracev2.EventType;
+    @:native("EvSpan") static var EvSpan: go.internal.trace.tracev2.EventType;
+    @:native("EvSpanAlloc") static var EvSpanAlloc: go.internal.trace.tracev2.EventType;
+    @:native("EvSpanFree") static var EvSpanFree: go.internal.trace.tracev2.EventType;
+    @:native("EvStack") static var EvStack: go.internal.trace.tracev2.EventType;
+    @:native("EvStacks") static var EvStacks: go.internal.trace.tracev2.EventType;
+    @:native("EvString") static var EvString: go.internal.trace.tracev2.EventType;
+    @:native("EvStrings") static var EvStrings: go.internal.trace.tracev2.EventType;
+    @:native("EvSync") static var EvSync: go.internal.trace.tracev2.EventType;
+    @:native("EvUserLog") static var EvUserLog: go.internal.trace.tracev2.EventType;
+    @:native("EvUserRegionBegin") static var EvUserRegionBegin: go.internal.trace.tracev2.EventType;
+    @:native("EvUserRegionEnd") static var EvUserRegionEnd: go.internal.trace.tracev2.EventType;
+    @:native("EvUserTaskBegin") static var EvUserTaskBegin: go.internal.trace.tracev2.EventType;
+    @:native("EvUserTaskEnd") static var EvUserTaskEnd: go.internal.trace.tracev2.EventType;
+    @:native("GoBad") static var GoBad: go.internal.trace.tracev2.GoStatus;
+    @:native("GoRunnable") static var GoRunnable: go.internal.trace.tracev2.GoStatus;
+    @:native("GoRunning") static var GoRunning: go.internal.trace.tracev2.GoStatus;
+    @:native("GoSyscall") static var GoSyscall: go.internal.trace.tracev2.GoStatus;
+    @:native("GoWaiting") static var GoWaiting: go.internal.trace.tracev2.GoStatus;
+    @:native("MaxBatchSize") static var MaxBatchSize: go.GoInt;
+    @:native("MaxEvent") static var MaxEvent: go.internal.trace.tracev2.EventType;
+    @:native("MaxEventTrailerDataSize") static var MaxEventTrailerDataSize: go.GoInt;
+    @:native("MaxExperimentalEvent") static var MaxExperimentalEvent: go.internal.trace.tracev2.EventType;
+    @:native("MaxFramesPerStack") static var MaxFramesPerStack: go.GoInt;
+    @:native("MaxTimedEventArgs") static var MaxTimedEventArgs: go.GoInt;
+    @:native("NoExperiment") static var NoExperiment: go.internal.trace.tracev2.Experiment;
+    @:native("NumEvents") static var NumEvents: go.internal.trace.tracev2.EventType;
+    @:native("NumExperimentalEvents") static var NumExperimentalEvents: go.internal.trace.tracev2.EventType;
+    @:native("NumExperiments") static var NumExperiments: go.internal.trace.tracev2.Experiment;
+    @:native("ProcBad") static var ProcBad: go.internal.trace.tracev2.ProcStatus;
+    @:native("ProcIdle") static var ProcIdle: go.internal.trace.tracev2.ProcStatus;
+    @:native("ProcRunning") static var ProcRunning: go.internal.trace.tracev2.ProcStatus;
+    @:native("ProcSyscall") static var ProcSyscall: go.internal.trace.tracev2.ProcStatus;
+    @:native("ProcSyscallAbandoned") static var ProcSyscallAbandoned: go.internal.trace.tracev2.ProcStatus;
+
+    @:native("EventArgTypes") static var EventArgTypes: go.GoArray<String, 10>;
+
+    @:native("EventNames") static function eventNames(specs: go.Slice<go.internal.trace.tracev2.EventSpec>): go.Map<String, go.internal.trace.tracev2.EventType>;
+    @:native("Experiments") static function experiments(): go.Slice<String>;
+    @:native("Specs") static function specs(): go.Slice<go.internal.trace.tracev2.EventSpec>;
+
+}

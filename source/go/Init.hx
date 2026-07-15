@@ -80,14 +80,18 @@ class Init {
 				throw "cannot find HXB! something went wrong, perhaps the onAfterGenerate callback fired too early?";
 			}
 
-			final mainClass = Compiler.getConfiguration().mainClass;
-			hx2go.Main.exec(archiveOutput, sourceOutput, mainClass.pack.length > 0 ? '${mainClass.pack.join(".")}.${mainClass.name}' : '${mainClass.name}');
+			if (!FileSystem.exists(sourceOutput)) {
+				FileSystem.createDirectory(sourceOutput);
+			}
 
 			if (!FileSystem.exists(goModOutput)) {
 				var ps = new Process("go", ["-C", sourceOutput, "mod", "init", "main"]);
 				ps.exitCode(true);
 				ps.close();
 			}
+
+			final mainClass = Compiler.getConfiguration().mainClass;
+			hx2go.Main.exec(archiveOutput, sourceOutput, mainClass.pack.length > 0 ? '${mainClass.pack.join(".")}.${mainClass.name}' : '${mainClass.name}');
 		});
     }
 

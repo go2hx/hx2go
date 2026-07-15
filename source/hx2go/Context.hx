@@ -471,6 +471,10 @@ class Context {
                 // we don't want to do anything.
             }
 
+            case TField({ t: t }, FAnon(fa)) if (t.match(TType(_)) && TypeHelper.followToDef(this, t, true).match(TInst(_))): {
+                // we don't want to do anything.
+            }
+
             case TField(e, FAnon(fa)): {
                 expr.expr = TField(e, FDynamic(fa.name));
                 expr.t = TDynamicAny;

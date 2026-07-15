@@ -12,6 +12,15 @@ class HxArray {
     @:pure public extern static function getData<T>(arr: Array<T>): Slice<T>;
     public extern static function setData<T>(arr: Array<T>, data: Slice<T>): Void;
 
+
+    public inline extern static function fastGet<T>(arr: Array<T>, index: Int): T {
+        return getData(arr)[index];
+    }
+
+    public inline extern static function fastSet<T>(arr: Array<T>, index: Int, value: T) {
+        getData(arr)[index] = value;
+    }
+
     public inline extern static function push<T>(arr: Array<T>, value: T): GoInt {
         var data = getData(arr);
         setData(arr, Go.append(data, value));

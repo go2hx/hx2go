@@ -108,6 +108,7 @@ class Context {
             new hx2go.passes.RewriteThrow(this),
             new hx2go.passes.ArrayAccessDynamicSet(this),
             new hx2go.passes.ArrayAccessDynamicGet(this),
+            new hx2go.passes.ArrayAccessSet(this),
             new hx2go.passes.FieldAccessSuper(this),
             new hx2go.passes.RewriteTupleAssign(this),
             new hx2go.passes.RewriteResultAssign(this),

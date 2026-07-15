@@ -128,12 +128,13 @@ class Context {
             new hx2go.passes.RewriteSyntaxSelect(this),
             new hx2go.passes.RewriteSyntaxDefer(this),
             new hx2go.passes.RewriteSyntaxGo(this),
-            new hx2go.passes.ResolveVarDecl(this),
             new hx2go.passes.RewriteArrayGetData(this),
             new hx2go.passes.RewriteArraySetData(this),
             new hx2go.passes.RewriteArrayCreation(this),
             new hx2go.passes.RewriteChanCreation(this),
             new hx2go.passes.RewriteStringCreation(this),
+            new hx2go.passes.ResolveVarDecl(this),
+            new hx2go.passes.ResolveCast(this),
         ];
     }
 

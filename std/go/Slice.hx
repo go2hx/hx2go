@@ -69,4 +69,8 @@ extern abstract Slice<T> {
         return Syntax.code("(*{0})", self);
     }
 
+    @:from public static inline function fromString(str: String): Slice<Byte> {
+        return cast str;
+    }
+
 }

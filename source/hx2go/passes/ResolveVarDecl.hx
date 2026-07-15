@@ -24,7 +24,7 @@ class ResolveVarDecl extends CompilerPass {
         }
     }
 
-    public function resolveType(type: HxbType, frame: ContextFrame): Void {
+    public static function resolveType(context: Context, type: HxbType, frame: ContextFrame): Void {
         var tp = switch type {
             case TInst(tp, _): tp;
             case TAbstract(tp, _): tp;
@@ -74,7 +74,7 @@ class ResolveVarDecl extends CompilerPass {
     public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
         switch expr.expr {
             case TVar(v, _): {
-                TypeTools.walk(v.type, resolveType.bind(_, frame));
+                TypeTools.walk(v.type, resolveType.bind(context, _, frame));
             }
 
             case _: null;

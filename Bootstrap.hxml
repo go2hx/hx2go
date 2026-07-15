@@ -1,6 +1,6 @@
+-cp source
+-main hx2go.Main
 -L hx2go
--cp testbed
--main Main
 --custom-target go=output
 --cmd go work init output/main
 --cmd go run ./output/main

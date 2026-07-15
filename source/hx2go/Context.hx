@@ -472,6 +472,11 @@ class Context {
                 expr.t = TDynamicAny;
             }
 
+            case TField(e, FInstance(_, _, fa)) if (e.t != null && e.t.match(TDynamic(_) | TDynamicAny)): {
+                expr.expr = TField(e, FDynamic(fa.name));
+                expr.t = TDynamicAny;
+            }
+
             case TField(e, FDynamic(_)): {
                 expr.t = TDynamicAny;
             }

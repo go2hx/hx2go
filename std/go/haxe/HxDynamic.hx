@@ -493,7 +493,9 @@ class HxDynamic {
 
         if (kind == Reflect.Struct) {
             var f = value.fieldByName(formatField(fieldName));
-            if (!f.isValid()) {
+            if (f.isValid()) {
+                found = true;
+            } else {
                 var vtable = value.fieldByName("VTable");
                 if (vtable.isValid()) {
                     f = vtable.methodByName(formatField(fieldName));
@@ -506,7 +508,6 @@ class HxDynamic {
                     }
                 }
             }
-
             value = f;
         }
 

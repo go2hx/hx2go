@@ -80,10 +80,7 @@ class ClassWriter extends WriterImpl {
 
                     hasInterfaces.set(dot, true);
 
-                    var im = writer.context.resolve(iface.t);
-                    var ip = StringConversions.moduleTypeGetTypePath(im);
-
-                    vtables.push('obj.${StringConversions.typePathClassInstanceName(ip)}.VTable = obj');
+                    vtables.push('obj.${writer.context.resolvedInstanceName(iface.t)}.VTable = obj');
                 }
 
                 vtables.push('obj.${StringConversions.typePathClassInstanceName(current.path)}.VTable = obj');
@@ -121,15 +118,11 @@ class ClassWriter extends WriterImpl {
         buf.add('type ${StringConversions.typePathClassInstanceName(cls.path)} struct {');
 
         if (cls.superClass != null) {
-            var mod = writer.context.resolve(cls.superClass.t);
-            var tp = StringConversions.moduleTypeGetTypePath(mod);
-            buf.add(StringConversions.typePathClassInstanceName(tp), 1);
+            buf.add(writer.context.resolvedInstanceName(cls.superClass.t), 1);
         }
 
         for (iface in cls.interfaces.filter(i -> !hasInterfaces.exists(i.t.dotPath()))) {
-            var mod = writer.context.resolve(iface.t);
-            var tp = StringConversions.moduleTypeGetTypePath(mod);
-            var ifName = StringConversions.typePathClassInstanceName(tp);
+            var ifName = writer.context.resolvedInstanceName(iface.t);
 
             buf.add(ifName, 1);
             vtables.push('obj.${ifName}.VTable = obj');

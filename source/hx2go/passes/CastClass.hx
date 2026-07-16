@@ -11,6 +11,7 @@ import hx2go.util.TypeHelper;
 import hx2go.normaliser.Semantics;
 import hx2go.util.StringConversions;
 import hx2go.hxb.flags.HxbClassFlag;
+import hx2go.hxb.TypePath;
 
 class CastClass extends CompilerPass {
 
@@ -60,11 +61,45 @@ class CastClass extends CompilerPass {
 
                     context.submitNode(expr, true, 1);
                 } else {
+                    var name = StringConversions.typePathClassInstanceName(cls.path);
+                    var srcPath = switch e.t {
+                        case TInst(stp, _): stp;
+                        case _: null;
+                    }
+
+                    if (srcPath != null && isBaseOf(context.resolvedInstanceName(cls.path), srcPath)) {
+                        expr.expr = ExprHelper.createUntyped('&{0}.$name', [e]).expr;
+                    } else {
+                        expr.expr = ExprHelper.createUntyped('{0}.VTable.(*$name)', [e]).expr;
+                    }
                     expr.expr = ExprHelper.createUntyped('&{0}.${StringConversions.typePathClassInstanceName(cls.path)}', [e]).expr;
                 }
 
             case _: null;
         }
+    }
+
+    function isBaseOf(key: String, start: TypePath): Bool {
+        if (context.resolvedInstanceName(start) == key) {
+            return true;
+        }
+
+        var cls = switch context.resolve(start) {
+            case MClass(x): x;
+            case _: return false;
+        }
+
+        if (cls.superClass != null && isBaseOf(key, cls.superClass.t)) {
+            return true;
+        }
+
+        for (i in cls.interfaces) {
+            if (isBaseOf(key, i.t)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 }

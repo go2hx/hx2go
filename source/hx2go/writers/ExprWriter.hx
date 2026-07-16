@@ -125,10 +125,8 @@ class ExprWriter extends WriterImpl {
 
     public function writeNew(expr: HxbTypedExpr, tp: TypePath, params: Array<HxbType>, el: Array<HxbTypedExpr>): OutputBuffer {
         var buf = new OutputBuffer();
-        var mod = writer.context.resolve(tp);
-        var path = StringConversions.moduleTypeGetTypePath(mod);
 
-        buf.addInline('${StringConversions.typePathClassInstanceName(path)}_CreateInstance(');
+        buf.addInline('${writer.context.resolvedInstanceName(tp)}_CreateInstance(');
 
         for (argIdx in 0...el.length) {
             var arg = el[argIdx];
@@ -526,6 +524,11 @@ class ExprWriter extends WriterImpl {
                 if (m == null ) ""
                 else {
                     var ntp = StringConversions.moduleTypeGetTypePath(m);
+                    ntp = switch ntp {
+                        case { name: "String", pack: [] }: new TypePath(["go", "haxe"], "HxString", "HxString");
+                        case { name: "Array", pack: [] }: new TypePath(["go", "haxe"], "HxArray", "HxArray");
+                        case _: ntp;
+                    }
                     '${StringConversions.typePathClassInstanceName(ntp)}_RTTI';
                 }
             }

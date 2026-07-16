@@ -286,6 +286,11 @@ class Context {
         return types[tp.dotPath()];
     }
 
+    public function resolvedInstanceName(tp: TypePath): String {
+        var mt = resolve(tp);
+        return StringConversions.typePathClassInstanceName(mt == null ? tp : StringConversions.moduleTypeGetTypePath(mt));
+    }
+
     public function resolveModule(tp: TypePath): Null<HxbModule> {
         var res = archive.findModule(tp.moduleDotPath(), "go");
         if (res == null) {

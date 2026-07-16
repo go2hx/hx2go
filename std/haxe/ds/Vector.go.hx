@@ -20,11 +20,11 @@ abstract Vector<T>(Array<T>) {
 	}
 
 	@:op([]) public inline extern function get(index:Int):T {
-		return Syntax.code("(*{0})[{1}]", this, index);
+		return this[index];
 	}
 
 	@:op([]) public inline extern function set(index:Int, val:T):T {
-		Syntax.code("(*{0})[{1}] = {2}", (this : VectorData<T>), index, val);
+		this[index] = val;
 		return val;
 	}
 

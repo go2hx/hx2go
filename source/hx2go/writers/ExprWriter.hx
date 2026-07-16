@@ -373,7 +373,7 @@ class ExprWriter extends WriterImpl {
         buf.addInline('var ${v.name} ');
         buf.addBufferInline(writer.types.writeHxbType(v.type));
 
-        if (vexpr != null && !vexpr.expr.match(TConst(TNull))) {
+        if (vexpr != null && !vexpr.expr.match(TConst(TNull) | TCast({ expr: TConst(TNull) }, _))) {
             buf.addInline(' = ');
             buf.addBufferInline(writeExpr(vexpr));
         }

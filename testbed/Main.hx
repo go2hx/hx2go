@@ -1,27 +1,13 @@
-import go.Image;
-import go.image.color.RGBA;
-import go.bytes.Buffer;
-import go.Pointer;
-import go.image.Png;
-import go.Os;
+import go.Net;
 
 function main() {
-    var width = 512;
-    var height = 512;
-    var img = Image.newRGBA(Image.rect(0, 0, width, height));
+    var dns = Net.lookupIP("google.com");
+    var ips = dns.sure();
 
-    for (x in 0...width) {
-        var t = x / width - 1;
-        var r = Std.int(255 * (1 - t));
-        var g = Std.int(255 * t);
-
-        for (y in 0...height) {
-            img.set(x, y, new RGBA(r, g, 0, 255));
-        }
+    for (ip in ips) {
+        trace(ip.string());
     }
 
-    var buf: Buffer = null;
-
-    Png.encode(buf, img).sure();
-    Os.writeFile("./output.png", buf.bytes(), Os.ModePerm);
+    var v: go.GoArray<Int, 4> = null;
+    var x = v.toSlice();
 }

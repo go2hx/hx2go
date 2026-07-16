@@ -632,7 +632,7 @@ class HxDynamic {
         if (kind == Reflect.Slice || kind == Reflect.Array) {
             var length = value.len();
             if (index >= length) {
-                throw "runtime.HxDynamic.getArrayIndex out of bounds exception";
+                return null;
             }
 
             return value.index(index).iface();

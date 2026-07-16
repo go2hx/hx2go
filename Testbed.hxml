@@ -2,6 +2,5 @@
 -cp testbed
 -main Main
 --custom-target go=output
--L crypto
 --cmd go work init output/main || exit 0
 --cmd go run ./output/main

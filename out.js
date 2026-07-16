@@ -29,7 +29,7 @@ function Main_main() {
 	}
 	var start = Date.now() / 1000;
 	var _g = 0;
-	while(_g < 1000) {
+	while(_g < 10000) {
 		var i = _g++;
 		haxe_crypto_Sha512.encode(garbage);
 	}

@@ -1,19 +1,15 @@
-import haxe.crypto.Sha512;
-import haxe.io.Bytes;
-import haxe.ds.Vector;
-
 function main() {
-    var garbage = "";
-    for (i in 0...2048) {
-        garbage += String.fromCharCode(41 + Std.int(Math.random() * 26));
-    }
+    var arr: Array<String> = ['a', 'b', 'c'];
+    trace(arr[0]);
+    arr[0] = 'hello';
 
-    var start = Sys.time();
-    for (i in 0...1000) {
-        Sha512.encode(garbage);
-    }
-    var end = Sys.time();
+    var arr_dyn_t: Array<Dynamic> = [];
+    trace(arr_dyn_t[1]);
+    arr_dyn_t[1] = 'world';
 
-    trace('took ${end - start}s');
+    var arr_dyn_s: Dynamic = [];
+    trace(arr_dyn_s[2]);
+    arr_dyn_s[2] = '!';
 
+    trace(arr, arr_dyn_t, arr_dyn_s);
 }

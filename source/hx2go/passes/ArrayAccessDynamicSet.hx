@@ -19,7 +19,7 @@ class ArrayAccessDynamicSet extends CompilerPass {
 
     public function match(expr: HxbTypedExpr): Bool {
         return switch expr.expr {
-            case TBinop(OpAssign | OpAssignOp(_), { expr: TArray(_, _), t: t }, _):
+            case TBinop(OpAssign | OpAssignOp(_), { expr: TArray({ t: t }, _) }, _):
                 switch (TypeHelper.follow(context, t)) {
                     case TInst({ name: "Array", pack: [] }, [TDynamic(_) | TDynamicAny]) | TDynamic(_) | TDynamicAny: true;
                     case _: false;

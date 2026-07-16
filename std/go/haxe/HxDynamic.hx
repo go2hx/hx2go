@@ -561,7 +561,7 @@ class HxDynamic {
             }
 
             field.set(
-                ensureValue(v)
+                valueToAssign(v, field.type())
             );
         }
 
@@ -572,7 +572,7 @@ class HxDynamic {
                 throw 'runtime.HxDynamic.setField field "$fieldName" not present on "$value"';
             }
 
-            value.setMapIndex(fn, ensureValue(v));
+            value.setMapIndex(fn, valueToAssign(v, value.type().elem()));
         }
 
         return v;
@@ -610,7 +610,7 @@ class HxDynamic {
 
             var item = value.index(index);
             item.set(
-                ensureValue(v)
+                valueToAssign(v, item.type())
             );
         }
 
@@ -673,6 +673,17 @@ class HxDynamic {
         }
 
         return value;
+    }
+
+    // Produce the reflect.Value to assign into a settable target of type `t`.
+    // Haxe `null` maps to the zero value of `t` (e.g. a nil interface for []any),
+    // because ensureValue(null) yields an invalid reflect.Value that Set() rejects
+    // with "call of reflect.Value.Set on zero Value".
+    public static function valueToAssign(v: Dynamic, t: Type): Value {
+        if (isNull(v)) {
+            return Reflect.zero(t);
+        }
+        return ensureValue(v);
     }
 
     // same as ensureValue, but recursively unpacks interface{}

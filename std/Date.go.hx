@@ -21,13 +21,13 @@
  */
 
 import haxe.Int64Helper;
-import go.time.Time;
+import go.Time;
 
 @:coreApi final class Date {
-	private var t:Time;
+	private var t: go.time.Time;
 
 	public function new(year:Int, month:Int, day:Int, hour:Int, min:Int, sec:Int):Void {
-		t = Time.date(year, month, day, hour, min, sec, 0, Time.local);
+		t = Time.date(year, month, day, hour, min, sec, 0, Time.Local);
 	}
 
 	public function getTime():Float {
@@ -63,31 +63,31 @@ import go.time.Time;
 	}
 
 	public function getUTCFullYear():Int {
-		return t.utc().year();
+		return t.UTC().year();
 	}
 
 	public function getUTCMonth():Int {
-		return t.utc().month();
+		return t.UTC().month();
 	}
 
 	public function getUTCDate():Int {
-		return t.utc().unix();
+		return t.UTC().unix();
 	}
 
 	public function getUTCHours():Int {
-		return t.utc().hour();
+		return t.UTC().hour();
 	}
 
 	public function getUTCMinutes():Int {
-		return t.utc().minute();
+		return t.UTC().minute();
 	}
 
 	public function getUTCSeconds():Int {
-		return t.utc().second();
+		return t.UTC().second();
 	}
 
 	public function getUTCDay():Int {
-		return t.utc().day();
+		return t.UTC().day();
 	}
 
 	public function getTimezoneOffset():Int {
@@ -124,19 +124,19 @@ import go.time.Time;
         // The first two formats expressed a date in local time. The third is a time relative to the UTC epoch.
 		var d:Date = createEmpty();
 		
-		var res = Time.parse(Time.dateTime, s);
+		var res = Time.parse(Time.DateTime, s);
 		if (res.isOk()) {
 			d.t = res.sure();
 			return d;
 		}
 
-		res = Time.parse(Time.dateOnly, s);
+		res = Time.parse(Time.DateOnly, s);
 		if (res.isOk()) {
 			d.t = res.sure();
 			return d;
 		}
 
-		res = Time.parse(Time.timeOnly, s);
+		res = Time.parse(Time.TimeOnly, s);
 		if (res.isOk()) {
 			d.t = res.sure();
 			return d;

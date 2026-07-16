@@ -2,5 +2,8 @@
 -cp testbed
 -main Main
 --custom-target go=output
+#-D go-lib=github.com/hajimehoshi/ebiten/v2
+#-D go-lib=github.com/hajimehoshi/ebiten/v2/ebitenutil
+-D go-lib=fmt
 --cmd go work init output/main || exit 0
 --cmd go run ./output/main

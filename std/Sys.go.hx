@@ -10,6 +10,7 @@ import go.Syntax;
 import go.Go;
 import go.Pointer;
 import go.os.exec.ExitError;
+import go.os.Exec;
 
 class Sys {
 

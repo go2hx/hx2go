@@ -26,11 +26,11 @@ class TypeNormaliserCall extends CompilerPass {
             case TCall({ t: TFun(params, ret), expr: f }, args): {
                 var ext = FieldAccessExtern.getExternInfo(context, new HxbTypedExpr(f, TFun(params, ret), expr.pos));
                 var rest = -1;
+                var innerType = TVoid;
 
                 for (idx in 0...args.length) {
                     var arg = args[idx];
                     var param  = params[idx] ?? params[params.length - 1];
-                    var innerType = TVoid;
                     var spread = false;
                     var submit = false;
 
@@ -58,7 +58,8 @@ class TypeNormaliserCall extends CompilerPass {
 
                     if (spread) {
                         arg.expr = ExprHelper.createUntyped("{0}...", [
-                            ExprHelper.createCallStatic(context, { pack: ['go', 'haxe'], name: 'HxDynamic', moduleName: 'HxDynamic' }, 'toAnySlice', [Copy.copy(arg)])
+                            arg.t.match(TDynamic(_) | TDynamicAny) ? ExprHelper.createCallStatic(context, { pack: ['go', 'haxe'], name: 'HxDynamic', moduleName: 'HxDynamic' }, 'toAnySlice', [Copy.copy(arg)]) :
+                            ExprHelper.createUntyped("(*({0}))", [Copy.copy(arg)])
                         ]).expr;
                         submit = true;
                     }
@@ -71,7 +72,7 @@ class TypeNormaliserCall extends CompilerPass {
                 if (rest != -1 && ext.kind == ExNone) {
                     expr.expr = switch expr.expr {
                         case TCall(f, args): {
-                            var slice = ExprHelper.createUntyped('[]any{ ${[for (i in 0...args.length - rest) '{$i}'].join(", ")} }', args.slice(rest));
+                            var slice = ExprHelper.createUntyped('[]${context.getWriter().types.writeHxbType(innerType)}{ ${[for (i in 0...args.length - rest) '{$i}'].join(", ")} }', args.slice(rest));
 
                             TCall(f, args.slice(0, rest).concat([ slice ]));
                         }

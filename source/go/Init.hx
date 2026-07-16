@@ -18,6 +18,19 @@ class Init {
 		Compiler.addClassPath(path);
 	}
 
+	static function getGoLibs():Array<String> {
+		var args = Sys.args();
+		var libs = [];
+		var i = 0;
+		while (i < args.length) {
+			if (args[i] == "-D" && args[i + 1] != null && StringTools.startsWith(args[i + 1], "go-lib=")) {
+				libs.push(args[i + 1].substr("go-lib=".length));
+			}
+			i++;
+		}
+		return libs;
+	}
+
     public static function init() {
         var anyPath = {
             pack: ["go"],
@@ -55,15 +68,34 @@ class Init {
 			supportsAtomics: true
 		}
 
-		Compiler.setPlatformConfiguration(newConfig);
+		var libraries = getGoLibs();
 
-        var relativeOutput = Compiler.getOutput();
-        var root = Sys.getCwd();
-        var absoluteOutput = Path.join([ root, relativeOutput ]);
+		var relativeOutput = Compiler.getOutput();
+		var root = Sys.getCwd();
+		var absoluteOutput = Path.join([ root, relativeOutput ]);
 
 		var archiveOutput = Path.join([ absoluteOutput, "target.hxb" ]);
+		var librariesOutput = Path.join([ absoluteOutput, "libs" ]);
 		var sourceOutput = Path.join([ absoluteOutput, "main" ]);
 		var goModOutput = Path.join([ absoluteOutput, "main", "go.mod" ]);
+
+		if (!FileSystem.exists(absoluteOutput)) {
+			FileSystem.createDirectory(absoluteOutput);
+		}
+
+		if (libraries.length > 0) {
+			if (!FileSystem.exists(librariesOutput)) {
+				FileSystem.createDirectory(librariesOutput);
+			}
+
+			Compiler.addClassPath(librariesOutput);
+
+			for (lib in libraries) {
+				Sys.command('haxelib', ['run', 'go2hx', lib, librariesOutput]);
+			}
+		}
+
+		Compiler.setPlatformConfiguration(newConfig);
 
         var hxbConf: WriterConfig = {
 			archivePath: archiveOutput,

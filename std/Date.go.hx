@@ -27,11 +27,13 @@ import go.Time;
 	private var t: go.time.Time;
 
 	public function new(year:Int, month:Int, day:Int, hour:Int, min:Int, sec:Int):Void {
-		t = Time.date(year, month, day, hour, min, sec, 0, Time.Local);
+		// Haxe months are 0-based (Jan = 0); Go's time.Month is 1-based (Jan = 1).
+		t = Time.date(year, month + 1, day, hour, min, sec, 0, Time.Local);
 	}
 
 	public function getTime():Float {
-        return t.unix();
+        // Haxe getTime is in milliseconds since the Unix epoch.
+        return t.unixMilli();
 	}
 
 	public function getFullYear():Int {
@@ -39,11 +41,11 @@ import go.Time;
 	}
 
 	public function getMonth():Int {
-		return t.month();
+		return t.month() - 1;
 	}
 
 	public function getDate():Int {
-		return t.unix();
+		return t.day();
 	}
 
 	public function getHours():Int {
@@ -59,7 +61,7 @@ import go.Time;
 	}
 
 	public function getDay():Int {
-		return t.day();
+		return t.weekday();
 	}
 
 	public function getUTCFullYear():Int {
@@ -67,11 +69,11 @@ import go.Time;
 	}
 
 	public function getUTCMonth():Int {
-		return t.UTC().month();
+		return t.UTC().month() - 1;
 	}
 
 	public function getUTCDate():Int {
-		return t.UTC().unix();
+		return t.UTC().day();
 	}
 
 	public function getUTCHours():Int {
@@ -87,7 +89,7 @@ import go.Time;
 	}
 
 	public function getUTCDay():Int {
-		return t.UTC().day();
+		return t.UTC().weekday();
 	}
 
 	public function getTimezoneOffset():Int {

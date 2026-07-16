@@ -19,11 +19,11 @@ abstract Vector<T>(Array<T>) {
         }
 	}
 
-	@:op([]) public inline extern function get(index:Int):T {
+	@:op([]) public inline extern function get(index:Int): T {
 		return this[index];
 	}
 
-	@:op([]) public inline extern function set(index:Int, val:T):T {
+	@:op([]) public inline extern function set(index:Int, val:T): T {
 		this[index] = val;
 		return val;
 	}

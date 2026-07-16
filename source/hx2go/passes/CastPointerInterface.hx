@@ -39,6 +39,20 @@ class CastPointerInterface extends CompilerPass {
             }
 
             case TCast(e, _) if (expr.t.match(TType(_)) && e.t.match(TInst(_))): {
+                var m = switch expr.t {
+                    case TType(tp, _): context.resolve(tp);
+                    case _: return;
+                }
+
+                if (m == null) {
+                    return;
+                }
+
+                switch m {
+                    case MTypedef(t) if (t.meta.filter(m -> m.name == ":go.Type").length > 0): null;
+                    case _: return;
+                }
+
                 var o = ExprHelper.createUntyped("(&({0}))", [Copy.copy(e)]);
                 e.expr = o.expr;
 

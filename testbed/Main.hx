@@ -1,36 +1,27 @@
-import go.github_com.hajimehoshi.ebiten.v2.Image;
-import go.Error;
-import go.github_com.hajimehoshi.ebiten.v2.Ebitenutil;
-import go.Tuple;
-import go.github_com.hajimehoshi.ebiten.v2.Ebiten;
+import go.Image;
+import go.image.color.RGBA;
+import go.bytes.Buffer;
+import go.Pointer;
+import go.image.Png;
+import go.Os;
 
-@:go.Native
-class Game {
+function main() {
+    var width = 512;
+    var height = 512;
+    var img = Image.newRGBA(Image.rect(0, 0, width, height));
 
-    public function new() {
-        // ...
+    for (x in 0...width) {
+        var t = x / width - 1;
+        var r = Std.int(255 * (1 - t));
+        var g = Std.int(255 * t);
+
+        for (y in 0...height) {
+            img.set(x, y, new RGBA(r, g, 0, 255));
+        }
     }
 
-    public function update(): Error {
-        return null;
-    }
+    var buf: Buffer = null;
 
-    public function draw(screen: Image): Void {
-        Ebitenutil.debugPrint(screen, "Hello, World!");
-    }
-
-    public function layout(outsideWidth: Int, outsideHeight: Int): Tuple<{ screenWidth: Int, screenHeight: Int }> {
-        return { screenWidth: outsideWidth, screenHeight: outsideHeight };
-    }
-
-}
-
-class Main {
-
-    public static function main() {
-        Ebiten.setWindowSize(640, 480);
-        Ebiten.setWindowTitle("Haxe Window");
-        Ebiten.runGame(cast new Game());
-    }
-
+    Png.encode(buf, img).sure();
+    Os.writeFile("./output.png", buf.bytes(), Os.ModePerm);
 }

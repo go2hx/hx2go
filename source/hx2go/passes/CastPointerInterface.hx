@@ -20,18 +20,29 @@ class CastPointerInterface extends CompilerPass {
                 true;
             }
 
+            case TCast(e, _) if (expr.t.match(TType(_)) && e.t.match(TInst(_))): {
+                true;
+            }
+
             case _: false;
         }
     }
 
     public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
         switch expr.expr {
-            case TCast({ expr: TCast(inner, _), t: t2 }, _): {
+            case TCast({ expr: TCast(inner, _), t: t2 }, _) if (inner.t.match(TAbstract({ name: "Pointer", pack: ["go"] }, _))): {
                 var o = ExprHelper.createCast(inner, expr.t);
                 expr.expr = o.expr;
                 expr.t = o.t;
 
                 context.submitNode(expr, true);
+            }
+
+            case TCast(e, _) if (expr.t.match(TType(_)) && e.t.match(TInst(_))): {
+                var o = ExprHelper.createUntyped("(&({0}))", [Copy.copy(e)]);
+                e.expr = o.expr;
+
+                context.submitNode(e, true);
             }
 
             case _: null;

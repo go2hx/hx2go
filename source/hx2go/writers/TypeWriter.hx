@@ -93,6 +93,7 @@ class TypeWriter extends WriterImpl {
             case { name: "Single", pack: [] } | { name: "Float32", pack: ['go'] }: "float32";
             case { name: "String", pack: [] }: "string";
             case { name: "Byte", pack: ['go'] }: "byte";
+            case { name: "Rune", pack: ['go'] }: "rune";
             case { name: "Class", pack: [] }: "*Hx_Obj_go_haxe_hxclass";
             case { name: "Rest", pack: ['haxe'] }: "any";
             case _: null;
@@ -164,7 +165,7 @@ class TypeWriter extends WriterImpl {
             case TAbstract({ pack: ['go'], name: 'Result'}, params) | TEnum({ pack: ['go'], name: 'ResultKind'}, params): 'struct { Error ${writeHxbType(params[1])}; Result ${writeHxbType(params[0])} }';
             case TType({ pack: ['go'], name: 'Tuple'}, [TAnon(anon)]): 'struct { ${anon.fields.map(f -> '${StringConversions.toPascalCase(f.name)} ${writeHxbType(f.type)}').join('; ')} }';
             case TAbstract({ pack: [], name: 'Null' }, params): 'struct { Value ${writeHxbType(params[0])}; Valid bool }';
-            case TInst({ pack: [], name: 'Array' }, params): '*[]${writeHxbType(params[0])}';
+            case TInst({ pack: [], name: 'Array' }, params) | TAbstract({ pack: ["haxe", "ds"], name: "Vector" }, params): '*[]${writeHxbType(params[0])}';
             case TAbstract({ pack: ['go'], name: 'Slice' }, params): '[]${writeHxbType(params[0])}';
             case TAbstract({ pack: ['go'], name: 'GoArray' }, params): '[${writeHxbType(params[1])}]${writeHxbType(params[0])}';
             case TAbstract({ pack: ['go'], name: 'Chan' }, params): 'chan ${writeHxbType(params[0])}';

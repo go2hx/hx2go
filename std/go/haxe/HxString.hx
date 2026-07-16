@@ -1,6 +1,7 @@
 package go.haxe;
 
 import go.Strings;
+import go.unicode.Utf8;
 
 class HxString {
     // TODO: remove comment, templ
@@ -12,18 +13,37 @@ class HxString {
         return Strings.toLower(s);
     }
 
-    public static function charAt(s: String, index:Int):String {
-        return "".toLowerCase() + Syntax.code("string(([]rune)({0})[{1}])", s, index);
+    public static function charAt(s: String, index:Int): String {
+        var v = charCodeAt(s, index);
+        if (v == null) {
+            return "";
+        }
+
+        return cast Go.string((v : Int));
     }
-    public static function charCodeAt(s: String, index:Int): Null<Int> {
-        // If index is negative or exceeds s.length, null is returned.
-        if (index < 0 || index > s.length) {
+
+    public static function charCodeAt(s: String, index: Int): Null<Int> {
+        var str_len = s.length;
+        if (index < 0 || index > str_len) {
             return null;
         }
 
-        var code:go.Int32 = Syntax.code("([]rune)({0})[{1}]", s, index);
-        return code;
+        var i = 0;
+        var j = 0;
+        while (i < str_len) {
+            if (j == index) {
+                var v = Utf8.decodeRuneInString(Syntax.code("{0}[{1}:]", s, i));
+                return v.size == 0 ? null : v.r;
+            }
+
+            var b:Int = Syntax.code("int({0}[{1}])", s, i);
+            i += if (b < 0x80) 1 else if (b < 0xE0) 2 else if (b < 0xF0) 3 else 4;
+            j++;
+        }
+
+        return null;
     }
+
     public static function indexOf(s: String, str:String, ?startIndex:Int):Int {
         if (startIndex != null ) {
             if (startIndex >= s.length) {

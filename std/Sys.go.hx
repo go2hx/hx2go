@@ -112,10 +112,10 @@ class Sys {
 
     public static function time(): Float {
         var tn = Time.now();
-        var sec = tn.unixNano() / Time.Second;
-        sec += tn.local().zone().offset;
+        var sec = tn.unixNano().toFloat() / Time.Second.toFloat();
+        var off = tn.local().zone().offset;
 
-        return Time.now().unixNano() / Time.Second;
+        return sec + off.toFloat();
     }
 
     public static function cpuTime(): Float {

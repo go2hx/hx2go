@@ -1,28 +1,19 @@
-import go.Image;
-import go.image.color.RGBA;
-import go.bytes.Buffer;
-import go.image.Png;
-import go.Os;
+import haxe.crypto.Sha512;
+import haxe.io.Bytes;
+import haxe.ds.Vector;
 
 function main() {
-    var width = 512;
-    var height = 512;
-    var img = Image.newRGBA(Image.rect(0, 0, width, height));
-
-    for (x in 0...width) {
-        var t = x / width - 1;
-        var r = Std.int(255 * (1 - t));
-        var g = Std.int(255 * t);
-
-        for (y in 0...height) {
-            img.set(x, y, new RGBA(r, g, 0, 255));
-        }
+    var garbage = "";
+    for (i in 0...2048) {
+        garbage += String.fromCharCode(41 + Std.int(Math.random() * 26));
     }
 
-    var buf: Buffer = null;
+    var start = Sys.time();
+    for (i in 0...1000) {
+        Sha512.encode(garbage);
+    }
+    var end = Sys.time();
 
-    Png.encode(buf, img).sure();
-    Os.writeFile("./output/output.png", buf.bytes(), Os.ModePerm);
+    trace('took ${end - start}s');
 
-    trace("done!");
 }

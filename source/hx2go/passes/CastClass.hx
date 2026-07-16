@@ -72,7 +72,6 @@ class CastClass extends CompilerPass {
                     } else {
                         expr.expr = ExprHelper.createUntyped('{0}.VTable.(*$name)', [e]).expr;
                     }
-                    expr.expr = ExprHelper.createUntyped('&{0}.${StringConversions.typePathClassInstanceName(cls.path)}', [e]).expr;
                 }
 
             case _: null;

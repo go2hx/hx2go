@@ -71,7 +71,7 @@ class ExprWriter extends WriterImpl {
         for (c in cases) {
             buf.add('');
             buf.add('case ', 1, false);
-            buf.addInline(c.patterns.map(p -> writeExpr(p).toString()).join(' | '));
+            buf.addInline(c.patterns.map(p -> writeExpr(p).toString()).join(', '));
             buf.add(':');
             buf.addBuffer(writeExpr(c.expr), 2);
         }

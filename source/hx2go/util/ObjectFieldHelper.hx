@@ -23,10 +23,10 @@ class ObjectFieldHelper {
             case EArrayDecl(items):
                 var out = [];
                 for (item in items) {
-                    out.push(switch item?.expr {
-                        case EConst(CString(x, _)): x;
-                        case _: null;
-                    });
+                    switch item?.expr {
+                        case EConst(CString(x, _)): out.push(x);
+                        case _:
+                    }
                 }
 
                 out;

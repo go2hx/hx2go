@@ -205,7 +205,6 @@ class Context {
             var header = new OutputBuffer();
 
             var path = module[0].module;
-            var imports = imports.get(path) ?? [];
 
             var hasWrittenSomething = false;
             for (entry in module) {
@@ -220,6 +219,8 @@ class Context {
 
                 file.addBufferInline(localBuf);
             }
+            
+            var imports = imports.get(path) ?? [];
 
             header.add('package $topLevelPackage');
 

@@ -186,9 +186,12 @@ class Normaliser {
             case TVar(v, e):
                 expr.expr = scope.defineLocal(v, e);
 
-            case TSwitch(_):
+            case TSwitch(_, cases, edef):
                 var local = scope.copy();
                 local.activeSwitch = expr;
+
+                for (c in cases) c.expr.expr = ensureBlock(c.expr).expr;
+                if (edef != null) edef.expr = ensureBlock(edef).expr;
                 return iterateExpr(expr, local, ancestor);
 
             case TFunction(tfunc):

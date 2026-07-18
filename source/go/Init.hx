@@ -11,7 +11,7 @@ import haxe.hxb.WriterConfig;
 import sys.io.Process;
 
 class Init {
-
+	// --macro go.Init.addStd()
 	public static function addStd() {
 		var self = Context.resolvePath("go/Init.hx");
 		var path = Path.join([ Path.directory(self), '..', '..', 'std' ]);
@@ -30,7 +30,7 @@ class Init {
 		}
 		return libs;
 	}
-
+	// --custom-target go=output
     public static function init() {
         var anyPath = {
             pack: ["go"],
@@ -105,7 +105,27 @@ class Init {
 			}
 		};
 
+		// register custom defines
+		Compiler.registerCustomDefine({
+			define: "go-bootstrap",
+			doc: "use the bootrapped version of the compiler (running on the Go target)",
+		});
+		Compiler.registerCustomDefine({
+			define: "go-lib",
+			doc: "automatic extern generation of a given Go library",
+		});
+		// register custom metadata
+		Compiler.registerCustomMetadata({
+			metadata: "go.Type",
+			doc: "",
+		});
+		Compiler.registerCustomMetadata({
+			metadata: "go.Tuple",
+			doc: "",
+		});
+		
 		Compiler.setHxbWriterConfiguration(hxbConf);
+		
 
 		Context.onAfterGenerate(() -> {
 			if (!FileSystem.exists(archiveOutput)) {
@@ -123,7 +143,30 @@ class Init {
 			}
 
 			final mainClass = Compiler.getConfiguration().mainClass;
-			hx2go.Main.exec(archiveOutput, sourceOutput, mainClass.pack.length > 0 ? '${mainClass.pack.join(".")}.${mainClass.name}' : '${mainClass.name}');
+			final mainClassName = mainClass.pack.length > 0 ? '${mainClass.pack.join(".")}.${mainClass.name}' : '${mainClass.name}';
+
+			var self = Context.resolvePath("go/Init.hx");
+			var path = Path.join([ Path.directory(self), '..', '..' ]);
+
+			if (Context.defined("go-bootstrap")) {
+				final bin = Path.join([ path, "bootstrap" ]);
+				if (!FileSystem.exists(bin)) {
+					throw 'bootstrap executable not found';
+				}
+				var args = [archiveOutput, sourceOutput, mainClassName];
+				var code = Sys.command(bin, args);
+				if (code != 0)
+					throw "bootstrap failed";
+			} else {
+				final bin = Path.join(["Compile-eval.hxml"]);
+				var args = [bin, archiveOutput, sourceOutput, mainClassName];
+				var oldCwd = Sys.getCwd();
+				Sys.setCwd(path);
+				var code = Sys.command("haxe", args);
+				Sys.setCwd(oldCwd);
+				if (code != 0)
+					throw "compile eval failed";
+			}
 		});
     }
 

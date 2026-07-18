@@ -2,5 +2,4 @@
 -main hx2go.Main
 -L hx2go
 --custom-target go=output
---cmd go work init output/main || exit 0
---cmd go run ./output/main
+--cmd go build -o bootstrap ./output/main

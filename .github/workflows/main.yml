@@ -38,6 +38,12 @@ jobs:
         run: echo "CORES=$(sysctl -n hw.logicalcpu)" >> $GITHUB_ENV
       - name: Setup hx2go dev
         run: haxelib dev hx2go .
+      - name: Run bootstrap
+        run: haxe Bootstrap.hxml
+      - name: Bootstrap the bootstrap
+        run: haxe Bootstrap.hxml -D go-bootstrap
+      - name: Run tests with bootstrap
+        run: haxe Tests.hxml -D go-bootstrap
       - name: Run testbed
         run: haxe Testbed.hxml
       - name: Run tests

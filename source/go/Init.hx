@@ -154,7 +154,7 @@ class Init {
 					throw 'bootstrap executable not found';
 				}
 				var args = [archiveOutput, sourceOutput, mainClassName];
-				var code = Sys.command(bin, args);
+				var code = Sys.command(executable(bin), args);
 				if (code != 0)
 					throw "bootstrap failed";
 			} else {
@@ -170,5 +170,13 @@ class Init {
 		});
     }
 
+}
+
+private function executable(path: String): String {
+	return if (Sys.systemName().toLowerCase() == "windows") {
+		path + '.exe';
+	}else{
+		path;
+	}
 }
 #end

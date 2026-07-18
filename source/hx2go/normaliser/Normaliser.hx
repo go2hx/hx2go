@@ -319,6 +319,20 @@ class Normaliser {
                 result;
             }
 
+            case TSwitch(_, cases, edef): {
+                var result = scope.temp(expr, null, this, scope, ancestor, expr.t);
+                var makeAssign = (e: HxbTypedExpr) -> {
+                    e.expr = TBinop(OpAssign, result, ensureBlock(Copy.copy(e)));
+                };
+
+                for (c in cases) makeAssign(c.expr);
+                if (edef != null) makeAssign(edef);
+
+                scope.insert(expr, Copy.copy(expr), this, scope, ancestor);
+
+                result;
+            }
+
             case _: expr;
         }
 

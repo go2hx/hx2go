@@ -453,10 +453,6 @@ class HxDynamic {
     }
 
     static function valueToClass(value: Value, className: String): Value {
-        if (!value.isValid()) {
-            return value;
-        }
-
         var kind = value.kind();
 
         if (kind == Reflect.Ptr || kind == Reflect.Interface) {

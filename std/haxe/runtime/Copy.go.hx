@@ -8,10 +8,7 @@ class Copy {
 
     public static function copy<T>(v: T): T {
         var val: Value = Reflect.valueOf(v);
-        if (!val.isValid()) {
-            return v;
-        }
-
+        
         if ((val.kind() == Reflect.Ptr || val.kind() == Reflect.Interface) && val.isNil()) {
             return null;
         }

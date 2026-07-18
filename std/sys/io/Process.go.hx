@@ -17,7 +17,7 @@ class Process {
 
     public function new(cmd: String, ?args: Array<String>, ?detached: Bool) {
         var args2: Array<String> = args ?? [];
-        proc = Exec.command(cmd, ...arg2);
+        proc = Exec.command(cmd, ...args2);
         proc.stdout = cast Os.Stdout;
         proc.stderr = cast Os.Stderr;
         proc.start();

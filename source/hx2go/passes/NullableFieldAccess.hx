@@ -17,7 +17,7 @@ import haxe.runtime.Copy;
 import hx2go.util.TypeHelper;
 
 // NOTE: identical to NullableIndex, but separate for clarity
-class NullableField extends CompilerPass {
+class NullableFieldAccess extends CompilerPass {
 
     public function match(expr: HxbTypedExpr): Bool {
         return switch expr.expr {

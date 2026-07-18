@@ -78,7 +78,7 @@ class Context {
             new hx2go.passes.TypeNormaliserCall(this),
             new hx2go.passes.NullableCompare(this),
             new hx2go.passes.NullableConst(this),
-            new hx2go.passes.NullableField(this),
+            new hx2go.passes.NullableFieldAccess(this),
             new hx2go.passes.NullableIndex(this),
             new hx2go.passes.NullableCall(this),
             new hx2go.passes.CastInstToClass(this),

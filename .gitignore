@@ -4,5 +4,5 @@ go.work.sum
 output
 .idea
 go.work
-/bootstrap
-/bootstrap.exe
+/main
+/main.exe

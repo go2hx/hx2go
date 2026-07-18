@@ -180,7 +180,7 @@ class TypeHelper {
         if (mod == null) {
             return null;
         }
-
+        // TODO use instOpt as an arg with a default value, once it's supported
         var inst = instOpt ?? true;
         return switch mod {
             case MClass(x): inst ? TInst(x.path, []) : TClassStatic(x.path);

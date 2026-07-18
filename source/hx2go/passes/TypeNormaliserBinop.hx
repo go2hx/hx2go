@@ -10,8 +10,9 @@ import hx2go.hxb.Ast.HxbBinop;
 class TypeNormaliserBinop extends CompilerPass {
 
     public function match(expr: HxbTypedExpr): Bool {
+        // match unconditionally in case generic erasure occurs after
         return switch expr.expr {
-            case TBinop(op, left, right): !TypeHelper.compare(left.t, expr.t) || !TypeHelper.compare(right.t, expr.t) || op == OpDiv;
+            case TBinop(_, _, _): true;
             case _: false;
         }
     }
@@ -59,9 +60,13 @@ class TypeNormaliserBinop extends CompilerPass {
             context.submitNode(left, true);
         }
 
-        // NOTE: this also handles OpAssign, since the resulting type of the assign expr always equals the left side, only RHS will be casted if needed.
-        if (!TypeHelper.compare(right.t, expr.t)) {
-            var o = ExprHelper.createCast(right, expr.t);
+        var rightTarget = switch op {
+            case OpAssign: left.t;
+            case _: expr.t;
+        }
+
+        if (!TypeHelper.compare(right.t, rightTarget)) {
+            var o = ExprHelper.createCast(right, rightTarget);
             right.expr = o.expr;
             right.t = o.t;
             context.submitNode(right, true);

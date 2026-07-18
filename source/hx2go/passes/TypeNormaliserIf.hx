@@ -15,6 +15,7 @@ import hx2go.util.ObjectFieldHelper;
 import hx2go.hxb.HxbType;
 import haxe.runtime.Copy;
 import hx2go.util.TypeHelper;
+import hx2go.normaliser.Semantics;
 
 class TypeNormaliserIf extends CompilerPass {
 
@@ -29,16 +30,19 @@ class TypeNormaliserIf extends CompilerPass {
     public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
         switch expr.expr {
             case TIf(econd, eif, eelse): {
-                if (expr.t.match(TVoid)) {
-                    return;
-                }
-
-                if (econd.t.match(TDynamic(_) | TDynamicAny)) {
+                if (econd.t != null
+                        && (econd.t.match(TDynamic(_) | TDynamicAny)
+                        || Semantics.isNullableType(econd.t))
+                    ) {
                     var o = ExprHelper.createCast(econd, TBool);
                     econd.expr = o.expr;
                     econd.t = o.t;
 
                     context.submitNode(econd, true);
+                }
+
+                if (expr.t.match(TVoid)) {
+                    return;
                 }
 
                 if (!TypeHelper.compare(eif.t, expr.t)) {

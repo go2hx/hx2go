@@ -197,14 +197,8 @@ function main() {
         }
 
         for (t2 in toTypes) {
-            var tStr = t2.toLowerCase();
-            if (tStr == t2.toLowerCase()) {
-                content.add('   @:to public inline function to${t2}(): $t2 {\n');
-                content.add('       return (untyped this : $t2);\n');
-            }else{
-                content.add('   @:to public inline function to${t2}(): $t2 {\n');
-                content.add('       return Go.$tStr(this);\n');
-            }
+            content.add('   @:to public inline function to${t2}(): $t2 {\n');
+            content.add('       return (untyped this : $t2);\n');
             content.add('   }\n');
         }
 

@@ -54,8 +54,19 @@ class HxString {
         if (startIndex > s.length) {
             startIndex = s.length;
         }
-        var sliced:String = Syntax.code("string(([]rune)({0})[{1}:])", s, (startIndex : Int));
+
+        var index = 0;
+        var diff = 0;
+        var s:Slice<Byte> = s;
+
+        while (startIndex > index) {
+            var obj = Utf8.decodeRune(s.slice(diff));
+            diff += obj.size;
+            index++;
+        }
+        var sliced:String = Go.string(s.slice(diff));
         var found:Int = Strings.index(sliced, str);
+
         return found < 0 ? -1 : found + startIndex;
     }
     public static function lastIndexOf(s: String, str:String, ?startIndex:Int):Int {
@@ -67,7 +78,17 @@ class HxString {
             if (end > s.length) {
                 end = s.length;
             }
-            var sliced:String = Syntax.code("string(([]rune)({0})[:{1}])", s, (end : Int));
+
+            var diff = 0;
+            var s:Slice<Byte> = s;
+
+            while (end > 0) {
+                var obj = Utf8.decodeRune(s.slice(diff));
+                diff += obj.size;
+                end--;
+            }
+
+            var sliced:String = Go.string(s.slice(0, diff));
             return Strings.lastIndex(sliced, str);
         }
         return Strings.lastIndex(s, str);

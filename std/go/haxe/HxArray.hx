@@ -310,10 +310,10 @@ class HxArray {
         return res;
     }
 
-    public inline extern static function join<T>(arr: Array<T>, ?separator: String): String {
+    public inline extern static function join<T>(arr: Array<T>, separator: String): String {
         var data = getData(arr);
         var length = data.length;
-        var sep: String = if (separator == null) "," else separator;
+        var sep: String = separator;
 
         if (length == 0) {
             return "";

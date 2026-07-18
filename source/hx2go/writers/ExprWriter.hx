@@ -304,9 +304,9 @@ class ExprWriter extends WriterImpl {
             buf.add('if ${catchName} := recover(); ${catchName} != nil ', 2, false);
             buf.addBuffer(writeExpr(c.expr), 2);
             buf.add('}()', 1, false);
+            buf.add('');
         }
-
-        buf.add('');
+        
         buf.addBuffer(writeExpr(e), 1);
         buf.addInline('}()');
 

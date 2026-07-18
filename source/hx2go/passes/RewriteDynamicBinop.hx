@@ -73,6 +73,9 @@ class RewriteDynamicBinop extends CompilerPass {
     public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
         switch expr.expr {
             case TBinop(op, left, right): {
+                // if assignOp keep lhs
+                var assignTarget = op.match(OpAssignOp(_)) ? Copy.copy(left) : null;
+
                 if (!left.t.match(TDynamic(_) | TDynamicAny)) {
                     var o = ExprHelper.createCast(left, TDynamicAny);
                     left.expr = o.expr;
@@ -95,10 +98,12 @@ class RewriteDynamicBinop extends CompilerPass {
 
                 if (op.match(OpAssignOp(_))) {
                     o = new HxbTypedExpr(
-                        TBinop(OpAssign, left, o),
-                        left.t,
-                        left.pos
+                        TBinop(OpAssign, assignTarget, o),
+                        assignTarget.t,
+                        assignTarget.pos
                     );
+
+                    context.submitNode(assignTarget, true);
                 }
 
                 expr.expr = o.expr;

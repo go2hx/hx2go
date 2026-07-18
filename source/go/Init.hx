@@ -149,12 +149,12 @@ class Init {
 			var path = Path.join([ Path.directory(self), '..', '..' ]);
 
 			if (Context.defined("go-bootstrap")) {
-				final bin = Path.join([ path, "main" ]);
+				final bin = Path.join([ path, executable("main") ]);
 				if (!FileSystem.exists(bin)) {
 					throw 'bootstrap executable not found';
 				}
 				var args = [archiveOutput, sourceOutput, mainClassName];
-				var code = Sys.command(executable(bin), args);
+				var code = Sys.command(bin, args);
 				if (code != 0)
 					throw "bootstrap failed";
 			} else {

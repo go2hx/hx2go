@@ -80,7 +80,7 @@ class ExprWriter extends WriterImpl {
             buf.add('');
             buf.add('default: ', 1);
             buf.addBuffer(writeExpr(edef), 2, false);
-        } else if (Semantics.allPathsReturn(expr)) {
+        } else if (Semantics.allPathsReturn(expr) && !switchSubjectIsString(subject)) {
             buf.add('');
             buf.add('default: ', 1);
             buf.add('panic("exhaustiveness check mismatch, you shouldn\'t be able to reach this! please report!")', 2, false);
@@ -90,6 +90,18 @@ class ExprWriter extends WriterImpl {
         buf.addInline('}');
 
         return buf;
+    }
+
+    function switchSubjectIsString(subject: HxbTypedExpr): Bool {
+        if (subject == null || subject.t == null) {
+            return false;
+        }
+
+        return switch TypeHelper.followToDef(writer.context, subject.t) {
+            case TString: true;
+            case TInst({ name: 'String', pack: [] }, _): true;
+            case _: false;
+        }
     }
 
     public function writeEnumParameter(expr: HxbTypedExpr, e: HxbTypedExpr, ef: EnumFieldRef, index: Int): OutputBuffer {

@@ -20,18 +20,27 @@ class NullableIndex extends CompilerPass {
 
     public function match(expr: HxbTypedExpr): Bool {
         return switch expr.expr {
-            case TArray({ t: TAbstract({ name: 'Null', pack: [] }, _) }, _): true;
+            case TArray(e, idx): e.t.match(TAbstract({ name: 'Null', pack: [] }, _)) || idx.t.match(TAbstract({ name: 'Null', pack: [] }, _));
             case _: false;
         }
     }
 
     public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
         switch expr.expr {
-            case TArray(e, _): {
-                var local = Copy.copy(e);
-                context.submitNode(local, true);
+            case TArray(e, idx): {
+                if (e.t.match(TAbstract({ name: 'Null', pack: [] }, _))) {
+                    var local = Copy.copy(e);
+                    context.submitNode(local, true);
 
-                e.expr = ExprHelper.createUntyped('{0}.Value', [local]).expr;
+                    e.expr = ExprHelper.createUntyped('{0}.Value', [local]).expr;
+                }
+
+                if (idx.t.match(TAbstract({ name: 'Null', pack: [] }, _))) {
+                    var local = Copy.copy(idx);
+                    context.submitNode(local, true);
+
+                    idx.expr = ExprHelper.createUntyped('{0}.Value', [local]).expr;
+                }
             }
             case _: null;
         }

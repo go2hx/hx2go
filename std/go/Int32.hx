@@ -199,6 +199,12 @@ extern abstract Int32 {
    @:from public static inline function fromInt64(x: Int64): Int32 {
        return Go.int32(x);
    }
+   @:from public static inline function fromComplex64(x: Complex64): Int32 {
+       return Go.int32(x);
+   }
+   @:from public static inline function fromComplex128(x: Complex128): Int32 {
+       return Go.int32(x);
+   }
    @:to public inline function toFloat(): Float {
        return (untyped this : Float);
    }

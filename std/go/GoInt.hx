@@ -199,6 +199,12 @@ extern abstract GoInt {
    @:from public static inline function fromInt64(x: Int64): GoInt {
        return Go.int(x);
    }
+   @:from public static inline function fromComplex64(x: Complex64): GoInt {
+       return Go.int(x);
+   }
+   @:from public static inline function fromComplex128(x: Complex128): GoInt {
+       return Go.int(x);
+   }
    @:to public inline function toFloat(): Float {
        return (untyped this : Float);
    }

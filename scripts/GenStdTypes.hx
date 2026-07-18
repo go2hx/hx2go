@@ -8,7 +8,7 @@ using StringTools;
 import sys.io.File;
 import haxe.io.Path;
 
-var types = ["int", "uint", "uint8", "uint16", "uint32", "uint64", "int8", "int16", "int32", "int64", "float32", "float64", "byte", "rune"];
+var types = ["int", "uint", "uint8", "uint16", "uint32", "uint64", "int8", "int16", "int32", "int64", "float32", "float64", "byte", "rune", "complex64", "complex128"];
 var operators = [
     { name: "add",      format: "A + B",   bitwise: false, outFloat: false, outBool: false, unary: false, commutative: true  },
     { name: "sub",      format: "A - B",   bitwise: false, outFloat: false, outBool: false, unary: false, commutative: false },
@@ -196,9 +196,15 @@ function main() {
             toTypes.push("Int");
         }
 
-        for (t in toTypes) {
-            content.add('   @:to public inline function to${t}(): $t {\n');
-            content.add('       return (untyped this : $t);\n');
+        for (t2 in toTypes) {
+            var tStr = t2.toLowerCase();
+            if (tStr == t2.toLowerCase()) {
+                content.add('   @:to public inline function to${t2}(): $t2 {\n');
+                content.add('       return (untyped this : $t2);\n');
+            }else{
+                content.add('   @:to public inline function to${t2}(): $t2 {\n');
+                content.add('       return Go.$tStr(this);\n');
+            }
             content.add('   }\n');
         }
 
@@ -222,6 +228,8 @@ function main() {
         var module = toModuleName(t);
         convContent.add('   @:pure static function $t(x: Dynamic): $module;\n');
     }
+    // float -> float64
+    convContent.add('   @:pure @:native("float64") static function float(x: Dynamic): Float;\n');
 
     for (tl in topLevel) {
         if (tl.goName != tl.hxName) convContent.add('   @:native("${tl.goName}")\n');

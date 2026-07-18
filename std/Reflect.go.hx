@@ -10,4 +10,14 @@ class Reflect {
         return HxDynamic.getField(o, field);
     }
 
+    public static function fields<T>(a: T): Array<String> {
+        // TODO
+        throw "not implemented";
+    }
+
+    public static function setField<T>(a: T, f: String, e: Dynamic): Dynamic {
+        // TODO
+        throw "not implemented";
+    }
+
 }

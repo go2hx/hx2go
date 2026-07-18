@@ -41,6 +41,15 @@ class Process {
         return _exitCode;
     }
 
-    public function close(): Void {}
+    public function close(): Void {
+        proc.stdout = null;
+        proc.stdin = null;
+        proc.stderr = null;
+        proc.process.release().sure();
+    }
+
+    public function kill(): Void {
+        proc.process.kill().sure();
+    }
 
 }

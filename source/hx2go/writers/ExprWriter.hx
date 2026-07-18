@@ -117,6 +117,15 @@ class ExprWriter extends WriterImpl {
     public function writeEnumIndex(expr: HxbTypedExpr, e: HxbTypedExpr): OutputBuffer {
         var buf = new OutputBuffer();
 
+        if (e.t != null && e.t.match(TDynamic(_) | TDynamicAny)) {
+            // Dynamic may hold a reflect.Value
+            // unwrap it to the concrete enum before asserting the enumIndex interface
+            buf.addInline('Hx_Field_go_haxe_hxdynamic_ensureInterface(');
+            buf.addBufferInline(writeExpr(e));
+            buf.addInline(').(interface { Hx_Field_enumIndex() int }).Hx_Field_enumIndex()');
+            return buf;
+        }
+
         buf.addBufferInline(writeExpr(e));
         buf.addInline('.Hx_Field_enumIndex()');
 

@@ -75,6 +75,7 @@ class Context {
     private function createPasses(): Array<ICompilerPass> {
         return [
             new hx2go.passes.FieldAccessGeneric(this),
+            new hx2go.passes.TypeNormaliserCallReturn(this),
             new hx2go.passes.TypeNormaliserCall(this),
             new hx2go.passes.NullableCompare(this),
             new hx2go.passes.NullableConst(this),

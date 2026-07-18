@@ -49,7 +49,7 @@ class TypeNormaliserCall extends CompilerPass {
                         case _: param.t;
                     };
 
-                    if (!toType.match(TDynamicAny | TDynamic(_)) && !TypeHelper.compare(arg.t, toType)) {
+                    if (!spread && !toType.match(TDynamicAny | TDynamic(_)) && !TypeHelper.compare(arg.t, toType)) {
                         var o = ExprHelper.createCast(arg, toType);
                         arg.expr = o.expr;
                         arg.t = o.t;
@@ -57,10 +57,24 @@ class TypeNormaliserCall extends CompilerPass {
                     }
 
                     if (spread) {
+                        var inner = switch arg.expr {
+                            case TUnop(OpSpread, _, e): e;
+                            case _: arg;
+                        };
+                        // peel every Rest/Dynamic cast to recover the underlying Array<T>
+                        while (inner.expr.match(TCast(_, _))
+                            && (inner.t == null
+                                || inner.t.match(TDynamic(_) | TDynamicAny)
+                                || inner.t.match(TAbstract({ pack: ['haxe'], name: 'Rest' }, _)))) {
+                            inner = switch inner.expr { case TCast(e, _): e; case _: inner; };
+                        }
+                        var innerIsDynamic = inner.t == null || inner.t.match(TDynamic(_) | TDynamicAny);
                         arg.expr = ExprHelper.createUntyped("{0}...", [
-                            arg.t.match(TDynamic(_) | TDynamicAny) ? ExprHelper.createCallStatic(context, { pack: ['go', 'haxe'], name: 'HxDynamic', moduleName: 'HxDynamic' }, 'toAnySlice', [Copy.copy(arg)]) :
-                            ExprHelper.createUntyped("(*({0}))", [Copy.copy(arg)])
+                            innerIsDynamic ? ExprHelper.createCallStatic(context, { pack: ['go', 'haxe'], name: 'HxDynamic', moduleName: 'HxDynamic' }, 'toAnySlice', [Copy.copy(inner)]) :
+                            ExprHelper.createUntyped("(*({0}))", [Copy.copy(inner)])
                         ]).expr;
+                        // added to prevent recasting or respreading
+                        arg.t = innerType;
                         submit = true;
                     }
 
@@ -81,24 +95,6 @@ class TypeNormaliserCall extends CompilerPass {
                     }
                 }
 
-                if (!TypeHelper.compare(expr.t, ret)) {
-                    if (ext.field?.type != null) {
-                        var v = switch ext.field.type {
-                            case TFun(_, x): x;
-                            case _: ext.field.type;
-                        }
-
-                        if (TypeHelper.compare(ret, v)) { // in this case, something transformed the field type, and the return type reported by haxe is wrong.
-                            expr.t = ret;
-                            return;
-                        }
-                    }
-
-                    var o = ExprHelper.createCast(expr, ret);
-                    expr.expr = o.expr;
-                    expr.t = o.t;
-                    context.submitNode(expr, true, 1);
-                }
             };
 
             case _: null;

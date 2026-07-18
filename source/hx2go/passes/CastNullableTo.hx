@@ -8,6 +8,7 @@ import hx2go.util.ExprHelper;
 import hx2go.util.TypeHelper;
 import hx2go.hxb.Typed.HxbVar;
 import hx2go.hxb.Typed.HxbVarKind;
+import haxe.runtime.Copy;
 
 class CastNullableTo extends CompilerPass {
 
@@ -103,6 +104,21 @@ class CastNullableTo extends CompilerPass {
                             ExprHelper.createUntyped('${context.getWriter().types.writeHxbType(expr.t)}{ Value: {0}, Valid: true }', [o])
                         ), expr.t, expr.pos)
                     ]), expr.t, expr.pos);
+                }
+
+                case _ if (e.expr.match(TArray(_, _)) && TypeHelper.compare(e.t, ot)): {
+                    // Haxe array reads return null for out-of-bounds
+                    var nullType = context.getWriter().types.writeHxbType(expr.t);
+                    switch e.expr {
+                        case TArray(arr, idx):
+                            context.submitNode(arr, true);
+                            context.submitNode(idx, true);
+                            ExprHelper.createUntyped(
+                                'func() $nullType { _hx_a := {0}; _hx_i := {1}; if _hx_i >= 0 && _hx_i < len((*_hx_a)) { return $nullType{ Value: (*_hx_a)[_hx_i], Valid: true } }; return $nullType{} }()',
+                                [arr, idx]
+                            );
+                        case _: expr;
+                    }
                 }
 
                 case _: {

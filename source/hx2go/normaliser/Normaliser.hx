@@ -25,7 +25,9 @@ class Normaliser {
 
     public function iterateExpr(e: HxbTypedExpr, scope: Scope, ancestor: Null<Ancestor>) {
         var children = []; // flatten / copy to prevent issues if mutating
-        TypedExprTools.iter(e, child -> children.push(child));
+        TypedExprTools.iter(e, child -> {
+            if (child != null) children.push(child); 
+        });
 
         for (idx in 0...children.length) {
             processExpr(children[idx], scope, { node: e, up: ancestor, scope: scope });

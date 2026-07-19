@@ -37,6 +37,7 @@ class TypeNormaliserCall extends CompilerPass {
                     var toType = switch param.t {
                         case TAbstract({ pack: ['haxe'], name: 'Rest' }, params) if (!arg.t.match(TAbstract({ pack: ['haxe'], name: 'Rest' }, _)) || !arg.expr.match(TUnop(OpSpread, _, _))): {
                             rest = rest == -1 ? idx : rest;
+                            innerType = params[0];
                             params[0];
                         }
 

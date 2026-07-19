@@ -137,8 +137,6 @@ class Context {
             new hx2go.passes.RewriteStringCreation(this),
             new hx2go.passes.RewritePointerCastFrom(this),
             new hx2go.passes.RewritePointerCastTo(this),
-//            new hx2go.passes.ResolveVarDecl(this),
-//            new hx2go.passes.ResolveCast(this),
         ];
     }
 

@@ -1,8 +1,12 @@
-function main() {
-    var x = get() / 2;
-    trace(x, x == 3.5);
+function test(...a:Int): haxe.Rest<Int> {
+    return a;
 }
 
-function get():haxe.Int32 {
-    return 7;
+function foo(...a:haxe.Rest<Int>): Void {
+    trace(a);
+}
+
+function main() {
+    var x = test(1, 2, 3);
+    foo(x);
 }

@@ -206,8 +206,8 @@ class Normaliser {
 
                 local.activeTry = expr;
 
-                var allPathsReturn = local.activeSwitchAllPathsReturn ? local.activeSwitchAllPathsReturn : Semantics.allPathsReturn(expr);
-                local.activeSwitchAllPathsReturn = Semantics.allPathsReturn(expr);
+                var allPathsReturn = local.activeSwitchAllPathsReturn ? local.activeSwitchAllPathsReturn : Semantics.allPathsReturn(expr).allPathsReturn;
+                local.activeSwitchAllPathsReturn = Semantics.allPathsReturn(expr).allPathsReturn;
 
                 iterateExpr(expr, local, ancestor);
 

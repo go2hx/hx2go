@@ -12,5 +12,5 @@ function init() {
         return;
     }
 
-    File.saveContent(path, File.getContent("testbed/Main.hx"));
+    File.saveContent(path, 'package unit;\n' + File.getContent("testbed/Main.hx"));
 }

@@ -13,6 +13,9 @@ import sys.io.Process;
 class Init {
 	// --macro go.Init.addStd()
 	public static function addStd() {
+		if (!Context.defined("custom-target")) {
+			return;
+		}
 		var self = Context.resolvePath("go/Init.hx");
 		var path = Path.join([ Path.directory(self), '..', '..', 'std' ]);
 		Compiler.addClassPath(path);

@@ -22,11 +22,14 @@ extern class Go {
    @:pure static function rune(x: Dynamic): Rune;
    @:pure static function complex64(x: Dynamic): Complex64;
    @:pure static function complex128(x: Dynamic): Complex128;
-   @:pure @:native("float64") static function float(x: Dynamic): Float;
    static function panic(v: Dynamic): Void;
    @:pure static function len<T>(v: T): GoInt;
    static function append<T>(s: Slice<T>, v: haxe.Rest<T>): Slice<T>;
    static function copy<T>(dst: Slice<T>, src: Slice<T>): GoInt;
    @:pure static function cap<T>(v: Slice<T>): GoInt;
    @:pure static function string(v: Dynamic): String;
+   @:native("float64")
+   @:pure static function hxFloat(x: Dynamic): Float;
+   @:native("int")
+   @:pure static function hxInt(x: Dynamic): Int;
 }

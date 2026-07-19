@@ -36,12 +36,14 @@ var operators = [
 ];
 
 var topLevel = [
-    { hxName: "panic",  goName: "panic",    returnType: "Void",     types: [],    pure: false, isOverload: false, args: [ { name: "v", type: "Dynamic" } ] },
-    { hxName: "len",    goName: "len",      returnType: "GoInt",    types: ["T"], pure: true,  isOverload: false, args: [ { name: "v", type: "T" } ] },
-    { hxName: "append", goName: "append",   returnType: "Slice<T>", types: ["T"], pure: false, isOverload: false, args: [ { name: "s", type: "Slice<T>" }, { name: "v", type: "haxe.Rest<T>" } ] },
-    { hxName: "copy",   goName: "copy",     returnType: "GoInt",    types: ["T"], pure: false, isOverload: false, args: [ { name: "dst", type: "Slice<T>" }, { name: "src", type: "Slice<T>" } ] },
-    { hxName: "cap",    goName: "cap",      returnType: "GoInt",    types: ["T"], pure: true,  isOverload: false, args: [ { name: "v", type: "Slice<T>" } ] },
-    { hxName: "string", goName: "string",   returnType: "String",   types: [],    pure: true,  isOverload: false, args: [ { name: "v", type: "Dynamic" } ] },
+    { hxName: "panic",   goName: "panic",    returnType: "Void",     types: [],    pure: false, isOverload: false, args: [ { name: "v", type: "Dynamic" } ] },
+    { hxName: "len",     goName: "len",      returnType: "GoInt",    types: ["T"], pure: true,  isOverload: false, args: [ { name: "v", type: "T" } ] },
+    { hxName: "append",  goName: "append",   returnType: "Slice<T>", types: ["T"], pure: false, isOverload: false, args: [ { name: "s", type: "Slice<T>" }, { name: "v", type: "haxe.Rest<T>" } ] },
+    { hxName: "copy",    goName: "copy",     returnType: "GoInt",    types: ["T"], pure: false, isOverload: false, args: [ { name: "dst", type: "Slice<T>" }, { name: "src", type: "Slice<T>" } ] },
+    { hxName: "cap",     goName: "cap",      returnType: "GoInt",    types: ["T"], pure: true,  isOverload: false, args: [ { name: "v", type: "Slice<T>" } ] },
+    { hxName: "string",  goName: "string",   returnType: "String",   types: [],    pure: true,  isOverload: false, args: [ { name: "v", type: "Dynamic" } ] },
+    { hxName: "hxFloat", goName: "float64",  returnType: "Float",    types: [],    pure: true,  isOverload: false, args: [ { name: "x", type: "Dynamic" } ] },
+    { hxName: "hxInt",   goName: "int",      returnType: "Int",      types: [],    pure: true,  isOverload: false, args: [ { name: "x", type: "Dynamic" } ] }
 ];
 
 var path = Path.join([Sys.getCwd(), 'std/go']);
@@ -222,8 +224,6 @@ function main() {
         var module = toModuleName(t);
         convContent.add('   @:pure static function $t(x: Dynamic): $module;\n');
     }
-    // float -> float64
-    convContent.add('   @:pure @:native("float64") static function float(x: Dynamic): Float;\n');
 
     for (tl in topLevel) {
         if (tl.goName != tl.hxName) convContent.add('   @:native("${tl.goName}")\n');

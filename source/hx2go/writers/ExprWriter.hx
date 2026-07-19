@@ -185,22 +185,23 @@ class ExprWriter extends WriterImpl {
 
     public function writeArrayAccess(expr: HxbTypedExpr, e: HxbTypedExpr, eidx: HxbTypedExpr): OutputBuffer {
         var buf = new OutputBuffer();
-
-        // explicit Go numeric conversion
         var scalarConv = scalarElementConversion(expr, e);
 
-        // Haxe returns null for out-of-bounds reads
-        if (scalarConv == null && expr.t != null && nullableElement(expr.t)) {
+        if (scalarConv == null && expr.t != null) {
             var elem = writer.types.writeHxbType(expr.t).toString();
+
             buf.addInline('func() ${elem} { _hx_a := ');
             buf.addBufferInline(writeExpr(e));
             buf.addInline('; _hx_i := ');
             buf.addBufferInline(writeExpr(eidx));
             buf.addInline('; if _hx_i >= 0 && _hx_i < len((*_hx_a)) { return (*_hx_a)[_hx_i] }; var _hx_z ${elem}; return _hx_z }()');
+
             return buf;
         }
 
-        if (scalarConv != null) buf.addInline('${scalarConv}(');
+        if (scalarConv != null) {
+            buf.addInline('${scalarConv}(');
+        }
 
         buf.addInline('(*');
         buf.addBufferInline(writeExpr(e));
@@ -209,17 +210,31 @@ class ExprWriter extends WriterImpl {
         buf.addBufferInline(writeExpr(eidx));
         buf.addInline(']');
 
-        if (scalarConv != null) buf.addInline(')');
+        if (scalarConv != null) {
+            buf.addInline(')');
+        }
 
         return buf;
     }
 
-    function nullableElement(t: HxbType): Bool {
-        return switch TypeHelper.followToDef(writer.context, t) {
-            case TInst(_) | TEnum(_) | TType(_) | TFun(_) | TDynamic(_) | TDynamicAny: true;
-            case TAbstract({ name: 'Null', pack: [] }, _): true;
-            case _: false;
+    function writeLvalue(expr: HxbTypedExpr): OutputBuffer {
+        return switch expr.expr {
+            case TArray(e, eidx): writePlainArrayAccess(expr, e, eidx);
+            case _: writeExpr(expr);
         }
+    }
+
+    function writePlainArrayAccess(expr: HxbTypedExpr, e: HxbTypedExpr, eidx: HxbTypedExpr): OutputBuffer {
+        var buf = new OutputBuffer();
+
+        buf.addInline('(*');
+        buf.addBufferInline(writeExpr(e));
+        buf.addInline(')');
+        buf.addInline('[');
+        buf.addBufferInline(writeExpr(eidx));
+        buf.addInline(']');
+
+        return buf;
     }
 
     function scalarElementConversion(expr: HxbTypedExpr, e: HxbTypedExpr): Null<String> {
@@ -508,18 +523,24 @@ class ExprWriter extends WriterImpl {
                 }
         };
 
-         if (op != OpAssign) buf.addInline('(');
-        buf.addBufferInline(writeExpr(left));
+        if (op != OpAssign) {
+            buf.addInline('(');
+        }
+
+        buf.addBufferInline(op.match(OpAssign | OpAssignOp(_)) ? writeLvalue(left) : writeExpr(left));
         buf.addInline(' $opStr ');
         buf.addBufferInline(writeExpr(right));
-         if (op != OpAssign) buf.addInline(')');
+
+        if (op != OpAssign) {
+            buf.addInline(')');
+        }
 
         return buf;
     }
 
     public function writeUnop(expr: HxbTypedExpr, op: HxbUnop, postFix: Bool, e: HxbTypedExpr): OutputBuffer {
         var buf = new OutputBuffer();
-        var op = switch op {
+        var opStr = switch op {
             case OpIncrement: "++";
             case OpDecrement: "--";
             case OpNot: "!";
@@ -529,13 +550,13 @@ class ExprWriter extends WriterImpl {
         }
 
         if (!postFix) {
-            buf.addInline(op);
+            buf.addInline(opStr);
         }
 
-        buf.addBufferInline(writeExpr(e));
+        buf.addBufferInline(op == OpIncrement || op == OpDecrement ? writeLvalue(e) : writeExpr(e));
 
         if (postFix) {
-            buf.addInline(op);
+            buf.addInline(opStr);
         }
 
         return buf;

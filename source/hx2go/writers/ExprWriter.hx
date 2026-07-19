@@ -122,7 +122,7 @@ class ExprWriter extends WriterImpl {
             // unwrap it to the concrete enum before asserting the enumIndex interface
             buf.addInline('Hx_Field_go_haxe_hxdynamic_ensureInterface(');
             buf.addBufferInline(writeExpr(e));
-            buf.addInline(').(interface { Hx_Field_enumIndex() int }).Hx_Field_enumIndex()');
+            buf.addInline(').(Hx_Obj_VTable_go_haxe__hxenumvalue__hxenumvalue).Hx_Field_enumIndex()');
             return buf;
         }
 

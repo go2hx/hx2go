@@ -1,12 +1,7 @@
-function test(...a:Int): haxe.Rest<Int> {
-    return a;
-}
-
-function foo(...a:haxe.Rest<Int>): Void {
-    trace(a);
-}
-
 function main() {
-    var x = test(1, 2, 3);
-    foo(x);
+    var arr: Array<Int> = [1, 2, 3];
+    var x: Null<Int> = arr[0];
+    var y: Null<Int> = arr[1];
+
+    trace(arr, x, y);
 }

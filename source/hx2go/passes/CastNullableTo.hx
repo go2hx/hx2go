@@ -107,16 +107,29 @@ class CastNullableTo extends CompilerPass {
                 }
 
                 case _ if (e.expr.match(TArray(_, _)) && TypeHelper.compare(e.t, ot)): {
-                    // Haxe array reads return null for out-of-bounds
                     var nullType = context.getWriter().types.writeHxbType(expr.t);
                     switch e.expr {
-                        case TArray(arr, idx):
+                        case TArray(arr, idx): {
                             context.submitNode(arr, true);
                             context.submitNode(idx, true);
-                            ExprHelper.createUntyped(
-                                'func() $nullType { _hx_a := {0}; _hx_i := {1}; if _hx_i >= 0 && _hx_i < len((*_hx_a)) { return $nullType{ Value: (*_hx_a)[_hx_i], Valid: true } }; return $nullType{} }()',
-                                [arr, idx]
-                            );
+
+                            var arrTmp = new HxbVar(-1, 'hx_nullable_a${nullableId++}', VUser(TVOLocalVariable), 0, [], e.pos, arr.t);
+                            var idxTmp = new HxbVar(-1, 'hx_nullable_i${nullableId++}', VUser(TVOLocalVariable), 0, [], e.pos, idx.t);
+
+                            var arrIdent = new HxbTypedExpr(TLocal(arrTmp), arrTmp.type, e.pos);
+                            var idxIdent = new HxbTypedExpr(TLocal(idxTmp), idxTmp.type, e.pos);
+
+                            var cond = ExprHelper.createUntyped('{1} >= 0 && {1} < len((*{0}))', [arrIdent, idxIdent]);
+                            var hit = ExprHelper.createUntyped('$nullType{ Value: (*{0})[{1}], Valid: true }', [arrIdent, idxIdent]);
+                            var miss = ExprHelper.createUntyped('$nullType{}', []);
+
+                            new HxbTypedExpr(TBlock([
+                                new HxbTypedExpr(TVar(arrTmp, arr), TVoid, e.pos),
+                                new HxbTypedExpr(TVar(idxTmp, idx), TVoid, e.pos),
+                                new HxbTypedExpr(TIf(cond, hit, miss), expr.t, expr.pos)
+                            ]), expr.t, expr.pos);
+                        }
+
                         case _: expr;
                     }
                 }

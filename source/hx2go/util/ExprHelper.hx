@@ -10,6 +10,15 @@ import hx2go.hxb.Typed.HxbFieldAccess;
 
 class ExprHelper {
 
+    public static function unwrapNullableLocal(arr: HxbTypedExpr): Void {
+        switch arr.expr {
+            case TLocal(v) if (v.type != null && v.type.match(TAbstract({ name: 'Null', pack: [] }, _))):
+                var local = Copy.copy(arr);
+                arr.expr = ExprHelper.createUntyped('{0}.Value', [local]).expr;
+            case _:
+        }
+    }
+
     public static function createUntyped(template: String, params: Array<HxbTypedExpr>): HxbTypedExpr {
         return new HxbTypedExpr(
             TCall(

@@ -32,17 +32,17 @@ class OutputBuffer {
     public function decrementIndentLevel(): Void {
         this.indentLevel--;
     }
-
-    public function add(line: String, indentLevelOffset: Int = 0, newLine: Bool = true): Void {
-        content += indent(line, indentLevel + indentLevelOffset) + (newLine ? "\n" : "");
+    // TODO switch back to default value args, once supported
+    public function add(line: String, indentLevelOffset: Int = 0, ?newLine: Bool): Void {
+        content += indent(line, indentLevel + indentLevelOffset) + ((newLine ?? true) ? "\n" : "");
     }
 
     public function addInline(line: String): Void {
         content += line;
     }
-
-    public function addBuffer(buffer: OutputBuffer, indentLevelOffset: Int = 0, newLine: Bool = true): Void {
-        content += indent(buffer.toString(), indentLevel + indentLevelOffset) + (newLine ? "\n" : "");
+    // TODO switch back to default value args, once supported
+    public function addBuffer(buffer: OutputBuffer, indentLevelOffset: Int = 0, ?newLine: Bool): Void {
+        content += indent(buffer.toString(), indentLevel + indentLevelOffset) + ((newLine ?? true) ? "\n" : "");
     }
 
     public function addBufferInline(buffer: OutputBuffer): Void {

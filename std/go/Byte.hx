@@ -199,6 +199,12 @@ extern abstract Byte {
    @:from public static inline function fromInt64(x: Int64): Byte {
        return Go.byte(x);
    }
+   @:from public static inline function fromComplex64(x: Complex64): Byte {
+       return Go.byte(x);
+   }
+   @:from public static inline function fromComplex128(x: Complex128): Byte {
+       return Go.byte(x);
+   }
    @:to public inline function toFloat(): Float {
        return (untyped this : Float);
    }

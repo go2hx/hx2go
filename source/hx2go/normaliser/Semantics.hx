@@ -248,37 +248,65 @@ class Semantics {
         }
     }
 
-    public static function allPathsReturn(e: HxbTypedExpr): Bool {
+    public static function allPathsReturn(e: HxbTypedExpr): { allPathsReturn: Bool, isVoidType: Bool } {
         return switch e.expr {
-            case TReturn(_) | TThrow(_): true;
-            case TCall(_) if (isPanicCall(e)): true;
+            case TReturn(e1):
+                { allPathsReturn: true, isVoidType: e1 == null || (e1.t != null && e1.t.match(TVoid)) };
+
+            case TThrow(_):
+                { allPathsReturn: true, isVoidType: true };
+
+            case TCall(_) if (isPanicCall(e)):
+                { allPathsReturn: true, isVoidType: true };
 
             case TBlock(exprs):
-                exprs.length > 0 && allPathsReturn(exprs[exprs.length - 1]);
+                exprs.length > 0 ? allPathsReturn(exprs[exprs.length - 1]) : { allPathsReturn: false, isVoidType: false };
 
             case TIf(_, eif, eelse):
-                eelse != null && allPathsReturn(eif) && allPathsReturn(eelse);
+                if (eelse == null) { allPathsReturn: false, isVoidType: false }
+                else {
+                    var rif = allPathsReturn(eif);
+                    var relse = allPathsReturn(eelse);
+                    { allPathsReturn: rif.allPathsReturn && relse.allPathsReturn, isVoidType: rif.isVoidType && relse.isVoidType };
+                }
 
             case TSwitch(_, cases, edef):
                 var ok = cases.length > 0;
-                for (c in cases) ok = ok && allPathsReturn(c.expr);
-                if (edef != null) ok = ok && allPathsReturn(edef);
-                ok;
+                var isVoid = true;
+                for (c in cases) {
+                    var r = allPathsReturn(c.expr);
+                    ok = ok && r.allPathsReturn;
+                    isVoid = isVoid && r.isVoidType;
+                }
+                if (edef != null) {
+                    var r = allPathsReturn(edef);
+                    ok = ok && r.allPathsReturn;
+                    isVoid = isVoid && r.isVoidType;
+                }
+                { allPathsReturn: ok, isVoidType: isVoid };
 
             case TTry(e1, catches):
-                if (!allPathsReturn(e1)) false;
+                var r1 = allPathsReturn(e1);
+                if (!r1.allPathsReturn) { allPathsReturn: false, isVoidType: false }
                 else {
                     var ok = true;
-                    for (c in catches) ok = ok && allPathsReturn(c.expr);
-                    ok;
+                    var isVoid = r1.isVoidType;
+                    for (c in catches) {
+                        var r = allPathsReturn(c.expr);
+                        ok = ok && r.allPathsReturn;
+                        isVoid = isVoid && r.isVoidType;
+                    }
+                    { allPathsReturn: ok, isVoidType: isVoid };
                 }
 
             case TWhile(econd, e1, true) if (isConstant(econd) && econd.expr.match(TConst(TBool(true)))):
                 allPathsReturn(e1);
 
-            case TParenthesis(e1) | TMeta(_, e1): allPathsReturn(e1);
+            case TParenthesis(e1) | TMeta(_, e1):
+                allPathsReturn(e1);
 
-            case _: false;
+            case _:
+                { allPathsReturn: false, isVoidType: false };
         }
     }
     

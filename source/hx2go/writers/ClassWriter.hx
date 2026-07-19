@@ -182,18 +182,27 @@ class ClassWriter extends WriterImpl {
             buf.add('func ${StringConversions.typePathClassInstanceName(cls.path)}_CreateInstance(${ctor.buf.toString()}) *${StringConversions.typePathClassInstanceName(cls.path)} {');
             buf.add('obj := ${StringConversions.typePathClassInstanceName(cls.path)}_CreateEmptyInstance()', 1);
 
-            if (cls.constructor != null) {
+            var fieldInits = cls.fields.filter(f -> f.kind.match(KVar(_)) && shouldGenVar(f.kind) && f.expr?.expr != null);
+            var needsHxNew = cls.constructor?.expr != null || fieldInits.length > 0;
+
+            if (needsHxNew) {
                 buf.add('obj.Hx_New(${ctor.args.map(a -> a.name).join(", ")})', 1);
             }
 
             buf.add('return obj', 1);
             buf.add('}');
 
-            if (cls.constructor?.expr != null) {
+            if (needsHxNew) {
                 buf.add('');
-                buf.addInline('func (this *${StringConversions.typePathClassInstanceName(cls.path)}) Hx_New(${ctor.buf.toString()}) ');
-                buf.addBufferInline(writer.exprs.writeExpr(cls.constructor.expr.expr, true));
-                buf.add('');
+                buf.add('func (this *${StringConversions.typePathClassInstanceName(cls.path)}) Hx_New(${ctor.buf.toString()}) {');
+                for (f in fieldInits) {
+                    buf.add('this.${StringConversions.nameToFieldName(f.name)} = ${writer.exprs.writeExpr(Copy.copy(f.expr.expr))}', 1);
+                }
+                if (cls.constructor?.expr != null) {
+                    buf.addBuffer(writer.exprs.writeExpr(cls.constructor.expr.expr, true), 1);
+                    buf.add('');
+                }
+                buf.add('}');
             }
 
             buf.add('');
@@ -308,6 +317,8 @@ class ClassWriter extends WriterImpl {
         }
 
         if (field.expr?.expr != null) buf.addBufferInline(writer.exprs.writeExpr(field.expr.expr, true))
+        // allow empty block to work with non void return func
+        else if (fTypes.returnType != TVoid) buf.addInline('{ panic("abstract method: ${field.name}") }');
         else buf.addInline("{}");
 
         return buf;
@@ -367,6 +378,8 @@ class ClassWriter extends WriterImpl {
             buf.addInline('}');
         } else {
             if (field.expr?.expr != null) buf.addBufferInline(writer.exprs.writeExpr(field.expr.expr, true))
+            // allow empty block to work with non void return func
+            else if (fTypes.returnType != TVoid) buf.addInline('{ panic("abstract method: ${field.name}") }');
             else buf.addInline("{}");
         }
 

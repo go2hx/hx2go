@@ -17,8 +17,11 @@ class RewriteArraySetData extends CompilerPass {
 
     public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
         expr.expr = switch expr.expr {
-            case TCall({ expr: TField(_, FStatic({ name: 'HxArray', pack: ['go', 'haxe'] }, { name: 'setData' })) }, [arr, val]): switch arr.t {
-                case TInst({ name: 'Array', pack: [] }, _): ExprHelper.createUntyped('(*{0}) = {1}', [arr, val]).expr;
+            case TCall({ expr: TField(_, FStatic({ name: 'HxArray', pack: ['go', 'haxe'] }, { name: 'setData' })) }, [arr, val]):
+                switch arr.t {
+                case TInst({ name: 'Array', pack: [] }, _):
+                    ExprHelper.unwrapNullableLocal(arr);
+                    ExprHelper.createUntyped('(*{0}) = {1}', [arr, val]).expr;
                 case TDynamic(_) | TDynamicAny if (isFreshArrayLiteral(arr)):
                     ExprHelper.createUntyped('(*{0}) = {1}', [arr, val]).expr;
                 case TDynamic(_) | TDynamicAny:

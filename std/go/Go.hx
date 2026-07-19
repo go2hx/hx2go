@@ -28,4 +28,8 @@ extern class Go {
    static function copy<T>(dst: Slice<T>, src: Slice<T>): GoInt;
    @:pure static function cap<T>(v: Slice<T>): GoInt;
    @:pure static function string(v: Dynamic): String;
+   @:native("float64")
+   @:pure static function hxFloat(x: Dynamic): Float;
+   @:native("int")
+   @:pure static function hxInt(x: Dynamic): Int;
 }

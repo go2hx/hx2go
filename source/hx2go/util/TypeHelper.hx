@@ -155,7 +155,6 @@ class TypeHelper {
             final aa = a[i];
             final bb = b[i];
 
-            if (aa.name != bb.name) return false;
             if (aa.opt != bb.opt) return false;
             if (!compare(aa.t, bb.t)) return false;
         }
@@ -177,11 +176,12 @@ class TypeHelper {
         }
     }
 
-    public static function getTypeOfModule(mod: HxbModuleType, inst: Bool = true): HxbType {
+    public static function getTypeOfModule(mod: HxbModuleType, ?instOpt: Bool): HxbType {
         if (mod == null) {
             return null;
         }
-
+        // TODO use instOpt as an arg with a default value, once it's supported
+        var inst = instOpt ?? true;
         return switch mod {
             case MClass(x): inst ? TInst(x.path, []) : TClassStatic(x.path);
             case MEnum(x): inst? TEnum(x.path, []) : TEnumStatic(x.path);

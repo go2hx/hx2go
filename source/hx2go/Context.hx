@@ -75,10 +75,11 @@ class Context {
     private function createPasses(): Array<ICompilerPass> {
         return [
             new hx2go.passes.FieldAccessGeneric(this),
+            new hx2go.passes.TypeNormaliserCallReturn(this),
             new hx2go.passes.TypeNormaliserCall(this),
             new hx2go.passes.NullableCompare(this),
             new hx2go.passes.NullableConst(this),
-            new hx2go.passes.NullableField(this),
+            new hx2go.passes.NullableFieldAccess(this),
             new hx2go.passes.NullableIndex(this),
             new hx2go.passes.NullableCall(this),
             new hx2go.passes.CastInstToClass(this),
@@ -254,7 +255,7 @@ class Context {
     function installGoDeps(imports:Map<String, Array<String>>) {
         final previousCwd = Sys.getCwd();
         Sys.setCwd(outputDirectory);
-        for (_ => deps in imports) {
+        for (deps in imports) {
             for (dep in deps) {
                 if (dep.contains(".")) {
                     processList.push(new Process("go", ["get", dep]));
@@ -329,6 +330,10 @@ class Context {
             full.push(part);
 
             var p = full.join("/");
+            // if path is absolute prevent an empty directory from trying to be created
+            if (p == "") {
+                continue;
+            }
             if (!FileSystem.exists(p)) {
                 FileSystem.createDirectory(p);
             }
@@ -546,6 +551,17 @@ class Context {
                     roots.push(def.constructor);
                 }
 
+                for (f in def.fields) {
+                    var needsCoerce = switch f.type {
+                        case TType(_): true;
+                        case TAbstract({ pack: ['haxe', 'ds'], name: 'Map' }, _): true;
+                        case _: false;
+                    };
+                    if (f.kind.match(KVar(_)) && f.expr?.expr != null && needsCoerce) {
+                        f.expr.expr = ExprHelper.createCast(f.expr.expr, f.type);
+                    }
+                }
+
                 var queue: Array<HxbClass> = [def];
 
                 while (queue.length > 0) {
@@ -608,7 +624,7 @@ class Context {
                                 var name = '_hx_param_' + farg.name;
 
                                 assign.push(
-                                    ExprHelper.createUntyped('${farg.name} := ${name}.(${writer.types.writeHxbType(farg.t)})', [])
+                                    ExprHelper.createUntyped('${Context.sanitiseString(farg.name)} := ${name}.(${writer.types.writeHxbType(farg.t)})', [])
                                 );
 
                                 args.push({

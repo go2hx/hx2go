@@ -208,6 +208,12 @@ extern abstract UInt8 {
    @:from public static inline function fromRune(x: Rune): UInt8 {
        return Go.uint8(x);
    }
+   @:from public static inline function fromComplex64(x: Complex64): UInt8 {
+       return Go.uint8(x);
+   }
+   @:from public static inline function fromComplex128(x: Complex128): UInt8 {
+       return Go.uint8(x);
+   }
    @:to public inline function toFloat(): Float {
        return (untyped this : Float);
    }

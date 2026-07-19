@@ -171,6 +171,12 @@ extern abstract Float32 {
    @:from public static inline function fromRune(x: Rune): Float32 {
        return Go.float32(x);
    }
+   @:from public static inline function fromComplex64(x: Complex64): Float32 {
+       return Go.float32(x);
+   }
+   @:from public static inline function fromComplex128(x: Complex128): Float32 {
+       return Go.float32(x);
+   }
    @:from public static inline function fromFloat(x: Float): Float32 {
        return Go.float32(x);
    }

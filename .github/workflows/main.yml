@@ -42,3 +42,9 @@ jobs:
         run: haxe Testbed.hxml
       - name: Run tests
         run: haxe Tests.hxml
+      - name: Run bootstrap
+        run: haxe Bootstrap.hxml
+      - name: Bootstrap the bootstrap
+        run: haxe Bootstrap.hxml -D go-bootstrap
+      - name: Run tests with bootstrap
+        run: haxe Tests.hxml -D go-bootstrap

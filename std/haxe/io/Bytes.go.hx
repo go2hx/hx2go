@@ -181,7 +181,10 @@ class Bytes {
 		encoding).
 	**/
     public inline function getInt32(pos:Int):Int {
-        return get(pos) | (get(pos + 1) << 8) | (get(pos + 2) << 16) | (get(pos + 3) << 24);
+        var v = get(pos) | (get(pos + 1) << 8) | (get(pos + 2) << 16) | (get(pos + 3) << 24);
+        // match the behaviour of Go where 64-bit will not overflow
+        // there we need to do a sign extension explicitly through int32
+        return Syntax.code("int(int32({0}))", v);
     }
 
     /**

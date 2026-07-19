@@ -1,0 +1,2 @@
+-cp source
+--run hx2go.Main

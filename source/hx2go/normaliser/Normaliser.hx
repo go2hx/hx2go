@@ -25,7 +25,9 @@ class Normaliser {
 
     public function iterateExpr(e: HxbTypedExpr, scope: Scope, ancestor: Null<Ancestor>) {
         var children = []; // flatten / copy to prevent issues if mutating
-        TypedExprTools.iter(e, child -> children.push(child));
+        TypedExprTools.iter(e, child -> {
+            if (child != null) children.push(child); 
+        });
 
         for (idx in 0...children.length) {
             processExpr(children[idx], scope, { node: e, up: ancestor, scope: scope });
@@ -184,9 +186,12 @@ class Normaliser {
             case TVar(v, e):
                 expr.expr = scope.defineLocal(v, e);
 
-            case TSwitch(_):
+            case TSwitch(_, cases, edef):
                 var local = scope.copy();
                 local.activeSwitch = expr;
+
+                for (c in cases) c.expr.expr = ensureBlock(c.expr).expr;
+                if (edef != null) edef.expr = ensureBlock(edef).expr;
                 return iterateExpr(expr, local, ancestor);
 
             case TFunction(tfunc):
@@ -201,8 +206,8 @@ class Normaliser {
 
                 local.activeTry = expr;
 
-                var allPathsReturn = local.activeSwitchAllPathsReturn ? local.activeSwitchAllPathsReturn : Semantics.allPathsReturn(expr);
-                local.activeSwitchAllPathsReturn = Semantics.allPathsReturn(expr);
+                var allPathsReturn = local.activeSwitchAllPathsReturn ? local.activeSwitchAllPathsReturn : Semantics.allPathsReturn(expr).allPathsReturn;
+                local.activeSwitchAllPathsReturn = Semantics.allPathsReturn(expr).allPathsReturn;
 
                 iterateExpr(expr, local, ancestor);
 
@@ -308,6 +313,20 @@ class Normaliser {
 
                 makeAssign(eif);
                 if (eelse != null) makeAssign(eelse);
+
+                scope.insert(expr, Copy.copy(expr), this, scope, ancestor);
+
+                result;
+            }
+
+            case TSwitch(_, cases, edef): {
+                var result = scope.temp(expr, null, this, scope, ancestor, expr.t);
+                var makeAssign = (e: HxbTypedExpr) -> {
+                    e.expr = TBinop(OpAssign, result, ensureBlock(Copy.copy(e)));
+                };
+
+                for (c in cases) makeAssign(c.expr);
+                if (edef != null) makeAssign(edef);
 
                 scope.insert(expr, Copy.copy(expr), this, scope, ancestor);
 

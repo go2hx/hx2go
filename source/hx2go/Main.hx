@@ -2,9 +2,7 @@ package hx2go;
 
 import haxe.io.Path;
 import sys.FileSystem;
-import hx2go.hxb.HxbModuleType;
 import hx2go.hxb.Hxb;
-import hx2go.hxb.Typed.HxbModuleTypeRef;
 import hx2go.hxb.HxbModule.HxbImport;
 import hx2go.hxb.HxbArchive;
 
@@ -18,8 +16,9 @@ class Main {
         var relativeOutput = args[1] ?? ".";
         var mainClass = args[2] ?? "Main";
 
-        var absoluteOutput = Path.join([ root, relativeOutput ]);
-        var absoluteInput = Path.join([ root, relativeInput ]);
+        // accept both absolute paths (-D go-bootstrap) and relative paths
+        var absoluteOutput = Path.isAbsolute(relativeOutput) ? relativeOutput : Path.join([ root, relativeOutput ]);
+        var absoluteInput = Path.isAbsolute(relativeInput) ? relativeInput : Path.join([ root, relativeInput ]);
 
         exec(absoluteInput, absoluteOutput, mainClass);
     }

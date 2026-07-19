@@ -80,7 +80,10 @@ class ExprWriter extends WriterImpl {
             buf.add('');
             buf.add('default: ', 1);
             buf.addBuffer(writeExpr(edef), 2, false);
-        } else if (Semantics.allPathsReturn(expr)) {
+        } else if ({
+            var p = Semantics.allPathsReturn(expr);
+            p.allPathsReturn && !p.isVoidType;
+        }) {
             buf.add('');
             buf.add('default: ', 1);
             buf.add('panic("exhaustiveness check mismatch, you shouldn\'t be able to reach this! please report!")', 2, false);
@@ -104,6 +107,15 @@ class ExprWriter extends WriterImpl {
 
     public function writeEnumIndex(expr: HxbTypedExpr, e: HxbTypedExpr): OutputBuffer {
         var buf = new OutputBuffer();
+
+        if (e.t != null && e.t.match(TDynamic(_) | TDynamicAny)) {
+            // Dynamic may hold a reflect.Value
+            // unwrap it to the concrete enum before asserting the enumIndex interface
+            buf.addInline('Hx_Field_go_haxe_hxdynamic_ensureInterface(');
+            buf.addBufferInline(writeExpr(e));
+            buf.addInline(').(Hx_Obj_VTable_go_haxe__hxenumvalue__hxenumvalue).Hx_Field_enumIndex()');
+            return buf;
+        }
 
         buf.addBufferInline(writeExpr(e));
         buf.addInline('.Hx_Field_enumIndex()');
@@ -173,6 +185,47 @@ class ExprWriter extends WriterImpl {
 
     public function writeArrayAccess(expr: HxbTypedExpr, e: HxbTypedExpr, eidx: HxbTypedExpr): OutputBuffer {
         var buf = new OutputBuffer();
+        var scalarConv = scalarElementConversion(expr, e);
+
+        if (scalarConv == null && expr.t != null) {
+            var elem = writer.types.writeHxbType(expr.t).toString();
+
+            buf.addInline('func() ${elem} { _hx_a := ');
+            buf.addBufferInline(writeExpr(e));
+            buf.addInline('; _hx_i := ');
+            buf.addBufferInline(writeExpr(eidx));
+            buf.addInline('; if _hx_i >= 0 && _hx_i < len((*_hx_a)) { return (*_hx_a)[_hx_i] }; var _hx_z ${elem}; return _hx_z }()');
+
+            return buf;
+        }
+
+        if (scalarConv != null) {
+            buf.addInline('${scalarConv}(');
+        }
+
+        buf.addInline('(*');
+        buf.addBufferInline(writeExpr(e));
+        buf.addInline(')');
+        buf.addInline('[');
+        buf.addBufferInline(writeExpr(eidx));
+        buf.addInline(']');
+
+        if (scalarConv != null) {
+            buf.addInline(')');
+        }
+
+        return buf;
+    }
+
+    function writeLvalue(expr: HxbTypedExpr): OutputBuffer {
+        return switch expr.expr {
+            case TArray(e, eidx): writePlainArrayAccess(expr, e, eidx);
+            case _: writeExpr(expr);
+        }
+    }
+
+    function writePlainArrayAccess(expr: HxbTypedExpr, e: HxbTypedExpr, eidx: HxbTypedExpr): OutputBuffer {
+        var buf = new OutputBuffer();
 
         buf.addInline('(*');
         buf.addBufferInline(writeExpr(e));
@@ -182,6 +235,33 @@ class ExprWriter extends WriterImpl {
         buf.addInline(']');
 
         return buf;
+    }
+
+    function scalarElementConversion(expr: HxbTypedExpr, e: HxbTypedExpr): Null<String> {
+        var want = switch expr.t {
+            case TInt: "int";
+            case TFloat: "float64";
+            case _: return null;
+        }
+
+        var elem = concreteArrayElement(e.t);
+        if (elem == null) {
+            return null;
+        }
+
+        return want == writer.types.writeHxbType(elem).toString() ? null : want;
+    }
+
+    function concreteArrayElement(t: HxbType): Null<HxbType> {
+        if (t == null) {
+            return null;
+        }
+
+        return switch TypeHelper.followToDef(writer.context, t) {
+            case TInst({ name: 'Array', pack: [] }, [el]):
+                (el == null || el.match(TDynamic(_) | TDynamicAny)) ? null : el;
+            case _: null;
+        }
     }
 
     public function writeObjectDecl(expr: HxbTypedExpr, fields: Array<HxbTObjectField>): OutputBuffer {
@@ -260,6 +340,17 @@ class ExprWriter extends WriterImpl {
             case [(TDynamic(_) | TDynamicAny), (TDynamic(_) | TDynamicAny)]:
                 buf.addBufferInline(writeExpr(e));
 
+            case [(TDynamic(_) | TDynamicAny), _] if (concreteArrayElement(expr.t) != null):
+                // converting each element out of its any box
+                var elemGo = writer.types.writeHxbType(concreteArrayElement(expr.t)).toString();
+                var inHxDynamic = expr.pos?.file.endsWith("HxDynamic.hx") == true;
+                buf.addInline('func() *[]${elemGo} { _hx_d := ');
+                buf.addInline(inHxDynamic ? '(' : 'Hx_Field_go_haxe_hxdynamic_ensureInterface(');
+                buf.addBufferInline(writeExpr(e));
+                buf.addInline('); if _hx_c, _hx_ok := _hx_d.(*[]${elemGo}); _hx_ok { return _hx_c }; ');
+                buf.addInline('_hx_src := *(_hx_d.(*[]any)); _hx_out := make([]${elemGo}, len(_hx_src)); ');
+                buf.addInline('for _hx_i, _hx_v := range _hx_src { _hx_out[_hx_i] = _hx_v.(${elemGo}) }; return &_hx_out }()');
+
             case [(TDynamic(_) | TDynamicAny), _]:
                 buf.addInline(expr.pos?.file.endsWith("HxDynamic.hx") ? '(' : 'Hx_Field_go_haxe_hxdynamic_ensureInterface('); // this is a really bad hack, I know...
                 buf.addBufferInline(writeExpr(e));
@@ -292,9 +383,9 @@ class ExprWriter extends WriterImpl {
             buf.add('if ${catchName} := recover(); ${catchName} != nil ', 2, false);
             buf.addBuffer(writeExpr(c.expr), 2);
             buf.add('}()', 1, false);
+            buf.add('');
         }
-
-        buf.add('');
+        
         buf.addBuffer(writeExpr(e), 1);
         buf.addInline('}()');
 
@@ -368,18 +459,21 @@ class ExprWriter extends WriterImpl {
 
     public function writeVarDecl(expr: HxbTypedExpr, v: HxbVar, vexpr: HxbTypedExpr): OutputBuffer {
         var buf = new OutputBuffer();
+
+        var hasInit = vexpr != null
+            && !vexpr.expr.match(TConst(TNull) | TCast({ expr: TConst(TNull) }, _));
+
         buf.addInline('var ${v.name} ');
         buf.addBufferInline(writer.types.writeHxbType(v.type));
-
-        if (vexpr != null && !vexpr.expr.match(TConst(TNull) | TCast({ expr: TConst(TNull) }, _))) {
-            buf.addInline(' = ');
-            buf.addBufferInline(writeExpr(vexpr));
-        }
-
         if (v.name != "_") {
             buf.addInline('; _ = ${v.name}');
         }
-        
+
+        if (hasInit) {
+            buf.addInline('\n${v.name} = ');
+            buf.addBufferInline(writeExpr(vexpr));
+        }
+
         return buf;
     }
 
@@ -429,18 +523,24 @@ class ExprWriter extends WriterImpl {
                 }
         };
 
-         if (op != OpAssign) buf.addInline('(');
-        buf.addBufferInline(writeExpr(left));
+        if (op != OpAssign) {
+            buf.addInline('(');
+        }
+
+        buf.addBufferInline(op.match(OpAssign | OpAssignOp(_)) ? writeLvalue(left) : writeExpr(left));
         buf.addInline(' $opStr ');
         buf.addBufferInline(writeExpr(right));
-         if (op != OpAssign) buf.addInline(')');
+
+        if (op != OpAssign) {
+            buf.addInline(')');
+        }
 
         return buf;
     }
 
     public function writeUnop(expr: HxbTypedExpr, op: HxbUnop, postFix: Bool, e: HxbTypedExpr): OutputBuffer {
         var buf = new OutputBuffer();
-        var op = switch op {
+        var opStr = switch op {
             case OpIncrement: "++";
             case OpDecrement: "--";
             case OpNot: "!";
@@ -450,13 +550,13 @@ class ExprWriter extends WriterImpl {
         }
 
         if (!postFix) {
-            buf.addInline(op);
+            buf.addInline(opStr);
         }
 
-        buf.addBufferInline(writeExpr(e));
+        buf.addBufferInline(op == OpIncrement || op == OpDecrement ? writeLvalue(e) : writeExpr(e));
 
         if (postFix) {
-            buf.addInline(op);
+            buf.addInline(opStr);
         }
 
         return buf;
@@ -515,7 +615,11 @@ class ExprWriter extends WriterImpl {
                 if (m == null ) ""
                 else {
                     var ntp = StringConversions.moduleTypeGetTypePath(m);
-                    '${StringConversions.typePathAbstractName(ntp)}_RTTI';
+                    // Class<T> / Enum<T> are both @:coreType and therefore have no RTTI
+                    switch ntp {
+                        case { name: "Class", pack: [] } | { name: "Enum", pack: [] }: "nil";
+                        case _: '${StringConversions.typePathAbstractName(ntp)}_RTTI';
+                    }
                 }
             }
 

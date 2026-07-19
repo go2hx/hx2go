@@ -171,7 +171,7 @@ class HxDynamic {
         else if (k == Reflect.String)
             return toString(a) == toString(b);
         else
-            throw "runtime.HxDynamic.equals invalid operands: " + aV.string() + " and " + bV.string();
+            return Syntax.code("reflect.DeepEqual({0}, {1})", aV.iface(), bV.iface());
     }
 
     public static function nequals(a:Dynamic, b:Dynamic):Bool {
@@ -455,24 +455,50 @@ class HxDynamic {
     static function valueToClass(value: Value, className: String): Value {
         var kind = value.kind();
 
-        if (isNull(value) || !value.isValid()) {
-            throw "runtime.HxDynamic.toClass: dynamic is null, cannot cast to " + className;
-        }
-
         if (kind == Reflect.Ptr || kind == Reflect.Interface) {
-            value = valueToClass(value.elem(), className);
+            if (value.isNil()) {
+                return value;
+            }
+            return valueToClass(value.elem(), className);
         }
 
         if (kind == Reflect.Struct && value.type().name() != className) {
-            value = value.fieldByName(className);
+            var f = value.fieldByName(className);
+            if (f.isValid()) {
+                return valueToClass(f, className);
+            }
+            // Null<T> is struct{Value T; Valid bool}
+            // cast the boxed value.
+            var boxed = value.fieldByName("Value");
+            if (boxed.isValid()) {
+                return valueToClass(boxed, className);
+            }
         }
 
         return value;
     }
 
     public static function toClass(d: Dynamic, className: String): Dynamic {
-        var value = ensureValue(d);
-        var cls = valueToClass(value, className);
+        if (isNull(d)) {
+            return null;
+        }
+
+        var cls = valueToClass(ensureValue(d), className);
+        if (!cls.isValid()) {
+            return null;
+        }
+
+        // already the class reference.
+        if (cls.kind() == Reflect.Ptr) {
+            return cls.iface();
+        }
+
+        // return a pointer to the value
+        if (!cls.canAddr()) {
+            var boxed = Reflect._new(cls.type());
+            boxed.elem().set(cls);
+            return boxed.iface();
+        }
 
         return cls.addr().iface();
     }
@@ -488,8 +514,7 @@ class HxDynamic {
         }
 
         if (kind == Reflect.Ptr || kind == Reflect.Interface) {
-            value = getField(value.elem(), fieldName);
-            found = true;
+            return getField(value.elem(), fieldName);
         }
 
         if (kind == Reflect.Struct) {
@@ -513,10 +538,14 @@ class HxDynamic {
         }
 
         if (kind == Reflect.Map) {
-            found = true;
-            value = value.mapIndex(
+            var mi = value.mapIndex(
                 ensureValue(fieldName)
             );
+
+            if (mi.isValid()) {
+                found = true;
+                value = mi;
+            }
         }
 
         if (kind == Reflect.Array || kind == Reflect.Slice) {
@@ -533,7 +562,11 @@ class HxDynamic {
             }
         }
 
-        return found ? value : null;
+        if (!found) {
+            return null;
+        }
+
+        return value.canInterface() ? value.iface() : null;
     }
 
     // write field access on dynamic (class, anon, etc)

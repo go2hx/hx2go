@@ -45,20 +45,51 @@ class HxString {
     }
 
     public static function indexOf(s: String, str:String, ?startIndex:Int):Int {
-        if (startIndex != null ) {
-            if (startIndex >= s.length) {
-                return -1;
-            }
-            s = Syntax.code("string(([]rune)({0})[{1}:])", s, (startIndex : Int));
+        if (startIndex == null ) {
+            return Strings.index(s, str);
         }
-        return Strings.index(s, str);
+        if (startIndex < 0) {
+            startIndex = 0;
+        }
+        if (startIndex > s.length) {
+            startIndex = s.length;
+        }
+
+        var index = 0;
+        var diff = 0;
+        var s:Slice<Byte> = s;
+
+        while (startIndex > index) {
+            var obj = Utf8.decodeRune(s.slice(diff));
+            diff += obj.size;
+            index++;
+        }
+        var sliced:String = Go.string(s.slice(diff));
+        var found:Int = Strings.index(sliced, str);
+
+        return found < 0 ? -1 : found + startIndex;
     }
     public static function lastIndexOf(s: String, str:String, ?startIndex:Int):Int {
         if (startIndex != null ) {
-            if (startIndex >= s.length) {
+            var end:Int = startIndex + str.length;
+            if (end <= 0) {
                 return -1;
             }
-            s = Syntax.code("string(([]rune)({0})[{1}:])", s, (startIndex : Int));
+            if (end > s.length) {
+                end = s.length;
+            }
+
+            var diff = 0;
+            var s:Slice<Byte> = s;
+
+            while (end > 0) {
+                var obj = Utf8.decodeRune(s.slice(diff));
+                diff += obj.size;
+                end--;
+            }
+
+            var sliced:String = Go.string(s.slice(0, diff));
+            return Strings.lastIndex(sliced, str);
         }
         return Strings.lastIndex(s, str);
     }

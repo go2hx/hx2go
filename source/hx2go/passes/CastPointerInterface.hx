@@ -6,6 +6,8 @@ import hx2go.hxb.Typed.HxbTypedExprDef;
 import hx2go.hxb.HxbType;
 import hx2go.util.ExprHelper;
 import hx2go.util.TypeHelper;
+import hx2go.util.StringConversions;
+import hx2go.hxb.flags.HxbClassFlag;
 import haxe.runtime.Copy;
 
 class CastPointerInterface extends CompilerPass {
@@ -48,15 +50,48 @@ class CastPointerInterface extends CompilerPass {
                     return;
                 }
 
-                switch m {
-                    case MTypedef(t) if (t.meta.filter(m -> m.name == ":go.Type").length > 0): null;
+                var td = switch m {
+                    case MTypedef(t): t;
                     case _: return;
                 }
 
-                var o = ExprHelper.createUntyped("(&({0}))", [Copy.copy(e)]);
-                e.expr = o.expr;
+                if (td.meta.filter(mm -> mm.name == ":go.Type").length > 0) {
+                    // Go-native extern typedef: wrap the address.
+                    var o = ExprHelper.createUntyped("(&({0}))", [Copy.copy(e)]);
+                    e.expr = o.expr;
 
-                context.submitNode(e, true);
+                    context.submitNode(e, true);
+                    return;
+                }
+                
+                switch context.normalize(td.type) {
+                    case TInst(itp, _): {
+                        var isIface = switch context.resolve(itp) {
+                            case MClass(icls): icls.flags & HxbClassFlag.CInterface != 0;
+                            case _: false;
+                        }
+
+                        if (!isIface) {
+                            return;
+                        }
+
+                        var ifaceName = context.resolvedInstanceName(itp);
+
+                        // check if it's already the interface
+                        var operandIsIface = switch context.normalize(e.t) {
+                            case TInst(etp, _): context.resolvedInstanceName(etp) == ifaceName;
+                            case _: false;
+                        }
+
+                        expr.expr = operandIsIface
+                            ? ExprHelper.createUntyped('(*$ifaceName)({0})', [Copy.copy(e)]).expr
+                            : ExprHelper.createUntyped('&{0}.$ifaceName', [Copy.copy(e)]).expr;
+
+                        context.submitNode(expr, true);
+                    }
+
+                    case _: return;
+                }
             }
 
             case _: null;

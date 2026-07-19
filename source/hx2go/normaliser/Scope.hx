@@ -20,7 +20,8 @@ class Scope {
     public var activeSwitchAllPathsReturn: Bool = false;
     public var activeTry: HxbTypedExpr = null;
     public var activeLoopLabel: Null<String> = null;
-    public var tmpId: Int = 0;
+    // pass by ref across scope copies
+    public var tmpId: Array<Int> = [0];
 
     public function temp(before: HxbTypedExpr, expr: HxbTypedExpr, preprocessor: Normaliser, scope: Scope, ancestor: Ancestor, ?explicitType: HxbType): HxbTypedExpr {
         var varInfo: HxbVar = {
@@ -29,7 +30,7 @@ class Scope {
             flags: 0,
             meta: [],
             pos: null,
-            name: '_hx_tmp_${tmpId++}',
+            name: '_hx_tmp_${tmpId[0]++}',
             type: explicitType ?? expr.t
         };
 

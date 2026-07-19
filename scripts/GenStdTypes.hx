@@ -8,7 +8,7 @@ using StringTools;
 import sys.io.File;
 import haxe.io.Path;
 
-var types = ["int", "uint", "uint8", "uint16", "uint32", "uint64", "int8", "int16", "int32", "int64", "float32", "float64", "byte", "rune"];
+var types = ["int", "uint", "uint8", "uint16", "uint32", "uint64", "int8", "int16", "int32", "int64", "float32", "float64", "byte", "rune", "complex64", "complex128"];
 var operators = [
     { name: "add",      format: "A + B",   bitwise: false, outFloat: false, outBool: false, unary: false, commutative: true  },
     { name: "sub",      format: "A - B",   bitwise: false, outFloat: false, outBool: false, unary: false, commutative: false },
@@ -36,12 +36,14 @@ var operators = [
 ];
 
 var topLevel = [
-    { hxName: "panic",  goName: "panic",    returnType: "Void",     types: [],    pure: false, isOverload: false, args: [ { name: "v", type: "Dynamic" } ] },
-    { hxName: "len",    goName: "len",      returnType: "GoInt",    types: ["T"], pure: true,  isOverload: false, args: [ { name: "v", type: "T" } ] },
-    { hxName: "append", goName: "append",   returnType: "Slice<T>", types: ["T"], pure: false, isOverload: false, args: [ { name: "s", type: "Slice<T>" }, { name: "v", type: "haxe.Rest<T>" } ] },
-    { hxName: "copy",   goName: "copy",     returnType: "GoInt",    types: ["T"], pure: false, isOverload: false, args: [ { name: "dst", type: "Slice<T>" }, { name: "src", type: "Slice<T>" } ] },
-    { hxName: "cap",    goName: "cap",      returnType: "GoInt",    types: ["T"], pure: true,  isOverload: false, args: [ { name: "v", type: "Slice<T>" } ] },
-    { hxName: "string", goName: "string",   returnType: "String",   types: [],    pure: true,  isOverload: false, args: [ { name: "v", type: "Dynamic" } ] },
+    { hxName: "panic",   goName: "panic",    returnType: "Void",     types: [],    pure: false, isOverload: false, args: [ { name: "v", type: "Dynamic" } ] },
+    { hxName: "len",     goName: "len",      returnType: "GoInt",    types: ["T"], pure: true,  isOverload: false, args: [ { name: "v", type: "T" } ] },
+    { hxName: "append",  goName: "append",   returnType: "Slice<T>", types: ["T"], pure: false, isOverload: false, args: [ { name: "s", type: "Slice<T>" }, { name: "v", type: "haxe.Rest<T>" } ] },
+    { hxName: "copy",    goName: "copy",     returnType: "GoInt",    types: ["T"], pure: false, isOverload: false, args: [ { name: "dst", type: "Slice<T>" }, { name: "src", type: "Slice<T>" } ] },
+    { hxName: "cap",     goName: "cap",      returnType: "GoInt",    types: ["T"], pure: true,  isOverload: false, args: [ { name: "v", type: "Slice<T>" } ] },
+    { hxName: "string",  goName: "string",   returnType: "String",   types: [],    pure: true,  isOverload: false, args: [ { name: "v", type: "Dynamic" } ] },
+    { hxName: "hxFloat", goName: "float64",  returnType: "Float",    types: [],    pure: true,  isOverload: false, args: [ { name: "x", type: "Dynamic" } ] },
+    { hxName: "hxInt",   goName: "int",      returnType: "Int",      types: [],    pure: true,  isOverload: false, args: [ { name: "x", type: "Dynamic" } ] }
 ];
 
 var path = Path.join([Sys.getCwd(), 'std/go']);
@@ -196,9 +198,9 @@ function main() {
             toTypes.push("Int");
         }
 
-        for (t in toTypes) {
-            content.add('   @:to public inline function to${t}(): $t {\n');
-            content.add('       return (untyped this : $t);\n');
+        for (t2 in toTypes) {
+            content.add('   @:to public inline function to${t2}(): $t2 {\n');
+            content.add('       return (untyped this : $t2);\n');
             content.add('   }\n');
         }
 

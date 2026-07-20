@@ -14,7 +14,7 @@ class Copy {
         }
 
         var seen: Map<Int, Dynamic> = new Map();
-        return cast deepCopy(val, seen).iface();
+        return cast deepCopy(val, seen)._interface();
     }
 
     static function deepCopy(v: Value, seen: Map<Int, Dynamic>): Value {
@@ -31,7 +31,7 @@ class Copy {
             }
 
             var nv = Reflect._new(v.type().elem());
-            seen.set(addr, nv.iface());
+            seen.set(addr, nv._interface());
 
             // copy the pointer elem by kind
             var pointerElem = v.elem();

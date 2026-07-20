@@ -7,8 +7,8 @@ extern class ValueError {
     @:native("Method") var method: String;
     @:native("Kind") var kind: go.reflect.Kind;
 
-function new(method: String, kind: go.reflect.Kind);
+    function new(method: String, kind: go.reflect.Kind);
 
-    @:native("Error") function error(): String;
+    @:native("Error") function error(): (String);
 
 }

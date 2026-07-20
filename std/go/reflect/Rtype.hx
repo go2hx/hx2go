@@ -1,7 +1,8 @@
 package go.reflect;
 
-@:go.Type({ name: "Type", instanceName: "reflect.Type", imports: ["reflect"] })
-extern typedef Type = {
+@:structInit
+@:go.Type({ name: "rtype", instanceName: "reflect.rtype", imports: ["reflect"] })
+extern class Rtype {
 
     @:native("Align") function align(): (go.GoInt);
     @:native("AssignableTo") function assignableTo(u: go.reflect.Type): (Bool);
@@ -25,8 +26,8 @@ extern typedef Type = {
     @:native("Key") function key(): (go.reflect.Type);
     @:native("Kind") function kind(): (go.reflect.Kind);
     @:native("Len") function len(): (go.GoInt);
-    @:native("Method") function method(p0: go.GoInt): (go.reflect.Method);
-    @:go.Tuple("p0", "p1") @:native("MethodByName") function methodByName(p0: String): go.Tuple<{ p0: go.reflect.Method, p1: Bool }>;
+    @:native("Method") function method(i: go.GoInt): (go.reflect.Method);
+    @:go.Tuple("m", "ok") @:native("MethodByName") function methodByName(name: String): go.Tuple<{ m: go.reflect.Method, ok: Bool }>;
     @:native("Methods") function methods(): (go.iter.Seq<go.reflect.Method>);
     @:native("Name") function name(): (String);
     @:native("NumField") function numField(): (go.GoInt);

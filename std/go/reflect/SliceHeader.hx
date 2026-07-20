@@ -8,6 +8,6 @@ extern class SliceHeader {
     @:native("Len") var len: go.GoInt;
     @:native("Cap") var cap: go.GoInt;
 
-function new(data: go.UIntPtr, len: go.GoInt, cap: go.GoInt);
+    function new(data: go.UIntPtr, len: go.GoInt, cap: go.GoInt);
 
 }

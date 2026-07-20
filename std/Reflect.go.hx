@@ -25,7 +25,7 @@ class Reflect {
         return go.Reflect.typeOf(v).kind() == Syntax.code("reflect.Func");
     }
 
-    public static function callMethod(o:Dynamic, func:Function, args:Array<Dynamic>):Dynamic {
+    public static function callMethod(o:Dynamic, func:Dynamic, args:Array<Dynamic>):Dynamic {
         throw "not implemented";
     }
 

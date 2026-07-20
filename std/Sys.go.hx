@@ -27,7 +27,7 @@ class Sys {
 
     public static function args(): Array<String> {
         var args = [];
-        HxArray.setData(args, Os.Args);
+        HxArray.setData(args, Os.args);
         HxArray.shift(args);
 
         return args;
@@ -130,7 +130,7 @@ class Sys {
     }
 
     public static function programPath(): String {
-        return Os.Args[0];
+        return Os.args[0];
     }
 
     public static function environment(): Map<String, String> {

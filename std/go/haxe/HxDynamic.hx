@@ -171,7 +171,7 @@ class HxDynamic {
         else if (k == Reflect.String)
             return toString(a) == toString(b);
         else
-            return Syntax.code("reflect.DeepEqual({0}, {1})", aV.iface(), bV.iface());
+            return Syntax.code("reflect.DeepEqual({0}, {1})", aV._interface(), bV._interface());
     }
 
     public static function nequals(a:Dynamic, b:Dynamic):Bool {
@@ -385,12 +385,12 @@ class HxDynamic {
     }
 
     static function convertToType(v: Value, t: Type): Value {
-        var cv = ensureConcreteValue(v.iface());
+        var cv = ensureConcreteValue(v._interface());
         var k = t.kind();
 
         if (k == Reflect.Int) return Reflect.valueOf(valueToInt(cv));
         if (k == Reflect.Float64) return Reflect.valueOf(valueToFloat(cv));
-        if (k == Reflect.String) return Reflect.valueOf(toString(cv.iface()));
+        if (k == Reflect.String) return Reflect.valueOf(toString(cv._interface()));
         if (k == Reflect.Bool) return Reflect.valueOf(toBool(cv));
 
         return cv;
@@ -490,17 +490,17 @@ class HxDynamic {
 
         // already the class reference.
         if (cls.kind() == Reflect.Ptr) {
-            return cls.iface();
+            return cls._interface();
         }
 
         // return a pointer to the value
         if (!cls.canAddr()) {
             var boxed = Reflect._new(cls.type());
             boxed.elem().set(cls);
-            return boxed.iface();
+            return boxed._interface();
         }
 
-        return cls.addr().iface();
+        return cls.addr()._interface();
     }
 
     // read field access on dynamic (class, anon, etc)
@@ -566,7 +566,7 @@ class HxDynamic {
             return null;
         }
 
-        return value.canInterface() ? value.iface() : null;
+        return value.canInterface() ? value._interface() : null;
     }
 
     // write field access on dynamic (class, anon, etc)
@@ -668,12 +668,12 @@ class HxDynamic {
                 return null;
             }
 
-            return value.index(index).iface();
+            return value.index(index)._interface();
         }
 
         // TODO: throw when Null<T> is supported.
 
-        return value.iface();
+        return value._interface();
     }
 
     public static function getArrayLength(dyn: Dynamic): Int {
@@ -748,6 +748,6 @@ class HxDynamic {
             throw "runtime.HxDynamic.ensureInterface cannot convert to iface";
         }
 
-        return value.iface();
+        return value._interface();
     }
 }

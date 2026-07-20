@@ -8,6 +8,6 @@ extern class SelectCase {
     @:native("Chan") var chan: go.reflect.Value;
     @:native("Send") var send: go.reflect.Value;
 
-function new(dir: go.reflect.SelectDir, chan: go.reflect.Value, send: go.reflect.Value);
+    function new(dir: go.reflect.SelectDir, chan: go.reflect.Value, send: go.reflect.Value);
 
 }

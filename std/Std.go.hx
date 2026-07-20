@@ -41,7 +41,7 @@ class Std {
             var buf = new StringBuf();
 
             buf.add('[');
-            buf.add(HxArray.map(value.iface(), string).join(","));
+            buf.add(HxArray.map(value._interface(), string).join(","));
             buf.add(']');
 
             return buf.toString();
@@ -63,8 +63,8 @@ class Std {
             var enumTypeMethod = value.methodByName("Hx_Field_enumType");
 
             if (enumIndexMethod.isValid() && enumTypeMethod.isValid()) {
-                var enumIndex: Int = enumIndexMethod.call([])[0].iface();
-                var enumType: HxEnum = enumTypeMethod.call([])[0].iface();
+                var enumIndex: Int = enumIndexMethod.call([])[0]._interface();
+                var enumType: HxEnum = enumTypeMethod.call([])[0]._interface();
                 var enumCtorName: String = enumType.constructorNames[enumIndex];
                 var enumCtorCount: Int = enumType.constructorArgCounts[enumIndex];
                 var values: Array<String> = [];
@@ -81,7 +81,7 @@ class Std {
             var valid = value.fieldByName("Valid");
             if (valid.isValid()) {
                 var val = value.fieldByName("Value");
-                return valid.iface() == false || !val.isValid() ? "null" : string(val.iface());
+                return valid._interface() == false || !val.isValid() ? "null" : string(val._interface());
             }
 
             var vt = value.fieldByName("VTable");
@@ -92,14 +92,14 @@ class Std {
                 }
             }
 
-            return Fmt.sprintf("%v", value.iface());
+            return Fmt.sprintf("%v", value._interface());
         }
 
         if (kind == Reflect.Interface && value.isNil()) {
             return "null";
         }
 
-        return Fmt.sprintf("%v", value.iface());
+        return Fmt.sprintf("%v", value._interface());
     }
 
     public static function isOfType(v: Dynamic, t: Dynamic): Bool {

@@ -7,6 +7,6 @@ extern class StringHeader {
     @:native("Data") var data: go.UIntPtr;
     @:native("Len") var len: go.GoInt;
 
-function new(data: go.UIntPtr, len: go.GoInt);
+    function new(data: go.UIntPtr, len: go.GoInt);
 
 }

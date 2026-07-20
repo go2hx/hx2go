@@ -5,6 +5,7 @@ import go.Go;
 import go.Slice;
 import go.Byte;
 import haxe.io.Bytes;
+import go.Syntax;
 
 class File {
 
@@ -13,8 +14,7 @@ class File {
     }
 
     public static function saveContent(path: String, content: String): Void {
-        // 0666, umask is applied by the OS
-        Os.writeFile(path, Slice.fromString(content), Go.uint32(0x1B6)).sure();
+        Os.writeFile(path, Slice.fromString(content), Syntax.code("0666")).sure();
     }
 
     public static function getBytes(path: String): Bytes {
@@ -33,7 +33,11 @@ class File {
         for (i in 0...n) {
             slice[i] = cast bytes.get(i);
         }
-        Os.writeFile(path, slice, Go.uint32(0x1B6)).sure();
+        Os.writeFile(path, slice, Syntax.code("0666")).sure();
+    }
+
+    public static function read(path:String, ?binary:Bool):Dynamic {//:FileInput {
+        throw "not implemented";
     }
 
 }

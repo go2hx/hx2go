@@ -1,5 +1,7 @@
 package sys;
 
+import go.path.Filepath;
+import go.Path;
 import go.Os;
 import go.Go;
 
@@ -20,6 +22,10 @@ class FileSystem {
         Os.mkdirAll(path, Go.uint32(0x1FF)).sure();
     }
 
+    public static function readDirectory(path:String):Array<String> {
+        throw "not implemented";
+    }
+
     public static function deleteFile(path: String): Void {
         Os.remove(path).sure();
     }
@@ -32,4 +38,7 @@ class FileSystem {
         Os.rename(path, newPath).sure();
     }
 
+    public static function absolutePath(relPath:String):String {
+        return Filepath.abs(relPath).sure();
+    }
 }

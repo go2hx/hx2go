@@ -11,6 +11,9 @@ import go.Go;
 import go.Pointer;
 import go.os.exec.ExitError;
 import go.os.Exec;
+import sys.io.FileOutput;
+import sys.io.FileInput;
+import go.Syscall;
 
 class Sys {
 
@@ -130,12 +133,37 @@ class Sys {
         return Os.Args[0];
     }
 
-    /*
-    public static function environment():Map<String, String>;
-    public static function stdin():haxe.io.Input;
-    public static function stdout():haxe.io.Output;
-    public static function stderr():haxe.io.Output;
-    public static function getChar(echo:Bool):Int;
-    */
+    public static function environment(): Map<String, String> {
+        var em: Map<String, String> = [];
+        var ev: Slice<String> = Os.environ();
+
+        for (entry in ev) {
+            var parts: Array<String> = entry.split("=");
+            var name: String = parts.shift();
+            var value: String = parts.join("=");
+            em[name] = value;
+        }
+
+        return em;
+    }
+
+    @:access(sys.io.FileInput)
+    public static function stdin(): haxe.io.Input {
+        return new FileInput(Os.Stdin);
+    }
+
+    @:access(sys.io.FileOutput)
+    public static function stdout(): haxe.io.Output {
+        return new FileOutput(Os.Stdout);
+    }
+
+    @:access(sys.io.FileOutput)
+    public static function stderr(): haxe.io.Output {
+        return new FileOutput(Os.Stderr);
+    }
+
+    public static function getChar(echo: Bool): Int {
+        return 0; // TODO: impl
+    }
 
 }

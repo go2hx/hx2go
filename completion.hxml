@@ -1,0 +1,6 @@
+-cp source
+-main hx2go.Main
+-D no-compilation
+-L hx2go
+--no-output
+--custom-target go=output

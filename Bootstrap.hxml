@@ -3,4 +3,4 @@
 -L hx2go
 -D no-go-bootstrap
 --custom-target go=output/bootstrap
---cmd GOWORK=off go build -C "./output/bootstrap/main" .
+--cmd go -C output/bootstrap/main build .

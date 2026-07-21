@@ -3,4 +3,4 @@
 -L hx2go
 -D analyzer-no-module
 --custom-target go=output
---cmd go -C ./output/main run .
+--cmd go -C output/tests/main run .

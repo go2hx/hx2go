@@ -2,6 +2,5 @@
 -cp testbed
 --macro AddTest.init()
 -main Main
---custom-target go=output
---cmd go work init output/main || exit 0
---cmd go run ./output/main
+--custom-target go=output/testbed
+--cmd go -C output/testbed/main run .

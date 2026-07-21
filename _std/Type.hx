@@ -21,6 +21,8 @@
  */
 
 import go.Syntax;
+import go.Reflect;
+import go.reflect.Kind;
 
 enum ValueType {
 	TNull;
@@ -95,6 +97,45 @@ class Type {
 	}
 
 	public static function typeof(v:Dynamic):ValueType {
+		return switch Reflect.typeOf(v).kind().toInt() {
+			case 1:
+				TBool;
+			case 2, 3, 4, 5:
+				TInt;
+			case 6:
+				TInt64;
+			case 7, 8, 9, 10, 11:
+				TInt;
+			case 12: // uintptr
+				TUnknown;
+			case 13, 14:
+				TFloat;
+			case 15, 16: // complex64, complex128
+				TUnknown;
+			case 17: // array
+				TUnknown;
+			case 18: // chan
+				TUnknown;
+			case 19: // func
+				TFunction;
+			case 20: // interface
+				TObject;
+			case 21: // map
+				TUnknown;
+			case 22: // pointer
+				TUnknown;
+			case 23: // slice
+				TUnknown;
+			case 24: // string
+				TClass(String); 
+			case 25: // struct
+				TUnknown;
+			case 26: // unsafePointer
+				TUnknown;
+			case 0, _:
+				trace(Reflect.typeOf(v).kind(), Reflect.typeOf(v).kind().toInt());
+				TUnknown;
+		}
 		throw "not implemented";
 	}
 

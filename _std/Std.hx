@@ -103,7 +103,25 @@ class Std {
     }
 
     public static function isOfType(v: Dynamic, t: Dynamic): Bool {
-        return false; // TODO: impl
+        var vt = std.Type.typeof(v);
+        // TODO: finish impl
+        switch t {
+            // case Int:
+            //     return vt == TInt;
+            // case Float:
+            //     return vt == TFloat;
+            // case Bool:
+            //     return vt == TBool;
+            case String:
+                return vt.match(TClass(String));
+            case Array:
+                return vt.match(TClass(Array));
+            case Class:
+                return vt == t;
+            default:
+                trace(t);
+        }
+        return false;
     }
 
     public static function downcast<T:{}, S:T>(value: T, c: Class<S>): Null<S> {

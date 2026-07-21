@@ -2,5 +2,5 @@
 -m TestAll
 -L hx2go
 -D analyzer-no-module
---custom-target go=output
+--custom-target go=output/tests
 --cmd go -C output/tests/main run .

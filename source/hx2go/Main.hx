@@ -6,15 +6,6 @@ import hx2go.hxb.Hxb;
 import hx2go.hxb.HxbModule.HxbImport;
 import hx2go.hxb.HxbArchive;
 
-#if go
-@:go.Type({ name: "pprof", imports: ["runtime/pprof"] })
-extern class PProf {
-    static function startCPUProfile(f: go.Pointer<go.os.File>): Void;
-    static function stopCPUProfile(): Void;
-    static function writeHeapProfile(f: go.Pointer<go.os.File>): go.Error;
-}
-#end
-
 class Main {
 
     public static function main() {
@@ -28,23 +19,6 @@ class Main {
         // accept both absolute paths (-D go-bootstrap) and relative paths
         var absoluteOutput = Path.isAbsolute(relativeOutput) ? relativeOutput : Path.join([ root, relativeOutput ]);
         var absoluteInput = Path.isAbsolute(relativeInput) ? relativeInput : Path.join([ root, relativeInput ]);
-
-        #if go
-        var file = go.Os.openFile("./comp-cpu.prof", go.Syntax.code("os.O_RDWR | os.O_CREATE"), go.Syntax.code("0644")).sure();
-        PProf.startCPUProfile(file);
-        go.Syntax.defer(() -> {
-            PProf.stopCPUProfile();
-            file.close();
-            trace('pprof saved');
-
-            var memFile = go.Os.openFile("./comp-mem.prof", go.Syntax.code("os.O_RDWR | os.O_CREATE"), go.Syntax.code("0644")).sure();
-            go.Runtime.GC();
-            go.Runtime.memProfileRate = 1;
-            PProf.writeHeapProfile(memFile).sure();
-            memFile.close();
-            trace('mem profile saved');
-        });
-        #end
 
         exec(absoluteInput, absoluteOutput, mainClass);
     }

@@ -28,26 +28,31 @@ import hx2go.hxb.Typed.HxbTypedExprDef;
 import hx2go.normaliser.Semantics;
 import hx2go.passes.RewriteDynamicBinop;
 
+#if go
+import go.Map;
+#end
+
 class Context {
 
-    private static final _reserved: Map<String, Bool> = [
-        "_" => true,
-        "break" => true, "default" => true, "func" => true, "interface" => true, "select" => true,
-        "case" => true, "defer" => true, "go" => true, "map" => true, "struct" => true,
-        "chan" => true, "else" => true, "goto" => true, "package" => true, "switch" => true,
-        "const" => true, "fallthrough" => true, "if" => true, "range" => true, "type" => true,
-        "continue" => true, "for" => true, "import" => true, "return" => true, "var" => true,
-        "any" => true, "bool" => true, "byte" => true, "comparable" => true,
-        "complex64" => true, "complex128" => true, "error" => true, "float32" => true, "float64" => true,
-        "int" => true, "int8" => true, "int16" => true, "int32" => true, "int64" => true,
-        "rune" => true, "string" => true,
-        "uint" => true, "uint8" => true, "uint16" => true, "uint32" => true, "uint64" => true, "uintptr" => true,
-        "true" => true, "false" => true, "iota" => true, "nil" => true,
-        "append" => true, "cap" => true, "close" => true, "complex" => true, "copy" => true,
-        "delete" => true, "imag" => true, "len" => true, "make" => true, "new" => true,
-        "panic" => true, "print" => true, "println" => true, "real" => true, "recover" => true,
+    private static final _reservedWords: Array<String> = [
+        "_",
+        "break", "default", "func", "interface", "select",
+        "case", "defer", "go", "map", "struct",
+        "chan", "else", "goto", "package", "switch",
+        "const", "fallthrough", "if", "range", "type",
+        "continue", "for", "import", "return", "var",
+        "any", "bool", "byte", "comparable",
+        "complex64", "complex128", "error", "float32", "float64",
+        "int", "int8", "int16", "int32", "int64",
+        "rune", "string",
+        "uint", "uint8", "uint16", "uint32", "uint64", "uintptr",
+        "true", "false", "iota", "nil",
+        "append", "cap", "close", "complex", "copy",
+        "delete", "imag", "len", "make", "new",
+        "panic", "print", "println", "real", "recover",
     ];
 
+    private static final _reserved: Map<String, Bool> = new Map();
     private var types: Map<String, HxbModuleType>;
     private var archive: HxbArchive;
     private var imports: Map<String, Array<String>>;
@@ -61,8 +66,8 @@ class Context {
     private var processList: Array<Process>;
 
     public function new(archive: HxbArchive, outputDirectory: String) {
-        this.types = [];
-        this.imports = [];
+        this.types = new Map();
+        this.imports = new Map();
         this.outputDirectory = outputDirectory;
         this.topLevelPackage = Path.normalize(outputDirectory).split("/").pop();
         this.passes = createPasses();
@@ -70,6 +75,10 @@ class Context {
         this.contextStack = [];
         this.processList = [];
         this.archive = archive;
+
+        for (word in _reservedWords) {
+            _reserved.set(word, true);
+        }
     }
 
     private function createPasses(): Array<ICompilerPass> {
@@ -184,7 +193,7 @@ class Context {
     }
 
     public function build(mainClass: String): Void {
-        typesByModule = [];
+        typesByModule = new Map();
         typeQueue = [];
 
         var mod = resolveModule(StringConversions.pathToLossyTypePath(mainClass));
@@ -221,7 +230,7 @@ class Context {
                 file.addBufferInline(localBuf);
             }
             
-            var imports = imports.get(path) ?? [];
+            var imports = imports.exists(path) ? imports[path] : [];
 
             header.add('package $topLevelPackage');
 
@@ -540,7 +549,7 @@ class Context {
 
     private function transformType(type: HxbModuleType, moduleKey: String): Void {
         var roots: Array<HxbClassField> = [];
-        var baseInstFields: Map<String, HxbClassField> = [];
+        var baseInstFields: Map<String, HxbClassField> = new Map();
 
         switch type {
             case MClass(def):

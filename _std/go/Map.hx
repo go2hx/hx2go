@@ -1,11 +1,12 @@
 package go;
+import haxe.iterators.ArrayIterator;
 
 @:coreType
 @:runtimeValue
 abstract Map<K, V> {
     @:pure private extern static function _create<T>(): T;
 
-    public inline function new() {
+    @:pure public inline function new() {
         this = _create();
     }
 
@@ -47,6 +48,16 @@ abstract Map<K, V> {
         Syntax.code("for _, v := range {0} {{1} = append({1}, v)}", this, values);
 
         return values;
+    }
+
+    public inline extern function copy(): Map<K, V> {
+        var newMap: Map<K, V> = new Map();
+        Syntax.code("for k, v := range {0} {{1}[k] = v}", this, newMap);
+
+        return newMap;
+    }
+    public inline extern function iterator(): ArrayIterator<V> {
+        return new ArrayIterator(this.values().toArray());
     }
 
     public inline extern function clear(): Void {

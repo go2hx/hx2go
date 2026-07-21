@@ -24,6 +24,10 @@ import hx2go.hxb.HxbType.HxbAnonStatus;
 import hx2go.hxb.HxbModuleType.HxbAbstractOp;
 import hx2go.hxb.HxbModuleType.HxbAbstractUnop;
 
+#if go
+import go.Map;
+#end
+
 /**
 	Decodes a serialized HXB module (the bytes of a single `*.hxb` entry) into the
 	structured `hxb.HxbModule` model.

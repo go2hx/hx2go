@@ -7,10 +7,15 @@ import haxe.zip.Entry;
 import haxe.zip.Reader;
 import haxe.zip.Writer;
 
-private typedef Slot = {
-	var path:String;
-	var data:Bytes;
-	var time:Date;
+#if go
+import go.Map;
+#end
+
+@:structInit
+class Slot {
+	public var path:String;
+	public var data:Bytes;
+	public var time:Date;
 }
 
 /**
@@ -153,13 +158,13 @@ class HxbArchive {
 	/** Raw module bytes at `path`, or `null`. **/
 	public function getBytes(path:String):Null<Bytes> {
 		final i = index.get(path);
-		return i == null ? null : slots[i].data;
+		return !index.exists(path) ? null : slots[i].data;
 	}
 
 	function rawPut(path:String, data:Bytes, ?time:Date):Void {
 		final t = time == null ? Date.now() : time;
-		final existing = index.get(path);
-		if (existing != null) {
+		if (index.exists(path)) {
+			final existing = index.get(path);
 			slots[existing].data = data;
 			slots[existing].time = t;
 		} else {
@@ -175,9 +180,11 @@ class HxbArchive {
 
 	/** Remove an entry; returns `true` if it existed. **/
 	public function remove(path:String):Bool {
-		final i = index.get(path);
-		if (i == null)
+		if (!index.exists(path))
 			return false;
+
+		final i = index.get(path);
+
 		slots.splice(i, 1);
 		index.remove(path);
 		// reindex everything after i

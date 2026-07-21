@@ -8,12 +8,16 @@ import hx2go.hxb.Typed.HxbVarOrigin;
 import haxe.runtime.Copy;
 import hx2go.hxb.HxbType;
 
+#if go
+import go.Map;
+#end
+
 @:structInit
 class Scope {
 
     public var lastValidBlock: HxbTypedExpr = null;
-    public var variableAliases: Map<String, String> = [];
-    public var variableIterations: Map<String, Int> = [];
+    public var variableAliases: Map<String, String> = new Map();
+    public var variableIterations: Map<String, Int> = new Map();
     public var activeLoop: HxbTypedExpr = null;
     public var activeSwitch: HxbTypedExpr = null;
     public var activeFunction: HxbTypedExpr = null;
@@ -89,7 +93,7 @@ class Scope {
 
     public function getLocal(v: HxbVar): HxbTypedExprDef {
         return TLocal({
-            name: variableAliases[v.name] ?? v.name,
+            name: variableAliases.exists(v.name) ? variableAliases[v.name] : v.name,
             id: v.id,
             kind: v.kind,
             flags: v.flags,
@@ -101,7 +105,7 @@ class Scope {
     }
 
     public function defineLocal(v: HxbVar, expr: HxbTypedExpr): HxbTypedExprDef {
-        var iter = variableIterations[v.name] != null ? variableIterations[v.name] + 1 : 0;
+        var iter = variableIterations.exists(v.name) ? variableIterations[v.name] + 1 : 0;
         var name = iter == 0 ? v.name : 'tmp_${v.name}_${iter}';
 
         variableIterations.set(v.name, iter);

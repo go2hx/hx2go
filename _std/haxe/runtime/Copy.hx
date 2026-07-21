@@ -3,12 +3,13 @@ package haxe.runtime;
 import go.Reflect;
 import go.reflect.Value;
 import go.Syntax;
+import go.Map;
 
 class Copy {
 
     public static function copy<T>(v: T): T {
         var val: Value = Reflect.valueOf(v);
-        
+
         if ((val.kind() == Reflect.Ptr || val.kind() == Reflect.Interface) && val.isNil()) {
             return null;
         }

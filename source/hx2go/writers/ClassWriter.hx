@@ -12,6 +12,9 @@ import hx2go.normaliser.Normaliser;
 import hx2go.normaliser.Normaliser.Normaliser.run;
 import haxe.runtime.Copy;
 import hx2go.hxb.TypePath;
+import hx2go.hxb.Typed.HxbTypedExprDef;
+import hx2go.hxb.Typed.HxbFieldAccess;
+import hx2go.normaliser.Scope;
 
 class ClassWriter extends WriterImpl {
 
@@ -196,7 +199,10 @@ class ClassWriter extends WriterImpl {
                 buf.add('');
                 buf.add('func (this *${StringConversions.typePathClassInstanceName(cls.path)}) Hx_New(${ctor.buf.toString()}) {');
                 for (f in fieldInits) {
-                    buf.add('this.${StringConversions.nameToFieldName(f.name)} = ${writer.exprs.writeExpr(Copy.copy(f.expr.expr))}', 1);
+                    var einit = ensureBody(new HxbTypedExpr(TBinop(OpAssign, new HxbTypedExpr(TField(new HxbTypedExpr(TConst(TThis), null, null), FInstance(cls.path, [], { owner: cls.path, kind: null, name: StringConversions.nameToFieldName(f.name), depth: 0 })), null, null), Copy.copy(f.expr.expr)), null, null));
+                    Normaliser.run(einit, {}, writer.context);
+
+                    buf.addBuffer(writer.exprs.writeExpr(einit), 1);
                 }
                 if (cls.constructor?.expr != null) {
                     buf.addBuffer(writer.exprs.writeExpr(cls.constructor.expr.expr, true), 1);

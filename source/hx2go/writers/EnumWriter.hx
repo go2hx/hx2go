@@ -10,6 +10,10 @@ import hx2go.hxb.Ast.HxbExpr;
 import hx2go.util.ObjectFieldHelper;
 import hx2go.util.TypeHelper;
 
+#if go
+import go.Map;
+#end
+
 class EnumWriter extends WriterImpl {
 
     public function writeEnum(e: HxbEnum): OutputBuffer {
@@ -24,7 +28,7 @@ class EnumWriter extends WriterImpl {
         buf.add('M_${StringConversions.typePathEnumName(e.path)}()', 1);
         buf.add('}');
 
-        var counts: Map<String, Int> = [];
+        var counts: Map<String, Int> = new Map();
         for (cs in e.constructors) {
             var ctorName = '${StringConversions.typePathEnumName(e.path)}_${cs.name}';
             var ctorArgCount = 0;

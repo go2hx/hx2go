@@ -40,6 +40,9 @@ class Init {
 	}
 	// --custom-target go=output
     public static function init() {
+		if (Context.defined("display")) {
+			return;
+		}
         var anyPath = {
             pack: ["go"],
             name: "InitRandomPackage"
@@ -159,14 +162,16 @@ class Init {
 					#if rebuild
 					rebuild = true;
 					#else
-					if (!FileSystem.exists(bin) || Version.stale())
+					if (!FileSystem.exists(bin) || Version.stale(path))
 						rebuild = true;
 					#end
 					if (rebuild) {
 						Sys.println("Bootstrapping the compiler");
-						var code = Sys.command("haxe Bootstrap.hxml");
+						Sys.setCwd(path);
+						var code = Sys.command('haxe Bootstrap.hxml');
 						if (code != 0)
 							throw "bootstrap failed";
+						Sys.setCwd(root);
 					}
 					var args = [archiveOutput, sourceOutput, mainClassName];
 					var code = Sys.command(bin, args);

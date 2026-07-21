@@ -190,7 +190,7 @@ class Context {
         var mod = resolveModule(StringConversions.pathToLossyTypePath(mainClass));
         var cls = mod.classes();
         for (cl in cls) {
-            if (cl.path.name == "Main_Fields_") {
+            if (cl.path.name.endsWith("_Fields_")) {
                 mainClass = cl.path.dotPath();
                 break;
             }

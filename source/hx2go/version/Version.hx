@@ -1,5 +1,6 @@
 package hx2go.version;
 
+import haxe.io.Path;
 import sys.FileSystem;
 import sys.io.File;
 import sys.io.Process;
@@ -15,13 +16,14 @@ class Version {
         return proc.stdout.readLine();
     }
 
-    public static function stale():Bool {
+    public static function stale(path:String):Bool {
         #if rebuild
         return true;
         #else
         var v = gitVersion();
-        if (!FileSystem.exists("version.txt") || v != File.getContent("version.txt")) {
-            File.saveContent("version.txt", v);
+        var versionFile = Path.join([path, "version.txt"]);
+        if (!FileSystem.exists(versionFile) || v != File.getContent(versionFile)) {
+            File.saveContent(versionFile, v);
             return true;
         }else{
             return false;

@@ -29,7 +29,10 @@ class Main {
 
     public static function exec(input: String, output: String, mainClass: String): Void {
         final start = Sys.time();
-
+        if (!FileSystem.exists(input)) {
+            Sys.println("HXB not found: " + input);
+            Sys.exit(1);
+        }
         var arc = Hxb.loadArchive(input);
         generate(arc, output, mainClass);
 

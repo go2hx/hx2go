@@ -6,6 +6,6 @@ extern class Code {
 
     @:native("Text") var text: String;
 
-function new(text: String);
+    function new(text: String);
 
 }

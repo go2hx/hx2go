@@ -15,6 +15,6 @@ extern class Example {
     @:native("EmptyOutput") var emptyOutput: Bool;
     @:native("Order") var order: go.GoInt;
 
-function new(name: String, suffix: String, doc: String, code: go.go.ast.Node, play: go.Pointer<go.go.ast.File>, comments: go.Slice<go.Pointer<go.go.ast.CommentGroup>>, output: String, unordered: Bool, emptyOutput: Bool, order: go.GoInt);
+    function new(name: String, suffix: String, doc: String, code: go.go.ast.Node, play: go.Pointer<go.go.ast.File>, comments: go.Slice<go.Pointer<go.go.ast.CommentGroup>>, output: String, unordered: Bool, emptyOutput: Bool, order: go.GoInt);
 
 }

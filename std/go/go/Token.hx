@@ -90,10 +90,10 @@ extern class Token {
     @:native("XOR") static var XOR: go.go.token.Token;
     @:native("XOR_ASSIGN") static var XOR_ASSIGN: go.go.token.Token;
 
-    @:native("IsExported") static function isExported(name: String): Bool;
-    @:native("IsIdentifier") static function isIdentifier(name: String): Bool;
-    @:native("IsKeyword") static function isKeyword(name: String): Bool;
-    @:native("Lookup") static function lookup(ident: String): go.go.token.Token;
-    @:native("NewFileSet") static function newFileSet(): go.Pointer<go.go.token.FileSet>;
+    @:native("IsExported") static function isExported(name: String): (Bool);
+    @:native("IsIdentifier") static function isIdentifier(name: String): (Bool);
+    @:native("IsKeyword") static function isKeyword(name: String): (Bool);
+    @:native("Lookup") static function lookup(ident: String): (go.go.token.Token);
+    @:native("NewFileSet") static function newFileSet(): (go.Pointer<go.go.token.FileSet>);
 
 }

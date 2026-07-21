@@ -9,9 +9,9 @@ extern class IndexListExpr {
     @:native("Indices") var indices: go.Slice<go.go.ast.Expr>;
     @:native("Rbrack") var rbrack: go.go.token.Pos;
 
-function new(X: go.go.ast.Expr, lbrack: go.go.token.Pos, indices: go.Slice<go.go.ast.Expr>, rbrack: go.go.token.Pos);
+    function new(X: go.go.ast.Expr, lbrack: go.go.token.Pos, indices: go.Slice<go.go.ast.Expr>, rbrack: go.go.token.Pos);
 
-    @:native("End") function end(): go.go.token.Pos;
-    @:native("Pos") function pos(): go.go.token.Pos;
+    @:native("End") function end(): (go.go.token.Pos);
+    @:native("Pos") function pos(): (go.go.token.Pos);
 
 }

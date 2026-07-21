@@ -48,27 +48,27 @@ extern class Time {
     @:native("UnixDate") static var UnixDate: String;
     @:native("Wednesday") static var Wednesday: go.time.Weekday;
 
-    @:native("Local") static var Local: go.Pointer<go.time.Location>;
+    @:native("Local") static var local: go.Pointer<go.time.Location>;
     @:native("UTC") static var UTC: go.Pointer<go.time.Location>;
 
-    @:native("After") static function after(d: go.time.Duration): go.Chan<go.time.Time>;
-    @:native("AfterFunc") static function afterFunc(d: go.time.Duration, f: () -> Void): go.Pointer<go.time.Timer>;
-    @:native("Date") static function date(year: go.GoInt, month: go.time.Month, day: go.GoInt, hour: go.GoInt, min: go.GoInt, sec: go.GoInt, nsec: go.GoInt, loc: go.Pointer<go.time.Location>): go.time.Time;
-    @:native("FixedZone") static function fixedZone(name: String, offset: go.GoInt): go.Pointer<go.time.Location>;
-    @:native("LoadLocation") static function loadLocation(name: String): go.Result<go.Pointer<go.time.Location>>;
-    @:native("LoadLocationFromTZData") static function loadLocationFromTZData(name: String, data: go.Slice<go.Byte>): go.Result<go.Pointer<go.time.Location>>;
-    @:native("NewTicker") static function newTicker(d: go.time.Duration): go.Pointer<go.time.Ticker>;
-    @:native("NewTimer") static function newTimer(d: go.time.Duration): go.Pointer<go.time.Timer>;
-    @:native("Now") static function now(): go.time.Time;
-    @:native("Parse") static function parse(layout: String, value: String): go.Result<go.time.Time>;
-    @:native("ParseDuration") static function parseDuration(s: String): go.Result<go.time.Duration>;
-    @:native("ParseInLocation") static function parseInLocation(layout: String, value: String, loc: go.Pointer<go.time.Location>): go.Result<go.time.Time>;
-    @:native("Since") static function since(t: go.time.Time): go.time.Duration;
+    @:native("After") static function after(d: go.time.Duration): (go.Chan<go.time.Time>);
+    @:native("AfterFunc") static function afterFunc(d: go.time.Duration, f: () -> Void): (go.Pointer<go.time.Timer>);
+    @:native("Date") static function date(year: go.GoInt, month: go.time.Month, day: go.GoInt, hour: go.GoInt, min: go.GoInt, sec: go.GoInt, nsec: go.GoInt, loc: go.Pointer<go.time.Location>): (go.time.Time);
+    @:native("FixedZone") static function fixedZone(name: String, offset: go.GoInt): (go.Pointer<go.time.Location>);
+    @:native("LoadLocation") static function loadLocation(name: String): (go.Result<go.Pointer<go.time.Location>>);
+    @:native("LoadLocationFromTZData") static function loadLocationFromTZData(name: String, data: go.Slice<go.Byte>): (go.Result<go.Pointer<go.time.Location>>);
+    @:native("NewTicker") static function newTicker(d: go.time.Duration): (go.Pointer<go.time.Ticker>);
+    @:native("NewTimer") static function newTimer(d: go.time.Duration): (go.Pointer<go.time.Timer>);
+    @:native("Now") static function now(): (go.time.Time);
+    @:native("Parse") static function parse(layout: String, value: String): (go.Result<go.time.Time>);
+    @:native("ParseDuration") static function parseDuration(s: String): (go.Result<go.time.Duration>);
+    @:native("ParseInLocation") static function parseInLocation(layout: String, value: String, loc: go.Pointer<go.time.Location>): (go.Result<go.time.Time>);
+    @:native("Since") static function since(t: go.time.Time): (go.time.Duration);
     @:native("Sleep") static function sleep(d: go.time.Duration): Void;
-    @:native("Tick") static function tick(d: go.time.Duration): go.Chan<go.time.Time>;
-    @:native("Unix") static function unix(sec: go.Int64, nsec: go.Int64): go.time.Time;
-    @:native("UnixMicro") static function unixMicro(usec: go.Int64): go.time.Time;
-    @:native("UnixMilli") static function unixMilli(msec: go.Int64): go.time.Time;
-    @:native("Until") static function until(t: go.time.Time): go.time.Duration;
+    @:native("Tick") static function tick(d: go.time.Duration): (go.Chan<go.time.Time>);
+    @:native("Unix") static function unix(sec: go.Int64, nsec: go.Int64): (go.time.Time);
+    @:native("UnixMicro") static function unixMicro(usec: go.Int64): (go.time.Time);
+    @:native("UnixMilli") static function unixMilli(msec: go.Int64): (go.time.Time);
+    @:native("Until") static function until(t: go.time.Time): (go.time.Duration);
 
 }

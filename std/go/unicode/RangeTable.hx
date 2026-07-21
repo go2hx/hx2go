@@ -8,6 +8,6 @@ extern class RangeTable {
     @:native("R32") var R32: go.Slice<go.unicode.Range32>;
     @:native("LatinOffset") var latinOffset: go.GoInt;
 
-function new(R16: go.Slice<go.unicode.Range16>, R32: go.Slice<go.unicode.Range32>, latinOffset: go.GoInt);
+    function new(R16: go.Slice<go.unicode.Range16>, R32: go.Slice<go.unicode.Range32>, latinOffset: go.GoInt);
 
 }

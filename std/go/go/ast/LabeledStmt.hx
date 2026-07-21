@@ -8,9 +8,9 @@ extern class LabeledStmt {
     @:native("Colon") var colon: go.go.token.Pos;
     @:native("Stmt") var stmt: go.go.ast.Stmt;
 
-function new(label: go.Pointer<go.go.ast.Ident>, colon: go.go.token.Pos, stmt: go.go.ast.Stmt);
+    function new(label: go.Pointer<go.go.ast.Ident>, colon: go.go.token.Pos, stmt: go.go.ast.Stmt);
 
-    @:native("End") function end(): go.go.token.Pos;
-    @:native("Pos") function pos(): go.go.token.Pos;
+    @:native("End") function end(): (go.go.token.Pos);
+    @:native("Pos") function pos(): (go.go.token.Pos);
 
 }

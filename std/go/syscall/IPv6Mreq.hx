@@ -5,8 +5,8 @@ package go.syscall;
 extern class IPv6Mreq {
 
     @:native("Multiaddr") var multiaddr: go.GoArray<go.Byte, 16>;
-    @:native("Interface") var iface: go.UInt32;
+    @:native("Interface") var _interface: go.UInt32;
 
-function new(multiaddr: go.GoArray<go.Byte, 16>, iface: go.UInt32);
+    function new(multiaddr: go.GoArray<go.Byte, 16>, _interface: go.UInt32);
 
 }

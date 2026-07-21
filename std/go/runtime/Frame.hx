@@ -11,6 +11,6 @@ extern class Frame {
     @:native("Line") var line: go.GoInt;
     @:native("Entry") var entry: go.UIntPtr;
 
-function new(PC: go.UIntPtr, func: go.Pointer<go.runtime.Func>, _function: String, file: String, line: go.GoInt, entry: go.UIntPtr);
+    function new(PC: go.UIntPtr, func: go.Pointer<go.runtime.Func>, _function: String, file: String, line: go.GoInt, entry: go.UIntPtr);
 
 }

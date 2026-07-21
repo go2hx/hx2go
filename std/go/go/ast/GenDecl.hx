@@ -11,9 +11,9 @@ extern class GenDecl {
     @:native("Specs") var specs: go.Slice<go.go.ast.Spec>;
     @:native("Rparen") var rparen: go.go.token.Pos;
 
-function new(doc: go.Pointer<go.go.ast.CommentGroup>, tokPos: go.go.token.Pos, tok: go.go.token.Token, lparen: go.go.token.Pos, specs: go.Slice<go.go.ast.Spec>, rparen: go.go.token.Pos);
+    function new(doc: go.Pointer<go.go.ast.CommentGroup>, tokPos: go.go.token.Pos, tok: go.go.token.Token, lparen: go.go.token.Pos, specs: go.Slice<go.go.ast.Spec>, rparen: go.go.token.Pos);
 
-    @:native("End") function end(): go.go.token.Pos;
-    @:native("Pos") function pos(): go.go.token.Pos;
+    @:native("End") function end(): (go.go.token.Pos);
+    @:native("Pos") function pos(): (go.go.token.Pos);
 
 }

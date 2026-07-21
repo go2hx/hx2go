@@ -12,9 +12,9 @@ extern class SliceExpr {
     @:native("Slice3") var slice3: Bool;
     @:native("Rbrack") var rbrack: go.go.token.Pos;
 
-function new(X: go.go.ast.Expr, lbrack: go.go.token.Pos, low: go.go.ast.Expr, high: go.go.ast.Expr, max: go.go.ast.Expr, slice3: Bool, rbrack: go.go.token.Pos);
+    function new(X: go.go.ast.Expr, lbrack: go.go.token.Pos, low: go.go.ast.Expr, high: go.go.ast.Expr, max: go.go.ast.Expr, slice3: Bool, rbrack: go.go.token.Pos);
 
-    @:native("End") function end(): go.go.token.Pos;
-    @:native("Pos") function pos(): go.go.token.Pos;
+    @:native("End") function end(): (go.go.token.Pos);
+    @:native("Pos") function pos(): (go.go.token.Pos);
 
 }

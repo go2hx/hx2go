@@ -10,10 +10,10 @@ extern class MemProfileRecord {
     @:native("FreeObjects") var freeObjects: go.Int64;
     @:native("Stack0") var stack0: go.GoArray<go.UIntPtr, 32>;
 
-function new(allocBytes: go.Int64, freeBytes: go.Int64, allocObjects: go.Int64, freeObjects: go.Int64, stack0: go.GoArray<go.UIntPtr, 32>);
+    function new(allocBytes: go.Int64, freeBytes: go.Int64, allocObjects: go.Int64, freeObjects: go.Int64, stack0: go.GoArray<go.UIntPtr, 32>);
 
-    @:native("InUseBytes") function inUseBytes(): go.Int64;
-    @:native("InUseObjects") function inUseObjects(): go.Int64;
-    @:native("Stack") function stack(): go.Slice<go.UIntPtr>;
+    @:native("InUseBytes") function inUseBytes(): (go.Int64);
+    @:native("InUseObjects") function inUseObjects(): (go.Int64);
+    @:native("Stack") function stack(): (go.Slice<go.UIntPtr>);
 
 }

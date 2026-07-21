@@ -9,6 +9,6 @@ extern class Credential {
     @:native("Groups") var groups: go.Slice<go.UInt32>;
     @:native("NoSetGroups") var noSetGroups: Bool;
 
-function new(uid: go.UInt32, gid: go.UInt32, groups: go.Slice<go.UInt32>, noSetGroups: Bool);
+    function new(uid: go.UInt32, gid: go.UInt32, groups: go.Slice<go.UInt32>, noSetGroups: Bool);
 
 }

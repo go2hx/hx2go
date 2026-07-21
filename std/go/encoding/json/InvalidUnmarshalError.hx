@@ -6,8 +6,8 @@ extern class InvalidUnmarshalError {
 
     @:native("Type") var type: go.reflect.Type;
 
-function new(type: go.reflect.Type);
+    function new(type: go.reflect.Type);
 
-    @:native("Error") function error(): String;
+    @:native("Error") function error(): (String);
 
 }

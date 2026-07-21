@@ -10,9 +10,9 @@ extern class ForStmt {
     @:native("Post") var post: go.go.ast.Stmt;
     @:native("Body") var body: go.Pointer<go.go.ast.BlockStmt>;
 
-function new(_for: go.go.token.Pos, init: go.go.ast.Stmt, cond: go.go.ast.Expr, post: go.go.ast.Stmt, body: go.Pointer<go.go.ast.BlockStmt>);
+    function new(_for: go.go.token.Pos, init: go.go.ast.Stmt, cond: go.go.ast.Expr, post: go.go.ast.Stmt, body: go.Pointer<go.go.ast.BlockStmt>);
 
-    @:native("End") function end(): go.go.token.Pos;
-    @:native("Pos") function pos(): go.go.token.Pos;
+    @:native("End") function end(): (go.go.token.Pos);
+    @:native("Pos") function pos(): (go.go.token.Pos);
 
 }

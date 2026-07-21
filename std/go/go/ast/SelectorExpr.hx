@@ -7,9 +7,9 @@ extern class SelectorExpr {
     @:native("X") var X: go.go.ast.Expr;
     @:native("Sel") var sel: go.Pointer<go.go.ast.Ident>;
 
-function new(X: go.go.ast.Expr, sel: go.Pointer<go.go.ast.Ident>);
+    function new(X: go.go.ast.Expr, sel: go.Pointer<go.go.ast.Ident>);
 
-    @:native("End") function end(): go.go.token.Pos;
-    @:native("Pos") function pos(): go.go.token.Pos;
+    @:native("End") function end(): (go.go.token.Pos);
+    @:native("Pos") function pos(): (go.go.token.Pos);
 
 }

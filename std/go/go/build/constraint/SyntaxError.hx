@@ -7,8 +7,8 @@ extern class SyntaxError {
     @:native("Offset") var offset: go.GoInt;
     @:native("Err") var err: String;
 
-function new(offset: go.GoInt, err: String);
+    function new(offset: go.GoInt, err: String);
 
-    @:native("Error") function error(): String;
+    @:native("Error") function error(): (String);
 
 }

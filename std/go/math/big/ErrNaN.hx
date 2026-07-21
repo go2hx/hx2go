@@ -4,6 +4,6 @@ package go.math.big;
 @:go.Type({ name: "ErrNaN", instanceName: "big.ErrNaN", imports: ["math/big"] })
 extern class ErrNaN {
 
-    @:native("Error") function error(): String;
+    @:native("Error") function error(): (String);
 
 }

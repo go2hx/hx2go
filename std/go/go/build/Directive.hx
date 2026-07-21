@@ -7,6 +7,6 @@ extern class Directive {
     @:native("Text") var text: String;
     @:native("Pos") var pos: go.go.token.Position;
 
-function new(text: String, pos: go.go.token.Position);
+    function new(text: String, pos: go.go.token.Position);
 
 }

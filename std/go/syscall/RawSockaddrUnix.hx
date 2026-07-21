@@ -4,9 +4,10 @@ package go.syscall;
 @:go.Type({ name: "RawSockaddrUnix", instanceName: "syscall.RawSockaddrUnix", imports: ["syscall"] })
 extern class RawSockaddrUnix {
 
-    @:native("Family") var family: go.UInt16;
-    @:native("Path") var path: go.GoArray<go.Int8, 108>;
+    @:native("Len") var len: go.UInt8;
+    @:native("Family") var family: go.UInt8;
+    @:native("Path") var path: go.GoArray<go.Int8, 104>;
 
-function new(family: go.UInt16, path: go.GoArray<go.Int8, 108>);
+    function new(len: go.UInt8, family: go.UInt8, path: go.GoArray<go.Int8, 104>);
 
 }

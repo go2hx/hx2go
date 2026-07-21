@@ -5,7 +5,7 @@ package go.sync;
 extern class Mutex {
 
     @:native("Lock") function lock(): Void;
-    @:native("TryLock") function tryLock(): Bool;
+    @:native("TryLock") function tryLock(): (Bool);
     @:native("Unlock") function unlock(): Void;
 
 }

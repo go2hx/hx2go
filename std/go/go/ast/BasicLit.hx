@@ -9,9 +9,9 @@ extern class BasicLit {
     @:native("Kind") var kind: go.go.token.Token;
     @:native("Value") var value: String;
 
-function new(valuePos: go.go.token.Pos, valueEnd: go.go.token.Pos, kind: go.go.token.Token, value: String);
+    function new(valuePos: go.go.token.Pos, valueEnd: go.go.token.Pos, kind: go.go.token.Token, value: String);
 
-    @:native("End") function end(): go.go.token.Pos;
-    @:native("Pos") function pos(): go.go.token.Pos;
+    @:native("End") function end(): (go.go.token.Pos);
+    @:native("Pos") function pos(): (go.go.token.Pos);
 
 }

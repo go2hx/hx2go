@@ -7,6 +7,6 @@ extern class Instance {
     @:native("TypeArgs") var typeArgs: go.Pointer<go.go.types.TypeList>;
     @:native("Type") var type: go.go.types.Type;
 
-function new(typeArgs: go.Pointer<go.go.types.TypeList>, type: go.go.types.Type);
+    function new(typeArgs: go.Pointer<go.go.types.TypeList>, type: go.go.types.Type);
 
 }

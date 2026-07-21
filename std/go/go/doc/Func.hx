@@ -12,6 +12,6 @@ extern class Func {
     @:native("Level") var level: go.GoInt;
     @:native("Examples") var examples: go.Slice<go.Pointer<go.go.doc.Example>>;
 
-function new(doc: String, name: String, decl: go.Pointer<go.go.ast.FuncDecl>, recv: String, orig: String, level: go.GoInt, examples: go.Slice<go.Pointer<go.go.doc.Example>>);
+    function new(doc: String, name: String, decl: go.Pointer<go.go.ast.FuncDecl>, recv: String, orig: String, level: go.GoInt, examples: go.Slice<go.Pointer<go.go.doc.Example>>);
 
 }

@@ -1,3 +1,4 @@
+import sys.FileSystem;
 using StringTools;
 
 /*
@@ -91,6 +92,9 @@ function isUnsigned(t: String) {
 }
 
 function main() {
+    if (!FileSystem.exists(path)) {
+        FileSystem.createDirectory(path);
+    }
     for (t in types) {
         var module = toModuleName(t);
         var path = Path.join([ path, '$module.hx' ]);

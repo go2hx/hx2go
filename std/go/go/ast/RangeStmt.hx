@@ -13,9 +13,9 @@ extern class RangeStmt {
     @:native("X") var X: go.go.ast.Expr;
     @:native("Body") var body: go.Pointer<go.go.ast.BlockStmt>;
 
-function new(_for: go.go.token.Pos, key: go.go.ast.Expr, value: go.go.ast.Expr, tokPos: go.go.token.Pos, tok: go.go.token.Token, range: go.go.token.Pos, X: go.go.ast.Expr, body: go.Pointer<go.go.ast.BlockStmt>);
+    function new(_for: go.go.token.Pos, key: go.go.ast.Expr, value: go.go.ast.Expr, tokPos: go.go.token.Pos, tok: go.go.token.Token, range: go.go.token.Pos, X: go.go.ast.Expr, body: go.Pointer<go.go.ast.BlockStmt>);
 
-    @:native("End") function end(): go.go.token.Pos;
-    @:native("Pos") function pos(): go.go.token.Pos;
+    @:native("End") function end(): (go.go.token.Pos);
+    @:native("Pos") function pos(): (go.go.token.Pos);
 
 }

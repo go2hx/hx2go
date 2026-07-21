@@ -10,8 +10,8 @@ extern class UnmarshalTypeError {
     @:native("Struct") var struct: String;
     @:native("Field") var field: String;
 
-function new(value: String, type: go.reflect.Type, offset: go.Int64, struct: String, field: String);
+    function new(value: String, type: go.reflect.Type, offset: go.Int64, struct: String, field: String);
 
-    @:native("Error") function error(): String;
+    @:native("Error") function error(): (String);
 
 }

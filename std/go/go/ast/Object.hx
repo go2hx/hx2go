@@ -10,8 +10,8 @@ extern class Object {
     @:native("Data") var data: Dynamic;
     @:native("Type") var type: Dynamic;
 
-function new(kind: go.go.ast.ObjKind, name: String, decl: Dynamic, data: Dynamic, type: Dynamic);
+    function new(kind: go.go.ast.ObjKind, name: String, decl: Dynamic, data: Dynamic, type: Dynamic);
 
-    @:native("Pos") function pos(): go.go.token.Pos;
+    @:native("Pos") function pos(): (go.go.token.Pos);
 
 }

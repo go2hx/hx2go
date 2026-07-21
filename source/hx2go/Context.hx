@@ -551,7 +551,7 @@ class Context {
                     roots.push(def.constructor);
                 }
 
-                for (f in def.fields) {
+                for (f in def.fields.concat(def.statics)) {
                     var needsCoerce = switch f.type {
                         case TType(_): true;
                         case TAbstract({ pack: ['haxe', 'ds'], name: 'Map' }, _): true;

@@ -10,9 +10,9 @@ extern class CallExpr {
     @:native("Ellipsis") var ellipsis: go.go.token.Pos;
     @:native("Rparen") var rparen: go.go.token.Pos;
 
-function new(fun: go.go.ast.Expr, lparen: go.go.token.Pos, args: go.Slice<go.go.ast.Expr>, ellipsis: go.go.token.Pos, rparen: go.go.token.Pos);
+    function new(fun: go.go.ast.Expr, lparen: go.go.token.Pos, args: go.Slice<go.go.ast.Expr>, ellipsis: go.go.token.Pos, rparen: go.go.token.Pos);
 
-    @:native("End") function end(): go.go.token.Pos;
-    @:native("Pos") function pos(): go.go.token.Pos;
+    @:native("End") function end(): (go.go.token.Pos);
+    @:native("Pos") function pos(): (go.go.token.Pos);
 
 }

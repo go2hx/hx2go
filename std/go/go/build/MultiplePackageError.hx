@@ -8,8 +8,8 @@ extern class MultiplePackageError {
     @:native("Packages") var packages: go.Slice<String>;
     @:native("Files") var files: go.Slice<String>;
 
-function new(dir: String, packages: go.Slice<String>, files: go.Slice<String>);
+    function new(dir: String, packages: go.Slice<String>, files: go.Slice<String>);
 
-    @:native("Error") function error(): String;
+    @:native("Error") function error(): (String);
 
 }

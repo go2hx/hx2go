@@ -10,9 +10,9 @@ extern class FuncDecl {
     @:native("Type") var type: go.Pointer<go.go.ast.FuncType>;
     @:native("Body") var body: go.Pointer<go.go.ast.BlockStmt>;
 
-function new(doc: go.Pointer<go.go.ast.CommentGroup>, recv: go.Pointer<go.go.ast.FieldList>, name: go.Pointer<go.go.ast.Ident>, type: go.Pointer<go.go.ast.FuncType>, body: go.Pointer<go.go.ast.BlockStmt>);
+    function new(doc: go.Pointer<go.go.ast.CommentGroup>, recv: go.Pointer<go.go.ast.FieldList>, name: go.Pointer<go.go.ast.Ident>, type: go.Pointer<go.go.ast.FuncType>, body: go.Pointer<go.go.ast.BlockStmt>);
 
-    @:native("End") function end(): go.go.token.Pos;
-    @:native("Pos") function pos(): go.go.token.Pos;
+    @:native("End") function end(): (go.go.token.Pos);
+    @:native("Pos") function pos(): (go.go.token.Pos);
 
 }

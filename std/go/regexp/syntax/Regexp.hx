@@ -15,12 +15,12 @@ extern class Regexp {
     @:native("Cap") var cap: go.GoInt;
     @:native("Name") var name: String;
 
-function new(op: go.regexp.syntax.Op, flags: go.regexp.syntax.Flags, sub: go.Slice<go.Pointer<go.regexp.syntax.Regexp>>, sub0: go.GoArray<go.Pointer<go.regexp.syntax.Regexp>, 1>, rune: go.Slice<go.Rune>, rune0: go.GoArray<go.Rune, 2>, min: go.GoInt, max: go.GoInt, cap: go.GoInt, name: String);
+    function new(op: go.regexp.syntax.Op, flags: go.regexp.syntax.Flags, sub: go.Slice<go.Pointer<go.regexp.syntax.Regexp>>, sub0: go.GoArray<go.Pointer<go.regexp.syntax.Regexp>, 1>, rune: go.Slice<go.Rune>, rune0: go.GoArray<go.Rune, 2>, min: go.GoInt, max: go.GoInt, cap: go.GoInt, name: String);
 
-    @:native("CapNames") function capNames(): go.Slice<String>;
-    @:native("Equal") function equal(y: go.Pointer<go.regexp.syntax.Regexp>): Bool;
-    @:native("MaxCap") function maxCap(): go.GoInt;
-    @:native("Simplify") function simplify(): go.Pointer<go.regexp.syntax.Regexp>;
-    @:native("String") function string(): String;
+    @:native("CapNames") function capNames(): (go.Slice<String>);
+    @:native("Equal") function equal(y: go.Pointer<go.regexp.syntax.Regexp>): (Bool);
+    @:native("MaxCap") function maxCap(): (go.GoInt);
+    @:native("Simplify") function simplify(): (go.Pointer<go.regexp.syntax.Regexp>);
+    @:native("String") function string(): (String);
 
 }

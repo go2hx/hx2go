@@ -27,7 +27,7 @@ extern class Value {
     @:native("Equal") function equal(u: go.reflect.Value): (Bool);
     @:native("Field") function field(i: go.GoInt): (go.reflect.Value);
     @:native("FieldByIndex") function fieldByIndex(index: go.Slice<go.GoInt>): (go.reflect.Value);
-    @:native("FieldByIndexErr") function fieldByIndexErr(index: go.Slice<go.GoInt>): go.Result<go.reflect.Value>;
+    @:native("FieldByIndexErr") function fieldByIndexErr(index: go.Slice<go.GoInt>): (go.Result<go.reflect.Value>);
     @:native("FieldByName") function fieldByName(name: String): (go.reflect.Value);
     @:native("FieldByNameFunc") function fieldByNameFunc(match: (p0: String) -> (Bool)): (go.reflect.Value);
     @:native("Fields") function fields(): (go.iter.Seq2<go.reflect.StructField, go.reflect.Value>);
@@ -55,7 +55,7 @@ extern class Value {
     @:native("OverflowInt") function overflowInt(x: go.Int64): (Bool);
     @:native("OverflowUint") function overflowUint(x: go.UInt64): (Bool);
     @:native("Pointer") function pointer(): (go.UIntPtr);
-    @:go.Tuple("x", "ok") @:native("Recv") function recv(): go.Tuple<{ x: go.reflect.Value, ok: Bool }>;
+    @:go.Tuple("x", "ok") @:native("Recv") function recv(): (go.Tuple<{ x: go.reflect.Value, ok: Bool }>);
     @:native("Send") function send(x: go.reflect.Value): Void;
     @:native("Seq") function seq(): (go.iter.Seq<go.reflect.Value>);
     @:native("Seq2") function seq2(): (go.iter.Seq2<go.reflect.Value, go.reflect.Value>);
@@ -77,7 +77,7 @@ extern class Value {
     @:native("Slice") function slice(i: go.GoInt, j: go.GoInt): (go.reflect.Value);
     @:native("Slice3") function slice3(i: go.GoInt, j: go.GoInt, k: go.GoInt): (go.reflect.Value);
     @:native("String") function string(): (String);
-    @:go.Tuple("x", "ok") @:native("TryRecv") function tryRecv(): go.Tuple<{ x: go.reflect.Value, ok: Bool }>;
+    @:go.Tuple("x", "ok") @:native("TryRecv") function tryRecv(): (go.Tuple<{ x: go.reflect.Value, ok: Bool }>);
     @:native("TrySend") function trySend(x: go.reflect.Value): (Bool);
     @:native("Type") function type(): (go.reflect.Type);
     @:native("Uint") function uint(): (go.UInt64);

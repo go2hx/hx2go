@@ -9,8 +9,8 @@ extern class DocLink {
     @:native("Recv") var recv: String;
     @:native("Name") var name: String;
 
-function new(text: go.Slice<go.go.doc.comment.Text>, importPath: String, recv: String, name: String);
+    function new(text: go.Slice<go.go.doc.comment.Text>, importPath: String, recv: String, name: String);
 
-    @:native("DefaultURL") function defaultURL(baseURL: String): String;
+    @:native("DefaultURL") function defaultURL(baseURL: String): (String);
 
 }

@@ -6,13 +6,13 @@ extern class Base64 {
     @:native("NoPadding") static var NoPadding: go.Rune;
     @:native("StdPadding") static var StdPadding: go.Rune;
 
-    @:native("RawStdEncoding") static var RawStdEncoding: go.Pointer<go.encoding.base64.Encoding>;
-    @:native("RawURLEncoding") static var RawURLEncoding: go.Pointer<go.encoding.base64.Encoding>;
-    @:native("StdEncoding") static var StdEncoding: go.Pointer<go.encoding.base64.Encoding>;
-    @:native("URLEncoding") static var URLEncoding: go.Pointer<go.encoding.base64.Encoding>;
+    @:native("RawStdEncoding") static var rawStdEncoding: go.Pointer<go.encoding.base64.Encoding>;
+    @:native("RawURLEncoding") static var rawURLEncoding: go.Pointer<go.encoding.base64.Encoding>;
+    @:native("StdEncoding") static var stdEncoding: go.Pointer<go.encoding.base64.Encoding>;
+    @:native("URLEncoding") static var uRLEncoding: go.Pointer<go.encoding.base64.Encoding>;
 
-    @:native("NewDecoder") static function newDecoder(enc: go.Pointer<go.encoding.base64.Encoding>, r: go.io.Reader): go.io.Reader;
-    @:native("NewEncoder") static function newEncoder(enc: go.Pointer<go.encoding.base64.Encoding>, w: go.io.Writer): go.io.WriteCloser;
-    @:native("NewEncoding") static function newEncoding(encoder: String): go.Pointer<go.encoding.base64.Encoding>;
+    @:native("NewDecoder") static function newDecoder(enc: go.Pointer<go.encoding.base64.Encoding>, r: go.io.Reader): (go.io.Reader);
+    @:native("NewEncoder") static function newEncoder(enc: go.Pointer<go.encoding.base64.Encoding>, w: go.io.Writer): (go.io.WriteCloser);
+    @:native("NewEncoding") static function newEncoding(encoder: String): (go.Pointer<go.encoding.base64.Encoding>);
 
 }

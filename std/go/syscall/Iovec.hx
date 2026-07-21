@@ -7,7 +7,7 @@ extern class Iovec {
     @:native("Base") var base: go.Pointer<go.Byte>;
     @:native("Len") var len: go.UInt64;
 
-function new(base: go.Pointer<go.Byte>, len: go.UInt64);
+    function new(base: go.Pointer<go.Byte>, len: go.UInt64);
 
     @:native("SetLen") function setLen(length: go.GoInt): Void;
 

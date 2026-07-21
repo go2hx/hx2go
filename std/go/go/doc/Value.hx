@@ -8,6 +8,6 @@ extern class Value {
     @:native("Names") var names: go.Slice<String>;
     @:native("Decl") var decl: go.Pointer<go.go.ast.GenDecl>;
 
-function new(doc: String, names: go.Slice<String>, decl: go.Pointer<go.go.ast.GenDecl>);
+    function new(doc: String, names: go.Slice<String>, decl: go.Pointer<go.go.ast.GenDecl>);
 
 }

@@ -8,6 +8,6 @@ extern class Link {
     @:native("Text") var text: go.Slice<go.go.doc.comment.Text>;
     @:native("URL") var URL: String;
 
-function new(auto: Bool, text: go.Slice<go.go.doc.comment.Text>, URL: String);
+    function new(auto: Bool, text: go.Slice<go.go.doc.comment.Text>, URL: String);
 
 }

@@ -8,9 +8,9 @@ extern class KeyValueExpr {
     @:native("Colon") var colon: go.go.token.Pos;
     @:native("Value") var value: go.go.ast.Expr;
 
-function new(key: go.go.ast.Expr, colon: go.go.token.Pos, value: go.go.ast.Expr);
+    function new(key: go.go.ast.Expr, colon: go.go.token.Pos, value: go.go.ast.Expr);
 
-    @:native("End") function end(): go.go.token.Pos;
-    @:native("Pos") function pos(): go.go.token.Pos;
+    @:native("End") function end(): (go.go.token.Pos);
+    @:native("Pos") function pos(): (go.go.token.Pos);
 
 }

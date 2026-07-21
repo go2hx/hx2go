@@ -17,10 +17,10 @@ extern class Big {
     @:native("ToPositiveInf") static var ToPositiveInf: go.math.big.RoundingMode;
     @:native("ToZero") static var ToZero: go.math.big.RoundingMode;
 
-    @:native("Jacobi") static function jacobi(x: go.Pointer<go.math.big.Int>, y: go.Pointer<go.math.big.Int>): go.GoInt;
-    @:native("NewFloat") static function newFloat(x: Float): go.Pointer<go.math.big.Float>;
-    @:native("NewInt") static function newInt(x: go.Int64): go.Pointer<go.math.big.Int>;
-    @:native("NewRat") static function newRat(a: go.Int64, b: go.Int64): go.Pointer<go.math.big.Rat>;
-    @:go.Tuple("f", "b", "err") @:native("ParseFloat") static function parseFloat(s: String, base: go.GoInt, prec: go.GoUInt, mode: go.math.big.RoundingMode): go.Tuple<{ f: go.Pointer<go.math.big.Float>, b: go.GoInt, err: go.Error }>;
+    @:native("Jacobi") static function jacobi(x: go.Pointer<go.math.big.Int>, y: go.Pointer<go.math.big.Int>): (go.GoInt);
+    @:native("NewFloat") static function newFloat(x: Float): (go.Pointer<go.math.big.Float>);
+    @:native("NewInt") static function newInt(x: go.Int64): (go.Pointer<go.math.big.Int>);
+    @:native("NewRat") static function newRat(a: go.Int64, b: go.Int64): (go.Pointer<go.math.big.Rat>);
+    @:go.Tuple("f", "b", "err") @:native("ParseFloat") static function parseFloat(s: String, base: go.GoInt, prec: go.GoUInt, mode: go.math.big.RoundingMode): (go.Tuple<{ f: go.Pointer<go.math.big.Float>, b: go.GoInt, err: go.Error }>);
 
 }

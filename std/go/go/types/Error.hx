@@ -9,8 +9,8 @@ extern class Error {
     @:native("Msg") var msg: String;
     @:native("Soft") var soft: Bool;
 
-function new(fset: go.Pointer<go.go.token.FileSet>, pos: go.go.token.Pos, msg: String, soft: Bool);
+    function new(fset: go.Pointer<go.go.token.FileSet>, pos: go.go.token.Pos, msg: String, soft: Bool);
 
-    @:native("Error") function error(): String;
+    @:native("Error") function error(): (String);
 
 }

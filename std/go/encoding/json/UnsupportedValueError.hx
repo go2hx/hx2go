@@ -7,8 +7,8 @@ extern class UnsupportedValueError {
     @:native("Value") var value: go.reflect.Value;
     @:native("Str") var str: String;
 
-function new(value: go.reflect.Value, str: String);
+    function new(value: go.reflect.Value, str: String);
 
-    @:native("Error") function error(): String;
+    @:native("Error") function error(): (String);
 
 }

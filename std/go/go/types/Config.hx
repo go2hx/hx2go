@@ -13,8 +13,8 @@ extern class Config {
     @:native("Sizes") var sizes: go.go.types.Sizes;
     @:native("DisableUnusedImportCheck") var disableUnusedImportCheck: Bool;
 
-function new(context: go.Pointer<go.go.types.Context>, goVersion: String, ignoreFuncBodies: Bool, fakeImportC: Bool, error: (err: go.Error) -> Void, importer: go.go.types.Importer, sizes: go.go.types.Sizes, disableUnusedImportCheck: Bool);
+    function new(context: go.Pointer<go.go.types.Context>, goVersion: String, ignoreFuncBodies: Bool, fakeImportC: Bool, error: (err: go.Error) -> Void, importer: go.go.types.Importer, sizes: go.go.types.Sizes, disableUnusedImportCheck: Bool);
 
-    @:native("Check") function check(path: String, fset: go.Pointer<go.go.token.FileSet>, files: go.Slice<go.Pointer<go.go.ast.File>>, info: go.Pointer<go.go.types.Info>): go.Result<go.Pointer<go.go.types.Package>>;
+    @:native("Check") function check(path: String, fset: go.Pointer<go.go.token.FileSet>, files: go.Slice<go.Pointer<go.go.ast.File>>, info: go.Pointer<go.go.types.Info>): (go.Result<go.Pointer<go.go.types.Package>>);
 
 }

@@ -7,8 +7,8 @@ extern class Error {
     @:native("Pos") var pos: go.go.token.Position;
     @:native("Msg") var msg: String;
 
-function new(pos: go.go.token.Position, msg: String);
+    function new(pos: go.go.token.Position, msg: String);
 
-    @:native("Error") function error(): String;
+    @:native("Error") function error(): (String);
 
 }

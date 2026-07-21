@@ -15,8 +15,8 @@ extern typedef Type = {
     @:native("Field") function field(i: go.GoInt): (go.reflect.StructField);
     @:native("FieldAlign") function fieldAlign(): (go.GoInt);
     @:native("FieldByIndex") function fieldByIndex(index: go.Slice<go.GoInt>): (go.reflect.StructField);
-    @:go.Tuple("p0", "p1") @:native("FieldByName") function fieldByName(name: String): go.Tuple<{ p0: go.reflect.StructField, p1: Bool }>;
-    @:go.Tuple("p0", "p1") @:native("FieldByNameFunc") function fieldByNameFunc(match: (p0: String) -> (Bool)): go.Tuple<{ p0: go.reflect.StructField, p1: Bool }>;
+    @:go.Tuple("p0", "p1") @:native("FieldByName") function fieldByName(name: String): (go.Tuple<{ p0: go.reflect.StructField, p1: Bool }>);
+    @:go.Tuple("p0", "p1") @:native("FieldByNameFunc") function fieldByNameFunc(match: (p0: String) -> (Bool)): (go.Tuple<{ p0: go.reflect.StructField, p1: Bool }>);
     @:native("Fields") function fields(): (go.iter.Seq<go.reflect.StructField>);
     @:native("Implements") function _implements(u: go.reflect.Type): (Bool);
     @:native("In") function _in(i: go.GoInt): (go.reflect.Type);
@@ -26,7 +26,7 @@ extern typedef Type = {
     @:native("Kind") function kind(): (go.reflect.Kind);
     @:native("Len") function len(): (go.GoInt);
     @:native("Method") function method(p0: go.GoInt): (go.reflect.Method);
-    @:go.Tuple("p0", "p1") @:native("MethodByName") function methodByName(p0: String): go.Tuple<{ p0: go.reflect.Method, p1: Bool }>;
+    @:go.Tuple("p0", "p1") @:native("MethodByName") function methodByName(p0: String): (go.Tuple<{ p0: go.reflect.Method, p1: Bool }>);
     @:native("Methods") function methods(): (go.iter.Seq<go.reflect.Method>);
     @:native("Name") function name(): (String);
     @:native("NumField") function numField(): (go.GoInt);

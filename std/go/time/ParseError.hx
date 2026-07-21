@@ -10,8 +10,8 @@ extern class ParseError {
     @:native("ValueElem") var valueElem: String;
     @:native("Message") var message: String;
 
-function new(layout: String, value: String, layoutElem: String, valueElem: String, message: String);
+    function new(layout: String, value: String, layoutElem: String, valueElem: String, message: String);
 
-    @:native("Error") function error(): String;
+    @:native("Error") function error(): (String);
 
 }

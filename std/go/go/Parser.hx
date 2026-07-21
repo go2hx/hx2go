@@ -1,5 +1,6 @@
 package go.go;
 
+@:structInit
 @:go.Type({ name: "parser", instanceName: "parser.parser", imports: ["go/parser"] })
 extern class Parser {
 
@@ -12,9 +13,9 @@ extern class Parser {
     @:native("SpuriousErrors") static var SpuriousErrors: go.go.parser.Mode;
     @:native("Trace") static var Trace: go.go.parser.Mode;
 
-    @:native("ParseDir") static function parseDir(fset: go.Pointer<go.go.token.FileSet>, path: String, filter: (p0: go.io.fs.FileInfo) -> Bool, mode: go.go.parser.Mode): go.Result<go.Map<String, go.Pointer<go.go.ast.Package>>>;
-    @:native("ParseExpr") static function parseExpr(x: String): go.Result<go.go.ast.Expr>;
-    @:native("ParseExprFrom") static function parseExprFrom(fset: go.Pointer<go.go.token.FileSet>, filename: String, src: Dynamic, mode: go.go.parser.Mode): go.Result<go.go.ast.Expr>;
-    @:native("ParseFile") static function parseFile(fset: go.Pointer<go.go.token.FileSet>, filename: String, src: Dynamic, mode: go.go.parser.Mode): go.Result<go.Pointer<go.go.ast.File>>;
+    @:native("ParseDir") static function parseDir(fset: go.Pointer<go.go.token.FileSet>, path: String, filter: (p0: go.io.fs.FileInfo) -> (Bool), mode: go.go.parser.Mode): (go.Result<go.Map<String, go.Pointer<go.go.ast.Package>>>);
+    @:native("ParseExpr") static function parseExpr(x: String): (go.Result<go.go.ast.Expr>);
+    @:native("ParseExprFrom") static function parseExprFrom(fset: go.Pointer<go.go.token.FileSet>, filename: String, src: Dynamic, mode: go.go.parser.Mode): (go.Result<go.go.ast.Expr>);
+    @:native("ParseFile") static function parseFile(fset: go.Pointer<go.go.token.FileSet>, filename: String, src: Dynamic, mode: go.go.parser.Mode): (go.Result<go.Pointer<go.go.ast.File>>);
 
 }

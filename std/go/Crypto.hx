@@ -23,7 +23,7 @@ extern class Crypto {
     @:native("SHA512_224") static var SHA512_224: go.crypto.Hash;
     @:native("SHA512_256") static var SHA512_256: go.crypto.Hash;
 
-    @:native("RegisterHash") static function registerHash(h: go.crypto.Hash, f: () -> go.hash.Hash): Void;
-    @:native("SignMessage") static function signMessage(signer: go.crypto.Signer, rand: go.io.Reader, msg: go.Slice<go.Byte>, opts: go.crypto.SignerOpts): go.Result<go.Slice<go.Byte>>;
+    @:native("RegisterHash") static function registerHash(h: go.crypto.Hash, f: () -> (go.hash.Hash)): Void;
+    @:native("SignMessage") static function signMessage(signer: go.crypto.Signer, rand: go.io.Reader, msg: go.Slice<go.Byte>, opts: go.crypto.SignerOpts): (go.Result<go.Slice<go.Byte>>);
 
 }

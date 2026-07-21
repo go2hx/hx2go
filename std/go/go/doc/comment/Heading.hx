@@ -6,8 +6,8 @@ extern class Heading {
 
     @:native("Text") var text: go.Slice<go.go.doc.comment.Text>;
 
-function new(text: go.Slice<go.go.doc.comment.Text>);
+    function new(text: go.Slice<go.go.doc.comment.Text>);
 
-    @:native("DefaultID") function defaultID(): String;
+    @:native("DefaultID") function defaultID(): (String);
 
 }

@@ -5,8 +5,8 @@ package go.syscall;
 extern class RawSockaddrAny {
 
     @:native("Addr") var addr: go.syscall.RawSockaddr;
-    @:native("Pad") var pad: go.GoArray<go.Int8, 96>;
+    @:native("Pad") var pad: go.GoArray<go.Int8, 92>;
 
-function new(addr: go.syscall.RawSockaddr, pad: go.GoArray<go.Int8, 96>);
+    function new(addr: go.syscall.RawSockaddr, pad: go.GoArray<go.Int8, 92>);
 
 }

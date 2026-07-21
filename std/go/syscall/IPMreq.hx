@@ -5,8 +5,8 @@ package go.syscall;
 extern class IPMreq {
 
     @:native("Multiaddr") var multiaddr: go.GoArray<go.Byte, 4>;
-    @:native("Interface") var iface: go.GoArray<go.Byte, 4>;
+    @:native("Interface") var _interface: go.GoArray<go.Byte, 4>;
 
-function new(multiaddr: go.GoArray<go.Byte, 4>, iface: go.GoArray<go.Byte, 4>);
+    function new(multiaddr: go.GoArray<go.Byte, 4>, _interface: go.GoArray<go.Byte, 4>);
 
 }

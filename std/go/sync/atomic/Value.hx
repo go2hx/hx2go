@@ -4,9 +4,9 @@ package go.sync.atomic;
 @:go.Type({ name: "Value", instanceName: "atomic.Value", imports: ["sync/atomic"] })
 extern class Value {
 
-    @:native("CompareAndSwap") function compareAndSwap(old: Dynamic, _new: Dynamic): Bool;
-    @:native("Load") function load(): Dynamic;
+    @:native("CompareAndSwap") function compareAndSwap(old: Dynamic, _new: Dynamic): (Bool);
+    @:native("Load") function load(): (Dynamic);
     @:native("Store") function store(val: Dynamic): Void;
-    @:native("Swap") function swap(_new: Dynamic): Dynamic;
+    @:native("Swap") function swap(_new: Dynamic): (Dynamic);
 
 }

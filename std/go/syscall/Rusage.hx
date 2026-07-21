@@ -21,6 +21,6 @@ extern class Rusage {
     @:native("Nvcsw") var nvcsw: go.Int64;
     @:native("Nivcsw") var nivcsw: go.Int64;
 
-function new(utime: go.syscall.Timeval, stime: go.syscall.Timeval, maxrss: go.Int64, ixrss: go.Int64, idrss: go.Int64, isrss: go.Int64, minflt: go.Int64, majflt: go.Int64, nswap: go.Int64, inblock: go.Int64, oublock: go.Int64, msgsnd: go.Int64, msgrcv: go.Int64, nsignals: go.Int64, nvcsw: go.Int64, nivcsw: go.Int64);
+    function new(utime: go.syscall.Timeval, stime: go.syscall.Timeval, maxrss: go.Int64, ixrss: go.Int64, idrss: go.Int64, isrss: go.Int64, minflt: go.Int64, majflt: go.Int64, nswap: go.Int64, inblock: go.Int64, oublock: go.Int64, msgsnd: go.Int64, msgrcv: go.Int64, nsignals: go.Int64, nvcsw: go.Int64, nivcsw: go.Int64);
 
 }

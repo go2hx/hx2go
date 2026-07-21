@@ -8,6 +8,6 @@ extern class Range32 {
     @:native("Hi") var hi: go.UInt32;
     @:native("Stride") var stride: go.UInt32;
 
-function new(lo: go.UInt32, hi: go.UInt32, stride: go.UInt32);
+    function new(lo: go.UInt32, hi: go.UInt32, stride: go.UInt32);
 
 }

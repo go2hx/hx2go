@@ -13,6 +13,6 @@ extern class Type {
     @:native("Methods") var methods: go.Slice<go.Pointer<go.go.doc.Func>>;
     @:native("Examples") var examples: go.Slice<go.Pointer<go.go.doc.Example>>;
 
-function new(doc: String, name: String, decl: go.Pointer<go.go.ast.GenDecl>, consts: go.Slice<go.Pointer<go.go.doc.Value>>, vars: go.Slice<go.Pointer<go.go.doc.Value>>, funcs: go.Slice<go.Pointer<go.go.doc.Func>>, methods: go.Slice<go.Pointer<go.go.doc.Func>>, examples: go.Slice<go.Pointer<go.go.doc.Example>>);
+    function new(doc: String, name: String, decl: go.Pointer<go.go.ast.GenDecl>, consts: go.Slice<go.Pointer<go.go.doc.Value>>, vars: go.Slice<go.Pointer<go.go.doc.Value>>, funcs: go.Slice<go.Pointer<go.go.doc.Func>>, methods: go.Slice<go.Pointer<go.go.doc.Func>>, examples: go.Slice<go.Pointer<go.go.doc.Example>>);
 
 }

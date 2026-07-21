@@ -9,9 +9,9 @@ extern class Position {
     @:native("Line") var line: go.GoInt;
     @:native("Column") var column: go.GoInt;
 
-function new(filename: String, offset: go.GoInt, line: go.GoInt, column: go.GoInt);
+    function new(filename: String, offset: go.GoInt, line: go.GoInt, column: go.GoInt);
 
-    @:native("IsValid") function isValid(): Bool;
-    @:native("String") function string(): String;
+    @:native("IsValid") function isValid(): (Bool);
+    @:native("String") function string(): (String);
 
 }

@@ -8,9 +8,9 @@ extern class List {
     @:native("ForceBlankBefore") var forceBlankBefore: Bool;
     @:native("ForceBlankBetween") var forceBlankBetween: Bool;
 
-function new(items: go.Slice<go.Pointer<go.go.doc.comment.ListItem>>, forceBlankBefore: Bool, forceBlankBetween: Bool);
+    function new(items: go.Slice<go.Pointer<go.go.doc.comment.ListItem>>, forceBlankBefore: Bool, forceBlankBetween: Bool);
 
-    @:native("BlankBefore") function blankBefore(): Bool;
-    @:native("BlankBetween") function blankBetween(): Bool;
+    @:native("BlankBefore") function blankBefore(): (Bool);
+    @:native("BlankBetween") function blankBetween(): (Bool);
 
 }

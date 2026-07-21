@@ -9,9 +9,9 @@ extern class BinaryExpr {
     @:native("Op") var op: go.go.token.Token;
     @:native("Y") var Y: go.go.ast.Expr;
 
-function new(X: go.go.ast.Expr, opPos: go.go.token.Pos, op: go.go.token.Token, Y: go.go.ast.Expr);
+    function new(X: go.go.ast.Expr, opPos: go.go.token.Pos, op: go.go.token.Token, Y: go.go.ast.Expr);
 
-    @:native("End") function end(): go.go.token.Pos;
-    @:native("Pos") function pos(): go.go.token.Pos;
+    @:native("End") function end(): (go.go.token.Pos);
+    @:native("Pos") function pos(): (go.go.token.Pos);
 
 }

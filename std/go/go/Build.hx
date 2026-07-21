@@ -8,12 +8,12 @@ extern class Build {
     @:native("IgnoreVendor") static var IgnoreVendor: go.go.build.ImportMode;
     @:native("ImportComment") static var ImportComment: go.go.build.ImportMode;
 
-    @:native("Default") static var Default: go.go.build.Context;
-    @:native("ToolDir") static var ToolDir: String;
+    @:native("Default") static var _default: go.go.build.Context;
+    @:native("ToolDir") static var toolDir: String;
 
-    @:native("ArchChar") static function archChar(goarch: String): go.Result<String>;
-    @:native("Import") static function _import(path: String, srcDir: String, mode: go.go.build.ImportMode): go.Result<go.Pointer<go.go.build.Package>>;
-    @:native("ImportDir") static function importDir(dir: String, mode: go.go.build.ImportMode): go.Result<go.Pointer<go.go.build.Package>>;
-    @:native("IsLocalImport") static function isLocalImport(path: String): Bool;
+    @:native("ArchChar") static function archChar(goarch: String): (go.Result<String>);
+    @:native("Import") static function _import(path: String, srcDir: String, mode: go.go.build.ImportMode): (go.Result<go.Pointer<go.go.build.Package>>);
+    @:native("ImportDir") static function importDir(dir: String, mode: go.go.build.ImportMode): (go.Result<go.Pointer<go.go.build.Package>>);
+    @:native("IsLocalImport") static function isLocalImport(path: String): (Bool);
 
 }

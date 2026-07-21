@@ -8,6 +8,6 @@ extern class LinkDef {
     @:native("URL") var URL: String;
     @:native("Used") var used: Bool;
 
-function new(text: String, URL: String, used: Bool);
+    function new(text: String, URL: String, used: Bool);
 
 }

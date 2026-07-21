@@ -69,9 +69,9 @@ extern class Syntax {
     @:native("UnicodeGroups") static var UnicodeGroups: go.regexp.syntax.Flags;
     @:native("WasDollar") static var WasDollar: go.regexp.syntax.Flags;
 
-    @:native("Compile") static function compile(re: go.Pointer<go.regexp.syntax.Regexp>): go.Result<go.Pointer<go.regexp.syntax.Prog>>;
-    @:native("EmptyOpContext") static function emptyOpContext(r1: go.Rune, r2: go.Rune): go.regexp.syntax.EmptyOp;
-    @:native("IsWordChar") static function isWordChar(r: go.Rune): Bool;
-    @:native("Parse") static function parse(s: String, flags: go.regexp.syntax.Flags): go.Result<go.Pointer<go.regexp.syntax.Regexp>>;
+    @:native("Compile") static function compile(re: go.Pointer<go.regexp.syntax.Regexp>): (go.Result<go.Pointer<go.regexp.syntax.Prog>>);
+    @:native("EmptyOpContext") static function emptyOpContext(r1: go.Rune, r2: go.Rune): (go.regexp.syntax.EmptyOp);
+    @:native("IsWordChar") static function isWordChar(r: go.Rune): (Bool);
+    @:native("Parse") static function parse(s: String, flags: go.regexp.syntax.Flags): (go.Result<go.Pointer<go.regexp.syntax.Regexp>>);
 
 }

@@ -16,9 +16,9 @@ extern class File {
     @:native("Comments") var comments: go.Slice<go.Pointer<go.go.ast.CommentGroup>>;
     @:native("GoVersion") var goVersion: String;
 
-function new(doc: go.Pointer<go.go.ast.CommentGroup>, _package: go.go.token.Pos, name: go.Pointer<go.go.ast.Ident>, decls: go.Slice<go.go.ast.Decl>, fileStart: go.go.token.Pos, fileEnd: go.go.token.Pos, scope: go.Pointer<go.go.ast.Scope>, imports: go.Slice<go.Pointer<go.go.ast.ImportSpec>>, unresolved: go.Slice<go.Pointer<go.go.ast.Ident>>, comments: go.Slice<go.Pointer<go.go.ast.CommentGroup>>, goVersion: String);
+    function new(doc: go.Pointer<go.go.ast.CommentGroup>, _package: go.go.token.Pos, name: go.Pointer<go.go.ast.Ident>, decls: go.Slice<go.go.ast.Decl>, fileStart: go.go.token.Pos, fileEnd: go.go.token.Pos, scope: go.Pointer<go.go.ast.Scope>, imports: go.Slice<go.Pointer<go.go.ast.ImportSpec>>, unresolved: go.Slice<go.Pointer<go.go.ast.Ident>>, comments: go.Slice<go.Pointer<go.go.ast.CommentGroup>>, goVersion: String);
 
-    @:native("End") function end(): go.go.token.Pos;
-    @:native("Pos") function pos(): go.go.token.Pos;
+    @:native("End") function end(): (go.go.token.Pos);
+    @:native("Pos") function pos(): (go.go.token.Pos);
 
 }

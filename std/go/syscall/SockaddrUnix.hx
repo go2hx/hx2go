@@ -6,6 +6,6 @@ extern class SockaddrUnix {
 
     @:native("Name") var name: String;
 
-function new(name: String);
+    function new(name: String);
 
 }

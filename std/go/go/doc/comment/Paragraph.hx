@@ -6,6 +6,6 @@ extern class Paragraph {
 
     @:native("Text") var text: go.Slice<go.go.doc.comment.Text>;
 
-function new(text: go.Slice<go.go.doc.comment.Text>);
+    function new(text: go.Slice<go.go.doc.comment.Text>);
 
 }

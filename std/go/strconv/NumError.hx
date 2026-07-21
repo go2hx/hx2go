@@ -8,9 +8,9 @@ extern class NumError {
     @:native("Num") var num: String;
     @:native("Err") var err: go.Error;
 
-function new(func: String, num: String, err: go.Error);
+    function new(func: String, num: String, err: go.Error);
 
-    @:native("Error") function error(): String;
-    @:native("Unwrap") function unwrap(): go.Error;
+    @:native("Error") function error(): (String);
+    @:native("Unwrap") function unwrap(): (go.Error);
 
 }

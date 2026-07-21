@@ -6,8 +6,8 @@ extern class InvalidUTF8Error {
 
     @:native("S") var S: String;
 
-function new(S: String);
+    function new(S: String);
 
-    @:native("Error") function error(): String;
+    @:native("Error") function error(): (String);
 
 }

@@ -19,17 +19,17 @@ extern class Fs {
     @:native("ModeTemporary") static var ModeTemporary: go.io.fs.FileMode;
     @:native("ModeType") static var ModeType: go.io.fs.FileMode;
 
-    @:native("FileInfoToDirEntry") static function fileInfoToDirEntry(info: go.io.fs.FileInfo): go.io.fs.DirEntry;
-    @:native("FormatDirEntry") static function formatDirEntry(dir: go.io.fs.DirEntry): String;
-    @:native("FormatFileInfo") static function formatFileInfo(info: go.io.fs.FileInfo): String;
-    @:native("Glob") static function glob(fsys: go.io.fs.FS, pattern: String): go.Result<go.Slice<String>>;
-    @:native("Lstat") static function lstat(fsys: go.io.fs.FS, name: String): go.Result<go.io.fs.FileInfo>;
-    @:native("ReadDir") static function readDir(fsys: go.io.fs.FS, name: String): go.Result<go.Slice<go.io.fs.DirEntry>>;
-    @:native("ReadFile") static function readFile(fsys: go.io.fs.FS, name: String): go.Result<go.Slice<go.Byte>>;
-    @:native("ReadLink") static function readLink(fsys: go.io.fs.FS, name: String): go.Result<String>;
-    @:native("Stat") static function stat(fsys: go.io.fs.FS, name: String): go.Result<go.io.fs.FileInfo>;
-    @:native("Sub") static function sub(fsys: go.io.fs.FS, dir: String): go.Result<go.io.fs.FS>;
-    @:native("ValidPath") static function validPath(name: String): Bool;
-    @:native("WalkDir") static function walkDir(fsys: go.io.fs.FS, root: String, fn: go.io.fs.WalkDirFunc): go.Error;
+    @:native("FileInfoToDirEntry") static function fileInfoToDirEntry(info: go.io.fs.FileInfo): (go.io.fs.DirEntry);
+    @:native("FormatDirEntry") static function formatDirEntry(dir: go.io.fs.DirEntry): (String);
+    @:native("FormatFileInfo") static function formatFileInfo(info: go.io.fs.FileInfo): (String);
+    @:native("Glob") static function glob(fsys: go.io.fs.FS, pattern: String): (go.Result<go.Slice<String>>);
+    @:native("Lstat") static function lstat(fsys: go.io.fs.FS, name: String): (go.Result<go.io.fs.FileInfo>);
+    @:native("ReadDir") static function readDir(fsys: go.io.fs.FS, name: String): (go.Result<go.Slice<go.io.fs.DirEntry>>);
+    @:native("ReadFile") static function readFile(fsys: go.io.fs.FS, name: String): (go.Result<go.Slice<go.Byte>>);
+    @:native("ReadLink") static function readLink(fsys: go.io.fs.FS, name: String): (go.Result<String>);
+    @:native("Stat") static function stat(fsys: go.io.fs.FS, name: String): (go.Result<go.io.fs.FileInfo>);
+    @:native("Sub") static function sub(fsys: go.io.fs.FS, dir: String): (go.Result<go.io.fs.FS>);
+    @:native("ValidPath") static function validPath(name: String): (Bool);
+    @:native("WalkDir") static function walkDir(fsys: go.io.fs.FS, root: String, fn: go.io.fs.WalkDirFunc): (go.Error);
 
 }

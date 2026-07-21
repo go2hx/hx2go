@@ -8,8 +8,8 @@ extern class UnmarshalFieldError {
     @:native("Type") var type: go.reflect.Type;
     @:native("Field") var field: go.reflect.StructField;
 
-function new(key: String, type: go.reflect.Type, field: go.reflect.StructField);
+    function new(key: String, type: go.reflect.Type, field: go.reflect.StructField);
 
-    @:native("Error") function error(): String;
+    @:native("Error") function error(): (String);
 
 }

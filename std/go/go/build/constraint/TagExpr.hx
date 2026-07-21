@@ -6,9 +6,9 @@ extern class TagExpr {
 
     @:native("Tag") var tag: String;
 
-function new(tag: String);
+    function new(tag: String);
 
-    @:native("Eval") function eval(ok: (tag: String) -> Bool): Bool;
-    @:native("String") function string(): String;
+    @:native("Eval") function eval(ok: (tag: String) -> (Bool)): (Bool);
+    @:native("String") function string(): (String);
 
 }

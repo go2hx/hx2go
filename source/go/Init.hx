@@ -17,6 +17,10 @@ class Init {
 			return;
 		}
 		var self = Context.resolvePath("go/Init.hx");
+		// Override layer first so its modules take priority over both the base
+		// go target library (std/) and Haxe's own standard library.
+		var path = Path.join([ Path.directory(self), '..', '..', '_std' ]);
+		Compiler.addClassPath(path);
 		var path = Path.join([ Path.directory(self), '..', '..', 'std' ]);
 		Compiler.addClassPath(path);
 	}

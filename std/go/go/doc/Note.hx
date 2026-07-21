@@ -9,6 +9,6 @@ extern class Note {
     @:native("UID") var UID: String;
     @:native("Body") var body: String;
 
-function new(pos: go.go.token.Pos, end: go.go.token.Pos, UID: String, body: String);
+    function new(pos: go.go.token.Pos, end: go.go.token.Pos, UID: String, body: String);
 
 }

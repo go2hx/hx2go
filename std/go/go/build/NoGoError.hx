@@ -6,8 +6,8 @@ extern class NoGoError {
 
     @:native("Dir") var dir: String;
 
-function new(dir: String);
+    function new(dir: String);
 
-    @:native("Error") function error(): String;
+    @:native("Error") function error(): (String);
 
 }

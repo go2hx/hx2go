@@ -1,0 +1,5 @@
+-m IsolatedMain
+-cp source
+-L hx2go
+--custom-target go=output/isolated
+--cmd go -C output/isolated/main run .

@@ -1,6 +1,7 @@
 package go;
 
 #if (macro)
+import hx2go.version.Version;
 import sys.FileSystem;
 import haxe.macro.PlatformConfig;
 import haxe.macro.Compiler;
@@ -90,16 +91,13 @@ class Init {
 			FileSystem.createDirectory(absoluteOutput);
 		}
 
-		if (libraries.length > 0) {
+		if (libraries.length > 0 && !Context.defined("no-compilation")) {
 			if (!FileSystem.exists(librariesOutput)) {
 				FileSystem.createDirectory(librariesOutput);
 			}
 
 			Compiler.addClassPath(librariesOutput);
-
-			for (lib in libraries) {
-				Sys.command('haxelib', ['run', 'go2hx', lib, librariesOutput]);
-			}
+			new Process('haxelib', ['run', 'go2hx'].concat(libraries).concat([librariesOutput]));
 		}
 
 		Compiler.setPlatformConfiguration(newConfig);
@@ -114,8 +112,8 @@ class Init {
 
 		// register custom defines
 		Compiler.registerCustomDefine({
-			define: "go-bootstrap",
-			doc: "use the bootrapped version of the compiler (running on the Go target)",
+			define: "no-go-bootstrap",
+			doc: "do not use the bootrapped version of the compiler (running on the Go target)",
 		});
 		Compiler.registerCustomDefine({
 			define: "go-lib",
@@ -154,25 +152,36 @@ class Init {
 
 			var self = Context.resolvePath("go/Init.hx");
 			var path = Path.join([ Path.directory(self), '..', '..' ]);
-
-			if (Context.defined("go-bootstrap")) {
-				final bin = Path.join([ path, executable("main") ]);
-				if (!FileSystem.exists(bin)) {
-					throw 'bootstrap executable not found';
+			if (!Context.defined("no-compilation")) {
+				if (!Context.defined("no-go-bootstrap")) {
+					final bin = Path.join([ path, "output/bootstrap/main", executable("main") ]);
+					var rebuild = false;
+					#if rebuild
+					rebuild = true;
+					#else
+					if (!FileSystem.exists(bin) || Version.stale())
+						rebuild = true;
+					#end
+					if (rebuild) {
+						Sys.println("Bootstrapping the compiler");
+						var code = Sys.command("haxe Bootstrap.hxml");
+						if (code != 0)
+							throw "bootstrap failed";
+					}
+					var args = [archiveOutput, sourceOutput, mainClassName];
+					var code = Sys.command(bin, args);
+					if (code != 0)
+						throw "compiler failed";
+				} else {
+					final bin = Path.join(["Compile-eval.hxml"]);
+					var args = [bin, archiveOutput, sourceOutput, mainClassName];
+					var oldCwd = Sys.getCwd();
+					Sys.setCwd(path);
+					var code = Sys.command("haxe", args);
+					Sys.setCwd(oldCwd);
+					if (code != 0)
+						throw "compiler(eval) failed";
 				}
-				var args = [archiveOutput, sourceOutput, mainClassName];
-				var code = Sys.command(bin, args);
-				if (code != 0)
-					throw "bootstrap failed";
-			} else {
-				final bin = Path.join(["Compile-eval.hxml"]);
-				var args = [bin, archiveOutput, sourceOutput, mainClassName];
-				var oldCwd = Sys.getCwd();
-				Sys.setCwd(path);
-				var code = Sys.command("haxe", args);
-				Sys.setCwd(oldCwd);
-				if (code != 0)
-					throw "compile eval failed";
 			}
 		});
     }

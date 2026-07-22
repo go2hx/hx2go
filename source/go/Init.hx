@@ -166,7 +166,7 @@ class Init {
 						rebuild = true;
 					#end
 					if (rebuild) {
-						Sys.println("Bootstrapping the compiler");
+						Sys.println("Creating a Go version of the compiler");
 						Sys.setCwd(path);
 						var code = Sys.command('haxe Bootstrap.hxml');
 						if (code != 0)

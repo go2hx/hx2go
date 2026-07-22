@@ -55,7 +55,7 @@ class Process {
         proc.stdout = null;
         proc.stdin = null;
         proc.stderr = null;
-        proc.process.release().sure();
+        proc.process.release();
     }
 
     public function kill(): Void {

@@ -267,7 +267,9 @@ class Context {
         for (deps in imports) {
             for (dep in deps) {
                 if (dep.contains(".")) {
-                    processList.push(new Process("go", ["get", dep]));
+                    var args = ["get", dep];
+                    Sys.println("go " + args.join(" "));
+                    processList.push(new Process("go", args));
                 }
             }
         }

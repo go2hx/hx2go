@@ -137,7 +137,7 @@ class ClassWriter extends WriterImpl {
 
         for (f in cls.fields) {
             var fRes: { name: String, type: HxbType } = switch f.kind {
-                case _ if (!shouldGenVar(f.kind)): continue;
+                case _ if (!shouldGenVar(f)): continue;
                 case KVar(_): { name: StringConversions.nameToFieldName(f.name), type: f.type };
                 case KMethod(MethDynamic): { name: StringConversions.nameToFieldName(f.name) + "_Dyn", type: appendThis(f.type, cls) };
                 case _: continue;
@@ -190,7 +190,7 @@ class ClassWriter extends WriterImpl {
             buf.add('func ${StringConversions.typePathClassInstanceName(cls.path)}_CreateInstance(${ctor.buf.toString()}) *${StringConversions.typePathClassInstanceName(cls.path)} {');
             buf.add('obj := ${StringConversions.typePathClassInstanceName(cls.path)}_CreateEmptyInstance()', 1);
 
-            var fieldInits = cls.fields.filter(f -> f.kind.match(KVar(_)) && shouldGenVar(f.kind) && f.expr?.expr != null);
+            var fieldInits = cls.fields.filter(f -> f.kind.match(KVar(_)) && shouldGenVar(f) && f.expr?.expr != null);
             var needsHxNew = cls.constructor?.expr != null || fieldInits.length > 0;
 
             if (needsHxNew) {
@@ -335,16 +335,16 @@ class ClassWriter extends WriterImpl {
         return buf;
     }
 
-    public function shouldGenVar(k: HxbFieldKind): Bool {
-        return switch k {
+    public function shouldGenVar(field: HxbClassField): Bool {
+        return switch field.kind {
             case KVar(AccCall, AccNormal | AccNo) | KVar(AccNormal | AccNo, AccCall): true;
-            case KVar(AccCall, _) | KVar(_, AccCall): false;
+            case KVar(AccCall, _) | KVar(_, AccCall): field.meta.filter(m -> m.name == ":isVar").length != 0;
             case _: true;
         }
     }
     public function writeStaticClassVar(field: HxbClassField, read: HxbVarAccess, write: HxbVarAccess, cls: HxbClass): OutputBuffer {
         var buf = new OutputBuffer();
-        if (field.flags & HxbClassFieldFlag.CfExtern != 0 || cls.flags & HxbClassFlag.CExtern != 0 || !shouldGenVar(field.kind)) {
+        if (field.flags & HxbClassFieldFlag.CfExtern != 0 || cls.flags & HxbClassFlag.CExtern != 0 || !shouldGenVar(field)) {
             return buf;
         }
 

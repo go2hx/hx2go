@@ -1,5 +1,6 @@
 -cp source
 -main hx2go.Main
+--macro hx2go.version.Version.stale(".")
 -L hx2go
 -D no-go-bootstrap
 --custom-target go=output/bootstrap

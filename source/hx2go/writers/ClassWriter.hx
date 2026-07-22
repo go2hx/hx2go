@@ -169,6 +169,11 @@ class ClassWriter extends WriterImpl {
 
             for (f in dynMethods) {
                 var local = Copy.copy(f.field.expr.expr);
+                if (local == null) {
+                    trace('warning, null field: ' + f);
+                    continue;
+                }
+
                 local.t = appendThis(local.t, f.inst);
 
                 buf.add('obj.${StringConversions.nameToFieldName(f.field.name)}_Dyn = ${writer.exprs.writeExpr(local)}', 1);

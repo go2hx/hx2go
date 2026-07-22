@@ -14,7 +14,7 @@ class Std {
         return Go.int(x);
     }
 
-    public static function parseInt(x: String):Int {
+    public static function parseInt(x: String): Null<Int> {
         return Strconv.atoi(x).sure();
     }
 

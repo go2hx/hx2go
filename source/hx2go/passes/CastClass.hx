@@ -15,6 +15,8 @@ import hx2go.hxb.TypePath;
 
 class CastClass extends CompilerPass {
 
+    private static var dynCastId: Int = 0;
+
     public function match(expr: HxbTypedExpr): Bool {
         return switch expr {
             case { expr: TCast({ t: TInst(_) | TDynamic(_) | TDynamicAny }, _), t: TInst(_) }: true;
@@ -50,15 +52,33 @@ class CastClass extends CompilerPass {
 
                 var isDyn = e.t.match(TDynamic(_) | TDynamicAny);
                 if (isDyn) {
-                    var o = ExprHelper.createCast(ExprHelper.createCallStatic(context, {
+                    var callExpr = ExprHelper.createCallStatic(context, {
                         name: "HxDynamic",
                         moduleName: "HxDynamic",
                         pack: ["go", "haxe"]
-                    }, "toClass", [e, new HxbTypedExpr(TConst(TString(StringConversions.typePathClassInstanceName(cls.path))), TString, null)]), expr.t);
+                    }, "toClass", [e, new HxbTypedExpr(TConst(TString(StringConversions.typePathClassInstanceName(cls.path))), TString, null)]);
+
+                    var name = StringConversions.typePathClassInstanceName(cls.path);
+                    var tmp = new HxbVar(-1, 'hx_dyncast_${dynCastId++}', VUser(TVOLocalVariable), 0, [], e.pos, callExpr.t);
+                    var tmp_local = new HxbTypedExpr(TLocal(tmp), callExpr.t, e.pos);
+
+                    var castedVal = ExprHelper.createUntyped('{0}.(*$name)', [tmp_local]);
+                    castedVal.t = expr.t;
+
+                    var o = new HxbTypedExpr(TBlock([
+                        new HxbTypedExpr(TVar(tmp, callExpr), callExpr.t, expr.pos),
+                        new HxbTypedExpr(
+                        TIf(
+                            ExprHelper.createUntyped('{0} != nil', [tmp_local]),
+                            castedVal,
+                            new HxbTypedExpr(TConst(TNull), expr.t, expr.pos)
+                        ),
+                        expr.t,
+                        expr.pos
+                        )
+                    ]), expr.t, expr.pos);
 
                     expr.expr = o.expr;
-                    expr.t = o.t;
-
                     context.submitNode(expr, true, 1);
                 } else {
                     var name = StringConversions.typePathClassInstanceName(cls.path);

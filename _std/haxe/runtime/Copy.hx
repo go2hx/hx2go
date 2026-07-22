@@ -10,12 +10,22 @@ class Copy {
     public static function copy<T>(v: T): T {
         var val: Value = Reflect.valueOf(v);
 
+        if (!val.isValid()) {
+            return v;
+        }
+
         if ((val.kind() == Reflect.Ptr || val.kind() == Reflect.Interface) && val.isNil()) {
             return null;
         }
 
         var seen: Map<Int, Dynamic> = new Map();
-        return cast deepCopy(val, seen)._interface();
+        var result = deepCopy(val, seen);
+
+        if (!result.isValid()) {
+            return null;
+        }
+
+        return cast result._interface();
     }
 
     static function deepCopy(v: Value, seen: Map<Int, Dynamic>): Value {

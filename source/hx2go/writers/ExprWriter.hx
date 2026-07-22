@@ -27,6 +27,10 @@ import hx2go.normaliser.Semantics;
 class ExprWriter extends WriterImpl {
 
     public function writeExpr(expr: HxbTypedExpr, topLevel: Bool = false): OutputBuffer {
+        if (expr == null) {
+            return new OutputBuffer();
+        }
+
         return switch expr.expr {
             case TFunction(func): writeFunction(expr, func, topLevel);
             case TBlock(exprs): writeBlock(expr, exprs);

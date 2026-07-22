@@ -14,6 +14,7 @@ import go.os.Exec;
 import sys.io.FileOutput;
 import sys.io.FileInput;
 import go.Syscall;
+import go.golang_org.x.Term;
 
 class Sys {
 
@@ -163,7 +164,18 @@ class Sys {
     }
 
     public static function getChar(echo: Bool): Int {
-        return 0; // TODO: impl
+        // raw mode
+        var oldState = Term.makeRaw(Go.int(Os.stdin.fd())).sure();
+        // restore to previous mode
+        Syntax.defer(() -> Term.restore(Go.int(Os.stdin.fd()), oldState));
+        // read byte
+        var b = new Slice<Byte>(1);
+        Os.stdin.read(b).sure();
+        
+        if (echo) {
+            Sys.println(String.fromCharCode(b[0]));
+        }
+        return b[0];
     }
 
 }

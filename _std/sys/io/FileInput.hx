@@ -20,48 +20,44 @@ class FileInput extends haxe.io.Input {
     }
 
     public override function readByte(): Int {
-        // var t = __f.read(__byteBuf).tuple();
-        // if (t.error != null) {
-        //     if (t.error.error() == "EOF") {
-        //         __eof = true;
-        //         throw new haxe.io.Eof();
-        //     }
+        var t = __f.read(__byteBuf).tuple();
+        if (t.error != null) {
+            if (t.error.error() == "EOF") {
+                __eof = true;
+                throw new haxe.io.Eof();
+            }
 
-        //     throw haxe.io.Error.Custom(t.error);
-        // }
+            throw haxe.io.Error.Custom(t.error);
+        }
 
-        // return __byteBuf[0];
-        return -1;
+        return __byteBuf[0];
     }
 
     public override function readBytes(s: haxe.io.Bytes, p: Int, l: Int): Int {
-        // var t = __f.read((cast s.getData() : Pointer<Slice<Byte>>).value).tuple();
-        // if (t.error != null) {
-        //     if (t.error.error() == "EOF") {
-        //         __eof = true;
-        //         throw new haxe.io.Eof();
-        //     }
+        var t = __f.read((cast s.getData() : Pointer<Slice<Byte>>).value).tuple();
+        if (t.error != null) {
+            if (t.error.error() == "EOF") {
+                __eof = true;
+                throw new haxe.io.Eof();
+            }
 
-        //     throw haxe.io.Error.Custom(t.error);
-        // }
+            throw haxe.io.Error.Custom(t.error);
+        }
 
-        // return t.result;
-        return -1;
+        return t.result;
     }
 
     public override function close(): Void {
-        super.close();
-        // __f.close().sure();
+        __f.close().sure();
     }
 
     public function seek(p: Int, pos: FileSeek): Void {
-        // __f.seek(p, pos == SeekBegin ? 0 : pos == SeekCur ? 1 : 2).sure();
-        // __eof = false;
+        __f.seek(p, pos == SeekBegin ? 0 : pos == SeekCur ? 1 : 2).sure();
+        __eof = false;
     }
 
     public function tell(): Int {
-        return -1;
-        // return __f.seek(0, 1).sure();
+        return __f.seek(0, 1).sure();
     }
 
     public function eof(): Bool {

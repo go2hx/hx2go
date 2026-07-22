@@ -18,27 +18,25 @@ class FileOutput extends haxe.io.Output {
     }
 
     public override function writeByte(c: Int): Void {
-        // __byteBuf[0] = cast c;
-        // try __f.write(__byteBuf).sure() catch (e: Dynamic) throw haxe.io.Error.Custom(e);
+        __byteBuf[0] = cast c;
+        try __f.write(__byteBuf).sure() catch (e: Dynamic) throw haxe.io.Error.Custom(e);
     }
 
     public override function writeBytes(s: haxe.io.Bytes, p: Int, l: Int): Int {
-        return -1;
-        // return try __f.write((cast s.getData().slice(p, p + l) : Pointer<Slice<Byte>>).value).sure() catch (e: Dynamic) throw haxe.io.Error.Custom(e);
+        return try __f.write((cast s.getData().slice(p, p + l) : Pointer<Slice<Byte>>).value).sure() catch (e: Dynamic) throw haxe.io.Error.Custom(e);
     }
 
     public override function close(): Void {
-        // super.close();
-        // try __f.close().sure() catch (e: Dynamic) throw haxe.io.Error.Custom(e);
+        super.close();
+        try __f.close().sure() catch (e: Dynamic) throw haxe.io.Error.Custom(e);
     }
 
     public function seek(p: Int, pos: FileSeek):Void {
-        // try __f.seek(p, pos == SeekBegin ? 0 : pos == SeekCur ? 1 : 2).sure() catch (e: Dynamic) throw haxe.io.Error.Custom(e);
+        try __f.seek(p, pos == SeekBegin ? 0 : pos == SeekCur ? 1 : 2).sure() catch (e: Dynamic) throw haxe.io.Error.Custom(e);
     }
 
     public function tell(): Int {
-        return -1;
-        // return try __f.seek(0, 1).sure() catch (e: Dynamic) throw haxe.io.Error.Custom(e);
+        return try __f.seek(0, 1).sure() catch (e: Dynamic) throw haxe.io.Error.Custom(e);
     }
 
 }

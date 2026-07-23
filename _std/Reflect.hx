@@ -106,7 +106,6 @@ class Reflect {
     }
 
     public static function deleteField(o: Dynamic, field: String): Bool {
-        // if map, delete the field
         var value = HxDynamic.ensureConcreteValue(o);
         if (!value.isValid()) {
             return false;
@@ -138,7 +137,38 @@ class Reflect {
     }
 
     public static function copy<T>(o: Null<T>): Null<T> {
-        throw "not implemented"; // TODO
+        var value = HxDynamic.ensureConcreteValue(o);
+        if (!value.isValid()) {
+            return null;
+        }
+
+        var kind = value.kind();
+        if (kind == go.Reflect.Ptr || kind == go.Reflect.Interface) {
+            if (value.isNil()) {
+                return null;
+            }
+
+            value = value.elem();
+            kind = value.kind();
+        }
+
+        if (kind == go.Reflect.Map) {
+            var mt = value.type();
+            if (mt.key().kind() != go.Reflect.String || mt.elem().kind() != go.Reflect.Interface) {
+                return null;
+            }
+
+            var newMap = go.Reflect.makeMap(mt);
+            var keys = value.mapKeys();
+            for (key in keys) {
+                var v = value.mapIndex(key);
+                newMap.setMapIndex(key, v);
+            }
+
+            return newMap._interface();
+        }
+
+        throw "o is not an anon struct";
     }
 
     public static function makeVarArgs<T>(f: Array<Dynamic> -> T): Dynamic {

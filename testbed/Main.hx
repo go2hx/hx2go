@@ -1,4 +1,5 @@
 import haxe.Json;
+
 class Foo {
     public function new() {}
     public function bar(a: Int, b: Int) {
@@ -48,4 +49,8 @@ function main() {
     trace(Json.stringify(obj)); // {"x":30,"y":20}
 
     trace(Type.typeof(foo), Type.typeof(ev), Type.typeof(obj), Type.typeof(5), Type.typeof("hello"), Type.typeof(true), Type.typeof(null), Type.typeof([1, 2, 3])); // TClass, TEnum, TObject, TInt, TClass, TBool, TNull, TClass
+
+    var obj_cpy = Reflect.copy(obj);
+    obj_cpy.x = 100;
+    trace(obj, obj_cpy); // { x => 30, y => 20 }, { x => 100, y => 20 }
 }

@@ -18,6 +18,7 @@ class Normaliser {
 
     private var context: Context;
     private var labelId: Int = 0;
+    private var loopLabels: haxe.ds.ObjectMap<HxbTypedExpr, String> = new haxe.ds.ObjectMap();
 
     public function new(context: Context) {
         this.context = context;
@@ -195,8 +196,12 @@ class Normaliser {
                 return iterateExpr(expr, local, ancestor);
 
             case TFunction(tfunc):
-                scope.activeFunction = expr;
-                return iterateExpr(expr, scope, ancestor);
+                var local = scope.copy();
+                local.activeFunction = expr;
+                local.activeTry = null;
+                local.activeLoop = null;
+                local.activeSwitch = null;
+                return iterateExpr(expr, local, ancestor);
 
             case TTry(_, _):
                 var local = scope.copy();
@@ -243,30 +248,33 @@ class Normaliser {
                 }
 
                 var returnHandler = ExprHelper.createUntyped(returnHandlerStringBuf.toString(), []);
-                tryNode.expr = ExprHelper.createUntyped('{0}\n{1}', [Copy.copy(tryNode), returnHandler]).expr;
+                tryNode.expr = ExprHelper.createUntyped('{\n{0}\n{1}\n}', [Copy.copy(tryNode), returnHandler]).expr;
 
                 return;
 
             case TBreak if (scope.activeSwitch != null && scope.activeLoop != null):
-                if (scope.activeLoopLabel == null) {
-                    scope.activeLoopLabel = 'hx_label_${labelId++}';
-                    scope.activeLoop.expr = ExprHelper.createUntyped('${scope.activeLoopLabel}:\n{0}', [ switch scope.activeLoop.expr {
+                var label = loopLabels.get(scope.activeLoop);
+                if (label == null) {
+                    label = 'hx_label_${labelId++}';
+                    loopLabels.set(scope.activeLoop, label);
+                    scope.activeLoop.expr = ExprHelper.createUntyped('${label}:\n{0}', [ switch scope.activeLoop.expr {
                         case TWhile(econd, e, norm): new HxbTypedExpr(TWhile(econd, e, norm), scope.activeLoop.t, scope.activeLoop.pos);
                         case _: Copy.copy(scope.activeLoop);
                     } ]).expr;
                 }
 
-                expr.expr = ExprHelper.createUntyped('break ${scope.activeLoopLabel}', []).expr;
+                expr.expr = ExprHelper.createUntyped('break ${label}', []).expr;
 
             case TReturn(e) if (scope.activeTry != null):
-
-                expr.expr = ExprHelper.createUntyped('hx_try_state = 1; hx_try_return = {0}', [Copy.copy(e)]).expr;
+                expr.expr = e == null
+                    ? ExprHelper.createUntyped('hx_try_state = 1; return', []).expr
+                    : ExprHelper.createUntyped('hx_try_state = 1; hx_try_return = {0}; return', [Copy.copy(e)]).expr;
 
             case TBreak if (scope.activeTry != null):
-                expr.expr = ExprHelper.createUntyped('hx_try_state = 2', []).expr;
+                expr.expr = ExprHelper.createUntyped('hx_try_state = 2; return', []).expr;
 
             case TContinue if (scope.activeTry != null):
-                expr.expr = ExprHelper.createUntyped('hx_try_state = 3', []).expr;
+                expr.expr = ExprHelper.createUntyped('hx_try_state = 3; return', []).expr;
 
             case _: null;
         }
@@ -350,6 +358,10 @@ class Normaliser {
     }
 
     public function toStmt(expr: HxbTypedExpr, scope: Scope, ancestor: Null<Ancestor>): Void {
+        if (expr.t != null && expr.t.match(TVoid)) {
+            return;
+        }
+
         expr.expr = TBinop(
             OpAssign,
             new HxbTypedExpr(TIdent('_'), TVoid, null),

@@ -46,4 +46,6 @@ function main() {
 
     trace(Json.parse('{"x": 10, "y": 20, "nested": {"a": 1, "b": 2}}')); // { x => 10, y => 20, nested => { a => 1, b => 2 } }
     trace(Json.stringify(obj)); // {"x":30,"y":20}
+
+    trace(Type.typeof(foo), Type.typeof(ev), Type.typeof(obj), Type.typeof(5), Type.typeof("hello"), Type.typeof(true), Type.typeof(null), Type.typeof([1, 2, 3])); // TClass, TEnum, TObject, TInt, TClass, TBool, TNull, TClass
 }

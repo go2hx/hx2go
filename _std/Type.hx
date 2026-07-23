@@ -21,9 +21,11 @@
  */
 
 import go.Syntax;
+import Reflect as HxReflect;
 import go.Reflect;
 import go.reflect.Kind;
 import go.haxe.HxDynamic;
+import go.Slice;
 
 enum ValueType {
 	TNull;
@@ -102,21 +104,6 @@ class Type {
 			return ValueType.TNull;
 		}
 
-		/*
-		enum ValueType {
-			TNull;
-			TInt;
-			TInt64;
-			TFloat;
-			TBool;
-			TObject;
-			TFunction;
-			TClass(c:Class<Dynamic>);
-			TEnum(e:Enum<Dynamic>);
-			TUnknown;
-		}
-		 */
-
 		var value = HxDynamic.ensureValue(v);
 		if (!value.isValid()) {
 			return ValueType.TNull;
@@ -132,6 +119,11 @@ class Type {
 			return ValueType.TFloat;
 		} else if (kind == Reflect.Bool) {
 			return ValueType.TBool;
+		} else if (kind == Reflect.String) {
+			 return ValueType.TClass(String);
+		} else if (kind == Reflect.Slice) {
+			// return ValueType.TClass(Slice);
+			return ValueType.TObject; // TODO: wait until externs generate RTTI
 		} else if (kind == Reflect.Func) {
 			return ValueType.TFunction;
 		}
@@ -146,20 +138,24 @@ class Type {
 		}
 
 		if (kind == Reflect.Struct) {
-			var type = value.type();
-			var iface = value._interface();
-
-			if (type.name() == "go.haxe.HxClass") {
-				return ValueType.TClass(( cast iface : Class<Dynamic> ));
-			} else if (type.name() == "go.haxe.HxEnum") {
-				return ValueType.TEnum(( cast iface : Enum<Dynamic> ));
+			if (HxReflect.isEnumValue(v)) {
+				return ValueType.TEnum(( cast v : Enum<Dynamic> ));
 			}
 
-			return ValueType.TObject;
+			var vtable = value.fieldByName("VTable");
+			if (!vtable.isValid()) {
+				return ValueType.TObject;
+			}
+
+			return ValueType.TClass(( cast v : Class<Dynamic> ));
 		}
 
 		if (kind == Reflect.Map) {
 			return ValueType.TObject;
+		}
+
+		if (kind == Reflect.Slice) { // was a pointer to a map, so its an array
+			return ValueType.TClass(Array);
 		}
 
 		return ValueType.TUnknown;

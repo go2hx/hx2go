@@ -82,6 +82,9 @@ class FieldAccessExtern extends CompilerPass {
                     case MClass(cls): {
                         var name = ref.name;
                         var info = cls.statics.concat(cls.fields).filter(x -> x.name == ref.name)[0];
+                        if (info == null) {
+                            return { kind: ExNone };
+                        }
 
                         if ((cls.flags & HxbClassFlag.CExtern) == 0) {
                             return { kind: ExNone, field: info };

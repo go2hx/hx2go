@@ -23,6 +23,7 @@
 import go.Syntax;
 import go.Reflect;
 import go.reflect.Kind;
+import go.haxe.HxDynamic;
 
 enum ValueType {
 	TNull;
@@ -97,46 +98,71 @@ class Type {
 	}
 
 	public static function typeof(v:Dynamic):ValueType {
-		return switch Reflect.typeOf(v).kind().toInt() {
-			case 1:
-				TBool;
-			case 2, 3, 4, 5:
-				TInt;
-			case 6:
-				TInt64;
-			case 7, 8, 9, 10, 11:
-				TInt;
-			case 12: // uintptr
-				TUnknown;
-			case 13, 14:
-				TFloat;
-			case 15, 16: // complex64, complex128
-				TUnknown;
-			case 17: // array
-				TUnknown;
-			case 18: // chan
-				TUnknown;
-			case 19: // func
-				TFunction;
-			case 20: // interface
-				TObject;
-			case 21: // map
-				TUnknown;
-			case 22: // pointer
-				TUnknown;
-			case 23: // slice
-				TUnknown;
-			case 24: // string
-				TClass(String); 
-			case 25: // struct
-				TUnknown;
-			case 26: // unsafePointer
-				TUnknown;
-			case 0, _:
-				trace(Reflect.typeOf(v).kind(), Reflect.typeOf(v).kind().toInt());
-				TUnknown;
+		if (v == null) {
+			return ValueType.TNull;
 		}
-		throw "not implemented";
+
+		/*
+		enum ValueType {
+			TNull;
+			TInt;
+			TInt64;
+			TFloat;
+			TBool;
+			TObject;
+			TFunction;
+			TClass(c:Class<Dynamic>);
+			TEnum(e:Enum<Dynamic>);
+			TUnknown;
+		}
+		 */
+
+		var value = HxDynamic.ensureValue(v);
+		if (!value.isValid()) {
+			return ValueType.TNull;
+		}
+
+		var kind = value.kind();
+
+		if (kind == Reflect.Int) {
+			return ValueType.TInt;
+		} else if (kind == Reflect.Int64) {
+			return ValueType.TInt64;
+		} else if (kind == Reflect.Float64) {
+			return ValueType.TFloat;
+		} else if (kind == Reflect.Bool) {
+			return ValueType.TBool;
+		} else if (kind == Reflect.Func) {
+			return ValueType.TFunction;
+		}
+
+		if (kind == Reflect.Ptr || kind == Reflect.Interface) {
+			if (value.isNil()) {
+				return ValueType.TNull;
+			}
+
+			value = value.elem();
+			kind = value.kind();
+		}
+
+		if (kind == Reflect.Struct) {
+			var type = value.type();
+			var iface = value._interface();
+
+			if (type.name() == "go.haxe.HxClass") {
+				return ValueType.TClass(( cast iface : Class<Dynamic> ));
+			} else if (type.name() == "go.haxe.HxEnum") {
+				return ValueType.TEnum(( cast iface : Enum<Dynamic> ));
+			}
+
+			return ValueType.TObject;
+		}
+
+		if (kind == Reflect.Map) {
+			return ValueType.TObject;
+		}
+
+		return ValueType.TUnknown;
 	}
 
 	public static function enumEq<T:EnumValue>(a:T, b:T):Bool {

@@ -600,11 +600,6 @@ class HxDynamic {
 
         if (kind == Reflect.Map) {
             var fn = ensureValue(fieldName);
-            var mi = value.mapIndex(fn);
-            if (!mi.isValid()) {
-                throw 'runtime.HxDynamic.setField field "$fieldName" not present on "$value"';
-            }
-
             value.setMapIndex(fn, valueToAssign(v, value.type().elem()));
         }
 

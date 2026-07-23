@@ -50,6 +50,22 @@ class TypeNormaliserBinop extends CompilerPass {
                 context.submitNode(right, true);
             }
 
+            switch [left.t, right.t] {
+                case [TInt, TFloat]:
+                    var o = ExprHelper.createCast(left, TFloat);
+                    left.expr = o.expr;
+                    left.t = o.t;
+                    context.submitNode(left, true);
+
+                case [TFloat, TInt]:
+                    var o = ExprHelper.createCast(right, TFloat);
+                    right.expr = o.expr;
+                    right.t = o.t;
+                    context.submitNode(right, true);
+
+                case _: // may wanna default to enforcing to cast to lhs or rhs?
+            }
+
             return;
         }
 

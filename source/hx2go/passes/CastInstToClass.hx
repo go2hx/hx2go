@@ -25,9 +25,9 @@ class CastInstToClass extends CompilerPass {
 
     public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
         switch expr {
-            case { expr: TCast(e, _), t: TAbstract({ name: "Class", pack: [] }, _) | TClassStatic(_) }: {
+            case { expr: TCast(e, _), t: t }: {
                 var isDyn = e.t.match(TDynamicAny | TDynamic(_));
-                var o = new HxbTypedExpr(TCall(
+                var o = ExprHelper.createCast(new HxbTypedExpr(TCall(
                     new HxbTypedExpr(
                         TField(Copy.copy(e), isDyn ? FDynamic("_RTTI") : FInstance(switch e.t {
                             case TInst(tp, _): tp;
@@ -42,11 +42,12 @@ class CastInstToClass extends CompilerPass {
                         expr.pos
                     ),
                     []
-                ), expr.t, expr.pos);
+                ), expr.t, expr.pos), t);
 
                 expr.expr = o.expr;
+                expr.t = o.t;
 
-                context.submitNode(expr, true);
+                context.submitNode(expr, true, 1);
             }
 
             case _: null;

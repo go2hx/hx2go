@@ -515,17 +515,7 @@ class StringTools {
 		Tells if `c` represents the end-of-file (EOF) character.
 	**/
 	@:noUsing public static inline function isEof(c:Int):Bool {
-		#if (flash || cpp || hl)
 		return c == 0;
-		#elseif js
-		return c != c; // fast NaN
-		#elseif (neko || lua || eval)
-		return c == null;
-		#elseif (java || python)
-		return c == -1;
-		#else
-		return false;
-		#end
 	}
 
 	/**

@@ -59,7 +59,7 @@ class Init {
 			supportsFunctionEquality: true, // TODO: check?
 			usesUtf16: false,
 			thisBeforeSuper: false,
-			supportsThreads: true,
+			supportsThreads: false,
 			supportsUnicode: true,
 			supportsRestArgs: true, // we should change this if we run into issues that are difficult to solve
 			exceptions: {
@@ -161,14 +161,14 @@ class Init {
 					var rebuild = false;
 					#if rebuild
 					rebuild = true;
-					#else
+					#elseif !no_rebuild
 					if (!FileSystem.exists(bin) || Version.stale(path))
 						rebuild = true;
 					#end
 					if (rebuild) {
 						Sys.println("Creating a Go version of the compiler");
 						Sys.setCwd(path);
-						var code = Sys.command('haxe Bootstrap.hxml');
+						var code = Sys.command('haxe Bootstrap.hxml -D no-rebuild');
 						if (code != 0)
 							throw "bootstrap failed";
 						Sys.setCwd(root);

@@ -359,7 +359,7 @@ class ExprWriter extends WriterImpl {
                 buf.addInline('for _hx_i, _hx_v := range _hx_src { _hx_out[_hx_i] = _hx_v.(${elemGo}) }; return &_hx_out }()');
 
             case [(TDynamic(_) | TDynamicAny), _]:
-                buf.addInline(expr.pos?.file.endsWith("HxDynamic.hx") ? '(' : 'Hx_Field_go_haxe_hxdynamic_ensureInterface('); // this is a really bad hack, I know...
+                buf.addInline(expr.pos?.file.endsWith("HxDynamic.hx") ? 'any(' : 'Hx_Field_go_haxe_hxdynamic_ensureInterface('); // this is a really bad hack, I know...
                 buf.addBufferInline(writeExpr(e));
                 buf.addInline(').(');
                 buf.addBufferInline(writer.types.writeHxbType(expr.t));

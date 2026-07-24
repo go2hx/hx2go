@@ -341,6 +341,9 @@ class ExprWriter extends WriterImpl {
         }
 
         switch [e.t, expr.t] {
+            case [_, TVoid]:
+                buf.addBufferInline(writeExpr(e));
+
             case [(TDynamic(_) | TDynamicAny), (TDynamic(_) | TDynamicAny)]:
                 buf.addBufferInline(writeExpr(e));
 

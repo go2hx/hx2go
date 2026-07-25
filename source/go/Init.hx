@@ -203,7 +203,7 @@ class Init {
 			doc: "",
 		});
 	}
-	private function executable(path: String): String {
+	private static function executable(path: String): String {
 		return if (Sys.systemName().toLowerCase() == "windows") {
 			path + '.exe';
 		}else{

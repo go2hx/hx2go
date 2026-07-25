@@ -1,6 +1,7 @@
 package go;
 
 #if (macro)
+import sys.io.File;
 import hx2go.version.Version;
 import sys.FileSystem;
 import haxe.macro.PlatformConfig;
@@ -12,18 +13,29 @@ import haxe.hxb.WriterConfig;
 import sys.io.Process;
 
 class Init {
+	@:persistent static var builtLibs = [];
 	// --macro go.Init.addStd()
 	public static function addStd() {
 		if (!Context.defined("custom-target")) {
 			return;
 		}
 		var self = Context.resolvePath("go/Init.hx");
-		// Override layer first so its modules take priority over both the base
-		// go target library (std/) and Haxe's own standard library.
+		// override layer first so its modules take priority over both the Go's std
+		// (std/) and Haxe's std.
 		var path = Path.join([ Path.directory(self), '..', '..', '_std' ]);
 		Compiler.addClassPath(path);
 		var path = Path.join([ Path.directory(self), '..', '..', 'std' ]);
 		Compiler.addClassPath(path);
+
+		var relativeOutput = Compiler.getOutput();
+		var root = Sys.getCwd();
+		var absoluteOutput = Path.join([ root, relativeOutput ]);
+
+		var librariesOutput = Path.join([ absoluteOutput, "libs" ]);
+		if (!FileSystem.exists(librariesOutput)) {
+			FileSystem.createDirectory(librariesOutput);
+		}
+		Compiler.addClassPath(librariesOutput);
 	}
 
 	static function getGoLibs():Array<String> {
@@ -40,9 +52,7 @@ class Init {
 	}
 	// --custom-target go=output
     public static function init() {
-		if (Context.defined("display")) {
-			return;
-		}
+		addCustomDefines();
         var anyPath = {
             pack: ["go"],
             name: "InitRandomPackage"
@@ -79,8 +89,6 @@ class Init {
 			supportsAtomics: true
 		}
 
-		var libraries = getGoLibs();
-
 		var relativeOutput = Compiler.getOutput();
 		var root = Sys.getCwd();
 		var absoluteOutput = Path.join([ root, relativeOutput ]);
@@ -94,16 +102,20 @@ class Init {
 			FileSystem.createDirectory(absoluteOutput);
 		}
 
-		if (libraries.length > 0 && !Context.defined("no-compilation")) {
-			if (!FileSystem.exists(librariesOutput)) {
-				FileSystem.createDirectory(librariesOutput);
-			}
-
-			Compiler.addClassPath(librariesOutput);
-			new Process('haxelib', ['run', 'go2hx'].concat(libraries).concat([librariesOutput]));
-		}
 
 		Compiler.setPlatformConfiguration(newConfig);
+
+		var libraries = getGoLibs();
+		// trace(builtLibs, libraries);
+		if (libraries.length > 0 && builtLibs.join("+") != libraries.join("+")) {
+			Sys.command('haxelib', ['run', 'go2hx'].concat(libraries).concat([librariesOutput]));
+			builtLibs = libraries;
+		}
+
+		if (Context.defined("display") || Context.defined("times.macro")) {
+			trace("stop running");
+			return;
+		}
 
         var hxbConf: WriterConfig = {
 			archivePath: archiveOutput,
@@ -112,25 +124,6 @@ class Init {
 				generateDocumentation: true
 			}
 		};
-
-		// register custom defines
-		Compiler.registerCustomDefine({
-			define: "no-go-bootstrap",
-			doc: "do not use the bootrapped version of the compiler (running on the Go target)",
-		});
-		Compiler.registerCustomDefine({
-			define: "go-lib",
-			doc: "automatic extern generation of a given Go library",
-		});
-		// register custom metadata
-		Compiler.registerCustomMetadata({
-			metadata: "go.Type",
-			doc: "",
-		});
-		Compiler.registerCustomMetadata({
-			metadata: "go.Tuple",
-			doc: "",
-		});
 		
 		Compiler.setHxbWriterConfiguration(hxbConf);
 		
@@ -190,14 +183,32 @@ class Init {
 			}
 		});
     }
-
-}
-
-private function executable(path: String): String {
-	return if (Sys.systemName().toLowerCase() == "windows") {
-		path + '.exe';
-	}else{
-		path;
+	static function addCustomDefines() {
+		// register custom defines
+		Compiler.registerCustomDefine({
+			define: "no-go-bootstrap",
+			doc: "do not use the bootrapped version of the compiler (running on the Go target)",
+		});
+		Compiler.registerCustomDefine({
+			define: "go-lib",
+			doc: "automatic extern generation of a given Go library",
+		});
+		// register custom metadata
+		Compiler.registerCustomMetadata({
+			metadata: "go.Type",
+			doc: "",
+		});
+		Compiler.registerCustomMetadata({
+			metadata: "go.Tuple",
+			doc: "",
+		});
+	}
+	private function executable(path: String): String {
+		return if (Sys.systemName().toLowerCase() == "windows") {
+			path + '.exe';
+		}else{
+			path;
+		}
 	}
 }
 #end

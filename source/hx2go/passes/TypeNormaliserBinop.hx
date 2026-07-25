@@ -69,7 +69,16 @@ class TypeNormaliserBinop extends CompilerPass {
             return;
         }
 
-        if (!TypeHelper.compare(left.t, expr.t) && !op.match(OpAssign | OpAssignOp(_))) {
+        if (op.match(OpAssignOp(_)) && Semantics.isNullableType(expr.t)) {
+            expr.t = Semantics.getNullableType(expr.t);
+        }
+
+        var castLeft = !TypeHelper.compare(left.t, expr.t) && switch op {
+            case OpAssign: false;
+            case OpAssignOp(_): Semantics.isNullableType(left.t);
+            case _: true;
+        };
+        if (castLeft) {
             var o = ExprHelper.createCast(left, expr.t);
             left.expr = o.expr;
             left.t = o.t;
@@ -77,7 +86,7 @@ class TypeNormaliserBinop extends CompilerPass {
         }
 
         var rightTarget = switch op {
-            case OpAssign: left.t;
+            case OpAssign | OpAssignOp(_): left.t;
             case _: expr.t;
         }
 

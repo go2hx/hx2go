@@ -39,6 +39,15 @@ class ExprHelper {
         );
     }
 
+    public static function addExprToBlock(block:HxbTypedExpr, expr:HxbTypedExpr) {
+        switch block.expr {
+            case TBlock(el):
+                el.unshift(expr);
+            default:
+                throw "not a block";
+        }
+    }
+
     public static function createCallStatic(context: Context, type: TypePath, typeField: String, params: Array<HxbTypedExpr>): HxbTypedExpr {
         var mod = context.resolve(type);
         if (mod == null) {

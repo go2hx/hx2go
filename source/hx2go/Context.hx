@@ -84,6 +84,7 @@ class Context {
     private function createPasses(): Array<ICompilerPass> {
         return [
             new hx2go.passes.FieldAccessGeneric(this),
+            new hx2go.passes.DefaultArgs(this),
             new hx2go.passes.TypeNormaliserCallReturn(this),
             new hx2go.passes.TypeNormaliserCall(this),
             new hx2go.passes.NullableCompare(this),
@@ -239,6 +240,7 @@ class Context {
             }
 
             for (imp in imports) {
+                _reserved[imp] = true;
                 header.add('import "$imp"');
             }
 

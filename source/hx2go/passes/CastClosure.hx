@@ -18,10 +18,19 @@ class CastClosure extends CompilerPass {
 
         return switch [expr.expr, expr.t] {
             case [
-                TCast(_, _),
+                TCast(e, _),
                 TFun(_)
-            ]: true;
+            ]: !isNullConst(e); // a null function stays nil, wrapping it would call nil
 
+            case _: false;
+        }
+    }
+
+    static function isNullConst(e: HxbTypedExpr): Bool {
+        return switch e.expr {
+            case TConst(TNull): true;
+            case TCast(inner, _): isNullConst(inner);
+            case TParenthesis(inner): isNullConst(inner);
             case _: false;
         }
     }
@@ -38,6 +47,15 @@ class CastClosure extends CompilerPass {
             case [TCast({ t: TFun(e_params, e_ret) }, _), TCast(e, _), TFun(params, ret)]: {
                 var args: Array<HxbTypedExpr> = [];
                 var new_params: Array<HxbVar> = [];
+
+                var srcVar: HxbVar = null;
+                var callee: HxbTypedExpr = e;
+                switch e.expr {
+                    case TArray(_, _):
+                        srcVar = new HxbVar(-1, '_hx_closure_src', VUser(TVOLocalVariable), 0, [], null, e.t);
+                        callee = new HxbTypedExpr(TLocal(srcVar), e.t, null);
+                    case _: // stable source, safe to inline directly
+                }
 
                 for (i in 0...params.length) {
                     var new_p = params[i];
@@ -64,25 +82,47 @@ class CastClosure extends CompilerPass {
                     context.submitNode(e, true);
                 }
 
-                var e_call = new HxbTypedExpr(TCall(e, args), e_ret, null); // TODO: "e" must be captured;
-                if (!TypeHelper.compare(e_ret, ret)) {
+                var voidToValue = e_ret.match(TVoid) && !ret.match(TVoid);
+
+                var e_call = new HxbTypedExpr(TCall(callee, args), e_ret, null);
+                if (!voidToValue && !TypeHelper.compare(e_ret, ret)) {
                     e_call = new HxbTypedExpr(TCast(e_call, null), ret, null);
                 }
 
                 context.submitNode(e_call, true);
 
-                expr.expr = TFunction({
+                var body: Array<HxbTypedExpr> = if (voidToValue) {
+                    [ e_call, new HxbTypedExpr(TReturn(new HxbTypedExpr(TConst(TNull), ret, null)), null, null) ];
+                } else if (ret == TVoid) {
+                    [ e_call ];
+                } else {
+                    [ new HxbTypedExpr(TReturn(e_call), null, null) ];
+                }
+
+                var closure = new HxbTypedExpr(TFunction({
                     args: new_params.map(v -> {
                         v: v,
                         value: null
                     }),
-                    expr: new HxbTypedExpr(TBlock([
-                        ret == TVoid ? e_call : new HxbTypedExpr(TReturn(
-                            e_call
-                        ), null, null)
-                    ]), null, null),
+                    expr: new HxbTypedExpr(TBlock(body), null, null),
                     t: ret,
-                });
+                }), expr.t, null);
+
+                if (srcVar == null) {
+                    expr.expr = closure.expr;
+                } else {
+                    var decl = new HxbTypedExpr(TVar(srcVar, e), null, null);
+                    var iife = new HxbTypedExpr(TFunction({
+                        args: [],
+                        expr: new HxbTypedExpr(TBlock([
+                            decl,
+                            new HxbTypedExpr(TReturn(closure), null, null)
+                        ]), null, null),
+                        t: expr.t,
+                    }), TFun([], expr.t), null);
+                    expr.expr = TCall(iife, []);
+                    context.submitNode(decl, true);
+                }
             }
 
             case _: null;

@@ -391,8 +391,22 @@ class ExprWriter extends WriterImpl {
         for (c in catches) {
             buf.add('defer func() {', 1);
             var catchName = Context.sanitiseString(c.v.name);
-            buf.add('if ${catchName} := recover(); ${catchName} != nil ', 2, false);
+            buf.add('if ${catchName} := recover(); $catchName != nil {', 2, true);
+
+            var typed = false;
+            if (c.v.type != null) {
+                typed = true;
+                buf.add('switch $catchName := $catchName.(type) {', 2, true);
+                var t:HxbType = c.v.type;
+                buf.add('case ${writer.types.writeHxbType(t)}:', 2, true);
+                buf.add('_ = $catchName');
+            }
+
             buf.addBuffer(writeExpr(c.expr), 2);
+            if (typed) {
+                buf.add('}', 1, true);
+            }
+            buf.add('}', 1, true);
             buf.add('}()', 1, false);
             buf.add('');
         }

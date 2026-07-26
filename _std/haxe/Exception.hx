@@ -32,8 +32,17 @@ class Exception {
 		return new Exception(Std.string(value));
 	}
 
-	static private function thrown(value: Any): Any {
-		return 0;
+	static private function thrown(value: Any): Exception {
+		// if(Std.isOfType(value, Exception)) {
+		// 	return (value:Exception).native;
+		// } else {
+		// 	var e = new ValueException(value);
+		// 	// e.__shiftStack();
+		// 	return e;
+		// }
+		var e = new ValueException(value);
+		// e.__shiftStack();
+		return e;
 	}
 
 	var _message: String;

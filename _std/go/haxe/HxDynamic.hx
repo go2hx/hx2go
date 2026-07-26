@@ -132,16 +132,34 @@ class HxDynamic {
         return 'Hx_Field_$name';
     }
 
+    public static function isNilValue(v: Value): Bool {
+        if (!v.isValid()) {
+            return true;
+        }
+
+        var k = v.kind();
+        if (k == Reflect.Ptr || k == Reflect.Interface || k == Reflect.Map
+            || k == Reflect.Slice || k == Reflect.Func || k == Reflect.Chan
+            || k == Reflect.UnsafePointer) {
+            return v.isNil();
+        }
+
+        return false;
+    }
+
     public static function isNull(x: Dynamic): Bool {
-        return Syntax.code("{0} == nil", x); // this doesn't work: ensureConcreteValue(x).isNil();
+        if (Syntax.code("{0} == nil", x)) {
+            return true;
+        }
+        return isNilValue(ensureValue(x));
     }
 
     public static function equals(a:Dynamic, b:Dynamic):Bool {
         // null == special case
         var aV = ensureConcreteValue(a);
         var bV = ensureConcreteValue(b);
-        var aN = !aV.isValid();
-        var bN = !bV.isValid();
+        var aN = isNilValue(aV);
+        var bN = isNilValue(bV);
 
         if (aN || bN) {
             if (aN && bN)
@@ -385,6 +403,10 @@ class HxDynamic {
     }
 
     static function convertToType(v: Value, t: Type): Value {
+        if (!v.isValid()) {
+            return Reflect.zero(t);
+        }
+
         var cv = ensureConcreteValue(v._interface());
         var k = t.kind();
 
@@ -503,6 +525,36 @@ class HxDynamic {
         return cls.addr()._interface();
     }
 
+    static function isNullableType(t: Type): Bool {
+        if (t.kind() != Reflect.Struct || t.numField() != 2 || t.name() != "") {
+            return false;
+        }
+
+        return t.field(0).name == "Value"
+            && t.field(1).name == "Valid"
+            && t.field(1).type.kind() == Reflect.Bool;
+    }
+    
+    static function unwrapNullable(value: Value): Value {
+        if (!value.isValid()) {
+            return value;
+        }
+
+        var v = value;
+        if (v.kind() == Reflect.Interface) {
+            if (v.isNil()) {
+                return value;
+            }
+            v = v.elem();
+        }
+
+        if (!isNullableType(v.type())) {
+            return value;
+        }
+
+        return v.field(1).bool() ? v.field(0) : Null;
+    }
+
     // read field access on dynamic (class, anon, etc)
     public static function getField(dyn: Dynamic, fieldName: String): Dynamic {
         var value = ensureValue(dyn);
@@ -563,6 +615,11 @@ class HxDynamic {
         }
 
         if (!found) {
+            return null;
+        }
+
+        value = unwrapNullable(value);
+        if (!value.isValid()) {
             return null;
         }
 
@@ -663,6 +720,7 @@ class HxDynamic {
                 return null;
             }
 
+            // keep the Null<T> box
             return value.index(index)._interface();
         }
 
@@ -703,15 +761,26 @@ class HxDynamic {
         return value;
     }
 
-    // Produce the reflect.Value to assign into a settable target of type `t`.
-    // Haxe `null` maps to the zero value of `t` (e.g. a nil interface for []any),
-    // because ensureValue(null) yields an invalid reflect.Value that Set() rejects
-    // with "call of reflect.Value.Set on zero Value".
+
     public static function valueToAssign(v: Dynamic, t: Type): Value {
         if (isNull(v)) {
             return Reflect.zero(t);
         }
-        return ensureValue(v);
+
+        if (!isNullableType(t)) {
+            return ensureValue(v);
+        }
+
+        // roundtrips instead of double boxing
+        var unwrappedValue = unwrapNullable(ensureValue(v));
+        if (!unwrappedValue.isValid()) {
+            return Reflect.zero(t);
+        }
+
+        var box = Reflect._new(t).elem();
+        box.field(0).set(convertToType(unwrappedValue, t.field(0).type));
+        box.field(1).setBool(true);
+        return box;
     }
 
     // same as ensureValue, but recursively unpacks interface{}

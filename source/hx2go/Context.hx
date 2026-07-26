@@ -421,12 +421,15 @@ class Context {
         return switch (t) {
             case TAbstract({ name: "Null", pack: [], moduleName: mName }, [inner]):
                 var n = normalize(inner);
-
-                switch (n) {
-                    case TDynamicAny | TDynamic(_):
-                        TDynamicAny;
-                    case _:
-                        TAbstract({ name: "Null", moduleName: mName, pack: [] }, [n]);
+                if (!Semantics.isBoolType(n) && !Semantics.isIntegerType(n) && !Semantics.isFloatType(n) && !Semantics.isStringType(n)) {
+                    n;
+                }else{
+                    switch (n) {
+                        case TDynamicAny | TDynamic(_):
+                            TDynamicAny;
+                        case _:
+                            TAbstract({ name: "Null", moduleName: mName, pack: [] }, [n]);
+                    }
                 }
 
             case TInst({ name: "Array", pack: [] }, [inner]):
@@ -530,7 +533,9 @@ class Context {
 
             case TVar(v, _) | TLocal(v):
                 v.name = sanitiseString(v.name);
-
+                if (v.type != null) {
+                    v.type = normalize(v.type);
+                }
             case TParenthesis(e):
                 expr.t = e.t; // update paren type
 

@@ -102,7 +102,9 @@ class ExprWriter extends WriterImpl {
     public function writeEnumParameter(expr: HxbTypedExpr, e: HxbTypedExpr, ef: EnumFieldRef, index: Int): OutputBuffer {
         var buf = new OutputBuffer();
 
-        buf.addInline('(');
+        // guard a null panic
+        var returnType = writer.types.writeHxbType(expr.t).toString();
+        buf.addInline('func() $returnType { _hx_d := (');
         buf.addBufferInline(writeExpr(e));
         buf.addInline('.Hx_Field_enumParameter($index)).(${writer.types.writeHxbType(expr.t)})');
 

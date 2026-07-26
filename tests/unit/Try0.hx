@@ -4,32 +4,38 @@ function main() {
     var x = foo();
     assert(x == true);
     assert(foo2() == false);
-
     while (true) {
         try {
             if (x) {
                 break;
             }
         }
-        throw "impossible";
+        assert(false);
+        break;
     }
-
-    while (true) {
+    var loop = true;
+    var reached = false;
+    while (loop) {
+        loop = false;
         try {
             throw "issue";
         }catch(_) {
+            reached = true;
             break;
         }
-        throw "impossible";
+        assert(false);
+        break;
     }
-
+    assert(reached == true);
+    
     for (i in 0...4) {
         try {
             if (x) {
                 continue;
             }
         }
-        throw "impossible";
+        assert(false);
+        break;
     }
 
     for (i in 0...4) {
@@ -42,7 +48,8 @@ function main() {
                 continue;
             }
         }
-        throw "impossible";
+        assert(false);
+        break;
     }
     
 }

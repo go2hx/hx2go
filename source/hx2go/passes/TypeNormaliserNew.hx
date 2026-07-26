@@ -62,8 +62,11 @@ class TypeNormaliserNew extends CompilerPass {
                             var param = params[idx];
                             var arg = el[idx];
 
-                            if (!TypeHelper.compare(param.t, arg.t)) {
-                                var o = ExprHelper.createCast(arg, param.t);
+                            // need to normalize now, as it might have been skipped
+                            var paramType = context.normalize(param.t);
+
+                            if (!TypeHelper.compare(paramType, arg.t)) {
+                                var o = ExprHelper.createCast(arg, paramType);
                                 arg.expr = o.expr;
                                 arg.t = o.t;
 

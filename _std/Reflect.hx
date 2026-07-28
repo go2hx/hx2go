@@ -90,7 +90,7 @@ class Reflect {
         }
 
         var type = value.type();
-        return (kind == go.Reflect.Struct) || (kind == go.Reflect.Map && type.key().kind() == go.Reflect.String && type.elem().kind() == go.Reflect.Interface);
+        return (kind == go.Reflect.String) || (kind == go.Reflect.Struct) || (kind == go.Reflect.Map && type.key().kind() == go.Reflect.String && type.elem().kind() == go.Reflect.Interface);
     }
 
     public static function isEnumValue(v: Dynamic): Bool {

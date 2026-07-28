@@ -44,7 +44,7 @@ class Sys {
     }
 
     public static function sleep(seconds: Float): Void {
-        Time.sleep(seconds * 1000 * Time.Millisecond);
+        Time.sleep(cast (seconds * 1000 * cast(Time.Millisecond, Float)));
     }
 
     public static function setTimeLocale(loc: String): Bool {
@@ -67,29 +67,26 @@ class Sys {
     }
 
     public static function systemName(): String {
-        if (Runtime.GOOS == "windows")
-            return "Windows";
-
-        if (Runtime.GOOS == "linux" || Runtime.GOOS == "android")
-            return "Linux";
-
-        if (Runtime.GOOS == "freebsd" || Runtime.GOOS == "netbsd" || Runtime.GOOS == "openbsd")
-            return "BSD";
-
-        if (Runtime.GOOS == "darwin")
-            return "Mac";
-
-        return Runtime.GOOS; // otherwise return the go name
+        return switch Runtime.GOOS {
+            case "windows":
+                "Windows";
+            case "linux", "android":
+                "Linux";
+            case "freebsd", "netbsd", "openbsd":
+                "BSD";
+            case "darwin":
+                "Mac";
+            default:
+                Runtime.GOOS;
+        }
     }
 
     public static function command(cmd: String, ?args: Array<String>): Int {
-        var arg: Slice<String> = args != null ? Slice.fromArray(args) : new Slice();
-        var err: Error = null;
-        var output: Slice<Byte> = null;
-
-        err.sure();
-
-        Syntax.code('{0}, {1} = exec.Command({2}, {3}...).Output()', output, err, cmd, arg);
+        var argv: Array<String> = args != null ? args : [];
+        var res = Exec.command(cmd, ...argv).output();
+        var t = res.tuple();
+        var output: Slice<Byte> = t.result;
+        var err: Error = t.error;
 
         var exitCode: Int = 0;
         var exitError: Pointer<ExitError> = null;
@@ -116,7 +113,7 @@ class Sys {
 
     public static function time(): Float {
         var tn = Time.now();
-        var sec = tn.unixNano().toFloat() / Time.Second.toFloat();
+        var sec = tn.unixNano().toFloat() / cast(Time.Second, Float);
         var off = tn.local().zone().offset;
 
         return sec + off.toFloat();

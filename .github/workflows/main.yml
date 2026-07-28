@@ -35,7 +35,7 @@ jobs:
         with:
           path: |
             output/bootstrap
-          key: ${{ github.sha }}-build-${{ env.cache-name }}
+          key: ${{ github.sha }}-os-${{ matrix.os }}-build-${{ env.cache-name }}
       # haxelib setup
       - name: Setup hx2go dev
         run: haxelib dev hx2go .
@@ -57,4 +57,4 @@ jobs:
         with:
           path: |
             output/bootstrap
-          key: ${{ github.sha }}-build-${{ env.cache-name }}
+          key: ${{ github.sha }}-${{ matrix.os }}-build-${{ env.cache-name }}

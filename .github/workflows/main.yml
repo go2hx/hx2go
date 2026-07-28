@@ -8,7 +8,7 @@ concurrency:
 jobs:
   test:
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 15
+    timeout-minutes: 5
     strategy:
       matrix:
         go-version: ['oldstable', 'stable']
@@ -29,13 +29,14 @@ jobs:
           haxe-version: ${{ matrix.haxe-version }}
       - name: Haxe version
         run: haxe --version
-      # Get the cores 
-      - name: Get number of cores (Ubuntu)
-        if: startsWith(runner.os, 'Linux')
-        run: echo "CORES=$(nproc --all)" >> $GITHUB_ENV
-      - name: Get number of cores (macOS)
-        if: startsWith(runner.os, 'macOS')
-        run: echo "CORES=$(sysctl -n hw.logicalcpu)" >> $GITHUB_ENV
+      # cache restores
+      - uses: actions/cache/restore@v4
+        id: setup-cache
+        with:
+          path: |
+            output/bootstrap
+          key: ${{ github.sha }}-build-${{ env.cache-name }}
+      # haxelib setup
       - name: Setup hx2go dev
         run: haxelib dev hx2go .
       - name: Run bootstrap
@@ -46,3 +47,14 @@ jobs:
         run: haxe Testbed.hxml
       - name: Run tests
         run: haxe Tests.hxml
+      # cache saves
+      - name: cache save
+        id: cache-setup
+        uses: actions/cache/save@v4
+        env:
+          cache-name: cache-setup
+        if: always()
+        with:
+          path: |
+            output/bootstrap
+          key: ${{ github.sha }}-build-${{ env.cache-name }}

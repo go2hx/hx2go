@@ -78,8 +78,7 @@ abstract Vector<T>(VectorData<T>) {
 	}
 
 	public inline extern function copy<T>():Vector<T> {
-        //return this.copy();
-		return null;
+        return cast fromArrayCopy(this.copy());
 	}
 
 	public inline function join<T>(sep:String):String {
@@ -87,8 +86,7 @@ abstract Vector<T>(VectorData<T>) {
 	}
 
 	public inline extern function sort(f:T->T->Int):Void {
-        // TODO: implement
-		// this.sort(f);
+		this.sort(f);
 	}
 
 	public inline extern function map<S>(f:T->S):Vector<S> {

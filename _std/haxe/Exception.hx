@@ -68,3 +68,19 @@ class Exception {
 		return toString() + "\n" + haxe.CallStack.toString(stack);
 	}
 }
+
+// This function checks if the exception is a Go error and converts it to a haxe.Exception if necessary.
+@:keep function checkException(e:Dynamic):Dynamic {
+	// trace("checkException: ", e);
+
+	var isGoError:Bool = false;
+	var goError:go.Error = null;
+	go.Syntax.code("{0}, {1} = {2}.(error)", goError, isGoError, e);
+	if (isGoError) {
+		// trace("checkException: Go error detected, converting to haxe.Exception");
+		return new haxe.Exception(go.Syntax.code("{0}.Error()", goError));
+	}
+
+	// trace("checkException: Not a Go error or string, returning original exception");
+	return e;
+}

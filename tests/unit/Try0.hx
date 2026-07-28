@@ -1,5 +1,8 @@
 package unit;
 
+import haxe.Exception;
+import go.Syntax;
+
 function main() {
     var x = foo();
     assert(x == true);
@@ -52,6 +55,7 @@ function main() {
         break;
     }
     
+    testGo();
 }
 
 function foo():Bool {
@@ -73,4 +77,28 @@ function foo2():Bool {
     } catch(_) {
         return false;
     }
+}
+
+function testGo() {
+	testTC(true); // Go code generation test
+	testTC(false); // Haxe code generation test
+}
+
+var x:Int = 10;
+var y:Int = 0;
+
+function testTC(goCode:Bool) {
+	try {
+		if (goCode) {
+			// go.Fmt.printf("\nGo exception generation test\n");
+			var result = Syntax.code("{0}/{1}", x, y); // This will cause a division by zero error
+		} else {
+			// go.Fmt.printf("\nHaxe exception generation test\n");
+			throw "This is a test error.";
+		}
+	} catch (e:Dynamic) {
+		var isException:Bool = false;
+		go.Syntax.code("_, {0} = {1}.(*Hx_Obj_haxe_exception)", isException, e);
+		assert(isException);
+	}
 }

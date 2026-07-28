@@ -391,7 +391,7 @@ class ExprWriter extends WriterImpl {
         for (c in catches) {
             buf.add('defer func() {', 1);
             var catchName = Context.sanitiseString(c.v.name);
-            buf.add('if ${catchName} := recover(); $catchName != nil {', 2, true);
+            buf.add('if ${catchName} := Hx_Field_haxe__exception_exception_fields__checkException(recover()); $catchName != nil {', 2, true);
 
             var typed = false;
             if (c.v.type != null) {

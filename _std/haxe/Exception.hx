@@ -25,6 +25,7 @@ class Exception {
 
 	public var native(get, never): Any;
 	final private function get_native(): Any {
+		// TODO fix
 		return 0;
 	}
 
@@ -78,7 +79,7 @@ class Exception {
 	go.Syntax.code("{0}, {1} = {2}.(error)", goError, isGoError, e);
 	if (isGoError) {
 		// trace("checkException: Go error detected, converting to haxe.Exception");
-		return new haxe.Exception(go.Syntax.code("{0}.Error()", goError));
+		return (new haxe.ValueException(go.Syntax.code("{0}.Error()", goError), null, goError) : haxe.Exception);
 	}
 
 	// trace("checkException: Not a Go error or string, returning original exception");

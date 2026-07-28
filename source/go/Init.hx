@@ -20,12 +20,13 @@ class Init {
 			return;
 		}
 		var self = Context.resolvePath("go/Init.hx");
+		var path = Path.join([ Path.directory(self), '..', '..' ]);
 		// override layer first so its modules take priority over both the Go's std
 		// (std/) and Haxe's std.
-		var path = Path.join([ Path.directory(self), '..', '..', '_std' ]);
-		Compiler.addClassPath(path);
-		var path = Path.join([ Path.directory(self), '..', '..', 'std' ]);
-		Compiler.addClassPath(path);
+		var path_std = Path.join([ path, '_std' ]);
+		Compiler.addClassPath(path_std);
+		var pathstd = Path.join([ path, 'std' ]);
+		Compiler.addClassPath(pathstd);
 
 		var relativeOutput = Compiler.getOutput();
 		var root = Sys.getCwd();
@@ -36,6 +37,13 @@ class Init {
 			FileSystem.createDirectory(librariesOutput);
 		}
 		Compiler.addClassPath(librariesOutput);
+
+		var libraries = getGoLibs();
+		if (libraries.length > 0 && builtLibs.join("+") != libraries.join("+")) {
+			Sys.command('haxelib', ['dev', 'hx2go-extern', Path.join([path, "hx2go-extern"])]);
+			Sys.command('haxelib', ['run', 'hx2go-extern'].concat(libraries).concat([librariesOutput]));
+			builtLibs = libraries;
+		}
 	}
 
 	static function getGoLibs():Array<String> {
@@ -104,13 +112,6 @@ class Init {
 
 
 		Compiler.setPlatformConfiguration(newConfig);
-
-		var libraries = getGoLibs();
-		// trace(builtLibs, libraries);
-		if (libraries.length > 0 && builtLibs.join("+") != libraries.join("+")) {
-			Sys.command('haxelib', ['run', 'go2hx'].concat(libraries).concat([librariesOutput]));
-			builtLibs = libraries;
-		}
 
 		if (Context.defined("display") || Context.defined("times.macro")) {
 			trace("stop running");

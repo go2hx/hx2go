@@ -1,5 +1,7 @@
 package sys;
 
+import go.os.DirEntry;
+import go.Slice;
 import go.path.Filepath;
 import go.Path;
 import go.Os;
@@ -23,7 +25,8 @@ class FileSystem {
     }
 
     public static function readDirectory(path:String):Array<String> {
-        throw "not implemented";
+        var list:Slice<DirEntry> = Os.readDir(path).sure();
+        return list.toArray().map(res -> res.name());
     }
 
     public static function deleteFile(path: String): Void {

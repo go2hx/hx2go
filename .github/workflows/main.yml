@@ -48,9 +48,8 @@ jobs:
       - name: Run tests
         run: haxe Tests.hxml
       - name: Extern tests
+        working-directory: hx2go-extern
         run: haxe Testbed.hxml
-        with:
-          path: hx2go-extern
       # cache saves
       - name: cache save
         id: cache-setup

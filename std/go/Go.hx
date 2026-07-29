@@ -22,6 +22,8 @@ extern class Go {
    @:pure static function rune(x: Dynamic): Rune;
    @:pure static function complex64(x: Dynamic): Complex64;
    @:pure static function complex128(x: Dynamic): Complex128;
+   static function print(v: haxe.Rest<Dynamic>): Void;
+   static function println(v: haxe.Rest<Dynamic>): Void;
    static function panic(v: Dynamic): Void;
    @:pure static function len<T>(v: T): GoInt;
    static function append<T>(s: Slice<T>, v: haxe.Rest<T>): Slice<T>;

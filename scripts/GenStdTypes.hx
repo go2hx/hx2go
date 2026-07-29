@@ -37,6 +37,8 @@ var operators = [
 ];
 
 var topLevel = [
+    { hxName: "print",  goName: "print",   returnType: "Void", types: [], pure: false, isOverload: false, args: [ { name: "v", type: "haxe.Rest<Dynamic>" } ] },
+    { hxName: "println",  goName: "println",   returnType: "Void", types: [], pure: false, isOverload: false, args: [ { name: "v", type: "haxe.Rest<Dynamic>" } ] },
     { hxName: "panic",   goName: "panic",    returnType: "Void",     types: [],    pure: false, isOverload: false, args: [ { name: "v", type: "Dynamic" } ] },
     { hxName: "len",     goName: "len",      returnType: "GoInt",    types: ["T"], pure: true,  isOverload: false, args: [ { name: "v", type: "T" } ] },
     { hxName: "append",  goName: "append",   returnType: "Slice<T>", types: ["T"], pure: false, isOverload: false, args: [ { name: "s", type: "Slice<T>" }, { name: "v", type: "haxe.Rest<T>" } ] },

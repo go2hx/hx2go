@@ -39,8 +39,8 @@ jobs:
       # haxelib setup
       - name: Setup hx2go dev
         run: haxelib dev hx2go .
-      - name: Install UTest
-        run: haxelib git utest github.com/haxe-utest/utest
+      - name: Install utest
+        run: haxelib git utest https://github.com/haxe-utest/utest
       - name: Run bootstrap
         run: haxe Bootstrap.hxml
       - name: Run isolated test

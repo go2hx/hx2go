@@ -57,21 +57,21 @@ class StringMap<T> implements haxe.Constraints.IMap<String, T> {
 	}
 
 	public function get(key:String): Null<T> {
-		if (key == null)
-			return null;
+		// if (key == null)
+		// 	return null;
 
 		return @:privateAccess h.get(key);
 	}
 
 	public function exists(key:String):Bool {
-		if (key == null)
-			return false;
+		// if (key == null)
+		// 	return false;
 		return @:privateAccess h.exists(key);
 	}
 
 	public function remove(key:String):Bool {
-		if (key == null)
-			return false;
+		// if (key == null)
+		// 	return false;
         var prevSize = h.size();
 		@:privateAccess h.remove(key);
         return prevSize != h.size();

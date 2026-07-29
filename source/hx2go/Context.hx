@@ -418,6 +418,18 @@ class Context {
         return switch (t) {
             case TAbstract({ name: "Null", pack: [], moduleName: mName }, [inner]):
                 var n = normalize(inner);
+                switch n {
+                    case TInst(c, _):
+                        var m = resolve(c);
+                        switch m {
+                            case MTypedef(_.meta => meta), MClass(_.meta => meta):
+                                if (meta.filter(m -> m.name == ":go.Type").length > 0) {
+                                    return TAbstract({ name: "Null", moduleName: mName, pack: [] }, [n]);
+                                }
+                            default:
+                        }
+                    default:
+                }
                 if (!Semantics.isBoolType(n) && !Semantics.isIntegerType(n) && !Semantics.isFloatType(n) && !Semantics.isStringType(n)) {
                     n;
                 }else{

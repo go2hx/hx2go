@@ -29,7 +29,7 @@ can build with the standard `go` toolchain.
 ## Requirements
 
 - [Haxe nightly](https://haxe.org/download/nightlies/) `5.0.0-preview.1+957b2c7` or newer
-- [Go 1.25+](https://go.dev/dl/)
+- [Go 1.26 or higher](https://go.dev/dl/)
 
 ## Installation
 

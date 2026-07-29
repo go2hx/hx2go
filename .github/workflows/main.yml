@@ -11,7 +11,8 @@ jobs:
     timeout-minutes: 5
     strategy:
       matrix:
-        go-version: ['oldstable', 'stable']
+        # go-version: ['oldstable', 'stable']
+        go-version: ['stable']
         haxe-version: [latest]
         os: [ubuntu-latest, macos-latest, windows-latest]
     steps:

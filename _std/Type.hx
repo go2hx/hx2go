@@ -26,6 +26,8 @@ import go.Reflect;
 import go.reflect.Kind;
 import go.haxe.HxDynamic;
 import go.Slice;
+import go.haxe.HxEnumValue;
+import go.haxe.HxEnum;
 
 enum ValueType {
 	TNull;
@@ -44,11 +46,11 @@ enum ValueType {
 class Type {
 
 	public static function getClass<T>(o:T):Null<Class<T>> {
-		throw "not implemented";
+		return cast o;
 	}
 
 	public static function getEnum(o:EnumValue):Null<Enum<Dynamic>> {
-		throw "not implemented";
+		return cast o;
 	}
 
 	public static function getSuperClass(c:Class<Dynamic>):Null<Class<Dynamic>> {
@@ -56,11 +58,11 @@ class Type {
 	}
 
 	public static function getClassName(c:Class<Dynamic>):String {
-		throw "not implemented";
+		return untyped c.name;
 	}
 
 	public static function getEnumName(e:Enum<Dynamic>):String {
-		throw "not implemented";
+		return untyped e.name;
 	}
 
 	public static function resolveClass(name:String):Null<Class<Dynamic>> {
@@ -84,7 +86,8 @@ class Type {
 	}
 
 	public static function createEnumIndex<T>(e:Enum<T>, index:Int, ?params:Array<Dynamic>):T {
-		throw "not implemented";
+		var e: HxEnum = cast e;
+		return cast e.createByIndex(index, params);
 	}
 
 	public static function getInstanceFields(c:Class<Dynamic>):Array<String> {
@@ -96,7 +99,7 @@ class Type {
 	}
 
 	public static function getEnumConstructs(e:Enum<Dynamic>):Array<String> {
-		throw "not implemented";
+		return untyped e.constructorNames;
 	}
 
 	public static function typeof(v:Dynamic):ValueType {
@@ -162,19 +165,45 @@ class Type {
 	}
 
 	public static function enumEq<T:EnumValue>(a:T, b:T):Bool {
-		throw "not implemented";
+		if (a == b) {
+			return true;
+		}
+
+		var aidx = Type.enumIndex(a);
+		var bidx = Type.enumIndex(b);
+		if (aidx != bidx) {
+			return false;
+		}
+
+		var aprm = Type.enumParameters(a);
+		var bprm = Type.enumParameters(b);
+		if (aprm.length != bprm.length) {
+			return false;
+		}
+
+		for (idx in 0...aprm.length) {
+			var ap = aprm[idx];
+			var bp = bprm[idx];
+
+			if (ap != bp) {
+				return false; // TODO: review, some stuff may not be comparable, perhaps we need to use https://go.dev/src/reflect/deepequal.go
+			}
+		}
+
+		return true;
 	}
 
 	public static function enumConstructor(e:EnumValue):String {
-        throw "not implemented";
+		var t: HxEnum = untyped e.enumType();
+		return t.constructorNames[Type.enumIndex(e)];
 	}
 
 	public static function enumParameters(e:EnumValue):Array<Dynamic> {
-		return Syntax.code('{0}.Hx_Field_enumParams()', e);
+		return untyped e.enumParams();
 	}
 
 	public static function enumIndex(e:EnumValue):Int {
-		return Syntax.code('{0}.Hx_Field_enumIndex()', e);
+		return untyped e.enumIndex();
 	}
 
 	public static function allEnums<T>(e:Enum<T>):Array<T> {

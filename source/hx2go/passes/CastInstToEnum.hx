@@ -18,7 +18,7 @@ class CastInstToEnum extends CompilerPass {
 
     public function match(expr: HxbTypedExpr): Bool {
         return switch expr {
-            case { expr: TCast({ t: TEnum(_) | TDynamic(_) | TDynamicAny }, _), t: TAbstract({ name: "Enum", pack: [] }, _) | TEnumStatic(_) }: true;
+            case { expr: TCast({ t: TAbstract({ name: "EnumValue", pack: [] }, _) | TEnum(_) | TDynamic(_) | TDynamicAny }, _), t: TAbstract({ name: "Enum", pack: [] }, _) | TEnumStatic(_) }: true;
             case _: false;
         }
     }
@@ -30,7 +30,7 @@ class CastInstToEnum extends CompilerPass {
                 var o = ExprHelper.createCast(new HxbTypedExpr(TCall(
                     new HxbTypedExpr(
                     TField(Copy.copy(e), isDyn ? FDynamic("enumType") : FInstance(switch e.t {
-                        case TEnum(tp, _): tp;
+                        case TEnum(tp, _) | TAbstract(tp, _): tp;
                         case _: return;
                     }, [], {
                         owner: null,

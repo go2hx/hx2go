@@ -50,7 +50,23 @@ function main() {
 
     trace(Type.typeof(foo), Type.typeof(ev), Type.typeof(obj), Type.typeof(5), Type.typeof("hello"), Type.typeof(true), Type.typeof(null), Type.typeof([1, 2, 3])); // TClass, TEnum, TObject, TInt, TClass, TBool, TNull, TClass
 
+    var xml = Xml.parse('<div><a href="https://mki.sh">hello</a></div>');
+    trace(xml.toString());
+
     var obj_cpy = Reflect.copy(obj);
     obj_cpy.x = 100;
     trace(obj, obj_cpy); // { x => 30, y => 20 }, { x => 100, y => 20 }
+
+    var cls = Type.getClass(foo);
+    trace(cls);
+    trace(Type.getClassName(cls));
+
+    var enm = Type.getEnum(ev);
+    trace(enm);
+    trace(Type.getEnumName(enm));
+    trace(Type.enumIndex(ev));
+    trace(Type.enumParameters(ev));
+    trace(Type.enumConstructor(ev));
+    trace(Type.enumEq(A, A), Type.enumEq(A, B));
+    trace(Type.createEnumIndex(Bar, 0), Type.createEnumIndex(Bar, 1));
 }

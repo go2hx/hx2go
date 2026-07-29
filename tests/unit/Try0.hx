@@ -100,5 +100,12 @@ function testTC(goCode:Bool) {
 		var isException:Bool = false;
 		go.Syntax.code("_, {0} = {1}.(*Hx_Obj_haxe_exception)", isException, e);
 		assert(isException);
+
+        if (goCode) { // Check that the exception.native value is a Go error 
+            var isGoError:Bool = false;
+            var nativeError = (e:Exception).native;
+            go.Syntax.code("_, {0} = {1}.(error)", isGoError, nativeError); 
+            assert(isGoError);
+        }
 	}
 }

@@ -25,8 +25,7 @@ class Exception {
 
 	public var native(get, never): Any;
 	final private function get_native(): Any {
-		// TODO fix
-		return 0;
+		return _native;
 	}
 
 	static private function caught(value: Any): Exception {
@@ -47,12 +46,14 @@ class Exception {
 	}
 
 	var _message: String;
+    var _native: Any;
 	// var _previous: Null<cxx.SharedPtr<Exception>>;
 	// var _stack: CallStack;
 
 	public function new(message: String, ?previous: Exception, ?native: Any): Void {
 
 		_message = message;
+		_native = native;
 		// _previous = previous != null ? cxx.SharedPtr.make((previous : Exception)) : null;
 		// _stack = NativeStackTrace.toHaxe(NativeStackTrace.callStack());
 	}

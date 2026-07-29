@@ -1,5 +1,0 @@
--cp source
--main hx2go.Main
--L hx2go
---custom-target go=output/bootstrap
---cmd go -C output/bootstrap/main build .

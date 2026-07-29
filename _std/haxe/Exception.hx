@@ -72,7 +72,10 @@ class Exception {
 }
 
 // This function checks if the exception is a Go error or string and converts it to a haxe.Exception if necessary.
-@:keep function checkException(e:Dynamic):Dynamic {
+@:analyzer(no_user_var_fusion)
+@:analyzer(no_const_propagation)
+@:keep 
+function checkException(e:Dynamic):Dynamic {
 	// trace("checkException: ", e);
 
 	var isGoError:Bool = false;

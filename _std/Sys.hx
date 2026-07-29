@@ -81,9 +81,12 @@ class Sys {
         }
     }
 
-    public static function command(cmd: String, ?args: Array<String>): Int {
-        var argv: Array<String> = args != null ? args : [];
-        var res = Exec.command(cmd, ...argv).output();
+    @:analyzer(no_user_var_fusion)
+    @:analyzer(no_const_propagation)
+    public static function command(cmd: String, args: Array<String>=null): Int {
+        if (args == null)
+            args = [];
+        var res = Exec.command(cmd, ...args).output();
         var t = res.tuple();
         var output: Slice<Byte> = t.result;
         var err: Error = t.error;

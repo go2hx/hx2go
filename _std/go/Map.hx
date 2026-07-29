@@ -22,10 +22,8 @@ abstract Map<K, V> {
     }
 
     public inline extern function exists(key: K): Bool {
-        var ok: Bool = false;
-        Syntax.code("_, {2} = {0}[{1}]", this, key, ok);
-
-        return ok;
+        Syntax.code("_, ok := {0}[{1}]", this, key);
+        return Syntax.code("ok");
     }
 
     public inline extern function remove(key: K): Void {

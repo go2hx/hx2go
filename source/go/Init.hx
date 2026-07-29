@@ -142,6 +142,10 @@ class Init {
 				var ps = new Process("go", ["-C", sourceOutput, "mod", "init", "main"]);
 				ps.exitCode(true);
 				ps.close();
+				// set version
+				var ps = new Process("go", ["-C", sourceOutput, "mod", "edit", "-go=1.26.0"]);
+				ps.exitCode(true);
+				ps.close();
 			}
 
 			final mainClass = Compiler.getConfiguration().mainClass;

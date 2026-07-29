@@ -270,15 +270,12 @@ class Context {
             for (dep in deps) {
                 if (dep.contains(".")) {
                     var args = ["get", dep];
-                    Sys.println("go " + args.join(" "));
-                    processList.push(new Process("go", args));
+                    var code = Sys.command("go", args);
+                    if (code != 0) {
+                        Sys.println("command failed: go " + args.join(" "));
+                    }
                 }
             }
-        }
-        while (processList.length > 0) {
-            var ps = processList.pop();
-            ps.exitCode();
-            ps.close();
         }
 
         Sys.setCwd(previousCwd);

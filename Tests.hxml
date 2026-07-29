@@ -1,6 +1,14 @@
 -cp tests
 -m TestAll
 -L hx2go
--D analyzer-no-module
+-D utest
+-lib utest
+
+--dce full
+-D analyzer-optimize
+-D analyzer-user-var-fusion
+-D message.reporting=pretty
+-D haxe-next
+
 --custom-target go=output/tests
 --cmd go -C output/tests/main run .

@@ -103,7 +103,7 @@ class Sys {
                 exitCode = -1; // failed to run
             }
         } else {
-            Fmt.println(Go.string(output)); // TODO: pipe output rather than printing at the end
+            Sys.println(Go.string(output)); // TODO: pipe output rather than printing at the end
         }
 
         return 0;

@@ -1,11 +1,11 @@
 -cp tests
 -m TestAll
 -L hx2go
--D utest
--lib utest
+# -D utest
+# -lib utest
 
 --dce full
--D analyzer-optimize
+# -D analyzer-optimize
 -D analyzer-user-var-fusion
 -D message.reporting=pretty
 -D haxe-next

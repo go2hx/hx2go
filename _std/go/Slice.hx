@@ -61,7 +61,7 @@ extern abstract Slice<T> {
 
     @:to public inline function toArray(): Array<T> {
         var self: Slice<T> = this;
-        return Syntax.code("(&{0})", self);
+        return Syntax.code("new({0})", self);
     }
 
     @:from public static inline function fromArray<T>(arr: Array<T>): Slice<T> {

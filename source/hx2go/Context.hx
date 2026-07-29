@@ -1,5 +1,6 @@
 package hx2go;
 
+import hx2go.hxb.Typed.HxbVar;
 import hx2go.hxb.HxbModule;
 import sys.io.Process;
 using StringTools;
@@ -650,8 +651,12 @@ class Context {
                                 var barg = b_args[idx];
                                 var name = '_hx_param_' + farg.name;
 
+                                var toType = farg.t;
+                                var fromType = b_args[idx].t;
+                                var localVar = new HxbVar(-1, name, VUser(TVOLocalVariable), 0, [], f.pos, fromType);
+                                var local = new HxbTypedExpr(TLocal(localVar), fromType, f.pos);
                                 assign.push(
-                                    ExprHelper.createUntyped('${Context.sanitiseString(farg.name)} := ${name}.(${writer.types.writeHxbType(farg.t)})', [])
+                                    ExprHelper.createUntyped('${Context.sanitiseString(farg.name)} := {0}', [ExprHelper.createCast(local, toType)])
                                 );
 
                                 args.push({

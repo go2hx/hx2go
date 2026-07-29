@@ -80,32 +80,47 @@ function foo2():Bool {
 }
 
 function testGo() {
-	testTC(true); // Go code generation test
-	testTC(false); // Haxe code generation test
+	testTC(true,true); // Go code generation test - go internal error
+    testTC(true,false); // Go code generation test - go string error
+	testTC(false,false); // Haxe code generation test
 }
 
 var x:Int = 10;
 var y:Int = 0;
 
-function testTC(goCode:Bool) {
+function testTC(goCode:Bool, goError:Bool) {
+    var haxeMessage:String = "This is a test error.";
+    var goMessage:String = "This is a test string error from Go.";
 	try {
 		if (goCode) {
 			// go.Fmt.printf("\nGo exception generation test\n");
-			var result = Syntax.code("{0}/{1}", x, y); // This will cause a division by zero error
+            if (goError) {
+                var result = Syntax.code("{0}/{1}", x, y); // This will cause a division by zero error
+            } else {
+        		go.Syntax.code("panic({0})", goMessage); // This will cause a panic with a string message
+            }
 		} else {
 			// go.Fmt.printf("\nHaxe exception generation test\n");
-			throw "This is a test error.";
+			throw haxeMessage;
 		}
 	} catch (e:Dynamic) {
 		var isException:Bool = false;
 		go.Syntax.code("_, {0} = {1}.(*Hx_Obj_haxe_exception)", isException, e);
 		assert(isException);
 
-        if (goCode) { // Check that the exception.native value is a Go error 
+        if (goCode && goError) { // Check that the exception.native value is a Go error 
             var isGoError:Bool = false;
             var nativeError = (e:Exception).native;
             go.Syntax.code("_, {0} = {1}.(error)", isGoError, nativeError); 
             assert(isGoError);
+        }
+
+        if (!goError) { // Check that the correct message is returned
+            if (goCode) {
+                assert((e:Exception).toString() == "Error: " + goMessage);
+            } else {
+                assert((e:Exception).toString() == "Error: " + haxeMessage);
+            }
         }
 	}
 }

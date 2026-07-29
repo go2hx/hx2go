@@ -71,7 +71,7 @@ class Exception {
 	}
 }
 
-// This function checks if the exception is a Go error and converts it to a haxe.Exception if necessary.
+// This function checks if the exception is a Go error or string and converts it to a haxe.Exception if necessary.
 @:keep function checkException(e:Dynamic):Dynamic {
 	// trace("checkException: ", e);
 
@@ -81,6 +81,14 @@ class Exception {
 	if (isGoError) {
 		// trace("checkException: Go error detected, converting to haxe.Exception");
 		return (new haxe.ValueException(go.Syntax.code("{0}.Error()", goError), null, goError) : haxe.Exception);
+	}
+
+	// some Go panics may be strings, so we check for that as well
+	var isGoString:Bool = false;
+	go.Syntax.code("_, {0} = {1}.(string)", isGoString, e);
+	if (isGoString) {
+		// trace("checkException: Go string detected, converting to haxe.Exception");
+		return (new haxe.ValueException(e) : haxe.Exception);
 	}
 
 	// trace("checkException: Not a Go error or string, returning original exception");

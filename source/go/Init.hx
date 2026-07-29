@@ -114,7 +114,6 @@ class Init {
 		Compiler.setPlatformConfiguration(newConfig);
 
 		if (Context.defined("display") || Context.defined("times.macro")) {
-			trace("stop running");
 			return;
 		}
 
@@ -151,6 +150,8 @@ class Init {
 			final mainClass = Compiler.getConfiguration().mainClass;
 			final mainClassName = mainClass.pack.length > 0 ? '${mainClass.pack.join(".")}.${mainClass.name}' : '${mainClass.name}';
 
+			var singleFile = Context.defined("go-single-file");
+
 			var self = Context.resolvePath("go/Init.hx");
 			var path = Path.join([ Path.directory(self), '..', '..' ]);
 			if (!Context.defined("no-compilation")) {
@@ -171,13 +172,13 @@ class Init {
 							throw "bootstrap failed";
 						Sys.setCwd(root);
 					}
-					var args = [archiveOutput, sourceOutput, mainClassName];
+					var args = [archiveOutput, sourceOutput, mainClassName, singleFile ? "1" : "0"];
 					var code = Sys.command(bin, args);
 					if (code != 0)
 						throw "compiler failed";
 				} else {
 					final bin = Path.join(["Compile-eval.hxml"]);
-					var args = [bin, archiveOutput, sourceOutput, mainClassName];
+					var args = [bin, archiveOutput, sourceOutput, mainClassName, singleFile ? "1" : "0"];
 					var oldCwd = Sys.getCwd();
 					Sys.setCwd(path);
 					var code = Sys.command("haxe", args);
@@ -188,6 +189,7 @@ class Init {
 			}
 		});
     }
+
 	static function addCustomDefines() {
 		// register custom defines
 		Compiler.registerCustomDefine({
@@ -197,6 +199,10 @@ class Init {
 		Compiler.registerCustomDefine({
 			define: "go-lib",
 			doc: "automatic extern generation of a given Go library",
+		});
+		Compiler.registerCustomDefine({
+			define: "go-single-file",
+			doc: "output a single Go file",
 		});
 		// register custom metadata
 		Compiler.registerCustomMetadata({
@@ -208,6 +214,7 @@ class Init {
 			doc: "",
 		});
 	}
+
 	private static function executable(path: String): String {
 		return if (Sys.systemName().toLowerCase() == "windows") {
 			path + '.exe';

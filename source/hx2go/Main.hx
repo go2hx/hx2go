@@ -15,38 +15,39 @@ class Main {
         var relativeInput = args[0] ?? "output.hxb";
         var relativeOutput = args[1] ?? ".";
         var mainClass = args[2] ?? "Main";
+        var singleFile = (args[3] == "1") ?? false;
 
         // accept both absolute paths (-D go-bootstrap) and relative paths
         var absoluteOutput = Path.isAbsolute(relativeOutput) ? relativeOutput : Path.join([ root, relativeOutput ]);
         var absoluteInput = Path.isAbsolute(relativeInput) ? relativeInput : Path.join([ root, relativeInput ]);
 
-        exec(absoluteInput, absoluteOutput, mainClass);
+        exec(absoluteInput, absoluteOutput, mainClass, singleFile);
     }
 
     public static function importToPath(imp: HxbImport): String {
         return imp.pack.length > 0 ? '${imp.pack.join(".")}.${imp.name}' : imp.name;
     }
 
-    public static function exec(input: String, output: String, mainClass: String): Void {
+    public static function exec(input: String, output: String, mainClass: String, singleFile:Bool): Void {
         final start = Sys.time();
         if (!FileSystem.exists(input)) {
             Sys.println("HXB not found: " + input);
             Sys.exit(1);
         }
         var arc = Hxb.loadArchive(input);
-        generate(arc, output, mainClass);
+        generate(arc, output, mainClass, singleFile);
 
         final end = Sys.time();
         Sys.println('hx2go took ${Std.string(Math.round((end - start) * 100000) / 100)}ms');
     }
 
-    public static function generate(archive: HxbArchive, absoluteOutput: String, mainClass: String): Void {
+    public static function generate(archive: HxbArchive, absoluteOutput: String, mainClass: String, singleFile:Bool): Void {
         if (!FileSystem.exists(absoluteOutput)) {
             FileSystem.createDirectory(absoluteOutput);
         }
 
         var ctx = new hx2go.Context(archive, absoluteOutput);
-        ctx.build(mainClass);
+        ctx.build(mainClass, singleFile);
     }
 
 }

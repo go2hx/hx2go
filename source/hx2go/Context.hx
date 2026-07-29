@@ -194,7 +194,7 @@ class Context {
         types.set(typePath, t);
     }
 
-    public function build(mainClass: String): Void {
+    public function build(mainClass: String, singleFile:Bool): Void {
         typesByModule = new Map();
         typeQueue = [];
 
@@ -206,6 +206,9 @@ class Context {
                 break;
             }
         }
+
+        var buf = new OutputBuffer();
+        var importList:Array<String> = [];
 
         while (typeQueue.length != 0) {
             var module = typesByModule[typeQueue.pop()];
@@ -234,7 +237,9 @@ class Context {
             
             var imports = imports.exists(path) ? imports[path] : [];
 
-            header.add('package $topLevelPackage');
+            if (!singleFile) {
+                header.add('package $topLevelPackage');
+            }
 
             if (imports.length > 0) {
                 header.add("");
@@ -242,24 +247,44 @@ class Context {
 
             for (imp in imports) {
                 _reserved[imp] = true;
-                header.add('import "$imp"');
+                if (singleFile) {
+                    if (!importList.contains(imp))
+                        importList.push(imp);
+                }else{
+                    header.add('import "$imp"');
+                }
             }
 
             if (!hasWrittenSomething) continue;
             else header.add(file.toString());
 
-            writeFile("/", StringConversions.stringPathGetFileName(module[0].module), header.toString());
+
+            if (singleFile) {
+                buf.add(header.toString());
+            }else{
+                writeFile("/", StringConversions.stringPathGetFileName(module[0].module), header.toString());
+            }
         }
-
-        var buf = new OutputBuffer();
-
-        buf.add('package ${topLevelPackage}');
+        if (!singleFile) {
+            buf.add('package ${topLevelPackage}');
+        }
         buf.add('');
         buf.add('func main() {');
         buf.add('${StringConversions.typePathStaticFieldName("main", StringConversions.pathToLossyTypePath(mainClass))}()', 1);
         buf.add('}');
 
-        writeFile("", "Main", buf.toString());
+        var prefix = new OutputBuffer();
+        if (singleFile) {
+            prefix.add('package ${topLevelPackage}');
+            prefix.add('');
+            prefix.add('import (');
+            for (imp in importList) {
+                prefix.add('  "$imp"');
+            }
+            prefix.add(')');
+        }
+
+        writeFile("", "Main", prefix + buf.toString());
 
         installGoDeps(imports);
     }

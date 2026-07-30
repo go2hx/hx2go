@@ -29,7 +29,10 @@ function runTestSuite(target:String) {
         }
     }
     Sys.println("haxe " + args.join(" "));
-    Sys.command('haxe', args);
+    var code = Sys.command('haxe', args);
+    if (code == 0) {
+        Sys.command("go run -C ./bin/go/main .");
+    }
 }
 
 #if macro

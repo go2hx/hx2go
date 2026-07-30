@@ -28,6 +28,8 @@ import go.haxe.HxDynamic;
 import go.Slice;
 import go.haxe.HxEnumValue;
 import go.haxe.HxEnum;
+import go.haxe.HxArray;
+import go.haxe.HxClass;
 
 enum ValueType {
 	TNull;
@@ -46,15 +48,15 @@ enum ValueType {
 class Type {
 
 	public static function getClass<T>(o:T):Null<Class<T>> {
-		return cast o;
+		return cast o; // TODO: perhaps using typeof() with a switch is more robust?
 	}
 
 	public static function getEnum(o:EnumValue):Null<Enum<Dynamic>> {
-		return cast o;
+		return cast o; // TODO: perhaps using typeof() with a switch is more robust?
 	}
 
 	public static function getSuperClass(c:Class<Dynamic>):Null<Class<Dynamic>> {
-		throw "not implemented";
+		return untyped c.superClass;
 	}
 
 	public static function getClassName(c:Class<Dynamic>):String {
@@ -66,23 +68,29 @@ class Type {
 	}
 
 	public static function resolveClass(name:String):Null<Class<Dynamic>> {
-		throw "not implemented";
+		return cast untyped HxClass.getClass(name);
 	}
 
 	public static function resolveEnum(name:String):Null<Enum<Dynamic>> {
-		throw "not implemented";
+		return cast untyped HxEnum.getEnum(name);
 	}
 
 	public static function createInstance<T>(cl:Class<T>, args:Array<Dynamic>):T {
-		throw "not implemented";
+		return untyped cl.createInstance(args);
 	}
 
 	public static function createEmptyInstance<T>(cl:Class<T>):T {
-		throw "not implemented";
+		return untyped cl.createEmptyInstance();
 	}
 
 	public static function createEnum<T>(e:Enum<T>, constr:String, ?params:Array<Dynamic>):T {
-		throw "not implemented";
+		var e: HxEnum = cast e;
+		var i = e.constructorNames.indexOf(constr);
+		if (i < 0) {
+			throw "Unknown constructor " + constr + " for enum " + e.name;
+		}
+
+		return cast e.createByIndex(i, params);
 	}
 
 	public static function createEnumIndex<T>(e:Enum<T>, index:Int, ?params:Array<Dynamic>):T {
@@ -91,15 +99,15 @@ class Type {
 	}
 
 	public static function getInstanceFields(c:Class<Dynamic>):Array<String> {
-        throw "not implemented";
+        return HxArray.copy(untyped c.instanceFields);
 	}
 
 	public static function getClassFields(c:Class<Dynamic>):Array<String> {
-		throw "not implemented";
+		return HxArray.copy(untyped c.staticFields);
 	}
 
 	public static function getEnumConstructs(e:Enum<Dynamic>):Array<String> {
-		return untyped e.constructorNames;
+		return HxArray.copy(untyped e.constructorName);
 	}
 
 	public static function typeof(v:Dynamic):ValueType {
@@ -207,6 +215,18 @@ class Type {
 	}
 
 	public static function allEnums<T>(e:Enum<T>):Array<T> {
-		throw "not implemented";
+		var t: HxEnum = cast (e : Enum<Dynamic>);
+		var r: Array<T> = [];
+
+		for (i in 0...t.constructorNames.length) {
+			if (t.constructorArgCounts[i] != 0) {
+				continue;
+			}
+
+			r.push(cast t.createByIndex(i, []));
+		}
+
+		return r;
 	}
+
 }

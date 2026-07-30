@@ -6,12 +6,18 @@ class Foo {
         trace("bar", a + b);
         return a + b;
     }
+    public static function foo() {
+        trace("foo!");
+    }
 }
 
 enum Bar {
     A;
     B;
+    C(v: Int);
 }
+
+class Baz extends Foo {}
 
 function main() {
     var foo: Foo = new Foo();
@@ -60,13 +66,35 @@ function main() {
     var cls = Type.getClass(foo);
     trace(cls);
     trace(Type.getClassName(cls));
+    trace(Type.getClassFields(cls), Type.getInstanceFields(cls));
+    trace(Type.getSuperClass(cls));
+
+    var cls2 = Type.getClass(new Baz());
+    trace(cls2);
+    trace(Type.getClassName(cls2));
+    trace(Type.getClassFields(cls2), Type.getInstanceFields(cls2));
+    trace(Type.getSuperClass(cls2));
+    trace(Type.createEmptyInstance(cls2));
+    trace(Type.createInstance(cls2, []));
 
     var enm = Type.getEnum(ev);
     trace(enm);
     trace(Type.getEnumName(enm));
+    trace(Type.allEnums(enm));
     trace(Type.enumIndex(ev));
     trace(Type.enumParameters(ev));
     trace(Type.enumConstructor(ev));
     trace(Type.enumEq(A, A), Type.enumEq(A, B));
-    trace(Type.createEnumIndex(Bar, 0), Type.createEnumIndex(Bar, 1));
+    trace(Type.createEnumIndex(Bar, 0), Type.createEnumIndex(Bar, 1), Type.createEnum(Bar, "A"), Type.createEnum(Bar, "B"));
+
+    trace(Type.resolveClass("go.haxe.HxClass"));
+    trace(Type.resolveClass("Foo"));
+    trace(Type.resolveClass("Bar"));
+    trace(Type.resolveClass("Baz"));
+
+    trace(Type.resolveEnum("go.haxe.HxClass"));
+    trace(Type.resolveEnum("Foo"));
+    trace(Type.resolveEnum("Bar"));
+    trace(Type.resolveEnum("Baz"));
+
 }

@@ -41,53 +41,62 @@ class ClassWriter extends WriterImpl {
         var dynMethods: Array<{ inst: HxbClass, field: HxbClassField }> = [];
         var canOmitVTable: Bool = writer.context.omitVTable(cls);
         var isInterface = cls.flags & HxbClassFlag.CInterface != 0;
+        var fieldNames: Array<String> = [];
+        var firstSuper: Null<HxbClass> = null;
 
-        buf.add('');
-        buf.add('var ${StringConversions.typePathClassInstanceName(cls.path)}_RTTI = Hx_Obj_go_haxe_hxclass_CreateInstance(');
-        buf.add('"${cls.path.dotPath()}",', 1);
-        buf.add(')');
+        while (current != null) {
+            for (f in current.fields) {
+                if (!fieldNames.contains(f.name)) {
+                    fieldNames.push(f.name);
+                }
+
+                if (!f.kind.match(KMethod(_)) || fields.exists(f.name)) {
+                    continue;
+                }
+
+                if (f.kind.match(KMethod(MethDynamic))) {
+                    dynMethods.push({ inst: current, field: f });
+                }
+
+                fields.set(f.name, f);
+            }
+
+            if (current?.superClass?.t == null) {
+                break;
+            }
+
+            var mod = writer.context.resolve(current.superClass.t);
+
+            current = switch mod {
+                case MClass(x): x;
+                case _: null;
+            }
+
+            if (current == null) {
+                break;
+            }
+
+            if (firstSuper == null) {
+                firstSuper = current;
+            }
+
+            for (iface in current.interfaces) {
+                var dot = iface.t.dotPath();
+                if (hasInterfaces.exists(dot)) {
+                    continue;
+                }
+
+                hasInterfaces.set(dot, true);
+
+                vtables.push('obj.${writer.context.resolvedInstanceName(iface.t)}.VTable = obj');
+            }
+
+            vtables.push('obj.${StringConversions.typePathClassInstanceName(current.path)}.VTable = obj');
+        }
 
         if (!canOmitVTable) {
             buf.add('');
             buf.add('type ${StringConversions.typePathClassVTableName(cls.path)} interface {');
-
-            while (current != null) {
-                for (f in current.fields.filter(f -> f.kind.match(KMethod(_)) && !fields.exists(f.name))) {
-                    if (f.kind.match(KMethod(MethDynamic))) {
-                        dynMethods.push({ inst: current, field: f });
-                    }
-
-                    fields.set(f.name, f);
-                }
-
-                if (current?.superClass?.t == null) {
-                    break;
-                }
-
-                var mod = writer.context.resolve(current.superClass.t);
-
-                current = switch mod {
-                    case MClass(x): x;
-                    case _: null;
-                }
-
-                if (current == null) {
-                    break;
-                }
-
-                for (iface in current.interfaces) {
-                    var dot = iface.t.dotPath();
-                    if (hasInterfaces.exists(dot)) {
-                        continue;
-                    }
-
-                    hasInterfaces.set(dot, true);
-
-                    vtables.push('obj.${writer.context.resolvedInstanceName(iface.t)}.VTable = obj');
-                }
-
-                vtables.push('obj.${StringConversions.typePathClassInstanceName(current.path)}.VTable = obj');
-            }
 
             for (f in fields) {
                 if (f.flags & HxbClassFieldFlag.CfExtern != 0) {
@@ -215,6 +224,21 @@ class ClassWriter extends WriterImpl {
                 }
                 buf.add('}');
             }
+
+            buf.add('');
+
+            buf.add('var ${StringConversions.typePathClassInstanceName(cls.path)}_RTTI = Hx_Obj_go_haxe_hxclass_CreateInstance(');
+            buf.add('"${cls.path.dotPath()}",', 1);
+            buf.add('&[]string{${cls.statics.map(f -> '"${f.name}"').join(", ")}},', 1);
+            buf.add('&[]string{${fieldNames.map(f -> '"${f}"').join(", ")}},', 1);
+            buf.add('${firstSuper != null ? '${StringConversions.typePathClassInstanceName(firstSuper.path)}_RTTI' : 'nil'},', 1);
+            buf.add('func (params any) any {', 1);
+            buf.add('return nil', 2);
+            buf.add('},', 1);
+            buf.add('func () any {', 1);
+            buf.add('return ${StringConversions.typePathClassInstanceName(cls.path)}_CreateEmptyInstance()', 2);
+            buf.add('},', 1);
+            buf.add(')');
 
             buf.add('');
             buf.add('func (this *${StringConversions.typePathClassInstanceName(cls.path)}) Hx_Field__RTTI() *Hx_Obj_go_haxe_hxclass {');

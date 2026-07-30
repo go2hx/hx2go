@@ -157,6 +157,12 @@ class Semantics {
 
             case _: // f(x, y) -> z = x; w = y; f(z, w);
                 var ca: Ancestor = { up: ancestor, node: parent, scope: scope };
+                // normalize before the args, in case of inlined function, or recv
+                switch parent.expr {
+                    case TCall(callee, _) if (callee != null && callee.expr != null):
+                        preprocessor.processExpr(callee, scope, ca);
+                    case _:
+                }
 
                 var lastImpure = -1;
                 for (i in 0...children.length) {

@@ -1,99 +1,10 @@
-import haxe.Json;
-
-class Foo {
-    public function new() {}
-    public function bar(a: Int, b: Int) {
-        trace("bar", a + b);
-        return a + b;
-    }
-    public static function foo() {
-        trace("foo!");
-    }
-}
-
-enum Bar {
-    A;
-    B;
-    C(v: Int);
-}
-
-class Baz extends Foo {}
-
 function main() {
-    var foo: Foo = new Foo();
-    var foo_dyn: Dynamic = foo;
-
-    var field = Reflect.field(foo_dyn, "bar");
-    var res = Reflect.callMethod(foo_dyn, field, [5, 10.5]);
-
-    trace(res, Reflect.isFunction(field), Reflect.isFunction(res)); // 15, true, false
-
-    var obj = {
-        x: 10,
-        y: 20,
-    }
-
-    var ev = Bar.A;
-    var ev_dyn: Dynamic = ev;
-
-    var cls: Class<Dynamic> = cast foo;
-
-    trace(obj, cls, Reflect.isObject(cls), Reflect.isObject(obj), Reflect.isObject(foo_dyn), Reflect.isObject(foo), Reflect.isObject(null), Reflect.isObject(5), Reflect.isObject("hello"), Reflect.isObject(true), Reflect.isObject(ev)); // true, true, true, true, false, false, false, false, false
-    trace(Reflect.isEnumValue(cls), Reflect.isEnumValue(ev), Reflect.isEnumValue(ev_dyn)); // false, true, true
-
-    trace(obj, obj.x, obj.y); // { x => 10, y => 20 }, 10, 20
-    Reflect.deleteField(obj, "x");
-    trace(obj, obj.x, obj.y); // { y => 20 }, null, 20
-
-    Reflect.setField(obj, "x", 30);
-    trace(obj, obj.x, obj.y); // { x => 30, y => 20 }, 30, 20
-
-    trace(Reflect.fields(obj)); // ["x", "y"]
-    trace(Reflect.hasField(obj, "x"), Reflect.hasField(obj, "y"), Reflect.hasField(obj, "z")); // true, true, false
-
-    trace(Json.parse('{"x": 10, "y": 20, "nested": {"a": 1, "b": 2}}')); // { x => 10, y => 20, nested => { a => 1, b => 2 } }
-    trace(Json.stringify(obj)); // {"x":30,"y":20}
-
-    trace(Type.typeof(foo), Type.typeof(ev), Type.typeof(obj), Type.typeof(5), Type.typeof("hello"), Type.typeof(true), Type.typeof(null), Type.typeof([1, 2, 3])); // TClass, TEnum, TObject, TInt, TClass, TBool, TNull, TClass
-
-    var xml = Xml.parse('<div><a href="https://mki.sh">hello</a></div>');
-    trace(xml.toString());
-
-    var obj_cpy = Reflect.copy(obj);
-    obj_cpy.x = 100;
-    trace(obj, obj_cpy); // { x => 30, y => 20 }, { x => 100, y => 20 }
-
-    var cls = Type.getClass(foo);
-    trace(cls);
-    trace(Type.getClassName(cls));
-    trace(Type.getClassFields(cls), Type.getInstanceFields(cls));
-    trace(Type.getSuperClass(cls));
-
-    var cls2 = Type.getClass(new Baz());
-    trace(cls2);
-    trace(Type.getClassName(cls2));
-    trace(Type.getClassFields(cls2), Type.getInstanceFields(cls2));
-    trace(Type.getSuperClass(cls2));
-    trace(Type.createEmptyInstance(cls2));
-    trace(Type.createInstance(cls2, []));
-
-    var enm = Type.getEnum(ev);
-    trace(enm);
-    trace(Type.getEnumName(enm));
-    trace(Type.allEnums(enm));
-    trace(Type.enumIndex(ev));
-    trace(Type.enumParameters(ev));
-    trace(Type.enumConstructor(ev));
-    trace(Type.enumEq(A, A), Type.enumEq(A, B));
-    trace(Type.createEnumIndex(Bar, 0), Type.createEnumIndex(Bar, 1), Type.createEnum(Bar, "A"), Type.createEnum(Bar, "B"));
-
-    trace(Type.resolveClass("go.haxe.HxClass"));
-    trace(Type.resolveClass("Foo"));
-    trace(Type.resolveClass("Bar"));
-    trace(Type.resolveClass("Baz"));
-
-    trace(Type.resolveEnum("go.haxe.HxClass"));
-    trace(Type.resolveEnum("Foo"));
-    trace(Type.resolveEnum("Bar"));
-    trace(Type.resolveEnum("Baz"));
+	var f1_1:(?x:NInt)->NInt = (?x:NInt) -> 2;
+	trace(f1_1());
 }
+
+dynamic function foo(?x:NInt) {
+	return x;
+}
+
+typedef NInt = Int;

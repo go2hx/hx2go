@@ -14,7 +14,7 @@
 
 ---
 
-Write ordinary Haxe and get Go source you
+Write Haxe and get Go source output you
 can build with the standard `go` toolchain.
 
 - **Go interop** - [automatic extern generation](#automatic-extern-generation), and interop between Haxe and Go types.
@@ -28,8 +28,10 @@ can build with the standard `go` toolchain.
 
 ## Requirements
 
-- [Haxe nightly](https://haxe.org/download/nightlies/) `5.0.0-preview.1+957b2c7` or newer
-- [Go 1.26 or higher](https://go.dev/dl/)
+- [Haxe nightly](https://haxe.org/download/nightlies/) 
+  - `5.0.0-preview.1+957b2c7` or newer
+- [Go](https://go.dev/dl/) 
+  - `1.26` or newer
 
 ## Installation
 
@@ -66,7 +68,7 @@ Change ``go run`` to ``go build``:
 ```sh
 --cmd go build ./output/main
 ```
-In order to get an executable located at ``./output/main/main/``.
+It will create an executable located at ``./output/main/main`` (on Windows OS with the extension ``.exe``).
 
 ## Automatic extern generation
 

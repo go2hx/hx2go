@@ -66,9 +66,9 @@ class ExprWriter extends WriterImpl {
         }
     }
 
-    public function toLocation(p):Location {
+    public function toLocation(p):haxe.display.Position.Location {
 
-        var infos = PositionTools.getInfos(p);
+        var infos = haxe.macro.PositionTools.getInfos(p);
         var bytes = File.getBytes(infos.file);
 
         var line = 1;

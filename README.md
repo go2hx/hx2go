@@ -110,6 +110,17 @@ cd hx2go
 haxelib dev hx2go .
 ```
 
+#### Tests
+
+Runs the tests found at ``./tests``
+```sh
+haxe Tests.hxml
+```
+Runs the Haxe compiler's unit tests
+```
+haxe scripts/haxeunit.hxml
+```
+
 ## License
 
 hx2go is open-source software licensed under the [MIT license](https://opensource.org/license/MIT).

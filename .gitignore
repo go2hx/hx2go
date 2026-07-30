@@ -2,6 +2,7 @@
 *.txt
 go.work.sum
 .repo-version
+./haxe
 output
 .idea
 go.work

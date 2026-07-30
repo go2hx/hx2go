@@ -69,6 +69,9 @@ class ExprWriter extends WriterImpl {
     public function toLocation(p):haxe.display.Position.Location {
 
         var infos = haxe.macro.PositionTools.getInfos(p);
+        if (!sys.FileSystem.exists(infos.file)) {
+            return null;
+        }
         var bytes = File.getBytes(infos.file);
 
         var line = 1;
@@ -372,7 +375,9 @@ class ExprWriter extends WriterImpl {
     function addJumpComment(e:HxbTypedExpr) {
         #if go
         if (e.pos != null) {
-            var lineNumber = toLocation(e.pos).range.start.line;
+            var lineNumber = toLocation(e.pos)?.range.start.line;
+            if (lineNumber == null)
+                return '';
             var path = haxe.io.Path.normalize(e.pos.file);
             path = go.path.Filepath.abs(path).sure();
             if (Sys.systemName() == "Windows") {

@@ -23,7 +23,7 @@ class HxArray {
 
     public inline extern static function push<T>(arr: Array<T>, value: T): GoInt {
         var data = getData(arr);
-        setData(arr, Go.append(data, value));
+        @:nullSafety(Off) setData(arr, Go.append(data, value));
 
         return data.length + 1;
     }

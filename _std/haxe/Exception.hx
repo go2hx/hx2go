@@ -72,12 +72,12 @@ class Exception {
 }
 
 // This function checks if the exception is a Go error or string and converts it to a haxe.Exception if necessary.
+
 @:analyzer(no_user_var_fusion)
 @:analyzer(no_const_propagation)
-@:keep 
+@:keep
 function checkException(e:Dynamic):Dynamic {
-	// trace("checkException: ", e);
-
+	// Can't use Std.isOfType() because it doesn't work with non-Haxe types like Go's error interface
 	var isGoError:Bool = false;
 	var goError:go.Error = null;
 	go.Syntax.code("{0}, {1} = {2}.(error)", goError, isGoError, e);
@@ -86,10 +86,8 @@ function checkException(e:Dynamic):Dynamic {
 		return (new haxe.ValueException(go.Syntax.code("{0}.Error()", goError), null, goError) : haxe.Exception);
 	}
 
-	// some Go panics may be strings, so we check for that as well
-	var isGoString:Bool = false;
-	go.Syntax.code("_, {0} = {1}.(string)", isGoString, e);
-	if (isGoString) {
+	// some Go panics may be strings, so we check for that as well but using Std.isOfType() since it is a Haxe type
+	if (Std.isOfType(e, String)) {
 		// trace("checkException: Go string detected, converting to haxe.Exception");
 		return (new haxe.ValueException(e) : haxe.Exception);
 	}

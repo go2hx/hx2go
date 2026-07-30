@@ -172,7 +172,9 @@ class Reflect {
     }
 
     public static function makeVarArgs<T>(f: Array<Dynamic> -> T): Dynamic {
-        throw "not implemented"; // TODO
+        return (v: haxe.Rest<Dynamic>) -> {
+            return f(v.toArray());
+        };
     }
 
 }

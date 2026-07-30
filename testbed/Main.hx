@@ -96,5 +96,4 @@ function main() {
     trace(Type.resolveEnum("Foo"));
     trace(Type.resolveEnum("Bar"));
     trace(Type.resolveEnum("Baz"));
-
 }

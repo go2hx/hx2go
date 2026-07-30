@@ -1,5 +1,6 @@
 package hx2go.writers;
 
+import sys.io.File;
 using StringTools;
 
 import hx2go.hxb.Typed.HxbTypedExpr;
@@ -33,7 +34,7 @@ class ExprWriter extends WriterImpl {
 
         return switch expr.expr {
             case TFunction(func): writeFunction(expr, func, topLevel);
-            case TBlock(exprs): writeBlock(expr, exprs);
+            case TBlock(exprs): writeBlock(expr, exprs, topLevel);
             case TCall({ expr: TField({ expr: TTypeExpr(MTEnum(_)) }, FEnum(tp, ref)) }, params): writeEnumConstructor(tp, ref.name, params);
             case TField({ expr: TTypeExpr(MTEnum(_)) }, FEnum(tp, ref)): writeEnumConstructor(tp, ref.name, []);
             case TCall(e, args): writeCall(expr, e, args);
@@ -63,6 +64,36 @@ class ExprWriter extends WriterImpl {
             case TContinue: new OutputBuffer("continue");
             case _: new OutputBuffer();
         }
+    }
+
+    public function toLocation(p):Location {
+
+        var infos = PositionTools.getInfos(p);
+        var bytes = File.getBytes(infos.file);
+
+        var line = 1;
+        var lineStart = 0;
+
+        for (i in 0...infos.min) {
+            if (bytes.get(i) == "\n".code) {
+                line++;
+                lineStart = i + 1;
+            }
+        }
+        var start = { line: line, character: infos.min - lineStart };
+
+        // for (i in infos.min...infos.max) {
+        //     if (bytes.get(i) == "\n".code) {
+        //         line++;
+        //         lineStart = i + 1;
+        //     }
+        // }
+        // var end = { line: line, character: infos.max - lineStart };
+
+        return {
+            file: null,
+            range: { start: start, end: null }
+        };
     }
 
     public function writeSwitch(expr: HxbTypedExpr, subject: HxbTypedExpr, cases: Array<HxbTCase>, edef: Null<HxbTypedExpr>): OutputBuffer {
@@ -292,7 +323,7 @@ class ExprWriter extends WriterImpl {
     }
 
     public function writeFunction(expr: HxbTypedExpr, func: HxbTFunc, topLevel: Bool): OutputBuffer {
-        if (topLevel) return writeExpr(func.expr);
+        if (topLevel) return writeExpr(func.expr, topLevel);
         else {
             var buf = new OutputBuffer();
             var returnType: HxbType = TVoid;
@@ -319,13 +350,15 @@ class ExprWriter extends WriterImpl {
         return buf;
     }
 
-    public function writeBlock(expr: HxbTypedExpr, exprs: Array<HxbTypedExpr>): OutputBuffer {
+    public function writeBlock(expr: HxbTypedExpr, exprs: Array<HxbTypedExpr>, topLevel:Bool=false): OutputBuffer {
         var buf = new OutputBuffer();
         buf.add("{");
-
         for (e in exprs) {
             if (buf.endedWithBlock()) {
                 buf.add(''); // makes code more readable when you deal with nesting
+            }
+            if (writer.context.sourcelineComments && topLevel) {
+                buf.addInline(addJumpComment(e));
             }
 
             buf.addBuffer(writeExpr(e), 1);
@@ -334,6 +367,21 @@ class ExprWriter extends WriterImpl {
         buf.addInline("}");
 
         return buf;
+    }
+
+    function addJumpComment(e:HxbTypedExpr) {
+        #if go
+        if (e.pos != null) {
+            var lineNumber = toLocation(e.pos).range.start.line;
+            var path = haxe.io.Path.normalize(e.pos.file);
+            path = go.path.Filepath.abs(path).sure();
+            if (Sys.systemName() == "Windows") {
+                path = "/" + path;
+            }
+            return '// file://' + path + "#" + lineNumber + "\n";
+        }
+        #end
+        return '';
     }
 
     public function writeCast(expr: HxbTypedExpr, e: HxbTypedExpr, ref: HxbModuleTypeRef): OutputBuffer {

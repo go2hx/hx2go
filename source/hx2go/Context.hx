@@ -65,8 +65,10 @@ class Context {
     private var typesByModule: Map<String, Array<{ type: HxbModuleType, name: String, module: String }>>;
     private var typeQueue: Array<String>;
     private var processList: Array<Process>;
+    public var sourcelineComments:Bool = false;
 
-    public function new(archive: HxbArchive, outputDirectory: String) {
+    public function new(archive: HxbArchive, outputDirectory: String, sourcelineComments:Bool) {
+        this.sourcelineComments = sourcelineComments;
         this.types = new Map();
         this.imports = new Map();
         this.outputDirectory = outputDirectory;
@@ -591,7 +593,13 @@ class Context {
         }
     }
 
+    var enumClassIndex = MClass(null).getIndex();
+
     private function transformType(type: HxbModuleType, moduleKey: String): Void {
+        if (type.getIndex() != enumClassIndex) {
+            return;
+        }
+        
         var roots: Array<HxbClassField> = [];
         var baseInstFields: Map<String, HxbClassField> = new Map();
 

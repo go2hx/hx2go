@@ -62,6 +62,9 @@ class TypeNormaliserNew extends CompilerPass {
                             var param = params[idx];
                             var arg = el[idx];
 
+                            if (param == null)
+                                continue;
+
                             // need to normalize now, as it might have been skipped
                             var paramType = context.normalize(param.t);
 

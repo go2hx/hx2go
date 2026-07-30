@@ -32,7 +32,7 @@ class TypeNormaliserIf extends CompilerPass {
             case TIf(econd, eif, eelse): {
                 if (econd.t != null
                         && (econd.t.match(TDynamic(_) | TDynamicAny)
-                        || Semantics.isNullableType(econd.t))
+                        || Semantics.isNullableType(context, econd.t))
                     ) {
                     var o = ExprHelper.createCast(econd, TBool);
                     econd.expr = o.expr;

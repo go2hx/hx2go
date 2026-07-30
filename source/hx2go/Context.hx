@@ -458,7 +458,8 @@ class Context {
                         }
                     default:
                 }
-                if (!Semantics.isBoolType(n) && !Semantics.isIntegerType(n) && !Semantics.isFloatType(n) && !Semantics.isStringType(n)) {
+                
+                if (!Semantics.isBoolType(this, n) && !Semantics.isIntegerType(this, n) && !Semantics.isFloatType(this, n) && !Semantics.isStringType(this, n)) {
                     n;
                 }else{
                     switch (n) {

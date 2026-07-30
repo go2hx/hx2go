@@ -44,10 +44,10 @@ class CastDynamicFrom extends CompilerPass {
 
     public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
         expr.expr = switch expr.expr {
-            case TCast(e, _) if (Semantics.isIntegerType(expr.t)): makeDynamicCall(expr, e, 'toInt');
-            case TCast(e, _) if (Semantics.isFloatType(expr.t)): makeDynamicCall(expr, e, 'toFloat');
-            case TCast(e, _) if (Semantics.isBoolType(expr.t)): makeDynamicCall(expr, e, 'toBool');
-            case TCast(e, _) if (Semantics.isStringType(expr.t)): makeDynamicCall(expr, e, 'toString');
+            case TCast(e, _) if (Semantics.isIntegerType(context, expr.t)): makeDynamicCall(expr, e, 'toInt');
+            case TCast(e, _) if (Semantics.isFloatType(context, expr.t)): makeDynamicCall(expr, e, 'toFloat');
+            case TCast(e, _) if (Semantics.isBoolType(context, expr.t)): makeDynamicCall(expr, e, 'toBool');
+            case TCast(e, _) if (Semantics.isStringType(context, expr.t)): makeDynamicCall(expr, e, 'toString');
             case _: expr.expr;
         }
     }

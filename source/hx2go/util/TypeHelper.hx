@@ -8,7 +8,7 @@ import hx2go.hxb.HxbModuleType;
 
 class TypeHelper {
 
-    public static function follow(context: Context, type: HxbType): HxbType {
+    public static function follow(context: Context, type: HxbType, getNullElem:Bool=true): HxbType {
         if (type == null) {
             return null;
         }
@@ -27,7 +27,11 @@ class TypeHelper {
             }
 
             case TAbstract({ name: "Null", pack: [] }, p):
-                TypeHelper.follow(context, p[0]);
+                if (getNullElem) {
+                    TypeHelper.follow(context, p[0]);
+                }else{
+                    type;
+                }
 
             case _: type;
         }

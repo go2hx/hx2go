@@ -36,15 +36,15 @@ class TypeNormaliserBinop extends CompilerPass {
         }
 
         if (TypeHelper.compare(expr.t, TBool) && op != OpAssign) {
-            if (Semantics.isNullableType(left.t)) {
-                var o = ExprHelper.createCast(left, Semantics.getNullableType(left.t));
+            if (Semantics.isNullableType(context, left.t)) {
+                var o = ExprHelper.createCast(left, Semantics.getNullableType(context, left.t));
                 left.expr = o.expr;
                 left.t = o.t;
                 context.submitNode(left, true);
             }
 
-            if (Semantics.isNullableType(right.t)) {
-                var o = ExprHelper.createCast(right, Semantics.getNullableType(right.t));
+            if (Semantics.isNullableType(context, right.t)) {
+                var o = ExprHelper.createCast(right, Semantics.getNullableType(context, right.t));
                 right.expr = o.expr;
                 right.t = o.t;
                 context.submitNode(right, true);
@@ -69,13 +69,13 @@ class TypeNormaliserBinop extends CompilerPass {
             return;
         }
 
-        if (op.match(OpAssignOp(_)) && Semantics.isNullableType(expr.t)) {
-            expr.t = Semantics.getNullableType(expr.t);
+        if (op.match(OpAssignOp(_)) && Semantics.isNullableType(context, expr.t)) {
+            expr.t = Semantics.getNullableType(context, expr.t);
         }
 
         var castLeft = !TypeHelper.compare(left.t, expr.t) && switch op {
             case OpAssign: false;
-            case OpAssignOp(_): Semantics.isNullableType(left.t);
+            case OpAssignOp(_): Semantics.isNullableType(context, left.t);
             case _: true;
         };
         if (castLeft) {

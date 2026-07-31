@@ -23,22 +23,22 @@ class CastNullableFrom extends CompilerPass {
         }
 
         return switch expr.expr {
-            case TCast({ t: t }, _) if (t != null && t.match(TAbstract({ pack: [], name: "Null" }, _))): true;
+            case TCast(e, _) if (Semantics.isNullableExpr(context, e)): true;
             case _: false;
         }
     }
 
     public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
         switch expr.expr {
-            case TCast(e, _) if (!expr.t.match(TAbstract({ pack: [], name: "Null" }, _)) && e.t.match(TAbstract({ pack: [], name: "Null" }, _))): {
+            case TCast(e, _) if (!expr.t.match(TAbstract({ pack: [], name: "Null" }, _)) && Semantics.isNullableExpr(context, e)): {
                 if (e.t == null) {
                     return;
                 }
 
                 var o = ExprHelper.createUntyped('{0}.Value', [e]);
-                var type = switch e.t {
-                    case TAbstract(_, p): p[0];
-                    case _: e.t;
+                var type = Semantics.getNullableType(context, e.t);
+                if (type == null) {
+                    type = e.t;
                 }
 
                 o.t = type;

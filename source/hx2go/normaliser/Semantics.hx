@@ -247,6 +247,21 @@ class Semantics {
         }
     }
 
+    public static function isNullableExpr(context:Context, e:HxbTypedExpr):Bool {
+        if (e == null) {
+            return false;
+        }
+
+        return switch e.expr {
+            case TLocal(v) if (v != null && v.type != null):
+                isNullableType(context, context.normalize(v.type));
+            case TParenthesis(inner) | TMeta(_, inner):
+                isNullableExpr(context, inner);
+            case _:
+                e.t != null && isNullableType(context, e.t);
+        }
+    }
+
     static function isPanicCall(e: HxbTypedExpr): Bool {
         return switch e.expr {
             case TCall({ expr: TCall({ expr: TIdent("__go__") }, args) }, _)

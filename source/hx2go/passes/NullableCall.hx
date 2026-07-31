@@ -15,13 +15,14 @@ import hx2go.util.ObjectFieldHelper;
 import hx2go.hxb.HxbType;
 import haxe.runtime.Copy;
 import hx2go.util.TypeHelper;
+import hx2go.normaliser.Semantics;
 
 // NOTE: identical to NullableIndex, but separate for clarity
 class NullableCall extends CompilerPass {
 
     public function match(expr: HxbTypedExpr): Bool {
         return switch expr.expr {
-            case TCall(e, _) if (e.t != null && e.t.match(TAbstract({ name: 'Null', pack: [] }, _))): true;
+            case TCall(e, _) if (Semantics.isNullableExpr(context, e)): true;
             case _: false;
         }
     }

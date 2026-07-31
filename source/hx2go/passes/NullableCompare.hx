@@ -13,19 +13,23 @@ class NullableCompare extends CompilerPass {
 
     public function match(expr: HxbTypedExpr): Bool {
         return switch expr.expr {
-            case TBinop(OpEq | OpNotEq, { t: TAbstract({ pack: [], name: 'Null' }, _) }, _) |
-                 TBinop(OpEq | OpNotEq, _, { t: TAbstract({ pack: [], name: 'Null' }, _) }): true;
+            case TBinop(OpEq | OpNotEq, left, right):
+                Semantics.isNullableExpr(context, left) || Semantics.isNullableExpr(context, right);
 
             case _: false;
         }
     }
 
     public function executeSide(right: HxbTypedExpr, left: HxbTypedExpr): Void {
+        // `left.t` is not a reliable witness for the box -- see Semantics.isNullableExpr.
+        var boxed = Semantics.isNullableExpr(context, left);
+
         switch right.expr {
             case TConst(TNull):
                 var local_cmp = Copy.copy(left);
-                left.expr = switch left.t {
-                    case TAbstract({ pack: [], name: 'Null' }, _): ExprHelper.createUntyped("{0}.Valid", [local_cmp]).expr;
+                left.expr = if (boxed) {
+                    ExprHelper.createUntyped("{0}.Valid", [local_cmp]).expr;
+                } else switch left.t {
                     case TInt: {
                         local_cmp = ExprHelper.createCast(local_cmp, TAbstract({ pack: [], name: 'Null', moduleName: 'Null' }, [ left.t ]));
                         ExprHelper.createUntyped("{0}.Valid", [local_cmp]).expr;
@@ -44,13 +48,15 @@ class NullableCompare extends CompilerPass {
 
             case TConst(_):
                 var local_cmp = Copy.copy(left);
-                switch left.t {
-                    case TAbstract({ pack: [], name: 'Null' }, p):
-                        left.expr = ExprHelper.createUntyped("{0}.Value", [local_cmp]).expr;
-                        left.t = p[0];
+                if (boxed) {
+                    left.expr = ExprHelper.createUntyped("{0}.Value", [local_cmp]).expr;
 
-                    case _:
-                        left.expr = local_cmp.expr;
+                    var payload = Semantics.getNullableType(context, left.t);
+                    if (payload != null) {
+                        left.t = payload;
+                    }
+                } else {
+                    left.expr = local_cmp.expr;
                 }
 
                 context.submitNode(left, true);

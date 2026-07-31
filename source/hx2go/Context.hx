@@ -112,6 +112,7 @@ class Context {
             new hx2go.passes.TypeNormaliserIf(this),
             new hx2go.passes.TypeNormaliserSwitch(this),
             new hx2go.passes.SuperCtor(this),
+            new hx2go.passes.RewriteGoUIntNegativeConst(this),
             new hx2go.passes.CastClosure(this),
             new hx2go.passes.CastArray(this),
             new hx2go.passes.CastNullableTo(this),

@@ -31,7 +31,7 @@ function runTestSuite(target:String) {
     Sys.println("haxe " + args.join(" "));
     var code = Sys.command('haxe', args);
     if (code == 0) {
-        Sys.command("go run -C ./bin/go/main .");
+        Sys.command("go run -C ./bin/go/main -gcflags=all=-e .");
     }
 }
 

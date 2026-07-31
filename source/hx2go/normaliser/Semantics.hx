@@ -1,5 +1,6 @@
 package hx2go.normaliser;
 
+import hx2go.util.TypeHelper;
 import hx2go.hxb.Typed.HxbTypedExpr;
 import hx2go.hxb.tools.TypedExprTools;
 import hx2go.hxb.Ast.HxbBinop;
@@ -204,43 +205,43 @@ class Semantics {
         }
     }
     
-    public static function isFloatType(t: HxbType): Bool {
-        return switch t {
+    public static function isFloatType(context:Context, t: HxbType): Bool {
+        return switch TypeHelper.follow(context, t) {
             case TAbstract({ pack: [], name: "Float" }, _) | TAbstract({ pack: ["go"], name: "Float32" | "Float64" }, _) | TFloat: true;
             case _: false;
         }
     }
     
-    public static function isBoolType(t: HxbType): Bool {
-        return switch t {
+    public static function isBoolType(context:Context, t: HxbType): Bool {
+        return switch TypeHelper.follow(context, t) {
             case TAbstract({ pack: [], name: "Bool" }, _) | TBool: true;
             case _: false;
         }
     }
     
-    public static function isIntegerType(t: HxbType): Bool {
-        return switch t {
+    public static function isIntegerType(context:Context, t: HxbType): Bool {
+        return switch TypeHelper.follow(context, t) {
             case TAbstract({ pack: [], name: "Int" | "UInt" }, _) | TAbstract({ pack: ["go"], name: "GoInt" | "GoUInt" | "Int8" | "UInt8" | "Int16" | "UInt16" | "Int32" | "UInt32" | "Int64" | "UInt64" | "Rune" |  "Byte" }, _) | TInt: true;
             case _: false;
         }
     }
     
-    public static function isStringType(t: HxbType): Bool {
-        return switch t {
+    public static function isStringType(context:Context, t: HxbType): Bool {
+        return switch TypeHelper.follow(context, t) {
             case TAbstract({ pack: [], name: "String" }, _) | TString: true;
             case _: false;
         }
     }
 
-    public static function isNullableType(t: HxbType): Bool {
-        return switch t {
+    public static function isNullableType(context:Context, t: HxbType): Bool {
+        return switch TypeHelper.follow(context, t, false) {
             case TAbstract({ pack: [], name: "Null" }, _): true;
             case _: false;
         }
     }
 
-    public static function getNullableType(t: HxbType): HxbType {
-        return switch t {
+    public static function getNullableType(context:Context, t: HxbType): HxbType {
+        return switch TypeHelper.follow(context, t, false) {
             case TAbstract({ pack: [], name: "Null" }, p): p[0];
             case _: null;
         }

@@ -1,5 +1,6 @@
 package hx2go.passes;
 
+import hx2go.hxb.tools.TypeTools;
 import hx2go.hxb.Typed.HxbTypedExpr;
 import hx2go.hxb.HxbModuleType;
 import hx2go.hxb.Typed.HxbTypedExprDef;

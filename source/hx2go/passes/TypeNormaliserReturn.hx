@@ -1,5 +1,6 @@
 package hx2go.passes;
 
+import hx2go.hxb.tools.TypeTools;
 import hx2go.hxb.Typed.HxbTypedExpr;
 import hx2go.hxb.flags.HxbClassFlag;
 import hx2go.hxb.Typed.HxbFieldAccess;
@@ -30,6 +31,12 @@ class TypeNormaliserReturn extends CompilerPass {
         switch expr.expr {
             case TReturn(e) if (e?.t != null):
                 var want = enclosingReturnType(frame, expr);
+				var s = TypeTools.toString(want);
+				if (s.indexOf("NInt") != -1) {
+					trace(TypeTools.toString(e.t));
+					trace(s);
+					trace(TypeHelper.compare(e.t, want));
+				}
                 if (want != null && want != TVoid && !TypeHelper.compare(e.t, want)) {
                     var o = ExprHelper.createCast(e, want);
                     expr.expr = TReturn(o);

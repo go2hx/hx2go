@@ -13,7 +13,7 @@ class FloatMod extends CompilerPass {
 
     public function match(expr: HxbTypedExpr): Bool {
         return switch expr.expr {
-            case TBinop(OpMod, _, _) if (Semantics.isFloatType(expr.t)): true;
+            case TBinop(OpMod, _, _) if (Semantics.isFloatType(context, expr.t)): true;
             case _: false;
         }
     }

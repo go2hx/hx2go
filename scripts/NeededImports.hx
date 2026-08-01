@@ -1,6 +1,5 @@
+import sys.FileSystem;
 import sys.io.File;
-import haxe.DynamicAccess;
-import haxe.Json;
 import sys.io.Process;
 import haxe.io.Path;
 
@@ -11,40 +10,45 @@ function main() {
     root = Sys.getCwd();
     var imps:Array<String> = [];
     getImports(imps, "./output/bootstrap/main");
-    getImports(imps, "./output/tests/main");
+    getGoImports(imps, "std");
 
-    var dir = runCommandReturnLine("haxelib", ["path", "go2hx"]);
+    var dir = runCommandReturnLine("haxelib", ["path", "hx2go-extern"]);
     getImports(imps, Path.join([dir, "..", "/output/main"]));
-    Sys.command('haxelib run go2hx -stdgen ${imps.join(" ")} ./std');
+    Sys.command('haxelib run hx2go-extern -stdgen ${imps.join(" ")} ./std');
 }
 
 function runCommand(cmd:String, args:Array<String>):String {
-    // trace(cmd + " " + args.join(" "));
+    trace(cmd + " " + args.join(" "));
     var proc = new Process(cmd, args);
-    if (proc.exitCode() != 0)
-        throw "failed command";
+    // drain before exit
     var s = proc.stdout.readAll().toString();
+    if (proc.exitCode() != 0)
+        throw "failed command: " + cmd + " " + args.join(" ");
     proc.close();
     return s;
 }
 
 function runCommandReturnLine(cmd:String, args:Array<String>):String {
-    var proc = new Process(cmd, args);
-    if (proc.exitCode() != 0)
-        throw "failed command";
-    var s = proc.stdout.readLine();
-    proc.close();
-    return s;
+    return runCommand(cmd, args).split("\n")[0];
 }
 
 function getImports(imps:Array<String>, path:String) {
-    Sys.setCwd(path);
-    var jsonData = Json.parse(runCommand("go", ["list", "-json", "."]));
-    var data:DynamicAccess<Dynamic> = jsonData;
+    if (FileSystem.exists(path)) {
+        Sys.setCwd(path);
+    }
+    getGoImports(imps, ".");
     Sys.setCwd(root);
-    var dataImports:Array<String> = data["Deps"];
-    for (imp in dataImports) {
-        if (imps.contains(imp)) {
+}
+
+function isMetaPattern(goPath:String):Bool {
+    return goPath == "std" || goPath == "all" || goPath == "cmd" || goPath.indexOf("...") != -1;
+}
+
+function getGoImports(imps:Array<String>, goPath:String) {
+    var template = isMetaPattern(goPath) ? '{{.ImportPath}}' : '{{range .Imports}}{{.}}{{"\\n"}}{{end}}';
+    for (line in runCommand("go", ["list", "-f", template, goPath]).split("\n")) {
+        var imp = StringTools.trim(line);
+        if (imp == "" || imps.contains(imp)) {
             continue;
         }
         imps.push(imp);

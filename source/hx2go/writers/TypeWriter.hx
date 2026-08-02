@@ -20,8 +20,42 @@ class TypeWriter extends WriterImpl {
             case MClass(v): writer.classes.writeClass(v);
             case MTypedef(t): writer.types.writeTypedef(t);
             case MEnum(e): writer.enums.writeEnum(e);
+            case MAbstract(a): writeAbstract(a);
             case _: new OutputBuffer();
         }
+    }
+
+    public function writeAbstract(a: HxbAbstract): OutputBuffer {
+        var buf = new OutputBuffer();
+
+        if (a.isExtern) {
+            return buf;
+        }
+
+        for (m in a.meta) {
+            if (m.name == ":go.Type") return buf; // skip externs
+        }
+
+        var statics: Array<String> = switch (a.impl != null ? writer.context.resolve(a.impl) : null) {
+            case MClass(c): c.statics.map(f -> f.name);
+            case _: [];
+        }
+
+        buf.add('');
+        buf.add('var ${StringConversions.typePathAbstractName(a.path)}_RTTI = Hx_Obj_go_haxe_hxclass_CreateInstance(');
+        buf.add('"${a.path.dotPath()}",', 1);
+        buf.add('&[]string{${statics.map(f -> '"${f}"').join(", ")}},', 1);
+        buf.add('&[]string{},', 1);
+        buf.add('nil,', 1);
+        buf.add('func (params any) any {', 1);
+        buf.add('return nil', 2);
+        buf.add('},', 1);
+        buf.add('func () any {', 1);
+        buf.add('return nil', 2);
+        buf.add('},', 1);
+        buf.add(')');
+
+        return buf;
     }
 
     public function writeTypedef(t: HxbTypedef): OutputBuffer {

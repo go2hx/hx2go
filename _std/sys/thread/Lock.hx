@@ -22,7 +22,7 @@
 
 package sys.thread;
 
-import go.Time;
+import go.Time_ as Time;
 import go.Go;
 import go.Syntax;
 

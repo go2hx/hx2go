@@ -1,7 +1,7 @@
 package go.runtime;
 
 @:go.Type({ name: "metrics", instanceName: "metrics.metrics", imports: ["runtime/metrics"] })
-extern class Metrics {
+extern class Metrics_ {
 
     @:native("KindBad") static var KindBad: go.runtime.metrics.ValueKind;
     @:native("KindFloat64") static var KindFloat64: go.runtime.metrics.ValueKind;

@@ -1,7 +1,7 @@
 package go.runtime;
 
 @:go.Type({ name: "debug", instanceName: "debug.debug", imports: ["runtime/debug"] })
-extern class Debug {
+extern class Debug_ {
 
     @:native("FreeOSMemory") static function freeOSMemory(): Void;
     @:native("ParseBuildInfo") static function parseBuildInfo(data: String): (go.Result<go.Pointer<go.runtime.debug.BuildInfo>>);

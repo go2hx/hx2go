@@ -1,7 +1,7 @@
 package go.os;
 
 @:go.Type({ name: "user", instanceName: "user.user", imports: ["os/user"] })
-extern class User {
+extern class User_ {
 
     @:native("Current") static function current(): (go.Result<go.Pointer<go.os.user.User>>);
     @:native("Lookup") static function lookup(username: String): (go.Result<go.Pointer<go.os.user.User>>);

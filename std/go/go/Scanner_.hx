@@ -1,7 +1,7 @@
 package go.go;
 
 @:go.Type({ name: "scanner", instanceName: "scanner.scanner", imports: ["go/scanner"] })
-extern class Scanner {
+extern class Scanner_ {
 
     @:native("ScanComments") static var ScanComments: go.go.scanner.Mode;
 

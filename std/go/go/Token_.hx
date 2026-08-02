@@ -1,7 +1,7 @@
 package go.go;
 
 @:go.Type({ name: "token", instanceName: "token.token", imports: ["go/token"] })
-extern class Token {
+extern class Token_ {
 
     @:native("ADD") static var ADD: go.go.token.Token;
     @:native("ADD_ASSIGN") static var ADD_ASSIGN: go.go.token.Token;

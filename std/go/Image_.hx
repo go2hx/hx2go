@@ -1,7 +1,7 @@
 package go;
 
 @:go.Type({ name: "image", instanceName: "image.image", imports: ["image"] })
-extern class Image {
+extern class Image_ {
 
     @:native("YCbCrSubsampleRatio410") static var YCbCrSubsampleRatio410: go.image.YCbCrSubsampleRatio;
     @:native("YCbCrSubsampleRatio411") static var YCbCrSubsampleRatio411: go.image.YCbCrSubsampleRatio;

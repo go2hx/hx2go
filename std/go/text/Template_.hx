@@ -1,7 +1,7 @@
 package go.text;
 
 @:go.Type({ name: "template", instanceName: "template.template", imports: ["text/template"] })
-extern class Template {
+extern class Template_ {
 
     @:native("HTMLEscape") static function hTMLEscape(w: go.io.Writer, b: go.Slice<go.Byte>): Void;
     @:native("HTMLEscapeString") static function hTMLEscapeString(s: String): (String);

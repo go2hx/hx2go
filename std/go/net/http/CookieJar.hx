@@ -1,8 +1,9 @@
 package go.net.http;
 
-@:go.Type({ name: "cookiejar", instanceName: "cookiejar.cookiejar", imports: ["net/http/cookiejar"] })
-extern class Cookiejar {
+@:go.Type({ name: "CookieJar", instanceName: "http.CookieJar", imports: ["net/http"] })
+extern typedef CookieJar = {
 
-    @:native("New") static function _new(o: go.Pointer<go.net.http.cookiejar.Options>): (go.Result<go.Pointer<go.net.http.cookiejar.Jar>>);
+    @:native("Cookies") function cookies(u: go.Pointer<go.net.url.URL>): (go.Slice<go.Pointer<go.net.http.Cookie>>);
+    @:native("SetCookies") function setCookies(u: go.Pointer<go.net.url.URL>, cookies: go.Slice<go.Pointer<go.net.http.Cookie>>): Void;
 
 }

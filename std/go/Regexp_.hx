@@ -1,7 +1,7 @@
 package go;
 
 @:go.Type({ name: "regexp", instanceName: "regexp.regexp", imports: ["regexp"] })
-extern class Regexp {
+extern class Regexp_ {
 
     @:native("Compile") static function compile(expr: String): (go.Result<go.Pointer<go.regexp.Regexp>>);
     @:native("CompilePOSIX") static function compilePOSIX(expr: String): (go.Result<go.Pointer<go.regexp.Regexp>>);

@@ -1,7 +1,7 @@
 package go;
 
 @:go.Type({ name: "flag", instanceName: "flag.flag", imports: ["flag"] })
-extern class Flag {
+extern class Flag_ {
 
     @:native("ContinueOnError") static var ContinueOnError: go.flag.ErrorHandling;
     @:native("ExitOnError") static var ExitOnError: go.flag.ErrorHandling;

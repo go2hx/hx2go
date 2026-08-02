@@ -1,7 +1,7 @@
 package go.crypto;
 
 @:go.Type({ name: "sha256", instanceName: "sha256.sha256", imports: ["crypto/sha256"] })
-extern class Sha256 {
+extern class Sha256_ {
 
     @:native("BlockSize") static var BlockSize: go.GoInt;
     @:native("Size") static var Size: go.GoInt;

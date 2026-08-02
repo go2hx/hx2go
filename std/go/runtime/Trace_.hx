@@ -1,7 +1,7 @@
 package go.runtime;
 
 @:go.Type({ name: "trace", instanceName: "trace.trace", imports: ["runtime/trace"] })
-extern class Trace {
+extern class Trace_ {
 
     @:native("IsEnabled") static function isEnabled(): (Bool);
     @:native("Log") static function log(ctx: go.context.Context, category: String, message: String): Void;

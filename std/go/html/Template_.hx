@@ -1,7 +1,7 @@
 package go.html;
 
 @:go.Type({ name: "template", instanceName: "template.template", imports: ["html/template"] })
-extern class Template {
+extern class Template_ {
 
     @:native("ErrAmbigContext") static var ErrAmbigContext: go.html.template.ErrorCode;
     @:native("ErrBadHTML") static var ErrBadHTML: go.html.template.ErrorCode;

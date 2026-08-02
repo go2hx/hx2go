@@ -1,9 +1,9 @@
 package go.image.color;
 
-@:go.Type({ name: "palette", instanceName: "palette.palette", imports: ["image/color/palette"] })
+@:go.Type({ name: "Palette", instanceName: "color.Palette", imports: ["image/color"] })
 extern class Palette {
 
-    @:native("Plan9") static var plan9: go.Slice<go.image.color.Color>;
-    @:native("WebSafe") static var webSafe: go.Slice<go.image.color.Color>;
+    @:native("Convert") function convert(c: go.image.color.Color): (go.image.color.Color);
+    @:native("Index") function index(c: go.image.color.Color): (go.GoInt);
 
 }

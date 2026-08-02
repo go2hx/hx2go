@@ -1,7 +1,7 @@
 package go;
 
 @:go.Type({ name: "context", instanceName: "context.context", imports: ["context"] })
-extern class Context {
+extern class Context_ {
 
     @:native("AfterFunc") static function afterFunc(ctx: go.context.Context, f: () -> Void): (() -> (Bool));
     @:native("Background") static function background(): (go.context.Context);

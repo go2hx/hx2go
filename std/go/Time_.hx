@@ -1,7 +1,7 @@
 package go;
 
 @:go.Type({ name: "time", instanceName: "time.time", imports: ["time"] })
-extern class Time {
+extern class Time_ {
 
     @:native("ANSIC") static var ANSIC: String;
     @:native("April") static var April: go.time.Month;

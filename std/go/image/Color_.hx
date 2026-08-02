@@ -1,7 +1,7 @@
 package go.image;
 
 @:go.Type({ name: "color", instanceName: "color.color", imports: ["image/color"] })
-extern class Color {
+extern class Color_ {
 
     @:native("Alpha16Model") static var alpha16Model: go.image.color.Model;
     @:native("AlphaModel") static var alphaModel: go.image.color.Model;

@@ -1,7 +1,7 @@
 package go.math;
 
 @:go.Type({ name: "rand", instanceName: "rand.rand", imports: ["math/rand"] })
-extern class Rand {
+extern class Rand_ {
 
     @:native("ExpFloat64") static function expFloat64(): (Float);
     @:native("Float32") static function float32(): (go.Float32);

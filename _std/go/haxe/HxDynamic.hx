@@ -561,6 +561,10 @@ class HxDynamic {
 
     // read field access on dynamic (class, anon, etc)
     public static function getField(dyn: Dynamic, fieldName: String): Dynamic {
+        return getFieldFrom(dyn, fieldName, true);
+    }
+    
+    static function getFieldFrom(dyn: Dynamic, fieldName: String, hop: Bool): Dynamic {
         var value = ensureValue(dyn);
         var kind = value.kind();
         var found = false;
@@ -570,7 +574,7 @@ class HxDynamic {
         }
 
         if (kind == Reflect.Ptr || kind == Reflect.Interface) {
-            return getField(value.elem(), fieldName);
+            return getFieldFrom(value.elem(), fieldName, hop);
         }
 
         if (kind == Reflect.Struct) {
@@ -581,7 +585,14 @@ class HxDynamic {
                 var vtable = value.fieldByName("VTable");
                 if (vtable.isValid()) {
                     f = vtable.methodByName(formatField(fieldName));
-                    found = true;
+                    if (f.isValid()) {
+                        found = true;
+                    } else if (hop && vtable.kind() == Reflect.Interface && !vtable.isNil()) {
+                        var self = vtable.elem();
+                        if (self.isValid() && self.canInterface()) {
+                            return getFieldFrom(self._interface(), fieldName, false);
+                        }
+                    }
                 } else {
                     var m = value.methodByName(formatField(fieldName));
                     if (m.isValid()) {

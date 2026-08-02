@@ -21,7 +21,7 @@
  */
 
 import haxe.Int64Helper;
-import go.Time;
+import go.Time_ as Time;
 
 @:coreApi final class Date {
 	private var t: go.time.Time;
@@ -118,7 +118,7 @@ import go.Time;
 
 	public static function fromTime(t:Float):Date {
 		var d:Date = createEmpty();
-		d.t = Time.unixMilli(Int64Helper.fromFloat(t));
+		d.t = Time.unixMilli(cast Int64Helper.fromFloat(t));
 		return d;
 	}
 

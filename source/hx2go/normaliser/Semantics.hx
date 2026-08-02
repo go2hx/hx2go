@@ -135,6 +135,7 @@ class Semantics {
 
         switch parent.expr {
             case TBinop(OpBoolAnd, left, right): // x && y -> if (x) y else false
+                parent.t = TBool;
                 parent.expr = TIf(
                     left,
                     right,
@@ -146,6 +147,7 @@ class Semantics {
                 preprocessor.processExpr(parent, scope, ancestor);
 
             case TBinop(OpBoolOr, left, right): // x || y -> if (x) true else y
+                parent.t = TBool;
                 parent.expr = TIf(
                     left,
                     new HxbTypedExpr(TConst(

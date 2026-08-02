@@ -597,7 +597,7 @@ class ExprWriter extends WriterImpl {
                     case OpXor: "^=";
                     case OpShl: "<<=";
                     case OpShr: ">>=";
-                    case OpUShr: throw "OpUShr not supported";  // TODO: preprocess as this isn't valid
+                    case OpUShr: ""; // throw "OpUShr not supported";  // TODO: preprocess as this isn't valid
                     case OpMod: "%=";
                     default:
                         throw 'Unsupported assignment operator: $inner';

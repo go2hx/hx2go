@@ -1,4 +1,4 @@
-import go.Time;
+import go.Time_ as Time;
 import go.Os;
 import go.haxe.HxArray;
 import go.Runtime;
@@ -18,11 +18,11 @@ import go.golang_org.x.Term;
 class Sys {
 
     public static function print(v: Dynamic): Void {
-        Go.print(Std.string(v));
+        Os.stdout.writeString(Std.string(v));
     }
 
     public static function println(v: Dynamic): Void {
-        Go.println(Std.string(v));
+        Os.stdout.writeString(Std.string(v) + "\n");
     }
 
     public static function args(): Array<String> {

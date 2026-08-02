@@ -1,5 +1,5 @@
 import go.Go;
-import go.math.Rand;
+import go.math.Rand_ as Rand;
 
 @:pure
 class Math {

@@ -22,6 +22,7 @@
 
 import haxe.iterators.StringIterator;
 import haxe.iterators.StringKeyValueIterator;
+import go.net.Url;
 
 #if cpp
 using cpp.NativeString;
@@ -40,32 +41,7 @@ class StringTools {
 		Encode an URL by using the standard format.
 	**/
 	#if (!java && !cpp && !lua && !eval) inline #end public static function urlEncode(s:String):String {
-		#if flash
-		return untyped __global__["encodeURIComponent"](s);
-		#elseif neko
-		return untyped new String(_urlEncode(s.__s));
-		#elseif js
-		return untyped encodeURIComponent(s);
-		#elseif cpp
-		return untyped s.__URLEncode();
-		#elseif java
-		return postProcessUrlEncode(java.net.URLEncoder.encode(s, "UTF-8"));
-		#elseif python
-		return python.lib.urllib.Parse.quote(s, "");
-		#elseif hl
-		var len = 0;
-		var b = @:privateAccess s.bytes.urlEncode(len);
-		return @:privateAccess String.__alloc__(b, len);
-		#elseif lua
-		s = lua.NativeStringTools.gsub(s, "\n", "\r\n");
-		s = lua.NativeStringTools.gsub(s, "([^%w %-%_%.%~])", function(c) {
-			return lua.NativeStringTools.format("%%%02X", lua.NativeStringTools.byte(c) + '');
-		});
-		s = lua.NativeStringTools.gsub(s, " ", "+");
-		return s;
-		#else
-		return null;
-		#end
+		return Url.queryEscape(s);
 	}
 
 	#if java
@@ -106,35 +82,7 @@ class StringTools {
 		Decode an URL using the standard format.
 	**/
 	#if (!java && !cpp && !lua && !eval) inline #end public static function urlDecode(s:String):String {
-		#if flash
-		return untyped __global__["decodeURIComponent"](s.split("+").join(" "));
-		#elseif neko
-		return untyped new String(_urlDecode(s.__s));
-		#elseif js
-		return untyped decodeURIComponent(s.split("+").join(" "));
-		#elseif cpp
-		return untyped s.__URLDecode();
-		#elseif java
-		try
-			return java.net.URLDecoder.decode(s, "UTF-8")
-		catch (e:Dynamic)
-			throw e;
-		#elseif python
-		return python.lib.urllib.Parse.unquote(s);
-		#elseif hl
-		var len = 0;
-		var b = @:privateAccess s.bytes.urlDecode(len);
-		return @:privateAccess String.__alloc__(b, len);
-		#elseif lua
-		s = lua.NativeStringTools.gsub(s, "+", " ");
-		s = lua.NativeStringTools.gsub(s, "%%(%x%x)", function(h) {
-			return lua.NativeStringTools.char(lua.Lua.tonumber(h, 16));
-		});
-		s = lua.NativeStringTools.gsub(s, "\r\n", "\n");
-		return s;
-		#else
-		return null;
-		#end
+		return Url.queryUnescape(s).sure();
 	}
 
 	/**

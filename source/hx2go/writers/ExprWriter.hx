@@ -422,6 +422,9 @@ class ExprWriter extends WriterImpl {
                 buf.addInline('); if _hx_d == nil { var _hx_z $goT; return _hx_z }; ');
                 buf.addInline('return _hx_d.($goT) }()');
 
+            case [TString, TInt]:
+                buf.addBufferInline(writeExpr(e)); // TODO: investigate this better
+
             case _:
                 buf.addInline('(');
                 buf.addInline('(');

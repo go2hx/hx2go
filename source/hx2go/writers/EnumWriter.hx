@@ -52,6 +52,7 @@ class EnumWriter extends WriterImpl {
             }
 
             buf.add('');
+            buf.add('func (this ${ctorName}) Hx_Field__RTTI() *Hx_Obj_go_haxe_hxclass { return nil }'); // TODO: Do we need this to not be nil?
             buf.add('func (this ${ctorName}) M_${StringConversions.typePathEnumName(e.path)}() {}');
             buf.add('func (this ${ctorName}) Hx_Field_enumIndex() int { return ${cs.index} }');
             buf.add('func (this ${ctorName}) Hx_Field_enumType() *Hx_Obj_go_haxe_hxenum { return ${StringConversions.typePathEnumName(e.path)}_RTTI }');

@@ -48,7 +48,9 @@ class Reflect {
             return keys.toArray().map(k -> Std.string(k));
         }
 
-        // TODO: according to spec this function is only guarenteed to work for anon objects, but it would be nice to support classes too.
+        if (kind == go.Reflect.Struct) {
+            return Type.getInstanceFields(Type.getClass(o));
+        }
 
         return [];
     }
@@ -58,7 +60,7 @@ class Reflect {
     }
 
     public static function compare<T>(a: T, b: T): Int {
-        return (a == b) ? 0 : (((a : Dynamic) > (b : Dynamic)) ? 1 : -1);
+        return try (a == b) ? 0 : (((a : Dynamic) > (b : Dynamic)) ? 1 : -1) catch (_) -1;
     }
 
     public static function compareMethods(f1: Dynamic, f2: Dynamic): Bool {

@@ -489,11 +489,15 @@ class HxDynamic {
             if (f.isValid()) {
                 return valueToClass(f, className);
             }
-            // Null<T> is struct{Value T; Valid bool}
-            // cast the boxed value.
+
             var boxed = value.fieldByName("Value");
             if (boxed.isValid()) {
                 return valueToClass(boxed, className);
+            }
+
+            var vtable = value.fieldByName("VTable");
+            if (vtable.isValid()) {
+                return valueToClass(vtable, className);
             }
         }
 
@@ -664,7 +668,7 @@ class HxDynamic {
         // TODO: throw when Null<T> is supported.
     }
 
-    public static function setArrayIndex(dyn: Dynamic, index: Int, v: Dynamic): Void {
+    public static function setArrayIndex(dyn: Dynamic, index: Dynamic, v: Dynamic): Void {
         var value = ensureValue(dyn);
         var kind = value.kind();
 
@@ -702,7 +706,7 @@ class HxDynamic {
         // TODO: throw when Null<T> is supported.
     }
 
-    public static function getArrayIndex(dyn: Dynamic, index: Int): Dynamic {
+    public static function getArrayIndex(dyn: Dynamic, index: Dynamic): Dynamic {
         var value = ensureValue(dyn);
         var kind = value.kind();
 

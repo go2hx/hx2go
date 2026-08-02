@@ -158,7 +158,7 @@ class Type {
 				return ValueType.TObject;
 			}
 
-			return ValueType.TClass(( cast v : Class<Dynamic> ));
+			return ValueType.TClass(( v : Class<Dynamic> ));
 		}
 
 		if (kind == Reflect.Map) {

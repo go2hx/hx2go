@@ -87,6 +87,14 @@ class CastClass extends CompilerPass {
                         case _: null;
                     }
 
+//                    if (cls.flags & HxbClassFlag.CInterface != 0) {
+//                        expr.expr = ExprHelper.createUntyped('&{0}.$name', [e]).expr;
+//                    } else if (srcPath != null && isBaseOf(context.resolvedInstanceName(cls.path), srcPath)) {
+//                        expr.expr = ExprHelper.createUntyped('&{0}.$name', [e]).expr;
+//                    } else {
+//                        expr.expr = ExprHelper.createUntyped('{0}.(*$name)', [e]).expr;
+//                    }
+
                     if (srcPath != null && isBaseOf(context.resolvedInstanceName(cls.path), srcPath)) {
                         expr.expr = ExprHelper.createUntyped('&{0}.$name', [e]).expr;
                     } else {

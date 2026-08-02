@@ -46,11 +46,15 @@ class ClassWriter extends WriterImpl {
 
         while (current != null) {
             for (f in current.fields) {
-                if (!fieldNames.contains(f.name)) {
-                    fieldNames.push(f.name);
+                if (fields.exists(f.name)) {
+                    continue;
                 }
 
-                if (!f.kind.match(KMethod(_)) || fields.exists(f.name)) {
+                if (!f.kind.match(KMethod(_))) {
+                    if (!fieldNames.contains(f.name)) {
+                        fieldNames.push(f.name);
+                    }
+
                     continue;
                 }
 
@@ -118,10 +122,7 @@ class ClassWriter extends WriterImpl {
                 buf.addBuffer(vBuf, 1);
             }
 
-            if (!isInterface) {
-                buf.add('Hx_Field__RTTI() *Hx_Obj_go_haxe_hxclass', 1);
-            }
-
+            buf.add('Hx_Field__RTTI() *Hx_Obj_go_haxe_hxclass', 1);
             buf.add('}');
         }
 
@@ -229,7 +230,7 @@ class ClassWriter extends WriterImpl {
 
             buf.add('var ${StringConversions.typePathClassInstanceName(cls.path)}_RTTI = Hx_Obj_go_haxe_hxclass_CreateInstance(');
             buf.add('"${cls.path.dotPath()}",', 1);
-            buf.add('&[]string{${cls.statics.map(f -> '"${f.name}"').join(", ")}},', 1);
+            buf.add('&[]string{${cls.statics.filter(f -> f.kind.match(KVar(_, _))).map(f -> '"${f.name}"').join(", ")}},', 1);
             buf.add('&[]string{${fieldNames.map(f -> '"${f}"').join(", ")}},', 1);
             buf.add('${firstSuper != null ? '${StringConversions.typePathClassInstanceName(firstSuper.path)}_RTTI' : 'nil'},', 1);
             buf.add('func (params any) any {', 1);

@@ -9,6 +9,7 @@ import hx2go.hxb.Ast.HxbMetaEntry;
 import hx2go.hxb.Ast.HxbExpr;
 import hx2go.util.ObjectFieldHelper;
 import hx2go.util.TypeHelper;
+import hx2go.hxb.flags.HxbClassFlag;
 
 class TypeWriter extends WriterImpl {
 
@@ -114,7 +115,7 @@ class TypeWriter extends WriterImpl {
                 return StringConversions.typePathTypedefName(tp);
             }
 
-            case MClass({ meta: meta }): {
+            case MClass({ meta: meta, flags: flags }): {
                 for (m in meta) {
                     switch m.name {
                         case ":go.Type": return writeExternType(m);

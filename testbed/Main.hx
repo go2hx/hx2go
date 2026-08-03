@@ -1,10 +1,7 @@
-function main() {
-    makeExpr2();
-}
+import sys.thread.Thread;
 
-function makeExpr2():Void->Dynamic {
-    return function() {
-        var v:Dynamic = true;
-        return (v == null || v == false);
-    };
+function main() {
+    Thread.create("CoolThread", () -> {
+        trace("Hello from Thread!");
+    });
 }

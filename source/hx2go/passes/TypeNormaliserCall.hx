@@ -31,7 +31,6 @@ class TypeNormaliserCall extends CompilerPass {
                     var spread = false;
                     var toType = param.t;
 
-
                     switch param.t {
                         case TAbstract({ pack: ['haxe'], name: 'Rest' }, restTypeParams):
                             if (isSpreadOfRest(arg)) {

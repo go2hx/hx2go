@@ -30,6 +30,9 @@ class CastClass extends CompilerPass {
                 switch e.t {
                     case TInst(ftp, _) if (ftp.dotPath() == tp.dotPath()): {
                         expr.expr = e.expr;
+                        expr.t = e.t;
+                        context.submitNode(expr, true);
+
                         return;
                     }
 

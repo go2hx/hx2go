@@ -8,6 +8,7 @@ import hx2go.hxb.HxbType;
 import haxe.runtime.Copy;
 import hx2go.hxb.flags.HxbClassFieldFlag;
 import hx2go.hxb.flags.HxbClassFlag;
+import hx2go.util.TypeHelper;
 
 class FieldAccessGeneric extends CompilerPass {
 

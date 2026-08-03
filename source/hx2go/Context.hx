@@ -86,10 +86,10 @@ class Context {
 
     private function createPasses(): Array<ICompilerPass> {
         return [
-            new hx2go.passes.FieldAccessGeneric(this),
+            new hx2go.passes.FieldAccessGeneric(this), // TODO: c1
             new hx2go.passes.DefaultArgs(this),
             new hx2go.passes.TypeNormaliserCallReturn(this),
-            new hx2go.passes.TypeNormaliserCall(this),
+            new hx2go.passes.TypeNormaliserCall(this), // TODO: c2
             new hx2go.passes.NullableCompare(this),
             new hx2go.passes.NullableConst(this),
             new hx2go.passes.NullableFieldAccess(this),
@@ -237,7 +237,7 @@ class Context {
 
                 file.addBufferInline(localBuf);
             }
-            
+
             var imports = imports.exists(path) ? imports[path] : [];
 
             if (!singleFile) {
@@ -459,7 +459,7 @@ class Context {
                         }
                     default:
                 }
-                
+
                 if (!Semantics.isBoolType(this, n) && !Semantics.isIntegerType(this, n) && !Semantics.isFloatType(this, n) && !Semantics.isStringType(this, n)) {
                     n;
                 }else{
@@ -601,7 +601,7 @@ class Context {
         if (type.getIndex() != enumClassIndex) {
             return;
         }
-        
+
         var roots: Array<HxbClassField> = [];
         var baseInstFields: Map<String, HxbClassField> = new Map();
 

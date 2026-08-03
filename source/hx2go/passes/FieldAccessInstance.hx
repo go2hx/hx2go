@@ -27,11 +27,7 @@ class FieldAccessInstance extends CompilerPass {
 
                 var cls = switch mt {
                     case MClass(x): x;
-                    case _: null;
-                }
-
-                if (cls == null) {
-                    return;
+                    case _: return;
                 }
 
                 if (cls.flags & HxbClassFlag.CExtern != 0) {

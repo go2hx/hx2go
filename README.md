@@ -138,6 +138,7 @@ haxelib dev hx2go .
 ```
 
 #### Tests
+*the tests require the [utest](https://github.com/haxe-utest/utest)* library
 
 Runs the tests found at ``./tests``
 ```sh

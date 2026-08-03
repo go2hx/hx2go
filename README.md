@@ -70,17 +70,9 @@ Change ``go run`` to ``go build``:
 ```
 It will create an executable located at ``./output/main/main`` (on Windows OS with the extension ``.exe``).
 
-## Automatic extern generation
+## Built-in Go standard library
 
-Add the target flag to your `.hxml`:
-
-```hxml
--D go-lib=net/http
-```
-
-Run the program once before trying to access the extern's to allow the compiler to generate them.
-
-Now given a ``Main.hx`` you can add the following and launch an HTTP file server:
+For example, to launch an HTTP file server, alter ``Main.hx`` to:
 
 ```haxe
 import go.net.Http;
@@ -96,6 +88,41 @@ function main() {
 }
 ```
 
+## Automatic extern generation
+
+For example, to print the ASCII graph below:
+```
+ 10.00 ┤        ╭╮
+  9.00 ┤ ╭╮     ││
+  8.00 ┤ ││   ╭╮││
+  7.00 ┤ ││   ││││╭╮
+  6.00 ┤ │╰╮  ││││││ ╭
+  5.00 ┤ │ │ ╭╯╰╯│││╭╯
+  4.00 ┤╭╯ │╭╯   ││││
+  3.00 ┼╯  ││    ││││
+  2.00 ┤   ╰╯    ╰╯╰╯
+```
+
+Add the target flag to your `.hxml`:
+
+```hxml
+-D go-lib=github.com/guptarohit/asciigraph
+```
+
+Run hx2go once before trying to access the externs to allow the compiler to generate them.
+
+Alter ``Main.hx`` to:
+
+```haxe
+import go.Fmt;
+import go.github_com.guptarohit.Asciigraph;
+
+function main() {
+	var data:go.Slice<Float> = [3, 4, 9, 6, 2, 4, 5, 8, 5, 10, 2, 7, 2, 5, 6];
+	var graph:String = Asciigraph.plot(data);
+	Fmt.println(graph);
+}
+```
 
 ## Contributing
 

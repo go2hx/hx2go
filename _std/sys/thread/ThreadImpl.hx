@@ -22,22 +22,42 @@
 
 package sys.thread;
 
-abstract ThreadImpl(Dynamic) {
+private class NativeThread {
 
-	public static function create( job : Void -> Void ) : ThreadImpl {
-		throw "Not implemented for this platform";
+	public static function current(): NativeThread {
+		return new NativeThread(null);
 	}
 
-	public static function current() : ThreadImpl {
-		throw "Not implemented for this platform";
+	public function new(job: () -> Void) {
+		return;
 	}
 
-	public static function getName( t : ThreadImpl ) : Null<String> {
-		throw "Not implemented for this platform";
+	public function getName(): String {
+		return "";
 	}
 
-	public static function setName( t : ThreadImpl, name : String ) {
-		throw "Not implemented for this platform";
+	public function setName(name: String): Void {
+		return;
+	}
+
+}
+
+abstract ThreadImpl(NativeThread) {
+
+	public static inline function current(): ThreadImpl {
+		return cast NativeThread.current();
+	}
+
+	public static inline function create(job: Void->Void): ThreadImpl {
+		return cast new NativeThread(job);
+	}
+
+	public static function setName(t: ThreadImpl, name: String) {
+		(cast t : NativeThread).setName(name);
+	}
+
+	public static function getName(t: ThreadImpl ) {
+		return (cast t : NativeThread).getName();
 	}
 
 }

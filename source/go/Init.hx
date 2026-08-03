@@ -77,7 +77,7 @@ class Init {
 			supportsFunctionEquality: true, // TODO: check?
 			usesUtf16: false,
 			thisBeforeSuper: false,
-			supportsThreads: true,
+			supportsThreads: false,
 			supportsUnicode: true,
 			supportsRestArgs: true, // we should change this if we run into issues that are difficult to solve
 			exceptions: {

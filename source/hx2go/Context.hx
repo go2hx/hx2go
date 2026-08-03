@@ -614,6 +614,10 @@ class Context {
                     roots.push(def.constructor);
                 }
 
+                if (def.init?.expr != null) {
+                    roots.push(def.init);
+                }
+
                 for (f in def.fields.concat(def.statics)) {
                     var needsCoerce = switch f.type {
                         case TType(_): true;

@@ -15,6 +15,7 @@ import hx2go.hxb.TypePath;
 import hx2go.hxb.Typed.HxbTypedExprDef;
 import hx2go.hxb.Typed.HxbFieldAccess;
 import hx2go.normaliser.Scope;
+import hx2go.util.ExprHelper;
 
 class ClassWriter extends WriterImpl {
 
@@ -97,6 +98,17 @@ class ClassWriter extends WriterImpl {
 
             vtables.push('obj.${StringConversions.typePathClassInstanceName(current.path)}.VTable = obj');
         }
+
+        buf.add('');
+        buf.add('var Hx_InitV_${StringConversions.typePathClassVTableName(cls.path)} = Hx_InitF_${StringConversions.typePathClassVTableName(cls.path)}()');
+        buf.add('func Hx_InitF_${StringConversions.typePathClassVTableName(cls.path)}() int {');
+        if (cls.init != null) {
+            var initExpr = ensureBody(cls.init.expr.expr);
+            Normaliser.run(initExpr, {}, writer.context);
+            buf.addBuffer(writer.exprs.writeExpr(initExpr, true), 1);
+        }
+        buf.add('return 0', 1);
+        buf.add('}');
 
         if (!canOmitVTable) {
             buf.add('');
@@ -394,6 +406,13 @@ class ClassWriter extends WriterImpl {
             var initName = 'Hx_Init_${StringConversions.typePathStaticFieldName(field.name, cls.path)}';
             var initExpr = ensureBody(new HxbTypedExpr(TReturn(field.expr.expr), null, null));
             Normaliser.run(initExpr, {}, writer.context); // TODO: bit hacky, will do for now.
+
+            switch initExpr.expr {
+                case TBlock(x): x.unshift(ExprHelper.createUntyped(
+                    '_ = Hx_InitV_${StringConversions.typePathClassVTableName(cls.path)}', []
+                ));
+                case _: null;
+            }
 
             buf.add(' = ${initName}()');
             buf.addInline('func ${initName}() ${writer.types.writeHxbType(field.type)} ');

@@ -109,7 +109,7 @@ Add the target flag to your `.hxml`:
 -D go-lib=github.com/guptarohit/asciigraph
 ```
 
-Run hx2go once before trying to access the externs to allow the compiler to generate them.
+Run the Haxe compiler using the altered `.hxml` once before trying to access the externs to allow the compiler to generate them.
 
 Alter ``Main.hx`` to:
 

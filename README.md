@@ -1,7 +1,7 @@
 <h1 align="center">hx2go</h1>
 
 <p align="center">
-  <strong>The Go target for Haxe</strong>
+  <strong>A Go target for Haxe</strong>
 </p>
 
 <p align="center">

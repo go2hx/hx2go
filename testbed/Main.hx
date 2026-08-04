@@ -37,5 +37,5 @@
 //}
 
 function main() {
-    throw "Hello, World!";
+    // throw "Hello, World!";
 }

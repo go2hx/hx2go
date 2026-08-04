@@ -98,7 +98,7 @@ class CastClass extends CompilerPass {
 //                        expr.expr = ExprHelper.createUntyped('{0}.(*$name)', [e]).expr;
 //                    }
 
-                    if (srcPath != null && isBaseOf(context.resolvedInstanceName(cls.path), srcPath)) {
+                    if (srcPath != null && ExprHelper.isBaseOf(context, context.resolvedInstanceName(cls.path), srcPath)) {
                         expr.expr = ExprHelper.createUntyped('&{0}.$name', [e]).expr;
                     } else {
                         expr.expr = ExprHelper.createUntyped('{0}.VTable.(*$name)', [e]).expr;
@@ -107,29 +107,6 @@ class CastClass extends CompilerPass {
 
             case _: null;
         }
-    }
-
-    function isBaseOf(key: String, start: TypePath): Bool {
-        if (context.resolvedInstanceName(start) == key) {
-            return true;
-        }
-
-        var cls = switch context.resolve(start) {
-            case MClass(x): x;
-            case _: return false;
-        }
-
-        if (cls.superClass != null && isBaseOf(key, cls.superClass.t)) {
-            return true;
-        }
-
-        for (i in cls.interfaces) {
-            if (isBaseOf(key, i.t)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
 }

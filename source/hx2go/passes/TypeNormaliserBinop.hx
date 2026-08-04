@@ -1,5 +1,6 @@
 package hx2go.passes;
 
+import haxe.runtime.Copy;
 import hx2go.hxb.Typed.HxbTypedExpr;
 import hx2go.hxb.HxbModuleType;
 import hx2go.util.TypeHelper;
@@ -49,8 +50,21 @@ class TypeNormaliserBinop extends CompilerPass {
                 right.t = o.t;
                 context.submitNode(right, true);
             }
-
             switch [left.t, right.t] {
+                case [TInst(c, _), TInst(c2, _)]:
+                    if (ExprHelper.isBaseOf(context, context.resolvedInstanceName(c), c2)) {
+                        var o = ExprHelper.createCast(right, left.t);
+                        right.expr = o.expr;
+                        right.t = o.t;
+                        context.submitNode(right, true);
+                    }
+
+                    if (ExprHelper.isBaseOf(context, context.resolvedInstanceName(c2), c)) {
+                        var o = ExprHelper.createCast(left, right.t);
+                        left.expr = o.expr;
+                        left.t = o.t;
+                        context.submitNode(left, true);
+                    }
                 case [TInt, TFloat]:
                     var o = ExprHelper.createCast(left, TFloat);
                     left.expr = o.expr;

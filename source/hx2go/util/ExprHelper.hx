@@ -48,6 +48,40 @@ class ExprHelper {
         }
     }
 
+    public static function debug(e:HxbTypedExpr, find:String):Bool {
+        var s = hx2go.hxb.print.TypedExprPrinter.print(e);
+        if (s.indexOf(find) != -1) {
+            trace(s);
+            trace(e.t);
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public static function isBaseOf(context:Context, key: String, start: TypePath): Bool {
+        if (context.resolvedInstanceName(start) == key) {
+            return true;
+        }
+
+        var cls = switch context.resolve(start) {
+            case MClass(x): x;
+            case _: return false;
+        }
+
+        if (cls.superClass != null && isBaseOf(context, key, cls.superClass.t)) {
+            return true;
+        }
+
+        for (i in cls.interfaces) {
+            if (isBaseOf(context, key, i.t)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public static function createCallStatic(context: Context, type: TypePath, typeField: String, params: Array<HxbTypedExpr>): HxbTypedExpr {
         var mod = context.resolve(type);
         if (mod == null) {

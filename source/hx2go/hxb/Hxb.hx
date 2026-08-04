@@ -45,7 +45,7 @@ class Hxb {
 		return HxbArchive.read(bytes);
 	}
 
-	#if sys
+	#if (sys || hxnodejs)
 	/** Open an HXB archive (zip) from a file path. **/
 	public static inline function loadArchive(path:String):HxbArchive {
 		return HxbArchive.load(path);

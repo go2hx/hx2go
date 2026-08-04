@@ -126,7 +126,7 @@ class HxbArchive {
 		return new Date(year, month - 1, day, hour, min, sec);
 	}
 
-	#if sys
+	#if (sys || hxnodejs)
 	/** Load an archive from a file path. **/
 	public static function load(path:String):HxbArchive {
 		return read(sys.io.File.getBytes(path));

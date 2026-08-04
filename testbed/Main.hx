@@ -1,49 +1,29 @@
-function main() {
-    var regexp:EReg = ~/world/;
+//import haxe.Http;
+//
+//function main() {
+//    trace(
+//        Http.requestUrl("http://raw.githubusercontent.com/go2hx/hx2go/refs/heads/main/README.md")
+//    );
+//}
 
-    trace(regexp.match("hello world")); // true
-    trace(regexp.match("hello")); // false
+@:structInit
+class Foo {
+    public var v:Int = 0;
 
-    var message = "important message: Haxe is great";
-    var ereg:EReg = ~/(message).+?(is)/;
-
-    if (ereg.match(message)) {
-        trace(ereg.matched(1)); // message
-        trace(ereg.matched(2)); // is
-        trace(ereg.matchedLeft()); // important
-        trace(ereg.matchedRight()); //  great
+    public dynamic function log(mul: Float) {
+        trace("Value is", this.v * mul);
     }
+}
 
-    var message = "row row row your boat";
-    var ereg:EReg = ~/(row)/;
+class Main {
+    static function main() {
+        var a: Foo = { v : 1 };
+        var b: Foo = { v : 2 };
 
-    while (ereg.match(message)) {
-        trace(ereg.matched(1));
-        message = ereg.matchedRight(); // 3x row
+        a.log(2);
+        b.log(2);
+        a.log = b.log;
+        a.log(2);
+        b.log(2);
     }
-
-    function getFruits(input:String):Array<{amount:Int, fruit:String}> {
-        var ereg = ~/(\d{1,2})\s(.+?)(\n|$)/g;
-        var list = [];
-        while (ereg.match(input)) {
-            list.push({
-                amount: Std.parseInt(ereg.matched(1)),
-                fruit: ereg.matched(2),
-            });
-            input = ereg.matchedRight();
-        }
-        return list;
-    }
-
-    var fruits = "1 Apple
-    2 Bananas
-       3 Pears
-      1 Tomato";
-
-    // [{amount:1, fruit:Apple}, {amount:2, fruit:Bananas}, {amount:3, fruit:Pears}, {amount:1, fruit:Tomato}]
-    trace(getFruits(fruits));
-
-    var ereg:EReg = ~/(hello)/i;
-    var message = "hello world";
-    trace(ereg.map(message, function(e) return "happy")); // happy world
 }

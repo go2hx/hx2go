@@ -71,11 +71,30 @@ class StringConversions {
     }
 
     public static function quoteString(str: String): String {
-        var s = str.split("\\").join("\\\\");
-        s = s.split('"').join('\\"');
-        s = s.split('\x00').join('\\x00');
-        s = s.split("\n").join("\\n");
-        return '"' + s + '"';
+        var buf = new StringBuf();
+        buf.add('"');
+
+        for (i in 0...str.length) {
+            var c = StringTools.fastCodeAt(str, i);
+            switch (c) {
+                case '\\'.code: buf.add("\\\\");
+                case '"'.code: buf.add('\\"');
+                case '\n'.code: buf.add("\\n");
+                case '\r'.code: buf.add("\\r");
+                case '\t'.code: buf.add("\\t");
+                default:
+                    if (c < 0x20 || c == 0x7f) {
+                        buf.add("\\x");
+                        buf.add(StringTools.hex(c, 2));
+                    } else {
+                        buf.addChar(c);
+                    }
+            }
+        }
+
+        buf.add('"');
+
+        return buf.toString();
     }
 
 }

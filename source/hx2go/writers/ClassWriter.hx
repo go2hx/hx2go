@@ -453,6 +453,49 @@ class ClassWriter extends WriterImpl {
         }
 
         if (field.meta.filter(m -> m.name == ":go.Export").length != 0) {
+            var bbuf = new OutputBuffer();
+
+            var isTuple = false;
+            var tupleTypes = [];
+            var tupleNames = [];
+
+            switch fTypes.returnType {
+                case TType({ name: "Tuple", pack: ["go"] }, [TAnon(anon)]): {
+                    isTuple = true;
+
+                    var tupleMeta = field.meta.filter(m -> m.name == ":go.Tuple")[0];
+                    if (tupleMeta == null) {
+                        throw "Tuple type missing @:go.Tuple metadata, required when used with @:go.Export";
+                    }
+
+                    for (e in tupleMeta.params) {
+                        var name = switch e.expr {
+                            case EConst(CString(s, _)): s;
+                            case _: throw "Tuple type metadata must be a string";
+                        }
+
+                        var m = anon.fields.filter(f -> f.name == name)[0];
+                        if (m == null) {
+                            throw "Tuple type metadata must match a field in the tuple";
+                        }
+
+                        tupleTypes.push(m.type);
+                        tupleNames.push(name);
+                    }
+
+                    bbuf.add('_v := this.VTable.${StringConversions.nameToFieldName(field.name)}(${fTypes.args.map(a -> a.name).join(", ")})');
+                    bbuf.addInline('return ${tupleNames.map(t -> '_v.${StringConversions.toPascalCase(t)}').join(', ')}');
+                }
+
+                case TVoid: {
+                    bbuf.addInline('this.VTable.${StringConversions.nameToFieldName(field.name)}(${fTypes.args.map(a -> a.name).join(", ")})');
+                }
+
+                case _: {
+                    bbuf.addInline('return this.VTable.${StringConversions.nameToFieldName(field.name)}(${fTypes.args.map(a -> a.name).join(", ")})');
+                }
+            }
+
             buf.add("");
             buf.add("");
             buf.addInline('func (this *${StringConversions.typePathClassInstanceName(cls.path)}) ${StringConversions.toPascalCase(field.name)}(');
@@ -460,14 +503,14 @@ class ClassWriter extends WriterImpl {
             buf.addInline(') ');
 
             if (fTypes.returnType != TVoid) {
-                buf.addBufferInline(writer.types.writeHxbType(fTypes.returnType));
+                if (!isTuple) buf.addBufferInline(writer.types.writeHxbType(fTypes.returnType));
+                else buf.addInline('(${tupleTypes.map(t -> writer.types.writeHxbType(t)).join(', ')})');
+
                 buf.addInline(' ');
             }
 
             buf.add('{');
-
-            if (fTypes.returnType != TVoid) buf.add("return ", 1, false);
-            buf.add('this.VTable.${StringConversions.nameToFieldName(field.name)}(${fTypes.args.map(a -> a.name).join(", ")})', fTypes.returnType != TVoid ? 0 : 1);
+            buf.addBuffer(bbuf, 1, true);
             buf.addInline('}');
         }
 

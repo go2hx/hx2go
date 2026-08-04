@@ -1,14 +1,37 @@
-//import haxe.Http;
-//
-//function main() {
-//    trace(
-//        Http.requestUrl("http://raw.githubusercontent.com/go2hx/hx2go/refs/heads/main/README.md")
-//    );
-//}
+import go.github_com.hajimehoshi.ebiten.v2.Ebitenutil;
+import go.github_com.hajimehoshi.ebiten.v2.Ebiten;
+import go.github_com.hajimehoshi.ebiten.v2.Image;
+import go.Pointer;
+import go.GoInt;
+import go.Error;
+import go.Tuple;
+
+class Game {
+
+    public function new() {
+        return;
+    }
+
+    @:go.Export
+    public function draw(screen: Pointer<Image>): Void {
+        Ebitenutil.debugPrint(screen, "Hello, World!");
+    }
+
+    @:go.Export
+    public function update(): Error {
+        return null;
+    }
+
+    @:go.Export
+    @:go.Tuple("screenWidth", "screenHeight")
+    public function layout(outsideWidth: GoInt, outsideHeight: GoInt): Tuple<{ screenWidth: GoInt, screenHeight: GoInt }> {
+        return { screenWidth: 640, screenHeight: 480 };
+    }
+
+}
 
 function main() {
-    var items = ["a", "b", "c"];
-    trace(Lambda.exists(items, (v) -> {
-        return v == "c";
-    }));
+    Ebiten.setWindowSize(640, 480);
+    Ebiten.setWindowTitle("Hello, World!");
+    Ebiten.runGame(new Game()).sure();
 }

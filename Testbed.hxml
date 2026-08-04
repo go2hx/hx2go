@@ -2,5 +2,7 @@
 -cp testbed
 --macro AddTest.init()
 -main Main
+-D go-lib=github.com/hajimehoshi/ebiten/v2
+-D go-lib=github.com/hajimehoshi/ebiten/v2/ebitenutil
 --custom-target go=output/testbed
 --cmd go -C output/testbed/main run .

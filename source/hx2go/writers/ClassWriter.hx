@@ -452,6 +452,25 @@ class ClassWriter extends WriterImpl {
             else buf.addInline("{}");
         }
 
+        if (field.meta.filter(m -> m.name == ":go.Export").length != 0) {
+            buf.add("");
+            buf.add("");
+            buf.addInline('func (this *${StringConversions.typePathClassInstanceName(cls.path)}) ${StringConversions.toPascalCase(field.name)}(');
+            buf.addBufferInline(fTypes.buf);
+            buf.addInline(') ');
+
+            if (fTypes.returnType != TVoid) {
+                buf.addBufferInline(writer.types.writeHxbType(fTypes.returnType));
+                buf.addInline(' ');
+            }
+
+            buf.add('{');
+
+            if (fTypes.returnType != TVoid) buf.add("return ", 1, false);
+            buf.add('this.VTable.${StringConversions.nameToFieldName(field.name)}(${fTypes.args.map(a -> a.name).join(", ")})', fTypes.returnType != TVoid ? 0 : 1);
+            buf.addInline('}');
+        }
+
         return buf;
     }
 

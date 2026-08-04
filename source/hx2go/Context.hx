@@ -576,6 +576,7 @@ class Context {
                 if (v.type != null) {
                     v.type = normalize(v.type);
                 }
+
             case TParenthesis(e):
                 expr.t = e.t; // update paren type
 

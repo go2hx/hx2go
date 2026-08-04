@@ -620,6 +620,11 @@ class HxDynamic {
                 value = ensureValue(getArrayLength(dyn));
                 found = true;
             }
+
+            if (fieldName == "iterator") {
+                value = ensureValue(() -> toAnySlice(dyn).toArray().iterator());
+                found = true;
+            }
         }
 
         if (kind == Reflect.String) {

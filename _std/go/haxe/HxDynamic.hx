@@ -285,9 +285,11 @@ class HxDynamic {
         var aV = ensureConcreteValue(a);
         var bV = ensureConcreteValue(b);
         var k = jointKind(aV, bV);
-        // In Haxe, Float does not support modulo
+        // In Haxe, modulo on Float is fmod
         if (k == Reflect.Int)
             return (valueToInt(aV) % valueToInt(bV) : Dynamic);
+        else if (k == Reflect.Float64)
+            return (valueToFloat(aV) % valueToFloat(bV) : Dynamic);
         else
             throw "runtime.HxDynamic.modulo invalid operands: " + aV.string() + " and " + bV.string();
     }

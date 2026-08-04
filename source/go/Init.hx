@@ -218,6 +218,10 @@ class Init {
 			metadata: "go.Tuple",
 			doc: "",
 		});
+		Compiler.registerCustomMetadata({
+			metadata: "go.Export",
+			doc: "",
+		});
 	}
 
 	private static function executable(path: String): String {

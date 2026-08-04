@@ -66,6 +66,11 @@ class Exception {
 		return 'Error: $message';
 	}
 
+	@:go.Export
+	private function error(): String {
+		return toString();
+	}
+
 	public function details(): String {
 		return toString() + "\n" + haxe.CallStack.toString(stack);
 	}

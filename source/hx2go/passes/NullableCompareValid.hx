@@ -13,11 +13,26 @@ class NullableCompareValid extends CompilerPass {
 
     public function match(expr: HxbTypedExpr): Bool {
         return switch expr.expr {
+            case TBinop(OpEq | OpNotEq, left, right) if (isNullLiteral(left) || isNullLiteral(right)):
+                false;
+
             case TBinop(OpEq | OpNotEq, left, right):
                 var i = 0;
                 i += Semantics.isNullableExpr(context, left) ? 1 : 0;
                 i += Semantics.isNullableExpr(context, right) ? 1 : 0;
                 i == 1;
+            case _: false;
+        }
+    }
+
+    static function isNullLiteral(e: HxbTypedExpr): Bool {
+        if (e == null) {
+            return false;
+        }
+
+        return switch e.expr {
+            case TConst(TNull): true;
+            case TParenthesis(inner) | TMeta(_, inner) | TCast(inner, _): isNullLiteral(inner);
             case _: false;
         }
     }

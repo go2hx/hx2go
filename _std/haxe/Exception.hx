@@ -63,7 +63,7 @@ class Exception {
 	}
 
 	public function toString(): String {
-		return 'Error: $message';
+		return '$message';
 	}
 
 	@:go.Export

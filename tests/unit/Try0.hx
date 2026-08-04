@@ -117,9 +117,9 @@ function testTC(goCode:Bool, goError:Bool) {
 
         if (!goError) { // Check that the correct message is returned
             if (goCode) {
-                assert((e:Exception).toString() == "Error: " + goMessage);
+                assert((e:Exception).toString() == goMessage);
             } else {
-                assert((e:Exception).toString() == "Error: " + haxeMessage);
+                assert((e:Exception).toString() == haxeMessage);
             }
         }
 	}

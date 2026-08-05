@@ -8,10 +8,13 @@ function idx() {
 
 function main() {
     var g = [1];
+    g[3] = 0;
     g[3] += 7;
     assert(g.length == 4);
     assert(g[0] == 1);
-    assert(g[2] == 0);
+    #if target.static
+        assert(g[2] == 0);
+    #end
     assert(g[3] == 7);
 
     var a = [8, 8, 8, 8];

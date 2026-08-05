@@ -653,7 +653,7 @@ class ExprWriter extends WriterImpl {
             case TSuper: "super";
             case TBool(v): Std.string(v);
             case TInt(v): Std.string(v);
-            case TFloat(v): v;
+            case TFloat(v): 'float64($v)';
             case TString(v): StringConversions.quoteString(v);
         }
 

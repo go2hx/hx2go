@@ -1,18 +1,18 @@
 package hx2go.passes;
 
-import hx2go.hxb.Typed.HxbTypedExpr;
-import hx2go.hxb.HxbModuleType;
-import hx2go.hxb.Typed.HxbTypedExprDef;
-import hx2go.hxb.HxbType;
+import hxb.Typed.HxbTypedExpr;
+import hxb.HxbModuleType;
+import hxb.Typed.HxbTypedExprDef;
+import hxb.HxbType;
 import hx2go.util.ExprHelper;
-import hx2go.hxb.Typed.HxbVarKind;
-import hx2go.hxb.Typed.HxbVar;
+import hxb.Typed.HxbVarKind;
+import hxb.Typed.HxbVar;
 import hx2go.util.TypeHelper;
 import hx2go.normaliser.Semantics;
 import hx2go.util.StringConversions;
-import hx2go.hxb.flags.HxbClassFlag;
+import hxb.flags.HxbClassFlag;
 import haxe.runtime.Copy;
-import hx2go.hxb.Typed.HxbFieldAccess;
+import hxb.Typed.HxbFieldAccess;
 
 class CastInstToClass extends CompilerPass {
 

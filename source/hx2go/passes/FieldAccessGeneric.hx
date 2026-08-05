@@ -1,13 +1,13 @@
 package hx2go.passes;
 
-import hx2go.hxb.Typed.HxbTypedExpr;
-import hx2go.hxb.Typed.HxbFieldAccess;
-import hx2go.hxb.HxbModuleType;
-import hx2go.hxb.Typed.HxbTypedExprDef;
-import hx2go.hxb.HxbType;
+import hxb.Typed.HxbTypedExpr;
+import hxb.Typed.HxbFieldAccess;
+import hxb.HxbModuleType;
+import hxb.Typed.HxbTypedExprDef;
+import hxb.HxbType;
 import haxe.runtime.Copy;
-import hx2go.hxb.flags.HxbClassFieldFlag;
-import hx2go.hxb.flags.HxbClassFlag;
+import hxb.flags.HxbClassFieldFlag;
+import hxb.flags.HxbClassFlag;
 import hx2go.util.TypeHelper;
 
 class FieldAccessGeneric extends CompilerPass {

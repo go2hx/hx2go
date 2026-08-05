@@ -1,11 +1,11 @@
 package hx2go.passes;
 
-import hx2go.hxb.Typed.HxbTypedExpr;
-import hx2go.hxb.HxbModuleType;
+import hxb.Typed.HxbTypedExpr;
+import hxb.HxbModuleType;
 import hx2go.util.TypeHelper;
 import hx2go.util.ExprHelper;
-import hx2go.hxb.HxbClassField;
-import hx2go.hxb.HxbType;
+import hxb.HxbClassField;
+import hxb.HxbType;
 
 class TypeNormaliserVar extends CompilerPass {
 

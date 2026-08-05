@@ -1,12 +1,12 @@
 package hx2go.passes;
 
 import haxe.runtime.Copy;
-import hx2go.hxb.Typed.HxbTypedExpr;
-import hx2go.hxb.HxbModuleType;
+import hxb.Typed.HxbTypedExpr;
+import hxb.HxbModuleType;
 import hx2go.util.TypeHelper;
 import hx2go.util.ExprHelper;
 import hx2go.normaliser.Semantics;
-import hx2go.hxb.Ast.HxbBinop;
+import hxb.Ast.HxbBinop;
 
 class TypeNormaliserBinop extends CompilerPass {
 

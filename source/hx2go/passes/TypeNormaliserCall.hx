@@ -1,12 +1,12 @@
 package hx2go.passes;
 
-import hx2go.hxb.Typed.HxbTypedExpr;
+import hxb.Typed.HxbTypedExpr;
 import hx2go.util.TypeHelper;
 import hx2go.util.ExprHelper;
-import hx2go.hxb.HxbType;
-import hx2go.hxb.HxbClassField;
+import hxb.HxbType;
+import hxb.HxbClassField;
 import haxe.runtime.Copy;
-import hx2go.hxb.Typed.HxbTypedExprDef;
+import hxb.Typed.HxbTypedExprDef;
 
 class TypeNormaliserCall extends CompilerPass {
 

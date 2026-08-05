@@ -1,9 +1,9 @@
 package hx2go.passes;
 
-import hx2go.hxb.Typed.HxbTypedExpr;
-import hx2go.hxb.HxbModuleType;
-import hx2go.hxb.Typed.HxbTypedExprDef;
-import hx2go.hxb.Typed.HxbFieldAccess;
+import hxb.Typed.HxbTypedExpr;
+import hxb.HxbModuleType;
+import hxb.Typed.HxbTypedExprDef;
+import hxb.Typed.HxbFieldAccess;
 import hx2go.util.ExprHelper;
 import haxe.runtime.Copy;
 import haxe.runtime.Copy.Copy.copy;

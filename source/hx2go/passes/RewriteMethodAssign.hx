@@ -1,20 +1,20 @@
 package hx2go.passes;
 
-import hx2go.hxb.Typed.HxbTypedExpr;
-import hx2go.hxb.flags.HxbClassFlag;
-import hx2go.hxb.Typed.HxbFieldAccess;
-import hx2go.hxb.Ast.HxbExpr;
-import hx2go.hxb.Ast.HxbExprDef.EObjectDecl;
-import hx2go.hxb.Ast.HxbExprDef.EConst;
-import hx2go.hxb.Ast.HxbExprDef.EArrayDecl;
-import hx2go.hxb.HxbModuleType;
+import hxb.Typed.HxbTypedExpr;
+import hxb.flags.HxbClassFlag;
+import hxb.Typed.HxbFieldAccess;
+import hxb.Ast.HxbExpr;
+import hxb.Ast.HxbExprDef.EObjectDecl;
+import hxb.Ast.HxbExprDef.EConst;
+import hxb.Ast.HxbExprDef.EArrayDecl;
+import hxb.HxbModuleType;
 import hx2go.util.ExprHelper;
 import hx2go.util.StringConversions;
-import hx2go.hxb.Ast.HxbObjectField;
+import hxb.Ast.HxbObjectField;
 import hx2go.util.ObjectFieldHelper;
-import hx2go.hxb.HxbType;
-import hx2go.hxb.Typed.HxbTypedExprDef;
-import hx2go.hxb.HxbClassField;
+import hxb.HxbType;
+import hxb.Typed.HxbTypedExprDef;
+import hxb.HxbClassField;
 import haxe.runtime.Copy;
 
 class RewriteMethodAssign extends CompilerPass {

@@ -1,11 +1,11 @@
 package hx2go.passes;
 
-import hx2go.hxb.Typed.HxbTypedExpr;
-import hx2go.hxb.HxbModuleType;
-import hx2go.hxb.Typed.HxbTypedExprDef;
+import hxb.Typed.HxbTypedExpr;
+import hxb.HxbModuleType;
+import hxb.Typed.HxbTypedExprDef;
 import hx2go.util.ExprHelper;
-import hx2go.hxb.HxbType;
-import hx2go.hxb.Ast.HxbBinop;
+import hxb.HxbType;
+import hxb.Ast.HxbBinop;
 import haxe.runtime.Copy;
 
 class RewriteDynamicBinop extends CompilerPass {
@@ -92,8 +92,11 @@ class RewriteDynamicBinop extends CompilerPass {
 
                 var opName = toOperationFunction(op);
                 var o = makeDynamicCall(left, right, opName);
-                if (!expr.t.match(TDynamic(_) | TDynamicAny) && !returnsBool(op)) {
+                if (!expr.t.match(TDynamic(_) | TDynamicAny)) {
                     o = ExprHelper.createCast(o, expr.t);
+                }else if (returnsBool(op)) {
+                    o = ExprHelper.createCast(o, expr.t);
+                    o.t = TBool;
                 }
 
                 if (op.match(OpAssignOp(_))) {

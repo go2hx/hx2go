@@ -1,18 +1,18 @@
 package hx2go.passes;
 
-import hx2go.hxb.Typed.HxbTypedExpr;
-import hx2go.hxb.Typed.HxbFieldAccess;
+import hxb.Typed.HxbTypedExpr;
+import hxb.Typed.HxbFieldAccess;
 import hx2go.util.ExprHelper;
-import hx2go.hxb.flags.HxbClassFieldFlag;
-import hx2go.hxb.flags.HxbClassFlag;
+import hxb.flags.HxbClassFieldFlag;
+import hxb.flags.HxbClassFlag;
 import hx2go.util.StringConversions;
 import haxe.runtime.Copy;
-import hx2go.hxb.HxbClassField.HxbMethodKind;
-import hx2go.hxb.HxbType.HxbFunArg;
-import hx2go.hxb.Typed.HxbTFunc;
-import hx2go.hxb.Typed.HxbTFuncArg;
-import hx2go.hxb.Typed.HxbVarKind;
-import hx2go.hxb.Typed.HxbVarOrigin;
+import hxb.HxbClassField.HxbMethodKind;
+import hxb.HxbType.HxbFunArg;
+import hxb.Typed.HxbTFunc;
+import hxb.Typed.HxbTFuncArg;
+import hxb.Typed.HxbVarKind;
+import hxb.Typed.HxbVarOrigin;
 
 class DynamicInstFunctionAssign extends CompilerPass {
 

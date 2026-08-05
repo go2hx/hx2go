@@ -1,10 +1,10 @@
 package hx2go.passes;
 
-import hx2go.hxb.Typed.HxbTypedExpr;
-import hx2go.hxb.Typed.HxbFieldAccess;
+import hxb.Typed.HxbTypedExpr;
+import hxb.Typed.HxbFieldAccess;
 import hx2go.util.ExprHelper;
-import hx2go.hxb.flags.HxbClassFieldFlag;
-import hx2go.hxb.flags.HxbClassFlag;
+import hxb.flags.HxbClassFieldFlag;
+import hxb.flags.HxbClassFlag;
 import hx2go.util.StringConversions;
 import haxe.runtime.Copy;
 

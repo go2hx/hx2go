@@ -1,8 +1,8 @@
 package hx2go.passes;
 
-import hx2go.hxb.HxbType;
-import hx2go.hxb.Typed.HxbVar;
-import hx2go.hxb.Typed.HxbTypedExpr;
+import hxb.HxbType;
+import hxb.Typed.HxbVar;
+import hxb.Typed.HxbTypedExpr;
 
 class ArrayAccessAssignOp extends CompilerPass {
 

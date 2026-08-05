@@ -1,11 +1,11 @@
 package hx2go.passes;
 
-import hx2go.hxb.Typed.HxbTypedExpr;
-import hx2go.hxb.Typed.HxbTypedExprDef;
-import hx2go.hxb.Typed.HxbVar;
-import hx2go.hxb.Typed.HxbTConstant;
-import hx2go.hxb.Ast.HxbBinop;
-import hx2go.hxb.HxbType;
+import hxb.Typed.HxbTypedExpr;
+import hxb.Typed.HxbTypedExprDef;
+import hxb.Typed.HxbVar;
+import hxb.Typed.HxbTConstant;
+import hxb.Ast.HxbBinop;
+import hxb.HxbType;
 import hx2go.util.ExprHelper;
 
 class DefaultArgs extends CompilerPass {

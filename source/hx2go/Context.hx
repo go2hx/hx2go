@@ -143,6 +143,7 @@ class Context {
             new hx2go.passes.RewriteMapCreation(this),
             new hx2go.passes.RewriteStringLength(this),
             new hx2go.passes.RewriteArrayLength(this),
+            new hx2go.passes.RewriteSyntaxCode(this),
             new hx2go.passes.RewriteSyntaxSelect(this),
             new hx2go.passes.RewriteSyntaxDefer(this),
             new hx2go.passes.RewriteSyntaxGo(this),

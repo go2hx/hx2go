@@ -8,9 +8,7 @@ extern class Syntax {
        @param template The template string to use, using {n} to use the parameters.
        @param parameters The parameters to use.
     **/
-    public extern static inline function code<T>(template: String, ...parameters: Dynamic): T {
-        return untyped __go__(template, ...parameters);
-    }
+    public extern static function code<T>(template: String, ...parameters: Dynamic): T;
 
     /**
        Emits a defer in Go, captures local variables and you can use as many statements as you desire.

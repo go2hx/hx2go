@@ -476,34 +476,46 @@ class HxDynamic {
         return valueToFloat(dV);
     }
 
-    static function valueToClass(value: Value, className: String): Value {
+    static function valueToClass(value: Value, className: String, hoppedVTable: Bool = false): Value {
+        if (!value.isValid()) {
+            return Null;
+        }
+
         var kind = value.kind();
 
         if (kind == Reflect.Ptr || kind == Reflect.Interface) {
             if (value.isNil()) {
-                return value;
+                return Null;
             }
-            return valueToClass(value.elem(), className);
+            return valueToClass(value.elem(), className, hoppedVTable);
         }
 
-        if (kind == Reflect.Struct && value.type().name() != className) {
-            var f = value.fieldByName(className);
-            if (f.isValid()) {
-                return valueToClass(f, className);
-            }
+        if (kind != Reflect.Struct) {
+            return Null;
+        }
 
-            var boxed = value.fieldByName("Value");
-            if (boxed.isValid()) {
-                return valueToClass(boxed, className);
-            }
+        if (value.type().name() == className) {
+            return value;
+        }
 
+        var f = value.fieldByName(className);
+        if (f.isValid()) {
+            return valueToClass(f, className, hoppedVTable);
+        }
+
+        var boxed = value.fieldByName("Value");
+        if (boxed.isValid()) {
+            return valueToClass(boxed, className, hoppedVTable);
+        }
+
+        if (!hoppedVTable) {
             var vtable = value.fieldByName("VTable");
             if (vtable.isValid()) {
-                return valueToClass(vtable, className);
+                return valueToClass(vtable, className, true);
             }
         }
 
-        return value;
+        return Null;
     }
 
     public static function toClass(d: Dynamic, className: String): Dynamic {

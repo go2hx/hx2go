@@ -34,7 +34,9 @@ class MacroTest {
         var goDefined = Context.defined("go");
         for (path in paths) {
             var dir = "tests/" + path + "/";
-            for (filePath in FileSystem.readDirectory(dir)) {
+            var filePaths = FileSystem.readDirectory(dir);
+            filePaths.sort((a, b) -> a > b ? 1 : -1);
+            for (filePath in filePaths) {
                 final name = Path.withoutExtension(filePath);
                 if (!goDefined) {
                     final content = File.getContent(dir + filePath);

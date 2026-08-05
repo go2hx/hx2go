@@ -113,6 +113,19 @@ class ClassWriter extends WriterImpl {
         if (!canOmitVTable) {
             buf.add('');
             buf.add('type ${StringConversions.typePathClassVTableName(cls.path)} interface {');
+            
+            if (isInterface) {
+                for (iface in cls.interfaces.filter(i -> !hasInterfaces.exists(i.t.dotPath()))) {
+                    var mod = writer.context.resolve(iface.t);
+                    switch mod {
+                        case MClass(x):
+                            for (f in x.fields) {
+                                fields.set(f.name, f);
+                            }
+                        case _:
+                    }
+                }
+            }
 
             for (f in fields) {
                 if (f.flags & HxbClassFieldFlag.CfExtern != 0) {

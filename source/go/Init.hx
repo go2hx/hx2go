@@ -46,6 +46,13 @@ class Init {
 		}
 	}
 
+	static function fail(message: String): Void {
+		var out = Sys.stderr();
+		out.writeString('[hx2go] $message\n');
+		out.flush();
+		Sys.exit(1);
+	}
+
 	static function getGoLibs():Array<String> {
 		var args = Sys.args();
 		var libs = [];
@@ -130,7 +137,7 @@ class Init {
 
 		Context.onAfterGenerate(() -> {
 			if (!FileSystem.exists(archiveOutput)) {
-				throw "cannot find HXB! something went wrong, perhaps the onAfterGenerate callback fired too early?";
+				fail("cannot find HXB! something went wrong, perhaps the onAfterGenerate callback fired too early?");
 			}
 
 			if (!FileSystem.exists(sourceOutput)) {
@@ -170,13 +177,13 @@ class Init {
 						Sys.setCwd(path);
 						var code = Sys.command('haxe Bootstrap.hxml -D no-rebuild');
 						if (code != 0)
-							throw "bootstrap failed";
+							fail('bootstrap failed, $bin might be stale');
 						Sys.setCwd(root);
 					}
 					var args = [archiveOutput, sourceOutput, mainClassName, singleFile ? "1" : "0", sourcelineComments ? "1" : "0"];
 					var code = Sys.command(bin, args);
 					if (code != 0)
-						throw "compiler failed";
+						fail("compiler failed");
 				} else {
 					final bin = Path.join(["Compile-eval.hxml"]);
 					var args = [bin, archiveOutput, sourceOutput, mainClassName, singleFile ? "1" : "0", sourcelineComments ? "1" : "0"];
@@ -185,7 +192,7 @@ class Init {
 					var code = Sys.command("haxe", args);
 					Sys.setCwd(oldCwd);
 					if (code != 0)
-						throw "compiler(eval) failed";
+						fail("compiler(eval) failed");
 				}
 			}
 		});

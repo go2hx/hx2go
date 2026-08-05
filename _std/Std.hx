@@ -119,8 +119,13 @@ class Std {
             case Class:
                 return vt == t;
             default:
-                trace(t);
         }
+
+        var cls: Null<go.haxe.HxClass> = HxDynamic.toClass(t, "Hx_Obj_go_haxe_hxclass");
+        if (cls != null) {
+            return HxDynamic.toClass(v, "Hx_Obj_" + cls.name.toLowerCase().split(".").join("_")) != null;
+        }
+
         return false;
     }
 

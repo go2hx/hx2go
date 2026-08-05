@@ -65,6 +65,7 @@ class Context {
     private var typesByModule: Map<String, Array<{ type: HxbModuleType, name: String, module: String }>>;
     private var typeQueue: Array<String>;
     private var processList: Array<Process>;
+    private var writtenFiles: Map<String, Bool>;
     public var sourcelineComments:Bool = false;
 
     public function new(archive: HxbArchive, outputDirectory: String, sourcelineComments:Bool) {
@@ -77,6 +78,7 @@ class Context {
         this.writer = new Writer(this);
         this.contextStack = [];
         this.processList = [];
+        this.writtenFiles = new Map();
         this.archive = archive;
 
         for (word in _reservedWords) {
@@ -292,6 +294,8 @@ class Context {
 
         writeFile("", "Main", prefix + buf.toString());
 
+        removeStaleFiles();
+
         installGoDeps(imports);
     }
 
@@ -358,7 +362,26 @@ class Context {
         var fullPath = Path.join([ outputDirectory, directory, '$fileName.go' ]);
         ensureDirectory(Path.directory(fullPath));
 
+        writtenFiles.set(Path.normalize(fullPath), true);
         File.saveContent(fullPath, content);
+    }
+
+    private function removeStaleFiles(): Void {
+        if (!FileSystem.exists(outputDirectory)) {
+            return;
+        }
+
+        for (entry in FileSystem.readDirectory(outputDirectory)) {
+            if (!entry.endsWith(".go")) continue;
+            if (!entry.startsWith("Hx_") && entry != "Main.go") continue;
+
+            var fullPath = Path.normalize(Path.join([ outputDirectory, entry ]));
+            if (writtenFiles.exists(fullPath) || FileSystem.isDirectory(fullPath)) {
+                continue;
+            }
+
+            FileSystem.deleteFile(fullPath);
+        }
     }
 
     private function ensureDirectory(path: String): Void {

@@ -1,0 +1,10 @@
+-cp tests
+-m TestAll
+-D utest
+-lib utest
+--dce full
+-D analyzer-optimize
+#-D analyzer-user-var-fusion
+-D message.reporting=pretty
+-D haxe-next
+-D go-sourceline-comments

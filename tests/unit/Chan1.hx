@@ -1,7 +1,9 @@
 package unit;
 
+import go.Chan;
+
 function main() {
-    var messages = new go.Chan<String>(2);
+    var messages = new Chan<String>(2);
     messages.send("b0");
     messages.send("b1");
     assert(messages.receive() == "b0");

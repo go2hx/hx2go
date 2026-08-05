@@ -48,6 +48,8 @@ jobs:
         run: cd tests/isolated && haxe build.hxml
       - name: Run testbed
         run: haxe Testbed.hxml
+      - name: Run tests baseline
+        run: haxe Tests-each.hxml --interp
       - name: Run tests
         run: haxe Tests.hxml
       - name: Extern tests

@@ -2,6 +2,8 @@
 -main hx2go.Main
 --macro hx2go.version.Version.stale(".")
 -L hx2go
+-D go-sourceline-comments
+-cp hxb-parser
 -D no-go-bootstrap
 --custom-target go=output/bootstrap
 --cmd go -C output/bootstrap/main build .

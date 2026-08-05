@@ -1,2 +1,3 @@
 -cp source
+-cp hxb-parser
 --run hx2go.Main

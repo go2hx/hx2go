@@ -1,12 +1,12 @@
 package hx2go.normaliser;
 
 import hx2go.util.TypeHelper;
-import hx2go.hxb.Typed.HxbTypedExpr;
-import hx2go.hxb.tools.TypedExprTools;
-import hx2go.hxb.Ast.HxbBinop;
+import hxb.Typed.HxbTypedExpr;
+import hxb.tools.TypedExprTools;
+import hxb.Ast.HxbBinop;
 import haxe.runtime.Copy;
-import hx2go.hxb.Typed.HxbTypedExprDef;
-import hx2go.hxb.HxbType;
+import hxb.Typed.HxbTypedExprDef;
+import hxb.HxbType;
 
 class Semantics {
 

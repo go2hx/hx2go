@@ -2,9 +2,9 @@ package hx2go.util;
 
 using StringTools;
 
-import hx2go.hxb.TypePath;
+import hxb.TypePath;
 import haxe.macro.Type.ModuleType;
-import hx2go.hxb.HxbModuleType;
+import hxb.HxbModuleType;
 
 class StringConversions {
 

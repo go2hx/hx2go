@@ -1,7 +1,7 @@
 package hx2go;
 
-import hx2go.hxb.Typed.HxbTypedExpr;
-import hx2go.hxb.HxbModuleType;
+import hxb.Typed.HxbTypedExpr;
+import hxb.HxbModuleType;
 
 interface ICompilerPass {
     public function match(expr: HxbTypedExpr): Bool;

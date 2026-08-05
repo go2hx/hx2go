@@ -1,12 +1,12 @@
 package hx2go.util;
 
-import hx2go.hxb.Typed.HxbTypedExpr;
-import hx2go.hxb.Typed.HxbTypedExprDef;
+import hxb.Typed.HxbTypedExpr;
+import hxb.Typed.HxbTypedExprDef;
 import haxe.runtime.Copy;
-import hx2go.hxb.HxbType;
-import hx2go.hxb.Typed.HxbModuleTypeRef;
-import hx2go.hxb.TypePath;
-import hx2go.hxb.Typed.HxbFieldAccess;
+import hxb.HxbType;
+import hxb.Typed.HxbModuleTypeRef;
+import hxb.TypePath;
+import hxb.Typed.HxbFieldAccess;
 
 class ExprHelper {
 
@@ -49,7 +49,7 @@ class ExprHelper {
     }
 
     public static function debug(e:HxbTypedExpr, find:String):Bool {
-        var s = hx2go.hxb.print.TypedExprPrinter.print(e);
+        var s = hxb.print.TypedExprPrinter.print(e);
         if (s.indexOf(find) != -1) {
             trace(s);
             trace(e.t);

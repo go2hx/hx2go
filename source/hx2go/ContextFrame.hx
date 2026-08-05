@@ -1,8 +1,8 @@
 package hx2go;
 
-import hx2go.hxb.Typed.HxbTypedExpr;
-import hx2go.hxb.HxbModuleType;
-import hx2go.hxb.HxbClassField;
+import hxb.Typed.HxbTypedExpr;
+import hxb.HxbModuleType;
+import hxb.HxbClassField;
 
 class ContextFrame {
 

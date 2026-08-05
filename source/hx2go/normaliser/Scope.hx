@@ -1,12 +1,12 @@
 package hx2go.normaliser;
 
-import hx2go.hxb.Typed.HxbTypedExpr;
-import hx2go.hxb.Typed.HxbTypedExprDef;
-import hx2go.hxb.Typed.HxbVar;
-import hx2go.hxb.Typed.HxbVarKind;
-import hx2go.hxb.Typed.HxbVarOrigin;
+import hxb.Typed.HxbTypedExpr;
+import hxb.Typed.HxbTypedExprDef;
+import hxb.Typed.HxbVar;
+import hxb.Typed.HxbVarKind;
+import hxb.Typed.HxbVarOrigin;
 import haxe.runtime.Copy;
-import hx2go.hxb.HxbType;
+import hxb.HxbType;
 
 #if go
 import go.Map;

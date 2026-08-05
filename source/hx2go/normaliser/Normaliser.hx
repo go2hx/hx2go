@@ -1,13 +1,13 @@
 package hx2go.normaliser;
 
-import hx2go.hxb.Typed.HxbTypedExpr;
-import hx2go.hxb.tools.TypedExprTools;
-import hx2go.hxb.Typed.HxbTypedExprDef;
+import hxb.Typed.HxbTypedExpr;
+import hxb.tools.TypedExprTools;
+import hxb.Typed.HxbTypedExprDef;
 import haxe.runtime.Copy;
-import hx2go.hxb.HxbType;
-import hx2go.hxb.Typed.HxbTConstant;
-import hx2go.hxb.Ast.HxbUnop;
-import hx2go.hxb.Ast.HxbBinop;
+import hxb.HxbType;
+import hxb.Typed.HxbTConstant;
+import hxb.Ast.HxbUnop;
+import hxb.Ast.HxbBinop;
 import hx2go.util.ExprHelper;
 
 class Normaliser {

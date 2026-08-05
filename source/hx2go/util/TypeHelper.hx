@@ -1,10 +1,10 @@
 package hx2go.util;
 
-import hx2go.hxb.HxbType;
-import hx2go.hxb.TypePath;
-import hx2go.hxb.Typed.HxbModuleTypeRef;
-import hx2go.hxb.HxbModule;
-import hx2go.hxb.HxbModuleType;
+import hxb.HxbType;
+import hxb.TypePath;
+import hxb.Typed.HxbModuleTypeRef;
+import hxb.HxbModule;
+import hxb.HxbModuleType;
 
 class TypeHelper {
 

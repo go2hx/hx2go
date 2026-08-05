@@ -1,19 +1,19 @@
 package hx2go.writers;
 
 import hx2go.util.OutputBuffer;
-import hx2go.hxb.HxbModuleType.HxbClass;
-import hx2go.hxb.HxbClassField;
+import hxb.HxbModuleType.HxbClass;
+import hxb.HxbClassField;
 import hx2go.util.StringConversions;
-import hx2go.hxb.HxbType;
-import hx2go.hxb.flags.HxbClassFieldFlag;
-import hx2go.hxb.flags.HxbClassFlag;
-import hx2go.hxb.Typed.HxbTypedExpr;
+import hxb.HxbType;
+import hxb.flags.HxbClassFieldFlag;
+import hxb.flags.HxbClassFlag;
+import hxb.Typed.HxbTypedExpr;
 import hx2go.normaliser.Normaliser;
 import hx2go.normaliser.Normaliser.Normaliser.run;
 import haxe.runtime.Copy;
-import hx2go.hxb.TypePath;
-import hx2go.hxb.Typed.HxbTypedExprDef;
-import hx2go.hxb.Typed.HxbFieldAccess;
+import hxb.TypePath;
+import hxb.Typed.HxbTypedExprDef;
+import hxb.Typed.HxbFieldAccess;
 import hx2go.normaliser.Scope;
 import hx2go.util.ExprHelper;
 

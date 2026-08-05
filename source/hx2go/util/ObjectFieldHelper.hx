@@ -1,6 +1,6 @@
 package hx2go.util;
 
-import hx2go.hxb.Ast.HxbObjectField;
+import hxb.Ast.HxbObjectField;
 
 class ObjectFieldHelper {
     

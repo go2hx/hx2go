@@ -1,12 +1,12 @@
 package hx2go.writers;
 
 import hx2go.util.OutputBuffer;
-import hx2go.hxb.HxbModuleType;
-import hx2go.hxb.HxbType;
-import hx2go.hxb.TypePath;
+import hxb.HxbModuleType;
+import hxb.HxbType;
+import hxb.TypePath;
 import hx2go.util.StringConversions;
-import hx2go.hxb.Ast.HxbMetaEntry;
-import hx2go.hxb.Ast.HxbExpr;
+import hxb.Ast.HxbMetaEntry;
+import hxb.Ast.HxbExpr;
 import hx2go.util.ObjectFieldHelper;
 import hx2go.util.TypeHelper;
 

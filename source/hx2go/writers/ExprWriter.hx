@@ -3,26 +3,26 @@ package hx2go.writers;
 import sys.io.File;
 using StringTools;
 
-import hx2go.hxb.Typed.HxbTypedExpr;
+import hxb.Typed.HxbTypedExpr;
 import hx2go.util.OutputBuffer;
-import hx2go.hxb.Typed.HxbTFunc;
-import hx2go.hxb.Typed.HxbTConstant;
-import hx2go.hxb.Typed.HxbFieldAccess;
+import hxb.Typed.HxbTFunc;
+import hxb.Typed.HxbTConstant;
+import hxb.Typed.HxbFieldAccess;
 import hx2go.util.StringConversions;
-import hx2go.hxb.Typed.HxbVar;
-import hx2go.hxb.Typed.HxbModuleTypeRef;
-import hx2go.hxb.Typed.HxbTypedExpr;
-import hx2go.hxb.Typed.HxbTypedExprDef.TConst;
-import hx2go.hxb.Ast.HxbBinop;
+import hxb.Typed.HxbVar;
+import hxb.Typed.HxbModuleTypeRef;
+import hxb.Typed.HxbTypedExpr;
+import hxb.Typed.HxbTypedExprDef.TConst;
+import hxb.Ast.HxbBinop;
 import hx2go.util.TypeHelper;
-import hx2go.hxb.Ast.HxbUnop;
-import hx2go.hxb.Typed.HxbTypedExprDef;
-import hx2go.hxb.Typed.HxbTObjectField;
-import hx2go.hxb.HxbType;
-import hx2go.hxb.TypePath;
-import hx2go.hxb.tools.TypedExprTools;
-import hx2go.hxb.EnumFieldRef;
-import hx2go.hxb.Typed.HxbTCase;
+import hxb.Ast.HxbUnop;
+import hxb.Typed.HxbTypedExprDef;
+import hxb.Typed.HxbTObjectField;
+import hxb.HxbType;
+import hxb.TypePath;
+import hxb.tools.TypedExprTools;
+import hxb.EnumFieldRef;
+import hxb.Typed.HxbTCase;
 import hx2go.normaliser.Semantics;
 
 class ExprWriter extends WriterImpl {
@@ -440,7 +440,7 @@ class ExprWriter extends WriterImpl {
         return buf;
     }
 
-    public function writeTry(e: HxbTypedExpr, catches:Array<hx2go.hxb.Typed.HxbTCatch>):OutputBuffer {
+    public function writeTry(e: HxbTypedExpr, catches:Array<hxb.Typed.HxbTCatch>):OutputBuffer {
         var buf = new OutputBuffer();
         buf.add('func() {');
 

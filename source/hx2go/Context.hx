@@ -1,31 +1,31 @@
 package hx2go;
 
-import hx2go.hxb.Typed.HxbVar;
-import hx2go.hxb.HxbModule;
+import hxb.Typed.HxbVar;
+import hxb.HxbModule;
 import sys.io.Process;
 using StringTools;
 
 import haxe.io.Path;
 import sys.FileSystem;
 import sys.io.File;
-import hx2go.hxb.Typed.HxbTypedExpr;
+import hxb.Typed.HxbTypedExpr;
 import hx2go.util.OutputBuffer;
-import hx2go.hxb.HxbModuleType;
-import hx2go.hxb.tools.TypedExprTools;
-import hx2go.hxb.TypePath;
+import hxb.HxbModuleType;
+import hxb.tools.TypedExprTools;
+import hxb.TypePath;
 import hx2go.util.StringConversions;
 import hx2go.normaliser.Normaliser;
-import hx2go.hxb.Typed.HxbModuleTypeRef;
-import hx2go.hxb.HxbArchive;
-import hx2go.hxb.ModuleRef;
-import hx2go.hxb.flags.HxbClassFlag;
+import hxb.Typed.HxbModuleTypeRef;
+import hxb.HxbArchive;
+import hxb.ModuleRef;
+import hxb.flags.HxbClassFlag;
 import haxe.CallStack;
-import hx2go.hxb.HxbClassField;
-import hx2go.hxb.HxbType;
+import hxb.HxbClassField;
+import hxb.HxbType;
 import hx2go.util.TypeHelper;
-import hx2go.hxb.flags.HxbClassFieldFlag;
+import hxb.flags.HxbClassFieldFlag;
 import hx2go.util.ExprHelper;
-import hx2go.hxb.Typed.HxbTypedExprDef;
+import hxb.Typed.HxbTypedExprDef;
 import hx2go.normaliser.Semantics;
 import hx2go.passes.RewriteDynamicBinop;
 

@@ -1,6 +1,6 @@
 package hx2go.normaliser;
 
-import hx2go.hxb.Typed.HxbTypedExpr;
+import hxb.Typed.HxbTypedExpr;
 
 @:structInit
 class Ancestor {

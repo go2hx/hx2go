@@ -2,9 +2,9 @@ package hx2go;
 
 import haxe.io.Path;
 import sys.FileSystem;
-import hx2go.hxb.Hxb;
-import hx2go.hxb.HxbModule.HxbImport;
-import hx2go.hxb.HxbArchive;
+import hxb.Hxb;
+import hxb.HxbModule.HxbImport;
+import hxb.HxbArchive;
 
 class Main {
 

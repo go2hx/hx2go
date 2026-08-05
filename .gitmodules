@@ -2,3 +2,7 @@
 	path = hx2go-extern
 	url = https://github.com/go2hx/hx2go-extern
 	branch = main
+[submodule "hxb-parser"]
+	path = hxb-parser
+	url = https://github.com/go2hx/hxb-parser
+	branch = master

@@ -198,10 +198,10 @@ class Semantics {
 
     public static function getIntegerWidth(t: HxbType): Int {
         return switch t {
-            case TAbstract({ pack: [], name: "Int" | "Dynamic" | "UInt" }, _) | TAbstract({ pack: ["go"], name: "Int" | "UInt" | "GoInt" | "GoUInt" }, _) | TInt | TDynamicAny | TDynamic(_): 64; // for GoInt I assume the wider type, i could add special handling but that is extra complexity for little (to no) gain.
+            case TAbstract({ pack: ["go"], name: "Int" | "UInt" | "GoInt" | "GoUInt" }, _) | TInt | TDynamicAny | TDynamic(_): 64; // for GoInt I assume the wider type, i could add special handling but that is extra complexity for little (to no) gain.
             case TAbstract({ pack: ["go"], name: "Int8" | "UInt8" | "Rune" | "Byte" }, _): 8;
             case TAbstract({ pack: ["go"], name: "Int16" | "UInt16" }, _): 16;
-            case TAbstract({ pack: ["go"], name: "Int32" | "UInt32" }, _): 32;
+            case TAbstract({ pack: [], name: "Int" | "Dynamic" | "UInt" }, _) | TAbstract({ pack: ["go"], name: "Int32" | "UInt32" }, _): 32;
             case TAbstract({ pack: ["go"], name: "Int64" | "UInt64" }, _): 64;
             case _: 64; // abstract should not cause this code path anyway.
         }

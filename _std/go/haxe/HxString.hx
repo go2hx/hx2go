@@ -36,7 +36,7 @@ class HxString {
                 return v.size == 0 ? null : v.r;
             }
 
-            var b:Int = Syntax.code("int({0}[{1}])", s, i);
+            var b:Int = Syntax.code("int32({0}[{1}])", s, i);
             i += if (b < 0x80) 1 else if (b < 0xE0) 2 else if (b < 0xF0) 3 else 4;
             j++;
         }

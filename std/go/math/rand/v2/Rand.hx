@@ -1,7 +1,7 @@
 package go.math.rand.v2;
 
 @:structInit
-@:go.Type({ name: "Rand", instanceName: "v2.Rand", imports: ["math/rand/v2"] })
+@:go.Type({ name: "Rand", instanceName: "rand.Rand", imports: ["math/rand/v2"] })
 extern class Rand {
 
     @:native("ExpFloat64") function expFloat64(): (Float);

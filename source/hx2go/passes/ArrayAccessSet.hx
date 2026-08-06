@@ -29,11 +29,11 @@ class ArrayAccessSet extends CompilerPass {
 
     public function growCheck(frame:ContextFrame, expr: HxbTypedExpr, on: HxbTypedExpr, idx: HxbTypedExpr, value: HxbTypedExpr): HxbTypedExpr {
         var elem = context.getWriter().types.writeHxbType(expr.t); // element type, e.g. "int"
-        var len = ExprHelper.createUntyped('len(*{0})', [on]);
+        var len = ExprHelper.createUntyped('int32(len(*{0}))', [on]);
         return new HxbTypedExpr(
             TIf(
                 {expr: TBinop(OpGte, idx, len), t: expr.t, pos: expr.pos},
-                ExprHelper.createUntyped('*{0} = append(*{0}, make([]${elem}, {1}+1-len(*{0}))...)', [on, idx]),
+                ExprHelper.createUntyped('*{0} = append(*{0}, make([]${elem}, {1}+1-int32(len(*{0})))...)', [on, idx]),
                 null,
             ),
             expr.t, expr.pos,

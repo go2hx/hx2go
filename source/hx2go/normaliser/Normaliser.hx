@@ -64,7 +64,7 @@ class Normaliser {
             var lhsWidth: Int = switch left.t {
                 // getIntegerWidth returns 64, because that is usually what go's "int" is (we assume the wider type)
                 // but semantically, haxe expects int to behave like a 32-bit one, we must force it to do OpUShr on a 32-bit unsigned value.
-                case TAbstract({ name: "Int" | "UInt", pack: [] }, _) | TInt: 32;
+                case TAbstract({ name: "Int" | "UInt", pack: [] }, _) | TInt: 32; // TODO: review if we still need this after changing mapping int to int32
                 case _: Semantics.getIntegerWidth(left.t);
             }
 

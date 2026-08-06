@@ -1,6 +1,7 @@
+import go.Byte;
 //import go.github_com.hajimehoshi.ebiten.v2.Ebitenutil;
-//import go.github_com.hajimehoshi.ebiten.v2.Ebiten;
 //import go.github_com.hajimehoshi.ebiten.v2.Image;
+//import go.github_com.hajimehoshi.ebiten.Ebiten;
 //import go.Pointer;
 //import go.GoInt;
 //import go.Error;
@@ -36,6 +37,15 @@
 //    Ebiten.runGame(new Game()).sure();
 //}
 
+import haxe.Int64.*;
+import haxe.Int64;
+
 function main() {
-    // throw "Hello, World!";
+    var a:Int64;
+    a = Int64.make(10, 0xFFFFFFFF);
+    trace(a.low==0xFFFFFFFF, a.low , 0xFFFFFFFF);
+    a = 47244640255i64;
+    trace(a.low==0xFFFFFFFF, a.low , 0xFFFFFFFF);
+    a = 0x7FFFFFFFFFFFFFFFi64;
+    trace(a.low==0xFFFFFFFF, a.low , 0xFFFFFFFF);
 }

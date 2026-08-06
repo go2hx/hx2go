@@ -235,7 +235,7 @@ class ExprWriter extends WriterImpl {
             buf.addBufferInline(writeExpr(e));
             buf.addInline('; _hx_i := ');
             buf.addBufferInline(writeExpr(eidx));
-            buf.addInline('; if _hx_i >= 0 && _hx_i < len((*_hx_a)) { return (*_hx_a)[_hx_i] }; var _hx_z ${elem}; return _hx_z }()');
+            buf.addInline('; if _hx_i >= 0 && int(_hx_i) < len((*_hx_a)) { return (*_hx_a)[_hx_i] }; var _hx_z ${elem}; return _hx_z }()');
 
             return buf;
         }

@@ -17,7 +17,9 @@
       <sourceFolder url="file://$MODULE_DIR$/_std" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/haxe/tests/unit/bin" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/output/testbed/libs" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/hxb-parser" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/haxe" />
+      <excludeFolder url="file://$MODULE_DIR$/hx2go-extern/output" />
     </content>
     <orderEntry type="jdk" jdkName="Haxe 5.0.0" jdkType="Haxe toolkit" />
     <orderEntry type="sourceFolder" forTests="false" />

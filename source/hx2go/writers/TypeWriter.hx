@@ -113,15 +113,15 @@ class TypeWriter extends WriterImpl {
             case { name: "EnumValue", pack: [] }: "Hx_Obj_VTable_go_haxe__hxenumvalue__hxenumvalue";
             case { name: "Enum", pack: [] }: "*Hx_Obj_go_haxe_hxenum";
             case { name: "Void", pack: [] }: "void";
-            case { name: "Int", pack: [] } | { name: "GoInt", pack: ['go'] }: "int";
-            case { name: "UInt", pack: [] } | { name: "GoUInt", pack: ['go'] }: "uint";
+            case { name: "GoInt", pack: ['go'] }: "int";
+            case { name: "GoUInt", pack: ['go'] }: "uint";
             case { name: "Int8", pack: ['go'] }: "int8";
             case { name: "Int16", pack: ['go'] }: "int16";
-            case { name: "Int32", pack: ['go'] }: "int32";
+            case { name: "Int", pack: [] } | { name: "Int32", pack: ['go'] }: "int32";
             case { name: "Int64", pack: ['go'] }: "int64";
             case { name: "UInt8", pack: ['go'] }: "uint8";
             case { name: "UInt16", pack: ['go'] }: "uint16";
-            case { name: "UInt32", pack: ['go'] }: "uint32";
+            case { name: "UInt", pack: [] } | { name: "UInt32", pack: ['go'] }: "uint32";
             case { name: "UInt64", pack: ['go'] }: "uint64";
             case { name: "Float", pack: [] } | { name: "Float64", pack: ['go'] }: "float64";
             case { name: "Bool", pack: [] }: "bool";
@@ -191,7 +191,7 @@ class TypeWriter extends WriterImpl {
         var norm = writer.context.normalize(type);
         var buf = new OutputBuffer(switch norm {
             case TVoid: "void";
-            case TInt: "int";
+            case TInt: "int32";
             case TFloat: "float64";
             case TBool: "bool";
             case TString: "string";

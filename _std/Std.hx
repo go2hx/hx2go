@@ -11,7 +11,7 @@ import go.Strconv;
 class Std {
 
     public static function int(x: Float): Int {
-        return Go.int(x);
+        return Go.int32(x);
     }
 
     public static function parseInt(x: String): Null<Int> {

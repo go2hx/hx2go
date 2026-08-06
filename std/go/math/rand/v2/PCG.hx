@@ -1,7 +1,7 @@
 package go.math.rand.v2;
 
 @:structInit
-@:go.Type({ name: "PCG", instanceName: "v2.PCG", imports: ["math/rand/v2"] })
+@:go.Type({ name: "PCG", instanceName: "rand.PCG", imports: ["math/rand/v2"] })
 extern class PCG {
 
     @:native("AppendBinary") function appendBinary(b: go.Slice<go.Byte>): (go.Result<go.Slice<go.Byte>>);

@@ -1,8 +1,7 @@
 package go.crypto.hpke;
 
-@:structInit
-@:go.Type({ name: "aead", instanceName: "hpke.aead", imports: ["crypto/hpke"] })
-extern class Aead {
+@:go.Type({ name: "AEAD", instanceName: "hpke.AEAD", imports: ["crypto/hpke"] })
+extern typedef AEAD = {
 
     @:native("ID") function ID(): (go.UInt16);
 

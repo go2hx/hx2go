@@ -184,7 +184,7 @@ class Bytes {
         var v = get(pos) | (get(pos + 1) << 8) | (get(pos + 2) << 16) | (get(pos + 3) << 24);
         // match the behaviour of Go where 64-bit will not overflow
         // there we need to do a sign extension explicitly through int32
-        return Syntax.code("int(int32({0}))", v);
+        return Syntax.code("int32({0})", v);
     }
 
     /**

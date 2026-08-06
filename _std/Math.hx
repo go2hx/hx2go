@@ -83,15 +83,15 @@ class Math {
     }
 
     public static function round(v: Float): Int {
-        return Go.int(fround(v));
+        return Go.int32(fround(v));
     }
 
     public static function floor(v: Float): Int {
-        return Go.int(ffloor(v));
+        return Go.int32(ffloor(v));
     }
 
     public static function ceil(v: Float): Int {
-        return Go.int(fceil(v));
+        return Go.int32(fceil(v));
     }
 
     public static function random(): Float {

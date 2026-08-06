@@ -14,6 +14,7 @@ import sys.io.FileOutput;
 import sys.io.FileInput;
 import go.Syscall;
 import go.golang_org.x.Term;
+import go.GoInt;
 
 class Sys {
 
@@ -90,7 +91,7 @@ class Sys {
         var output: Slice<Byte> = t.result;
         var err: Error = t.error;
 
-        var exitCode: Int = 0;
+        var exitCode: GoInt = 0;
         var exitError: Pointer<ExitError> = null;
         var ok: Bool = false;
 

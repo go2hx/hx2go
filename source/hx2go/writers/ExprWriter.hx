@@ -280,7 +280,7 @@ class ExprWriter extends WriterImpl {
 
     function scalarElementConversion(expr: HxbTypedExpr, e: HxbTypedExpr): Null<String> {
         var want = switch expr.t {
-            case TInt: "int";
+            case TInt: "int32";
             case TFloat: "float64";
             case _: return null;
         }

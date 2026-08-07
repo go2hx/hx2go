@@ -95,7 +95,7 @@ class TypeNormaliserCall extends CompilerPass {
     }
 
     static function needsCast(arg: HxbTypedExpr, toType: HxbType): Bool {
-        return !toType.match(TDynamicAny | TDynamic(_))
+        return (!toType.match(TDynamicAny | TDynamic(_)) || arg.t.match(TAbstract({ pack: [], name: "Null" }, _)))
             && !TypeHelper.compare(arg.t, toType);
     }
 

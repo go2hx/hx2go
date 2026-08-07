@@ -40,7 +40,12 @@ import go.Syntax;
 //}
 
 function main() {
+    var t1: Int = 42;
     var t2:Null<Int> = 42;
-    trace(Type.typeof(t2));
+    trace(t1 == t2, Type.typeof(t1), Type.typeof(t2), eq(t1, t2));
+}
+
+function eq(a:Dynamic, b:Dynamic):Bool {
+    return a == b;
 }
 // testbed/Main.hx:3: TObject

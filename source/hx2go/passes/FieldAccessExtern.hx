@@ -17,7 +17,7 @@ import hxb.Ast.HxbExprDef;
 import hxb.HxbClassField;
 import hxb.HxbType;
 
-private enum ExternKind {
+enum ExternKind {
     ExNone;
     ExModule;
     ExTemplate;

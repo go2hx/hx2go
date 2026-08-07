@@ -7,6 +7,8 @@ import hxb.HxbType;
 import hxb.HxbClassField;
 import haxe.runtime.Copy;
 import hxb.Typed.HxbTypedExprDef;
+import hxb.Ast.HxbExpr;
+import hx2go.passes.FieldAccessExtern.ExternKind;
 
 class TypeNormaliserCall extends CompilerPass {
 
@@ -17,73 +19,100 @@ class TypeNormaliserCall extends CompilerPass {
         }
     }
 
+    public function norm(ext: { kind: ExternKind, ?options: HxbExpr, ?left: HxbTypedExpr, ?right: String, ?field: HxbClassField }, args: Array<HxbTypedExpr>, params: Array<HxbFunArg>, expr: HxbTypedExpr) {
+        var restStart = -1;
+        var restElement = TVoid;
+
+        for (idx in 0...args.length) {
+            var arg = args[idx];
+            var param = params[idx] ?? params[params.length - 1];
+
+            var spread = false;
+            var toType = param.t;
+
+            switch param.t {
+                case TAbstract({ pack: ['haxe'], name: 'Rest' }, restTypeParams):
+                    if (isSpreadOfRest(arg)) {
+                        if (ext.kind != ExNone) {
+                            spread = true;
+                            restElement = restTypeParams[0];
+                        }
+                    } else {
+                        if (restStart == -1) restStart = idx;
+                        restElement = restTypeParams[0];
+                        toType = restTypeParams[0];
+                    }
+
+                case _:
+            }
+
+            var changed = false;
+
+            var callee: HxbClassField = ext.field;
+            if (param.opt && arg.expr.match(TConst(TNull))
+            && !toType.match(TAbstract({ name: "Null", pack: [] }, _))
+            && callee != null && callee.expr != null) {
+                switch callee.expr.expr.expr {
+                    case TFunction(func) if (idx < func.args.length):
+                        var defaultValue: HxbTypedExpr = func.args[idx].value;
+                        if (defaultValue != null) {
+                            var c = ExprHelper.createCast(defaultValue, toType);
+                            arg.expr = c.expr;
+                            arg.t = c.t;
+                            changed = true;
+                        }
+                    case _:
+                }
+            }
+
+            if (spread) {
+                rewriteSpreadArg(arg, restElement);
+                changed = true;
+            } else if (needsCast(arg, toType)) {
+                var c = ExprHelper.createCast(arg, toType);
+                arg.expr = c.expr;
+                arg.t = c.t;
+                changed = true;
+            }
+
+            if (changed) {
+                context.submitNode(arg, true);
+            }
+        }
+
+        if (restStart != -1 && ext.kind == ExNone) {
+            collapseRestArgs(expr, restStart, restElement);
+        }
+    }
+
     public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
         switch expr.expr {
             case TCall({ t: TFun(params, ret), expr: callee }, args):
-                var ext = FieldAccessExtern.getExternInfo(context, new HxbTypedExpr(callee, TFun(params, ret), expr.pos));
-                var restStart = -1;
-                var restElement = TVoid;
+                norm(
+                    FieldAccessExtern.getExternInfo(context, new HxbTypedExpr(callee, TFun(params, ret), expr.pos)),
+                    args,
+                    params,
+                    expr
+                );
 
-                for (idx in 0...args.length) {
-                    var arg = args[idx];
-                    var param = params[idx] ?? params[params.length - 1];
-
-                    var spread = false;
-                    var toType = param.t;
-
-                    switch param.t {
-                        case TAbstract({ pack: ['haxe'], name: 'Rest' }, restTypeParams):
-                            if (isSpreadOfRest(arg)) {
-                                if (ext.kind != ExNone) {
-                                    spread = true;
-                                    restElement = restTypeParams[0];
-                                }
-                            } else {
-                                if (restStart == -1) restStart = idx;
-                                restElement = restTypeParams[0];
-                                toType = restTypeParams[0];
-                            }
-
-                        case _:
-                    }
-
-                    var changed = false;
-
-                    var callee: HxbClassField = ext.field;
-                    if (param.opt && arg.expr.match(TConst(TNull))
-                        && !toType.match(TAbstract({ name: "Null", pack: [] }, _))
-                        && callee != null && callee.expr != null) {
-                        switch callee.expr.expr.expr {
-                            case TFunction(func) if (idx < func.args.length):
-                                var defaultValue: HxbTypedExpr = func.args[idx].value;
-                                if (defaultValue != null) {
-                                    var c = ExprHelper.createCast(defaultValue, toType);
-                                    arg.expr = c.expr;
-                                    arg.t = c.t;
-                                    changed = true;
-                                }
-                            case _:
-                        }
-                    }
-
-                    if (spread) {
-                        rewriteSpreadArg(arg, restElement);
-                        changed = true;
-                    } else if (needsCast(arg, toType)) {
-                        var c = ExprHelper.createCast(arg, toType);
-                        arg.expr = c.expr;
-                        arg.t = c.t;
-                        changed = true;
-                    }
-
-                    if (changed) {
-                        context.submitNode(arg, true);
-                    }
+            case TCall({ expr: TConst(TSuper), t: TInst(tp, _), pos: pos }, args): {
+                var m = context.resolve(tp);
+                if (m == null) {
+                    return;
                 }
 
-                if (restStart != -1 && ext.kind == ExNone) {
-                    collapseRestArgs(expr, restStart, restElement);
+                var base = switch m {
+                    case MClass(x): x;
+                    case _: return;
                 }
+
+                if (base.constructor != null) {
+                    switch base.constructor.type {
+                        case TFun(params, ret): norm({ kind: ExNone, field: base.constructor }, args, params, expr);
+                        case _: return;
+                    }
+                }
+            }
 
             case _:
         }

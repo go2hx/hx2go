@@ -100,6 +100,8 @@ class CastClass extends CompilerPass {
 
                     if (srcPath != null && ExprHelper.isBaseOf(context, context.resolvedInstanceName(cls.path), srcPath)) {
                         expr.expr = ExprHelper.createUntyped('&{0}.$name', [e]).expr;
+                    } else if (cls.flags & HxbClassFlag.CInterface != 0) {
+                        expr.expr = ExprHelper.createUntyped('&$name{ VTable: {0}.VTable.(${StringConversions.typePathClassVTableName(cls.path)}) }', [e]).expr;
                     } else {
                         expr.expr = ExprHelper.createUntyped('{0}.VTable.(*$name)', [e]).expr;
                     }

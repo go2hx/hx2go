@@ -424,6 +424,8 @@ class HxDynamic {
             }
         }
 
+        // TODO: null<T> types?
+
         return cv;
     }
 

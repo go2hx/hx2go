@@ -184,6 +184,7 @@ class Normaliser {
 
                 var local = scope.copy();
                 local.activeLoop = expr;
+                local.activeTryOwnsBreak = false;
 
                 return iterateExpr(expr, local, ancestor);
             }
@@ -194,6 +195,7 @@ class Normaliser {
                 econd.expr = ensureParen(econd).expr;
                 ebody.expr = ensureBlock(ebody).expr;
                 local.activeLoop = expr;
+                local.activeTryOwnsBreak = false;
 
                 return iterateExpr(expr, local, ancestor);
 
@@ -226,6 +228,7 @@ class Normaliser {
                 var local = scope.copy();
                 local.activeFunction = expr;
                 local.activeTry = null;
+                local.activeTryOwnsBreak = false;
                 local.activeLoop = null;
                 local.activeSwitch = null;
                 return iterateExpr(expr, local, ancestor);
@@ -237,6 +240,7 @@ class Normaliser {
                 }
 
                 local.activeTry = expr;
+                local.activeTryOwnsBreak = true;
 
                 var allPathsReturn = local.activeSwitchAllPathsReturn ? local.activeSwitchAllPathsReturn : Semantics.allPathsReturn(expr).allPathsReturn;
                 local.activeSwitchAllPathsReturn = Semantics.allPathsReturn(expr).allPathsReturn;
@@ -302,10 +306,10 @@ class Normaliser {
                     ? ExprHelper.createUntyped('hx_try_state = 1; return', []).expr
                     : ExprHelper.createUntyped('hx_try_state = 1; hx_try_return = {0}; return', [Copy.copy(e)]).expr;
 
-            case TBreak if (scope.activeTry != null):
+            case TBreak if (scope.activeTryOwnsBreak):
                 expr.expr = ExprHelper.createUntyped('hx_try_state = 2; return', []).expr;
 
-            case TContinue if (scope.activeTry != null):
+            case TContinue if (scope.activeTryOwnsBreak):
                 expr.expr = ExprHelper.createUntyped('hx_try_state = 3; return', []).expr;
 
             case _: null;

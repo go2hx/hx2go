@@ -23,6 +23,7 @@ class Scope {
     public var activeFunction: HxbTypedExpr = null;
     public var activeSwitchAllPathsReturn: Bool = false;
     public var activeTry: HxbTypedExpr = null;
+    public var activeTryOwnsBreak: Bool = false;
     public var activeLoopLabel: Null<String> = null;
     // pass by ref across scope copies
     public var tmpId: Array<Int> = [0];
@@ -133,6 +134,7 @@ class Scope {
             activeFunction: activeFunction,
             activeSwitchAllPathsReturn: activeSwitchAllPathsReturn,
             activeTry: activeTry,
+            activeTryOwnsBreak: activeTryOwnsBreak,
             activeLoopLabel: activeLoopLabel,
             tmpId: tmpId
         };

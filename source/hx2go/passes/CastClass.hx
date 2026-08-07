@@ -15,7 +15,7 @@ import hxb.TypePath;
 
 class CastClass extends CompilerPass {
 
-    private static var dynCastId: Int = 0;
+    private static var castId: Int = 0;
 
     public function match(expr: HxbTypedExpr): Bool {
         return switch expr {
@@ -62,7 +62,7 @@ class CastClass extends CompilerPass {
                     }, "toClass", [e, new HxbTypedExpr(TConst(TString(StringConversions.typePathClassInstanceName(cls.path))), TString, null)]);
 
                     var name = StringConversions.typePathClassInstanceName(cls.path);
-                    var tmp = new HxbVar(-1, 'hx_dyncast_${dynCastId++}', VUser(TVOLocalVariable), 0, [], e.pos, callExpr.t);
+                    var tmp = new HxbVar(-1, 'hx_dyncast_${castId++}', VUser(TVOLocalVariable), 0, [], e.pos, callExpr.t);
                     var tmp_local = new HxbTypedExpr(TLocal(tmp), callExpr.t, e.pos);
 
                     var castedVal = ExprHelper.createUntyped('{0}.(*$name)', [tmp_local]);
@@ -101,7 +101,14 @@ class CastClass extends CompilerPass {
                     if (srcPath != null && ExprHelper.isBaseOf(context, context.resolvedInstanceName(cls.path), srcPath)) {
                         expr.expr = ExprHelper.createUntyped('&{0}.$name', [e]).expr;
                     } else if (cls.flags & HxbClassFlag.CInterface != 0) {
-                        expr.expr = ExprHelper.createUntyped('&$name{ VTable: {0}.VTable.(${StringConversions.typePathClassVTableName(cls.path)}) }', [e]).expr;
+                        var cst = ExprHelper.createUntyped('&$name{ VTable: {0}.VTable.(${StringConversions.typePathClassVTableName(cls.path)}) }', [e]);
+                        var tmp = new HxbVar(-1, 'hx_icast_${castId++}', VUser(TVOLocalVariable), 0, [], e.pos, expr.t);
+
+                        expr.expr = new HxbTypedExpr(TBlock([
+                            new HxbTypedExpr(TVar(tmp, cst), expr.t, expr.pos),
+                            new HxbTypedExpr(TLocal(tmp), expr.t, e.pos)
+                        ]), expr.t, expr.pos).expr;
+
                     } else {
                         expr.expr = ExprHelper.createUntyped('{0}.VTable.(*$name)', [e]).expr;
                     }

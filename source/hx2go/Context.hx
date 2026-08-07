@@ -722,8 +722,10 @@ class Context {
                                 var fromType = b_args[idx].t;
                                 var localVar = new HxbVar(-1, name, VUser(TVOLocalVariable), 0, [], f.pos, fromType);
                                 var local = new HxbTypedExpr(TLocal(localVar), fromType, f.pos);
+                                var sanName = Context.sanitiseString(farg.name);
+
                                 assign.push(
-                                    ExprHelper.createUntyped('${Context.sanitiseString(farg.name)} := {0}', [ExprHelper.createCast(local, toType)])
+                                    ExprHelper.createUntyped('${sanName} := {0}; _ = ${sanName}', [ExprHelper.createCast(local, toType)])
                                 );
 
                                 args.push({

@@ -6,7 +6,7 @@ go.work.
 .go2hx_cache
 needed_imports.json
 .repo-version
-./haxe
+/haxe
 output
 .idea
 go.work

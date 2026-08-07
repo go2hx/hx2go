@@ -1,8 +1,8 @@
 package unit;
 #if utest
 import utest.Assert;
-import utest.ui.Report;
 import utest.Runner;
+import utest.ui.common.ResultAggregator;
 
 class TestBasic implements utest.ITest {
     public function new() {}
@@ -31,7 +31,12 @@ class TestBasic implements utest.ITest {
 function main() {
     var runner = new Runner();
     runner.addCase(new TestBasic());
-    Report.create(runner);
+    var aggregator = new ResultAggregator(runner, true);
+    aggregator.onComplete.add(result -> {
+        final stats = result.stats;
+        final name = 'utest TestBasic (${stats.successes}/${stats.assertations} assertions)';
+        if (stats.isOk) TestAll.logOk(name) else TestAll.logFail(name);
+    });
     runner.run();
 }
 #else

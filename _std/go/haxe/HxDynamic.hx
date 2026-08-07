@@ -416,6 +416,13 @@ class HxDynamic {
         if (k == Reflect.Float64) return Reflect.valueOf(valueToFloat(cv));
         if (k == Reflect.String) return Reflect.valueOf(toString(cv._interface()));
         if (k == Reflect.Bool) return Reflect.valueOf(toBool(cv));
+        if (k == Reflect.Ptr && t.elem().kind() == Reflect.Struct) {
+            var cls = valueToClass(cv, t.elem().name());
+            if (cls.isValid()) {
+                if (cls.kind() == Reflect.Ptr) return cls;
+                if (cls.canAddr()) return cls.addr();
+            }
+        }
 
         return cv;
     }

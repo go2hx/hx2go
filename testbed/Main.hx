@@ -39,37 +39,48 @@ import go.Syntax;
 //    Ebiten.runGame(new Game()).sure();
 //}
 
-@:structInit class Foo{}
-@:structInit class Bar{}
+class Base {
 
-enum A {
-    A1;
-    A2;
+    public function new() {}
+    public function foo() {
+        trace("Foo from base");
+    }
+
 }
 
-enum B {
-    B1;
-    B2;
+class Child extends Base {
+
+    override public function foo() {
+        trace("Foo from child");
+    }
 }
 
-function main() {
-    var t = (42:go.Float64);
-    trace(Std.isOfType(t, Float));
-    trace(Type.typeof(t));
+class Main {
 
-    var v = true;
-    trace(Std.isOfType(v, Bool));
-    trace(Type.typeof(v));
+    public static function identity(x: Base): Base {
+        return x;
+    }
 
-    var q1: Foo = {};
-    var q2: Bar = {};
-    trace(Std.isOfType(q1, Foo), Std.isOfType(q2, Foo));
-    trace(Std.isOfType(q1, Bar), Std.isOfType(q2, Bar));
-    trace(Type.typeof(q1), Type.typeof(q2));
+    public static function main() {
+        var child: Child = new Child();
+        var base: Base = child;
+        var child_dyn: Dynamic = child;
+        var base_dyn: Dynamic = base;
+        var base_from_dyn: Base = child_dyn;
+        var child_from_dyn: Child = child_dyn;
 
-    var e1: A = A.A1;
-    var e2: B = B.B1;
-    trace(Std.isOfType(e1, A), Std.isOfType(e2, A));
-    trace(Std.isOfType(e1, B), Std.isOfType(e2, B));
-    trace(Type.typeof(e1), Type.typeof(e2));
+        child.foo();
+        base.foo();
+        child_dyn.foo();
+        base_dyn.foo();
+        child_from_dyn.foo();
+        base_from_dyn.foo();
+
+        var closure_iden = identity;
+        var closure_iden_dyn: Dynamic = identity;
+        var res = closure_iden_dyn(child);
+
+        res.foo();
+    }
+
 }

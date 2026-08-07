@@ -39,13 +39,37 @@ import go.Syntax;
 //    Ebiten.runGame(new Game()).sure();
 //}
 
-function main() {
-    var t1: Int = 42;
-    var t2:Null<Int> = 42;
-    trace(t1 == t2, Type.typeof(t1), Type.typeof(t2), eq(t1, t2));
+@:structInit class Foo{}
+@:structInit class Bar{}
+
+enum A {
+    A1;
+    A2;
 }
 
-function eq(a:Dynamic, b:Dynamic):Bool {
-    return a == b;
+enum B {
+    B1;
+    B2;
 }
-// testbed/Main.hx:3: TObject
+
+function main() {
+    var t = (42:go.Float64);
+    trace(Std.isOfType(t, Float));
+    trace(Type.typeof(t));
+
+    var v = true;
+    trace(Std.isOfType(v, Bool));
+    trace(Type.typeof(v));
+
+    var q1: Foo = {};
+    var q2: Bar = {};
+    trace(Std.isOfType(q1, Foo), Std.isOfType(q2, Foo));
+    trace(Std.isOfType(q1, Bar), Std.isOfType(q2, Bar));
+    trace(Type.typeof(q1), Type.typeof(q2));
+
+    var e1: A = A.A1;
+    var e2: B = B.B1;
+    trace(Std.isOfType(e1, A), Std.isOfType(e2, A));
+    trace(Std.isOfType(e1, B), Std.isOfType(e2, B));
+    trace(Type.typeof(e1), Type.typeof(e2));
+}

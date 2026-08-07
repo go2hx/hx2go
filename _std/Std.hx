@@ -7,6 +7,7 @@ import go.haxe.HxEnumValue;
 import go.haxe.HxEnum;
 import go.Syntax;
 import go.Strconv;
+import go.haxe.HxClass;
 
 class Std {
 
@@ -106,24 +107,31 @@ class Std {
         var vt = std.Type.typeof(v);
         // TODO: finish impl
         switch t {
-            // case Int:
-            //     return vt == TInt;
-            // case Float:
-            //     return vt == TFloat;
-            // case Bool:
-            //     return vt == TBool;
+            case Int:
+                return vt == TInt;
+            case Float:
+                return vt == TFloat;
+            case Bool:
+                return vt == TBool;
             case String:
                 return vt.match(TClass(String));
             case Array:
                 return vt.match(TClass(Array));
-            case Class:
-                return vt == t;
-            default:
-        }
+            case _: return switch vt {
+                case TClass(q): {
+                    var v1: Null<HxClass> = HxDynamic.toClass(t, "Hx_Obj_go_haxe_hxclass");
+                    var v2: HxClass = cast q;
+                    v1.name == v2.name;
+                };
 
-        var cls: Null<go.haxe.HxClass> = HxDynamic.toClass(t, "Hx_Obj_go_haxe_hxclass");
-        if (cls != null) {
-            return HxDynamic.toClass(v, "Hx_Obj_" + cls.name.toLowerCase().split(".").join("_")) != null;
+                case TEnum(q): {
+                    var v1: HxEnum = cast t;
+                    var v2: HxEnum = cast q;
+                    v1.name == v2.name;
+                }
+
+                case _: false;
+            }
         }
 
         return false;

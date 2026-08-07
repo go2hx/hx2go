@@ -60,6 +60,15 @@ class FieldAccessGeneric extends CompilerPass {
         }
     }
 
+    static function containsDynamic(t:HxbType):Bool {
+        return switch (t) {
+            case TDynamicAny | TDynamic(_): true;
+            case TFun(args, ret): containsDynamic(ret) || Lambda.exists(args, a -> containsDynamic(a.t));
+            case TInst(_, params) | TEnum(_, params) | TType(_, params) | TAbstract(_, params): Lambda.exists(params, containsDynamic);
+            case _: false;
+        }
+    }
+
     public function match(expr: HxbTypedExpr): Bool {
         return switch expr.expr {
             case TField(_): true;
@@ -87,7 +96,15 @@ class FieldAccessGeneric extends CompilerPass {
                             return;
                         }
 
-                        expr.t = processType(field.type);
+                        var erased = processType(field.type);
+
+                        if (containsDynamic(erased) && !containsDynamic(expr.t) && TypeHelper.compare(processType(expr.t), expr.t)) {
+                            expr.expr = TCast(new HxbTypedExpr(expr.expr, erased, expr.pos), null);
+                            context.submitNode(expr, true, 1);
+                            return;
+                        }
+
+                        expr.t = erased;
                     }
 
                     case _: null;

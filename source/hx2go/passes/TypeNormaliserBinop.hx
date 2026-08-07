@@ -36,6 +36,14 @@ class TypeNormaliserBinop extends CompilerPass {
             return;
         }
 
+        switch [op, left.expr] {
+            case [OpAssign | OpAssignOp(_), TCast(inner, _)] if (inner.t.match(TDynamicAny | TDynamic(_))):
+                left.expr = inner.expr;
+                left.t = inner.t;
+
+            case _:
+        }
+
         if (TypeHelper.compare(expr.t, TBool) && op != OpAssign) {
             if (Semantics.isNullableType(context, left.t)) {
                 var o = ExprHelper.createCast(left, Semantics.getNullableType(context, left.t));

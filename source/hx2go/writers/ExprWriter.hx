@@ -444,24 +444,18 @@ class ExprWriter extends WriterImpl {
         var buf = new OutputBuffer();
         buf.add('func() {');
 
-        for (c in catches) {
+        // defers runs LIFO
+        for (i in 0...catches.length) {
+            var c = catches[catches.length - 1 - i];
             buf.add('defer func() {', 1);
             var catchName = Context.sanitiseString(c.v.name);
-            buf.add('if ${catchName} := Hx_Field_haxe__exception_exception_fields__checkException(recover()); $catchName != nil {', 2, true);
+            buf.add('if _hx_ex := Hx_Field_haxe__exception_exception_fields__checkException(recover()); _hx_ex != nil {', 2, true);
 
-            var typed = false;
-            if (c.v.type != null) {
-                typed = true;
-                buf.add('switch $catchName := $catchName.(type) {', 2, true);
-                var t:HxbType = c.v.type;
-                buf.add('case ${writer.types.writeHxbType(t)}:', 2, true);
-                buf.add('_ = $catchName');
-            }
-
+            var goType = c.v.type == null ? "any" : writer.types.writeHxbType(c.v.type).toString();
+            buf.add('if $catchName, _hx_ok := Hx_Field_haxe_exception_catchValue(_hx_ex, "$goType").($goType); _hx_ok {', 2, true);
+            buf.add('_ = $catchName');
             buf.addBuffer(writeExpr(c.expr), 2);
-            if (typed) {
-                buf.add('}', 1, true);
-            }
+            buf.add('} else { panic(_hx_ex) }', 1, true); // not ours, let an outer catch have it
             buf.add('}', 1, true);
             buf.add('}()', 1, false);
             buf.add('');

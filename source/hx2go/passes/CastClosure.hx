@@ -51,7 +51,7 @@ class CastClosure extends CompilerPass {
                 var srcVar: HxbVar = null;
                 var callee: HxbTypedExpr = e;
                 switch e.expr {
-                    case TArray(_, _):
+                    case TArray(_, _) | TCall(_, _):
                         srcVar = new HxbVar(-1, '_hx_closure_src', VUser(TVOLocalVariable), 0, [], null, e.t);
                         callee = new HxbTypedExpr(TLocal(srcVar), e.t, null);
                     case _: // stable source, safe to inline directly

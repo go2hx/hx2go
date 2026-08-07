@@ -56,6 +56,79 @@ function main() {
     }
     
     testGo();
+    testTypedCatch();
+    testLoopInsideTry();
+}
+
+// a break/continue belongs to the nearest enclosing loop, even when that loop sits inside a try --
+// these used to unwind the whole try, dropping everything after the loop
+function testLoopInsideTry() {
+    assert(sumTo(4) == 6);
+
+    var log = [];
+    try {
+        for (i in 0...5) {
+            if (i == 1) continue;
+            if (i == 3) break;
+            log.push(i);
+        }
+        log.push(9);
+    } catch (_) {
+        log.push(-1);
+    }
+    assert(log.join(",") == "0,2,9");
+}
+
+function sumTo(n:Int):Int {
+    try {
+        var sum = 0;
+        var i = 0;
+        while (true) {
+            if (i >= n) break;
+            sum += i;
+            i++;
+        }
+        return sum; // unreachable while `break` unwinds the try closure
+    } catch (_) {
+        return -1;
+    }
+}
+
+class MyError {
+    public var code:Int;
+    public function new(code:Int) this.code = code;
+}
+
+class MyException extends Exception {}
+
+// every throw is wrapped by Exception.thrown(), so a catch has to dig the value back out --
+// these used to be recovered and silently dropped, leaving the try's result empty
+function testTypedCatch() {
+    var log = [];
+    for (i in 0...5) {
+        try {
+            switch i {
+                case 0: throw new MyError(7);
+                case 1: throw new MyException("sub");
+                case 2: throw new Exception("base");
+                case 3: throw "str";
+                case _: throw [1];
+            }
+        } catch (e:MyError) log.push('MyError${e.code}')
+          catch (e:MyException) log.push('MyException${e.message}')
+          // catches the last two too: a value throw arrives wrapped in a ValueException
+          catch (e:Exception) log.push('Exception${e.message}');
+    }
+    assert(log.join(",") == "MyError7,MyExceptionsub,Exceptionbase,Exceptionstr,Exception[1]");
+
+    // an unmatched catch must rethrow, not swallow
+    var outer = "none";
+    try {
+        try {
+            throw new MyError(1);
+        } catch (e:String) outer = "wrong";
+    } catch (e:MyError) outer = "rethrown";
+    assert(outer == "rethrown");
 }
 
 function foo():Bool {

@@ -59,7 +59,26 @@ class Exception {
 	}
 
 	private function unwrap(): Any {
-		return 0;
+		return this;
+	}
+	
+	@:keep
+	static function catchValue(ex: Dynamic, goType: String): Dynamic {
+		if (goType == "any") {
+			return ex;
+		}
+
+		var e: Exception = ex;
+		var value: Dynamic = e.unwrap();
+		// remove "*" prefix
+		var name = goType.substr(1);
+
+		var hit = go.haxe.HxDynamic.toClass(value, name);
+		if (hit == null) {
+			hit = go.haxe.HxDynamic.toClass(e, name);
+		}
+
+		return hit != null ? hit : value;
 	}
 
 	public function toString(): String {
@@ -82,6 +101,12 @@ class Exception {
 @:analyzer(no_const_propagation)
 @:keep
 function checkException(e:Dynamic):Dynamic {
+	// haxe.Exception exports error()
+	var thrown = go.haxe.HxDynamic.toClass(e, "Hx_Obj_haxe_exception");
+	if (thrown != null) {
+		return thrown;
+	}
+
 	// Can't use Std.isOfType() because it doesn't work with non-Haxe types like Go's error interface
 	var isGoError:Bool = false;
 	var goError:go.Error = null;

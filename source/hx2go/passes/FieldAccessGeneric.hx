@@ -69,7 +69,7 @@ class FieldAccessGeneric extends CompilerPass {
 
     public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
         switch expr.expr {
-            case TField(left, FStatic(tp, ref) | FInstance(tp, _, ref)): {
+            case TField(left, FStatic(tp, ref) | FInstance(tp, _, ref) | FClosureInstance(tp, _, ref)): {
                 var mt = context.resolve(tp);
                 if (mt == null) {
                     return;

@@ -72,7 +72,7 @@ class FieldAccessExtern extends CompilerPass {
                     case _: { kind: ExNone };
                 }
 
-            case TField(left, FStatic(tp, ref) | FInstance(tp, _, ref)): {
+            case TField(left, FStatic(tp, ref) | FInstance(tp, _, ref) | FClosureInstance(tp, _, ref)): {
                 var mt = context.resolve(tp);
                 if (mt == null) {
                     return { kind: ExNone };

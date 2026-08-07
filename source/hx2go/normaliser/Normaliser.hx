@@ -223,14 +223,19 @@ class Normaliser {
                     switch local.activeFunction.expr {
                         case TFunction(tfunc):
                             var varStringBuf = new StringBuf();
+                            var isVoid = tfunc.t.match(TVoid);
 
-                            if (allPathsReturn) {
+                            if (allPathsReturn && !isVoid) {
                                 returnHandlerStringBuf.add('\nreturn hx_try_return');
-                            } else if (!tfunc.t.match(TVoid)) {
+                            } else if (allPathsReturn && isVoid) {
+                                returnHandlerStringBuf.add('\nreturn');
+                            } else if (!isVoid) {
                                 returnHandlerStringBuf.add('if hx_try_state == 1 {\nreturn hx_try_return\n}');
+                            } else {
+                                returnHandlerStringBuf.add('if hx_try_state == 1 {\nreturn\n}');
                             }
 
-                            if (!tfunc.t.match(TVoid)) {
+                            if (!isVoid) {
                                 varStringBuf.add('var hx_try_return ${context.getWriter().types.writeHxbType(tfunc.t)}\n_ = hx_try_return\n');
                             }
 

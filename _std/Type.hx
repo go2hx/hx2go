@@ -122,7 +122,7 @@ class Type {
 
 		var kind = value.kind();
 
-		if (kind == Reflect.Int) {
+		if (kind == Reflect.Int32) {
 			return ValueType.TInt;
 		} else if (kind == Reflect.Int64) {
 			return ValueType.TInt64;

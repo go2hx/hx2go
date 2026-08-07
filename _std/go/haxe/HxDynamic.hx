@@ -412,7 +412,7 @@ class HxDynamic {
         var cv = ensureConcreteValue(v._interface());
         var k = t.kind();
 
-        if (k == Reflect.Int) return Reflect.valueOf(valueToInt(cv));
+        if (k == Reflect.Int32) return Reflect.valueOf(valueToInt(cv));
         if (k == Reflect.Float64) return Reflect.valueOf(valueToFloat(cv));
         if (k == Reflect.String) return Reflect.valueOf(toString(cv._interface()));
         if (k == Reflect.Bool) return Reflect.valueOf(toBool(cv));
@@ -802,7 +802,7 @@ class HxDynamic {
         }
 
         if (!isNullableType(t)) {
-            return ensureValue(v);
+            return convertToType(ensureValue(v), t);
         }
 
         // roundtrips instead of double boxing

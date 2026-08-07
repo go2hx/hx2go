@@ -707,7 +707,7 @@ class HxDynamic {
         // TODO: throw when Null<T> is supported.
     }
 
-    public static function setArrayIndex(dyn: Dynamic, index: Dynamic, v: Dynamic): Void {
+    public static function setArrayIndex(dyn: Dynamic, index: Dynamic, v: Dynamic): Dynamic {
         var value = ensureValue(dyn);
         var kind = value.kind();
 
@@ -741,6 +741,8 @@ class HxDynamic {
                 valueToAssign(v, item.type())
             );
         }
+
+        return v;
 
         // TODO: throw when Null<T> is supported.
     }

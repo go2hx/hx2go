@@ -182,7 +182,7 @@ class HxDynamic {
         }
 
         var k = jointKind(aV, bV);
-        if (k == Reflect.Int)
+        if (k == Reflect.Int32 || k == Reflect.Int)
             return valueToInt(aV) == valueToInt(bV);
         else if (k == Reflect.Float64)
             return valueToFloat(aV) == valueToFloat(bV);
@@ -200,7 +200,7 @@ class HxDynamic {
         var aV = ensureConcreteValue(a);
         var bV = ensureConcreteValue(b);
         var k = jointKind(aV, bV);
-        if (k == Reflect.Int)
+        if (k == Reflect.Int32 || k == Reflect.Int)
             return valueToInt(aV) < valueToInt(bV);
         else if (k == Reflect.Float64)
             return valueToFloat(aV) < valueToFloat(bV);
@@ -218,7 +218,7 @@ class HxDynamic {
         var aV = ensureConcreteValue(a);
         var bV = ensureConcreteValue(b);
         var k = jointKind(aV, bV);
-        if (k == Reflect.Int)
+        if (k == Reflect.Int32 || k == Reflect.Int)
             return valueToInt(aV) > valueToInt(bV);
         else if (k == Reflect.Float64)
             return valueToFloat(aV) > valueToFloat(bV);
@@ -236,7 +236,7 @@ class HxDynamic {
         var aV = ensureConcreteValue(a);
         var bV = ensureConcreteValue(b);
         var k = jointKind(aV, bV);
-        if (k == Reflect.Int)
+        if (k == Reflect.Int32 || k == Reflect.Int)
             return (valueToInt(aV) + valueToInt(bV) : Dynamic);
         else if (k == Reflect.Float64)
             return (valueToFloat(aV) + valueToFloat(bV) : Dynamic);
@@ -250,7 +250,7 @@ class HxDynamic {
         var aV = ensureConcreteValue(a);
         var bV = ensureConcreteValue(b);
         var k = jointKind(aV, bV);
-        if (k == Reflect.Int)
+        if (k == Reflect.Int32 || k == Reflect.Int)
             return (valueToInt(aV) - valueToInt(bV) : Dynamic);
         else if (k == Reflect.Float64)
             return (valueToFloat(aV) - valueToFloat(bV) : Dynamic);
@@ -262,7 +262,7 @@ class HxDynamic {
         var aV = ensureConcreteValue(a);
         var bV = ensureConcreteValue(b);
         var k = jointKind(aV, bV);
-        if (k == Reflect.Int)
+        if (k == Reflect.Int32 || k == Reflect.Int)
             return (valueToInt(aV) * valueToInt(bV) : Dynamic);
         else if (k == Reflect.Float64)
             return (valueToFloat(aV) * valueToFloat(bV) : Dynamic);
@@ -286,7 +286,7 @@ class HxDynamic {
         var bV = ensureConcreteValue(b);
         var k = jointKind(aV, bV);
         // In Haxe, modulo on Float is fmod
-        if (k == Reflect.Int)
+        if (k == Reflect.Int32 || k == Reflect.Int)
             return (valueToInt(aV) % valueToInt(bV) : Dynamic);
         else if (k == Reflect.Float64)
             return (valueToFloat(aV) % valueToFloat(bV) : Dynamic);
@@ -298,7 +298,7 @@ class HxDynamic {
         var aV = ensureConcreteValue(a);
         var bV = ensureConcreteValue(b);
         var k = jointKind(aV, bV);
-        if (k == Reflect.Int)
+        if (k == Reflect.Int32 || k == Reflect.Int)
             return (valueToInt(aV) & valueToInt(bV) : Dynamic);
         else
             throw "runtime.HxDynamic.bitand invalid operands: " + aV.string() + " and " + bV.string();
@@ -308,7 +308,7 @@ class HxDynamic {
         var aV = ensureConcreteValue(a);
         var bV = ensureConcreteValue(b);
         var k = jointKind(aV, bV);
-        if (k == Reflect.Int)
+        if (k == Reflect.Int32 || k == Reflect.Int)
             return (valueToInt(aV) | valueToInt(bV) : Dynamic);
         else
             throw "runtime.HxDynamic.bitor invalid operands: " + aV.string() + " and " + bV.string();
@@ -318,7 +318,7 @@ class HxDynamic {
         var aV = ensureConcreteValue(a);
         var bV = ensureConcreteValue(b);
         var k = jointKind(aV, bV);
-        if (k == Reflect.Int)
+        if (k == Reflect.Int32 || k == Reflect.Int)
             return (valueToInt(aV) ^ valueToInt(bV) : Dynamic);
         else
             throw "runtime.HxDynamic.bitxor invalid operands: " + aV.string() + " and " + bV.string();
@@ -328,7 +328,7 @@ class HxDynamic {
         var aV = ensureConcreteValue(a);
         var bV = ensureConcreteValue(b);
         var k = jointKind(aV, bV);
-        if (k == Reflect.Int)
+        if (k == Reflect.Int32 || k == Reflect.Int)
             return (valueToInt(aV) << valueToInt(bV) : Dynamic);
         else
             throw "runtime.HxDynamic.lbitshift invalid operands: " + aV.string() + " and " + bV.string();
@@ -338,7 +338,7 @@ class HxDynamic {
         var aV = ensureConcreteValue(a);
         var bV = ensureConcreteValue(b);
         var k = jointKind(aV, bV);
-        if (k == Reflect.Int)
+        if (k == Reflect.Int32 || k == Reflect.Int)
             return (valueToInt(aV) >> valueToInt(bV) : Dynamic);
         else
             throw "runtime.HxDynamic.rbitshift invalid operands: " + aV.string() + " and " + bV.string();
@@ -348,7 +348,7 @@ class HxDynamic {
         var aV = ensureConcreteValue(a);
         var bV = ensureConcreteValue(b);
         var k = jointKind(aV, bV);
-        if (k == Reflect.Int)
+        if (k == Reflect.Int32 || k == Reflect.Int)
             return (valueToInt(aV) >>> valueToInt(bV) : Dynamic);
         else
             throw "runtime.HxDynamic.urbitshift invalid operands: " + aV.string() + " and " + bV.string();
@@ -412,7 +412,7 @@ class HxDynamic {
         var cv = ensureConcreteValue(v._interface());
         var k = t.kind();
 
-        if (k == Reflect.Int32) return Reflect.valueOf(valueToInt(cv));
+        if (k == Reflect.Int32 || k == Reflect.Int) return Reflect.valueOf(valueToInt(cv));
         if (k == Reflect.Float64) return Reflect.valueOf(valueToFloat(cv));
         if (k == Reflect.String) return Reflect.valueOf(toString(cv._interface()));
         if (k == Reflect.Bool) return Reflect.valueOf(toBool(cv));

@@ -553,7 +553,7 @@ class HxDynamic {
             && t.field(1).type.kind() == Reflect.Bool;
     }
     
-    static function unwrapNullable(value: Value): Value {
+    public static function unwrapNullable(value: Value): Value {
         if (!value.isValid()) {
             return value;
         }

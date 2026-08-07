@@ -115,7 +115,7 @@ class Type {
 			return ValueType.TNull;
 		}
 
-		var value = HxDynamic.ensureValue(v);
+		var value = HxDynamic.unwrapNullable(HxDynamic.ensureValue(v));
 		if (!value.isValid()) {
 			return ValueType.TNull;
 		}

@@ -39,18 +39,8 @@ import go.Syntax;
 //    Ebiten.runGame(new Game()).sure();
 //}
 
-import haxe.Int64;
-
 function main() {
-    trace(getInt32());
+    var t2:Null<Int> = 42;
+    trace(Type.typeof(t2));
 }
-
-function getInt32() {
-    var pos = 0;
-    var v = get(pos) | (get(pos + 1) << 8) | (get(pos + 2) << 16) | (get(pos + 3) << 24);
-    return v;
-}
-
-function get(pos):Int64 {
-    return 2147483647 + 1;
-}
+// testbed/Main.hx:3: TObject

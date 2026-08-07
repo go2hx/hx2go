@@ -298,6 +298,7 @@ class Context {
         removeStaleFiles();
 
         installGoDeps(imports);
+        proc.exitCode(true);
     }
 
     function installGoDeps(imports:Map<String, Array<String>>) {

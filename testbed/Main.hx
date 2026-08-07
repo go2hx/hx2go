@@ -39,10 +39,18 @@ import go.Syntax;
 //    Ebiten.runGame(new Game()).sure();
 //}
 
-class Main {
-    static function main() {
-        var a:Array<Int> = [1, 2, 3];
-        trace(Type.typeof(a));
-        trace(Type.typeof([1, 2, 3]));
-    }
+import haxe.Int64;
+
+function main() {
+    trace(getInt32());
+}
+
+function getInt32() {
+    var pos = 0;
+    var v = get(pos) | (get(pos + 1) << 8) | (get(pos + 2) << 16) | (get(pos + 3) << 24);
+    return v;
+}
+
+function get(pos):Int64 {
+    return 2147483647 + 1;
 }

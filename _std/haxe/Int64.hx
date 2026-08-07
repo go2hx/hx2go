@@ -63,11 +63,13 @@ abstract Int64(__Int64) from __Int64 to __Int64 {
 	public inline function copy():Int64
 		return new Int64(this);
 
-	@:from public static inline function ofInt(x:Int):Int64
-		return cast x;
+	@:from public static inline function ofInt(x:Int):Int64 {
+		var _v: Int = x;
+		return cast _v;
+	}
 
     public static inline function fromInt(x:Int):Int64
-		return cast x;
+		return ofInt(x);
 
     public inline function toFloat():Float
 		return Int64Helper.toFloat(abstract);

@@ -77,6 +77,32 @@ class Normaliser {
         }
     }
 
+    public function ensureNonConstArith(expr: HxbTypedExpr, left: HxbTypedExpr, right: HxbTypedExpr, scope: Scope, ancestor: Null<Ancestor>): Void {
+        if (!needsOverflowGuard(left.t) && !needsOverflowGuard(right.t)) return;
+        if (!isLiteralInt(left) || !isLiteralInt(right)) return; // only a problem if fully constant
+
+        left.expr = scope.temp(expr, Copy.copy(left), this, scope, ancestor).expr;
+    }
+
+    private function isLiteralInt(e: HxbTypedExpr): Bool {
+        return switch e.expr {
+            case TConst(TInt(_)): true;
+            case TParenthesis(inner) | TCast(inner, _): isLiteralInt(inner);
+            case _: false;
+        }
+    }
+
+    private function needsOverflowGuard(t: HxbType): Bool {
+        if (t == null) {
+            return false;
+        }
+
+        return switch t {
+            case TAbstract({ name: "Int" | "UInt", pack: [] }, _) | TInt: true;
+            case _: false;
+        }
+    }
+
     public function processExpr(expr: HxbTypedExpr, scope: Scope, ancestor: Null<Ancestor>): Void {
         if (ancestor != null && !Semantics.canHold(ancestor.node, expr)) {
             switch Semantics.getExprKind(expr) {
@@ -113,6 +139,7 @@ class Normaliser {
 
                 if (op.match(OpShr) || op.match(OpShl)) ensureShift(expr, left, right, op, scope, ancestor);
                 else if (op.match(OpUShr)) ensureShift(expr, left, right, op, scope, ancestor);
+                else if (op.match(OpAdd) || op.match(OpSub) || op.match(OpMult)) ensureNonConstArith(expr, left, right, scope, ancestor);
 
                 return;
 

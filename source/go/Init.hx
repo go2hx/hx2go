@@ -162,6 +162,7 @@ class Init {
 
 			var self = Context.resolvePath("go/Init.hx");
 			var path = Path.join([ Path.directory(self), '..', '..' ]);
+			var res = haxe.Serializer.run(Context.getResources());
 			if (!Context.defined("no-compilation")) {
 				if (!Context.defined("no-go-bootstrap")) {
 					final bin = Path.join([ path, "output/bootstrap/main", executable("main") ]);
@@ -180,13 +181,13 @@ class Init {
 							fail('bootstrap failed, $bin might be stale');
 						Sys.setCwd(root);
 					}
-					var args = [archiveOutput, sourceOutput, mainClassName, singleFile ? "1" : "0", sourcelineComments ? "1" : "0"];
+					var args = [archiveOutput, sourceOutput, mainClassName, singleFile ? "1" : "0", sourcelineComments ? "1" : "0", res];
 					var code = Sys.command(bin, args);
 					if (code != 0)
 						fail("compiler failed");
 				} else {
 					final bin = Path.join(["Compile-eval.hxml"]);
-					var args = [bin, archiveOutput, sourceOutput, mainClassName, singleFile ? "1" : "0", sourcelineComments ? "1" : "0"];
+					var args = [bin, archiveOutput, sourceOutput, mainClassName, singleFile ? "1" : "0", sourcelineComments ? "1" : "0", res];
 					var oldCwd = Sys.getCwd();
 					Sys.setCwd(path);
 					var code = Sys.command("haxe", args);

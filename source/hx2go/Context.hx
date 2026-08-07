@@ -1,5 +1,6 @@
 package hx2go;
 
+import haxe.io.Bytes;
 import hxb.Typed.HxbVar;
 import hxb.HxbModule;
 import sys.io.Process;
@@ -28,10 +29,6 @@ import hx2go.util.ExprHelper;
 import hxb.Typed.HxbTypedExprDef;
 import hx2go.normaliser.Semantics;
 import hx2go.passes.RewriteDynamicBinop;
-
-#if go
-import go.Map;
-#end
 
 class Context {
 
@@ -202,10 +199,11 @@ class Context {
         if (!typeQueue.contains(modulePath)) typeQueue.push(modulePath);
         types.set(typePath, t);
     }
-
-    public function build(mainClass: String, singleFile:Bool): Void {
+    public var res:Map<String, Bytes> = [];
+    public function build(mainClass: String, singleFile:Bool, res:Map<String, Bytes>): Void {
         typesByModule = new Map();
         typeQueue = [];
+        this.res = res;
 
         var mod = resolveModule(StringConversions.pathToLossyTypePath(mainClass));
         var cls = mod.classes();
@@ -296,6 +294,8 @@ class Context {
         writeFile("", "Main", prefix + buf.toString());
 
         removeStaleFiles();
+
+        var proc = new sys.io.Process('go fmt -C $outputDirectory .');
 
         installGoDeps(imports);
         proc.exitCode(true);

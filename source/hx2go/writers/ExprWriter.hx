@@ -54,7 +54,7 @@ class ExprWriter extends WriterImpl {
             case TBinop(op, left, right): writeBinop(expr, op, left, right);
             case TReturn(e): writeReturn(e);
             case TObjectDecl(fields): writeObjectDecl(expr, fields);
-            case TArrayDecl(elements): writeArrayDecl(expr, elements);
+            case TArrayDecl(elements): writeArrayDecl(expr.t, elements);
             case TArray(e, idx): writeArrayAccess(expr, e, idx);
             case TNew(tp, params, el): writeNew(expr, tp, params, el);
             case TEnumIndex(e): writeEnumIndex(expr, e);
@@ -195,13 +195,13 @@ class ExprWriter extends WriterImpl {
         return buf;
     }
 
-    public function writeArrayDecl(expr: HxbTypedExpr, elements: Array<HxbTypedExpr>): OutputBuffer {
+    public function writeArrayDecl(t:HxbType, elements: Array<HxbTypedExpr>): OutputBuffer {
         var buf = new OutputBuffer();
 
         buf.addInline("&([]");
-        buf.addBufferInline(switch expr.t {
+        buf.addBufferInline(switch t {
             case TInst(_, params): writer.types.writeHxbType(params[0]);
-            case TDynamic(_) | TDynamicAny: writer.types.writeHxbType(expr.t);
+            case TDynamic(_) | TDynamicAny: writer.types.writeHxbType(t);
             case _: throw "type is not array type for arrayDecl?";
         });
 
@@ -515,6 +515,18 @@ class ExprWriter extends WriterImpl {
     public function writeCall(expr: HxbTypedExpr, ecall: HxbTypedExpr, args: Array<HxbTypedExpr>): OutputBuffer {
         var buf = new OutputBuffer();
         var estr = writeExpr(ecall);
+
+        if (estr.toString() == "__resources__") {
+            var cpy = args.copy();
+            // {name:String, data:String, str:String}
+            buf.add('[]any{\n');
+            for (name => value in writer.context.res) {
+                var valueString = haxe.crypto.Base64.encode(value).toString();
+                buf.add('any(map[string]any{"name": any(${StringConversions.quoteString(name)}), "value": any(${StringConversions.quoteString(valueString)}), "str": any(${${StringConversions.quoteString("")}})}),\n');
+            }
+            buf.add("},");
+            return buf;
+        }
 
         if (estr.toString() == "__go__") { // untyped __go__();
             var cpy = args.copy();

@@ -1,29 +1,16 @@
-class Foo {
-
-    public var foo(get, set): Int;
-
-    function set_foo(value:Int):Int {
-        trace('set foo', value);
-        return value;
-    }
-
-
-    function get_foo():Int {
-        trace('get foo');
-        return 0;
-    }
-
-    public function new() {}
-
+function main() {
+    var a : IA = new C();
+    var b : IB = a;
+    trace(b.b() == "b");
 }
 
-function main() {
-    var foo: Foo = new Foo();
-    foo.foo = 5;
-    trace(foo.foo);
+private class C implements IA {
+    public function new() {}
+    public function b() return "b";
+}
 
-    var foo_dyn: Dynamic = foo;
-    trace(Reflect.getProperty(foo_dyn, "foo"));
-    Reflect.setProperty(foo_dyn, "foo", 20);
-    trace(Reflect.getProperty(foo_dyn, "foo"));
+private interface IA extends IB {}
+
+private interface IB {
+    function b() : String;
 }

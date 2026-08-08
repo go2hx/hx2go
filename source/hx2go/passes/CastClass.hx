@@ -98,9 +98,7 @@ class CastClass extends CompilerPass {
 //                        expr.expr = ExprHelper.createUntyped('{0}.(*$name)', [e]).expr;
 //                    }
 
-                    if (srcPath != null && ExprHelper.isBaseOf(context, context.resolvedInstanceName(cls.path), srcPath)) {
-                        expr.expr = ExprHelper.createUntyped('&{0}.$name', [e]).expr;
-                    } else if (cls.flags & HxbClassFlag.CInterface != 0) {
+                    if (cls.flags & HxbClassFlag.CInterface != 0) {
                         var cst = ExprHelper.createUntyped('&$name{ VTable: {0}.VTable.(${StringConversions.typePathClassVTableName(cls.path)}) }', [e]);
                         var tmp = new HxbVar(-1, 'hx_icast_${castId++}', VUser(TVOLocalVariable), 0, [], e.pos, expr.t);
 
@@ -109,6 +107,8 @@ class CastClass extends CompilerPass {
                             new HxbTypedExpr(TLocal(tmp), expr.t, e.pos)
                         ]), expr.t, expr.pos).expr;
 
+                    } else if (srcPath != null && ExprHelper.isBaseOf(context, context.resolvedInstanceName(cls.path), srcPath)) {
+                        expr.expr = ExprHelper.createUntyped('&{0}.$name', [e]).expr;
                     } else {
                         expr.expr = ExprHelper.createUntyped('{0}.VTable.(*$name)', [e]).expr;
                     }

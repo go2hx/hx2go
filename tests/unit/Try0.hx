@@ -156,13 +156,14 @@ function testGo() {
 	testTC(true,true); // Go code generation test - go internal error
     testTC(true,false); // Go code generation test - go string error
 	testTC(false,false); // Haxe code generation test
+	testTC(false,true); // Haxe code generation test - enum error
 }
 
 var x:Int = 10;
 var y:Int = 0;
 
 function testTC(goCode:Bool, goError:Bool) {
-    var haxeMessage:String = "This is a test error.";
+    var haxeMessage:String = "This is a test error from Haxe.";
     var goMessage:String = "This is a test string error from Go.";
 	try {
 		if (goCode) {
@@ -174,6 +175,11 @@ function testTC(goCode:Bool, goError:Bool) {
             }
 		} else {
 			// go.Fmt.printf("\nHaxe exception generation test\n");
+            if (goError) {
+                throw Try0Error.Custom(haxeMessage); // This will throw a Haxe exception with an enum value
+            } else {
+                throw haxeMessage; // This will throw a Haxe exception with a string message
+            }
 			throw haxeMessage;
 		}
 	} catch (e:Dynamic) {
@@ -194,6 +200,29 @@ function testTC(goCode:Bool, goError:Bool) {
             } else {
                 assert((e:Exception).toString() == haxeMessage);
             }
+        }else {
+            if (!goCode) {
+                switch (e.unwrap():Try0Error) {
+                    case Try0Error.Blocked: assert(false); // Not expected
+                    case Try0Error.Overflow: assert(false); // Not expected
+                    case Try0Error.OutsideBounds: assert(false); // Not expected
+                    case Try0Error.Custom(msg): assert(msg == haxeMessage);
+                }
+            }
         }
 	}
+}
+
+enum Try0Error {
+	/** The IO is set into non-blocking mode and some data cannot be read or written **/
+	Blocked;
+
+	/** An integer value is outside its allowed range **/
+	Overflow;
+
+	/** An operation on Bytes is outside of its valid range **/
+	OutsideBounds;
+
+	/** Other errors **/
+	Custom(e:Dynamic);
 }

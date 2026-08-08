@@ -63,7 +63,7 @@ class RewriteDynamicBinop extends CompilerPass {
 
     public static function returnsBool(op: HxbBinop): Bool {
         return switch (op) {
-            case OpEq, OpNotEq, OpGt, OpGte, OpLt, OpLte, OpOr, OpAnd:
+            case OpEq, OpNotEq, OpGt, OpGte, OpLt, OpLte, OpBoolOr, OpBoolAnd:
                 true;
             case _:
                 false;

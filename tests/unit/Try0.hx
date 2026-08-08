@@ -163,53 +163,46 @@ var x:Int = 10;
 var y:Int = 0;
 
 function testTC(goCode:Bool, goError:Bool) {
-    var haxeMessage:String = "This is a test error from Haxe.";
-    var goMessage:String = "This is a test string error from Go.";
+	var haxeMessage:String = "This is a test error from Haxe.";
+	var goMessage:String = "This is a test string error from Go.";
 	try {
 		if (goCode) {
-			// go.Fmt.printf("\nGo exception generation test\n");
-            if (goError) {
-                var result = Syntax.code("{0}/{1}", x, y); // This will cause a division by zero error
-            } else {
-        		go.Syntax.code("panic({0})", goMessage); // This will cause a panic with a string message
-            }
+			if (goError) {
+				var result = Syntax.code("{0}/{1}", x, y); // This will cause a division by zero error
+			} else {
+				go.Syntax.code("panic({0})", goMessage); // This will cause a panic with a string message
+			}
 		} else {
-			// go.Fmt.printf("\nHaxe exception generation test\n");
-            if (goError) {
-                throw Try0Error.Custom(haxeMessage); // This will throw a Haxe exception with an enum value
-            } else {
-                throw haxeMessage; // This will throw a Haxe exception with a string message
-            }
+			if (goError) {
+				throw Try0Error.Custom(haxeMessage); // This will throw a Haxe exception with an enum value
+			} else {
+				throw haxeMessage; // This will throw a Haxe exception with a string message
+			}
 			throw haxeMessage;
 		}
 	} catch (e:Dynamic) {
-		var isException:Bool = false;
-		go.Syntax.code("_, {0} = {1}.(*Hx_Obj_haxe_exception)", isException, e);
-		assert(isException);
-
-        if (goCode && goError) { // Check that the exception.native value is a Go error 
-            var isGoError:Bool = false;
-            var nativeError = (e:Exception).native;
-            go.Syntax.code("_, {0} = {1}.(error)", isGoError, nativeError); 
-            assert(isGoError);
-        }
-
-        if (!goError) { // Check that the correct message is returned
-            if (goCode) {
-                assert((e:Exception).toString() == goMessage);
-            } else {
-                assert((e:Exception).toString() == haxeMessage);
-            }
-        }else {
-            if (!goCode) {
-                switch (e.unwrap():Try0Error) {
-                    case Try0Error.Blocked: assert(false); // Not expected
-                    case Try0Error.Overflow: assert(false); // Not expected
-                    case Try0Error.OutsideBounds: assert(false); // Not expected
-                    case Try0Error.Custom(msg): assert(msg == haxeMessage);
-                }
-            }
-        }
+		if (!goError) { // Check that the correct message is returned
+			if (goCode) {
+				assert(e == goMessage);
+			} else {
+				assert(e == haxeMessage);
+			}
+		} else {
+			if (!goCode) {
+				switch (e : Try0Error) {
+					case Try0Error.Blocked:
+						assert(false); // Not expected
+					case Try0Error.Overflow:
+						assert(false); // Not expected
+					case Try0Error.OutsideBounds:
+						assert(false); // Not expected
+					case Try0Error.Custom(msg):
+						assert(msg == haxeMessage);
+				}
+			} else {
+				assert(e == "runtime error: integer divide by zero");
+			}
+		}
 	}
 }
 

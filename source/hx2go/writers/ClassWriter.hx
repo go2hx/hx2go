@@ -85,24 +85,13 @@ class ClassWriter extends WriterImpl {
                 firstSuper = current;
             }
 
-            var queue = current.interfaces.copy();
-            while (queue.length != 0) {
-                var iface = queue.shift();
+            for (iface in current.interfaces) {
                 var dot = iface.t.dotPath();
                 if (hasInterfaces.exists(dot)) {
                     continue;
                 }
 
                 hasInterfaces.set(dot, true);
-
-                var ifacem = switch writer.context.resolve(iface.t) {
-                    case MClass(x): x;
-                    case _: null;
-                }
-
-                if (ifacem != null) {
-                    queue = queue.concat(ifacem.interfaces);
-                }
 
                 vtables.push('obj.${writer.context.resolvedInstanceName(iface.t)}.VTable = obj');
             }
@@ -170,20 +159,8 @@ class ClassWriter extends WriterImpl {
             buf.add(writer.context.resolvedInstanceName(cls.superClass.t), 1);
         }
 
-        var queue =  cls.interfaces.filter(i -> !hasInterfaces.exists(i.t.dotPath()));
-        while (queue.length != 0) {
-            var iface = queue.shift();
+        for (iface in cls.interfaces.filter(i -> !hasInterfaces.exists(i.t.dotPath()))) {
             var ifName = writer.context.resolvedInstanceName(iface.t);
-            hasInterfaces.set(iface.t.dotPath(), true);
-
-            var ifacem = switch writer.context.resolve(iface.t) {
-                case MClass(x): x;
-                case _: null;
-            }
-
-            if (ifacem != null) {
-                queue = queue.concat(ifacem.interfaces.filter(i -> !hasInterfaces.exists(i.t.dotPath())));
-            }
 
             buf.add(ifName, 1);
             vtables.push('obj.${ifName}.VTable = obj');
@@ -415,7 +392,7 @@ class ClassWriter extends WriterImpl {
         }
 
         if (field.expr?.expr != null) buf.addBufferInline(writer.exprs.writeExpr(field.expr.expr, true))
-        // allow empty block to work with non void return func
+            // allow empty block to work with non void return func
         else if (fTypes.returnType != TVoid) buf.addInline('{ panic("abstract method: ${field.name}") }');
         else buf.addInline("{}");
 
@@ -483,7 +460,7 @@ class ClassWriter extends WriterImpl {
             buf.addInline('}');
         } else {
             if (field.expr?.expr != null) buf.addBufferInline(writer.exprs.writeExpr(field.expr.expr, true))
-            // allow empty block to work with non void return func
+                // allow empty block to work with non void return func
             else if (fTypes.returnType != TVoid) buf.addInline('{ panic("abstract method: ${field.name}") }');
             else buf.addInline("{}");
         }

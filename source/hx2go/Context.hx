@@ -295,7 +295,7 @@ class Context {
 
         removeStaleFiles();
 
-        var proc = new sys.io.Process('go fmt -C $outputDirectory .');
+        var proc = new sys.io.Process('gofmt -w $outputDirectory');
 
         installGoDeps(imports);
         proc.exitCode(true);

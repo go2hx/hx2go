@@ -9,8 +9,11 @@ import hx2go.util.TypeHelper;
 import hx2go.util.StringConversions;
 import hxb.flags.HxbClassFlag;
 import haxe.runtime.Copy;
+import hxb.Typed.HxbVar;
 
 class CastPointerInterface extends CompilerPass {
+
+    private var castId: Int = 0;
 
     public function match(expr: HxbTypedExpr): Bool {
         if (expr.t == null) {
@@ -75,7 +78,12 @@ class CastPointerInterface extends CompilerPass {
                             return;
                         }
 
-                        var ifaceName = context.resolvedInstanceName(itp);
+                        var ifaceMt = context.resolve(itp);
+                        var ifaceName = StringConversions.typePathClassInstanceName(ifaceMt == null ? itp : StringConversions.moduleTypeGetTypePath(ifaceMt));
+                        var ifaceCls = switch ifaceMt {
+                            case MClass(x): x;
+                            case _: null;
+                        }
 
                         // check if it's already the interface
                         var operandIsIface = switch context.normalize(e.t) {
@@ -85,7 +93,15 @@ class CastPointerInterface extends CompilerPass {
 
                         expr.expr = operandIsIface
                             ? ExprHelper.createUntyped('(*$ifaceName)({0})', [Copy.copy(e)]).expr
-                            : ExprHelper.createUntyped('&{0}.$ifaceName', [Copy.copy(e)]).expr;
+                            : {
+                                var cst = ExprHelper.createUntyped('&$ifaceName{ VTable: {0}.VTable.(${StringConversions.typePathClassVTableName(ifaceCls?.path)}) }', [e]);
+                                var tmp = new HxbVar(-1, 'hx_picast_${castId++}', VUser(TVOLocalVariable), 0, [], e.pos, expr.t);
+
+                                expr.expr = new HxbTypedExpr(TBlock([
+                                    new HxbTypedExpr(TVar(tmp, cst), expr.t, expr.pos),
+                                    new HxbTypedExpr(TLocal(tmp), expr.t, e.pos)
+                                ]), expr.t, expr.pos).expr;
+                            }
 
                         context.submitNode(expr, true);
                     }

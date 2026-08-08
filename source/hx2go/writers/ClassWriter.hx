@@ -85,17 +85,6 @@ class ClassWriter extends WriterImpl {
                 firstSuper = current;
             }
 
-            for (iface in current.interfaces) {
-                var dot = iface.t.dotPath();
-                if (hasInterfaces.exists(dot)) {
-                    continue;
-                }
-
-                hasInterfaces.set(dot, true);
-
-                vtables.push('obj.${writer.context.resolvedInstanceName(iface.t)}.VTable = obj');
-            }
-
             vtables.push('obj.${StringConversions.typePathClassInstanceName(current.path)}.VTable = obj');
         }
 
@@ -157,13 +146,6 @@ class ClassWriter extends WriterImpl {
 
         if (cls.superClass != null) {
             buf.add(writer.context.resolvedInstanceName(cls.superClass.t), 1);
-        }
-
-        for (iface in cls.interfaces.filter(i -> !hasInterfaces.exists(i.t.dotPath()))) {
-            var ifName = writer.context.resolvedInstanceName(iface.t);
-
-            buf.add(ifName, 1);
-            vtables.push('obj.${ifName}.VTable = obj');
         }
 
         if (!canOmitVTable) {

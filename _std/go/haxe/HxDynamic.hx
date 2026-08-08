@@ -443,12 +443,35 @@ class HxDynamic {
         var numIn = fType.numIn();
         var isVariadic = fType.isVariadic();
         var argVals: Array<Value> = [];
+        var actingVariadic = numIn >= 1 && args.length > numIn; // if more args than params, it is probably a varray acting as haxe.Rest
 
-        for (i in 0...numIn) {
-            if (isVariadic && i == numIn - 1) break;
-            var pt = fType._in(i);
-            var av = i < args.length ? args[i] : null;
-            argVals.push(convertToType(ensureValue(av), pt));
+        if (isVariadic) {
+            for (i in 0...numIn) {
+                if (i == numIn - 1) {
+                    var elemType = fType._in(i).elem();
+                    for (j in i...args.length) {
+                        argVals.push(convertToType(ensureValue(j < args.length ? args[j] : null), elemType));
+                    }
+                    break;
+                }
+                var pt = fType._in(i);
+                argVals.push(convertToType(ensureValue(i < args.length ? args[i] : null), pt));
+            }
+        } else if (actingVariadic) {
+            for (i in 0...(numIn - 1)) {
+                var pt = fType._in(i);
+                argVals.push(convertToType(ensureValue(i < args.length ? args[i] : null), pt));
+            }
+
+            var rest: Array<Dynamic> = args.slice(numIn - 1);
+            var pt = fType._in(numIn - 1);
+            argVals.push(convertToType(ensureValue((rest : Dynamic)), pt));
+        } else {
+            for (i in 0...numIn) {
+                var pt = fType._in(i);
+                var av = i < args.length ? args[i] : null;
+                argVals.push(convertToType(ensureValue(av), pt));
+            }
         }
 
         var results = fV.call(argVals);

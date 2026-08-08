@@ -1,13 +1,14 @@
-import go.Weak;
-import go.Runtime;
-
 function main() {
-    var v: Dynamic = { id: 1 };
-    var v_ptr = Weak.make(v);
-    trace(v, v_ptr, v_ptr.value() == null);
+    var v = (x: Array<Dynamic>) -> {
+        trace(x, x.length, x.pop());
+    }
 
-    Runtime.GC();
-    Sys.sleep(1);
+    var vr: Dynamic = Reflect.makeVarArgs(v);
+    v([6, 5, 4]);
+    v = (x: Array<Dynamic>) -> {
+        trace("hi");
+    }
 
-    trace(v_ptr, v_ptr.value() == null);
+    vr(1, 2, 3);
+    v([]);
 }

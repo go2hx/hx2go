@@ -326,13 +326,25 @@ class ExprWriter extends WriterImpl {
     }
 
     public function writeFunction(expr: HxbTypedExpr, func: HxbTFunc, topLevel: Bool): OutputBuffer {
-        if (topLevel) return writeExpr(func.expr, topLevel);
-        else {
+        if (topLevel) {
+            return writeExpr(func.expr, topLevel);
+        } else {
             var buf = new OutputBuffer();
-            var returnType: HxbType = TVoid;
 
             switch expr.t {
-                case TFun(params, ret): buf.addInline('func(${params.map(p -> '${p.name} ${writer.types.writeHxbType(p.t)}').join(', ')}) ${ret == TVoid ? '' : '${writer.types.writeHxbType(ret)} '}');
+                case TFun(params, ret):
+                    var paramStrs = [];
+                    for (i in 0...params.length) {
+                        var goT = writer.types.writeHxbType(params[i].t).toString();
+                        var name = (i < func.args.length && func.args[i].v.name != null && func.args[i].v.name != "")
+                            ? func.args[i].v.name
+                            : '_hx_unused_$i';
+
+                        paramStrs.push('$name $goT');
+                    }
+
+                    buf.addInline('func(${paramStrs.join(", ")}) ${ret == TVoid ? "" : writer.types.writeHxbType(ret).toString()}');
+
                 case _: null;
             }
 

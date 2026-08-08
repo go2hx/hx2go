@@ -50,16 +50,9 @@ class CastClosure extends CompilerPass {
                 var args: Array<HxbTypedExpr> = [];
                 var new_params: Array<HxbVar> = [];
 
-                var srcVar: HxbVar = null;
-                var callee: HxbTypedExpr = e;
-
-                switch e.expr {
-                    case TArray(_, _) | TCall(_, _) | TField(_, _):
-                        var name = '_hx_closure_src_${_closureSrcId++}';
-                        srcVar = new HxbVar(-1, name, VUser(TVOLocalVariable), 0, [], null, e.t);
-                        callee = new HxbTypedExpr(TLocal(srcVar), e.t, null);
-                    case _: // safe to inline
-                }
+                var name = '_hx_closure_src_${_closureSrcId++}';
+                var srcVar = new HxbVar(-1, name, VUser(TVOLocalVariable), 0, [], null, e.t);
+                var callee = new HxbTypedExpr(TLocal(srcVar), e.t, null);
 
                 for (i in 0...params.length) {
                     var new_p = params[i];
@@ -112,21 +105,93 @@ class CastClosure extends CompilerPass {
                     t: ret,
                 }), expr.t, null);
 
-                if (srcVar == null) {
-                    expr.expr = closure.expr;
-                } else {
-                    var decl = new HxbTypedExpr(TVar(srcVar, e), null, null);
-                    var iife = new HxbTypedExpr(TFunction({
-                        args: [],
-                        expr: new HxbTypedExpr(TBlock([
-                            decl,
-                            new HxbTypedExpr(TReturn(closure), null, null)
-                        ]), null, null),
-                        t: expr.t,
-                    }), TFun([], expr.t), null);
-                    expr.expr = TCall(iife, []);
-                    context.submitNode(decl, true);
+                var decl = new HxbTypedExpr(TVar(srcVar, e), null, null);
+                var iife = new HxbTypedExpr(TFunction({
+                    args: [],
+                    expr: new HxbTypedExpr(TBlock([
+                        decl,
+                        new HxbTypedExpr(TReturn(closure), null, null)
+                    ]), null, null),
+                    t: expr.t,
+                }), TFun([], expr.t), null);
+                expr.expr = TCall(iife, []);
+                context.submitNode(decl, true);
+            }
+
+            case [TCast({ t: TDynamic(_) | TDynamicAny }, _), TCast(e, _), TFun(params, ret)]: {
+                /*
+                tmp = dyn
+                new = func ($1 x, $2 y) z {
+                    return z(HxDynamic.call(tmp, [x, y]))
                 }
+                */
+
+                var name = '_hx_closure_src_${_closureSrcId++}';
+                var srcVar = new HxbVar(-1, name, VUser(TVOLocalVariable), 0, [], null, e.t);
+                var srcLocal = new HxbTypedExpr(TLocal(srcVar), e.t, null);
+
+                var new_params: Array<HxbVar> = [];
+                var argExprs: Array<HxbTypedExpr> = [];
+
+                for (i in 0...params.length) {
+                    var p = params[i];
+                    var pname = (p.name == null || p.name == "") ? '_hx_carg$i' : p.name;
+
+                    var v = new HxbVar(-1, pname, VUser(TVOArgument), 0, [], null, p.t);
+                    new_params.push(v);
+
+                    var pe = new HxbTypedExpr(TLocal(v), v.type, null);
+                    context.submitNode(pe, true);
+
+                    var dynArg = TypeHelper.compare(p.t, TDynamicAny)
+                    ? pe
+                    : ExprHelper.createCast(pe, TDynamicAny);
+
+                    argExprs.push(dynArg);
+                }
+
+                var argsArray = new HxbTypedExpr(TArrayDecl(argExprs), TDynamicAny, null);
+                context.submitNode(argsArray, true);
+
+                var dynCall = ExprHelper.createCallStatic(
+                    context,
+                    {
+                        name: 'HxDynamic',
+                        moduleName: 'HxDynamic',
+                        pack: ['go', 'haxe']
+                    },
+                    'call',
+                    [srcLocal, argsArray]
+                );
+                context.submitNode(dynCall, true);
+
+                var body: Array<HxbTypedExpr> = if (ret.match(TVoid)) {
+                    [ dynCall ];
+                } else {
+                    var result = TypeHelper.compare(ret, TDynamicAny)
+                    ? dynCall
+                    : ExprHelper.createCast(dynCall, ret);
+                    [ new HxbTypedExpr(TReturn(result), null, null) ];
+                }
+
+                var closure = new HxbTypedExpr(TFunction({
+                    args: new_params.map(v -> { v: v, value: null }),
+                    expr: new HxbTypedExpr(TBlock(body), null, null),
+                    t: ret,
+                }), expr.t, null);
+
+                var decl = new HxbTypedExpr(TVar(srcVar, e), null, null);
+                var iife = new HxbTypedExpr(TFunction({
+                    args: [],
+                    expr: new HxbTypedExpr(TBlock([
+                        decl,
+                        new HxbTypedExpr(TReturn(closure), null, null)
+                    ]), null, null),
+                    t: expr.t,
+                }), TFun([], expr.t), null);
+
+                expr.expr = TCall(iife, []);
+                context.submitNode(decl, true);
             }
 
             case _: null;

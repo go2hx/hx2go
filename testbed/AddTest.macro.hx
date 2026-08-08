@@ -12,6 +12,6 @@ function init() {
         return;
     }
     var content = File.getContent("testbed/Main.hx");
-    content = StringTools.replace("trace", "assert");
+    content = StringTools.replace(content, "trace", "assert");
     File.saveContent(path, 'package unit;\n' + content);
 }

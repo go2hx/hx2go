@@ -21,7 +21,6 @@ class NullableCompare extends CompilerPass {
     }
 
     public function executeSide(right: HxbTypedExpr, left: HxbTypedExpr): Void {
-        // `left.t` is not a reliable witness for the box -- see Semantics.isNullableExpr.
         var boxed = Semantics.isNullableExpr(context, left);
 
         switch right.expr {
@@ -69,12 +68,41 @@ class NullableCompare extends CompilerPass {
         var left: HxbTypedExpr = null;
         var right: HxbTypedExpr = null;
 
+        var op: HxbBinop = null;
+
         switch expr.expr {
-            case TBinop(_, b_left, b_right):
+            case TBinop(b_op, b_left, b_right):
+                op = b_op;
                 left = b_left;
                 right = b_right;
 
             case _: return;
+        }
+
+        // both sides boxed
+        if (!left.expr.match(TConst(_)) && !right.expr.match(TConst(_))
+            && Semantics.isNullableExpr(context, left) && Semantics.isNullableExpr(context, right)) {
+            var eq = op == OpEq;
+            var valid = e -> {
+                var v = ExprHelper.createUntyped("{0}.Valid", [Copy.copy(e)]);
+                v.t = TBool;
+                v;
+            };
+            var bin = (o: HxbBinop, l, r) -> new HxbTypedExpr(TBinop(o, l, r), TBool, expr.pos);
+
+            expr.expr = TParenthesis(bin(
+                eq ? OpBoolAnd : OpBoolOr,
+                bin(op, valid(left), valid(right)),
+                bin(
+                    eq ? OpBoolOr : OpBoolAnd,
+                    bin(OpEq, valid(left), new HxbTypedExpr(TConst(TBool(!eq)), TBool, expr.pos)),
+                    Copy.copy(expr)
+                )
+            ));
+            expr.t = TBool;
+
+            context.submitNode(expr, true, 1);
+            return;
         }
 
         executeSide(left, right);

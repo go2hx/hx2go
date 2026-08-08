@@ -65,7 +65,12 @@ class Exception {
 	@:keep
 	static function catchValue(ex: Dynamic, goType: String): Dynamic {
 		if (goType == "any") {
-			return ex;
+			try {
+				var r:Dynamic =  ex.unwrap();
+				return r;
+			} catch (e: Dynamic) {
+				return ex;
+			}
 		}
 
 		var e: Exception = ex;

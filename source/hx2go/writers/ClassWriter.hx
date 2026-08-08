@@ -85,6 +85,28 @@ class ClassWriter extends WriterImpl {
                 firstSuper = current;
             }
 
+            var queue = [].concat(current.interfaces);
+            while (queue.length != 0) {
+                var iface = queue.shift();
+                var dot = iface.t.dotPath();
+                if (hasInterfaces.exists(dot)) {
+                    continue;
+                }
+
+                hasInterfaces.set(dot, true);
+
+                var ifacem = switch writer.context.resolve(iface.t) {
+                    case MClass(x): x;
+                    case _: null;
+                }
+
+                if (ifacem != null) {
+                    queue = queue.concat(ifacem.interfaces);
+                }
+
+                vtables.push('obj.${writer.context.resolvedInstanceName(iface.t)}.VTable = obj');
+            }
+
             vtables.push('obj.${StringConversions.typePathClassInstanceName(current.path)}.VTable = obj');
         }
 
@@ -146,6 +168,25 @@ class ClassWriter extends WriterImpl {
 
         if (cls.superClass != null) {
             buf.add(writer.context.resolvedInstanceName(cls.superClass.t), 1);
+        }
+
+        var queue =  cls.interfaces.filter(i -> !hasInterfaces.exists(i.t.dotPath()));
+        while (queue.length != 0) {
+            var iface = queue.shift();
+            var ifName = writer.context.resolvedInstanceName(iface.t);
+            hasInterfaces.set(iface.t.dotPath(), true);
+
+            var ifacem = switch writer.context.resolve(iface.t) {
+                case MClass(x): x;
+                case _: null;
+            }
+
+            if (ifacem != null) {
+                queue = queue.concat(ifacem.interfaces.filter(i -> !hasInterfaces.exists(i.t.dotPath())));
+            }
+
+            buf.add(ifName, 1);
+            vtables.push('obj.${ifName}.VTable = obj');
         }
 
         if (!canOmitVTable) {

@@ -71,7 +71,7 @@ class TypeWriter extends WriterImpl {
         return buf;
     }
 
-    public function writeExternType(meta: HxbMetaEntry): String {
+    public function writeExternType(meta: HxbMetaEntry, params: Array<HxbType>): String {
         var name = "any";
         var hasInstanceName: Bool = false;
 
@@ -99,10 +99,11 @@ class TypeWriter extends WriterImpl {
             case _: null;
         }
 
-        return name;
+        return if (params.length == 0) name;
+        else name + '[${params.map(p -> writeHxbType(p)).join(", ")}]';
     }
 
-    public function writeModuleType(type: TypePath): String {
+    public function writeModuleType(type: TypePath, params: Array<HxbType>): String {
         var mod = writer.context.resolve(type);
         if (mod == null) {
             return '*' + StringConversions.typePathClassInstanceName(type);
@@ -142,7 +143,7 @@ class TypeWriter extends WriterImpl {
             case MTypedef({ meta: meta }): {
                 for (m in meta) {
                     switch m.name {
-                        case ":go.Type": return writeExternType(m);
+                        case ":go.Type": return writeExternType(m, params);
                     }
                 }
 
@@ -152,7 +153,7 @@ class TypeWriter extends WriterImpl {
             case MClass({ meta: meta, flags: flags }): {
                 for (m in meta) {
                     switch m.name {
-                        case ":go.Type": return writeExternType(m);
+                        case ":go.Type": return writeExternType(m, params);
                     }
                 }
 
@@ -162,7 +163,7 @@ class TypeWriter extends WriterImpl {
             case MEnum({ meta: meta }): {
                 for (m in meta) {
                     switch m.name {
-                        case ":go.Type": return writeExternType(m);
+                        case ":go.Type": return writeExternType(m, params);
                     }
                 }
 
@@ -172,7 +173,7 @@ class TypeWriter extends WriterImpl {
             case MAbstract({ meta: meta }): {
                 for (m in meta) {
                     switch m.name {
-                        case ":go.Type": return writeExternType(m);
+                        case ":go.Type": return writeExternType(m, params);
                     }
                 }
 
@@ -207,7 +208,7 @@ class TypeWriter extends WriterImpl {
             case TAbstract({ pack: ['go'], name: 'SendChan' }, params): 'chan<- ${writeHxbType(params[0])}';
             case TAbstract({ pack: ['go'], name: 'ReceiveChan' }, params): '<-chan ${writeHxbType(params[0])}';
             case TAnon(anon): 'any'; // TODO: anon.stauts, aka openness?
-            case TAbstract(tp, _) | TInst(tp, _) | TType(tp, _) | TEnum(tp, _): writeModuleType(tp);
+            case TAbstract(tp, params) | TInst(tp, params) | TType(tp, params) | TEnum(tp, params): writeModuleType(tp, params);
             case TFun(params, ret): 'func(${params.map(p -> writeHxbType(p.t)).join(', ')})${ret == TVoid ? '' : ' ${writeHxbType(ret)}'}';
             case TEnumStatic(_): "*Hx_Obj_go_haxe_hxenum";
             case TClassStatic(_): "*Hx_Obj_go_haxe_hxclass";

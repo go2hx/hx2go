@@ -27,7 +27,7 @@ class TypeNormaliserNew extends CompilerPass {
 
     public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
         switch expr.expr {
-            case TNew(tp, _, el): {
+            case TNew(tp, typeParams, el): {
                 var mt = context.resolve(tp);
                 if (mt == null) {
                     return;
@@ -54,7 +54,7 @@ class TypeNormaliserNew extends CompilerPass {
                                 argStr.push('${StringConversions.toPascalCase(params[idx].name)}: {${idx}}');
                             }
 
-                            expr.expr = ExprHelper.createUntyped('${context.getWriter().types.writeModuleType(tp)}{ ${argStr.join(", ")} }', el).expr;
+                            expr.expr = ExprHelper.createUntyped('${context.getWriter().types.writeModuleType(tp, typeParams)}{ ${argStr.join(", ")} }', el).expr;
                             return;
                         }
 

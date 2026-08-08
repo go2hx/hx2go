@@ -108,7 +108,6 @@ class Context {
             new hx2go.passes.DynamicInstFunctionAssign(this),
             new hx2go.passes.TypeNormaliserVar(this),
             new hx2go.passes.TypeNormaliserReturn(this),
-            new hx2go.passes.TypeNormaliserNew(this),
             new hx2go.passes.TypeNormaliserArray(this),
             new hx2go.passes.TypeNormaliserObject(this),
             new hx2go.passes.TypeNormaliserIf(this),

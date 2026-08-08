@@ -1,21 +1,11 @@
 function main() {
-    trace(foo(10));
+    // too many arguments in call to Hx_Obj_foo_CreateInstance
+    new Foo(1,2,3).foo(1,2,3);
 }
 
-function foo(x:Null<Int>):Foo {
-    return {x: x};
-}
-
-@:structInit
-class Foo extends Base {
-    public function new(?x) {
-        super(x);
-    }
-}
-
-class Base {
-    public var x:Int = 0;
-    public function new(x) {
-        this.x = x;
+class Foo {
+    public function new(x:haxe.Rest<Int>) {}
+    public function foo(x:haxe.Rest<Int>) {
+        trace(x.toArray(), x.toString(), x.iterator());
     }
 }

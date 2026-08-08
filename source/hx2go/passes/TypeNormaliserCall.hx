@@ -14,7 +14,7 @@ class TypeNormaliserCall extends CompilerPass {
 
     public function match(expr: HxbTypedExpr): Bool {
         return switch expr.expr {
-            case TCall(_): true;
+            case TCall(_) | TNew(_): true;
             case _: false;
         }
     }
@@ -95,7 +95,7 @@ class TypeNormaliserCall extends CompilerPass {
                     expr
                 );
 
-            case TCall({ expr: TConst(TSuper), t: TInst(tp, _), pos: pos }, args): {
+            case TCall({ expr: TConst(TSuper), t: TInst(tp, _) }, args) | TNew(tp, _, args): {
                 var m = context.resolve(tp);
                 if (m == null) {
                     return;
@@ -114,7 +114,7 @@ class TypeNormaliserCall extends CompilerPass {
                 }
             }
 
-            case _:
+            case _: null;
         }
     }
 
@@ -161,6 +161,13 @@ class TypeNormaliserCall extends CompilerPass {
                 var slice = ExprHelper.createUntyped('[]$goType{ $placeholders }', args.slice(restStart));
 
                 TCall(callee, args.slice(0, restStart).concat([slice]));
+
+            case TNew(tp, params, args):
+                var goType = context.getWriter().types.writeHxbType(elementType);
+                var placeholders = [for (i in 0...args.length - restStart) '{$i}'].join(", ");
+                var slice = ExprHelper.createUntyped('[]$goType{ $placeholders }', args.slice(restStart));
+
+                TNew(tp, params, args.slice(0, restStart).concat([slice]));
 
             case _:
                 expr.expr;

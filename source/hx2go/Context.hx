@@ -89,6 +89,7 @@ class Context {
             new hx2go.passes.DefaultArgs(this),
             new hx2go.passes.TypeNormaliserCallReturn(this),
             new hx2go.passes.TypeNormaliserCall(this), // TODO: c2
+            new hx2go.passes.TypeNormaliserNew(this),
             new hx2go.passes.NullableCompareValid(this),
             new hx2go.passes.NullableCompare(this),
             new hx2go.passes.NullableConst(this),

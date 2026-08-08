@@ -11,6 +11,8 @@ import hx2go.util.TypeHelper;
 
 class CastClosure extends CompilerPass {
 
+    static var _closureSrcId: Int = 0;
+
     public function match(expr: HxbTypedExpr): Bool {
         if (expr.t == null) {
             return false;
@@ -50,9 +52,11 @@ class CastClosure extends CompilerPass {
 
                 var srcVar: HxbVar = null;
                 var callee: HxbTypedExpr = e;
+
                 switch e.expr {
                     case TArray(_, _) | TCall(_, _) | TField(_, _):
-                        srcVar = new HxbVar(-1, '_hx_closure_src', VUser(TVOLocalVariable), 0, [], null, e.t);
+                        var name = '_hx_closure_src_${_closureSrcId++}';
+                        srcVar = new HxbVar(-1, name, VUser(TVOLocalVariable), 0, [], null, e.t);
                         callee = new HxbTypedExpr(TLocal(srcVar), e.t, null);
                     case _: // safe to inline
                 }

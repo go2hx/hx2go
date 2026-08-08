@@ -9,6 +9,7 @@ import haxe.runtime.Copy;
 import hxb.Typed.HxbTypedExprDef;
 import hxb.Ast.HxbExpr;
 import hx2go.passes.FieldAccessExtern.ExternKind;
+import hxb.flags.HxbClassFlag;
 
 class TypeNormaliserCall extends CompilerPass {
 
@@ -108,7 +109,7 @@ class TypeNormaliserCall extends CompilerPass {
 
                 if (base.constructor != null) {
                     switch base.constructor.type {
-                        case TFun(params, ret): norm({ kind: ExNone, field: base.constructor }, args, params, expr);
+                        case TFun(params, ret): norm({ kind: base.flags & HxbClassFlag.CExtern != 0 ? ExModule : ExNone, field: base.constructor }, args, params, expr);
                         case _: return;
                     }
                 }

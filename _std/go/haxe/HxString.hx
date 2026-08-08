@@ -115,7 +115,7 @@ class HxString {
 
         // if len is negative
         if (len != null && len < 0) {
-            return "";
+            end = s.length + len;
         }
 
         // If the calculated position + len exceeds s.length, the characters from that position to the end of s String are returned.

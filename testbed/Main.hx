@@ -1,13 +1,20 @@
-function main() {
-    trace(Std.isOfType(new Sub(), Sup) == true);
+interface Foo {
+    public var v: Int;
 }
 
-private class Sup {
-    public function new() {}
-}
+class Bar implements Foo {
 
-private class Sub extends Sup {
-    public function new() {
-        super();
+    public var v: Int;
+
+    public function new(_v: Int) {
+        v = _v;
     }
+
+}
+
+function main() {
+    var x: Bar = new Bar(10);
+    var y: Foo = x;
+
+    trace(x.v, y.v);
 }

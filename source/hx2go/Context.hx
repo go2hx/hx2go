@@ -596,6 +596,18 @@ class Context {
                 expr.t = TDynamicAny;
             }
 
+            case TField(e, FInstance(_, _, fa)) if (e.t != null && switch e.t {
+                case TInst(tp, _): switch resolve(tp) {
+                    case MClass(c): c.flags & HxbClassFlag.CInterface != 0;
+                    case _: false;
+                };
+
+                case _: false;
+            }): {
+                expr.expr = TField(ExprHelper.createUntyped("({0}).VTable", [e]), FDynamic(fa.name));
+                expr.t = TDynamicAny;
+            }
+
             case TField(e, FDynamic(_)): {
                 expr.t = TDynamicAny;
             }

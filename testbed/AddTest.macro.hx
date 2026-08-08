@@ -11,6 +11,7 @@ function init() {
     if (FileSystem.exists(path)) {
         return;
     }
-
-    File.saveContent(path, 'package unit;\n' + File.getContent("testbed/Main.hx"));
+    var content = File.getContent("testbed/Main.hx");
+    content = StringTools.replace("trace", "assert");
+    File.saveContent(path, 'package unit;\n' + content);
 }

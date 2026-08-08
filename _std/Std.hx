@@ -120,8 +120,12 @@ class Std {
             case _: return switch vt {
                 case TClass(q): {
                     var v1: Null<HxClass> = HxDynamic.toClass(t, "Hx_Obj_go_haxe_hxclass");
-                    var v2: HxClass = cast q;
-                    v1.name == v2.name;
+                    var v2: HxClass = cast t;
+                    if (v1.name != v2.name) {
+                        return v2.superClass != null ? isOfType(v, v2.superClass) : false;
+                    }
+
+                    return true;
                 };
 
                 case TEnum(q): {

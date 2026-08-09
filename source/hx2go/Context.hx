@@ -64,9 +64,11 @@ class Context {
     private var processList: Array<Process>;
     private var writtenFiles: Map<String, Bool>;
     public var sourcelineComments:Bool = false;
+    public var times: hx2go.util.Times;
 
-    public function new(archive: HxbArchive, outputDirectory: String, sourcelineComments:Bool) {
+    public function new(archive: HxbArchive, outputDirectory: String, sourcelineComments:Bool, times:Bool = false) {
         this.sourcelineComments = sourcelineComments;
+        this.times = new hx2go.util.Times(times);
         this.types = new Map();
         this.imports = new Map();
         this.outputDirectory = outputDirectory;
@@ -231,6 +233,7 @@ class Context {
             var path = module[0].module;
 
             var hasWrittenSomething = false;
+            var closeEmit = times.start("emit");
             for (entry in module) {
                 var old = writer.types.importTarget;
                 writer.types.importTarget = entry.module;
@@ -243,6 +246,7 @@ class Context {
 
                 file.addBufferInline(localBuf);
             }
+            closeEmit();
 
             var imports = imports.exists(path) ? imports[path] : [];
 
@@ -297,19 +301,34 @@ class Context {
 
         removeStaleFiles();
 
+        var closeFmt = times.start("gofmt");
         var proc = new sys.io.Process('gofmt -w $outputDirectory');
 
+        var closeDeps = times.start("go get");
         installGoDeps(imports);
+        closeDeps();
+
         proc.exitCode(true);
+        closeFmt();
     }
 
     function installGoDeps(imports:Map<String, Array<String>>) {
         final previousCwd = Sys.getCwd();
         Sys.setCwd(outputDirectory);
-        for (deps in imports) {
-            for (dep in deps) {
-                if (dep.contains(".")) {
-                    var args = ["get", dep];
+        
+        var seen: Map<String, Bool> = new Map();
+        var deps: Array<String> = [];
+        for (moduleDeps in imports) {
+            for (dep in moduleDeps) {
+                if (dep.contains(".") && !seen.exists(dep)) {
+                    seen.set(dep, true);
+                    deps.push(dep);
+                }
+            }
+        }
+
+        if (deps.length > 0) {
+            var args = ["get", dep];
                     var code = Sys.command("go", args);
                     if (code != 0) {
                         Sys.println("command failed: go " + args.join(" "));
@@ -351,13 +370,17 @@ class Context {
 
         var mod = archive.decode(res);
 
+        var closeDecode = times.start("decode");
         for (type in mod.types) {
             buildType(type, res);
         }
+        closeDecode();
 
+        var closeTransform = times.start("transform");
         for (type in mod.types) {
             transformType(type, res.dotPath());
         }
+        closeTransform();
 
         return mod;
     }
@@ -784,27 +807,39 @@ class Context {
                 TypedExprTools.iter(node, match);
             };
 
+            var closePrepass = times.start("transform.prepass");
             prepass(f.expr.expr);
+            closePrepass();
+
+            var closeMatch = times.start("transform.match");
             match(f.expr.expr);
+            closeMatch();
 
             for (i in 0...frame.passes.length) {
                 frame.currentPassIndex = i;
 
                 var p = frame.passes[i];
                 var queue = frame.pending[p];
+                if (queue.length == 0) continue;
+
+                var passName = Type.getClassName(Type.getClass(p)).split(".").pop();
+                var close = times.start("transform.passes." + passName);
                 var idx = 0;
                 while (idx < queue.length) {
                     p.execute(queue[idx], frame);
                     idx++;
                 }
+                close();
             }
 
             contextStack.pop();
         }
 
+        var closeNorm = times.start("transform.normalise");
         for (f in roots.filter(f -> f.kind.match(KMethod(_)) && f.expr?.expr != null)) {
             Normaliser.run(f.expr.expr, {}, this);
         }
+        closeNorm();
 
         writer.types.importTarget = old;
     }

@@ -3,10 +3,86 @@ package hx2go.util;
 import hxb.HxbType;
 import hxb.TypePath;
 import hxb.Typed.HxbModuleTypeRef;
+import hxb.Typed.HxbTypedExpr;
 import hxb.HxbModule;
 import hxb.HxbModuleType;
+import haxe.runtime.Copy;
 
 class TypeHelper {
+
+    public static function goEraseType(t: HxbType): HxbType {
+        return switch (t) {
+            case TTypeParam(_) | TUnboundTypeParam(_):
+                TDynamicAny;
+
+            case TDynamic(t2):
+                TDynamic(goEraseType(t2));
+
+            case TFun(args, ret):
+                TFun(
+                    [for (a in args) {
+                        var a2 = Copy.copy(a);
+                        a2.t = goEraseType(a.t);
+                        a2;
+                    }],
+                    goEraseType(ret)
+                );
+
+            case TInst(c, params):
+                TInst(c, [for (p in params) goEraseType(p)]);
+
+            case TEnum(e, params):
+                TEnum(e, [for (p in params) goEraseType(p)]);
+
+            case TType(td, params):
+                TType(td, [for (p in params) goEraseType(p)]);
+
+            case TAbstract(ab, params):
+                TAbstract(ab, [for (p in params) goEraseType(p)]);
+
+            case TAnon(anon):
+                var anon2 = Copy.copy(anon);
+                anon2.fields = [for (cf in anon.fields) {
+                    var cf2 = Copy.copy(cf);
+                    cf2.type = goEraseType(cf.type);
+                    cf2;
+                }];
+                anon2.status = switch (anon.status) {
+                    case AExtend(types): AExtend([for (x in types) goEraseType(x)]);
+                    case s: s;
+                };
+                TAnon(anon2);
+
+            case _:
+                Copy.copy(t);
+        }
+    }
+
+    public static function reconcile(wanted: HxbType, valueExpr: HxbTypedExpr, emitted: HxbType): Null<HxbTypedExpr> {
+        if (!needsExplicitCast(emitted, wanted)) {
+            return null;
+        }
+
+        var inner = Copy.copy(valueExpr);
+        inner.t = goEraseType(emitted);
+        return new HxbTypedExpr(TCast(inner, null), wanted, valueExpr.pos);
+    }
+
+    static function needsExplicitCast(emitted: HxbType, wanted: HxbType): Bool {
+        if (emitted == null || wanted == null) {
+            return false;
+        }
+
+        var emittedGo = goEraseType(emitted);
+        var wantedGo = goEraseType(wanted);
+        if (compare(emittedGo, wantedGo)) {
+            return false;
+        }
+
+        var assertFromAny = emittedGo.match(TDynamicAny | TDynamic(_)) && !wantedGo.match(TDynamicAny | TDynamic(_));
+        var adaptClosure = emittedGo.match(TFun(_)) && wantedGo.match(TFun(_));
+        return assertFromAny || adaptClosure;
+    }
 
     public static function follow(context: Context, type: HxbType, getNullElem:Bool=true): HxbType {
         if (type == null) {

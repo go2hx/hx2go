@@ -5,60 +5,11 @@ import hxb.Typed.HxbFieldAccess;
 import hxb.HxbModuleType;
 import hxb.Typed.HxbTypedExprDef;
 import hxb.HxbType;
-import haxe.runtime.Copy;
 import hxb.flags.HxbClassFieldFlag;
 import hxb.flags.HxbClassFlag;
 import hx2go.util.TypeHelper;
 
 class FieldAccessGeneric extends CompilerPass {
-
-    public static function processType(t:HxbType):HxbType {
-        return switch (t) {
-            case TTypeParam(_) | TUnboundTypeParam(_):
-                TDynamicAny;
-
-            case TDynamic(t2):
-                TDynamic(processType(t2));
-
-            case TFun(args, ret):
-                TFun(
-                    [for (a in args) {
-                        var a2 = Copy.copy(a);
-                        a2.t = processType(a.t);
-                        a2;
-                    }],
-                    processType(ret)
-                );
-
-            case TInst(c, params):
-                TInst(c, [for (p in params) processType(p)]);
-
-            case TEnum(e, params):
-                TEnum(e, [for (p in params) processType(p)]);
-
-            case TType(td, params):
-                TType(td, [for (p in params) processType(p)]);
-
-            case TAbstract(ab, params):
-                TAbstract(ab, [for (p in params) processType(p)]);
-
-            case TAnon(anon):
-                var anon2 = Copy.copy(anon);
-                anon2.fields = [for (cf in anon.fields) {
-                    var cf2 = Copy.copy(cf);
-                    cf2.type = processType(cf.type);
-                    cf2;
-                }];
-                anon2.status = switch (anon.status) {
-                    case AExtend(types): AExtend([for (x in types) processType(x)]);
-                    case s: s;
-                };
-                TAnon(anon2);
-
-            case _:
-                Copy.copy(t);
-        }
-    }
 
     static function containsDynamic(t:HxbType):Bool {
         return switch (t) {
@@ -96,9 +47,9 @@ class FieldAccessGeneric extends CompilerPass {
                             return;
                         }
 
-                        var erased = processType(field.type);
+                        var erased = TypeHelper.goEraseType(field.type);
 
-                        if (containsDynamic(erased) && !containsDynamic(expr.t) && TypeHelper.compare(processType(expr.t), expr.t)) {
+                        if (containsDynamic(erased) && !containsDynamic(expr.t) && TypeHelper.compare(TypeHelper.goEraseType(expr.t), expr.t)) {
                             expr.expr = TCast(new HxbTypedExpr(expr.expr, erased, expr.pos), null);
                             context.submitNode(expr, true, 1);
                             return;

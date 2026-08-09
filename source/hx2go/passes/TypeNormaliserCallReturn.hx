@@ -36,9 +36,23 @@ class TypeNormaliserCallReturn extends CompilerPass {
                     expr.expr = o.expr;
                     expr.t = o.t;
                     context.submitNode(expr, true, 1);
+                    return;
+                }
+
+                var castExpr = TypeHelper.reconcile(expr.t, expr, declaredReturn(f));
+                if (castExpr != null) {
+                    expr.expr = castExpr.expr;
+                    context.submitNode(expr, true, 1);
                 }
             };
 
+            case _: null;
+        }
+    }
+
+    function declaredReturn(callee: hxb.Typed.HxbTypedExprDef): Null<hxb.HxbType> {
+        return switch callee {
+            case TLocal({ type: TFun(_, ret) }): ret;
             case _: null;
         }
     }

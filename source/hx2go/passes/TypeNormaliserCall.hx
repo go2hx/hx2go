@@ -20,7 +20,7 @@ class TypeNormaliserCall extends CompilerPass {
         }
     }
 
-    public function norm(ext: { kind: ExternKind, ?options: HxbExpr, ?left: HxbTypedExpr, ?right: String, ?field: HxbClassField }, args: Array<HxbTypedExpr>, params: Array<HxbFunArg>, expr: HxbTypedExpr) {
+    public function norm(ext: { kind: ExternKind, ?options: HxbExpr, ?left: HxbTypedExpr, ?right: String, ?field: HxbClassField }, args: Array<HxbTypedExpr>, params: Array<HxbFunArg>, expr: HxbTypedExpr, ?declared: Array<HxbFunArg>) {
         var restStart = -1;
         var restElement = TVoid;
 
@@ -74,6 +74,15 @@ class TypeNormaliserCall extends CompilerPass {
                 arg.expr = c.expr;
                 arg.t = c.t;
                 changed = true;
+            } else if (declared != null) {
+                // declared param may be erased func(any)bool where the arg is func(int32)bool
+                var param = idx < declared.length ? declared[idx] : declared[declared.length - 1];
+                var castExpr = TypeHelper.reconcile(param.t, arg, arg.t);
+                if (castExpr != null) {
+                    arg.expr = castExpr.expr;
+                    arg.t = castExpr.t;
+                    changed = true;
+                }
             }
 
             if (changed) {
@@ -93,7 +102,8 @@ class TypeNormaliserCall extends CompilerPass {
                     FieldAccessExtern.getExternInfo(context, new HxbTypedExpr(callee, TFun(params, ret), expr.pos)),
                     args,
                     params,
-                    expr
+                    expr,
+                    declaredParams(callee)
                 );
 
             case TCall({ expr: TConst(TSuper), t: TInst(tp, _) }, args) | TNew(tp, _, args): {
@@ -109,12 +119,19 @@ class TypeNormaliserCall extends CompilerPass {
 
                 if (base.constructor != null) {
                     switch base.constructor.type {
-                        case TFun(params, ret): norm({ kind: base.flags & HxbClassFlag.CExtern != 0 ? ExModule : ExNone, field: base.constructor }, args, params, expr);
+                        case TFun(params, ret): norm({ kind: base.flags & HxbClassFlag.CExtern != 0 ? ExModule : ExNone, field: base.constructor }, args, params, expr, null);
                         case _: return;
                     }
                 }
             }
 
+            case _: null;
+        }
+    }
+
+    function declaredParams(callee: HxbTypedExprDef): Null<Array<HxbFunArg>> {
+        return switch callee {
+            case TLocal({ type: TFun(ps, _) }): ps;
             case _: null;
         }
     }

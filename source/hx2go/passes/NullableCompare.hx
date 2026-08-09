@@ -13,7 +13,7 @@ class NullableCompare extends CompilerPass {
 
     public function match(expr: HxbTypedExpr): Bool {
         return switch expr.expr {
-            case TBinop(OpEq | OpNotEq, left, right):
+            case TBinop(OpEq | OpNotEq | OpGt | OpGte | OpLt | OpLte, left, right):
                 Semantics.isNullableExpr(context, left) || Semantics.isNullableExpr(context, right);
 
             case _: false;
@@ -64,6 +64,45 @@ class NullableCompare extends CompilerPass {
         }
     }
 
+    static function isNullConst(e: HxbTypedExpr): Bool {
+        return switch e.expr {
+            case TConst(TNull): true;
+            case TParenthesis(inner) | TMeta(_, inner) | TCast(inner, _): isNullConst(inner);
+            case _: false;
+        }
+    }
+    
+    // <, <=, >, >= against null are false, unless both sides are null and the op allows equality
+    function executeRelational(expr: HxbTypedExpr, op: HxbBinop, left: HxbTypedExpr, right: HxbTypedExpr): Void {
+        var eq = op.match(OpGte | OpLte);
+        var opStr = switch op { case OpGt: ">"; case OpGte: ">="; case OpLt: "<"; case _: "<="; }
+        var raw = (template: String, args: Array<HxbTypedExpr>) -> ExprHelper.createUntyped(template, args).expr;
+
+        if (isNullConst(left) || isNullConst(right)) {
+            var other = isNullConst(left) ? right : left;
+            expr.expr = eq && Semantics.isNullableExpr(context, other)
+                ? raw("!{0}.Valid", [Copy.copy(other)])
+                : TConst(TBool(false));
+        } else {
+            var leftBoxed = Semantics.isNullableExpr(context, left);
+            var rightBoxed = Semantics.isNullableExpr(context, right);
+
+            var leftValid = leftBoxed ? "{0}.Valid" : "true";
+            var rightValid = rightBoxed ? "{1}.Valid" : "true";
+            var leftValue = leftBoxed ? "{0}.Value" : "{0}";
+            var rightValue = rightBoxed ? "{1}.Value" : "{1}";
+
+            expr.expr = raw(
+                '($leftValid && $rightValid && ($leftValue $opStr $rightValue)'
+                    + (eq ? ' || (!$leftValid && !$rightValid)' : '') + ')',
+                [Copy.copy(left), Copy.copy(right)]
+            );
+        }
+
+        expr.t = TBool;
+        context.submitNode(expr, true, 1);
+    }
+
     public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
         var left: HxbTypedExpr = null;
         var right: HxbTypedExpr = null;
@@ -77,6 +116,11 @@ class NullableCompare extends CompilerPass {
                 right = b_right;
 
             case _: return;
+        }
+
+        if (op.match(OpGt | OpGte | OpLt | OpLte)) {
+            executeRelational(expr, op, left, right);
+            return;
         }
 
         // both sides boxed

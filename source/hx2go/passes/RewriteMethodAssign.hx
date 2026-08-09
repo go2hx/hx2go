@@ -1,6 +1,7 @@
 package hx2go.passes;
 
 import hxb.Typed.HxbTypedExpr;
+import hxb.Typed.HxbVar;
 import hxb.flags.HxbClassFlag;
 import hxb.Typed.HxbFieldAccess;
 import hxb.Ast.HxbExpr;
@@ -63,6 +64,15 @@ class RewriteMethodAssign extends CompilerPass {
                 );
 
                 ae.t = context.getWriter().classes.appendThis(ae.t, current);
+
+                switch ae.expr {
+                    case TFunction(tfunc):
+                        tfunc.args.unshift({
+                            value: null,
+                            v: new HxbVar(-1, "this", VUser(TVOLocalVariable), 0, [], ae.pos, TInst(current.path, [])),
+                        });
+                    case _:
+                }
             };
 
             case _: null;

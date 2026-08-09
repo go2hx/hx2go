@@ -1,5 +1,6 @@
 package hx2go.writers;
 
+import hxb.Typed.HxbVar;
 import hx2go.util.OutputBuffer;
 import hxb.HxbModuleType.HxbClass;
 import hxb.HxbClassField;
@@ -233,6 +234,15 @@ class ClassWriter extends WriterImpl {
                 }
 
                 local.t = appendThis(local.t, f.inst);
+
+                switch local.expr {
+                    case TFunction(tfunc):
+                        tfunc.args.unshift({
+                            value: null,
+                            v: new HxbVar(-1, "this", VUser(TVOLocalVariable), 0, [], local.pos, TInst(f.inst.path, [])), 
+                        });
+                    default:
+                }
 
                 buf.add('obj.${StringConversions.nameToFieldName(f.field.name)}_Dyn = ${writer.exprs.writeExpr(local)}', 1);
             }

@@ -5,4 +5,5 @@
 #-D go-lib=github.com/hajimehoshi/ebiten/v2
 #-D go-lib=github.com/hajimehoshi/ebiten/v2/ebitenutil
 --custom-target go=output/testbed
+--cmd git update-index --skip-worktree testbed/Main.hx
 --cmd go -C output/testbed/main run .

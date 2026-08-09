@@ -328,12 +328,10 @@ class Context {
         }
 
         if (deps.length > 0) {
-            var args = ["get", dep];
-                    var code = Sys.command("go", args);
-                    if (code != 0) {
-                        Sys.println("command failed: go " + args.join(" "));
-                    }
-                }
+            var args = ["get"].concat(deps);
+            var code = Sys.command("go", args);
+            if (code != 0) {
+                Sys.println("command failed: go " + args.join(" "));
             }
         }
 

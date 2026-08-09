@@ -25,7 +25,7 @@ jobs:
         with:
           go-version: ${{ matrix.go-version }}
       # setup haxe
-      - uses: krdlab/setup-haxe@v2.0.2
+      - uses: krdlab/setup-haxe@v2.1.0
         with:
           haxe-version: ${{ matrix.haxe-version }}
       - name: Haxe version

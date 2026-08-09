@@ -102,7 +102,7 @@ For example, to print the ASCII graph below:
   2.00 ┤   ╰╯    ╰╯╰╯
 ```
 
-Add the target flag to your `.hxml`:
+Add the go library flag to your `.hxml`:
 
 ```hxml
 -D go-lib=github.com/guptarohit/asciigraph

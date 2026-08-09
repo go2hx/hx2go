@@ -17,7 +17,6 @@ class TypeNormaliserCallReturn extends CompilerPass {
         switch expr.expr {
             case TCall({ t: TFun(params, ret), expr: f }, args): {
                 var ext = FieldAccessExtern.getExternInfo(context, new HxbTypedExpr(f, TFun(params, ret), expr.pos));
-
                 if (!TypeHelper.compare(expr.t, ret)) {
                     if (ext.field?.type != null) {
                         var v = switch ext.field.type {

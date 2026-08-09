@@ -119,13 +119,18 @@ class Std {
                 return vt.match(TClass(Array));
             case _: return switch vt {
                 case TClass(q): {
-                    var v1: Null<HxClass> = HxDynamic.toClass(t, "Hx_Obj_go_haxe_hxclass");
-                    var v2: HxClass = cast t;
-                    if (v1.name != v2.name) {
-                        return v2.superClass != null ? isOfType(v, v2.superClass) : false;
+                    var target: HxClass = cast t;
+                    var current: HxClass = cast q;
+
+                    while (current != null) {
+                        if (current.name == target.name) {
+                            return true;
+                        }
+
+                        current = current.superClass;
                     }
 
-                    return true;
+                    return false;
                 };
 
                 case TEnum(q): {

@@ -1,20 +1,21 @@
-interface Foo {
-    public var v: Int;
-}
+import haxe.ds.StringMap;
 
-class Bar implements Foo {
-
-    public var v: Int;
-
-    public function new(_v: Int) {
-        v = _v;
-    }
-
-}
+// Reduced from unit.TestBasetypes.testStringMap (haxe/tests/unit).
+// Copying a StringMap<Null<Int>> into an array (Lambda.array) unwraps each
+// nullable value and assigns it into the array's element slot; hx2go emits a
+// bare value/nil where a struct{Value int32; Valid bool} is expected:
+//   cannot use _hx_tmp (variable of interface type any) as
+//   struct{Value int32; Valid bool} value in assignment: need type assertion
 
 function main() {
-    var x: Bar = new Bar(10);
-    var y: Foo = x;
+    var h = new StringMap<Null<Int>>();
+    h.set("x", -1);
+    h.set("abcd", 8546);
 
-    trace(x.v, y.v);
+    var k = Lambda.array(h);
+    k.sort(Reflect.compare);
+    trace(k.join("#") == "-1#8546");
+
+    h.set("x", null);
+    trace(h.get("x") == null);
 }

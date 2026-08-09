@@ -97,6 +97,9 @@ class TypeNormaliserCall extends CompilerPass {
 
     public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
         switch expr.expr {
+            case TCall({ expr: TIdent("__go__") }, _):
+                // nothing
+
             case TCall({ t: TFun(params, ret), expr: callee }, args):
                 norm(
                     FieldAccessExtern.getExternInfo(context, new HxbTypedExpr(callee, TFun(params, ret), expr.pos)),

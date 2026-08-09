@@ -88,6 +88,7 @@ class Context {
             new hx2go.passes.FieldAccessGeneric(this), // TODO: c1
             new hx2go.passes.DefaultArgs(this),
             new hx2go.passes.TypeNormaliserCallReturn(this),
+            new hx2go.passes.RewriteSyntaxCode(this),
             new hx2go.passes.TypeNormaliserCall(this), // TODO: c2
             new hx2go.passes.TypeNormaliserNew(this),
             new hx2go.passes.NullableCompareValid(this),
@@ -144,7 +145,6 @@ class Context {
             new hx2go.passes.RewriteMapCreation(this),
             new hx2go.passes.RewriteStringLength(this),
             new hx2go.passes.RewriteArrayLength(this),
-            new hx2go.passes.RewriteSyntaxCode(this),
             new hx2go.passes.RewriteSyntaxSelect(this),
             new hx2go.passes.RewriteSyntaxDefer(this),
             new hx2go.passes.RewriteSyntaxGo(this),

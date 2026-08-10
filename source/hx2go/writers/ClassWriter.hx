@@ -356,6 +356,10 @@ class ClassWriter extends WriterImpl {
             return new OutputBuffer();
         }
 
+        if (field.flags & HxbClassFieldFlag.CfGeneric != 0) {
+            return new OutputBuffer();
+        }
+
         return switch field.kind {
             case KMethod(kind): writeStaticClassFunction(field, kind, cls);
             case KVar(read, write): writeStaticClassVar(field, read, write, cls);
@@ -363,6 +367,9 @@ class ClassWriter extends WriterImpl {
     }
 
     public function writeMemberClassField(field: HxbClassField, cls: HxbClass): OutputBuffer {
+        if (field.flags & HxbClassFieldFlag.CfGeneric != 0) {
+            return new OutputBuffer();
+        }
         return switch field.kind {
             case KMethod(kind): writeMemberClassFunction(field, kind, cls);
             case KVar(read, write): writeMemberClassVar(field, read, write, cls);

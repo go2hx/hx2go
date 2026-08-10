@@ -60,13 +60,12 @@ class TypeNormaliserCall extends CompilerPass {
                     case TFunction(func) if (idx < func.args.length):
                         var defaultValue: HxbTypedExpr = func.args[idx].value;
                         if (defaultValue != null) {
+                            var c = ExprHelper.createCast(defaultValue, toType);
+                            arg.expr = c.expr;
+                            arg.t = c.t;
+                            changed = true;
                             if (Semantics.isConstant(defaultValue)) {
-                                var c = ExprHelper.createCast(defaultValue, toType);
-                                arg.expr = c.expr;
-                                arg.t = c.t;
-                                changed = true;
-                            }else{
-                                defaultValueTempVars(defaultValue, func, args);
+                                defaultValueTempVars(idx, defaultValue, func, args);
                             }
                         }
                     case _:
@@ -102,12 +101,12 @@ class TypeNormaliserCall extends CompilerPass {
         }
     }
 
-    function defaultValueTempVars(defaultValue:HxbTypedExpr, func:HxbTFunc, args:Array<HxbTypedExpr>) {
+    function defaultValueTempVars(index:Int, defaultValue:HxbTypedExpr, func:HxbTFunc, args:Array<HxbTypedExpr>) {
         function iter(e:HxbTypedExpr) {
             switch e.expr {
                 case TLocal(v):
                     for (i in 0...func.args.length) {
-                        if (v.id != func.args[i].v.id) {
+                        if (index == i || v.id != func.args[i].v.id) {
                             continue;
                         }
                         if (args[i].expr.match(TVar(_, _))) {

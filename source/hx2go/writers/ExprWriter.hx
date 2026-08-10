@@ -36,7 +36,7 @@ class ExprWriter extends WriterImpl {
             case TFunction(func): writeFunction(expr, func, topLevel);
             case TBlock(exprs): writeBlock(expr, exprs, topLevel);
             case TCall({ expr: TField({ expr: TTypeExpr(MTEnum(_)) }, FEnum(tp, ref)) }, params): writeEnumConstructor(tp, ref.name, params);
-            case TField({ expr: TTypeExpr(MTEnum(_)) }, FEnum(tp, ref)): writeEnumConstructor(tp, ref.name, []);
+            case TField({ expr: TTypeExpr(MTEnum(_)) }, FEnum(tp, ref)): writeEnumConstructorRef(expr, tp, ref.name);
             case TCall(e, args): writeCall(expr, e, args);
             case TConst(c): writeConst(expr, c);
             case TField(e, fa): writeField(expr, e, fa);
@@ -164,6 +164,22 @@ class ExprWriter extends WriterImpl {
         return buf;
     }
 
+    public function writeEnumConstructorRef(expr:HxbTypedExpr, tp: TypePath, name: String): OutputBuffer {
+        var mt = writer.context.resolve(tp);
+        var path = StringConversions.moduleTypeGetTypePath(mt);
+        var ctorName = '${StringConversions.typePathEnumName(path)}_${name}';
+
+        switch expr.t {
+            case TFun(args, ret):
+                var params = [for (i in 0...args.length) '_hx_a$i ${writer.types.writeHxbType(args[i].t)}'];
+                var fields = [for (i in 0...args.length) '_hx_a$i'];
+                var retTypeString = writer.types.writeHxbType(ret).toString();
+                return new OutputBuffer('func (${params.join(", ")}) $retTypeString { return $ctorName{${fields.join(", ")}}}');
+            default:
+                return new OutputBuffer('$ctorName{}');
+        }
+    }
+
     public function writeEnumConstructor(tp: TypePath, name: String, params: Array<HxbTypedExpr>): OutputBuffer {
         var mt = writer.context.resolve(tp);
         var path = StringConversions.moduleTypeGetTypePath(mt);
@@ -183,7 +199,7 @@ class ExprWriter extends WriterImpl {
 
         for (argIdx in 0...el.length) {
             var arg = el[argIdx];
-            buf.addBufferInline(writeExpr(arg));
+            buf.addBufferInline(writeValueExpr(arg));
 
             if (argIdx != el.length - 1) {
                 buf.addInline(", ");
@@ -193,6 +209,44 @@ class ExprWriter extends WriterImpl {
         buf.addInline(')');
 
         return buf;
+    }
+
+    function writeValueExpr(expr:HxbTypedExpr):OutputBuffer {
+        return switch expr.expr {
+            case TBlock(exprs) if (exprs.length > 0 && expr.t != null && !expr.t.match(TVoid)):
+                writeBlockValue(expr, exprs);
+            case TVar(v, init) if (init != null && v.type != null):
+                writeVarValue(v, init);
+            default:
+                writeExpr(expr);
+        }
+    }
+
+    function writeBlockValue(expr:HxbTypedExpr, exprs:Array<HxbTypedExpr>):OutputBuffer {
+        var buf = new OutputBuffer();
+        buf.addInline('func() ');
+        buf.addBufferInline(writer.types.writeHxbType(expr.t));
+        buf.add(' {');
+        for (i in 0...exprs.length - 1) {
+            buf.addBuffer(writeExpr(exprs[i]), 1);
+        }
+        buf.addBuffer(writeReturn(exprs[exprs.length - 1]), 1);
+        buf.addInline('}()');
+        return buf;
+    }
+
+    function writeVarValue(v:HxbVar, init:HxbTypedExpr):OutputBuffer {
+        var buf = new OutputBuffer();
+        var varType = writer.types.writeHxbType(v.type);
+        buf.addInline('func () ');
+        buf.addBufferInline(varType);
+        buf.add(' {');
+        buf.add('var ${v.name} = ', 1);
+        buf.addBuffer(writeExpr(init), 1);
+        buf.add('return ${v.name}', 1);
+        buf.addInline('}()');
+        return buf;
+
     }
 
     public function writeArrayDecl(t:HxbType, elements: Array<HxbTypedExpr>): OutputBuffer {

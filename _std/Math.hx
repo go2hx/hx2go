@@ -83,7 +83,7 @@ class Math {
     }
 
     public static function round(v: Float): Int {
-        return Go.int32(fround(v));
+        return Go.int32(go.Math.floor(v + 0.5));
     }
 
     public static function floor(v: Float): Int {

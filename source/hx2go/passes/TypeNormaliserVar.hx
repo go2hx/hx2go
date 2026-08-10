@@ -1,5 +1,7 @@
 package hx2go.passes;
 
+import haxe.runtime.Copy;
+import hx2go.normaliser.Semantics;
 import hxb.Typed.HxbTypedExpr;
 import hxb.HxbModuleType;
 import hx2go.util.TypeHelper;
@@ -19,6 +21,10 @@ class TypeNormaliserVar extends CompilerPass {
     public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
         switch expr.expr {
             case TVar(v, e): {
+                if (!Semantics.isNullableType(context, v.type) && isErasedNull(e)) {
+                    e.expr = ExprHelper.createUntyped('{0}.Value', [Copy.copy(e)]).expr;
+                    return;
+                }
                 if (TypeHelper.compare(v.type, e.t)) {
                     return;
                 }
@@ -34,4 +40,11 @@ class TypeNormaliserVar extends CompilerPass {
         }
     }
 
+    function isErasedNull(e:HxbTypedExpr):Bool {
+        return switch e.expr {
+            case TLocal(v): 
+                Semantics.isNullableType(context, v.type) && !Semantics.isNullableType(context, e.t);
+            default: false;
+        }
+    }
 }

@@ -498,6 +498,10 @@ class Context {
         return switch (t) {
             case TAbstract({ name: "Null", pack: [], moduleName: mName }, [inner]):
                 var n = normalize(inner);
+                // Null<Null<T> -> Null<T>
+                if (n.match(TAbstract({name: "Null", pack: []}, _))) {
+                    return n;
+                }
                 switch n {
                     case TInst(c, _):
                         var m = resolve(c);

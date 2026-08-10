@@ -1,5 +1,8 @@
 package hx2go.passes;
 
+import hxb.Typed.HxbTFunc;
+import hxb.tools.TypedExprTools;
+import hx2go.normaliser.Semantics;
 import hxb.Typed.HxbTypedExpr;
 import hx2go.util.TypeHelper;
 import hx2go.util.ExprHelper;
@@ -57,10 +60,14 @@ class TypeNormaliserCall extends CompilerPass {
                     case TFunction(func) if (idx < func.args.length):
                         var defaultValue: HxbTypedExpr = func.args[idx].value;
                         if (defaultValue != null) {
-                            var c = ExprHelper.createCast(defaultValue, toType);
-                            arg.expr = c.expr;
-                            arg.t = c.t;
-                            changed = true;
+                            if (Semantics.isConstant(defaultValue)) {
+                                var c = ExprHelper.createCast(defaultValue, toType);
+                                arg.expr = c.expr;
+                                arg.t = c.t;
+                                changed = true;
+                            }else{
+                                defaultValueTempVars(defaultValue, func, args);
+                            }
                         }
                     case _:
                 }
@@ -93,6 +100,29 @@ class TypeNormaliserCall extends CompilerPass {
         if (restStart != -1 && ext.kind == ExNone) {
             collapseRestArgs(expr, restStart, restElement);
         }
+    }
+
+    function defaultValueTempVars(defaultValue:HxbTypedExpr, func:HxbTFunc, args:Array<HxbTypedExpr>) {
+        function iter(e:HxbTypedExpr) {
+            switch e.expr {
+                case TLocal(v):
+                    for (i in 0...func.args.length) {
+                        if (v.id != func.args[i].v.id) {
+                            continue;
+                        }
+                        if (args[i].expr.match(TVar(_, _))) {
+                            continue;
+                        }
+                        args[i].expr = TBlock([
+                            {expr: TVar(func.args[i].v, Copy.copy(args[i])), t: args[i].t, pos: args[i].pos},
+                            {expr: TLocal(func.args[i].v), t: func.args[i].v.type, pos: func.args[i].v.pos},
+                        ]);
+                    }
+                default:
+                    TypedExprTools.iter(e, iter);
+            }
+        }
+        iter(defaultValue);
     }
 
     public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {

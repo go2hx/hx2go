@@ -64,7 +64,7 @@ class TypeNormaliserCall extends CompilerPass {
                             arg.expr = c.expr;
                             arg.t = c.t;
                             changed = true;
-                            if (Semantics.isConstant(defaultValue)) {
+                            if (!Semantics.isConstant(defaultValue)) {
                                 defaultValueTempVars(idx, defaultValue, func, args);
                             }
                         }

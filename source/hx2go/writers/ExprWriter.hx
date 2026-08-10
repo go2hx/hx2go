@@ -293,6 +293,16 @@ class ExprWriter extends WriterImpl {
         return want == writer.types.writeHxbType(elem).toString() ? null : want;
     }
 
+    function fromAny(target: HxbType, anyExpr: String): String {
+        var toType = writer.types.writeHxbType(target).toString();
+        var inner = Semantics.getNullableType(writer.context, target);
+        var value = inner == null
+            ? '_hx_d.($toType)'
+            : '$toType{ Value: _hx_d.(${writer.types.writeHxbType(inner)}), Valid: true }';
+
+        return 'func() $toType { _hx_d := $anyExpr; if _hx_d == nil { var _hx_z $toType; return _hx_z }; return $value }()';
+    }
+
     function concreteArrayElement(t: HxbType): Null<HxbType> {
         if (t == null) {
             return null;
@@ -417,22 +427,19 @@ class ExprWriter extends WriterImpl {
 
             case [(TDynamic(_) | TDynamicAny), _] if (concreteArrayElement(expr.t) != null):
                 // converting each element out of its any box
-                var elemGo = writer.types.writeHxbType(concreteArrayElement(expr.t)).toString();
+                var elemType = concreteArrayElement(expr.t);
+                var elemGo = writer.types.writeHxbType(elemType).toString();
                 var inHxDynamic = expr.pos?.file.endsWith("HxDynamic.hx") == true;
                 buf.addInline('func() *[]${elemGo} { _hx_d := ');
                 buf.addInline(inHxDynamic ? '(' : 'Hx_Field_go_haxe_hxdynamic_ensureInterface(');
                 buf.addBufferInline(writeExpr(e));
                 buf.addInline('); if _hx_c, _hx_ok := _hx_d.(*[]${elemGo}); _hx_ok { return _hx_c }; ');
                 buf.addInline('_hx_src := *(_hx_d.(*[]any)); _hx_out := make([]${elemGo}, len(_hx_src)); ');
-                buf.addInline('for _hx_i, _hx_v := range _hx_src { _hx_out[_hx_i] = _hx_v.(${elemGo}) }; return &_hx_out }()');
+                buf.addInline('for _hx_i, _hx_v := range _hx_src { _hx_out[_hx_i] = ${fromAny(elemType, "_hx_v")} }; return &_hx_out }()');
 
             case [(TDynamic(_) | TDynamicAny), _]:
-                var goT = writer.types.writeHxbType(expr.t).toString();
-                buf.addInline('func() $goT { _hx_d := ');
-                buf.addInline(expr.pos?.file.endsWith("HxDynamic.hx") ? 'any(' : 'Hx_Field_go_haxe_hxdynamic_ensureInterface('); // this is a really bad hack, I know...
-                buf.addBufferInline(writeExpr(e));
-                buf.addInline('); if _hx_d == nil { var _hx_z $goT; return _hx_z }; ');
-                buf.addInline('return _hx_d.($goT) }()');
+                var box = expr.pos?.file.endsWith("HxDynamic.hx") ? 'any' : 'Hx_Field_go_haxe_hxdynamic_ensureInterface'; // this is a really bad hack, I know...
+                buf.addInline(fromAny(expr.t, '$box(${writeExpr(e)})'));
 
             case [TString, TInt]:
                 buf.addBufferInline(writeExpr(e)); // TODO: investigate this better

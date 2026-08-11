@@ -605,7 +605,7 @@ class ExprWriter extends WriterImpl {
 
         for (argIdx in 0...args.length) {
             var arg = args[argIdx];
-            buf.addBufferInline(writeExpr(arg));
+            buf.addBufferInline(writeValueExpr(arg));
 
             if (argIdx != args.length - 1) {
                 buf.addInline(", ");

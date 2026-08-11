@@ -25,7 +25,12 @@ class EReg {
         }
 
         var pattern = flags.length > 0 ? "(?" + flags + ")" + r : r;
-        re = GoRegexp.compile(pattern).sure();
+        // TODO remove once we get a different regexp engine
+        // temp fix to evade haxe.Template failing compilation
+        var compiled = GoRegexp.compile(pattern);
+        if (compiled.isOk()) {
+            re = compiled.sure();
+        }
     }
 
     public function match(s: String): Bool {

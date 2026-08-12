@@ -19,14 +19,16 @@ class Version {
         return proc.stdout.readLine();
     }
 
-    public static function stale(path:String):Bool {
+    public static function stale(path:String, change:Bool=true):Bool {
         #if rebuild
         return true;
         #else
         var v = gitVersion(path);
         var versionFile = Path.join([path, "version.txt"]);
         if (!FileSystem.exists(versionFile) || v != File.getContent(versionFile)) {
-            File.saveContent(versionFile, v);
+            if (change) {
+                File.saveContent(versionFile, v);
+            }
             return true;
         }else{
             return false;

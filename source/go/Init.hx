@@ -40,10 +40,33 @@ class Init {
 
 		var libraries = getGoLibs();
 		if (libraries.length > 0 && builtLibs.join("+") != libraries.join("+")) {
-			Sys.command('haxelib', ['dev', 'hx2go-extern', Path.join([path, "hx2go-extern"])]);
-			Sys.command('haxelib', ['run', 'hx2go-extern'].concat(libraries).concat([librariesOutput]));
+			var code = Sys.command('haxelib', ['dev', 'hx2go-extern', Path.join([path, "hx2go-extern"])]);
+			if (code != 0)
+				Sys.exit(code);
+			var args = [];
+			if (rebuildBool(path, false)) {
+				args.push("rebuild");
+			}
+			code = Sys.command('haxelib', ['run', 'hx2go-extern'].concat(args).concat(libraries).concat([librariesOutput]));
+			if (code != 0)
+				Sys.exit(code);
 			builtLibs = libraries;
 		}
+	}
+
+	static function rebuildBool(path:String, change:Bool):Bool {
+		var rebuild = false;
+		#if rebuild
+		rebuild = true;
+		#elseif !no_rebuild
+		if (!FileSystem.exists(getBin(path)) || Version.stale(path, change))
+			rebuild = true;
+		#end
+		return rebuild;
+	}
+
+	static function getBin(path:String):String {
+		return Path.join([ path, "output/bootstrap/main", executable("main") ]);
 	}
 
 	static function fail(message: String): Void {
@@ -166,15 +189,8 @@ class Init {
 			var res = haxe.Serializer.run(Context.getResources());
 			if (!Context.defined("no-compilation")) {
 				if (!Context.defined("no-go-bootstrap")) {
-					final bin = Path.join([ path, "output/bootstrap/main", executable("main") ]);
-					var rebuild = false;
-					#if rebuild
-					rebuild = true;
-					#elseif !no_rebuild
-					if (!FileSystem.exists(bin) || Version.stale(path))
-						rebuild = true;
-					#end
-					if (rebuild) {
+					final bin = getBin(path);
+					if (rebuildBool(path, false)) {
 						Sys.println("Creating a Go version of the compiler");
 						Sys.setCwd(path);
 						var code = Sys.command('haxe Bootstrap.hxml -D no-rebuild');
@@ -207,25 +223,37 @@ class Init {
 			doc: "do not use the bootrapped version of the compiler (running on the Go target)",
 		});
 		Compiler.registerCustomDefine({
-			define: "go-lib",
+			define: "go-lib=",
 			doc: "automatic extern generation of a given Go library",
+			platforms: [CustomTarget("go")],
 		});
 		Compiler.registerCustomDefine({
 			define: "go-single-file",
 			doc: "output a single Go file",
+			platforms: [CustomTarget("go")],
 		});
 		Compiler.registerCustomDefine({
 			define: "go-sourceline-comments",
 			doc: "output source line comments",
+			platforms: [CustomTarget("go")],
 		});
 		Compiler.registerCustomDefine({
 			define: "go-times",
 			doc: "measure and report hx2go transpile times (per phase and per pass)",
+			platforms: [CustomTarget("go")],
 		});
 		// register custom metadata
 		Compiler.registerCustomMetadata({
 			metadata: "go.Type",
-			doc: "",
+			doc: "Set an extern typdef or class to a Go type",
+			params: ['{
+				name:String,
+				instanceName:String,
+				topLevel:Bool,
+				pascalCase:Bool,
+				imports:Array<String>,
+			}'],
+			platforms: [CustomTarget("go")],
 		});
 		Compiler.registerCustomMetadata({
 			metadata: "go.Tuple",

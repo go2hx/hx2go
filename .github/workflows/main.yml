@@ -63,7 +63,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: pxshadow/haxe
-          branch: go-target
+          ref: go-target
           path: haxe
       - name: Run haxe unit tests
         run: haxe scripts/haxeunit.hxml

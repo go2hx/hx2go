@@ -23,14 +23,14 @@ class HxString {
     }
 
     public static function charCodeAt(s: String, index: Int): Null<Int> {
-        var str_len = s.length;
+        var str_len = s.length; // length in runes/code-points
         if (index < 0 || index > str_len) {
             return null;
         }
 
-        var i = 0;
-        var j = 0;
-        while (i < str_len) {
+        var i = 0; // position in bytes
+        var j = 0; // position in runes/code-points
+        while (j < str_len) {
             if (j == index) {
                 var v = Utf8.decodeRuneInString(Syntax.code("{0}[{1}:]", s, i));
                 return v.size == 0 ? null : v.r;

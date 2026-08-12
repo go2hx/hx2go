@@ -32,11 +32,17 @@ jobs:
         run: haxe --version
       # cache restores
       - uses: actions/cache/restore@v4
-        id: setup-cache
+        id: bootstrap-cache
         with:
           path: |
             output/bootstrap
-          key: ${{ github.sha }}-os-${{ matrix.os }}-build-${{ env.cache-name }}
+          key: ${{ github.ref_name }}-os-${{ matrix.os }}-build-${{ env.cache-name }}
+      - uses: actions/cache/restore@v4
+        id: regression-cache
+        with:
+          path: |
+            haxe/tests/unit/bin/go/main/unittests.txt
+          key: ${{ github.ref_name }}-os-${{ matrix.os }}-build-${{ env.cache-name }}
       # haxelib setup
       - name: Setup hx2go dev
         run: haxelib dev hx2go .
@@ -54,14 +60,31 @@ jobs:
         run: haxe Tests.hxml
       - name: Extern tests
         run: cd hx2go-extern && haxe Testbed.hxml
+      - uses: actions/checkout@v4
+        with:
+          repository: pxshadow/haxe
+          branch: go-target
+          path: haxe
+      - name: Run haxe unit tests
+        run: haxe scripts/haxeunit.hxml
       # cache saves
       - name: cache save
-        id: cache-setup
+        id: bootstrap-cache
         uses: actions/cache/save@v4
         env:
-          cache-name: cache-setup
+          cache-name: bootstrap-cache
         if: always()
         with:
           path: |
             output/bootstrap
-          key: ${{ github.sha }}-${{ matrix.os }}-build-${{ env.cache-name }}
+          key: ${{ github.ref_name }}-${{ matrix.os }}-build-${{ env.cache-name }}
+      - name: cache save
+        id: regression-cache
+        uses: actions/cache/save@v4
+        env:
+          cache-name: regression-cache
+        if: always()
+        with:
+          path: |
+            haxe/tests/unit/bin/go/main/unittests.txt
+          key: ${{ github.ref_name }}-${{ matrix.os }}-build-${{ env.cache-name }}

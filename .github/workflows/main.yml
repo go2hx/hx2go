@@ -33,20 +33,16 @@ jobs:
       # cache restores
       - uses: actions/cache/restore@v4
         id: bootstrap-cache-restore
-        env:
-          cache-name: bootstrap-cache
         with:
           path: |
             output/bootstrap
-          key: ${{ github.ref_name }}-os-${{ matrix.os }}-build-${{ env.cache-name }}
+          key: ${{ github.ref_name }}-${{ matrix.os }}-bootstrap-cache
       - uses: actions/cache/restore@v4
         id: regression-cache-restore
-        env:
-          cache-name: regression-cache
         with:
           path: |
             haxe/tests/unit/bin/go/main/unittests.txt
-          key: ${{ github.ref_name }}-os-${{ matrix.os }}-build-${{ env.cache-name }}
+          key: ${{ github.ref_name }}-${{ matrix.os }}-regression-cache
       # haxelib setup
       - name: Setup hx2go dev
         run: haxelib dev hx2go .
@@ -72,23 +68,19 @@ jobs:
       - name: Run haxe unit tests
         run: haxe scripts/haxeunit.hxml
       # cache saves
-      - name: cache save
+      - name: Save bootstrap cache
         id: bootstrap-cache-save
         uses: actions/cache/save@v4
-        env:
-          cache-name: bootstrap-cache
         if: always()
         with:
           path: |
             output/bootstrap
-          key: ${{ github.ref_name }}-${{ matrix.os }}-build-${{ env.cache-name }}
-      - name: cache save
+          key: ${{ github.ref_name }}-${{ matrix.os }}-bootstrap-cache
+      - name: Save regression cache
         id: regression-cache-save
         uses: actions/cache/save@v4
-        env:
-          cache-name: regression-cache
         if: always()
         with:
           path: |
             haxe/tests/unit/bin/go/main/unittests.txt
-          key: ${{ github.ref_name }}-${{ matrix.os }}-build-${{ env.cache-name }}
+          key: ${{ github.ref_name }}-${{ matrix.os }}-regression-cache

@@ -739,10 +739,8 @@ class ExprWriter extends WriterImpl {
 
     public function writeConst(expr: HxbTypedExpr, c: HxbTConstant): OutputBuffer {
         var str = switch c {
-            case TNull: switch TypeHelper.follow(writer.context, expr.t) {
-                case TString
-                   | TInst({ name: "String", pack: [] }, _)
-                   | TAbstract({ name: "String", pack: [] }, _): "``";
+            case TNull: switch TypeHelper.followToDef(writer.context, expr.t) {
+                case TString: "``";
                 case _: "nil";
             }
             case TThis: "this";

@@ -65,8 +65,8 @@ jobs:
           repository: pxshadow/haxe
           ref: go-target
           path: haxe
-      # - name: Run haxe unit tests
-      #   run: haxe scripts/haxeunit.hxml
+      - name: Run haxe unit tests
+        run: haxe scripts/haxeunit.hxml
       # cache saves
       - name: cache save
         id: bootstrap-cache-save

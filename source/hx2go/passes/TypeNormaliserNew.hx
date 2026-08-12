@@ -51,6 +51,15 @@ class TypeNormaliserNew extends CompilerPass {
                         if (cls.flags & HxbClassFlag.CExtern != 0 && cls.meta.filter(m -> m.name == ":structInit").length != 0) {
                             var argStr = [];
                             for (idx in 0...el.length) {
+                                // cast each arg to the actual Go struct field type
+                                var arg = el[idx];
+                                var field = cls.fields.filter(f -> f.name == params[idx].name)[0];
+                                if (field != null && arg.t != null && !TypeHelper.compare(arg.t, field.type)) {
+                                    var c = ExprHelper.createCast(arg, field.type);
+                                    arg.expr = c.expr;
+                                    arg.t = c.t;
+                                    context.submitNode(arg, true);
+                                }
                                 argStr.push('${StringConversions.toPascalCase(params[idx].name)}: {${idx}}');
                             }
 

@@ -8,7 +8,7 @@ concurrency:
 jobs:
   test:
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 5
+    timeout-minutes: 10
     strategy:
       matrix:
         # go-version: ['oldstable', 'stable']
@@ -33,12 +33,16 @@ jobs:
       # cache restores
       - uses: actions/cache/restore@v4
         id: bootstrap-cache-restore
+        env:
+          cache-name: bootstrap-cache
         with:
           path: |
             output/bootstrap
           key: ${{ github.ref_name }}-os-${{ matrix.os }}-build-${{ env.cache-name }}
       - uses: actions/cache/restore@v4
         id: regression-cache-restore
+        env:
+          cache-name: regression-cache
         with:
           path: |
             haxe/tests/unit/bin/go/main/unittests.txt

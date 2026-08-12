@@ -32,13 +32,13 @@ jobs:
         run: haxe --version
       # cache restores
       - uses: actions/cache/restore@v4
-        id: bootstrap-cache
+        id: bootstrap-cache-restore
         with:
           path: |
             output/bootstrap
           key: ${{ github.ref_name }}-os-${{ matrix.os }}-build-${{ env.cache-name }}
       - uses: actions/cache/restore@v4
-        id: regression-cache
+        id: regression-cache-restore
         with:
           path: |
             haxe/tests/unit/bin/go/main/unittests.txt
@@ -69,7 +69,7 @@ jobs:
         run: haxe scripts/haxeunit.hxml
       # cache saves
       - name: cache save
-        id: bootstrap-cache
+        id: bootstrap-cache-save
         uses: actions/cache/save@v4
         env:
           cache-name: bootstrap-cache
@@ -79,7 +79,7 @@ jobs:
             output/bootstrap
           key: ${{ github.ref_name }}-${{ matrix.os }}-build-${{ env.cache-name }}
       - name: cache save
-        id: regression-cache
+        id: regression-cache-save
         uses: actions/cache/save@v4
         env:
           cache-name: regression-cache

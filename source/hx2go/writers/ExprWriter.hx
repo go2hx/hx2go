@@ -498,12 +498,6 @@ class ExprWriter extends WriterImpl {
             case [TString, TInt]:
                 buf.addBufferInline(writeExpr(e)); // TODO: investigate this better
 
-            case [(TInt | TFloat), (TDynamic(_) | TDynamicAny)]:
-                var scalarGo = writer.types.writeHxbType(e.t).toString();
-                buf.addInline('(($scalarGo)(');
-                buf.addBufferInline(writeExpr(e));
-                buf.addInline('))');
-
             case _:
                 buf.addInline('(');
                 buf.addInline('(');
@@ -730,8 +724,10 @@ class ExprWriter extends WriterImpl {
 
     public function writeConst(expr: HxbTypedExpr, c: HxbTConstant): OutputBuffer {
         var str = switch c {
-            case TNull: switch TypeHelper.followToDef(writer.context, expr.t) {
-                case TString: "``";
+            case TNull: switch TypeHelper.follow(writer.context, expr.t) {
+                case TString
+                   | TInst({ name: "String", pack: [] }, _)
+                   | TAbstract({ name: "String", pack: [] }, _): "``";
                 case _: "nil";
             }
             case TThis: "this";

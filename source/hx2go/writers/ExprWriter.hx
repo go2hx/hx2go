@@ -465,6 +465,15 @@ class ExprWriter extends WriterImpl {
         return '';
     }
 
+    function isNumericConst(e: HxbTypedExpr): Bool {
+        return switch e.expr {
+            case TConst(TInt(_) | TFloat(_)): true;
+            case TParenthesis(inner) | TMeta(_, inner): isNumericConst(inner);
+            case TUnop(_, _, inner): isNumericConst(inner);
+            case _: false;
+        }
+    }
+
     public function writeCast(expr: HxbTypedExpr, e: HxbTypedExpr, ref: HxbModuleTypeRef): OutputBuffer {
         var buf = new OutputBuffer();
 
@@ -497,6 +506,12 @@ class ExprWriter extends WriterImpl {
 
             case [TString, TInt]:
                 buf.addBufferInline(writeExpr(e)); // TODO: investigate this better
+
+            case [(TInt | TFloat), (TDynamic(_) | TDynamicAny)] if (isNumericConst(e)):
+                var scalarGo = writer.types.writeHxbType(e.t).toString();
+                buf.addInline('(($scalarGo)(');
+                buf.addBufferInline(writeExpr(e));
+                buf.addInline('))');
 
             case _:
                 buf.addInline('(');

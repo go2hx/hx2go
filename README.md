@@ -91,6 +91,7 @@ function main() {
 
 For example, to print the ASCII graph below:
 ```
+Main.hx:6: 
  10.00 ┤        ╭╮
   9.00 ┤ ╭╮     ││
   8.00 ┤ ││   ╭╮││
@@ -113,13 +114,12 @@ Run the Haxe compiler using the altered `.hxml` once before trying to access the
 Alter ``Main.hx`` to:
 
 ```haxe
-import go.Fmt;
 import go.github_com.guptarohit.Asciigraph;
 
 function main() {
-	var data:go.Slice<Float> = [3, 4, 9, 6, 2, 4, 5, 8, 5, 10, 2, 7, 2, 5, 6];
+	var data:Array<Float> = [3, 4, 9, 6, 2, 4, 5, 8, 5, 10, 2, 7, 2, 5, 6];
 	var graph:String = Asciigraph.plot(data);
-	Fmt.println(graph);
+	trace("\n" + graph);
 }
 ```
 

@@ -498,6 +498,12 @@ class ExprWriter extends WriterImpl {
             case [TString, TInt]:
                 buf.addBufferInline(writeExpr(e)); // TODO: investigate this better
 
+            case [(TInt | TFloat), (TDynamic(_) | TDynamicAny)]:
+                var scalarGo = writer.types.writeHxbType(e.t).toString();
+                buf.addInline('(($scalarGo)(');
+                buf.addBufferInline(writeExpr(e));
+                buf.addInline('))');
+
             case _:
                 buf.addInline('(');
                 buf.addInline('(');

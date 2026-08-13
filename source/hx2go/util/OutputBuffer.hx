@@ -6,7 +6,7 @@ class OutputBuffer {
     #if go
     private var content: go.strings.Builder;
     #else
-    private var content: String;
+    private var content: StringBuf;
     #end
     private var indentLevel: Int;
 
@@ -37,7 +37,8 @@ class OutputBuffer {
         #if go
         this.content.writeString(content);
         #else
-        this.content = content;
+        this.content = new StringBuf();
+        this.content.add(content);
         #end
         this.indentLevel = indentLevel;
     }
@@ -59,7 +60,7 @@ class OutputBuffer {
         #if go
         content.writeString(text);
         #else
-        content += text;
+        content.add(text);
         #end
     }
 
@@ -67,7 +68,7 @@ class OutputBuffer {
         #if go
         content.writeString(line);
         #else
-        content += line;
+        content.add(line);
         #end
     }
 
@@ -77,7 +78,7 @@ class OutputBuffer {
         #if go
         content.writeString(text);
         #else
-        content += text;
+        content.add(text);
         #end
     }
 
@@ -85,7 +86,7 @@ class OutputBuffer {
         #if go
         content.writeString(buffer.toString());
         #else
-        content += buffer.toString();
+        content.add(buffer.toString());
         #end
     }
 
@@ -101,7 +102,7 @@ class OutputBuffer {
         #if go
         content.reset();
         #else
-        content = "";
+        content = new StringBuf();
         #end
     }
 
@@ -109,7 +110,7 @@ class OutputBuffer {
         #if go
         return content.string();
         #else
-        return content;
+        return content.toString();
         #end
     }
 }

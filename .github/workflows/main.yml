@@ -39,9 +39,17 @@ jobs:
       - name: Haxe version
         run: haxe --version
 
+      - uses: actions/checkout@v4
+        with:
+          repository: pxshadow/haxe
+          ref: go-target
+          path: haxe
+
+      - name: create bin/go/main folder
+        run: mkdir haxe/bin/go/main
+
       # Only cache on ubuntu to reduce complexity
       - uses: actions/cache@v4
-        if: matrix.os == 'ubuntu-latest'
         with:
           path: haxe/tests/unit/bin/go/main/unittests.txt
           key: ${{ github.ref_name }}-regression-${{ github.run_id }}
@@ -77,12 +85,6 @@ jobs:
         
       - name: Extern tests
         run: cd hx2go-extern && haxe Testbed.hxml
-        
-      - uses: actions/checkout@v4
-        with:
-          repository: pxshadow/haxe
-          ref: go-target
-          path: haxe
           
       - name: Run haxe unit tests
         run: haxe scripts/haxeunit.hxml
@@ -117,7 +119,7 @@ jobs:
       - name: Setup hx2go dev
         run: haxelib dev hx2go .
       - name: Render unit-test graph
-        run: haxe scripts/haxeunitgraph.hxml
+        run: xvfb-run --auto-servernum haxe scripts/haxeunitgraph.hxml
 
       - name: Upload graph artifact
         uses: actions/upload-artifact@v4

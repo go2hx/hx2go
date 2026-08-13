@@ -221,6 +221,13 @@ class Semantics {
         }
     }
     
+    public static function isInt64Type(context:Context, t: HxbType): Bool {
+        return switch TypeHelper.follow(context, t) {
+            case TAbstract({ pack: ["go"], name: "Int64" | "UInt64" }, _): true;
+            case _: false;
+        }
+    }
+
     public static function isIntegerType(context:Context, t: HxbType): Bool {
         return switch TypeHelper.follow(context, t) {
             case TAbstract({ pack: [], name: "Int" | "UInt" }, _) | TAbstract({ pack: ["go"], name: "GoInt" | "GoUInt" | "Int8" | "UInt8" | "Int16" | "UInt16" | "Int32" | "UInt32" | "Int64" | "UInt64" | "Rune" |  "Byte" }, _) | TInt: true;

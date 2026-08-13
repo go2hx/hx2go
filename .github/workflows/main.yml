@@ -46,7 +46,7 @@ jobs:
           path: haxe
 
       - name: create bin/go/main folder
-        run: mkdir haxe/bin/go/main
+        run: mkdir -p haxe/tests/unit/bin/go/main
 
       # Only cache on ubuntu to reduce complexity
       - uses: actions/cache@v4

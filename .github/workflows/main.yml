@@ -1,64 +1,143 @@
 name: build
 
-on: [push, pull_request]
+on: 
+  push:
+  pull_request:
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.ref }}
   cancel-in-progress: true
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
   test:
     runs-on: ${{ matrix.os }}
     timeout-minutes: 10
     strategy:
       matrix:
+        go-version: ['stable']
+        haxe-version: [latest]
         os: [ubuntu-latest, macos-latest, windows-latest, ubuntu-24.04-arm]
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
         with:
           submodules: recursive
+          
+      - uses: actions/setup-go@v6
+        with:
+          go-version: ${{ matrix.go-version }}
+          
+      - uses: krdlab/setup-haxe@v2.1.0
+        with:
+          haxe-version: ${{ matrix.haxe-version }}
+          
+      - name: Haxe version
+        run: haxe --version
+
+      # Only cache on ubuntu to reduce complexity
+      - uses: actions/cache@v4
+        if: matrix.os == 'ubuntu-latest'
+        with:
+          path: haxe/tests/unit/bin/go/main/unittests.txt
+          key: ${{ github.ref_name }}-regression-${{ hashFiles('**/*.hxml') }}
+          restore-keys: ${{ github.ref_name }}-regression-
+
+      - uses: actions/cache@v4
+        if: matrix.os == 'ubuntu-latest'
+        with:
+          path: haxe/tests/unit/bin/go/main/unittests.json
+          key: ${{ github.ref_name }}-history-${{ hashFiles('**/*.hxml') }}
+          restore-keys: ${{ github.ref_name }}-history-
+
+      - name: Setup hx2go dev
+        run: haxelib dev hx2go .
+        
+      - name: Install utest
+        run: haxelib git utest https://github.com/haxe-utest/utest
+        
+      - name: Run bootstrap
+        run: haxe Bootstrap.hxml
+        
+      - name: Run isolated test
+        run: cd tests/isolated && haxe build.hxml
+        
+      - name: Run testbed
+        run: haxe Testbed.hxml
+        
+      - name: Run tests baseline
+        run: haxe Tests-each.hxml --interp
+        
+      - name: Run tests
+        run: haxe Tests.hxml
+        
+      - name: Extern tests
+        run: cd hx2go-extern && haxe Testbed.hxml
+        
+      - uses: actions/checkout@v4
+        with:
+          repository: pxshadow/haxe
+          ref: go-target
+          path: haxe
+          
+      - name: Run haxe unit tests
+        run: haxe scripts/haxeunit.hxml
+
+  # Separate job for ubuntu-only graphing and deployment
+  graph-and-deploy:
+    runs-on: ubuntu-latest
+    needs: test
+    if: always()  # Run even if test fails, to capture partial results
+    steps:
+      - uses: actions/checkout@v4
       - uses: actions/setup-go@v6
         with:
           go-version: stable
       - uses: krdlab/setup-haxe@v2.1.0
         with:
           haxe-version: latest
-      - name: Haxe version
-        run: haxe --version
-      - uses: actions/cache/restore@v4
-        id: regression-cache-restore
+
+      - name: Install Chrome
+        uses: browser-actions/setup-chrome@v2
         with:
-          path: |
-            haxe/tests/unit/bin/go/main/unittests.txt
-          key: ${{ github.ref_name }}-${{ matrix.os }}-regression-${{ github.run_id }}
-          restore-keys: |
-            ${{ github.ref_name }}-${{ matrix.os }}-regression-
-      - name: Setup hx2go dev
-        run: haxelib dev hx2go .
-      - name: Install utest
-        run: haxelib git utest https://github.com/haxe-utest/utest
-      - name: Run bootstrap
-        run: haxe Bootstrap.hxml
-      - name: Run isolated test
-        run: cd tests/isolated && haxe build.hxml
-      - name: Run testbed
-        run: haxe Testbed.hxml
-      - name: Run tests baseline
-        run: haxe Tests-each.hxml --interp
-      - name: Run tests
-        run: haxe Tests.hxml
-      - name: Extern tests
-        run: cd hx2go-extern && haxe Testbed.hxml
-      - uses: actions/checkout@v6
+          chrome-version: stable
+
+      - name: Restore test files
+        uses: actions/cache/restore@v4
         with:
-          repository: pxshadow/haxe
-          ref: go-target
-          path: haxe
-      - name: Run haxe unit tests
-        run: haxe scripts/haxeunit.hxml
-      - name: Save regression cache
-        uses: actions/cache/save@v4
+          path: haxe/tests/unit/bin/go/main/unittests.json
+          key: ${{ github.ref_name }}-history-${{ hashFiles('**/*.hxml') }}
+          restore-keys: ${{ github.ref_name }}-history-
+
+      - name: Render unit-test graph
+        run: haxe scripts/haxeunitgraph.hxml
+
+      - name: Upload graph artifact
+        uses: actions/upload-artifact@v4
         if: always()
         with:
-          path: |
-            haxe/tests/unit/bin/go/main/unittests.txt
-          key: ${{ github.ref_name }}-${{ matrix.os }}-regression-${{ github.run_id }}
+          name: unittests-graph
+          path: output/haxeunitgraph/main/graph.png
+          if-no-files-found: ignore
+
+      - name: Deploy to Pages
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: output/haxeunitgraph/main/
+
+  deploy-pages:
+    needs: graph-and-deploy
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

@@ -98,6 +98,9 @@ class HxString {
         return x;
     }
     public static function substr(s: String, pos:Int, ?len:Int):String {
+        if (pos > s.length) {
+            return "";
+        }
         var startIndex = if (pos < 0) {
             // If pos is negative, its value is calculated from the end of s String by s.length + pos. 
             s.length + pos;

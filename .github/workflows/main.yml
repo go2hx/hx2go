@@ -117,7 +117,7 @@ jobs:
       - name: Setup hx2go dev
         run: haxelib dev hx2go .
       - name: Render unit-test graph
-        run: xvfb-run --auto-servernum haxe scripts/haxeunitgraph.hxml
+        run: haxe scripts/haxeunitgraph.hxml
 
       - name: Upload graph history artifact
         uses: actions/upload-artifact@v4

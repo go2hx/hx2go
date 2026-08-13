@@ -113,9 +113,22 @@ function main() {
 	);
 
 	// Rasterise the chart to a PNG via snapshot-chromedp (headless Chrome).
-	var err = SnapshotRender.makeChartSnapshot(line.renderContent(), output);
+	// retry a few times before giving up.
+	var content = line.renderContent();
+	var attempts = 4;
+	var err:go.Error = null;
+	for (attempt in 1...attempts + 1) {
+		err = SnapshotRender.makeChartSnapshot(content, output);
+		if (err == null)
+			break;
+		Sys.println('HaxeUnitGraph: snapshot attempt $attempt/$attempts failed: ${err.error()}');
+		if (attempt < attempts) {
+			// brief backoff to let a transiently-slow/starved Chrome recover
+			Sys.sleep(3);
+		}
+	}
 	if (err != null) {
-		Sys.println('HaxeUnitGraph: snapshot failed: ${err.error()}');
+		Sys.println('HaxeUnitGraph: snapshot failed after $attempts attempts: ${err.error()}');
 		Sys.exit(1);
 	}
 	Sys.println('HaxeUnitGraph: wrote ${haxe.io.Path.join([Sys.getCwd(), output])} from ${records.length} record(s)');

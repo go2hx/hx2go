@@ -119,12 +119,12 @@ jobs:
       - name: Render unit-test graph
         run: xvfb-run --auto-servernum haxe scripts/haxeunitgraph.hxml
 
-      - name: Upload graph artifact
+      - name: Upload graph history artifact
         uses: actions/upload-artifact@v4
         if: always()
         with:
           name: unittests-graph
-          path: output/haxeunitgraph/main/graph.png
+          path: haxe/tests/unit/bin/go/main/unittests.json
           if-no-files-found: ignore
 
       - name: Deploy to Pages

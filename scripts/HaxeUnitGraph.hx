@@ -90,22 +90,22 @@ function main() {
 		}),
 	);
 
-	line.addSeries("Passed", [for (r in records) {
-		value: [Time.unixMilli(Go.int64(r.time)), r.passed],
+	line.addSeries("Passed Methods", [for (r in records) {
+		value: [Time.unixMilli(Go.int64(r.time)).UTC(), r.passed],
 	}],
 		Charts.withLineChartOpts({ stack: "tests", smooth: Opts.bool(false), step: "end" }),
 		Charts.withAreaStyleOpts({ opacity: Opts.float(0.9) }),
 		Charts.withItemStyleOpts({ color: passedColor })
 	);
-	line.addSeries("Failed", [for (r in records) {
-		value: [Time.unixMilli(Go.int64(r.time)), r.failed],
+	line.addSeries("Failed Methods", [for (r in records) {
+		value: [Time.unixMilli(Go.int64(r.time)).UTC(), r.failed],
 	}],
 		Charts.withLineChartOpts({ stack: "tests", smooth: Opts.bool(false), step: "end" }),
 		Charts.withAreaStyleOpts({ opacity: Opts.float(0.9) }),
 		Charts.withItemStyleOpts({ color: failedColor })
 	);
-	line.addSeries("Errored", [for (r in records) {
-		value: [Time.unixMilli(Go.int64(r.time)), r.errored],
+	line.addSeries("Errored Methods (caught throw)", [for (r in records) {
+		value: [Time.unixMilli(Go.int64(r.time)).UTC(), r.errored],
 	}],
 		Charts.withLineChartOpts({ stack: "tests", smooth: Opts.bool(false), step: "end" }),
 		Charts.withAreaStyleOpts({ opacity: Opts.float(0.9) }),

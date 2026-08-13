@@ -5,7 +5,6 @@ import hxb.HxbModuleType;
 import hxb.Typed.HxbTypedExprDef;
 import hxb.Typed.HxbFieldAccess;
 import hx2go.util.ExprHelper;
-import haxe.runtime.Copy;
 
 class RewriteSyntaxDefer extends CompilerPass {
 
@@ -20,7 +19,7 @@ class RewriteSyntaxDefer extends CompilerPass {
        switch expr.expr {
            case TCall({ expr: TField(_, FStatic({ name: 'Syntax', pack: ['go'] }, { name: 'defer' })) }, params): {
                var o = ExprHelper.createUntyped('defer {0}', [
-                   new HxbTypedExpr(TCall(Copy.copy(params[0]), []), params[0].t, expr.pos)
+                   new HxbTypedExpr(TCall(hx2go.normaliser.ExprCopy.copy(params[0]), []), params[0].t, expr.pos)
                ]);
 
                expr.expr = o.expr;

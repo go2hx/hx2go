@@ -3,7 +3,6 @@ package hx2go.normaliser;
 import hxb.Typed.HxbTypedExpr;
 import hxb.tools.TypedExprTools;
 import hxb.Typed.HxbTypedExprDef;
-import haxe.runtime.Copy;
 import hxb.HxbType;
 import hxb.Typed.HxbTConstant;
 import hxb.Ast.HxbUnop;
@@ -13,6 +12,7 @@ import hx2go.util.ExprHelper;
 class Normaliser {
 
     public static function run(expr: HxbTypedExpr, scope: Scope, context: Context): Void {
+        Semantics.clearMutateCache();
         new Normaliser(context).processExpr(expr, scope, null);
     }
 
@@ -38,21 +38,21 @@ class Normaliser {
     public function ensureBlock(expr: HxbTypedExpr): HxbTypedExpr {
         return switch expr.expr {
             case TBlock(_): expr;
-            case _: new HxbTypedExpr(TBlock([ Copy.copy(expr) ]), null, null);
+            case _: new HxbTypedExpr(TBlock([ ExprCopy.copy(expr) ]), null, null);
         }
     }
 
     public function ensureParen(expr: HxbTypedExpr): HxbTypedExpr {
         return switch expr.expr {
             case TParenthesis(_): expr;
-            case _: new HxbTypedExpr(TParenthesis(Copy.copy(expr)), null, null);
+            case _: new HxbTypedExpr(TParenthesis(ExprCopy.copy(expr)), null, null);
         }
     }
 
     public function ensureShift(expr: HxbTypedExpr, left: HxbTypedExpr, right: HxbTypedExpr, op: HxbBinop, scope: Scope, ancestor: Null<Ancestor>): Void {
         left.expr = switch left.expr {
             case TLocal(_): left.expr;
-            case _: scope.temp(expr, Copy.copy(left), this, scope, ancestor).expr;
+            case _: scope.temp(expr, ExprCopy.copy(left), this, scope, ancestor).expr;
         }
 
         var exprSigned = Semantics.getIntegerSigned(left.t);
@@ -72,8 +72,8 @@ class Normaliser {
             var lhsType: HxbType = TAbstract({ pack: ['go'], name: lhsName, moduleName: lhsName }, []);
 
             left.t = lhsType; // will force cast to lhsType, as "m" of TCast is ignored.
-            left.expr = TCast(Copy.copy(left), null);
-            expr.expr = TCast(Copy.copy(expr), null); // expr.t is already the desired type.
+            left.expr = TCast(ExprCopy.copy(left), null);
+            expr.expr = TCast(ExprCopy.copy(expr), null); // expr.t is already the desired type.
         }
     }
 
@@ -81,7 +81,7 @@ class Normaliser {
         if (!needsOverflowGuard(left.t) && !needsOverflowGuard(right.t)) return;
         if (!isLiteralInt(left) || !isLiteralInt(right)) return; // only a problem if fully constant
 
-        left.expr = scope.temp(expr, Copy.copy(left), this, scope, ancestor).expr;
+        left.expr = scope.temp(expr, ExprCopy.copy(left), this, scope, ancestor).expr;
     }
 
     private function isLiteralInt(e: HxbTypedExpr): Bool {
@@ -119,7 +119,7 @@ class Normaliser {
             case TBinop(OpAssignOp(op), left, right):
                 expr.expr = TBinop(
                     OpAssign,
-                    Copy.copy(left),
+                    ExprCopy.copy(left),
                     new HxbTypedExpr(TBinop(
                         op,
                         left,
@@ -167,11 +167,11 @@ class Normaliser {
 
                 var c = econd;
                 if (!econd.t.match(TBool)) {
-                    c = ExprHelper.createCallStatic(context, { name: "HxDynamic", moduleName: "HxDynamic", pack: ['go', 'haxe'] }, "toBool", [Copy.copy(econd)]);
+                    c = ExprHelper.createCallStatic(context, { name: "HxDynamic", moduleName: "HxDynamic", pack: ['go', 'haxe'] }, "toBool", [ExprCopy.copy(econd)]);
                 }
 
                 var newCond = new HxbTypedExpr(TIf(
-                    ensureParen(new HxbTypedExpr(TUnop(OpNot, false, Copy.copy(c)), null, null)),
+                    ensureParen(new HxbTypedExpr(TUnop(OpNot, false, ExprCopy.copy(c)), null, null)),
                     ensureBlock(new HxbTypedExpr(TBreak, null, null)),
                     null
                 ), null, null);
@@ -274,7 +274,7 @@ class Normaliser {
                             varStringBuf.add('var hx_try_state int\n;_ = hx_try_state\n');
 
                             var vars = ExprHelper.createUntyped(varStringBuf.toString(), []);
-                            tryNode.expr = ExprHelper.createUntyped('{0}\n{1}', [vars, Copy.copy(tryNode)]).expr;
+                            tryNode.expr = ExprHelper.createUntyped('{0}\n{1}', [vars, ExprCopy.copy(tryNode)]).expr;
 
                         default:
                     }
@@ -285,7 +285,7 @@ class Normaliser {
                 }
 
                 var returnHandler = ExprHelper.createUntyped(returnHandlerStringBuf.toString(), []);
-                tryNode.expr = ExprHelper.createUntyped('{\n{0}\n{1}\n}', [Copy.copy(tryNode), returnHandler]).expr;
+                tryNode.expr = ExprHelper.createUntyped('{\n{0}\n{1}\n}', [ExprCopy.copy(tryNode), returnHandler]).expr;
 
                 return;
 
@@ -296,7 +296,7 @@ class Normaliser {
                     loopLabels.set(scope.activeLoop, label);
                     scope.activeLoop.expr = ExprHelper.createUntyped('${label}:\n{0}', [ switch scope.activeLoop.expr {
                         case TWhile(econd, e, norm): new HxbTypedExpr(TWhile(econd, e, norm), scope.activeLoop.t, scope.activeLoop.pos);
-                        case _: Copy.copy(scope.activeLoop);
+                        case _: ExprCopy.copy(scope.activeLoop);
                     } ]).expr;
                 }
 
@@ -305,7 +305,7 @@ class Normaliser {
             case TReturn(e) if (scope.activeTry != null):
                 expr.expr = e == null
                     ? ExprHelper.createUntyped('hx_try_state = 1; return', []).expr
-                    : ExprHelper.createUntyped('hx_try_state = 1; hx_try_return = {0}; return', [Copy.copy(e)]).expr;
+                    : ExprHelper.createUntyped('hx_try_state = 1; hx_try_return = {0}; return', [ExprCopy.copy(e)]).expr;
 
             case TBreak if (scope.activeTryOwnsBreak):
                 expr.expr = ExprHelper.createUntyped('hx_try_state = 2; return', []).expr;
@@ -325,13 +325,13 @@ class Normaliser {
                 scope.hoist(exprs, this, scope, ancestor);
 
             case TBinop(OpAssign | OpAssignOp(_), left, right):
-                scope.insert(expr, Copy.copy(expr), this, scope, ancestor);
+                scope.insert(expr, ExprCopy.copy(expr), this, scope, ancestor);
                 scope.temp(expr, left, this, scope, ancestor);
 
             case TUnop(op, postFix, e) if (op.match(OpIncrement | OpDecrement)): {
                 var inc = new HxbTypedExpr(TBinop(
                     OpAssignOp(op.match(OpIncrement) ? OpAdd : OpSub),
-                    removeCast(Copy.copy(e)),
+                    removeCast(ExprCopy.copy(e)),
                     new HxbTypedExpr(TConst(TInt(1)), e.t, e.pos)
                 ), null, null);
 
@@ -353,13 +353,13 @@ class Normaliser {
 
                 var result = scope.temp(expr, null, this, scope, ancestor, expr.t);
                 var makeAssign = (e: HxbTypedExpr) -> {
-                    e.expr = TBinop(OpAssign, result, ensureBlock(Copy.copy(e)));
+                    e.expr = TBinop(OpAssign, result, ensureBlock(ExprCopy.copy(e)));
                 };
 
                 makeAssign(eif);
                 if (eelse != null) makeAssign(eelse);
 
-                scope.insert(expr, Copy.copy(expr), this, scope, ancestor);
+                scope.insert(expr, ExprCopy.copy(expr), this, scope, ancestor);
 
                 result;
             }
@@ -367,13 +367,13 @@ class Normaliser {
             case TSwitch(_, cases, edef): {
                 var result = scope.temp(expr, null, this, scope, ancestor, expr.t);
                 var makeAssign = (e: HxbTypedExpr) -> {
-                    e.expr = TBinop(OpAssign, result, ensureBlock(Copy.copy(e)));
+                    e.expr = TBinop(OpAssign, result, ensureBlock(ExprCopy.copy(e)));
                 };
 
                 for (c in cases) makeAssign(c.expr);
                 if (edef != null) makeAssign(edef);
 
-                scope.insert(expr, Copy.copy(expr), this, scope, ancestor);
+                scope.insert(expr, ExprCopy.copy(expr), this, scope, ancestor);
 
                 result;
             }
@@ -402,7 +402,7 @@ class Normaliser {
         expr.expr = TBinop(
             OpAssign,
             new HxbTypedExpr(TIdent('_'), TVoid, null),
-            Copy.copy(expr)
+            ExprCopy.copy(expr)
         ); // TODO: if no side effects, it may be omitted.
     }
 

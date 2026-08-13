@@ -13,7 +13,6 @@ import hx2go.util.StringConversions;
 import hxb.Ast.HxbObjectField;
 import hx2go.util.ObjectFieldHelper;
 import hxb.flags.HxbClassFieldFlag;
-import haxe.runtime.Copy;
 import hxb.Typed.HxbVar;
 
 class RewriteTupleAssign extends CompilerPass {
@@ -75,7 +74,7 @@ class RewriteTupleAssign extends CompilerPass {
                     return;
                 }
 
-                var local = Copy.copy(expr);
+                var local = hx2go.normaliser.ExprCopy.copy(expr);
                 var id = 'hx_tuple_${tupleId++}';
                 var tmp = new HxbVar(
                     -1,

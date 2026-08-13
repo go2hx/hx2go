@@ -2,7 +2,6 @@ package hx2go.util;
 
 import hxb.Typed.HxbTypedExpr;
 import hxb.Typed.HxbTypedExprDef;
-import haxe.runtime.Copy;
 import hxb.HxbType;
 import hxb.Typed.HxbModuleTypeRef;
 import hxb.TypePath;
@@ -13,7 +12,7 @@ class ExprHelper {
     public static function unwrapNullableLocal(arr: HxbTypedExpr): Void {
         switch arr.expr {
             case TLocal(v) if (v.type != null && v.type.match(TAbstract({ name: 'Null', pack: [] }, _))):
-                var local = Copy.copy(arr);
+                var local = hx2go.normaliser.ExprCopy.copy(arr);
                 arr.expr = ExprHelper.createUntyped('{0}.Value', [local]).expr;
             case _:
         }
@@ -33,7 +32,7 @@ class ExprHelper {
 
     public static function createCast(expr: HxbTypedExpr, type: HxbType): HxbTypedExpr {
         return new HxbTypedExpr(
-            TCast(Copy.copy(expr), null),
+            TCast(hx2go.normaliser.ExprCopy.copy(expr), null),
             type,
             null
         );

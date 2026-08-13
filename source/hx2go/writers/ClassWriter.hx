@@ -11,7 +11,6 @@ import hxb.flags.HxbClassFlag;
 import hxb.Typed.HxbTypedExpr;
 import hx2go.normaliser.Normaliser;
 import hx2go.normaliser.Normaliser.Normaliser.run;
-import haxe.runtime.Copy;
 import hxb.TypePath;
 import hxb.Typed.HxbTypedExprDef;
 import hxb.Typed.HxbFieldAccess;
@@ -227,7 +226,7 @@ class ClassWriter extends WriterImpl {
             }
 
             for (f in dynMethods) {
-                var local = Copy.copy(f.field.expr.expr);
+                var local = hx2go.normaliser.ExprCopy.copy(f.field.expr.expr);
                 if (local == null) {
                     trace('warning, null field: ' + f);
                     continue;
@@ -272,7 +271,7 @@ class ClassWriter extends WriterImpl {
                 buf.add('');
                 buf.add('func (this *${StringConversions.typePathClassInstanceName(cls.path)}) Hx_New(${ctor.buf.toString()}) {');
                 for (f in fieldInits) {
-                    var einit = ensureBody(new HxbTypedExpr(TBinop(OpAssign, new HxbTypedExpr(TField(new HxbTypedExpr(TConst(TThis), null, null), FInstance(cls.path, [], { owner: cls.path, kind: null, name: StringConversions.nameToFieldName(f.name), depth: 0 })), null, null), Copy.copy(f.expr.expr)), null, null));
+                    var einit = ensureBody(new HxbTypedExpr(TBinop(OpAssign, new HxbTypedExpr(TField(new HxbTypedExpr(TConst(TThis), null, null), FInstance(cls.path, [], { owner: cls.path, kind: null, name: StringConversions.nameToFieldName(f.name), depth: 0 })), null, null), hx2go.normaliser.ExprCopy.copy(f.expr.expr)), null, null));
                     Normaliser.run(einit, {}, writer.context);
 
                     buf.addBuffer(writer.exprs.writeExpr(einit), 1);

@@ -13,7 +13,6 @@ import hx2go.util.StringConversions;
 import hxb.Ast.HxbObjectField;
 import hx2go.util.ObjectFieldHelper;
 import hxb.HxbType;
-import haxe.runtime.Copy;
 import hx2go.util.TypeHelper;
 import hx2go.normaliser.Semantics;
 
@@ -30,7 +29,7 @@ class NullableCall extends CompilerPass {
     public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
         switch expr.expr {
             case TCall(e, _): {
-                var local = Copy.copy(e);
+                var local = hx2go.normaliser.ExprCopy.copy(e);
                 var o = ExprHelper.createUntyped('{0}.Value', [local]);
 
                 e.expr = o.expr;

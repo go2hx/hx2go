@@ -6,7 +6,6 @@ import hxb.Typed.HxbTypedExprDef;
 import hx2go.util.ExprHelper;
 import hxb.HxbType;
 import hxb.Ast.HxbBinop;
-import haxe.runtime.Copy;
 
 class RewriteDynamicBinop extends CompilerPass {
 
@@ -54,7 +53,7 @@ class RewriteDynamicBinop extends CompilerPass {
                 pack: ['go', 'haxe']
             },
             call,
-            Copy.copy([left, right])
+            hx2go.normaliser.ExprCopy.copyList([left, right])
         );
         e.t = TDynamicAny;
 
@@ -74,7 +73,7 @@ class RewriteDynamicBinop extends CompilerPass {
         switch expr.expr {
             case TBinop(op, left, right): {
                 // if assignOp keep lhs
-                var assignTarget = op.match(OpAssignOp(_)) ? Copy.copy(left) : null;
+                var assignTarget = op.match(OpAssignOp(_)) ? hx2go.normaliser.ExprCopy.copy(left) : null;
 
                 if (!left.t.match(TDynamic(_) | TDynamicAny)) {
                     var o = ExprHelper.createCast(left, TDynamicAny);

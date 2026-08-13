@@ -7,7 +7,6 @@ import hx2go.util.ExprHelper;
 import hx2go.normaliser.Semantics;
 import hxb.Ast.HxbBinop;
 import hxb.HxbType;
-import haxe.runtime.Copy;
 
 class NullableCompare extends CompilerPass {
 
@@ -25,7 +24,7 @@ class NullableCompare extends CompilerPass {
 
         switch right.expr {
             case TConst(TNull):
-                var local_cmp = Copy.copy(left);
+                var local_cmp = hx2go.normaliser.ExprCopy.copy(left);
                 left.expr = if (boxed) {
                     ExprHelper.createUntyped("{0}.Valid", [local_cmp]).expr;
                 } else switch left.t {
@@ -46,7 +45,7 @@ class NullableCompare extends CompilerPass {
                 context.submitNode(left, true);
 
             case TConst(_):
-                var local_cmp = Copy.copy(left);
+                var local_cmp = hx2go.normaliser.ExprCopy.copy(left);
                 if (boxed) {
                     left.expr = ExprHelper.createUntyped("{0}.Value", [local_cmp]).expr;
 
@@ -81,7 +80,7 @@ class NullableCompare extends CompilerPass {
         if (isNullConst(left) || isNullConst(right)) {
             var other = isNullConst(left) ? right : left;
             expr.expr = eq && Semantics.isNullableExpr(context, other)
-                ? raw("!{0}.Valid", [Copy.copy(other)])
+                ? raw("!{0}.Valid", [hx2go.normaliser.ExprCopy.copy(other)])
                 : TConst(TBool(false));
         } else {
             var leftBoxed = Semantics.isNullableExpr(context, left);
@@ -95,7 +94,7 @@ class NullableCompare extends CompilerPass {
             expr.expr = raw(
                 '($leftValid && $rightValid && ($leftValue $opStr $rightValue)'
                     + (eq ? ' || (!$leftValid && !$rightValid)' : '') + ')',
-                [Copy.copy(left), Copy.copy(right)]
+                [hx2go.normaliser.ExprCopy.copy(left), hx2go.normaliser.ExprCopy.copy(right)]
             );
         }
 
@@ -128,7 +127,7 @@ class NullableCompare extends CompilerPass {
             && Semantics.isNullableExpr(context, left) && Semantics.isNullableExpr(context, right)) {
             var eq = op == OpEq;
             var valid = e -> {
-                var v = ExprHelper.createUntyped("{0}.Valid", [Copy.copy(e)]);
+                var v = ExprHelper.createUntyped("{0}.Valid", [hx2go.normaliser.ExprCopy.copy(e)]);
                 v.t = TBool;
                 v;
             };
@@ -140,7 +139,7 @@ class NullableCompare extends CompilerPass {
                 bin(
                     eq ? OpBoolOr : OpBoolAnd,
                     bin(OpEq, valid(left), new HxbTypedExpr(TConst(TBool(!eq)), TBool, expr.pos)),
-                    Copy.copy(expr)
+                    hx2go.normaliser.ExprCopy.copy(expr)
                 )
             ));
             expr.t = TBool;

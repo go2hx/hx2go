@@ -4,7 +4,6 @@ import hxb.Typed.HxbTypedExpr;
 import hxb.HxbModuleType;
 import hxb.Typed.HxbTypedExprDef;
 import hxb.Typed.HxbFieldAccess;
-import haxe.runtime.Copy;
 
 class RewriteSyntaxCode extends CompilerPass {
 
@@ -19,7 +18,7 @@ class RewriteSyntaxCode extends CompilerPass {
        expr.expr = switch expr.expr {
            case TCall({ expr: TField(_, FStatic({ name: 'Syntax', pack: ['go'] }, { name: 'code' })) }, params): TCall(
                new HxbTypedExpr(TIdent("__go__"), null, null),
-               Copy.copy(params)
+               hx2go.normaliser.ExprCopy.copyList(params)
            );
 
            case _: return;

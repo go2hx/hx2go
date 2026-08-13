@@ -11,7 +11,6 @@ import hx2go.util.TypeHelper;
 import hx2go.normaliser.Semantics;
 import hx2go.util.StringConversions;
 import hxb.flags.HxbClassFlag;
-import haxe.runtime.Copy;
 import hxb.Typed.HxbFieldAccess;
 
 class CastInstToEnum extends CompilerPass {
@@ -29,7 +28,7 @@ class CastInstToEnum extends CompilerPass {
                 var isDyn = e.t.match(TDynamicAny | TDynamic(_));
                 var o = ExprHelper.createCast(new HxbTypedExpr(TCall(
                     new HxbTypedExpr(
-                    TField(Copy.copy(e), isDyn ? FDynamic("enumType") : FInstance(switch e.t {
+                    TField(hx2go.normaliser.ExprCopy.copy(e), isDyn ? FDynamic("enumType") : FInstance(switch e.t {
                         case TEnum(tp, _) | TAbstract(tp, _): tp;
                         case _: return;
                     }, [], {

@@ -4,7 +4,6 @@ import hx2go.util.TypeHelper;
 import hxb.Typed.HxbTypedExpr;
 import hxb.tools.TypedExprTools;
 import hxb.Ast.HxbBinop;
-import haxe.runtime.Copy;
 import hxb.Typed.HxbTypedExprDef;
 import hxb.HxbType;
 
@@ -80,18 +79,31 @@ class Semantics {
         }
     }
 
-    public static function goingToMutate(e: HxbTypedExpr, parent: HxbTypedExpr): Bool {
-        var res = !canHold(parent, e);
+    static var mutateCache: haxe.ds.ObjectMap<HxbTypedExpr, Bool> = new haxe.ds.ObjectMap();
 
-        TypedExprTools.iter(e, l -> {
-            if (l?.expr == null) {
-                return;
-            }
+    public static function clearMutateCache(): Void {
+        mutateCache = new haxe.ds.ObjectMap();
+    }
 
-            res = res || goingToMutate(l, e);
+    static function internalMutates(e: HxbTypedExpr): Bool {
+        if (e == null || e.expr == null) return false;
+
+        var cached = mutateCache.get(e);
+        if (cached != null) return cached;
+
+        var res = false;
+        TypedExprTools.iter(e, c -> {
+            if (res) return; // short-circuit: stop walking once a mutation is found
+            if (c == null || c.expr == null) return;
+            if (!canHold(e, c) || internalMutates(c)) res = true;
         });
 
+        mutateCache.set(e, res);
         return res;
+    }
+
+    public static function goingToMutate(e: HxbTypedExpr, parent: HxbTypedExpr): Bool {
+        return !canHold(parent, e) || internalMutates(e);
     }
 
     public static function isConstant(e: HxbTypedExpr): Bool {
@@ -120,13 +132,21 @@ class Semantics {
     }
 
     public static function ensure(parent: HxbTypedExpr, children: Array<HxbTypedExpr>, preprocessor: Normaliser, scope: Scope, ancestor: Null<Ancestor>): Void {
+        var mutate = new Array<Bool>();
+        var impure = new Array<Bool>();
         var willMutate = false;
         for (child in children) {
             if (child.expr == null) {
+                mutate.push(false);
+                impure.push(false);
                 continue;
             }
 
-            willMutate = willMutate || hasSideEffects(child) || goingToMutate(child, parent);
+            var m = goingToMutate(child, parent);
+            var i = hasSideEffects(child) || m;
+            mutate.push(m);
+            impure.push(i);
+            willMutate = willMutate || i;
         }
 
         if (!willMutate) {
@@ -169,8 +189,7 @@ class Semantics {
 
                 var lastImpure = -1;
                 for (i in 0...children.length) {
-                    var c = children[i];
-                    if (c.expr != null && (hasSideEffects(c) || goingToMutate(c, parent))) {
+                    if (children[i].expr != null && impure[i]) {
                         lastImpure = i;
                     }
                 }
@@ -181,8 +200,8 @@ class Semantics {
                         continue;
                     }
 
-                    if (goingToMutate(child, parent)) preprocessor.processExpr(child, scope, ca);
-                    else if (i < lastImpure && !isConstant(child)) child.expr = scope.temp(parent, Copy.copy(child), preprocessor, scope, ca).expr;
+                    if (mutate[i]) preprocessor.processExpr(child, scope, ca);
+                    else if (i < lastImpure && !isConstant(child)) child.expr = scope.temp(parent, ExprCopy.copy(child), preprocessor, scope, ca).expr;
                     else preprocessor.processExpr(child, scope, ca);
                 }
         }

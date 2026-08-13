@@ -5,7 +5,6 @@ import hxb.Typed.HxbTypedExprDef;
 import hxb.Typed.HxbVar;
 import hxb.Typed.HxbVarKind;
 import hxb.Typed.HxbVarOrigin;
-import haxe.runtime.Copy;
 import hxb.HxbType;
 
 #if go
@@ -41,7 +40,7 @@ class Scope {
 
         scope.insert(
             before,
-            new HxbTypedExpr(TVar(varInfo, Copy.copy(expr)), null, null),
+            new HxbTypedExpr(TVar(varInfo, ExprCopy.copy(expr)), null, null),
             preprocessor,
             scope,
             ancestor

@@ -6,7 +6,6 @@ import hx2go.util.ExprHelper;
 import hxb.flags.HxbClassFieldFlag;
 import hxb.flags.HxbClassFlag;
 import hx2go.util.StringConversions;
-import haxe.runtime.Copy;
 import hxb.HxbClassField.HxbMethodKind;
 import hxb.HxbType.HxbFunArg;
 import hxb.Typed.HxbTFunc;
@@ -54,7 +53,7 @@ class DynamicInstFunctionAssign extends CompilerPass {
                     case _: return;
                 };
 
-                var vcpy = Copy.copy(value);
+                var vcpy = hx2go.normaliser.ExprCopy.copy(value);
                 var ret = switch field.type {
                     case TFun(_, ret): ret;
                     case _: return;

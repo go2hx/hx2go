@@ -11,7 +11,6 @@ import hx2go.util.TypeHelper;
 import hx2go.normaliser.Semantics;
 import hx2go.util.StringConversions;
 import hxb.flags.HxbClassFlag;
-import haxe.runtime.Copy;
 import hxb.Typed.HxbFieldAccess;
 
 class CastInstToClass extends CompilerPass {
@@ -29,7 +28,7 @@ class CastInstToClass extends CompilerPass {
                 var isDyn = e.t.match(TDynamicAny | TDynamic(_));
                 var o = ExprHelper.createCast(new HxbTypedExpr(TCall(
                     new HxbTypedExpr(
-                        TField(Copy.copy(e), isDyn ? FDynamic("_RTTI") : FInstance(switch e.t {
+                        TField(hx2go.normaliser.ExprCopy.copy(e), isDyn ? FDynamic("_RTTI") : FInstance(switch e.t {
                             case TInst(tp, _): tp;
                             case _: return;
                         }, [], {

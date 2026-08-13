@@ -112,7 +112,8 @@ jobs:
           path: haxe/tests/unit/bin/go/main/unittests.json
           key: ${{ github.ref_name }}-history-${{ hashFiles('**/*.hxml') }}
           restore-keys: ${{ github.ref_name }}-history-
-
+      - name: Setup hx2go
+        run: haxelib dev hx2go .
       - name: Render unit-test graph
         run: haxe scripts/haxeunitgraph.hxml
 

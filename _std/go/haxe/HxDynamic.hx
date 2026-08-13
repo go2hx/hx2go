@@ -487,6 +487,22 @@ class HxDynamic {
         return valueToInt(dV);
     }
 
+    static function valueToInt64(dV:Value):go.Int64 {
+        if (dV.canInt()) {
+            return dV.int();
+        } else if (dV.canUint()) {
+            return go.Go.int64(dV.uint());
+        } else if (dV.canFloat()) {
+            return go.Go.int64(go.Math.floor(dV.float()));
+        }
+        return 0;
+    }
+
+    public static function toInt64(d:Dynamic):go.Int64 {
+        var dV = ensureConcreteValue(d);
+        return valueToInt64(dV);
+    }
+
     // internal function to convert Value to Float
     static function valueToFloat(dV:Value):Float {
         // NOTE not converting bool to int

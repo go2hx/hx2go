@@ -44,14 +44,14 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         with:
           path: haxe/tests/unit/bin/go/main/unittests.txt
-          key: ${{ github.ref_name }}-regression-${{ hashFiles('**/*.hxml') }}
+          key: ${{ github.ref_name }}-regression-${{ github.run_id }}
           restore-keys: ${{ github.ref_name }}-regression-
 
       - uses: actions/cache@v4
         if: matrix.os == 'ubuntu-latest'
         with:
           path: haxe/tests/unit/bin/go/main/unittests.json
-          key: ${{ github.ref_name }}-history-${{ hashFiles('**/*.hxml') }}
+          key: ${{ github.ref_name }}-history-${{ github.run_id }}
           restore-keys: ${{ github.ref_name }}-history-
 
       - name: Setup hx2go dev
@@ -94,6 +94,8 @@ jobs:
     if: always()  # Run even if test fails, to capture partial results
     steps:
       - uses: actions/checkout@v4
+        with:
+            submodules: recursive
       - uses: actions/setup-go@v6
         with:
           go-version: stable
@@ -110,9 +112,9 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           path: haxe/tests/unit/bin/go/main/unittests.json
-          key: ${{ github.ref_name }}-history-${{ hashFiles('**/*.hxml') }}
+          key: ${{ github.ref_name }}-history-${{ github.run_id }}
           restore-keys: ${{ github.ref_name }}-history-
-      - name: Setup hx2go
+      - name: Setup hx2go dev
         run: haxelib dev hx2go .
       - name: Render unit-test graph
         run: haxe scripts/haxeunitgraph.hxml

@@ -105,10 +105,9 @@ jobs:
         with:
           haxe-version: latest
 
-      - name: Install Chrome
-        uses: browser-actions/setup-chrome@v2
-        with:
-          chrome-version: stable
+      - name: Set up Chrome headless
+        run: |
+          docker run -d --network host --rm --name headless-shell docker.io/chromedp/headless-shell
 
       - name: Restore test files
         uses: actions/cache/restore@v4

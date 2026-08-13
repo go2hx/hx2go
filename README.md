@@ -123,6 +123,9 @@ function main() {
 }
 ```
 
+## Haxe unit tests
+<img src="https://go2hx.github.io/hx2go/graph.png"/>
+
 ## Contributing
 
 Contributions are welcome. Please open an issue to discuss substantial changes

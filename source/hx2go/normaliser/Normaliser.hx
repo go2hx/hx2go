@@ -232,6 +232,11 @@ class Normaliser {
                 local.activeTryOwnsBreak = false;
                 local.activeLoop = null;
                 local.activeSwitch = null;
+                // stop collisions with the args
+                for (a in tfunc.args) {
+                    var argName: String = a.v.name;
+                    local.variableAliases.remove(argName);
+                }
                 return iterateExpr(expr, local, ancestor);
 
             case TTry(_, _):

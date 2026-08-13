@@ -6,12 +6,8 @@ extern class String {
 
     function new(string:String): Void;
 
-    inline function toUpperCase():String {
-        return HxString.toUpperCase(this);
-    }
-    inline function toLowerCase():String {
-        return HxString.toLowerCase(this);
-    }
+    function toUpperCase():String;
+    function toLowerCase():String;
 
     inline function charAt(index:Int):String {
         return HxString.charAt(this, index);
@@ -34,9 +30,9 @@ extern class String {
     inline function substring(startIndex:Int, ?endIndex:Int):String {
         return HxString.substring(this, startIndex, endIndex);
     }
-    inline function toString():String {
-        return HxString.toString(this);
-    }
+    
+    function toString():String;
+
     @:pure inline static function fromCharCode(code:Int):String {
         return HxString.fromCharCode(code);
     }

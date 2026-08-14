@@ -13,7 +13,6 @@ import hx2go.util.StringConversions;
 import hxb.Ast.HxbObjectField;
 import hx2go.util.ObjectFieldHelper;
 import hxb.HxbType;
-import haxe.runtime.Copy;
 import hx2go.normaliser.Semantics;
 
 // NOTE: identical to NullableField, but separate for clarity
@@ -30,14 +29,14 @@ class NullableIndex extends CompilerPass {
         switch expr.expr {
             case TArray(e, idx): {
                 if (Semantics.isNullableExpr(context, e)) {
-                    var local = Copy.copy(e);
+                    var local = hx2go.normaliser.ExprCopy.copy(e);
                     context.submitNode(local, true);
 
                     e.expr = ExprHelper.createUntyped('{0}.Value', [local]).expr;
                 }
 
                 if (Semantics.isNullableExpr(context, idx)) {
-                    var local = Copy.copy(idx);
+                    var local = hx2go.normaliser.ExprCopy.copy(idx);
                     context.submitNode(local, true);
 
                     idx.expr = ExprHelper.createUntyped('{0}.Value', [local]).expr;

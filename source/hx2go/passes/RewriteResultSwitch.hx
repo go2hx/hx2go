@@ -13,7 +13,6 @@ import hx2go.util.StringConversions;
 import hxb.Ast.HxbObjectField;
 import hx2go.util.ObjectFieldHelper;
 import hxb.flags.HxbClassFieldFlag;
-import haxe.runtime.Copy;
 import hxb.Typed.HxbVar;
 
 class RewriteResultSwitch extends CompilerPass {
@@ -39,7 +38,7 @@ class RewriteResultSwitch extends CompilerPass {
                     head = idx == 0 && cases.length > 1 ? c.expr : new HxbTypedExpr(TIf(
                         new HxbTypedExpr(TBinop(
                             c.patterns[0].expr.match(TConst(TInt(0))) ? OpEq : OpNotEq,
-                            ExprHelper.createUntyped('{0}.Error', [ Copy.copy(e) ]),
+                            ExprHelper.createUntyped('{0}.Error', [ hx2go.normaliser.ExprCopy.copy(e) ]),
                             new HxbTypedExpr(TConst(TNull), e.t, e.pos)
                         ), TBool, e.pos),
                         c.expr,

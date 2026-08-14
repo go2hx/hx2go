@@ -8,7 +8,6 @@ import hx2go.util.ExprHelper;
 import hx2go.util.TypeHelper;
 import hx2go.util.StringConversions;
 import hxb.flags.HxbClassFlag;
-import haxe.runtime.Copy;
 import hxb.Typed.HxbVar;
 
 class CastPointerInterface extends CompilerPass {
@@ -60,7 +59,7 @@ class CastPointerInterface extends CompilerPass {
 
                 if (td.meta.filter(mm -> mm.name == ":go.Type").length > 0) {
                     // Go-native extern typedef: wrap the address.
-                    var o = ExprHelper.createUntyped("(&({0}))", [Copy.copy(e)]);
+                    var o = ExprHelper.createUntyped("(&({0}))", [hx2go.normaliser.ExprCopy.copy(e)]);
                     e.expr = o.expr;
 
                     context.submitNode(e, true);
@@ -92,7 +91,7 @@ class CastPointerInterface extends CompilerPass {
                         }
 
                         expr.expr = operandIsIface
-                            ? ExprHelper.createUntyped('(*$ifaceName)({0})', [Copy.copy(e)]).expr
+                            ? ExprHelper.createUntyped('(*$ifaceName)({0})', [hx2go.normaliser.ExprCopy.copy(e)]).expr
                             : {
                                 var cst = ExprHelper.createUntyped('&$ifaceName{ VTable: {0}.VTable.(${StringConversions.typePathClassVTableName(ifaceCls?.path)}) }', [e]);
                                 var tmp = new HxbVar(-1, 'hx_picast_${castId++}', VUser(TVOLocalVariable), 0, [], e.pos, expr.t);

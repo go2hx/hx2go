@@ -16,7 +16,6 @@ import hx2go.util.ObjectFieldHelper;
 import hxb.HxbType;
 import hxb.Typed.HxbTypedExprDef;
 import hxb.HxbClassField;
-import haxe.runtime.Copy;
 
 class RewriteMethodAssign extends CompilerPass {
 
@@ -49,7 +48,7 @@ class RewriteMethodAssign extends CompilerPass {
                     OpAssign,
                     new HxbTypedExpr(
                         TField(
-                            Copy.copy(e),
+                            hx2go.normaliser.ExprCopy.copy(e),
                             FInstance(tp, p, {
                                 owner: cf.owner,
                                 kind: cf.kind,

@@ -7,7 +7,6 @@ import hx2go.util.ExprHelper;
 import hx2go.normaliser.Semantics;
 import hxb.Ast.HxbBinop;
 import hxb.HxbType;
-import haxe.runtime.Copy;
 
 class FloatMod extends CompilerPass {
 
@@ -28,11 +27,11 @@ class FloatMod extends CompilerPass {
                 right = b_right;
                 left = b_left;
                 context.defineImport(frame, "math");
-                ExprHelper.createUntyped('math.Mod({0}, {1})', [b_left, Copy.copy(b_right)]);
+                ExprHelper.createUntyped('math.Mod({0}, {1})', [b_left, hx2go.normaliser.ExprCopy.copy(b_right)]);
             case _: expr;
         }
         if (op.match(OpAssignOp(OpMod))) {
-            expr.expr = TBinop(OpAssign, Copy.copy(left), o);
+            expr.expr = TBinop(OpAssign, hx2go.normaliser.ExprCopy.copy(left), o);
             context.submitNode(expr, true);
         }else{
             expr.expr = o.expr;

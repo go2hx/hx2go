@@ -1,7 +1,6 @@
 package hx2go.passes;
 
 import hxb.Typed.HxbVar;
-import haxe.runtime.Copy;
 import hxb.Typed.HxbTypedExpr;
 import hxb.flags.HxbClassFlag;
 import hxb.Typed.HxbFieldAccess;
@@ -71,11 +70,11 @@ class ArrayAccessSet extends CompilerPass {
                     eidx.t,
                     eidx.pos
                 );
-                var rightCopy = Copy.copy(right);
+                var rightCopy = hx2go.normaliser.ExprCopy.copy(right);
                 var o = new HxbTypedExpr(TBlock([
-                    new HxbTypedExpr(TVar(tmp_e, Copy.copy(e)), e.t, e.pos),
-                    new HxbTypedExpr(TVar(tmp_idx, Copy.copy(eidx)), eidx.t, eidx.pos),
-                    growCheck(frame, Copy.copy(expr), tmp_e_local, tmp_idx_local, rightCopy),
+                    new HxbTypedExpr(TVar(tmp_e, hx2go.normaliser.ExprCopy.copy(e)), e.t, e.pos),
+                    new HxbTypedExpr(TVar(tmp_idx, hx2go.normaliser.ExprCopy.copy(eidx)), eidx.t, eidx.pos),
+                    growCheck(frame, hx2go.normaliser.ExprCopy.copy(expr), tmp_e_local, tmp_idx_local, rightCopy),
                     new HxbTypedExpr(
                         TBinop(OpAssign, { 
                             expr: ExprHelper.createUntyped("(*{0})[{1}]", [tmp_e_local, tmp_idx_local]).expr, 

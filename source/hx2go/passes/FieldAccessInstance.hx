@@ -6,7 +6,6 @@ import hx2go.util.ExprHelper;
 import hxb.flags.HxbClassFieldFlag;
 import hxb.flags.HxbClassFlag;
 import hx2go.util.StringConversions;
-import haxe.runtime.Copy;
 
 class FieldAccessInstance extends CompilerPass {
 
@@ -36,7 +35,7 @@ class FieldAccessInstance extends CompilerPass {
 
                 if (cf.name == "_RTTI") { // special case for RTTI
                     if (!context.omitVTable(cls)) {
-                        e.expr = TField(Copy.copy(e), FInstance(tp, params, {
+                        e.expr = TField(hx2go.normaliser.ExprCopy.copy(e), FInstance(tp, params, {
                             name: 'VTable',
                             owner: cf.owner,
                             kind: cf.kind,
@@ -67,7 +66,7 @@ class FieldAccessInstance extends CompilerPass {
 
                 switch field.kind {
                     case KMethod(_) if (!context.omitVTable(cls)): {
-                        e.expr = TField(Copy.copy(e), FInstance(tp, params, {
+                        e.expr = TField(hx2go.normaliser.ExprCopy.copy(e), FInstance(tp, params, {
                             name: 'VTable',
                             owner: cf.owner,
                             kind: cf.kind,

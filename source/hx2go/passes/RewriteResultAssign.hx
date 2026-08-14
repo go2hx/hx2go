@@ -13,7 +13,6 @@ import hx2go.util.StringConversions;
 import hxb.Ast.HxbObjectField;
 import hx2go.util.ObjectFieldHelper;
 import hxb.flags.HxbClassFieldFlag;
-import haxe.runtime.Copy;
 import hxb.Typed.HxbVar;
 
 class RewriteResultAssign extends CompilerPass {
@@ -77,7 +76,7 @@ class RewriteResultAssign extends CompilerPass {
                     return;
                 }
 
-                var local = Copy.copy(expr);
+                var local = hx2go.normaliser.ExprCopy.copy(expr);
                 var id = 'hx_result_${resultId++}';
                 var tmp = new HxbVar(
                     -1,

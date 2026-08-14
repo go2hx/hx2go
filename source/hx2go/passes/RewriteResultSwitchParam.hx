@@ -13,7 +13,6 @@ import hx2go.util.StringConversions;
 import hxb.Ast.HxbObjectField;
 import hx2go.util.ObjectFieldHelper;
 import hxb.flags.HxbClassFieldFlag;
-import haxe.runtime.Copy;
 import hxb.Typed.HxbVar;
 
 class RewriteResultSwitchParam extends CompilerPass {
@@ -29,7 +28,7 @@ class RewriteResultSwitchParam extends CompilerPass {
         switch expr.expr {
             case TEnumParameter(e, ref, 0):
                 var kind = ref.name == "Ok" ? "Result" : "Error";
-                var access = ExprHelper.createUntyped('{0}.${kind}', [ Copy.copy(e) ]);
+                var access = ExprHelper.createUntyped('{0}.${kind}', [ hx2go.normaliser.ExprCopy.copy(e) ]);
 
                 expr.expr = access.expr;
                 context.submitNode(expr, true);

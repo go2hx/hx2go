@@ -3,7 +3,6 @@ package hx2go.passes;
 import hxb.Typed.HxbTypedExpr;
 import hxb.tools.TypedExprTools;
 import hx2go.util.ExprHelper;
-import haxe.runtime.Copy;
 
 class RewriteSyntaxSelect extends CompilerPass {
 
@@ -21,7 +20,7 @@ class RewriteSyntaxSelect extends CompilerPass {
                 var args: Array<HxbTypedExpr> = [];
 
                 function slot(e: HxbTypedExpr): String {
-                    return '{${(args.push(Copy.copy(e)) - 1)}}';
+                    return '{${(args.push(hx2go.normaliser.ExprCopy.copy(e)) - 1)}}';
                 }
 
                 for (param in params) {

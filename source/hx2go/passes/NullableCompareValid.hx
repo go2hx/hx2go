@@ -7,7 +7,6 @@ import hx2go.util.ExprHelper;
 import hx2go.normaliser.Semantics;
 import hxb.Ast.HxbBinop;
 import hxb.HxbType;
-import haxe.runtime.Copy;
 
 class NullableCompareValid extends CompilerPass {
 
@@ -55,7 +54,7 @@ class NullableCompareValid extends CompilerPass {
         }else{
             return;
         }
-        var nullCheckExpr = ExprHelper.createUntyped("{0}.Valid", [Copy.copy(nullValue)]);
+        var nullCheckExpr = ExprHelper.createUntyped("{0}.Valid", [hx2go.normaliser.ExprCopy.copy(nullValue)]);
         nullCheckExpr.t = TBool;
 
         var isValid = new HxbTypedExpr(
@@ -71,7 +70,7 @@ class NullableCompareValid extends CompilerPass {
             expr: TBinop(
                 op == OpEq ? OpBoolAnd : OpBoolOr,
                 isValid,
-                Copy.copy(expr)
+                hx2go.normaliser.ExprCopy.copy(expr)
             ),
             t: expr.t,
             pos: expr.pos,

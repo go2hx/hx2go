@@ -5,7 +5,6 @@ import hxb.HxbModuleType;
 import hxb.Typed.HxbTypedExprDef;
 import hxb.HxbType;
 import hx2go.util.ExprHelper;
-import haxe.runtime.Copy;
 import hxb.Typed.HxbVar;
 import hxb.Ast.HxbUnop;
 import hxb.Ast.HxbBinop;
@@ -48,13 +47,13 @@ class RewriteDynamicUnop extends CompilerPass { // only for OpIncrement / OpDecr
         var o = switch expr.expr {
             case TUnop(op, true, e):
                 new HxbTypedExpr(TBlock([
-                    new HxbTypedExpr(TVar(tmp, Copy.copy(e)), TVoid, expr.pos),
-                    assign_op(Copy.copy(e), op),
+                    new HxbTypedExpr(TVar(tmp, hx2go.normaliser.ExprCopy.copy(e)), TVoid, expr.pos),
+                    assign_op(hx2go.normaliser.ExprCopy.copy(e), op),
                     tmp_ident()
                 ]), TDynamicAny, expr.pos);
 
             case TUnop(op, false, e):
-                assign_op(Copy.copy(e), op);
+                assign_op(hx2go.normaliser.ExprCopy.copy(e), op);
 
             case _: return;
         }

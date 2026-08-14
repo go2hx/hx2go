@@ -8,7 +8,6 @@ import hx2go.util.TypeHelper;
 import hx2go.util.ExprHelper;
 import hxb.HxbType;
 import hxb.HxbClassField;
-import haxe.runtime.Copy;
 import hxb.Typed.HxbTypedExprDef;
 import hxb.Ast.HxbExpr;
 import hx2go.passes.FieldAccessExtern.ExternKind;
@@ -113,7 +112,7 @@ class TypeNormaliserCall extends CompilerPass {
                             continue;
                         }
                         args[i].expr = TBlock([
-                            {expr: TVar(func.args[i].v, Copy.copy(args[i])), t: args[i].t, pos: args[i].pos},
+                            {expr: TVar(func.args[i].v, hx2go.normaliser.ExprCopy.copy(args[i])), t: args[i].t, pos: args[i].pos},
                             {expr: TLocal(func.args[i].v), t: func.args[i].v.type, pos: func.args[i].v.pos},
                         ]);
                     }
@@ -196,8 +195,8 @@ class TypeNormaliserCall extends CompilerPass {
 
         var isDynamic = inner.t == null || inner.t.match(TDynamic(_) | TDynamicAny);
         var slice = isDynamic
-            ? ExprHelper.createCallStatic(context, { pack: ['go', 'haxe'], name: 'HxDynamic', moduleName: 'HxDynamic' }, 'toAnySlice', [Copy.copy(inner)])
-            : ExprHelper.createUntyped("(*({0}))", [Copy.copy(inner)]);
+            ? ExprHelper.createCallStatic(context, { pack: ['go', 'haxe'], name: 'HxDynamic', moduleName: 'HxDynamic' }, 'toAnySlice', [hx2go.normaliser.ExprCopy.copy(inner)])
+            : ExprHelper.createUntyped("(*({0}))", [hx2go.normaliser.ExprCopy.copy(inner)]);
 
         arg.expr = ExprHelper.createUntyped("{0}...", [slice]).expr;
         arg.t = elementType;

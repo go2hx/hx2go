@@ -15,9 +15,75 @@ class Std {
         return Go.int32(x);
     }
 
+    static inline function isSpaceChar(code:Int):Bool
+		return (code > 8 && code < 14) || code == 32;
+
+	static inline function isHexPrefix(cur:Int, next:Int):Bool
+		return cur == '0'.code && (next == 'x'.code || next == 'X'.code);
+
+	static inline function isDecimalDigit(code:Int):Bool
+		return '0'.code <= code && code <= '9'.code;
+
+	static inline function isHexadecimalDigit(code:Int):Bool
+		return isDecimalDigit(code) || ('a'.code <= code && code <= 'f'.code) || ('A'.code <= code && code <= 'F'.code);
+
     public static function parseInt(x: String): Null<Int> {
-        return Strconv.atoi(x).sure();
-    }
+        if (x == null)
+			return null;
+
+		final len = x.length;
+		var index = 0;
+
+		inline function hasIndex(index:Int)
+			return index < len;
+
+		// skip whitespace
+		while (hasIndex(index)) {
+			if (!isSpaceChar(x.charCodeAt(index)))
+				break;
+			++index;
+		}
+
+		// handle sign
+		final isNegative = hasIndex(index) && {
+			final sign = x.charCodeAt(index);
+			if (sign == '-'.code || sign == '+'.code) {
+				++index;
+			}
+			sign == '-'.code;
+		}
+
+		// handle base
+		final isHexadecimal = hasIndex(index + 1) && isHexPrefix(x.charCodeAt(index), x.charCodeAt(index + 1));
+		if (isHexadecimal)
+			index += 2; // skip prefix
+
+		// handle digits
+		final firstInvalidIndex = {
+			var cur = index;
+			if (isHexadecimal) {
+				while (hasIndex(cur)) {
+					if (!isHexadecimalDigit(x.charCodeAt(cur)))
+						break;
+					++cur;
+				}
+			} else {
+				while (hasIndex(cur)) {
+					if (!isDecimalDigit(x.charCodeAt(cur)))
+						break;
+					++cur;
+				}
+			}
+			cur;
+		}
+
+		// no valid digits
+		if (index == firstInvalidIndex)
+			return null;
+
+		final result:Int = Strconv.parseInt(x.substring(index, firstInvalidIndex), if (isHexadecimal) 16 else 10, 32).sure();
+		return if (isNegative) -result else result;
+	}
 
     public static function parseFloat(x: String):Float {
         return Strconv.parseFloat(x, 64).sure();

@@ -49,7 +49,11 @@ class EReg {
     }
 
     public function matched(n: Int): String {
-        if (matchPos == null || n < 0 || n * 2 + 1 >= matchPos.length) {
+        if (matchPos == null) {
+            throw "No string matched";
+        }
+
+        if (n < 0 || n * 2 + 1 >= matchPos.length) {
             return null;
         }
 

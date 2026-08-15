@@ -23,24 +23,31 @@
 package haxe.io;
 
 import haxe.Int32;
+import go.Math as GoMath;
+import go.Syntax;
+import go.UInt64;
 
-// Can't enable @:coreApi because floatToI32/i32ToFloat use Single instead of Float, and field types differ from core
 @:coreApi(check = Off)
 class FPHelper {
 
-	public static function i32ToFloat(i:Int32):Single {
-		return i;
+	public static function i32ToFloat(i: Int32): Single {
+		return GoMath.float32frombits(cast i);
 	}
 
-	public static function floatToI32(f:Single):Int32 {
-		return f;
+	public static function floatToI32(f: Single): Int32 {
+		return cast GoMath.float32bits(f);
 	}
 
-	public static function i64ToDouble(low:Int32, high:Int32):Float {
-		return Int64.make(low, high).toFloat();
+	public static function i64ToDouble(low: Int32, high: Int32): Float {
+		var bits: UInt64 = Syntax.code("(uint64(uint32({0})) << 32) | uint64(uint32({1}))", high, low);
+		return GoMath.float64frombits(bits);
 	}
 
-	public static function doubleToI64(v:Float):Int64 {
-		return Int64.fromFloat(v);
+	public static function doubleToI64(v: Float): Int64 {
+		var bits: UInt64 = GoMath.float64bits(v);
+		var low: Int32 = Syntax.code("int32(uint32({0}))", bits);
+		var high: Int32 = Syntax.code("int32(uint32({0} >> 32))", bits);
+		return Int64.make(high, low);
 	}
+
 }

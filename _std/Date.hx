@@ -97,7 +97,7 @@ import go.Time_ as Time;
 	}
 
 	@:keep public function toString():String {
-		return cast t.string();
+		return cast t.format("2006-01-02 15:04:05");
 	}
 
 	public static function now():Date {

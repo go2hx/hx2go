@@ -144,6 +144,7 @@ class Context {
             new hx2go.passes.FieldAccessExtern(this),
             new hx2go.passes.FieldAccessInstance(this),
             new hx2go.passes.InterfaceDynamic(this),
+            new hx2go.passes.FunctionCompare(this),
             new hx2go.passes.InterfaceCompare(this),
             new hx2go.passes.RewriteAbstractThis(this),
             new hx2go.passes.RewriteSliceCreation(this),

@@ -181,6 +181,10 @@ class HxDynamic {
             }
         }
 
+        if (aK == Reflect.Func && bK == Reflect.Func) {
+            return aV.pointer() == bV.pointer();
+        }
+
         var k = jointKind(aV, bV);
         if (k == Reflect.Int32 || k == Reflect.Int)
             return valueToInt(aV) == valueToInt(bV);

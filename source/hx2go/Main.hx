@@ -1,12 +1,16 @@
 package hx2go;
 
-import haxe.ds.Map;
 import haxe.io.Bytes;
 import haxe.io.Path;
 import sys.FileSystem;
 import hxb.Hxb;
 import hxb.HxbModule.HxbImport;
 import hxb.HxbArchive;
+
+#if go
+import go.Map;
+#end
+
 
 class Main {
 
@@ -20,7 +24,7 @@ class Main {
         var singleFile = (args[3] == "1") ?? false;
         var sourcelineComments = (args[4] == "1") ?? false;
         var resSerialized = args[5];
-        var res:Map<String, Bytes> = haxe.Unserializer.run(resSerialized);
+        var res:haxe.ds.Map<String, Bytes> = haxe.Unserializer.run(resSerialized);
         var times = (args[6] == "1") ?? false;
 
         // accept both absolute paths (-D go-bootstrap) and relative paths
@@ -34,7 +38,7 @@ class Main {
         return imp.pack.length > 0 ? '${imp.pack.join(".")}.${imp.name}' : imp.name;
     }
 
-    public static function exec(input: String, output: String, mainClass: String, singleFile:Bool, sourcelineComments:Bool, res:Map<String, Bytes>, times:Bool = false): Void {
+    public static function exec(input: String, output: String, mainClass: String, singleFile:Bool, sourcelineComments:Bool, res:haxe.ds.Map<String, Bytes>, times:Bool = false): Void {
         final start = Sys.time();
         if (!FileSystem.exists(input)) {
             Sys.println("HXB not found: " + input);
@@ -47,7 +51,7 @@ class Main {
         Sys.println('hx2go took ${Std.string(Math.round((end - start) * 100000) / 100)}ms');
     }
 
-    public static function generate(archive: HxbArchive, absoluteOutput: String, mainClass: String, singleFile:Bool, sourcelineComments:Bool, res:Map<String, Bytes>, times:Bool = false): Void {
+    public static function generate(archive: HxbArchive, absoluteOutput: String, mainClass: String, singleFile:Bool, sourcelineComments:Bool, res:haxe.ds.Map<String, Bytes>, times:Bool = false): Void {
         if (!FileSystem.exists(absoluteOutput)) {
             FileSystem.createDirectory(absoluteOutput);
         }

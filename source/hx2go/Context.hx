@@ -30,6 +30,10 @@ import hxb.Typed.HxbTypedExprDef;
 import hx2go.normaliser.Semantics;
 import hx2go.passes.RewriteDynamicBinop;
 
+#if go
+import go.Map;
+#end
+
 class Context {
 
     private static final _reservedWords: Array<String> = [
@@ -204,8 +208,8 @@ class Context {
         if (!typeQueue.contains(modulePath)) typeQueue.push(modulePath);
         types.set(typePath, t);
     }
-    public var res:Map<String, Bytes> = [];
-    public function build(mainClass: String, singleFile:Bool, res:Map<String, Bytes>): Void {
+    public var res:haxe.ds.Map<String, Bytes> = [];
+    public function build(mainClass: String, singleFile:Bool, res:haxe.ds.Map<String, Bytes>): Void {
         typesByModule = new Map();
         typeQueue = [];
         this.res = res;

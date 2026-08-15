@@ -4,8 +4,10 @@ function main() {
 	assert(foo == foo);
 	assert((foo : Dynamic) == foo);
 	assert((foo : Dynamic) != (foo2 : Dynamic));
-	// assert(foo == foo2);
-	// assert((foo : Func) == (foo2 : Func));
+	assert(foo != foo2);
+	assert((foo : Func) != (foo2 : Func));
+	assert((foo : Null<Func>) != (foo2 : Func));
+	assert((foo : Null<Func>) == (foo : Func));
 }
 
 typedef Func = Void -> Void;

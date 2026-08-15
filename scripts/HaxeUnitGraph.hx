@@ -93,21 +93,21 @@ function main() {
 	line.addSeries("Passed Methods", [for (r in records) {
 		value: [Time.unixMilli(Go.int64(r.time)).UTC(), r.passed],
 	}],
-		Charts.withLineChartOpts({ stack: "tests", smooth: Opts.bool(false), step: "end" }),
+		Charts.withLineChartOpts({ stack: "tests", smooth: Opts.bool(false), step: "start" }),
 		Charts.withAreaStyleOpts({ opacity: Opts.float(0.9) }),
 		Charts.withItemStyleOpts({ color: passedColor })
 	);
 	line.addSeries("Failed Methods", [for (r in records) {
 		value: [Time.unixMilli(Go.int64(r.time)).UTC(), r.failed],
 	}],
-		Charts.withLineChartOpts({ stack: "tests", smooth: Opts.bool(false), step: "end" }),
+		Charts.withLineChartOpts({ stack: "tests", smooth: Opts.bool(false), step: "start" }),
 		Charts.withAreaStyleOpts({ opacity: Opts.float(0.9) }),
 		Charts.withItemStyleOpts({ color: failedColor })
 	);
 	line.addSeries("Errored Methods (caught throw)", [for (r in records) {
 		value: [Time.unixMilli(Go.int64(r.time)).UTC(), r.errored],
 	}],
-		Charts.withLineChartOpts({ stack: "tests", smooth: Opts.bool(false), step: "end" }),
+		Charts.withLineChartOpts({ stack: "tests", smooth: Opts.bool(false), step: "start" }),
 		Charts.withAreaStyleOpts({ opacity: Opts.float(0.9) }),
 		Charts.withItemStyleOpts({ color: erroredColor })
 	);

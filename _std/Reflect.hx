@@ -80,7 +80,7 @@ class Reflect {
             return false;
         }
 
-        throw f1 == f2;
+        return f1 == f2;
     }
 
     public static function isObject(v: Dynamic): Bool {

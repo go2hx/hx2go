@@ -7,6 +7,8 @@ import go.reflect.Kind;
 import go.reflect.Type;
 import go.Syntax;
 import go.Fmt;
+import go.Pointer;
+import go.unsafe.Pointer as UnsafePointer;
 
 // HxDynamic implements Dynamic runtime manipulation required by Haxe
 // using go.reflect.Reflect and naming from http://haxedev.wikidot.com/article:operator-overloading
@@ -16,6 +18,13 @@ import go.Fmt;
 // All functions return String, Int, Float, Bool or null inside a Dynamic
 //
 // TODO tests
+
+@:go.Type({ name: "unsafe", imports: ["unsafe"] })
+private extern class Unsafe {
+    @:native("Pointer") static function pointer(p: Dynamic): UnsafePointer;
+    @:native("Add") static function add(ptr: UnsafePointer, len: go.UIntPtr): UnsafePointer;
+    @:native("Sizeof") static function sizeof(v: Dynamic): go.UIntPtr;
+}
 @:keep
 @:analyzer(ignore)
 class HxDynamic {
@@ -182,7 +191,11 @@ class HxDynamic {
         }
 
         if (aK == Reflect.Func && bK == Reflect.Func) {
-            return aV.pointer() == bV.pointer();
+            if (aV.pointer() != bV.pointer()) {
+                return false;
+            }
+
+            return funcReceiver(a) == funcReceiver(b);
         }
 
         var k = jointKind(aV, bV);
@@ -901,5 +914,18 @@ class HxDynamic {
         }
 
         return value._interface();
+    }
+
+    // peek atthe funcval's captured receiver directly.
+    static function funcReceiver(fn: Dynamic): go.UIntPtr {
+        // &fn points at the interface header; the data pointer is the 2nd word
+        var header: UnsafePointer = Unsafe.pointer(Pointer.addressOf(fn));
+        var wordSize: go.UIntPtr = Unsafe.sizeof(header);
+        // read the funcval pointer (stored at header + wordSize) as a uintptr,
+        // then reinterpret it as an unsafe.Pointer to walk the funcval.
+        var dataLoc: Pointer<go.UIntPtr> = cast Unsafe.add(header, wordSize);
+        var funcval: UnsafePointer = Unsafe.pointer(dataLoc.value);
+        var recvLoc: Pointer<go.UIntPtr> = cast Unsafe.add(funcval, wordSize * 2);
+        return recvLoc.value;
     }
 }

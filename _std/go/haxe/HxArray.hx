@@ -131,18 +131,8 @@ class HxArray {
             return [];
         }
 
-        var removed: Array<T> = [];
-
-        setData(
-            removed,
-            Syntax.code(
-                'append({0}, {1}[{2}:{3}]...)',
-                getData(removed),
-                getData(arr),
-                start,
-                start + removeLen
-            )
-        );
+        var removed: Array<T> = getData(arr).slice(start, removeLen);
+        removed = removed.copy();
 
         setData(
             arr,
@@ -150,7 +140,7 @@ class HxArray {
                 'append({0}[:{1}], {0}[{2}:]...)',
                 getData(arr),
                 start,
-                start + removeLen
+                removeLen
             )
         );
 

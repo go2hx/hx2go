@@ -34,12 +34,10 @@ class RewriteTupleCreation extends CompilerPass {
                     case _: return;
                 };
 
-                expr.expr = ExprHelper.createUntyped('${context.getWriter().types.writeHxbType(ret)}{ ${sorted.map(_ -> '{${idx++}}').join(', ')} }', sorted.map(f -> f.expr)).expr;
-
                 for (f in sorted) {
                     var rt = switch ret {
                         case TType({ name: "Tuple", pack: ["go"] }, [TAnon(anon)]): anon.fields.filter(a -> a.name == f.name)[0];
-                        case _: continue;
+                        case _: return; // this breaks out of the entire function, so expr.expr below is not ran.
                     }
 
                     var o = ExprHelper.createCast(f.expr, rt.type);
@@ -48,6 +46,8 @@ class RewriteTupleCreation extends CompilerPass {
 
                     context.submitNode(f.expr, true);
                 }
+
+                expr.expr = ExprHelper.createUntyped('${context.getWriter().types.writeHxbType(ret)}{ ${sorted.map(_ -> '{${idx++}}').join(', ')} }', sorted.map(f -> f.expr)).expr;
             }
 
             case _: null;

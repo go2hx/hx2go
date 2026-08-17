@@ -66,11 +66,11 @@ class CastPointerInterface extends CompilerPass {
                     case _: false;
                 }
 
-                if (ecls) {
-                    return;
-                }
-
                 if (td.meta.filter(mm -> mm.name == ":go.Type").length > 0) {
+                    if (ecls) {
+                        return;
+                    }
+
                     var o = ExprHelper.createUntyped("(&({0}))", [hx2go.normaliser.ExprCopy.copy(e)]);
                     e.expr = o.expr;
 

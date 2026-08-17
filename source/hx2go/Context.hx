@@ -70,9 +70,9 @@ class Context {
     public var sourcelineComments:Bool = false;
     public var times: hx2go.util.Times;
 
-    public function new(archive: HxbArchive, outputDirectory: String, sourcelineComments:Bool, times:Bool = false) {
+    public function new(archive: HxbArchive, outputDirectory: String, sourcelineComments:Bool, times:hx2go.util.Times) {
         this.sourcelineComments = sourcelineComments;
-        this.times = new hx2go.util.Times(times);
+        this.times = times;
         this.types = new Map();
         this.imports = new Map();
         this.outputDirectory = outputDirectory;

@@ -630,12 +630,13 @@ class Context {
 
             case TField(e, FInstance(_, _, fa)) if (e.t != null && switch e.t {
                 case TInst(tp, _): switch resolve(tp) {
-                    case MClass(c): c.flags & HxbClassFlag.CInterface != 0;
+                    case MClass(c): (c.flags & HxbClassFlag.CInterface != 0) && !expr.t.match(TFun(_)) && fa.name != "VTable";
                     case _: false;
                 };
 
                 case _: false;
             }): {
+                trace(expr.t, expr);
                 expr.expr = TField(ExprHelper.createUntyped("({0}).VTable", [e]), FDynamic(fa.name));
                 expr.t = TDynamicAny;
             }

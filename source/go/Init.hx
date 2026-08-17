@@ -242,6 +242,11 @@ class Init {
 			doc: "measure and report hx2go transpile times (per phase and per pass)",
 			platforms: [CustomTarget("go")],
 		});
+		Compiler.registerCustomDefine({
+			define: "go-profile",
+			doc: "emit runtime/pprof CPU + heap profiling into main() (writes cpu.pprof / mem.pprof)",
+			platforms: [CustomTarget("go")],
+		});
 		// register custom metadata
 		Compiler.registerCustomMetadata({
 			metadata: "go.Type",

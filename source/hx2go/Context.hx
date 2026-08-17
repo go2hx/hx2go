@@ -225,6 +225,9 @@ class Context {
                 break;
             }
         }
+        
+        var profileType: TypePath = { name: "HxProfile", moduleName: "HxProfile", pack: ["go", "haxe"] };
+        resolve(profileType);
 
         var buf = new OutputBuffer();
         var importList:Array<String> = [];
@@ -290,8 +293,12 @@ class Context {
             buf.add('package ${topLevelPackage}');
         }
         buf.add('');
+        var profileStart = StringConversions.typePathStaticFieldName("start", profileType);
+        var profileStop = StringConversions.typePathStaticFieldName("stop", profileType);
         buf.add('func main() {');
+        buf.add('$profileStart()', 1);
         buf.add('${StringConversions.typePathStaticFieldName("main", StringConversions.pathToLossyTypePath(mainClass))}()', 1);
+        buf.add('$profileStop()', 1);
         buf.add('}');
 
         var prefix = new OutputBuffer();

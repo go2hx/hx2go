@@ -123,6 +123,78 @@ function main() {
 }
 ```
 
+## Being compatible with Go interfaces
+In some libraries like ebiten or bubbletea a class must be compatible with a given interface.
+This is not the case by default, as such, you must use ``@go.Export``. 
+By using this meta you create some aliases where go-compatible names are used and types like
+``go.Tuple<T>`` are brought back to actual tuples. Try the following:
+
+Add the go library flag to your `.hxml`:
+
+```hxml
+-D go-lib=github.com/hajimehoshi/ebiten/v2
+-D go-lib=github.com/hajimehoshi/ebiten/v2/ebitenutil
+```
+
+Run the Haxe compiler using the altered `.hxml` once before trying to access the externs to allow the compiler to generate them.
+
+Alter ``Main.hx`` to:
+
+```haxe
+import go.github_com.hajimehoshi.ebiten.v2.Ebitenutil;
+import go.github_com.hajimehoshi.ebiten.v2.Ebiten;
+import go.github_com.hajimehoshi.ebiten.v2.Image;
+import go.Pointer;
+import go.GoInt;
+import go.Error;
+import go.Tuple;
+
+class Game {
+
+    public function new() {
+        return;
+    }
+
+    @:go.Export
+    public function draw(screen: Pointer<Image>): Void {
+        Ebitenutil.debugPrint(screen, "Hello, World!");
+    }
+
+    @:go.Export
+    public function update(): Error {
+        return null;
+    }
+
+    @:go.Export
+    @:go.Tuple("screenWidth", "screenHeight")
+    public function layout(outsideWidth: GoInt, outsideHeight: GoInt): Tuple<{ screenWidth: GoInt, screenHeight: GoInt }> {
+        return { screenWidth: 640, screenHeight: 480 };
+    }
+
+}
+
+function main() {
+    Ebiten.setWindowSize(640, 480);
+    Ebiten.setWindowTitle("Hello, World!");
+    Ebiten.runGame(new Game()).sure();
+}
+```
+
+Note how ``Ebiten.runGame`` has the following signature in go:
+```go
+func RunGame(game Game) error
+```
+
+Where ``Game`` is:
+```go
+type Game interface {
+    Update() error
+    Draw(screen *Image)
+    Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int)
+}
+```
+
+Due to the usage of ``@:go.Export`` on these 3 functions, the Haxe class can be used as the implementation for this Go interface.
 ## Haxe unit tests
 <img src="https://go2hx.github.io/hx2go/graph.png"/>
 

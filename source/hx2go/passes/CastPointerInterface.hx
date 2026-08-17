@@ -57,8 +57,20 @@ class CastPointerInterface extends CompilerPass {
                     case _: return;
                 }
 
+                var ecls = switch e.t {
+                    case TInst(tp, _): switch context.resolve(tp) {
+                        case MClass(cls): cls.flags & HxbClassFlag.CExtern == 0;
+                        case _: false;
+                    }
+
+                    case _: false;
+                }
+
+                if (ecls) {
+                    return;
+                }
+
                 if (td.meta.filter(mm -> mm.name == ":go.Type").length > 0) {
-                    // Go-native extern typedef: wrap the address.
                     var o = ExprHelper.createUntyped("(&({0}))", [hx2go.normaliser.ExprCopy.copy(e)]);
                     e.expr = o.expr;
 

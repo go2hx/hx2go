@@ -246,12 +246,21 @@ abstract Int64(__Int64) from __Int64 to __Int64 {
 	@:op(A ^ B) public static inline function xor(a:Int64, b:Int64):Int64
 		return a.val ^ b.val;
 
-	@:op(A << B) public static inline function shl(a:Int64, b:Int):Int64
+	@:op(A << B) public static inline function shl(a:Int64, b:Int):Int64 {
+		if (b <= 0 || b >= 64)
+			return a;
 		return a.val << b;
+	}
 
-	@:op(A >> B) public static inline function shr(a:Int64, b:Int):Int64
+	@:op(A >> B) public static inline function shr(a:Int64, b:Int):Int64 {
+		if (b <= 0 || b >= 64)
+			return a;
 		return a.val >> b;
+	}
 
-	@:op(A >>> B) public static inline function ushr(a:Int64, b:Int):Int64
+	@:op(A >>> B) public static inline function ushr(a:Int64, b:Int):Int64 {
+		if (b <= 0 || b >= 64)
+			return a;
 		return a.val >>> b;
+	}
 }

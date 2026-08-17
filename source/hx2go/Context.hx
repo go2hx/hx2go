@@ -636,7 +636,6 @@ class Context {
 
                 case _: false;
             }): {
-                trace(expr.t, expr);
                 expr.expr = TField(ExprHelper.createUntyped("({0}).VTable", [e]), FDynamic(fa.name));
                 expr.t = TDynamicAny;
             }

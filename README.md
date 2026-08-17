@@ -125,7 +125,7 @@ function main() {
 
 ## Being compatible with Go interfaces
 In some libraries like ebiten or bubbletea a class must be compatible with a given interface.
-This is not the case by default, as such, you must use ``@go.Export``. 
+This is not the case by default, as such, you must use ``@:go.Export``. 
 By using this meta you create some aliases where go-compatible names are used and types like
 ``go.Tuple<T>`` are brought back to actual tuples. Try the following:
 

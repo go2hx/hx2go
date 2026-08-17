@@ -93,6 +93,7 @@ class Context {
         return [
             new hx2go.passes.FieldAccessGeneric(this), // TODO: c1
             new hx2go.passes.DefaultArgs(this),
+            new hx2go.passes.FunctionCompare(this),
             new hx2go.passes.TypeNormaliserCallReturn(this),
             new hx2go.passes.RewriteSyntaxCode(this),
             new hx2go.passes.RewriteGoUIntNegativeConst(this),

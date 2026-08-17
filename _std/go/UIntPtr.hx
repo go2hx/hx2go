@@ -1,4 +1,4 @@
 package go;
 
 @:go.Type({ name: "uintptr" })
-interface UIntPtr {}
+typedef UIntPtr = go.GoUInt;

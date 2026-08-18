@@ -282,7 +282,6 @@ class Context {
             if (!hasWrittenSomething) continue;
             else header.add(file.toString());
 
-
             if (singleFile) {
                 buf.add(header.toString());
             }else{

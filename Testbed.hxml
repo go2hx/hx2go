@@ -3,9 +3,5 @@
 --macro AddTest.init()
 -main Main
 --custom-target go=output/testbed
--D go-lib=charm.land/bubbletea/v2
--D go-lib=github.com/charmbracelet/ultraviolet
--D go-lib=github.com/charmbracelet/x/ansi
--D go-lib=github.com/charmbracelet/colorprofile
 --cmd git update-index --skip-worktree testbed/Main.hx
 --cmd go -C output/testbed/main run .

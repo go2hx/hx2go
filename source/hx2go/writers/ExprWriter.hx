@@ -604,7 +604,7 @@ class ExprWriter extends WriterImpl {
             buf.add('[]any{\n');
             for (name => value in writer.context.res) {
                 var valueString = haxe.crypto.Base64.encode(value).toString();
-                buf.add('any(map[string]any{"name": any(${StringConversions.quoteString(name)}), "data": any(${StringConversions.quoteString(valueString)}), "str": any(${${StringConversions.quoteString("")}})}),\n');
+                buf.add('any(map[string]any{"name": any(`$name`), "data": any(`$valueString`), "str": any(``)}),\n');
             }
             buf.add("},");
             return buf;

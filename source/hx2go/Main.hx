@@ -6,15 +6,19 @@ import sys.FileSystem;
 import hxb.Hxb;
 import hxb.HxbModule.HxbImport;
 import hxb.HxbArchive;
+import sys.io.File;
 
 #if go
 import go.Map;
 #end
 
-
 class Main {
 
     public static function main() {
+        #if go
+        go.runtime.Debug_.setGCPercent(400);
+        #end
+
         var args = Sys.args();
         var root = Sys.getCwd();
 
@@ -23,8 +27,12 @@ class Main {
         var mainClass = args[2] ?? "Main";
         var singleFile = (args[3] == "1") ?? false;
         var sourcelineComments = (args[4] == "1") ?? false;
-        var resSerialized = args[5];
-        var res:haxe.ds.Map<String, Bytes> = haxe.Unserializer.run(resSerialized);
+        var resMap:haxe.ds.Map<String, String> = haxe.Unserializer.run(args[5]);
+        var res:haxe.ds.Map<String, Bytes> = [];
+        for (k => v in resMap) {
+            res[k] = File.getBytes(v);
+        }
+
         var times = (args[6] == "1") ?? false;
 
         // accept both absolute paths (-D go-bootstrap) and relative paths

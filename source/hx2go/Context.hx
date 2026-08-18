@@ -70,7 +70,10 @@ class Context {
     public var sourcelineComments:Bool = false;
     public var times: hx2go.util.Times;
 
-    public function new(archive: HxbArchive, outputDirectory: String, sourcelineComments:Bool, times:hx2go.util.Times) {
+    private var codegenVersion:String;
+    private var cache:Cache;
+
+    public function new(archive: HxbArchive, outputDirectory: String, sourcelineComments:Bool, times:hx2go.util.Times, codegenVersion:String = "") {
         this.sourcelineComments = sourcelineComments;
         this.times = times;
         this.types = new Map();
@@ -83,6 +86,7 @@ class Context {
         this.processList = [];
         this.writtenFiles = new Map();
         this.archive = archive;
+        this.codegenVersion = codegenVersion;
 
         for (word in _reservedWords) {
             _reserved.set(word, true);
@@ -216,6 +220,7 @@ class Context {
         typesByModule = new Map();
         typeQueue = [];
         this.res = res;
+        this.cache = new Cache(!singleFile && codegenVersion != "", outputDirectory);
 
         var mod = resolveModule(StringConversions.pathToLossyTypePath(mainClass));
         var cls = mod.classes();
@@ -315,6 +320,7 @@ class Context {
         writeFile("", "Main", prefix + buf.toString());
 
         removeStaleFiles();
+        cache.save();
 
         var closeFmt = times.start("gofmt");
         var proc = new sys.io.Process('gofmt -w $outputDirectory');
@@ -343,10 +349,19 @@ class Context {
         }
 
         if (deps.length > 0) {
-            var args = ["get"].concat(deps);
-            var code = Sys.command("go", args);
-            if (code != 0) {
-                Sys.println("command failed: go " + args.join(" "));
+            deps.sort((a, b) -> a < b ? -1 : (a > b ? 1 : 0));
+            var libCache = deps.join("\n");
+            var libCachePath = ".hx2go_deps";
+            var haveModule = FileSystem.exists("go.mod") && FileSystem.exists("go.sum");
+            var prev = FileSystem.exists(libCachePath) ? File.getContent(libCachePath) : null;
+            if (!(haveModule && prev == libCache)) {
+                var args = ["get"].concat(deps);
+                var code = Sys.command("go", args);
+                if (code != 0) {
+                    Sys.println("command failed: go " + args.join(" "));
+                } else {
+                    File.saveContent(libCachePath, libCache);
+                }
             }
         }
 
@@ -381,13 +396,32 @@ class Context {
             return null;
         }
 
+        var closeArcDecode = times.start("archive.decode");
         var mod = archive.decode(res);
+        closeArcDecode();
 
         var closeDecode = times.start("decode");
         for (type in mod.types) {
             buildType(type, res);
         }
         closeDecode();
+
+        var closeRefs = times.start("resolveRefs");
+        resolveModuleRefs(mod);
+        closeRefs();
+
+        var closeHit = times.start("cache.isHit");
+        var hit = cache.isHit(codegenVersion, archive, mod, res);
+        closeHit();
+        if (hit) {
+            var closeSig = times.start("normalizeSignatures");
+            for (type in mod.types) {
+                normalizeSignatures(type, res.dotPath());
+            }
+            closeSig();
+            typesByModule.set(res.dotPath(), []);
+            return mod;
+        }
 
         var closeTransform = times.start("transform");
         for (type in mod.types) {
@@ -396,6 +430,19 @@ class Context {
         closeTransform();
 
         return mod;
+    }
+
+    // resolve a module's external type references so it's reachable for the module graph
+    private function resolveModuleRefs(mod: HxbModule): Void {
+        inline function resolveAll(refs: Array<TypePath>) {
+            for (ref in refs) {
+                resolve(ref);
+            }
+        }
+        resolveAll(mod.classRefs);
+        resolveAll(mod.enumRefs);
+        resolveAll(mod.abstractRefs);
+        resolveAll(mod.typedefRefs);
     }
 
     private function writeFile(directory: String, fileName: String, content: String): Void {
@@ -409,6 +456,12 @@ class Context {
     private function removeStaleFiles(): Void {
         if (!FileSystem.exists(outputDirectory)) {
             return;
+        }
+
+        for (key in cache.keys()) {
+            var fileName = StringConversions.stringPathGetFileName(key);
+            var kept = Path.normalize(Path.join([ outputDirectory, '$fileName.go' ]));
+            writtenFiles.set(kept, true);
         }
 
         for (entry in FileSystem.readDirectory(outputDirectory)) {
@@ -681,8 +734,14 @@ class Context {
     var enumClassIndex = MClass(null).getIndex();
 
     private function transformType(type: HxbModuleType, moduleKey: String): Void {
+        var roots = normalizeSignatures(type, moduleKey);
+        if (roots == null) return;
+        transformBodies(type, moduleKey, roots);
+    }
+
+    private function normalizeSignatures(type: HxbModuleType, moduleKey: String): Null<Array<HxbClassField>> {
         if (type.getIndex() != enumClassIndex) {
-            return;
+            return null;
         }
 
         var roots: Array<HxbClassField> = [];
@@ -809,6 +868,18 @@ class Context {
             }
 
             f.type = normalize(f.type);
+        }
+
+        writer.types.importTarget = old;
+        return roots;
+    }
+
+    private function transformBodies(type: HxbModuleType, moduleKey: String, roots: Array<HxbClassField>): Void {
+        var old = writer.types.importTarget;
+        writer.types.importTarget = moduleKey;
+
+        for (f in roots) {
+            if (f.expr?.expr == null) continue;
 
             var frame = new ContextFrame(passes, type, moduleKey, f);
             contextStack.push(frame);

@@ -40,16 +40,28 @@ class Init {
 
 		var libraries = getGoLibs();
 		if (libraries.length > 0 && builtLibs.join("+") != libraries.join("+")) {
+
+			var libset = libraries.copy();
+			libset.sort((a, b) -> a > b ? 1 : -1);
+			var libCache = libset.join("\n");
+			var libCachePath = Path.join([librariesOutput, ".libset"]);
+			var prevLibCache = FileSystem.exists(libCachePath) ? File.getContent(libCachePath) : "";
+			var forceRebuild = rebuildBool(path, false);
+			if (!forceRebuild && prevLibCache == libCache) {
+				builtLibs = libraries;
+				return;
+			}
 			var code = Sys.command('haxelib', ['dev', 'hx2go-extern', Path.join([path, "hx2go-extern"])]);
 			if (code != 0)
 				Sys.exit(code);
 			var args = [];
-			if (rebuildBool(path, false)) {
+			if (forceRebuild) {
 				args.push("rebuild");
 			}
 			code = Sys.command('haxelib', ['run', 'hx2go-extern'].concat(args).concat(libraries).concat([librariesOutput]));
 			if (code != 0)
 				Sys.exit(code);
+			File.saveContent(libCachePath, libCache);
 			builtLibs = libraries;
 		}
 	}
@@ -187,6 +199,7 @@ class Init {
 			var self = Context.resolvePath("go/Init.hx");
 			var path = Path.join([ Path.directory(self), '..', '..' ]);
 			var res = haxe.Serializer.run(Context.getResources());
+			var codegenVersion = Version.gitVersion(path);
 			if (!Context.defined("no-compilation")) {
 				if (!Context.defined("no-go-bootstrap")) {
 					final bin = getBin(path);
@@ -198,13 +211,13 @@ class Init {
 							fail('bootstrap failed, $bin might be stale');
 						Sys.setCwd(root);
 					}
-					var args = [archiveOutput, sourceOutput, mainClassName, singleFile ? "1" : "0", sourcelineComments ? "1" : "0", res, times ? "1" : "0"];
+					var args = [archiveOutput, sourceOutput, mainClassName, singleFile ? "1" : "0", sourcelineComments ? "1" : "0", res, times ? "1" : "0", codegenVersion];
 					var code = Sys.command(bin, args);
 					if (code != 0)
 						fail("compiler failed");
 				} else {
 					final bin = Path.join(["Compile-eval.hxml"]);
-					var args = [bin, archiveOutput, sourceOutput, mainClassName, singleFile ? "1" : "0", sourcelineComments ? "1" : "0", res, times ? "1" : "0"];
+					var args = [bin, archiveOutput, sourceOutput, mainClassName, singleFile ? "1" : "0", sourcelineComments ? "1" : "0", res, times ? "1" : "0", codegenVersion];
 					var oldCwd = Sys.getCwd();
 					Sys.setCwd(path);
 					var code = Sys.command("haxe", args);
@@ -218,6 +231,10 @@ class Init {
 
 	static function addCustomDefines() {
 		// register custom defines
+		Compiler.registerCustomDefine({
+			define: "go-rebuild",
+			doc: "rebuild the hx2go compiler (bootstrapped)",
+		});
 		Compiler.registerCustomDefine({
 			define: "no-go-bootstrap",
 			doc: "do not use the bootrapped version of the compiler (running on the Go target)",

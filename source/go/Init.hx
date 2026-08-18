@@ -205,11 +205,14 @@ class Init {
 			var codegenVersion = Version.gitVersion(path);
 
 			var resMap: Map<String, String> = [];
+			var i = 0;
 			for (name => bytes in Context.getResources()) {
-				var p = Path.join([ resOutput, '$name.bin' ]);
+				var p = Path.join([ resOutput, '$i.bin' ]);
 				File.saveBytes(p, bytes);
 				resMap[name] = p;
+				i++;
 			}
+			
 
 			var res = haxe.Serializer.run(resMap);
 

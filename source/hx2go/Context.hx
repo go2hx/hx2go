@@ -71,9 +71,10 @@ class Context {
     public var times: hx2go.util.Times;
 
     private var codegenVersion:String;
+    private var disableIncrementalCache:Bool = false;
     private var cache:Cache;
 
-    public function new(archive: HxbArchive, outputDirectory: String, sourcelineComments:Bool, times:hx2go.util.Times, codegenVersion:String = "") {
+    public function new(archive: HxbArchive, outputDirectory: String, sourcelineComments:Bool, times:hx2go.util.Times, codegenVersion:String, disableIncrementalCache:Bool) {
         this.sourcelineComments = sourcelineComments;
         this.times = times;
         this.types = new Map();
@@ -220,7 +221,7 @@ class Context {
         typesByModule = new Map();
         typeQueue = [];
         this.res = res;
-        this.cache = new Cache(!singleFile && codegenVersion != "", outputDirectory);
+        this.cache = new Cache(!singleFile && codegenVersion != "" && !disableIncrementalCache, outputDirectory);
 
         var mod = resolveModule(StringConversions.pathToLossyTypePath(mainClass));
         var cls = mod.classes();
@@ -410,7 +411,7 @@ class Context {
         closeRefs();
 
         var closeHit = times.start("cache.isHit");
-        var hit = cache.isHit(codegenVersion, archive, mod, res);
+        var hit = cache.isHit(codegenVersion, archive, mod);
         closeHit();
         if (hit) {
             var closeSig = times.start("normalizeSignatures");

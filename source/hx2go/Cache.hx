@@ -1,5 +1,7 @@
 package hx2go;
 
+import haxe.io.BytesBuffer;
+import haxe.io.Bytes;
 import hxb.HxbModule;
 import hxb.HxbModuleType;
 import hxb.HxbClassField;
@@ -11,34 +13,51 @@ import haxe.crypto.Md5;
 import haxe.io.Path;
 import sys.FileSystem;
 
+/**
+    Per-module incremental cache. A module whose key is unchanged since the last
+    run skips the whole transform+emit pipeline (its `.go` stays on disk).
+
+    The key has two parts, both position-independent so the frontend's per-run
+    HXB non-determinism doesn't cause false misses:
+
+    1. A hash of every HXB chunk EXCEPT the EXD chunk (deferred field-expression
+       bodies). EXD is the one chunk the Haxe frontend rewrites non-deterministically
+       each run (it shuffles a few source-position varints), so hashing raw bytes
+       including EXD reported ~80 modules "changed" every run and cascaded false
+       misses to every importer. The other chunks (STR/CLS/CFD/…) are byte-stable
+       and carry every signature/type/pool change.
+
+    2. A hash of the field-expression BODIES rendered through `TypedExprPrinter`
+       (position-free Haxe source). This is REQUIRED: a change isolated to EXD —
+       e.g. swapping one operator `a - b` → `a + b`, same operands and string pool
+       — leaves ALL non-EXD chunks byte-identical, so part 1 alone would false-HIT
+       and emit stale Go. Printing the bodies catches those edits while ignoring
+       the position noise that made raw EXD bytes unusable.
+
+    A module's key also folds in each direct dependency's source key, so a
+    dependency's signature change re-keys its dependents (one level; the cascade
+    covers transitive deps because each dependent is itself re-keyed).
+**/
 class Cache {
     final enabled:Bool;
     final outputDirectory:String;
-    final cacheKeys:Map<String, String>;
+    final cacheKeys:Map<String, Bytes>;
+    final cacheSourceKeys:Map<String, Bytes> = [];
 
-    // a module imported by N others is fingerprinted once.
-    final fingerprintMemo:Map<String, String> = new Map();
-
-    // fast path byte comparison
-    final fpByBytes:Map<String, String>;
-    final fpByBytesNext:Map<String, String> = new Map();
-
-    // shared printer for printing out the HXB output to be hashed
     final printer:TypedExprPrinter = new TypedExprPrinter();
 
     public function new(enabled:Bool, outputDirectory:String) {
         this.enabled = enabled;
         this.outputDirectory = outputDirectory;
         this.cacheKeys = load();
-        this.fpByBytes = loadFpMemo();
     }
 
-    public function isHit(codegenVersion:String, archive:HxbArchive, mod:HxbModule, res:ModuleRef):Bool {
+    public function isHit(codegenVersion:String, archive:HxbArchive, mod:HxbModule):Bool {
         if (!enabled) return false;
 
-        var dotPath = res.dotPath();
-        var key = computeModuleKey(codegenVersion, archive, mod, res);
-        if (cacheKeys.get(dotPath) == key) {
+        var dotPath = mod.dotPath();
+        var key = computeModuleKey(codegenVersion, archive, mod);
+        if (bytesEqual(cacheKeys.get(dotPath), key)) {
             return true;
         }
         cacheKeys.set(dotPath, key);
@@ -53,147 +72,116 @@ class Cache {
         if (!enabled) return;
         var buf = new StringBuf();
         for (dotPath in cacheKeys.keys()) {
-            buf.add('$dotPath\t${cacheKeys.get(dotPath)}\n');
+            buf.add(dotPath);
+            buf.add("\t");
+            buf.add(cacheKeys.get(dotPath).toHex());
+            buf.add("\n");
         }
         File.saveContent(manifestPath(), buf.toString());
-
-        var fbuf = new StringBuf();
-        for (bytesHash in fpByBytesNext.keys()) {
-            fbuf.add('$bytesHash\t${fpByBytesNext.get(bytesHash)}\n');
-        }
-        File.saveContent(fpMemoPath(), fbuf.toString());
     }
 
     function manifestPath():String {
         return Path.join([ outputDirectory, ".hx2go_cache" ]);
     }
 
-    function fpMemoPath():String {
-        return Path.join([ outputDirectory, ".hx2go_fpmemo" ]);
-    }
-
-    function loadFpMemo():Map<String, String> {
-        var out = new Map<String, String>();
-        if (!enabled) return out;
-        var path = fpMemoPath();
-        if (!FileSystem.exists(path)) return out;
-        for (line in File.getContent(path).split("\n")) {
-            var tab = line.indexOf("\t");
-            if (tab < 0) continue;
-            out.set(line.substr(0, tab), line.substr(tab + 1));
-        }
-        return out;
-    }
-
-    function load():Map<String, String> {
-        var out = new Map<String, String>();
-        if (!enabled) return out;
+    function load():Map<String, Bytes> {
+        var out = new Map<String, Bytes>();
         var path = manifestPath();
-        if (!FileSystem.exists(path)) return out;
+        if (!enabled || !FileSystem.exists(path))
+            return out;
         for (line in File.getContent(path).split("\n")) {
             var tab = line.indexOf("\t");
             if (tab < 0) continue;
-            out.set(line.substr(0, tab), line.substr(tab + 1));
+            try {
+                out.set(line.substr(0, tab), Bytes.ofHex(line.substr(tab + 1)));
+            } catch (_:Dynamic) {}
         }
         return out;
     }
-    
-    function fingerprintOf(archive:HxbArchive, dotPath:String, ?decoded:HxbModule):String {
-        var memoized = fingerprintMemo.get(dotPath);
-        if (memoized != null) return memoized;
 
-        var ref = archive.findModule(dotPath, "go");
-        if (ref == null) {
-            fingerprintMemo.set(dotPath, "");
-            return "";
+    function computeModuleKey(codegenVersion:String, archive:HxbArchive, mod:HxbModule):Bytes {
+        var depKeys:Array<Bytes> = [];
+        for (imp in mod.imports) {
+            var depPath = imp.pack.length > 0 ? '${imp.pack.join(".")}.${imp.name}' : imp.name;
+            if (depPath == mod.dotPath()) continue;
+            var ref = archive.findModule(depPath, "go");
+            if (ref == null) continue;
+            depKeys.push(depSourceKey(archive, depPath, ref));
         }
+        depKeys.sort((a, b) -> a.compare(b));
 
-        var bytes = archive.getBytes(ref.entryPath);
-        var bytesHash = bytes != null ? Md5.make(bytes).toHex() : null;
-
-        var fp = bytesHash != null ? fpByBytes.get(bytesHash) : null;
-        if (fp == null) {
-            fp = hashModule(decoded != null ? decoded : archive.decode(ref));
+        var buf = new BytesBuffer();
+        buf.addString(codegenVersion);
+        buf.addInt32(0);
+        buf.add(computeModuleSourceKey(mod));
+        buf.addInt32(0);
+        for (k in depKeys) {
+            buf.add(k);
+            buf.addInt32(0);
         }
-        if (bytesHash != null) fpByBytesNext.set(bytesHash, fp);
-        fingerprintMemo.set(dotPath, fp);
-        return fp;
+        return buf.getBytes();
     }
 
-    function hashModule(mod:HxbModule):String {
-        var buf = new StringBuf();
+    function depSourceKey(archive:HxbArchive, depPath:String, ref:ModuleRef):Bytes {
+        var cached = cacheSourceKeys.get(depPath);
+        if (cached != null) return cached;
+        var key = computeModuleSourceKey(archive.decode(ref));
+        cacheSourceKeys.set(depPath, key);
+        return key;
+    }
+
+    function computeModuleSourceKey(mod:HxbModule):Bytes {
+        var dotPath = mod.dotPath();
+        var cached = cacheSourceKeys.get(dotPath);
+        if (cached != null) return cached;
+
+        var buf = new BytesBuffer();
+        if (mod.source != null) {
+            for (chunk in mod.source.chunks) {
+                if (chunk.kind == EXD)
+                    continue;
+                buf.add(hashBytes(chunk.data));
+                buf.addInt32(0);
+            }
+        }
+        // position free body content EXD substitute
+        var bodies = new StringBuf();
         for (type in mod.types) {
             switch type {
                 case MClass(c):
-                    buf.add("C:"); buf.add(c.path.dotPath());
-                    buf.add(":"); buf.add(Std.string(c.flags));
-                    buf.add(":"); buf.add(Std.string(c.kind));
-                    if (c.superClass != null) { buf.add(":super="); buf.add(c.superClass.t.dotPath()); }
-                    for (i in c.interfaces) { buf.add(":iface="); buf.add(i.t.dotPath()); }
-                    buf.add("\n");
-                    hashField(buf, c.constructor);
-                    hashField(buf, c.init);
-                    for (f in c.fields) hashField(buf, f);
-                    for (f in c.statics) hashField(buf, f);
-                case MEnum(e):
-                    buf.add("E:"); buf.add(e.path.dotPath());
-                    buf.add(":"); buf.add(Std.string(e.flags)); buf.add("\n");
-                    for (ctor in e.constructors) {
-                        buf.add(ctor.name); buf.add("#"); buf.add(Std.string(ctor.index));
-                        buf.add("="); buf.add(fieldTypeStr(ctor.type)); buf.add("\u0001");
-                    }
-                case MAbstract(a):
-                    buf.add("A:"); buf.add(a.path.dotPath());
-                    buf.add(":under="); buf.add(fieldTypeStr(a.underlyingThis));
-                    if (a.impl != null) { buf.add(":impl="); buf.add(a.impl.dotPath()); }
-                    for (t in a.from) { buf.add(":from="); buf.add(fieldTypeStr(t)); }
-                    for (t in a.to) { buf.add(":to="); buf.add(fieldTypeStr(t)); }
-                    buf.add("\n");
-                case MTypedef(t):
-                    buf.add("T:"); buf.add(t.path.dotPath()); buf.add("\n");
+                    hashFieldBody(bodies, c.constructor);
+                    hashFieldBody(bodies, c.init);
+                    for (f in c.fields) hashFieldBody(bodies, f);
+                    for (f in c.statics) hashFieldBody(bodies, f);
+                case _:
             }
         }
-        return Md5.encode(buf.toString());
+        buf.add(hashBytes(Bytes.ofString(bodies.toString())));
+
+        var key = hashBytes(buf.getBytes());
+        cacheSourceKeys.set(dotPath, key);
+        return key;
     }
 
-    function hashField(buf:StringBuf, f:Null<HxbClassField>):Void {
-        if (f == null) return;
+    function hashFieldBody(buf:StringBuf, f:Null<HxbClassField>):Void {
+        if (f == null || f.expr == null) return;
         buf.add(f.name);
         buf.add("\u0000");
-        buf.add(Std.string(f.flags));
-        buf.add("\u0000");
-
-        buf.add(fieldTypeStr(f.type));
-        buf.add("\u0000");
-        if (f.expr != null) {
-            printer.indent = 0;
-            printer.typeParams = [];
-            printer.fieldParams = [];
-            buf.add(try printer.expr(f.expr.expr) catch (_:Dynamic) "?body");
-        }
+        buf.add(try printer.expr(f.expr.expr) catch (_:Dynamic) "?body");
         buf.add("\u0001");
     }
 
-
-    function fieldTypeStr(t:hxb.HxbType):String {
-        return try printer.type(t) catch (_:Dynamic) "?type";
+    inline function hashBytes(b:Bytes):Bytes {
+        #if go
+        var sum:go.GoArray<go.Byte, 16> = go.crypto.Md5_.sum(b.getData());
+        return haxe.io.Bytes.ofData(sum.toSlice());
+        #else
+        return Md5.make(b);
+        #end
     }
 
-    function computeModuleKey(codegenVersion:String, archive:HxbArchive, mod:HxbModule, res:ModuleRef):String {
-        var own = fingerprintOf(archive, res.dotPath(), mod);
-
-        var depHashes:Array<String> = [];
-        for (imp in mod.imports) {
-            var depPath = imp.pack.length > 0 ? '${imp.pack.join(".")}.${imp.name}' : imp.name;
-            if (depPath == res.dotPath()) continue;
-            var depHash = fingerprintOf(archive, depPath);
-            if (depHash != "") {
-                depHashes.push(depHash);
-            }
-        }
-        depHashes.sort((a, b) -> a > b ? 1 : -1);
-
-        var parts = [codegenVersion, own].concat(depHashes);
-        return Md5.encode(parts.join("\u0000"));
+    static function bytesEqual(a:Null<Bytes>, b:Null<Bytes>):Bool {
+        if (a == null || b == null) return a == b;
+        return a.compare(b) == 0;
     }
 }

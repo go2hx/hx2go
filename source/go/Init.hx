@@ -144,6 +144,7 @@ class Init {
 		var absoluteOutput = Path.join([ root, relativeOutput ]);
 
 		var archiveOutput = Path.join([ absoluteOutput, "target.hxb" ]);
+		var resOutput = Path.join([ absoluteOutput, "resources" ]);
 		var librariesOutput = Path.join([ absoluteOutput, "libs" ]);
 		var sourceOutput = Path.join([ absoluteOutput, "main" ]);
 		var goModOutput = Path.join([ absoluteOutput, "main", "go.mod" ]);
@@ -152,6 +153,9 @@ class Init {
 			FileSystem.createDirectory(absoluteOutput);
 		}
 
+		if (!FileSystem.exists(resOutput)) {
+			FileSystem.createDirectory(resOutput);
+		}
 
 		Compiler.setPlatformConfiguration(newConfig);
 
@@ -198,8 +202,17 @@ class Init {
 
 			var self = Context.resolvePath("go/Init.hx");
 			var path = Path.join([ Path.directory(self), '..', '..' ]);
-			var res = haxe.Serializer.run(Context.getResources());
 			var codegenVersion = Version.gitVersion(path);
+
+			var resMap: Map<String, String> = [];
+			for (name => bytes in Context.getResources()) {
+				var p = Path.join([ resOutput, '$name.bin' ]);
+				File.saveBytes(p, bytes);
+				resMap[name] = p;
+			}
+
+			var res = haxe.Serializer.run(resMap);
+
 			if (!Context.defined("no-compilation")) {
 				if (!Context.defined("no-go-bootstrap")) {
 					final bin = getBin(path);

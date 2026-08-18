@@ -121,7 +121,7 @@ class FieldAccessExtern extends CompilerPass {
     }
 
     public function match(expr: HxbTypedExpr): Bool {
-        return getExternInfo(context, expr).kind != ExNone;
+        return true;
     }
 
     public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {

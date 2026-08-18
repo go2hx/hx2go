@@ -10,7 +10,7 @@ import hxb.Ast.HxbBinop;
 
 class TypeNormaliserBinop extends CompilerPass {
 
-    public function match(expr: HxbTypedExpr): Bool {
+    public function match(expr: HxbTypedExpr): Bool { 
         // match unconditionally in case generic erasure occurs after
         return switch expr.expr {
             case TBinop(_, _, _): true;
@@ -100,6 +100,7 @@ class TypeNormaliserBinop extends CompilerPass {
             case OpAssignOp(_): Semantics.isNullableType(context, left.t);
             case _: true;
         };
+
         if (castLeft) {
             var o = ExprHelper.createCast(left, expr.t);
             left.expr = o.expr;

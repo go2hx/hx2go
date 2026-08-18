@@ -644,6 +644,15 @@ class HxDynamic {
     }
     
     static function getFieldFrom(dyn: Dynamic, fieldName: String, hop: Bool): Dynamic {
+        Syntax.code("
+            switch m := {0}.(type) {
+                case map[string]any:
+                    return m[{1}]
+                default:
+                    break
+            }
+        ", dyn, fieldName);
+
         var value = ensureValue(dyn);
         var kind = value.kind();
         var found = false;

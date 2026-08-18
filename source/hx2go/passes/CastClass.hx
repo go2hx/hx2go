@@ -53,7 +53,7 @@ class CastClass extends CompilerPass {
                     return;
                 }
 
-                var isDyn = e.t.match(TDynamic(_) | TDynamicAny);
+                var isDyn = e.t.match(TDynamic(_) | TDynamicAny | TAbstract({ name: "Any", pack: [] }, _));
                 if (isDyn) {
                     var callExpr = ExprHelper.createCallStatic(context, {
                         name: "HxDynamic",

@@ -44,12 +44,16 @@ class Cache {
     final cacheKeys:Map<String, Bytes>;
     final cacheSourceKeys:Map<String, Bytes> = [];
 
+    final srcKeyByBytes:Map<String, Bytes>;
+    final srcKeyByBytesNext:Map<String, Bytes> = [];
+
     final printer:TypedExprPrinter = new TypedExprPrinter();
 
     public function new(enabled:Bool, outputDirectory:String) {
         this.enabled = enabled;
         this.outputDirectory = outputDirectory;
         this.cacheKeys = load();
+        this.srcKeyByBytes = loadSrcMemo();
     }
 
     public function isHit(codegenVersion:String, archive:HxbArchive, mod:HxbModule):Bool {
@@ -78,15 +82,35 @@ class Cache {
             buf.add("\n");
         }
         File.saveContent(manifestPath(), buf.toString());
+
+        var mbuf = new StringBuf();
+        for (bytesHash in srcKeyByBytesNext.keys()) {
+            mbuf.add(bytesHash);
+            mbuf.add("\t");
+            mbuf.add(srcKeyByBytesNext.get(bytesHash).toHex());
+            mbuf.add("\n");
+        }
+        File.saveContent(srcMemoPath(), mbuf.toString());
     }
 
     function manifestPath():String {
         return Path.join([ outputDirectory, ".hx2go_cache" ]);
     }
 
+    function srcMemoPath():String {
+        return Path.join([ outputDirectory, ".hx2go_srcmemo" ]);
+    }
+
     function load():Map<String, Bytes> {
+        return loadHexTsv(manifestPath());
+    }
+
+    function loadSrcMemo():Map<String, Bytes> {
+        return loadHexTsv(srcMemoPath());
+    }
+
+    function loadHexTsv(path:String):Map<String, Bytes> {
         var out = new Map<String, Bytes>();
-        var path = manifestPath();
         if (!enabled || !FileSystem.exists(path))
             return out;
         for (line in File.getContent(path).split("\n")) {
@@ -113,7 +137,7 @@ class Cache {
         var buf = new BytesBuffer();
         buf.addString(codegenVersion);
         buf.addInt32(0);
-        buf.add(computeModuleSourceKey(mod));
+        buf.add(ownSourceKey(archive, mod));
         buf.addInt32(0);
         for (k in depKeys) {
             buf.add(k);
@@ -122,12 +146,39 @@ class Cache {
         return buf.getBytes();
     }
 
+    function ownSourceKey(archive:HxbArchive, mod:HxbModule):Bytes {
+        var dotPath = mod.dotPath();
+        var cached = cacheSourceKeys.get(dotPath);
+        if (cached != null) return cached;
+        var ref = archive.findModule(dotPath, "go");
+        var rawBytes = ref == null ? null : archive.getBytes(ref.entryPath);
+        var key = sourceKeyFromBytes(dotPath, rawBytes, () -> mod);
+        cacheSourceKeys.set(dotPath, key);
+        return key;
+    }
+
     function depSourceKey(archive:HxbArchive, depPath:String, ref:ModuleRef):Bytes {
         var cached = cacheSourceKeys.get(depPath);
         if (cached != null) return cached;
-        var key = computeModuleSourceKey(archive.decode(ref));
+        var rawBytes = archive.getBytes(ref.entryPath);
+        var key = sourceKeyFromBytes(depPath, rawBytes, () -> archive.decode(ref));
         cacheSourceKeys.set(depPath, key);
         return key;
+    }
+
+    function sourceKeyFromBytes(dotPath:String, rawBytes:Null<Bytes>, decodeFn:Void->HxbModule):Bytes {
+        if (rawBytes != null) {
+            var bytesHash = hashBytes(rawBytes).toHex();
+            var memo = srcKeyByBytes.get(bytesHash);
+            if (memo != null) {
+                srcKeyByBytesNext.set(bytesHash, memo);
+                return memo;
+            }
+            var key = computeModuleSourceKey(decodeFn());
+            srcKeyByBytesNext.set(bytesHash, key);
+            return key;
+        }
+        return computeModuleSourceKey(decodeFn());
     }
 
     function computeModuleSourceKey(mod:HxbModule):Bytes {

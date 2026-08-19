@@ -1,3 +1,4 @@
+import go.Slice;
 import go.Fmt;
 import go.haxe.HxDynamic;
 import go.Reflect;
@@ -117,6 +118,18 @@ class Std {
         if (kind == Reflect.Map) {
             var buf = new StringBuf();
             var keys = value.mapKeys();
+
+            if (keys.length > 0) {
+                for (key in keys) {
+                    if (key.kind() == Reflect.String) {
+                        if (key.string() == "toString") {
+                            return HxDynamic.call(value.mapIndex(key)._interface(), []);
+                        }
+                    }else{
+                        break;
+                    }
+                }
+            }
 
             buf.add('[');
             buf.add(keys.toArray().map(k -> '${k} => ${string(value.mapIndex(k))}').join(', '));

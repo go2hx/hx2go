@@ -17,6 +17,7 @@ private class Node {
     public var calls:Int = 0;
     public var children:Array<Node> = [];
     public var time:Float = 0;
+    public var blankCalls:Bool = false;
 
     public function new(name:String, parent:Node) {
         this.name = name;
@@ -70,6 +71,9 @@ class Times {
         var wall = Sys.time() - startTime;
         var root = buildTree();
         root.time = wall;
+
+        // children too small to print individually
+        collapseMisc(root);
 
         var rows:Array<{ label:String, node:Node }> = [];
         collectRows(root, 0, rows);
@@ -125,6 +129,53 @@ class Times {
         node.children.sort((a, b) -> a.time > b.time ? -1 : (a.time < b.time ? 1 : 0));
     }
 
+    static function collapseMisc(node:Node):Void {
+        for (c in node.children) collapseMisc(c);
+
+        if (node.children.length == 0) return;
+
+        var kept:Array<Node> = [];
+        var keptTime = 0.0;
+        var miscTime = 0.0;
+        var miscCalls = 0;
+        var miscCount = 0;
+        for (c in node.children) {
+            if (c.time < MIN_PRINT_THRESHOLD) {
+                miscTime += c.time;
+                miscCalls += c.calls;
+                miscCount++;
+            } else {
+                kept.push(c);
+                keptTime += c.time;
+            }
+        }
+
+        if (miscCount > 0 && miscTime >= MIN_PRINT_THRESHOLD) {
+            var misc = new Node("misc", node);
+            misc.self = miscTime;
+            misc.time = miscTime;
+            misc.calls = miscCalls;
+            kept.push(misc);
+            keptTime += miscTime;
+        } else if (miscCount > 0) {
+            // Too small to show on its own; fold into the untimed remainder below.
+            keptTime += miscTime;
+        }
+
+        var untimed = node.time - keptTime;
+        if (untimed >= MIN_PRINT_THRESHOLD) {
+            var rem = new Node(node.parent == null ? "(untimed)" : "(self)", node);
+            rem.self = untimed;
+            rem.time = untimed;
+            rem.calls = 0;
+            rem.blankCalls = true;
+            kept.push(rem);
+        }
+
+        kept.sort((a, b) -> a.time > b.time ? -1 : (a.time < b.time ? 1 : 0));
+        node.children = kept;
+    }
+
     static function collectRows(node:Node, depth:Int, out:Array<{ label:String, node:Node }>):Void {
         for (c in node.children) {
             out.push({ label: "".rpad(" ", depth * 2) + c.name, node: c });
@@ -143,7 +194,7 @@ class Times {
             + " | " + fixed(node.time, 3).lpad(" ", 7)
             + " | " + Std.string(Math.round(pctRoot)).lpad(" ", 3)
             + " | " + Std.string(Math.round(pctParent)).lpad(" ", 3)
-            + " | " + Std.string(node.calls).lpad(" ", 6);
+            + " | " + (node.blankCalls ? "" : Std.string(node.calls)).lpad(" ", 6);
     }
 
     static function totalRow(nameWidth:Int, root:Node):String {

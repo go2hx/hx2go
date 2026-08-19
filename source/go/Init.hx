@@ -40,16 +40,28 @@ class Init {
 
 		var libraries = getGoLibs();
 		if (libraries.length > 0 && builtLibs.join("+") != libraries.join("+")) {
+
+			var libset = libraries.copy();
+			libset.sort((a, b) -> a > b ? 1 : -1);
+			var libCache = libset.join("\n");
+			var libCachePath = Path.join([librariesOutput, ".libset"]);
+			var prevLibCache = FileSystem.exists(libCachePath) ? File.getContent(libCachePath) : "";
+			var forceRebuild = rebuildBool(path, false);
+			if (!forceRebuild && prevLibCache == libCache) {
+				builtLibs = libraries;
+				return;
+			}
 			var code = Sys.command('haxelib', ['dev', 'hx2go-extern', Path.join([path, "hx2go-extern"])]);
 			if (code != 0)
 				Sys.exit(code);
 			var args = [];
-			if (rebuildBool(path, false)) {
+			if (forceRebuild) {
 				args.push("rebuild");
 			}
 			code = Sys.command('haxelib', ['run', 'hx2go-extern'].concat(args).concat(libraries).concat([librariesOutput]));
 			if (code != 0)
 				Sys.exit(code);
+			File.saveContent(libCachePath, libCache);
 			builtLibs = libraries;
 		}
 	}
@@ -187,9 +199,11 @@ class Init {
 			var singleFile = Context.defined("go-single-file");
 			var sourcelineComments = Context.defined("go-sourceline-comments");
 			var times = Context.defined("go-times");
+			var disableIncrementalCache = Context.defined("go-disable-cache");
 
 			var self = Context.resolvePath("go/Init.hx");
 			var path = Path.join([ Path.directory(self), '..', '..' ]);
+			var codegenVersion = Version.gitVersion(path);
 
 			var resMap: Map<String, String> = [];
 			var i = 0;
@@ -214,13 +228,13 @@ class Init {
 							fail('bootstrap failed, $bin might be stale');
 						Sys.setCwd(root);
 					}
-					var args = [archiveOutput, sourceOutput, mainClassName, singleFile ? "1" : "0", sourcelineComments ? "1" : "0", res, times ? "1" : "0"];
+					var args = [archiveOutput, sourceOutput, mainClassName, singleFile ? "1" : "0", sourcelineComments ? "1" : "0", res, times ? "1" : "0", codegenVersion, disableIncrementalCache ? "1" : "0"];
 					var code = Sys.command(bin, args);
 					if (code != 0)
 						fail("compiler failed");
 				} else {
 					final bin = Path.join(["Compile-eval.hxml"]);
-					var args = [bin, archiveOutput, sourceOutput, mainClassName, singleFile ? "1" : "0", sourcelineComments ? "1" : "0", res, times ? "1" : "0"];
+					var args = [bin, archiveOutput, sourceOutput, mainClassName, singleFile ? "1" : "0", sourcelineComments ? "1" : "0", res, times ? "1" : "0", codegenVersion, disableIncrementalCache ? "1" : "0"];
 					var oldCwd = Sys.getCwd();
 					Sys.setCwd(path);
 					var code = Sys.command("haxe", args);
@@ -234,6 +248,10 @@ class Init {
 
 	static function addCustomDefines() {
 		// register custom defines
+		Compiler.registerCustomDefine({
+			define: "go-rebuild",
+			doc: "rebuild the hx2go compiler (bootstrapped)",
+		});
 		Compiler.registerCustomDefine({
 			define: "no-go-bootstrap",
 			doc: "do not use the bootrapped version of the compiler (running on the Go target)",
@@ -261,6 +279,11 @@ class Init {
 		Compiler.registerCustomDefine({
 			define: "go-profile",
 			doc: "emit runtime/pprof CPU + heap profiling into main() (writes cpu.pprof / mem.pprof)",
+			platforms: [CustomTarget("go")],
+		});
+		Compiler.registerCustomDefine({
+			define: "no-go-cache",
+			doc: "disables the incremental cache",
 			platforms: [CustomTarget("go")],
 		});
 		// register custom metadata

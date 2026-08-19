@@ -88,6 +88,17 @@ class Cache {
         return [for (dotPath in cacheKeys.keys()) dotPath];
     }
 
+    public function prune(visited:Array<String>):Void {
+        if (!enabled) return;
+        var keep = new Map<String, Bool>();
+        for (dotPath in visited) keep.set(dotPath, true);
+        for (dotPath in cacheKeys.keys()) {
+            if (!keep.exists(dotPath)) {
+                cacheKeys.remove(dotPath);
+            }
+        }
+    }
+
     public function save():Void {
         if (!enabled) return;
         var buf = new StringBuf();

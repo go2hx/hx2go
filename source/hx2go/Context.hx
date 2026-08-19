@@ -67,6 +67,7 @@ class Context {
     private var typeQueue: Array<String>;
     private var processList: Array<Process>;
     private var writtenFiles: Map<String, Bool>;
+    private var visitedModules: Map<String, Bool>;
     public var sourcelineComments:Bool = false;
     public var times: hx2go.util.Times;
 
@@ -86,6 +87,7 @@ class Context {
         this.contextStack = [];
         this.processList = [];
         this.writtenFiles = new Map();
+        this.visitedModules = new Map();
         this.archive = archive;
         this.codegenVersion = codegenVersion;
 
@@ -319,6 +321,7 @@ class Context {
 
         writeFile("", "Main", prefix + buf.toString());
 
+        cache.prune([for (m in visitedModules.keys()) m]);
         removeStaleFiles();
         cache.save();
 
@@ -395,6 +398,7 @@ class Context {
         if (res == null) {
             return null;
         }
+        visitedModules.set(res.dotPath(), true);
 
         var closeArcDecode = times.start("archive.decode");
         var mod = archive.decode(res);

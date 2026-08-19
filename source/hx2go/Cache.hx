@@ -47,13 +47,29 @@ class Cache {
     final srcKeyByBytes:Map<String, Bytes>;
     final srcKeyByBytesNext:Map<String, Bytes> = [];
 
+    final resourceSalt:Bytes;
+
     final printer:TypedExprPrinter = new TypedExprPrinter();
 
-    public function new(enabled:Bool, outputDirectory:String) {
+    public function new(enabled:Bool, outputDirectory:String, res:Map<String, Bytes>) {
         this.enabled = enabled;
         this.outputDirectory = outputDirectory;
         this.cacheKeys = load();
         this.srcKeyByBytes = loadSrcMemo();
+        this.resourceSalt = computeResourceSalt(res);
+    }
+
+    function computeResourceSalt(res:Map<String, Bytes>):Bytes {
+        var names = [for (name in res.keys()) name];
+        names.sort((a, b) -> a < b ? -1 : (a > b ? 1 : 0));
+        var buf = new BytesBuffer();
+        for (name in names) {
+            buf.addString(name);
+            buf.addInt32(0);
+            buf.add(hashBytes(res.get(name)));
+            buf.addInt32(0);
+        }
+        return hashBytes(buf.getBytes());
     }
 
     public function isHit(codegenVersion:String, archive:HxbArchive, mod:HxbModule):Bool {
@@ -136,6 +152,8 @@ class Cache {
 
         var buf = new BytesBuffer();
         buf.addString(codegenVersion);
+        buf.addInt32(0);
+        buf.add(resourceSalt);
         buf.addInt32(0);
         buf.add(ownSourceKey(archive, mod));
         buf.addInt32(0);

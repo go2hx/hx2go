@@ -154,7 +154,8 @@ class Type {
 			}
 
 			var vtable = value.fieldByName("VTable");
-			if (!vtable.isValid()) {
+			var typeName = value.type().name();
+			if (!vtable.isValid() || typeName == "Hx_Obj_go_haxe_hxclass" || typeName == "Hx_Obj_go_haxe_hxenum") {
 				return ValueType.TObject;
 			}
 

@@ -792,11 +792,7 @@ class ExprWriter extends WriterImpl {
                 if (m == null ) ""
                 else {
                     var ntp = StringConversions.moduleTypeGetTypePath(m);
-                    // Class<T> / Enum<T> are both @:coreType and therefore have no RTTI
-                    switch ntp {
-                        case { name: "Class", pack: [] } | { name: "Enum", pack: [] }: "nil";
-                        case _: '${StringConversions.typePathAbstractName(ntp)}_RTTI';
-                    }
+                    '${StringConversions.typePathAbstractName(ntp)}_RTTI';
                 }
             }
 

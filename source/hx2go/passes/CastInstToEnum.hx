@@ -15,6 +15,14 @@ import hxb.Typed.HxbFieldAccess;
 
 class CastInstToEnum extends CompilerPass {
 
+    static function isTypeExpr(e: HxbTypedExpr): Bool {
+        return switch e.expr {
+            case TTypeExpr(_): true;
+            case TCast(inner, _) | TParenthesis(inner) | TMeta(_, inner): isTypeExpr(inner);
+            case _: false;
+        }
+    }
+
     public function match(expr: HxbTypedExpr): Bool {
         return switch expr {
             case { expr: TCast({ t: TAbstract({ name: "EnumValue", pack: [] }, _) | TEnum(_) | TDynamic(_) | TDynamicAny }, _), t: TAbstract({ name: "Enum", pack: [] }, _) | TEnumStatic(_) }: true;
@@ -26,6 +34,10 @@ class CastInstToEnum extends CompilerPass {
         switch expr {
             case { expr: TCast(e, _), t: t }: {
                 var isDyn = e.t.match(TDynamicAny | TDynamic(_));
+                // use directly, no need to get enumType
+                if (isDyn && isTypeExpr(e)) {
+                    return;
+                }
                 var o = ExprHelper.createCast(new HxbTypedExpr(TCall(
                     new HxbTypedExpr(
                     TField(hx2go.normaliser.ExprCopy.copy(e), isDyn ? FDynamic("enumType") : FInstance(switch e.t {

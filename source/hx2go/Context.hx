@@ -165,7 +165,6 @@ class Context {
             new hx2go.passes.RewriteArrayGetData(this),
             new hx2go.passes.RewriteArraySetData(this),
             new hx2go.passes.RewriteArrayCreation(this),
-            new hx2go.passes.RewriteChanCreation(this),
             new hx2go.passes.RewriteStringCreation(this),
             new hx2go.passes.RewritePointerCastFrom(this),
             new hx2go.passes.RewritePointerCastTo(this),

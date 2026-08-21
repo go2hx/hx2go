@@ -22,37 +22,55 @@
 
 package haxe.ds;
 
+@:structInit
+class Bucket<K, T> {
+	public var key:K;
+	public var value:T;
+	public function new(key,value) {
+		this.key = key;
+		this.value = value;
+	}
+}
+
 class ObjectMap<K:{}, T> implements haxe.Constraints.IMap<K, T> {
-	var h:go.Map<K,T>;
+	var h:go.Map<go.UIntPtr, Bucket<K, T>>;
 
 	public function new():Void {
-		h = new go.Map<K,T>();
+		h = new go.Map<go.UIntPtr, Bucket<K, T>>();
+	}
+
+	static inline function id(key:Dynamic):go.UIntPtr {
+		return go.Reflect.valueOf(key).pointer();
 	}
 
 	public function set(key:K, value:T):Void {
-		@:privateAccess h.set(key, value);
+		@:privateAccess h.set(id(key), {key: key, value: value});
 	}
 
 	public function get(key:K):Null<T> {
-		return @:privateAccess h.get(key);
+		if (!@:privateAccess h.exists(id(key)))
+			return null;
+		return @:privateAccess h.get(id(key)).value;
 	}
 
 	public function exists(key:K):Bool {
-		return @:privateAccess h.exists(key);
+		return @:privateAccess h.exists(id(key));
 	}
 
 	public function remove(key:K):Bool {
-         var prevSize = h.size();
-		@:privateAccess h.remove(key);
-        return prevSize != h.size();
+		var k = id(key);
+		if (!@:privateAccess h.exists(k))
+			return false;
+		@:privateAccess h.remove(k);
+		return true;
 	}
 
 	public function keys():Iterator<K> {
-		return h.keys().iterator();
+		return h.values().toArray().map(b -> b.key).iterator();
 	}
 
 	public function iterator():Iterator<T> {
-		return h.values().iterator();
+		return h.values().toArray().map(b -> b.value).iterator();
 	}
 
 	@:runtime public inline function keyValueIterator():KeyValueIterator<K, T> {
@@ -68,15 +86,14 @@ class ObjectMap<K:{}, T> implements haxe.Constraints.IMap<K, T> {
 
 	public function toString():String {
 		var s = new StringBuf();
-		var keys = h.keys();
-		var values = h.values();
+		var buckets = h.values();
 		s.addChar("[".code);
-		for (i in 0...keys.length) {
+		for (i in 0...buckets.length) {
 			if (i > 0)
 				s.add(", ");
-			s.add(keys[i]);
+			s.add(buckets[i].key);
 			s.add(" => ");
-			s.add(values[i]);
+			s.add(buckets[i].value);
 		}
 		s.addChar("]".code);
 		return s.toString();
@@ -85,7 +102,7 @@ class ObjectMap<K:{}, T> implements haxe.Constraints.IMap<K, T> {
 	public function clear():Void {
 		@:privateAccess h.clear();
 	}
-	
+
 	public function size():Int {
 		return h.size();
 	}

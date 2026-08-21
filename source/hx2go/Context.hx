@@ -157,6 +157,7 @@ class Context {
             new hx2go.passes.RewriteAbstractThis(this),
             new hx2go.passes.RewriteGoBuiltinCreation(this),
             new hx2go.passes.RewriteStringMethod(this),
+            new hx2go.passes.RewriteStringLength(this),
             new hx2go.passes.RewriteArrayLength(this),
             new hx2go.passes.RewriteSyntaxSelect(this),
             new hx2go.passes.RewriteSyntaxDefer(this),

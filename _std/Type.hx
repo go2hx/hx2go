@@ -48,11 +48,21 @@ enum ValueType {
 class Type {
 
 	public static function getClass<T>(o:T):Null<Class<T>> {
-		return cast o; // TODO: perhaps using typeof() with a switch is more robust?
+		return switch typeof(o) {
+			case TClass(o):
+				return cast o;
+			default:
+				null;
+		}
 	}
 
 	public static function getEnum(o:EnumValue):Null<Enum<Dynamic>> {
-		return cast o; // TODO: perhaps using typeof() with a switch is more robust?
+		return switch typeof(o) {
+			case TEnum(o):
+				return cast o;
+			default:
+				null;
+		}
 	}
 
 	public static function getSuperClass(c:Class<Dynamic>):Null<Class<Dynamic>> {

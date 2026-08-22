@@ -199,7 +199,7 @@ class Init {
 			var singleFile = Context.defined("go-single-file");
 			var sourcelineComments = Context.defined("go-sourceline-comments");
 			var times = Context.defined("go-times");
-			var disableIncrementalCache = Context.defined("go-disable-cache");
+			var disableIncrementalCache = Context.defined("go-disable-cache") || Context.defined("go-no-cache");
 
 			var self = Context.resolvePath("go/Init.hx");
 			var path = Path.join([ Path.directory(self), '..', '..' ]);

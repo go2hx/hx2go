@@ -290,6 +290,7 @@ class ClassWriter extends WriterImpl {
             buf.add('&[]string{${cls.statics.map(f -> '"${f.name}"').join(", ")}},', 1);
             buf.add('&[]string{${fieldNames.map(f -> '"${f}"').join(", ")}},', 1);
             buf.add('${firstSuper != null ? '${StringConversions.typePathClassInstanceName(firstSuper.path)}_RTTI' : 'nil'},', 1);
+            buf.add('&[]*Hx_Obj_go_haxe_hxclass{${cls.interfaces.map(i -> '${writer.context.resolvedInstanceName(i.t)}_RTTI').join(", ")}},', 1);
             buf.add('func (params any) any {', 1);
             buf.add('return nil', 2);
             buf.add('},', 1);
@@ -318,6 +319,7 @@ class ClassWriter extends WriterImpl {
             buf.add('&[]string{${cls.statics.map(f -> '"${f.name}"').join(", ")}},', 1);
             buf.add('&[]string{${fieldNames.map(f -> '"${f}"').join(", ")}},', 1);
             buf.add('nil,', 1);
+            buf.add('&[]*Hx_Obj_go_haxe_hxclass{${cls.interfaces.map(i -> '${writer.context.resolvedInstanceName(i.t)}_RTTI').join(", ")}},', 1);
             buf.add('func (params any) any {', 1);
             buf.add('return nil', 2);
             buf.add('},', 1);

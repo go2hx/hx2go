@@ -282,7 +282,7 @@ class Init {
 			platforms: [CustomTarget("go")],
 		});
 		Compiler.registerCustomDefine({
-			define: "no-go-cache",
+			define: "go-no-cache",
 			doc: "disables the incremental cache",
 			platforms: [CustomTarget("go")],
 		});

@@ -199,14 +199,21 @@ class Std {
             case _: return switch vt {
                 case TClass(q): {
                     var target: HxClass = cast t;
-                    var current: HxClass = cast q;
+                    var queue: Array<HxClass> = [(cast q : HxClass)];
 
-                    while (current != null) {
+                    while (queue.length > 0) {
+                        var current = queue.shift();
                         if (current.name == target.name) {
                             return true;
                         }
 
-                        current = current.superClass;
+                        if (current.superClass != null) {
+                            queue.push(current.superClass);
+                        }
+
+                        for (iface in current.interfaces) {
+                            queue.push(iface);
+                        }
                     }
 
                     return false;

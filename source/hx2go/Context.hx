@@ -56,6 +56,7 @@ class Context {
 
     private static final _reserved: Map<String, Bool> = new Map();
     private var types: Map<String, HxbModuleType>;
+    private var moduleCache: Map<String, HxbModule> = new Map();
     private var archive: HxbArchive;
     private var imports: Map<String, Array<String>>;
     private var outputDirectory: String;
@@ -67,7 +68,6 @@ class Context {
     private var typeQueue: Array<String>;
     private var processList: Array<Process>;
     private var writtenFiles: Map<String, Bool>;
-    private var visitedModules: Map<String, Bool>;
     public var sourcelineComments:Bool = false;
     public var times: hx2go.util.Times;
 
@@ -87,9 +87,9 @@ class Context {
         this.contextStack = [];
         this.processList = [];
         this.writtenFiles = new Map();
-        this.visitedModules = new Map();
         this.archive = archive;
         this.codegenVersion = codegenVersion;
+        this.disableIncrementalCache = disableIncrementalCache;
 
         for (word in _reservedWords) {
             _reserved.set(word, true);
@@ -318,7 +318,7 @@ class Context {
 
         writeFile("", "Main", prefix + buf.toString());
 
-        cache.prune([for (m in visitedModules.keys()) m]);
+        cache.prune([for (m in moduleCache.keys()) m]);
         removeStaleFiles();
         cache.save();
 
@@ -392,19 +392,20 @@ class Context {
 
     public function resolveModule(tp: TypePath): Null<HxbModule> {
         var res = archive.findModule(tp.moduleDotPath(), "go");
-        if (res == null) {
-            return null;
+        if (res == null) return null;
+
+        var key = res.dotPath();
+        if (moduleCache.exists(key)) {
+            return moduleCache[key];
         }
-        visitedModules.set(res.dotPath(), true);
 
         var closeArcDecode = times.start("archive.decode");
         var mod = archive.decode(res);
         closeArcDecode();
+        moduleCache.set(key, mod);
 
         var closeDecode = times.start("decode");
-        for (type in mod.types) {
-            buildType(type, res);
-        }
+        for (type in mod.types) buildType(type, res);
         closeDecode();
 
         var closeRefs = times.start("resolveRefs");
@@ -415,19 +416,13 @@ class Context {
         var hit = cache.isHit(codegenVersion, archive, mod);
         closeHit();
         if (hit) {
-            var closeSig = times.start("normalizeSignatures");
-            for (type in mod.types) {
-                normalizeSignatures(type, res.dotPath());
-            }
-            closeSig();
-            typesByModule.set(res.dotPath(), []);
+            for (type in mod.types) normalizeSignatures(type, key);
+            typesByModule.set(key, []);
             return mod;
         }
 
         var closeTransform = times.start("transform");
-        for (type in mod.types) {
-            transformType(type, res.dotPath());
-        }
+        for (type in mod.types) transformType(type, key);
         closeTransform();
 
         return mod;

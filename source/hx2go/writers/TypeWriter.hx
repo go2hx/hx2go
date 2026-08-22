@@ -47,6 +47,7 @@ class TypeWriter extends WriterImpl {
         buf.add('&[]string{${statics.map(f -> '"${f}"').join(", ")}},', 1);
         buf.add('&[]string{},', 1);
         buf.add('nil,', 1);
+        buf.add("&[]*Hx_Obj_go_haxe_hxclass{},", 1);
         buf.add('func (params any) any {', 1);
         buf.add('return nil', 2);
         buf.add('},', 1);

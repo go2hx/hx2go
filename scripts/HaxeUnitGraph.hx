@@ -63,7 +63,7 @@ function main() {
 	var line = Charts.newLine();
 	line.setGlobalOptions(
 		Charts.withInitializationOpts({
-			theme: Types.ThemeChalk, // dark theme
+			theme: Types.themeChalk, // dark theme
 			backgroundColor: "#1E1E28",
 			width: "1400px",
 			height: "700px",

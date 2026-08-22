@@ -195,14 +195,148 @@ type Game interface {
 ```
 
 Due to the usage of ``@:go.Export`` on these 3 functions, the Haxe class can be used as the implementation for this Go interface.
+
+## Usage of Go's language features
+**Goroutines / Channels**
+```haxe
+import go.Chan;
+import go.Syntax;
+
+function sum(c: Chan<Int>, values: Array<Int>): Void {
+    var sum = 0;
+    for (value in values) {
+        sum += value;
+    }
+
+    c.send(sum);
+}
+
+function main() {
+    var arr: Array<Int> = [7, 2, 8, -9, 4, 0];
+    var ch: Chan<Int> = new Chan();
+
+    Syntax.go(sum.bind(ch, arr.slice(0, 3)));
+    Syntax.go(sum.bind(ch, arr.slice(3, 6)));
+
+    var x = ch.receive();
+    var y = ch.receive();
+
+    trace(x, y, x + y);
+}
+```
+
+**Select**
+```haxe
+import go.Syntax;
+import go.Chan;
+
+function fib(c: Chan<Int>, quit: Chan<Int>) {
+    var x = 0;
+    var y = 1;
+    var f = true;
+
+    while (f) {
+        Syntax.select(
+            Select.send(c, x, () -> {
+                var v = x;
+                x = y;
+                y = v + y;
+            }),
+            Select.receive(quit, _ -> {
+                trace("quit");
+                f = false;
+            })
+        );
+    }
+}
+
+function main() {
+    var chan: Chan<Int> = new Chan();
+    var quit: Chan<Int> = new Chan();
+
+    Syntax.go(() -> {
+        for (i in 0...10) {
+            trace(chan.receive());
+        }
+
+        quit.send(0);
+    });
+
+    fib(chan, quit);
+}
+```
+
+**Defer**
+```haxe
+import go.Syntax;
+
+function main() {
+    Syntax.defer(() -> trace("Second!"));
+    trace("First!");
+}
+```
+
+**Fixed-size Arrays**
+```haxe
+import go.crypto.Sha256_;
+import go.GoArray;
+import go.Byte;
+import go.Slice;
+
+function main() {
+  var fixed: GoArray<Byte, 32> = Sha256_.sum256("Hello, World!");
+  for (value in fixed) {
+    trace(value);
+  }
+
+  trace(fixed[0]);
+  fixed[3] = 42; // works like normal
+
+  var slice: Slice<Byte> = fixed; // [N]T -> []T can be implicit
+  trace(slice);
+
+  slice[0] = 123;
+
+  trace(fixed[0], slice[0]); // not copied
+
+  var array: Array<Byte> = slice;
+
+  array[0] = 111;
+
+  trace(fixed[0], slice[0], array[0]); // Array<T>, Slice<T> and GoArray<T, N> all hold the same identity
+
+  array.push(0); // at this point Array<T> has grown, and doesn't share the identity with GoArray<T, N> and Slice<T> anymore
+  array[0] = 222;
+
+  trace(fixed[0], slice[0], array[0]);
+
+  // please be careful with casts to array as they *may* share identity, but they *may* not.
+  // consider using copy() when casting Slice<T> to Array<T>
+  // GoArray<T, N> = [N]T
+  // Slice<T> = []T
+  // Array<T> = *[]T
+}
+```
+
+**Raw syntax**
+```haxe
+import go.Syntax;
+
+function main() {
+    var result = Syntax.code("{0} + 5", 10); // beware: types are *not* checked
+    trace(result);
+}
+```
+
 ## Haxe unit tests
 <img src="https://go2hx.github.io/hx2go/graph.png"/>
+
+> ℹ️ The above graph updates in real-time as new changes are merged upstream.
 
 ## Contributing
 
 Contributions are welcome. Please open an issue to discuss substantial changes
 before sending a pull request.
-
 
 ### Dev env
 ```sh

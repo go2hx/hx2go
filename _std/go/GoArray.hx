@@ -9,6 +9,10 @@ extern abstract GoArray<T, @:const Size: Int> {
         return Go.len(this);
     }
 
+    public inline function iterator(): Iterator<T> {
+        return toSlice().iterator();
+    }
+
     // note: marked as extern to force inline
     @:arrayAccess @:pure private extern inline function get(index: Int): T {
         return Syntax.code("{0}[{1}]", this, (index : Int));

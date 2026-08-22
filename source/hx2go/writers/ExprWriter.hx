@@ -801,11 +801,11 @@ class ExprWriter extends WriterImpl {
                 if (m == null ) ""
                 else {
                     var ntp = StringConversions.moduleTypeGetTypePath(m);
-                    ntp = switch ntp {
+                    /* ntp = switch ntp {
                         case { name: "String", pack: [] }: new TypePath(["go", "haxe"], "HxString", "HxString");
                         case { name: "Array", pack: [] }: new TypePath(["go", "haxe"], "HxArray", "HxArray");
                         case _: ntp;
-                    }
+                    } */
                     '${StringConversions.typePathClassInstanceName(ntp)}_RTTI';
                 }
             }

@@ -32,6 +32,22 @@ class ClassWriter extends WriterImpl {
         var buf = new OutputBuffer();
 
         if (cls.flags & HxbClassFlag.CExtern != 0) {
+            // write RTTI
+            buf.add('');
+            buf.add('var ${StringConversions.typePathClassInstanceName(cls.path)}_RTTI = Hx_Obj_go_haxe_hxclass_CreateInstance(');
+            buf.add('"${cls.path.dotPath()}",', 1);
+            buf.add('&[]string{${cls.statics.map(f -> '"${f.name}"').join(", ")}},', 1);
+            buf.add('&[]string{},', 1);
+            buf.add('nil,', 1);
+            buf.add('&[]*Hx_Obj_go_haxe_hxclass{},', 1);
+            buf.add('func (params any) any {', 1);
+            buf.add('panic("Cannot dynamically create instance of extern class")', 2);
+            buf.add('},', 1);
+            buf.add('func () any {', 1);
+            buf.add('panic("Cannot dynamically create instance of extern class")', 2);
+            buf.add('},', 1);
+            buf.add(')');
+
             return buf;
         }
 

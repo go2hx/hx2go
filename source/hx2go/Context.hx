@@ -747,6 +747,11 @@ class Context {
             case MClass(def):
                 roots = roots.concat(def.fields);
                 roots = roots.concat(def.statics);
+                roots = roots.filter(f -> f.flags & HxbClassFieldFlag.CfExtern == 0);
+
+                if (def.flags & HxbClassFlag.CExtern != 0) {
+                    return null;
+                }
 
                 if (def.constructor?.expr != null) {
                     roots.push(def.constructor);

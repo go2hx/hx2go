@@ -68,6 +68,8 @@ class Reflect {
     }
 
     public static function isFunction(f: Dynamic): Bool {
+        if (f == null)
+            return false;
         return go.Reflect.typeOf(f).kind() == go.Reflect.Func;
     }
 

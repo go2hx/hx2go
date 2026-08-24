@@ -102,9 +102,7 @@ func (this *HxArrayImpl[T]) Set(idx int32, val T) {
 	}
 
 	if int(idx) >= len(this.data) {
-		grown := make([]T, idx+1)
-		copy(grown, this.data)
-		this.data = grown
+		this.data = append(this.data, make([]T, int(idx)+1-len(this.data))...)
 	}
 
 	this.data[idx] = val

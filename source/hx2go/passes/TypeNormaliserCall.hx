@@ -196,9 +196,9 @@ class TypeNormaliserCall extends CompilerPass {
         var isDynamic = inner.t == null || inner.t.match(TDynamic(_) | TDynamicAny);
         var slice = isDynamic
             ? ExprHelper.createCallStatic(context, { pack: ['go', 'haxe'], name: 'HxDynamic', moduleName: 'HxDynamic' }, 'toAnySlice', [hx2go.normaliser.ExprCopy.copy(inner)])
-            : ExprHelper.createUntyped("(*({0}))", [hx2go.normaliser.ExprCopy.copy(inner)]);
+            : ExprHelper.createUntyped("{0}", [hx2go.normaliser.ExprCopy.copy(inner)]);
 
-        arg.expr = ExprHelper.createUntyped("{0}...", [slice]).expr;
+        arg.expr = ExprHelper.createUntyped("{0}.Slice()...", [slice]).expr;
         arg.t = elementType;
     }
 
@@ -207,14 +207,14 @@ class TypeNormaliserCall extends CompilerPass {
             case TCall(callee, args):
                 var goType = context.getWriter().types.writeHxbType(elementType);
                 var placeholders = [for (i in 0...args.length - restStart) '{$i}'].join(", ");
-                var slice = ExprHelper.createUntyped('[]$goType{ $placeholders }', args.slice(restStart));
+                var slice = ExprHelper.createUntyped('HxMakeArray[$goType]( $placeholders )', args.slice(restStart));
 
                 TCall(callee, args.slice(0, restStart).concat([slice]));
 
             case TNew(tp, params, args):
                 var goType = context.getWriter().types.writeHxbType(elementType);
                 var placeholders = [for (i in 0...args.length - restStart) '{$i}'].join(", ");
-                var slice = ExprHelper.createUntyped('[]$goType{ $placeholders }', args.slice(restStart));
+                var slice = ExprHelper.createUntyped('HxMakeArray[$goType]( $placeholders )', args.slice(restStart));
 
                 TNew(tp, params, args.slice(0, restStart).concat([slice]));
 

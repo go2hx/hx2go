@@ -117,6 +117,17 @@ class Normaliser {
                 null;
 
             case TBinop(OpAssignOp(op), left, right):
+                left.expr = switch left.expr {
+                    case TArray(e, idx): {
+                        TArray(
+                            scope.temp(expr, e, this, scope, ancestor),
+                            scope.temp(expr, idx, this, scope, ancestor)
+                        );
+                    }
+
+                    case _: left.expr;
+                }
+
                 expr.expr = TBinop(
                     OpAssign,
                     ExprCopy.copy(left),
@@ -207,6 +218,10 @@ class Normaliser {
                 if (eelse != null) {
                     eelse.expr = ensureBlock(eelse).expr;
                 }
+
+            case TUnop(op, _, e) if (op.match(OpIncrement | OpDecrement) && e.expr.match(TArray(_))):
+                toExpr(expr, scope, ancestor); // ugly hack
+                toStmt(expr, scope, ancestor);
 
             case TUnop(op, false, e) if (op.match(OpIncrement | OpDecrement)):
                 expr.expr = TUnop(op, true, e); // at this point it is guarenteed to be used as a stmt, so we can just use x++

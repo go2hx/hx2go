@@ -40,10 +40,8 @@ class EReg {
             return false;
         }
 
-        matchPos = [];
+        matchPos = idx.toArray();
         str = s;
-
-        HxArray.setData(matchPos, idx);
 
         return true;
     }
@@ -101,10 +99,8 @@ class EReg {
             return false;
         }
 
-        matchPos = [];
+        matchPos = idx.toArray();
         str = s;
-
-        HxArray.setData(matchPos, idx);
 
         for (i in 0...matchPos.length) {
             if (matchPos[i] >= 0) matchPos[i] += pos;
@@ -119,9 +115,7 @@ class EReg {
 
     public function split(s: String): Array<String> {
         var parts: Slice<String> = re.split(s, -1);
-        var result: Array<String> = [];
-
-        HxArray.setData(result, parts);
+        var result: Array<String> = parts.toArray();
 
         return result;
     }
@@ -158,10 +152,8 @@ class EReg {
             var end = idx[1] + pos;
             buf.add(s.substring(pos, start));
 
-            matchPos = [];
+            matchPos = idx.toArray();
             str = s;
-
-            HxArray.setData(matchPos, idx);
 
             for (i in 0...matchPos.length) {
                 if (matchPos[i] >= 0) matchPos[i] += pos;

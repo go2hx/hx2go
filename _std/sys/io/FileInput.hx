@@ -34,7 +34,7 @@ class FileInput extends haxe.io.Input {
     }
 
     public override function readBytes(s: haxe.io.Bytes, p: Int, l: Int): Int {
-        var t = __f.read((cast s.getData() : Pointer<Slice<Byte>>).value).tuple();
+        var t = __f.read(Slice.fromArray(s.getData())).tuple();
         if (t.error != null) {
             if (t.error.error() == "EOF") {
                 __eof = true;

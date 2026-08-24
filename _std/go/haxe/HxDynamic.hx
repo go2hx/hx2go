@@ -25,6 +25,16 @@ private extern class Unsafe {
     @:native("Add") static function add(ptr: UnsafePointer, len: go.UIntPtr): UnsafePointer;
     @:native("Sizeof") static function sizeof(v: Dynamic): go.UIntPtr;
 }
+
+@:go.Type({ name: "HxDynamicArray" })
+private extern class HxDynamicArray {
+    @:native("Set_Dyn") function set(i: Int, v: Dynamic): Void;
+    @:native("Get_Dyn") function get(i: Int): Dynamic;
+    @:native("Slice_Dyn") function slice(): Slice<Dynamic>;
+    @:native("ElemType") function elemType(): Type;
+    @:native("Len") function len(): Int;
+}
+
 @:keep
 @:analyzer(ignore)
 class HxDynamic {
@@ -123,6 +133,11 @@ class HxDynamic {
     }
 
     public static function toAnySlice(v: Dynamic): Slice<Dynamic> {
+        var arr = tryDynamicArray(v);
+        if (arr != null) {
+            return arr.slice();
+        }
+
         var len: Int = getArrayLength(v);
         var slice: Slice<Dynamic> = new Slice();
 
@@ -653,13 +668,23 @@ class HxDynamic {
             }
         ", dyn, fieldName);
 
+        if (isNull(dyn)) {
+            throw "runtime.HxDynamic.field null field access: " + fieldName;
+        }
+
+        var arr = tryDynamicArray(dyn);
+        if (arr != null) {
+            if (fieldName == "length") {
+                return arr.len();
+            }
+            if (fieldName == "iterator") {
+                return () -> toAnySlice(dyn).toArray().iterator();
+            }
+        }
+
         var value = ensureValue(dyn);
         var kind = value.kind();
         var found = false;
-
-        if (isNull(dyn) || !value.isValid()) {
-            throw "runtime.HxDynamic.field null field access: " + fieldName;
-        }
 
         if (kind == Reflect.Ptr || kind == Reflect.Interface) {
             return getFieldFrom(value.elem(), fieldName, hop);
@@ -772,13 +797,30 @@ class HxDynamic {
         // TODO: throw when Null<T> is supported.
     }
 
-    public static function setArrayIndex(dyn: Dynamic, index: Dynamic, v: Dynamic): Dynamic {
-        var value = ensureValue(dyn);
-        var kind = value.kind();
+    static function tryDynamicArray(dyn: Dynamic): Null<HxDynamicArray> {
+        var arr: HxDynamicArray = null;
+        var ok: Bool = false;
+        Syntax.code("{0}, {1} = {2}.(HxDynamicArray)", arr, ok, dyn);
+        return ok ? arr : null;
+    }
 
-        if (isNull(dyn) || !value.isValid()) {
+    public static function setArrayIndex(dyn: Dynamic, index: Dynamic, v: Dynamic): Dynamic {
+        if (isNull(dyn)) {
             throw "runtime.HxDynamic.setArrayIndex null array access";
         }
+
+        var arr = tryDynamicArray(dyn);
+        if (arr != null) {
+            try arr.set(toInt(index), ensureInterface(v)) catch (_) {
+                var assigned = valueToAssign(v, arr.elemType());
+                arr.set(toInt(index), assigned.canInterface() ? assigned._interface() : null);
+            }
+
+            return v;
+        }
+
+        var value = ensureValue(dyn);
+        var kind = value.kind();
 
         if (kind == Reflect.Interface) {
             value = value.elem();
@@ -813,12 +855,17 @@ class HxDynamic {
     }
 
     public static function getArrayIndex(dyn: Dynamic, index: Dynamic): Dynamic {
-        var value = ensureValue(dyn);
-        var kind = value.kind();
-
-        if (isNull(dyn) || !value.isValid()) {
+        if (isNull(dyn)) {
             throw "runtime.HxDynamic.getArrayIndex null array access";
         }
+
+        var arr = tryDynamicArray(dyn);
+        if (arr != null) {
+            return arr.get(toInt(index));
+        }
+
+        var value = ensureValue(dyn);
+        var kind = value.kind();
 
         if (kind == Reflect.Ptr || kind == Reflect.Interface) {
             return getArrayIndex(value.elem(), index);
@@ -840,12 +887,17 @@ class HxDynamic {
     }
 
     public static function getArrayLength(dyn: Dynamic): Int {
-        var value = ensureValue(dyn);
-        var kind = value.kind();
-
-        if (isNull(value) || !value.isValid()) {
+        if (isNull(dyn)) {
             return 0;
         }
+
+        var arr = tryDynamicArray(dyn);
+        if (arr != null) {
+            return arr.len();
+        }
+
+        var value = ensureValue(dyn);
+        var kind = value.kind();
 
         if (kind == Reflect.Ptr || kind == Reflect.Interface) {
             return getArrayLength(value.elem());

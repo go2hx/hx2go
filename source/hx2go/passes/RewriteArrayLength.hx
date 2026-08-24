@@ -24,8 +24,7 @@ class RewriteArrayLength extends CompilerPass {
 
     public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
         var o = switch expr.expr {
-            case TField(e, FInstance({ name: 'Array', pack: [] }, [p], { name: 'length' })) if (context.getWriter().types.writeHxbType(p).toString() == 'any'): ExprHelper.createCallStatic(context, { name: 'HxDynamic', moduleName: 'HxDynamic', pack: ['go', 'haxe'] }, 'getArrayLength', [e]);
-            case TField(e, FInstance({ name: 'Array', pack: [] }, _, { name: 'length' })): ExprHelper.createUntyped('int32(len(*{0}))', [e]);
+            case TField(e, FInstance({ name: 'Array', pack: [] }, _, { name: 'length' })): ExprHelper.createUntyped('{0}.Len()', [e]);
             case _: expr;
         }
 

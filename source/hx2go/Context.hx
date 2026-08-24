@@ -114,7 +114,6 @@ class Context {
             new hx2go.passes.NullableCall(this),
             new hx2go.passes.CastInstToClass(this),
             new hx2go.passes.CastInstToEnum(this),
-            new hx2go.passes.ArrayAccessAssignOp(this),
             new hx2go.passes.RewriteDynamicCall(this),
             new hx2go.passes.RewriteDynamicUnop(this),
             new hx2go.passes.RewriteDynamicBinop(this),
@@ -136,15 +135,14 @@ class Context {
             new hx2go.passes.CastNullableTo(this),
             new hx2go.passes.CastNullableFrom(this),
             new hx2go.passes.CastString(this),
-            new hx2go.passes.CastDynamicFrom(this),
             new hx2go.passes.CastClass(this),
             new hx2go.passes.CastPointerInterface(this),
             new hx2go.passes.RewriteThrow(this),
             new hx2go.passes.FloatMod(this),
             new hx2go.passes.ArrayAccessDynamicSet(this),
             new hx2go.passes.ArrayAccessDynamicGet(this),
-            new hx2go.passes.ArrayAccessSet(this),
             new hx2go.passes.FieldAccessSuper(this),
+            new hx2go.passes.CastDynamicFrom(this),
             new hx2go.passes.RewriteTupleAssign(this),
             new hx2go.passes.RewriteResultAssign(this),
             new hx2go.passes.RewriteResultSwitch(this),
@@ -162,8 +160,6 @@ class Context {
             new hx2go.passes.RewriteSyntaxSelect(this),
             new hx2go.passes.RewriteSyntaxDefer(this),
             new hx2go.passes.RewriteSyntaxGo(this),
-            new hx2go.passes.RewriteArrayGetData(this),
-            new hx2go.passes.RewriteArraySetData(this),
             new hx2go.passes.RewriteArrayCreation(this),
             new hx2go.passes.RewriteStringCreation(this),
             new hx2go.passes.RewritePointerCastFrom(this),
@@ -322,6 +318,8 @@ class Context {
         removeStaleFiles();
         cache.save();
 
+        copyRuntime();
+
         var closeFmt = times.start("gofmt");
         var proc = new sys.io.Process('gofmt -w $outputDirectory');
 
@@ -331,6 +329,23 @@ class Context {
 
         proc.exitCode(true);
         closeFmt();
+    }
+
+    function copyRuntime() {
+        #if go
+        var libPath = Path.join([ Sys.programPath(), '..', '..', '..', '..' ]);
+        #else
+        var libPath = Path.join([ Path.directory(Sys.programPath()), '..', '..' ]);
+        #end
+
+        var runtimePath = Path.join([ libPath, 'runtime' ]);
+        var runtimeFiles = FileSystem.readDirectory(runtimePath);
+
+        for (entry in runtimeFiles) {
+            var src = Path.join([ runtimePath, entry ]);
+            var dst = Path.join([ outputDirectory, entry ]);
+            File.saveContent(dst, File.getContent(src));
+        }
     }
 
     function installGoDeps(imports:Map<String, Array<String>>) {

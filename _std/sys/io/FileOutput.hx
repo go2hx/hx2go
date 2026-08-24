@@ -23,7 +23,7 @@ class FileOutput extends haxe.io.Output {
     }
 
     public override function writeBytes(s: haxe.io.Bytes, p: Int, l: Int): Int {
-        return try __f.write((cast s.getData().slice(p, p + l) : Pointer<Slice<Byte>>).value).sure() catch (e: Dynamic) throw haxe.io.Error.Custom(e);
+        return try __f.write(Slice.fromArray(s.getData().slice(p, p + l))).sure() catch (e: Dynamic) throw haxe.io.Error.Custom(e);
     }
 
     public override function close(): Void {

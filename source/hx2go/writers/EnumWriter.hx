@@ -123,8 +123,8 @@ class EnumWriter extends WriterImpl {
         buf.add('');
         buf.add('var ${StringConversions.typePathEnumName(e.path)}_RTTI = Hx_Obj_go_haxe_hxenum_CreateInstance(');
         buf.add('"${e.path.toString()}",', 1);
-        buf.add('&([]string{ ${e.names.map(n -> '"$n"').join(", ")} }),', 1);
-        buf.add('&([]int32{ ${e.names.map(n -> counts[n]).join(", ") } }),', 1);
+        buf.add('HxMakeArray[string](${e.names.map(n -> '"$n"').join(", ")}),', 1);
+        buf.add('HxMakeArray[int32](${e.names.map(n -> counts[n]).join(", ") }),', 1);
         buf.add('func (index int32, params any) Hx_Obj_VTable_go_haxe__hxenumvalue__hxenumvalue {', 1);
         buf.add('switch index {', 2);
 

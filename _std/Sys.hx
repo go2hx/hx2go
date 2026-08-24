@@ -27,8 +27,7 @@ class Sys {
     }
 
     public static function args(): Array<String> {
-        var args = [];
-        HxArray.setData(args, Os.args);
+        var args = Os.args.toArray();
         HxArray.shift(args);
 
         return args;

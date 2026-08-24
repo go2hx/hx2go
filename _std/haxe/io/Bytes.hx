@@ -224,7 +224,8 @@ class Bytes {
             throw Error.OutsideBounds;
         }
 
-        return Syntax.code("string((*{0})[{1}:{2}])", b, pos, pos + len); // again, go is UTF8, so both RawNative and UTF8 do the same
+        // TODO: create / use built-in slice method for regions
+        return Syntax.code("string({0}.Slice()[{1}:{2}])", b, pos, pos + len); // again, go is UTF8, so both RawNative and UTF8 do the same
     }
 
     @:deprecated("readString is deprecated, use getString instead")

@@ -252,16 +252,16 @@ class ExprWriter extends WriterImpl {
     public function writeArrayDecl(t:HxbType, elements: Array<HxbTypedExpr>): OutputBuffer {
         var buf = new OutputBuffer();
 
-        buf.addInline("&([]");
+        buf.addInline("HxMakeArray[");
         buf.addBufferInline(switch t {
             case TInst(_, params): writer.types.writeHxbType(params[0]);
             case TDynamic(_) | TDynamicAny: writer.types.writeHxbType(t);
             case _: throw "type is not array type for arrayDecl?";
         });
 
-        if (elements.length == 0) buf.addInline('{}');
+        if (elements.length == 0) buf.addInline(']()');
         else {
-            buf.addInline('{ ');
+            buf.addInline(']( ');
 
             for (idx in 0...elements.length) {
                 buf.addBufferInline(writeExpr(elements[idx]));
@@ -270,64 +270,19 @@ class ExprWriter extends WriterImpl {
                 }
             }
 
-            buf.addInline(' }');
+            buf.addInline(' )');
         }
-
-        buf.addInline(')');
 
         return buf;
     }
 
     public function writeArrayAccess(expr: HxbTypedExpr, e: HxbTypedExpr, eidx: HxbTypedExpr): OutputBuffer {
         var buf = new OutputBuffer();
-        var scalarConv = scalarElementConversion(expr, e);
 
-        if (scalarConv == null && expr.t != null) {
-            var elem = writer.types.writeHxbType(expr.t).toString();
-
-            buf.addInline('func() ${elem} { _hx_a := ');
-            buf.addBufferInline(writeExpr(e));
-            buf.addInline('; _hx_i := ');
-            buf.addBufferInline(writeExpr(eidx));
-            buf.addInline('; if _hx_i >= 0 && int(_hx_i) < len((*_hx_a)) { return (*_hx_a)[_hx_i] }; var _hx_z ${elem}; return _hx_z }()');
-
-            return buf;
-        }
-
-        if (scalarConv != null) {
-            buf.addInline('${scalarConv}(');
-        }
-
-        buf.addInline('(*');
         buf.addBufferInline(writeExpr(e));
-        buf.addInline(')');
-        buf.addInline('[');
+        buf.addInline('.Get(');
         buf.addBufferInline(writeExpr(eidx));
-        buf.addInline(']');
-
-        if (scalarConv != null) {
-            buf.addInline(')');
-        }
-
-        return buf;
-    }
-
-    function writeLvalue(expr: HxbTypedExpr): OutputBuffer {
-        return switch expr.expr {
-            case TArray(e, eidx): writePlainArrayAccess(expr, e, eidx);
-            case _: writeExpr(expr);
-        }
-    }
-
-    function writePlainArrayAccess(expr: HxbTypedExpr, e: HxbTypedExpr, eidx: HxbTypedExpr): OutputBuffer {
-        var buf = new OutputBuffer();
-
-        buf.addInline('(*');
-        buf.addBufferInline(writeExpr(e));
         buf.addInline(')');
-        buf.addInline('[');
-        buf.addBufferInline(writeExpr(eidx));
-        buf.addInline(']');
 
         return buf;
     }
@@ -350,6 +305,7 @@ class ExprWriter extends WriterImpl {
     function fromAny(target: HxbType, anyExpr: String): String {
         var toType = writer.types.writeHxbType(target).toString();
         var inner = Semantics.getNullableType(writer.context, target);
+
         var value = inner == null
             ? '_hx_d.($toType)'
             : '$toType{ Value: _hx_d.(${writer.types.writeHxbType(inner)}), Valid: true }';
@@ -485,20 +441,12 @@ class ExprWriter extends WriterImpl {
             case [_, TVoid]:
                 buf.addBufferInline(writeExpr(e));
 
-            case [(TDynamic(_) | TDynamicAny), (TDynamic(_) | TDynamicAny)]:
+            case [(TDynamic(_) | TDynamicAny), (TDynamic(_) | TDynamicAny | TAbstract({ pack: ["haxe"], name: "Rest" }, _))]:
                 buf.addBufferInline(writeExpr(e));
 
             case [(TDynamic(_) | TDynamicAny), _] if (concreteArrayElement(expr.t) != null):
-                // converting each element out of its any box
-                var elemType = concreteArrayElement(expr.t);
-                var elemGo = writer.types.writeHxbType(elemType).toString();
-                var inHxDynamic = expr.pos?.file.endsWith("HxDynamic.hx") == true;
-                buf.addInline('func() *[]${elemGo} { _hx_d := ');
-                buf.addInline(inHxDynamic ? '(' : 'Hx_Field_go_haxe_hxdynamic_ensureInterface(');
                 buf.addBufferInline(writeExpr(e));
-                buf.addInline('); if _hx_c, _hx_ok := _hx_d.(*[]${elemGo}); _hx_ok { return _hx_c }; ');
-                buf.addInline('_hx_src := *(_hx_d.(*[]any)); _hx_out := make([]${elemGo}, len(_hx_src)); ');
-                buf.addInline('for _hx_i, _hx_v := range _hx_src { _hx_out[_hx_i] = ${fromAny(elemType, "_hx_v")} }; return &_hx_out }()');
+                buf.addInline('.(${writer.types.writeHxbType(expr.t)})'); // TODO: review behaviour
 
             case [(TDynamic(_) | TDynamicAny), _]:
                 var box = expr.pos?.file.endsWith("HxDynamic.hx") ? 'any' : 'Hx_Field_go_haxe_hxdynamic_ensureInterface'; // this is a really bad hack, I know...
@@ -702,9 +650,20 @@ class ExprWriter extends WriterImpl {
             buf.addInline('(');
         }
 
-        buf.addBufferInline(op.match(OpAssign | OpAssignOp(_)) ? writeLvalue(left) : writeExpr(left));
-        buf.addInline(' $opStr ');
-        buf.addBufferInline(writeExpr(right));
+        switch left.expr {
+            case TArray(e, idx) if (op == OpAssign):
+                buf.addBufferInline(writeExpr(e));
+                buf.addInline('.Set(');
+                buf.addBufferInline(writeExpr(idx));
+                buf.addInline(', ');
+                buf.addBufferInline(writeExpr(right));
+                buf.addInline(')');
+
+            case _:
+                buf.addBufferInline(writeExpr(left));
+                buf.addInline(' $opStr ');
+                buf.addBufferInline(writeExpr(right));
+        }
 
         if (op != OpAssign) {
             buf.addInline(')');
@@ -728,7 +687,7 @@ class ExprWriter extends WriterImpl {
             buf.addInline(opStr);
         }
 
-        buf.addBufferInline(op == OpIncrement || op == OpDecrement ? writeLvalue(e) : writeExpr(e));
+        buf.addBufferInline(writeExpr(e));
 
         if (postFix) {
             buf.addInline(opStr);

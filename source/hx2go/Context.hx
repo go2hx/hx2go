@@ -605,26 +605,6 @@ class Context {
                     }
                 }
 
-            case TInst({ name: "Array", pack: [] }, [inner]):
-                var n = normalize(inner);
-
-                switch (n) {
-                    case TDynamicAny | TDynamic(_):
-                        TDynamicAny;
-                    case _:
-                        TInst({ name: "Array", moduleName: "Array", pack: [] }, [n]);
-                }
-
-            case TAbstract({ pack: ["haxe", "ds"], name: "Vector" }, [inner]):
-                var n = normalize(inner);
-
-                switch (n) {
-                    case TDynamicAny | TDynamic(_):
-                        TDynamicAny;
-                    case _:
-                        TAbstract({ name: "Vector", moduleName: "Vector", pack: ["haxe", "ds"] }, [n]);
-                }
-
             case TTypeParam(_) | TUnboundTypeParam(_) | TAnon(_):
                 TDynamicAny;
 

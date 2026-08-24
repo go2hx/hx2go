@@ -67,15 +67,15 @@ func (this *HxArrayView[T]) ElemType() reflect.Type {
 
 func (this *HxArrayImpl[T]) Set_Dyn(idx int32, val any) {
 	if obj, ok := val.(T); ok {
-		this.data[idx] = obj
+		this.Set(idx, obj)
 		return
 	}
 
-	this.data[idx] = Hx_Field_go_haxe_hxdynamic_ensureInterface(Hx_Field_go_haxe_hxdynamic_valueToAssign(val, this.ElemType())).(T)
+	this.Set(idx, Hx_Field_go_haxe_hxdynamic_ensureInterface(Hx_Field_go_haxe_hxdynamic_valueToAssign(val, this.ElemType())).(T))
 }
 
 func (this *HxArrayImpl[T]) Get_Dyn(idx int32) any {
-	return this.data[idx]
+	return this.Get(idx)
 }
 
 func (this *HxArrayImpl[T]) Slice_Dyn() []any {

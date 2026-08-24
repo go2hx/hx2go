@@ -207,6 +207,7 @@ class TypeWriter extends WriterImpl {
                 'struct { ${fields.map(f -> '${StringConversions.toPascalCase(f.name)} ${writeHxbType(f.type)}').join('; ')} }';
             }
             case TAbstract({ pack: [], name: 'Null' }, params): 'struct { Value ${writeHxbType(params[0])}; Valid bool }';
+            case TInst({ pack: [], name: 'Array' }, [TDynamic(_) | TDynamicAny]) | TAbstract({ pack: ["haxe", "ds"], name: "Vector" }, [TDynamic(_) | TDynamicAny]): 'HxDynamicArray';
             case TInst({ pack: [], name: 'Array' }, params) | TAbstract({ pack: ["haxe", "ds"], name: "Vector" }, params): 'HxArray[${writeHxbType(params[0])}]';
             case TAbstract({ pack: ['go'], name: 'Slice' }, params): '[]${writeHxbType(params[0])}';
             case TAbstract({ pack: ['go'], name: 'GoArray' }, params): '[${writeHxbType(params[1])}]${writeHxbType(params[0])}';

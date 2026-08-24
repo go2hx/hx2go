@@ -280,11 +280,18 @@ class ExprWriter extends WriterImpl {
         var buf = new OutputBuffer();
 
         buf.addBufferInline(writeExpr(e));
-        buf.addInline('.Get(');
+        buf.addInline('.${writeArrayMethod("Get", e.t)}(');
         buf.addBufferInline(writeExpr(eidx));
         buf.addInline(')');
 
         return buf;
+    }
+
+    function writeArrayMethod(name: String, type: HxbType): String {
+        return switch type {
+            case TInst({ name: "Array", pack: [] }, [TDynamic(_) | TDynamicAny]): '${name}_Dyn';
+            case _: name;
+        }
     }
 
     function scalarElementConversion(expr: HxbTypedExpr, e: HxbTypedExpr): Null<String> {
@@ -653,7 +660,7 @@ class ExprWriter extends WriterImpl {
         switch left.expr {
             case TArray(e, idx) if (op == OpAssign):
                 buf.addBufferInline(writeExpr(e));
-                buf.addInline('.Set(');
+                buf.addInline('.${writeArrayMethod("Set", e.t)}(');
                 buf.addBufferInline(writeExpr(idx));
                 buf.addInline(', ');
                 buf.addBufferInline(writeExpr(right));

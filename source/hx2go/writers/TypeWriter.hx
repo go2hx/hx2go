@@ -48,7 +48,7 @@ class TypeWriter extends WriterImpl {
         buf.add('HxMakeArray[string](),', 1);
         buf.add('nil,', 1);
         buf.add("HxMakeArray[*Hx_Obj_go_haxe_hxclass](),", 1);
-        buf.add('func (params any) any {', 1);
+        buf.add('func (params HxDynamicArray) any {', 1);
         buf.add('return nil', 2);
         buf.add('},', 1);
         buf.add('func () any {', 1);

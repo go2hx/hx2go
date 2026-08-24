@@ -15,6 +15,9 @@ import hx2go.util.ObjectFieldHelper;
 import hxb.HxbType;
 import haxe.runtime.Copy;
 import hx2go.util.TypeHelper;
+import hx2go.normaliser.ExprCopy;
+import hxb.tools.ExprTools;
+import hxb.tools.TypedExprTools;
 
 class TypeNormaliserArray extends CompilerPass {
 

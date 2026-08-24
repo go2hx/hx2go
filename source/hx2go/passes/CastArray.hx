@@ -15,10 +15,24 @@ class CastArray extends CompilerPass {
         }
     }
 
+    public function elem(t: HxbType): HxbType {
+        return switch t {
+            case TInst({ name: "Array", pack: [] }, [elem]): elem;
+            case _: t;
+        }
+    }
+
     public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
+        trace(expr, expr.t, elem(expr.t));
         expr.expr = switch expr.expr {
-            case TCast(e, _): e.expr;
-            case _: expr.expr;
+            case TCast(e, _) if (elem(expr.t).match(TDynamic(_) | TDynamicAny) && !elem(e.t).match(TDynamic(_) | TDynamicAny)):
+                ExprHelper.createUntyped("{0}.Dyn()", [e]).expr;
+
+            case TCast(e, _):
+                e.expr;
+
+            case _:
+                expr.expr;
         }
     }
 

@@ -12,6 +12,7 @@ type HxDynamicArray interface {
 	Get_Dyn(idx int32) any
 	Slice_Dyn() []any
 	String() string
+	Push_Dyn(value any) int32
 }
 
 type HxArray[T any] interface {
@@ -22,6 +23,7 @@ type HxArray[T any] interface {
 	Get(idx int32) T
 	Dyn() HxDynamicArray
 	String() string
+	Push(value T) int32
 }
 
 type HxArrayImpl[T any] struct {
@@ -67,29 +69,6 @@ func (this *HxArrayView[T]) ElemType() reflect.Type {
 	return reflect.TypeOf((*T)(nil)).Elem()
 }
 
-func (this *HxArrayImpl[T]) Set_Dyn(idx int32, val any) {
-	if obj, ok := val.(T); ok {
-		this.Set(idx, obj)
-		return
-	}
-
-	this.Set(idx, Hx_Field_go_haxe_hxdynamic_ensureInterface(Hx_Field_go_haxe_hxdynamic_valueToAssign(val, this.ElemType())).(T))
-}
-
-func (this *HxArrayImpl[T]) Get_Dyn(idx int32) any {
-	return this.Get(idx)
-}
-
-func (this *HxArrayImpl[T]) Slice_Dyn() []any {
-	src := this.data
-	out := make([]any, len(src))
-	for i, v := range src {
-		out[i] = v
-	}
-
-	return out
-}
-
 func (this *HxArrayImpl[T]) Len() int32 {
 	return int32(len(this.data))
 }
@@ -114,6 +93,15 @@ func (this *HxArrayView[T]) Set(idx int32, val T) {
 	this.source.Set(idx, val)
 }
 
+func (this *HxArrayImpl[T]) Set_Dyn(idx int32, val any) {
+	if obj, ok := val.(T); ok {
+		this.Set(idx, obj)
+		return
+	}
+
+	this.Set(idx, Hx_Field_go_haxe_hxdynamic_ensureInterface(Hx_Field_go_haxe_hxdynamic_valueToAssign(val, this.ElemType())).(T))
+}
+
 func (this *HxArrayImpl[T]) Get(idx int32) T {
 	if idx < 0 || int(idx) >= len(this.data) {
 		return HxDefault[T]()
@@ -129,6 +117,10 @@ func (this *HxArrayView[T]) Get(idx int32) T {
 	}
 
 	return HxDefault[T]()
+}
+
+func (this *HxArrayImpl[T]) Get_Dyn(idx int32) any {
+	return this.Get(idx)
 }
 
 func (this *HxArrayImpl[T]) Slice() []T {
@@ -147,6 +139,33 @@ func (this *HxArrayView[T]) Slice() []T {
 	}
 
 	return out
+}
+
+func (this *HxArrayImpl[T]) Slice_Dyn() []any {
+	src := this.data
+	out := make([]any, len(src))
+	for i, v := range src {
+		out[i] = v
+	}
+
+	return out
+}
+
+func (this *HxArrayImpl[T]) Push(value T) int32 {
+	this.data = append(this.data, value)
+	return int32(len(this.data))
+}
+
+func (this *HxArrayView[T]) Push(value T) int32 {
+	return this.source.Push(value)
+}
+
+func (this *HxArrayImpl[T]) Push_Dyn(value any) int32 {
+	if obj, ok := value.(T); ok {
+		return this.Push(obj)
+	}
+
+	return this.Push(Hx_Field_go_haxe_hxdynamic_ensureInterface(Hx_Field_go_haxe_hxdynamic_valueToAssign(value, this.ElemType())).(T))
 }
 
 func (this *HxArrayImpl[T]) String() string {

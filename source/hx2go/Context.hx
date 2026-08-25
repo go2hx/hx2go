@@ -622,7 +622,7 @@ class Context {
                 var fwd = TypeHelper.followToDef(this, t, true);
                 var fwdNorm = normalize(fwd);
 
-                if (fwdNorm.match(TDynamic(_) | TDynamicAny)) {
+                if (fwdNorm.match(TDynamic(_) | TDynamicAny | TInst({ name: "Array", pack: [] }, [TDynamic(_) | TDynamicAny]))) { // the Array<Dynamic> case is not ideal, but will do for now...
                     TDynamicAny;
                 } else {
                     TType(path, params.map(normalize));

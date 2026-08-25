@@ -274,7 +274,7 @@ class ExprWriter extends WriterImpl {
             buf.addInline(' )');
         }
 
-        if (elem.match(TDynamic(_) | TDynamicAny)) {
+        if (elem.match(TDynamic(_) | TDynamicAny | TTypeParam(_))) {
             buf.addInline('.Dyn()');
         }
 
@@ -288,6 +288,8 @@ class ExprWriter extends WriterImpl {
         buf.addInline('.${writeArrayMethod("Get", e.t)}(');
         buf.addBufferInline(writeExpr(eidx));
         buf.addInline(')');
+
+        trace(expr, expr.t, e.t);
 
         return buf;
     }

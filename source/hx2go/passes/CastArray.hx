@@ -6,6 +6,7 @@ import hxb.Typed.HxbTypedExprDef;
 import hxb.HxbType;
 import hx2go.util.ExprHelper;
 import hx2go.util.TypeHelper;
+import hx2go.normaliser.ExprCopy;
 
 class CastArray extends CompilerPass {
 
@@ -30,18 +31,19 @@ class CastArray extends CompilerPass {
     public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
         expr.expr = switch expr.expr {
             case TCast(e, _) if (elem(expr.t).match(TDynamic(_) | TDynamicAny | TTypeParam(_)) && !elem(e.t).match(TDynamic(_) | TDynamicAny | TTypeParam(_))):
-                trace(expr, e.t, elem(e.t));
-                ExprHelper.createUntyped("{0}.Dyn()", [e]).expr;
+                ExprHelper.createUntyped("{0}.Dyn()", [ExprCopy.copy(e)]).expr;
 
             case TCast(e, _) if (elem(e.t).match(TDynamic(_) | TDynamicAny | TTypeParam(_)) && !elem(expr.t).match(TDynamic(_) | TDynamicAny | TTypeParam(_))):
-                ExprHelper.createUntyped('HxDynamicArrayAs[${context.getWriter().types.writeHxbType(elem(expr.t))}]({0})', [e]).expr;
+                ExprHelper.createUntyped('HxDynamicArrayAs[${context.getWriter().types.writeHxbType(elem(expr.t))}]({0})', [ExprCopy.copy(e)]).expr;
 
             case TCast(e, _):
-                e.expr;
+                ExprCopy.copy(e).expr;
 
             case _:
-                expr.expr;
+                return;
         }
+
+        context.submitNode(expr, true);
     }
 
 }

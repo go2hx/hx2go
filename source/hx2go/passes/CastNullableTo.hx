@@ -120,8 +120,8 @@ class CastNullableTo extends CompilerPass {
                             var arrIdent = new HxbTypedExpr(TLocal(arrTmp), arrTmp.type, e.pos);
                             var idxIdent = new HxbTypedExpr(TLocal(idxTmp), idxTmp.type, e.pos);
 
-                            var cond = ExprHelper.createUntyped('{1} >= 0 && {1} < int32(len((*{0})))', [arrIdent, idxIdent]);
-                            var hit = ExprHelper.createUntyped('$nullType{ Value: (*{0})[{1}], Valid: true }', [arrIdent, idxIdent]);
+                            var cond = ExprHelper.createUntyped('{1} >= 0 && {1} < int32({0}.Len())', [arrIdent, idxIdent]);
+                            var hit = ExprHelper.createUntyped('$nullType{ Value: {0}.Get({1}), Valid: true }', [arrIdent, idxIdent]);
                             var miss = ExprHelper.createUntyped('$nullType{}', []);
 
                             new HxbTypedExpr(TBlock([

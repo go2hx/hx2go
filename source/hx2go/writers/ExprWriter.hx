@@ -289,8 +289,6 @@ class ExprWriter extends WriterImpl {
         buf.addBufferInline(writeExpr(eidx));
         buf.addInline(')');
 
-        trace(expr, expr.t, e.t);
-
         return buf;
     }
 

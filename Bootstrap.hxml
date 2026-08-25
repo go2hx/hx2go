@@ -5,6 +5,5 @@
 -D go-sourceline-comments
 -cp hxb-parser
 -D no-go-bootstrap
--D go-profile
 --custom-target go=output/bootstrap
 --cmd go -C output/bootstrap/main build .

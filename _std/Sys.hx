@@ -1,6 +1,5 @@
 import go.Time_ as Time;
 import go.Os;
-import go.haxe.HxArray;
 import go.Runtime;
 import go.Slice;
 import go.Error;
@@ -28,7 +27,7 @@ class Sys {
 
     public static function args(): Array<String> {
         var args = Os.args.toArray();
-        HxArray.shift(args);
+        args.shift();
 
         return args;
     }

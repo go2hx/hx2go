@@ -29,30 +29,8 @@ class FieldAccessInstance extends CompilerPass {
                     case _: return;
                 }
 
-                if (cls.flags & HxbClassFlag.CExtern != 0) switch [cls.path, params[0]] {
-                    case [{ name: "Array", pack: [] }, TDynamic(_) | TDynamicAny]: {
-                        expr.expr = TField(e, FInstance(tp, params, {
-                            name: StringConversions.toPascalCase(cf.name) + '_Dyn',
-                            owner: cf.owner,
-                            kind: cf.kind,
-                            depth: cf.depth
-                        }));
-
-                        return;
-                    }
-
-                    case [{ name: "Array", pack: [] }, _]: {
-                        expr.expr = TField(e, FInstance(tp, params, {
-                            name: StringConversions.toPascalCase(cf.name),
-                            owner: cf.owner,
-                            kind: cf.kind,
-                            depth: cf.depth
-                        }));
-
-                        return;
-                    }
-
-                    case _: return;
+                if (cls.flags & HxbClassFlag.CExtern != 0) {
+                    return;
                 }
 
                 if (cf.name == "_RTTI") { // special case for RTTI

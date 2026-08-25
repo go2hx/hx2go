@@ -198,7 +198,7 @@ class TypeNormaliserCall extends CompilerPass {
             ? ExprHelper.createCallStatic(context, { pack: ['go', 'haxe'], name: 'HxDynamic', moduleName: 'HxDynamic' }, 'toAnySlice', [hx2go.normaliser.ExprCopy.copy(inner)])
             : ExprHelper.createUntyped("{0}", [hx2go.normaliser.ExprCopy.copy(inner)]);
 
-        arg.expr = ExprHelper.createUntyped("{0}.Slice()...", [slice]).expr;
+        arg.expr = ExprHelper.createUntyped("{0}.Underlying()...", [slice]).expr;
         arg.t = elementType;
     }
 

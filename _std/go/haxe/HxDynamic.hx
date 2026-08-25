@@ -30,7 +30,7 @@ private extern class Unsafe {
 private extern class HxDynamicArray {
     @:native("Set_Dyn") function set(i: Int, v: Dynamic): Void;
     @:native("Get_Dyn") function get(i: Int): Dynamic;
-    @:native("Slice_Dyn") function slice(): Slice<Dynamic>;
+    @:native("Underlying_Dyn") function underlying(): Slice<Dynamic>;
     @:native("ElemType") function elemType(): Type;
     @:native("Len") function len(): Int;
 }
@@ -135,7 +135,7 @@ class HxDynamic {
     public static function toAnySlice(v: Dynamic): Slice<Dynamic> {
         var arr = tryDynamicArray(v);
         if (arr != null) {
-            return arr.slice();
+            return arr.underlying();
         }
 
         var len: Int = getArrayLength(v);

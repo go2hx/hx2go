@@ -10,20 +10,20 @@ type HxDynamicArray interface {
 	ElemType() reflect.Type
 	Set_Dyn(idx int32, val any)
 	Get_Dyn(idx int32) any
-	Slice_Dyn() []any
+	Underlying_Dyn() []any
+	Resize(length int32)
 	String() string
-	Push_Dyn(value any) int32
 }
 
 type HxArray[T any] interface {
 	Len() int32
 	ElemType() reflect.Type
-	Slice() []T
+	Underlying() []T
 	Set(idx int32, val T)
 	Get(idx int32) T
 	Dyn() HxDynamicArray
+	Resize(length int32)
 	String() string
-	Push(value T) int32
 }
 
 type HxArrayImpl[T any] struct {
@@ -77,6 +77,20 @@ func (this *HxArrayView[T]) Len() int32 {
 	return this.source.Len()
 }
 
+func (this *HxArrayImpl[T]) Resize(length int32) {
+	l := int32(len(this.data))
+
+	if length < l {
+		this.data = this.data[:length]
+	} else if length > l {
+		this.data = append(this.data, make([]T, length-l)...)
+	}
+}
+
+func (this *HxArrayView[T]) Resize(length int32) {
+	this.source.Resize(length)
+}
+
 func (this *HxArrayImpl[T]) Set(idx int32, val T) {
 	if idx < 0 {
 		panic("array index out of bounds")
@@ -123,15 +137,11 @@ func (this *HxArrayImpl[T]) Get_Dyn(idx int32) any {
 	return this.Get(idx)
 }
 
-func (this *HxArrayImpl[T]) Slice() []T {
-	src := this.data
-	out := make([]T, len(src))
-	copy(out, src)
-
-	return out
+func (this *HxArrayImpl[T]) Underlying() []T {
+	return this.data
 }
 
-func (this *HxArrayView[T]) Slice() []T {
+func (this *HxArrayView[T]) Underlying() []T {
 	src := this.source.data
 	out := make([]T, len(src))
 	for i, v := range src {
@@ -141,7 +151,7 @@ func (this *HxArrayView[T]) Slice() []T {
 	return out
 }
 
-func (this *HxArrayImpl[T]) Slice_Dyn() []any {
+func (this *HxArrayImpl[T]) Underlying_Dyn() []any {
 	src := this.data
 	out := make([]any, len(src))
 	for i, v := range src {
@@ -149,23 +159,6 @@ func (this *HxArrayImpl[T]) Slice_Dyn() []any {
 	}
 
 	return out
-}
-
-func (this *HxArrayImpl[T]) Push(value T) int32 {
-	this.data = append(this.data, value)
-	return int32(len(this.data))
-}
-
-func (this *HxArrayView[T]) Push(value T) int32 {
-	return this.source.Push(value)
-}
-
-func (this *HxArrayImpl[T]) Push_Dyn(value any) int32 {
-	if obj, ok := value.(T); ok {
-		return this.Push(obj)
-	}
-
-	return this.Push(Hx_Field_go_haxe_hxdynamic_ensureInterface(Hx_Field_go_haxe_hxdynamic_valueToAssign(value, this.ElemType())).(T))
 }
 
 func (this *HxArrayImpl[T]) String() string {

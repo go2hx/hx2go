@@ -1,6 +1,5 @@
 import go.Regexp_ as GoRegexp;
 import go.regexp.Regexp;
-import go.haxe.HxArray;
 import go.Slice;
 import go.Byte;
 import go.Go;

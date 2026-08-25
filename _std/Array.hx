@@ -1,5 +1,4 @@
 import haxe.iterators.ArrayKeyValueIterator;
-import go.haxe.HxArray;
 
 @:coreType
 extern class Array<T> {
@@ -7,67 +6,67 @@ extern class Array<T> {
     var length(default, null):Int;
 
     inline function push(x: T):Int {
-        return HxArray.push(this, x);
+        return 0;
     }
 
     inline function concat(a:Array<T>):Array<T> {
-        return HxArray.concat(this, a);
+        return [];
     }
 
     inline function copy():Array<T> {
-        return HxArray.copy(this);
+        return [];
     }
 
     inline function pop():Null<T> {
-        return HxArray.pop(this);
+        return null;
     }
 
     inline function reverse():Void {
-        HxArray.reverse(this);
+        return;
     }
 
     inline function shift():Null<T> {
-        return HxArray.shift(this);
+        return null;
     }
 
     inline function unshift(x:T):Void {
-        HxArray.unshift(this, x);
+        return;
     }
 
     inline function splice(pos:Int, len:Int):Array<T> {
-        return HxArray.splice(this, pos, len);
+        return [];
     }
 
     inline function insert(pos:Int, x:T):Void {
-        HxArray.insert(this, pos, x);
+        return;
     }
 
     inline function slice(pos:Int, ?end:Int):Array<T> {
-        return HxArray.slice(this, pos, end);
+        return [];
     }
 
     inline function remove(x:T):Bool {
-        return HxArray.remove(this, x);
+        return false;
     }
 
     inline function indexOf(x:T, ?fromIndex:Int):Int {
-        return HxArray.indexOf(this, x, fromIndex);
+        return 0;
     }
 
     inline function lastIndexOf(x:T, ?fromIndex:Int):Int {
-        return HxArray.lastIndexOf(this, x, fromIndex);
+        return 0;
     }
 
     @:pure inline function contains( x : T ) : Bool {
-        return HxArray.contains(this, x);
+        return false;
     }
 
     inline function join(sep:String):String {
-        return HxArray.join(this, sep);
+        return "";
     }
 
     inline function toString():String {
-        return HxArray.toString(this);
+        return "";
     }
 
     @:runtime inline function iterator():haxe.iterators.ArrayIterator<T> {
@@ -79,19 +78,19 @@ extern class Array<T> {
     }
 
     @:runtime inline function map<S>(f:T->S):Array<S> {
-        return HxArray.map(this, f);
+        return [];
     }
 
     @:runtime inline function filter(f:T->Bool):Array<T> {
-        return HxArray.filter(this, f);
+        return [];
     }
 
     inline function sort(f:T->T->Int):Void {
-        HxArray.sort(this, f);
+        return;
     }
 
     inline function resize(len:Int):Void {
-        HxArray.resize(this, len);
+        return;
     }
 
     function new(): Void;

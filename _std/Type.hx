@@ -28,7 +28,6 @@ import go.haxe.HxDynamic;
 import go.Slice;
 import go.haxe.HxEnumValue;
 import go.haxe.HxEnum;
-import go.haxe.HxArray;
 import go.haxe.HxClass;
 
 enum ValueType {
@@ -109,15 +108,15 @@ class Type {
 	}
 
 	public static function getInstanceFields(c:Class<Dynamic>):Array<String> {
-        return HxArray.copy(untyped c.instanceFields);
+        return (untyped c.instanceFields : Array<String>).copy();
 	}
 
 	public static function getClassFields(c:Class<Dynamic>):Array<String> {
-		return HxArray.copy(untyped c.staticFields);
+		return (untyped c.staticFields : Array<String>).copy();
 	}
 
 	public static function getEnumConstructs(e:Enum<Dynamic>):Array<String> {
-		return HxArray.copy(untyped e.constructorName);
+		return (untyped c.constructorName : Array<String>).copy();
 	}
 
 	public static function typeof(v:Dynamic):ValueType {

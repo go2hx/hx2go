@@ -2,7 +2,6 @@ import go.Slice;
 import go.Fmt;
 import go.haxe.HxDynamic;
 import go.Reflect;
-import go.haxe.HxArray;
 import go.Go;
 import go.haxe.HxEnumValue;
 import go.haxe.HxEnum;
@@ -108,9 +107,7 @@ class Std {
         if (kind == Reflect.Array || kind == Reflect.Slice) {
             var buf = new StringBuf();
 
-            buf.add('[');
-            buf.add(HxArray.map(value._interface(), string).join(","));
-            buf.add(']');
+            // TODO: impl
 
             return buf.toString();
         }

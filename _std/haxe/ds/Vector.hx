@@ -1,14 +1,12 @@
 package haxe.ds;
 
 import go.Slice;
-import go.Syntax;
 
 private typedef VectorData<T> = Array<T>;
 
-@:go.AbstractNoGenericErasure
 abstract Vector<T>(VectorData<T>) {
 	extern overload public inline function new(length:Int) {
-		var x = new go.Slice(length);
+		var x = new Slice(length);
 		this = cast (x.toArray() : Array<Dynamic>);
 	}
 

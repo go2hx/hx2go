@@ -17,21 +17,20 @@ class CastArray extends CompilerPass {
     }
 
     public function isArrayType(t: HxbType): Bool {
-        return TypeHelper.followToDef(context, t).match(TInst({ name: 'Array', pack: [] }, _) | TAbstract({ name: 'Vector', pack: ["haxe", "ds"] }, _));
+        return TypeHelper.followToDef(context, t).match(TInst({ name: 'Array', pack: [] }, _));
     }
 
     public function elem(t: HxbType): HxbType {
         return switch TypeHelper.followToDef(context, t) {
             case TInst({ name: "Array", pack: [] }, [elem]): elem;
-            case TAbstract({ name: "Vector", pack: ["haxe", "ds"] }, [elem]): elem;
             case _: t;
         }
     }
 
     public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
-        trace(expr, expr.t, elem(expr.t));
         expr.expr = switch expr.expr {
             case TCast(e, _) if (elem(expr.t).match(TDynamic(_) | TDynamicAny | TTypeParam(_)) && !elem(e.t).match(TDynamic(_) | TDynamicAny | TTypeParam(_))):
+                trace(expr, e.t, elem(e.t));
                 ExprHelper.createUntyped("{0}.Dyn()", [e]).expr;
 
             case TCast(e, _) if (elem(e.t).match(TDynamic(_) | TDynamicAny | TTypeParam(_)) && !elem(expr.t).match(TDynamic(_) | TDynamicAny | TTypeParam(_))):

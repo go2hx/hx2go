@@ -708,12 +708,18 @@ class Context {
             case TCall(e, _) if (e.t != null && e.t.match(TDynamic(_) | TDynamicAny)):
                 expr.t = TDynamicAny;
 
+            case TFunction(f):
+                f.t = normalize(f.t);
+                for (a in f.args) {
+                    a.v.type = normalize(a.v.type);
+                } // prepass is already done on a.value.t
+
             case TMeta(_, e):
                 expr.expr = e.expr;
                 expr.t = e.t;
 
             case TBinop(OpAssign, _, _):
-            // skip
+                // skip
 
             case TBinop(op, left, right) if (left.t != null && right.t != null && (left.t.match(TDynamic(_) | TDynamicAny) || right.t.match(TDynamic(_) | TDynamicAny))):
                 expr.t = RewriteDynamicBinop.returnsBool(op) ? TBool : TDynamicAny;
@@ -810,8 +816,6 @@ class Context {
         writer.types.importTarget = moduleKey;
 
         for (f in roots) {
-            if (f.expr?.expr == null) continue;
-
             if (baseInstFields.exists(f.name)) {
                 var base = baseInstFields.get(f.name);
                 var assign: Array<HxbTypedExpr> = [];
@@ -851,14 +855,16 @@ class Context {
                         case _: f.type;
                     }
 
-                    f.expr.expr.expr = switch f.expr.expr.expr {
-                        case TFunction({ args: args, t: t, expr: { expr: TBlock(exprs), t: blockt, pos: blockpos } }) if (assign.length > 0): TFunction({
-                            args: args,
-                            t: t,
-                            expr: new HxbTypedExpr(TBlock(assign.concat(exprs)), blockt, blockpos)
-                        });
+                    if (f.expr?.expr != null) {
+                        f.expr.expr.expr = switch f.expr.expr.expr {
+                            case TFunction({ args: args, t: t, expr: { expr: TBlock(exprs), t: blockt, pos: blockpos } }) if (assign.length > 0): TFunction({
+                                args: args,
+                                t: t,
+                                expr: new HxbTypedExpr(TBlock(assign.concat(exprs)), blockt, blockpos)
+                            });
 
-                        case _: f.expr.expr.expr;
+                            case _: f.expr.expr.expr;
+                        }
                     }
                 }
             }

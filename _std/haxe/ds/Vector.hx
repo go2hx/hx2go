@@ -9,7 +9,7 @@ private typedef VectorData<T> = Array<T>;
 abstract Vector<T>(VectorData<T>) {
 	extern overload public inline function new(length:Int) {
 		var x = new go.Slice(length);
-		this = x.toArray();
+		this = cast (x.toArray() : Array<Dynamic>);
 	}
 
 	extern overload public inline function new(length:Int, defaultValue:T):Vector<T> {

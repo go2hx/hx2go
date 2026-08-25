@@ -11,6 +11,7 @@ type HxDynamicArray interface {
 	Set_Dyn(idx int32, val any)
 	Get_Dyn(idx int32) any
 	Slice_Dyn() []any
+	String() string
 }
 
 type HxArray[T any] interface {
@@ -20,6 +21,7 @@ type HxArray[T any] interface {
 	Set(idx int32, val T)
 	Get(idx int32) T
 	Dyn() HxDynamicArray
+	String() string
 }
 
 type HxArrayImpl[T any] struct {
@@ -152,5 +154,5 @@ func (this *HxArrayImpl[T]) String() string {
 }
 
 func (this *HxArrayView[T]) String() string {
-	return fmt.Sprint(this.source.data)
+	return this.source.String()
 }

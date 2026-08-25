@@ -251,8 +251,8 @@ class ExprWriter extends WriterImpl {
 
     public function writeArrayDecl(t:HxbType, elements: Array<HxbTypedExpr>): OutputBuffer {
         var buf = new OutputBuffer();
-        var elem = switch t {
-            case TInst(_, params): params[0];
+        var elem = switch TypeHelper.followToDef(writer.context, t) {
+            case TInst(_, params) | TAbstract(_, params): params[0];
             case TDynamic(_) | TDynamicAny: t;
             case _: throw "type is not array type for arrayDecl?";
         };
@@ -293,8 +293,8 @@ class ExprWriter extends WriterImpl {
     }
 
     function writeArrayMethod(name: String, type: HxbType): String {
-        return switch type {
-            case TInst({ name: "Array", pack: [] }, [TDynamic(_) | TDynamicAny]): '${name}_Dyn';
+        return switch TypeHelper.followToDef(writer.context, type) {
+            case TInst({ name: "Array", pack: [] }, [TDynamic(_) | TDynamicAny | TTypeParam(_)]): '${name}_Dyn';
             case _: name;
         }
     }

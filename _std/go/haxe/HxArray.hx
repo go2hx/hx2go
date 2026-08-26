@@ -102,11 +102,11 @@ class HxArray {
         grow[clampedPos] = value;
     }
 
-    public inline extern static function splice<T>(arr: Array<T>, pos: Int, length: Int): Array<T> {
+    public inline extern static function splice<T>(arr: Array<T>, pos: Int, len: Int): Array<T> {
         var data = getData(arr);
         var length = data.length;
 
-        if (length < 0) {
+        if (len < 0) {
             return [];
         }
 
@@ -121,17 +121,18 @@ class HxArray {
             return [];
         }
 
-        var removeLen: GoInt = if (start + length > length) {
+        var removeLen: GoInt = if (start + len > length) {
             length - start;
         } else {
-            length;
+            len;
         }
 
         if (removeLen <= 0) {
             return [];
         }
 
-        var removed: Array<T> = getData(arr).slice(start, removeLen);
+        var end = start + removeLen;
+        var removed: Array<T> = getData(arr).slice(start, end);
         removed = removed.copy();
 
         setData(
@@ -140,7 +141,7 @@ class HxArray {
                 'append({0}[:{1}], {0}[{2}:]...)',
                 getData(arr),
                 start,
-                removeLen
+                end
             )
         );
 

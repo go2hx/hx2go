@@ -19,6 +19,19 @@ import hx2go.util.ExprHelper;
 
 class ClassWriter extends WriterImpl {
 
+    function classMeta(cls: HxbClass): String {
+        var fields: Array<{ name: String, meta: Array<hxb.Ast.HxbMetaEntry> }> =
+            cls.fields.map(f -> { name: f.name, meta: f.meta });
+        if (cls.constructor != null) {
+            fields.push({ name: "_", meta: cls.constructor.meta });
+        }
+
+        var statics = cls.statics.map(f -> { name: f.name, meta: f.meta });
+
+        var meta = MetaWriter.build(cls.meta, fields, statics);
+        return meta == null ? "nil" : writer.exprs.writeExpr(meta).toString();
+    }
+
     public function ensureBody(expr: HxbTypedExpr): HxbTypedExpr {
         return switch expr.expr {
             case TBlock(_): expr;
@@ -46,6 +59,7 @@ class ClassWriter extends WriterImpl {
             buf.add('func () any {', 1);
             buf.add('panic("Cannot dynamically create instance of extern class")', 2);
             buf.add('},', 1);
+            buf.add('nil,', 1);
             buf.add(')');
 
             return buf;
@@ -313,6 +327,7 @@ class ClassWriter extends WriterImpl {
             buf.add('func () any {', 1);
             buf.add('return ${StringConversions.typePathClassInstanceName(cls.path)}_CreateEmptyInstance()', 2);
             buf.add('},', 1);
+            buf.add('${classMeta(cls)},', 1);
             buf.add(')');
 
             buf.add('');
@@ -342,6 +357,7 @@ class ClassWriter extends WriterImpl {
             buf.add('func () any {', 1);
             buf.add('return nil', 2);
             buf.add('},', 1);
+            buf.add('${classMeta(cls)},', 1);
             buf.add(')');
         }
 

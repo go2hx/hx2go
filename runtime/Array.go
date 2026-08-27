@@ -5,30 +5,30 @@ import (
 	"strings"
 )
 
-type ArrayAsDyn interface {
+type HxArrayDyn interface {
 	Set_Dyn(idx int, val any)
 	Get_Dyn(idx int) any
 	Len() int
 	String() string
 }
 
-type Array[T any] interface {
-	ArrayAsDyn
+type HxArray[T any] interface {
+	HxArrayDyn
 	Set(idx int, val T)
 	Get(idx int) T
 }
 
-type ArrayImpl[T any] struct {
+type HxArrayImpl[T any] struct {
 	data []T
 }
 
-func MakeArray[T any](items ...T) Array[T] {
+func HxMakeArray[T any](items ...T) HxArray[T] {
 	local := make([]T, len(items))
 	copy(local, items)
-	return ArrayImpl[T]{local}
+	return HxArrayImpl[T]{local}
 }
 
-func (this ArrayImpl[T]) Set_Dyn(idx int, val any) {
+func (this HxArrayImpl[T]) Set_Dyn(idx int, val any) {
 	if obj, ok := val.(T); ok {
 		this.data[idx] = obj
 		return
@@ -36,23 +36,23 @@ func (this ArrayImpl[T]) Set_Dyn(idx int, val any) {
 	this.data[idx] = Default[T]()
 }
 
-func (this ArrayImpl[T]) Get_Dyn(idx int) any {
+func (this HxArrayImpl[T]) Get_Dyn(idx int) any {
 	return this.data[idx]
 }
 
-func (this ArrayImpl[T]) Set(idx int, val T) {
+func (this HxArrayImpl[T]) Set(idx int, val T) {
 	this.data[idx] = val
 }
 
-func (this ArrayImpl[T]) Get(idx int) T {
+func (this HxArrayImpl[T]) Get(idx int) T {
 	return this.data[idx]
 }
 
-func (this ArrayImpl[T]) Len() int {
+func (this HxArrayImpl[T]) Len() int {
 	return len(this.data)
 }
 
-func (this ArrayImpl[T]) String() string {
+func (this HxArrayImpl[T]) String() string {
 	var r strings.Builder
 	r.WriteString("[")
 
@@ -68,36 +68,36 @@ func (this ArrayImpl[T]) String() string {
 	return r.String()
 }
 
-type ArrayView[T any] struct {
-	source ArrayAsDyn
+type HxArrayView[T any] struct {
+	source HxArrayDyn
 }
 
-func MakeArrayView[T any](src ArrayAsDyn) Array[T] {
-	return ArrayView[T]{src}
+func HxMakeArrayView[T any](src HxArrayDyn) HxArray[T] {
+	return HxArrayView[T]{src}
 }
 
-func (this ArrayView[T]) Set_Dyn(idx int, val any) {
+func (this HxArrayView[T]) Set_Dyn(idx int, val any) {
 	(this.source).Set_Dyn(idx, val)
 }
 
-func (this ArrayView[T]) Get_Dyn(idx int) any {
+func (this HxArrayView[T]) Get_Dyn(idx int) any {
 	return (this.source).Get_Dyn(idx)
 }
 
-func (this ArrayView[T]) Set(idx int, val T) {
+func (this HxArrayView[T]) Set(idx int, val T) {
 	(this.source).Set_Dyn(idx, val)
 }
 
-func (this ArrayView[T]) Get(idx int) T {
+func (this HxArrayView[T]) Get(idx int) T {
 	r_Dyn := (this.source).Get_Dyn(idx)
 	r, _ := r_Dyn.(T)
 	return r
 }
 
-func (this ArrayView[T]) Len() int {
+func (this HxArrayView[T]) Len() int {
 	return this.source.Len()
 }
 
-func (this ArrayView[T]) String() string {
+func (this HxArrayView[T]) String() string {
 	return this.source.String()
 }

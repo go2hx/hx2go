@@ -252,16 +252,17 @@ class ExprWriter extends WriterImpl {
     public function writeArrayDecl(t:HxbType, elements: Array<HxbTypedExpr>): OutputBuffer {
         var buf = new OutputBuffer();
 
-        buf.addInline("&([]");
+        buf.addInline("HxMakeArray[");
         buf.addBufferInline(switch t {
             case TInst(_, params): writer.types.writeHxbType(params[0]);
             case TDynamic(_) | TDynamicAny: writer.types.writeHxbType(t);
             case _: throw "type is not array type for arrayDecl?";
         });
+        buf.addInline("]");
 
-        if (elements.length == 0) buf.addInline('{}');
+        if (elements.length == 0) buf.addInline('()');
         else {
-            buf.addInline('{ ');
+            buf.addInline('( ');
 
             for (idx in 0...elements.length) {
                 buf.addBufferInline(writeExpr(elements[idx]));
@@ -270,10 +271,8 @@ class ExprWriter extends WriterImpl {
                 }
             }
 
-            buf.addInline(' }');
+            buf.addInline(' )');
         }
-
-        buf.addInline(')');
 
         return buf;
     }

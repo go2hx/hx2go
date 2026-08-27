@@ -5,12 +5,11 @@ package go.text.template;
 extern class Template {
 
     @:native("Tree") var tree: go.Pointer<go.text.template.parse.Tree>;
-    @:native("Name") var name: String;
     @:native("ParseName") var parseName: String;
     @:native("Root") var root: go.Pointer<go.text.template.parse.ListNode>;
     @:native("Mode") var mode: go.text.template.parse.Mode;
 
-    function new(tree: go.Pointer<go.text.template.parse.Tree>);
+    function new(tree: go.Pointer<go.text.template.parse.Tree>=null);
 
     @:native("AddParseTree") function addParseTree(name: String, tree: go.Pointer<go.text.template.parse.Tree>): (go.Result<go.Pointer<go.text.template.Template>>);
     @:native("Clone") function clone(): (go.Result<go.Pointer<go.text.template.Template>>);

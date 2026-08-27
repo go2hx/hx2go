@@ -10,7 +10,7 @@ extern class Server {
     @:native("TLS") var TLS: go.Pointer<go.crypto.tls.Config>;
     @:native("Config") var config: go.Pointer<go.net.http.Server>;
 
-    function new(URL: String, listener: go.net.Listener, enableHTTP2: Bool, TLS: go.Pointer<go.crypto.tls.Config>, config: go.Pointer<go.net.http.Server>);
+    function new(URL: String="", listener: go.net.Listener=null, enableHTTP2: Bool=false, TLS: go.Pointer<go.crypto.tls.Config>=null, config: go.Pointer<go.net.http.Server>=null);
 
     @:native("Certificate") function certificate(): (go.Pointer<go.crypto.x509.Certificate>);
     @:native("Client") function client(): (go.Pointer<go.net.http.Client>);

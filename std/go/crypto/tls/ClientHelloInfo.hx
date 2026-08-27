@@ -15,7 +15,7 @@ extern class ClientHelloInfo {
     @:native("Conn") var conn: go.net.Conn;
     @:native("HelloRetryRequest") var helloRetryRequest: Bool;
 
-    function new(cipherSuites: go.Slice<go.UInt16>, serverName: String, supportedCurves: go.Slice<go.crypto.tls.CurveID>, supportedPoints: go.Slice<go.UInt8>, signatureSchemes: go.Slice<go.crypto.tls.SignatureScheme>, supportedProtos: go.Slice<String>, supportedVersions: go.Slice<go.UInt16>, extensions: go.Slice<go.UInt16>, conn: go.net.Conn, helloRetryRequest: Bool);
+    function new(cipherSuites: go.Slice<go.UInt16>=null, serverName: String="", supportedCurves: go.Slice<go.crypto.tls.CurveID>=null, supportedPoints: go.Slice<go.UInt8>=null, signatureSchemes: go.Slice<go.crypto.tls.SignatureScheme>=null, supportedProtos: go.Slice<String>=null, supportedVersions: go.Slice<go.UInt16>=null, extensions: go.Slice<go.UInt16>=null, conn: go.net.Conn=null, helloRetryRequest: Bool=false);
 
     @:native("Context") function context(): (go.context.Context);
     @:native("SupportsCertificate") function supportsCertificate(c: go.Pointer<go.crypto.tls.Certificate>): (go.Error);

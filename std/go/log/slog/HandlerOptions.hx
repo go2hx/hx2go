@@ -8,6 +8,6 @@ extern class HandlerOptions {
     @:native("Level") var level: go.log.slog.Leveler;
     @:native("ReplaceAttr") var replaceAttr: (groups: go.Slice<String>, a: go.log.slog.Attr) -> (go.log.slog.Attr);
 
-    function new(addSource: Bool, level: go.log.slog.Leveler, replaceAttr: (groups: go.Slice<String>, a: go.log.slog.Attr) -> (go.log.slog.Attr));
+    function new(addSource: Bool=false, level: go.log.slog.Leveler=null, replaceAttr: (groups: go.Slice<String>, a: go.log.slog.Attr) -> (go.log.slog.Attr)=null);
 
 }

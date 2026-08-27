@@ -3,14 +3,14 @@ package go;
 @:go.Type({ name: "net", instanceName: "net.net", imports: ["net"] })
 extern class Net {
 
-    @:native("FlagBroadcast") static var FlagBroadcast: go.net.Flags;
-    @:native("FlagLoopback") static var FlagLoopback: go.net.Flags;
-    @:native("FlagMulticast") static var FlagMulticast: go.net.Flags;
-    @:native("FlagPointToPoint") static var FlagPointToPoint: go.net.Flags;
-    @:native("FlagRunning") static var FlagRunning: go.net.Flags;
-    @:native("FlagUp") static var FlagUp: go.net.Flags;
-    @:native("IPv4len") static var IPv4len: go.GoInt;
-    @:native("IPv6len") static var IPv6len: go.GoInt;
+    @:native("FlagBroadcast") static var flagBroadcast: go.net.Flags;
+    @:native("FlagLoopback") static var flagLoopback: go.net.Flags;
+    @:native("FlagMulticast") static var flagMulticast: go.net.Flags;
+    @:native("FlagPointToPoint") static var flagPointToPoint: go.net.Flags;
+    @:native("FlagRunning") static var flagRunning: go.net.Flags;
+    @:native("FlagUp") static var flagUp: go.net.Flags;
+    @:native("IPv4len") static var iPv4len: go.GoInt;
+    @:native("IPv6len") static var iPv6len: go.GoInt;
 
     @:native("DefaultResolver") static var defaultResolver: go.Pointer<go.net.Resolver>;
     @:native("IPv4allrouter") static var iPv4allrouter: go.net.IP;

@@ -9,7 +9,7 @@ extern class Client {
     @:native("Jar") var jar: go.net.http.CookieJar;
     @:native("Timeout") var timeout: go.time.Duration;
 
-    function new(transport: go.net.http.RoundTripper, checkRedirect: (req: go.Pointer<go.net.http.Request>, via: go.Slice<go.Pointer<go.net.http.Request>>) -> (go.Error), jar: go.net.http.CookieJar, timeout: go.time.Duration);
+    function new(transport: go.net.http.RoundTripper=null, checkRedirect: (req: go.Pointer<go.net.http.Request>, via: go.Slice<go.Pointer<go.net.http.Request>>) -> (go.Error)=null, jar: go.net.http.CookieJar=null, timeout: go.time.Duration=cast 0);
 
     @:native("CloseIdleConnections") function closeIdleConnections(): Void;
     @:native("Do") function _do(req: go.Pointer<go.net.http.Request>): (go.Result<go.Pointer<go.net.http.Response>>);

@@ -6,6 +6,6 @@ extern class DNSStartInfo {
 
     @:native("Host") var host: String;
 
-    function new(host: String);
+    function new(host: String="");
 
 }

@@ -1,7 +1,7 @@
 package go.reflect;
 
 @:structInit
-@:go.Type({ name: "interfaceType", instanceName: "reflect.interfaceType", imports: ["reflect"] })
+@:go.Type({ name: "interfaceType", instanceName: "Reflect._interfaceType", imports: ["reflect"] })
 extern class InterfaceType {
 
     @:native("InterfaceType") var interfaceType: Dynamic;

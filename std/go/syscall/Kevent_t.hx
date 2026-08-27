@@ -11,6 +11,6 @@ extern class Kevent_t {
     @:native("Data") var data: go.Int64;
     @:native("Udata") var udata: go.Pointer<go.Byte>;
 
-    function new(ident: go.UInt64, filter: go.Int16, flags: go.UInt16, fflags: go.UInt32, data: go.Int64, udata: go.Pointer<go.Byte>);
+    function new(ident: go.UInt64=0, filter: go.Int16=0, flags: go.UInt16=0, fflags: go.UInt32=0, data: go.Int64=0, udata: go.Pointer<go.Byte>=null);
 
 }

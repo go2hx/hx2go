@@ -9,6 +9,6 @@ extern class LineInfo {
     @:native("Line") var line: go.GoInt;
     @:native("Column") var column: go.GoInt;
 
-    function new(offset: go.GoInt, filename: String, line: go.GoInt, column: go.GoInt);
+    function new(offset: go.GoInt=0, filename: String="", line: go.GoInt=0, column: go.GoInt=0);
 
 }

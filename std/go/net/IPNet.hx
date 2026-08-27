@@ -7,7 +7,7 @@ extern class IPNet {
     @:native("IP") var IP: go.net.IP;
     @:native("Mask") var mask: go.net.IPMask;
 
-    function new(IP: go.net.IP, mask: go.net.IPMask);
+    function new(IP: go.net.IP=null, mask: go.net.IPMask=null);
 
     @:native("Contains") function contains(ip: go.net.IP): (Bool);
     @:native("Network") function network(): (String);

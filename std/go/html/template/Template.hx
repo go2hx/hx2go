@@ -6,7 +6,7 @@ extern class Template {
 
     @:native("Tree") var tree: go.Pointer<go.text.template.parse.Tree>;
 
-    function new(tree: go.Pointer<go.text.template.parse.Tree>);
+    function new(tree: go.Pointer<go.text.template.parse.Tree>=null);
 
     @:native("AddParseTree") function addParseTree(name: String, tree: go.Pointer<go.text.template.parse.Tree>): (go.Result<go.Pointer<go.html.template.Template>>);
     @:native("Clone") function clone(): (go.Result<go.Pointer<go.html.template.Template>>);

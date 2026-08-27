@@ -3,9 +3,9 @@ package go;
 @:go.Type({ name: "io", instanceName: "io.io", imports: ["io"] })
 extern class Io {
 
-    @:native("SeekCurrent") static var SeekCurrent: go.GoInt;
-    @:native("SeekEnd") static var SeekEnd: go.GoInt;
-    @:native("SeekStart") static var SeekStart: go.GoInt;
+    @:native("SeekCurrent") static var seekCurrent: go.GoInt;
+    @:native("SeekEnd") static var seekEnd: go.GoInt;
+    @:native("SeekStart") static var seekStart: go.GoInt;
 
     @:native("Discard") static var discard: go.io.Writer;
 

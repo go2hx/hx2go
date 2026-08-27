@@ -11,6 +11,6 @@ extern class DriverResponse {
     @:native("Packages") var packages: go.Slice<go.Pointer<go.golang_org.x.tools.go.packages.Package>>;
     @:native("GoVersion") var goVersion: go.GoInt;
 
-    function new(notHandled: Bool, compiler: String, arch: String, roots: go.Slice<String>, packages: go.Slice<go.Pointer<go.golang_org.x.tools.go.packages.Package>>, goVersion: go.GoInt);
+    function new(notHandled: Bool=false, compiler: String="", arch: String="", roots: go.Slice<String>=null, packages: go.Slice<go.Pointer<go.golang_org.x.tools.go.packages.Package>>=null, goVersion: go.GoInt=0);
 
 }

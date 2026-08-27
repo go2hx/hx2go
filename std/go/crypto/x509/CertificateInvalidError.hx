@@ -8,7 +8,7 @@ extern class CertificateInvalidError {
     @:native("Reason") var reason: go.crypto.x509.InvalidReason;
     @:native("Detail") var detail: String;
 
-    function new(cert: go.Pointer<go.crypto.x509.Certificate>, reason: go.crypto.x509.InvalidReason, detail: String);
+    function new(cert: go.Pointer<go.crypto.x509.Certificate>=null, reason: go.crypto.x509.InvalidReason=cast 0, detail: String="");
 
     @:native("Error") function error(): (String);
 

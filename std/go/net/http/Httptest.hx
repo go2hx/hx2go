@@ -3,7 +3,7 @@ package go.net.http;
 @:go.Type({ name: "httptest", instanceName: "httptest.httptest", imports: ["net/http/httptest"] })
 extern class Httptest {
 
-    @:native("DefaultRemoteAddr") static var DefaultRemoteAddr: String;
+    @:native("DefaultRemoteAddr") static var defaultRemoteAddr: String;
 
     @:native("NewRecorder") static function newRecorder(): (go.Pointer<go.net.http.httptest.ResponseRecorder>);
     @:native("NewRequest") static function newRequest(method: String, target: String, body: go.io.Reader): (go.Pointer<go.net.http.Request>);

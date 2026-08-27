@@ -11,7 +11,7 @@ extern class PrivateKey {
     @:native("N") var N: go.Pointer<go.math.big.Int>;
     @:native("E") var E: go.GoInt;
 
-    function new(publicKey: go.crypto.rsa.PublicKey, D: go.Pointer<go.math.big.Int>, primes: go.Slice<go.Pointer<go.math.big.Int>>, precomputed: go.crypto.rsa.PrecomputedValues);
+    function new(publicKey: go.crypto.rsa.PublicKey, D: go.Pointer<go.math.big.Int>=null, primes: go.Slice<go.Pointer<go.math.big.Int>>=null, precomputed: go.crypto.rsa.PrecomputedValues);
 
     @:native("Decrypt") function decrypt(rand: go.io.Reader, ciphertext: go.Slice<go.Byte>, opts: go.crypto.DecrypterOpts): (go.Result<go.Slice<go.Byte>>);
     @:native("Equal") function equal(x: go.crypto.PrivateKey): (Bool);

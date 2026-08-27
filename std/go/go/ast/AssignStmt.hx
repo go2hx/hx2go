@@ -9,7 +9,7 @@ extern class AssignStmt {
     @:native("Tok") var tok: go.go.token.Token;
     @:native("Rhs") var rhs: go.Slice<go.go.ast.Expr>;
 
-    function new(lhs: go.Slice<go.go.ast.Expr>, tokPos: go.go.token.Pos, tok: go.go.token.Token, rhs: go.Slice<go.go.ast.Expr>);
+    function new(lhs: go.Slice<go.go.ast.Expr>=null, tokPos: go.go.token.Pos=cast 0, tok: go.go.token.Token=cast 0, rhs: go.Slice<go.go.ast.Expr>=null);
 
     @:native("End") function end(): (go.go.token.Pos);
     @:native("Pos") function pos(): (go.go.token.Pos);

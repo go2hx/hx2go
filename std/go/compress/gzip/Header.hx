@@ -10,6 +10,6 @@ extern class Header {
     @:native("Name") var name: String;
     @:native("OS") var OS: go.Byte;
 
-    function new(comment: String, extra: go.Slice<go.Byte>, modTime: go.time.Time, name: String, OS: go.Byte);
+    function new(comment: String="", extra: go.Slice<go.Byte>=null, modTime: go.time.Time, name: String="", OS: go.Byte=0);
 
 }

@@ -7,7 +7,7 @@ extern class Dialer {
     @:native("NetDialer") var netDialer: go.Pointer<go.net.Dialer>;
     @:native("Config") var config: go.Pointer<go.crypto.tls.Config>;
 
-    function new(netDialer: go.Pointer<go.net.Dialer>, config: go.Pointer<go.crypto.tls.Config>);
+    function new(netDialer: go.Pointer<go.net.Dialer>=null, config: go.Pointer<go.crypto.tls.Config>=null);
 
     @:native("Dial") function dial(network: String, addr: String): (go.Result<go.net.Conn>);
     @:native("DialContext") function dialContext(ctx: go.context.Context, network: String, addr: String): (go.Result<go.net.Conn>);

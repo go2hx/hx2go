@@ -7,6 +7,6 @@ extern class Dyn32 {
     @:native("Tag") var tag: go.Int32;
     @:native("Val") var val: go.UInt32;
 
-    function new(tag: go.Int32, val: go.UInt32);
+    function new(tag: go.Int32=0, val: go.UInt32=0);
 
 }

@@ -7,6 +7,6 @@ extern class PosSpan {
     @:native("Start") var start: go.go.token.Pos;
     @:native("End") var end: go.go.token.Pos;
 
-    function new(start: go.go.token.Pos, end: go.go.token.Pos);
+    function new(start: go.go.token.Pos=cast 0, end: go.go.token.Pos=cast 0);
 
 }

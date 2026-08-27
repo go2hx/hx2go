@@ -1,7 +1,7 @@
 package go.reflect;
 
 @:structInit
-@:go.Type({ name: "structTypeUncommon", instanceName: "reflect.structTypeUncommon", imports: ["reflect"] })
+@:go.Type({ name: "structTypeUncommon", instanceName: "Reflect.structTypeUncommon", imports: ["reflect"] })
 extern class StructTypeUncommon {
 
     @:native("StructType") var structType: Dynamic;

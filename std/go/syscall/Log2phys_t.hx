@@ -8,6 +8,6 @@ extern class Log2phys_t {
     @:native("Contigbytes") var contigbytes: go.Int64;
     @:native("Devoffset") var devoffset: go.Int64;
 
-    function new(flags: go.UInt32, contigbytes: go.Int64, devoffset: go.Int64);
+    function new(flags: go.UInt32=0, contigbytes: go.Int64=0, devoffset: go.Int64=0);
 
 }

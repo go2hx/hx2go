@@ -8,6 +8,6 @@ extern class Http2PriorityWriteSchedulerConfig {
     @:native("MaxIdleNodesInTree") var maxIdleNodesInTree: go.GoInt;
     @:native("ThrottleOutOfOrderWrites") var throttleOutOfOrderWrites: Bool;
 
-    function new(maxClosedNodesInTree: go.GoInt, maxIdleNodesInTree: go.GoInt, throttleOutOfOrderWrites: Bool);
+    function new(maxClosedNodesInTree: go.GoInt=0, maxIdleNodesInTree: go.GoInt=0, throttleOutOfOrderWrites: Bool=false);
 
 }

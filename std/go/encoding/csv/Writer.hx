@@ -7,7 +7,7 @@ extern class Writer {
     @:native("Comma") var comma: go.Rune;
     @:native("UseCRLF") var useCRLF: Bool;
 
-    function new(comma: go.Rune, useCRLF: Bool);
+    function new(comma: go.Rune=0, useCRLF: Bool=false);
 
     @:native("Error") function error(): (go.Error);
     @:native("Flush") function flush(): Void;

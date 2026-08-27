@@ -9,7 +9,7 @@ extern class Entry {
     @:native("Children") var children: Bool;
     @:native("Field") var field: go.Slice<go.debug.dwarf.Field>;
 
-    function new(offset: go.debug.dwarf.Offset, tag: go.debug.dwarf.Tag, children: Bool, field: go.Slice<go.debug.dwarf.Field>);
+    function new(offset: go.debug.dwarf.Offset=cast 0, tag: go.debug.dwarf.Tag=cast 0, children: Bool=false, field: go.Slice<go.debug.dwarf.Field>=null);
 
     @:native("AttrField") function attrField(a: go.debug.dwarf.Attr): (go.Pointer<go.debug.dwarf.Field>);
     @:native("Val") function val(a: go.debug.dwarf.Attr): (Dynamic);

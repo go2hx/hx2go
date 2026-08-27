@@ -19,7 +19,7 @@ extern class Cmd {
     @:native("Cancel") var cancel: () -> (go.Error);
     @:native("WaitDelay") var waitDelay: go.time.Duration;
 
-    function new(path: String, args: go.Slice<String>, env: go.Slice<String>, dir: String, stdin: go.io.Reader, stdout: go.io.Writer, stderr: go.io.Writer, extraFiles: go.Slice<go.Pointer<go.os.File>>, sysProcAttr: go.Pointer<go.syscall.SysProcAttr>, process: go.Pointer<go.os.Process>, processState: go.Pointer<go.os.ProcessState>, err: go.Error, cancel: () -> (go.Error), waitDelay: go.time.Duration);
+    function new(path: String="", args: go.Slice<String>=null, env: go.Slice<String>=null, dir: String="", stdin: go.io.Reader=null, stdout: go.io.Writer=null, stderr: go.io.Writer=null, extraFiles: go.Slice<go.Pointer<go.os.File>>=null, sysProcAttr: go.Pointer<go.syscall.SysProcAttr>=null, process: go.Pointer<go.os.Process>=null, processState: go.Pointer<go.os.ProcessState>=null, err: go.Error=null, cancel: () -> (go.Error)=null, waitDelay: go.time.Duration=cast 0);
 
     @:native("CombinedOutput") function combinedOutput(): (go.Result<go.Slice<go.Byte>>);
     @:native("Environ") function environ(): (go.Slice<String>);

@@ -7,7 +7,7 @@ extern class CertificateVerificationError {
     @:native("UnverifiedCertificates") var unverifiedCertificates: go.Slice<go.Pointer<go.crypto.x509.Certificate>>;
     @:native("Err") var err: go.Error;
 
-    function new(unverifiedCertificates: go.Slice<go.Pointer<go.crypto.x509.Certificate>>, err: go.Error);
+    function new(unverifiedCertificates: go.Slice<go.Pointer<go.crypto.x509.Certificate>>=null, err: go.Error=null);
 
     @:native("Error") function error(): (String);
     @:native("Unwrap") function unwrap(): (go.Error);

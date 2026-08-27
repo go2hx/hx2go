@@ -3,8 +3,8 @@ package go;
 @:go.Type({ name: "mime", instanceName: "mime.mime", imports: ["mime"] })
 extern class Mime {
 
-    @:native("BEncoding") static var BEncoding: go.mime.WordEncoder;
-    @:native("QEncoding") static var QEncoding: go.mime.WordEncoder;
+    @:native("BEncoding") static var bEncoding: go.mime.WordEncoder;
+    @:native("QEncoding") static var qEncoding: go.mime.WordEncoder;
 
     @:native("AddExtensionType") static function addExtensionType(ext: String, typ: String): (go.Error);
     @:native("ExtensionsByType") static function extensionsByType(typ: String): (go.Result<go.Slice<String>>);

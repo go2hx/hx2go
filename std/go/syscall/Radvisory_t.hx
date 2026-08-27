@@ -8,6 +8,6 @@ extern class Radvisory_t {
     @:native("Count") var count: go.Int32;
     @:native("Pad_cgo_0") var pad_cgo_0: go.GoArray<go.Byte, 4>;
 
-    function new(offset: go.Int64, count: go.Int32, pad_cgo_0: go.GoArray<go.Byte, 4>);
+    function new(offset: go.Int64=0, count: go.Int32=0, pad_cgo_0: go.GoArray<go.Byte, 4>);
 
 }

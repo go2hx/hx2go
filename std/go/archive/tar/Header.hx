@@ -22,7 +22,7 @@ extern class Header {
     @:native("PAXRecords") var pAXRecords: go.Map<String, String>;
     @:native("Format") var format: go.archive.tar.Format;
 
-    function new(typeflag: go.Byte, name: String, linkname: String, size: go.Int64, mode: go.Int64, uid: go.GoInt, gid: go.GoInt, uname: String, gname: String, modTime: go.time.Time, accessTime: go.time.Time, changeTime: go.time.Time, devmajor: go.Int64, devminor: go.Int64, xattrs: go.Map<String, String>, pAXRecords: go.Map<String, String>, format: go.archive.tar.Format);
+    function new(typeflag: go.Byte=0, name: String="", linkname: String="", size: go.Int64=0, mode: go.Int64=0, uid: go.GoInt=0, gid: go.GoInt=0, uname: String="", gname: String="", modTime: go.time.Time, accessTime: go.time.Time, changeTime: go.time.Time, devmajor: go.Int64=0, devminor: go.Int64=0, xattrs: go.Map<String, String>=null, pAXRecords: go.Map<String, String>=null, format: go.archive.tar.Format=cast 0);
 
     @:native("FileInfo") function fileInfo(): (go.io.fs.FileInfo);
 

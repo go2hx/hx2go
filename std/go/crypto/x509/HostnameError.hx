@@ -7,7 +7,7 @@ extern class HostnameError {
     @:native("Certificate") var certificate: go.Pointer<go.crypto.x509.Certificate>;
     @:native("Host") var host: String;
 
-    function new(certificate: go.Pointer<go.crypto.x509.Certificate>, host: String);
+    function new(certificate: go.Pointer<go.crypto.x509.Certificate>=null, host: String="");
 
     @:native("Error") function error(): (String);
 

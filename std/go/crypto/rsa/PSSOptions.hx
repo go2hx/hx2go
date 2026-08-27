@@ -7,7 +7,7 @@ extern class PSSOptions {
     @:native("SaltLength") var saltLength: go.GoInt;
     @:native("Hash") var hash: go.crypto.Hash;
 
-    function new(saltLength: go.GoInt, hash: go.crypto.Hash);
+    function new(saltLength: go.GoInt=0, hash: go.crypto.Hash=cast 0);
 
     @:native("HashFunc") function hashFunc(): (go.crypto.Hash);
 

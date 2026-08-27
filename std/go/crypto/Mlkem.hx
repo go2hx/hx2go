@@ -3,12 +3,12 @@ package go.crypto;
 @:go.Type({ name: "mlkem", instanceName: "mlkem.mlkem", imports: ["crypto/mlkem"] })
 extern class Mlkem {
 
-    @:native("CiphertextSize1024") static var CiphertextSize1024: go.GoInt;
-    @:native("CiphertextSize768") static var CiphertextSize768: go.GoInt;
-    @:native("EncapsulationKeySize1024") static var EncapsulationKeySize1024: go.GoInt;
-    @:native("EncapsulationKeySize768") static var EncapsulationKeySize768: go.GoInt;
-    @:native("SeedSize") static var SeedSize: go.GoInt;
-    @:native("SharedKeySize") static var SharedKeySize: go.GoInt;
+    @:native("CiphertextSize1024") static var ciphertextSize1024: go.GoInt;
+    @:native("CiphertextSize768") static var ciphertextSize768: go.GoInt;
+    @:native("EncapsulationKeySize1024") static var encapsulationKeySize1024: go.GoInt;
+    @:native("EncapsulationKeySize768") static var encapsulationKeySize768: go.GoInt;
+    @:native("SeedSize") static var seedSize: go.GoInt;
+    @:native("SharedKeySize") static var sharedKeySize: go.GoInt;
 
     @:native("GenerateKey1024") static function generateKey1024(): (go.Result<go.Pointer<go.crypto.mlkem.DecapsulationKey1024>>);
     @:native("GenerateKey768") static function generateKey768(): (go.Result<go.Pointer<go.crypto.mlkem.DecapsulationKey768>>);

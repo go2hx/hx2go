@@ -19,7 +19,7 @@ extern class Response {
     @:native("Request") var request: go.Pointer<go.net.http.Request>;
     @:native("TLS") var TLS: go.Pointer<go.crypto.tls.ConnectionState>;
 
-    function new(status: String, statusCode: go.GoInt, proto: String, protoMajor: go.GoInt, protoMinor: go.GoInt, header: go.net.http.Header, body: go.io.ReadCloser, contentLength: go.Int64, transferEncoding: go.Slice<String>, close: Bool, uncompressed: Bool, trailer: go.net.http.Header, request: go.Pointer<go.net.http.Request>, TLS: go.Pointer<go.crypto.tls.ConnectionState>);
+    function new(status: String="", statusCode: go.GoInt=0, proto: String="", protoMajor: go.GoInt=0, protoMinor: go.GoInt=0, header: go.net.http.Header=null, body: go.io.ReadCloser=null, contentLength: go.Int64=0, transferEncoding: go.Slice<String>=null, close: Bool=false, uncompressed: Bool=false, trailer: go.net.http.Header=null, request: go.Pointer<go.net.http.Request>=null, TLS: go.Pointer<go.crypto.tls.ConnectionState>=null);
 
     @:native("Cookies") function cookies(): (go.Slice<go.Pointer<go.net.http.Cookie>>);
     @:native("Location") function location(): (go.Result<go.Pointer<go.net.url.URL>>);

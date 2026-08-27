@@ -3,7 +3,7 @@ package go;
 @:go.Type({ name: "runtime", instanceName: "runtime.runtime", imports: ["runtime"] })
 extern class Runtime {
 
-    @:native("Compiler") static var Compiler: String;
+    @:native("Compiler") static var compiler: String;
     @:native("GOARCH") static var GOARCH: String;
     @:native("GOOS") static var GOOS: String;
 

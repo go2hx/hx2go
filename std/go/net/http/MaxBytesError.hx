@@ -6,7 +6,7 @@ extern class MaxBytesError {
 
     @:native("Limit") var limit: go.Int64;
 
-    function new(limit: go.Int64);
+    function new(limit: go.Int64=0);
 
     @:native("Error") function error(): (String);
 

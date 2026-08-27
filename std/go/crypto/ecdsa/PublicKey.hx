@@ -8,7 +8,7 @@ extern class PublicKey {
     @:native("X") var X: go.Pointer<go.math.big.Int>;
     @:native("Y") var Y: go.Pointer<go.math.big.Int>;
 
-    function new(curve: go.crypto.elliptic.Curve, X: go.Pointer<go.math.big.Int>, Y: go.Pointer<go.math.big.Int>);
+    function new(curve: go.crypto.elliptic.Curve=null, X: go.Pointer<go.math.big.Int>=null, Y: go.Pointer<go.math.big.Int>=null);
 
     @:go.Tuple("x", "y") @:native("Add") function add(x1: go.Pointer<go.math.big.Int>, y1: go.Pointer<go.math.big.Int>, x2: go.Pointer<go.math.big.Int>, y2: go.Pointer<go.math.big.Int>): (go.Tuple<{ x: go.Pointer<go.math.big.Int>, y: go.Pointer<go.math.big.Int> }>);
     @:native("Bytes") function bytes(): (go.Result<go.Slice<go.Byte>>);

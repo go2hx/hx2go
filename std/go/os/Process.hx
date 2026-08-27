@@ -6,7 +6,7 @@ extern class Process {
 
     @:native("Pid") var pid: go.GoInt;
 
-    function new(pid: go.GoInt);
+    function new(pid: go.GoInt=0);
 
     @:native("Kill") function kill(): (go.Error);
     @:native("Release") function release(): (go.Error);

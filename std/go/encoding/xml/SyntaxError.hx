@@ -7,7 +7,7 @@ extern class SyntaxError {
     @:native("Msg") var msg: String;
     @:native("Line") var line: go.GoInt;
 
-    function new(msg: String, line: go.GoInt);
+    function new(msg: String="", line: go.GoInt=0);
 
     @:native("Error") function error(): (String);
 

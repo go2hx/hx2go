@@ -1,8 +1,8 @@
 package go.encoding.binary;
 
 @:structInit
-@:go.Type({ name: "bigEndian", instanceName: "binary.bigEndian", imports: ["encoding/binary"] })
-extern class BigEndian {
+@:go.Type({ name: "nativeEndian", instanceName: "binary.nativeEndian", imports: ["encoding/binary"] })
+extern class NativeEndian_ {
 
     @:native("AppendUint16") function appendUint16(b: go.Slice<go.Byte>, v: go.UInt16): (go.Slice<go.Byte>);
     @:native("AppendUint32") function appendUint32(b: go.Slice<go.Byte>, v: go.UInt32): (go.Slice<go.Byte>);

@@ -3,7 +3,7 @@ package go.encoding;
 @:go.Type({ name: "xml", instanceName: "xml.xml", imports: ["encoding/xml"] })
 extern class Xml {
 
-    @:native("Header") static var Header: String;
+    @:native("Header") static var header: String;
 
     @:native("HTMLAutoClose") static var hTMLAutoClose: go.Slice<String>;
     @:native("HTMLEntity") static var hTMLEntity: go.Map<String, String>;

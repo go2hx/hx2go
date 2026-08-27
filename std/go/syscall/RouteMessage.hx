@@ -7,6 +7,6 @@ extern class RouteMessage {
     @:native("Header") var header: go.syscall.RtMsghdr;
     @:native("Data") var data: go.Slice<go.Byte>;
 
-    function new(header: go.syscall.RtMsghdr, data: go.Slice<go.Byte>);
+    function new(header: go.syscall.RtMsghdr, data: go.Slice<go.Byte>=null);
 
 }

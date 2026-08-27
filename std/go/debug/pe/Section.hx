@@ -18,7 +18,7 @@ extern class Section {
     @:native("NumberOfLineNumbers") var numberOfLineNumbers: go.UInt16;
     @:native("Characteristics") var characteristics: go.UInt32;
 
-    function new(sectionHeader: go.debug.pe.SectionHeader, relocs: go.Slice<go.debug.pe.Reloc>, readerAt: go.io.ReaderAt);
+    function new(sectionHeader: go.debug.pe.SectionHeader, relocs: go.Slice<go.debug.pe.Reloc>=null, readerAt: go.io.ReaderAt=null);
 
     @:native("Data") function data(): (go.Result<go.Slice<go.Byte>>);
     @:native("Open") function open(): (go.io.ReadSeeker);

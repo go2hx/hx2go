@@ -7,7 +7,7 @@ extern class Error {
     @:native("Code") var code: go.GoInt;
     @:native("Msg") var msg: String;
 
-    function new(code: go.GoInt, msg: String);
+    function new(code: go.GoInt=0, msg: String="");
 
     @:native("Error") function error(): (String);
 

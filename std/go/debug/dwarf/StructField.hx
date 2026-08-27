@@ -12,6 +12,6 @@ extern class StructField {
     @:native("DataBitOffset") var dataBitOffset: go.Int64;
     @:native("BitSize") var bitSize: go.Int64;
 
-    function new(name: String, type: go.debug.dwarf.Type, byteOffset: go.Int64, byteSize: go.Int64, bitOffset: go.Int64, dataBitOffset: go.Int64, bitSize: go.Int64);
+    function new(name: String="", type: go.debug.dwarf.Type=null, byteOffset: go.Int64=0, byteSize: go.Int64=0, bitOffset: go.Int64=0, dataBitOffset: go.Int64=0, bitSize: go.Int64=0);
 
 }

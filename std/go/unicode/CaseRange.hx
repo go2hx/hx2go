@@ -8,6 +8,6 @@ extern class CaseRange {
     @:native("Hi") var hi: go.UInt32;
     @:native("Delta") var delta: go.unicode.D;
 
-    function new(lo: go.UInt32, hi: go.UInt32, delta: go.unicode.D);
+    function new(lo: go.UInt32=0, hi: go.UInt32=0, delta: go.unicode.D);
 
 }

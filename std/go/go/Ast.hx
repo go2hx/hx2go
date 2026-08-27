@@ -3,18 +3,18 @@ package go.go;
 @:go.Type({ name: "ast", instanceName: "ast.ast", imports: ["go/ast"] })
 extern class Ast {
 
-    @:native("Bad") static var Bad: go.go.ast.ObjKind;
-    @:native("Con") static var Con: go.go.ast.ObjKind;
-    @:native("FilterFuncDuplicates") static var FilterFuncDuplicates: go.go.ast.MergeMode;
-    @:native("FilterImportDuplicates") static var FilterImportDuplicates: go.go.ast.MergeMode;
-    @:native("FilterUnassociatedComments") static var FilterUnassociatedComments: go.go.ast.MergeMode;
-    @:native("Fun") static var Fun: go.go.ast.ObjKind;
-    @:native("Lbl") static var Lbl: go.go.ast.ObjKind;
-    @:native("Pkg") static var Pkg: go.go.ast.ObjKind;
+    @:native("Bad") static var bad: go.go.ast.ObjKind;
+    @:native("Con") static var con: go.go.ast.ObjKind;
+    @:native("FilterFuncDuplicates") static var filterFuncDuplicates: go.go.ast.MergeMode;
+    @:native("FilterImportDuplicates") static var filterImportDuplicates: go.go.ast.MergeMode;
+    @:native("FilterUnassociatedComments") static var filterUnassociatedComments: go.go.ast.MergeMode;
+    @:native("Fun") static var fun: go.go.ast.ObjKind;
+    @:native("Lbl") static var lbl: go.go.ast.ObjKind;
+    @:native("Pkg") static var pkg: go.go.ast.ObjKind;
     @:native("RECV") static var RECV: go.go.ast.ChanDir;
     @:native("SEND") static var SEND: go.go.ast.ChanDir;
-    @:native("Typ") static var Typ: go.go.ast.ObjKind;
-    @:native("Var") static var Var: go.go.ast.ObjKind;
+    @:native("Typ") static var typ: go.go.ast.ObjKind;
+    @:native("Var") static var _var: go.go.ast.ObjKind;
 
     @:native("FileExports") static function fileExports(src: go.Pointer<go.go.ast.File>): (Bool);
     @:native("FilterDecl") static function filterDecl(decl: go.go.ast.Decl, f: go.go.ast.Filter): (Bool);

@@ -11,7 +11,7 @@ extern class BenchmarkResult {
     @:native("MemBytes") var memBytes: go.UInt64;
     @:native("Extra") var extra: go.Map<String, Float>;
 
-    function new(N: go.GoInt, T: go.time.Duration, bytes: go.Int64, memAllocs: go.UInt64, memBytes: go.UInt64, extra: go.Map<String, Float>);
+    function new(N: go.GoInt=0, T: go.time.Duration=cast 0, bytes: go.Int64=0, memAllocs: go.UInt64=0, memBytes: go.UInt64=0, extra: go.Map<String, Float>=null);
 
     @:native("AllocedBytesPerOp") function allocedBytesPerOp(): (go.Int64);
     @:native("AllocsPerOp") function allocsPerOp(): (go.Int64);

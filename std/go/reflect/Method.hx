@@ -10,7 +10,7 @@ extern class Method {
     @:native("Func") var func: go.reflect.Value;
     @:native("Index") var index: go.GoInt;
 
-    function new(name: String, pkgPath: String, type: go.reflect.Type, func: go.reflect.Value, index: go.GoInt);
+    function new(name: String="", pkgPath: String="", type: go.reflect.Type=null, func: go.reflect.Value, index: go.GoInt=0);
 
     @:native("IsExported") function isExported(): (Bool);
 

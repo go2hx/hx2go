@@ -15,6 +15,6 @@ extern class Symbol {
     @:native("Version") var version: String;
     @:native("Library") var library: String;
 
-    function new(name: String, info: go.Byte, other: go.Byte, hasVersion: Bool, versionIndex: go.debug.elf.VersionIndex, section: go.debug.elf.SectionIndex, value: go.UInt64, size: go.UInt64, version: String, library: String);
+    function new(name: String="", info: go.Byte=0, other: go.Byte=0, hasVersion: Bool=false, versionIndex: go.debug.elf.VersionIndex=cast 0, section: go.debug.elf.SectionIndex=cast 0, value: go.UInt64=0, size: go.UInt64=0, version: String="", library: String="");
 
 }

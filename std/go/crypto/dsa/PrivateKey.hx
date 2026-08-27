@@ -12,6 +12,6 @@ extern class PrivateKey {
     @:native("Q") var Q: go.Pointer<go.math.big.Int>;
     @:native("G") var G: go.Pointer<go.math.big.Int>;
 
-    function new(publicKey: go.crypto.dsa.PublicKey, X: go.Pointer<go.math.big.Int>);
+    function new(publicKey: go.crypto.dsa.PublicKey, X: go.Pointer<go.math.big.Int>=null);
 
 }

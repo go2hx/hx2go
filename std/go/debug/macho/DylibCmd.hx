@@ -11,6 +11,6 @@ extern class DylibCmd {
     @:native("CurrentVersion") var currentVersion: go.UInt32;
     @:native("CompatVersion") var compatVersion: go.UInt32;
 
-    function new(cmd: go.debug.macho.LoadCmd, len: go.UInt32, name: go.UInt32, time: go.UInt32, currentVersion: go.UInt32, compatVersion: go.UInt32);
+    function new(cmd: go.debug.macho.LoadCmd=cast 0, len: go.UInt32=0, name: go.UInt32=0, time: go.UInt32=0, currentVersion: go.UInt32=0, compatVersion: go.UInt32=0);
 
 }

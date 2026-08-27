@@ -11,6 +11,6 @@ extern class GIF {
     @:native("Config") var config: go.image.Config;
     @:native("BackgroundIndex") var backgroundIndex: go.Byte;
 
-    function new(image: go.Slice<go.Pointer<go.image.Paletted>>, delay: go.Slice<go.GoInt>, loopCount: go.GoInt, disposal: go.Slice<go.Byte>, config: go.image.Config, backgroundIndex: go.Byte);
+    function new(image: go.Slice<go.Pointer<go.image.Paletted>>=null, delay: go.Slice<go.GoInt>=null, loopCount: go.GoInt=0, disposal: go.Slice<go.Byte>=null, config: go.image.Config, backgroundIndex: go.Byte=0);
 
 }

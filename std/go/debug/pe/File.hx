@@ -18,7 +18,7 @@ extern class File {
     @:native("SizeOfOptionalHeader") var sizeOfOptionalHeader: go.UInt16;
     @:native("Characteristics") var characteristics: go.UInt16;
 
-    function new(fileHeader: go.debug.pe.FileHeader, optionalHeader: Dynamic, sections: go.Slice<go.Pointer<go.debug.pe.Section>>, symbols: go.Slice<go.Pointer<go.debug.pe.Symbol>>, cOFFSymbols: go.Slice<go.debug.pe.COFFSymbol>, stringTable: go.debug.pe.StringTable);
+    function new(fileHeader: go.debug.pe.FileHeader, optionalHeader: Dynamic=null, sections: go.Slice<go.Pointer<go.debug.pe.Section>>=null, symbols: go.Slice<go.Pointer<go.debug.pe.Symbol>>=null, cOFFSymbols: go.Slice<go.debug.pe.COFFSymbol>=null, stringTable: go.debug.pe.StringTable=null);
 
     @:native("COFFSymbolReadSectionDefAux") function cOFFSymbolReadSectionDefAux(idx: go.GoInt): (go.Result<go.Pointer<go.debug.pe.COFFSymbolAuxFormat5>>);
     @:native("Close") function close(): (go.Error);

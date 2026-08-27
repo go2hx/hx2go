@@ -8,7 +8,7 @@ extern class LineTable {
     @:native("PC") var PC: go.UInt64;
     @:native("Line") var line: go.GoInt;
 
-    function new(data: go.Slice<go.Byte>, PC: go.UInt64, line: go.GoInt);
+    function new(data: go.Slice<go.Byte>=null, PC: go.UInt64=0, line: go.GoInt=0);
 
     @:native("LineToPC") function lineToPC(line: go.GoInt, maxpc: go.UInt64): (go.UInt64);
     @:native("PCToLine") function pCToLine(pc: go.UInt64): (go.GoInt);

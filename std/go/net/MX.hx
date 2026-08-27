@@ -7,6 +7,6 @@ extern class MX {
     @:native("Host") var host: String;
     @:native("Pref") var pref: go.UInt16;
 
-    function new(host: String, pref: go.UInt16);
+    function new(host: String="", pref: go.UInt16=0);
 
 }

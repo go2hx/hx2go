@@ -12,6 +12,6 @@ extern class VerifyOptions {
     @:native("MaxConstraintComparisions") var maxConstraintComparisions: go.GoInt;
     @:native("CertificatePolicies") var certificatePolicies: go.Slice<go.crypto.x509.OID>;
 
-    function new(dNSName: String, intermediates: go.Pointer<go.crypto.x509.CertPool>, roots: go.Pointer<go.crypto.x509.CertPool>, currentTime: go.time.Time, keyUsages: go.Slice<go.crypto.x509.ExtKeyUsage>, maxConstraintComparisions: go.GoInt, certificatePolicies: go.Slice<go.crypto.x509.OID>);
+    function new(dNSName: String="", intermediates: go.Pointer<go.crypto.x509.CertPool>=null, roots: go.Pointer<go.crypto.x509.CertPool>=null, currentTime: go.time.Time, keyUsages: go.Slice<go.crypto.x509.ExtKeyUsage>=null, maxConstraintComparisions: go.GoInt=0, certificatePolicies: go.Slice<go.crypto.x509.OID>=null);
 
 }

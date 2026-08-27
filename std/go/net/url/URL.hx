@@ -16,7 +16,7 @@ extern class URL {
     @:native("ForceQuery") var forceQuery: Bool;
     @:native("OmitHost") var omitHost: Bool;
 
-    function new(scheme: String, opaque: String, user: go.Pointer<go.net.url.Userinfo>, host: String, path: String, fragment: String, rawQuery: String, rawPath: String, rawFragment: String, forceQuery: Bool, omitHost: Bool);
+    function new(scheme: String="", opaque: String="", user: go.Pointer<go.net.url.Userinfo>=null, host: String="", path: String="", fragment: String="", rawQuery: String="", rawPath: String="", rawFragment: String="", forceQuery: Bool=false, omitHost: Bool=false);
 
     @:native("AppendBinary") function appendBinary(b: go.Slice<go.Byte>): (go.Result<go.Slice<go.Byte>>);
     @:native("EscapedFragment") function escapedFragment(): (String);

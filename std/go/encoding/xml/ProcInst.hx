@@ -7,7 +7,7 @@ extern class ProcInst {
     @:native("Target") var target: String;
     @:native("Inst") var inst: go.Slice<go.Byte>;
 
-    function new(target: String, inst: go.Slice<go.Byte>);
+    function new(target: String="", inst: go.Slice<go.Byte>=null);
 
     @:native("Copy") function copy(): (go.encoding.xml.ProcInst);
 

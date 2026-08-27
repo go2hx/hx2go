@@ -8,7 +8,7 @@ extern class Parser {
     @:native("LookupPackage") var lookupPackage: (name: String) -> (go.Tuple<{ importPath: String, ok: Bool }>);
     @:native("LookupSym") var lookupSym: (recv: String, name: String) -> (Bool);
 
-    function new(words: go.Map<String, String>, lookupPackage: (name: String) -> (go.Tuple<{ importPath: String, ok: Bool }>), lookupSym: (recv: String, name: String) -> (Bool));
+    function new(words: go.Map<String, String>=null, lookupPackage: (name: String) -> (go.Tuple<{ importPath: String, ok: Bool }>)=null, lookupSym: (recv: String, name: String) -> (Bool)=null);
 
     @:native("Parse") function parse(text: String): (go.Pointer<go.go.doc.comment.Doc>);
 

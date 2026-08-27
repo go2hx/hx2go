@@ -3,8 +3,8 @@ package go.encoding;
 @:go.Type({ name: "base32", instanceName: "base32.base32", imports: ["encoding/base32"] })
 extern class Base32 {
 
-    @:native("NoPadding") static var NoPadding: go.Rune;
-    @:native("StdPadding") static var StdPadding: go.Rune;
+    @:native("NoPadding") static var noPadding: go.Rune;
+    @:native("StdPadding") static var stdPadding: go.Rune;
 
     @:native("HexEncoding") static var hexEncoding: go.Pointer<go.encoding.base32.Encoding>;
     @:native("StdEncoding") static var stdEncoding: go.Pointer<go.encoding.base32.Encoding>;

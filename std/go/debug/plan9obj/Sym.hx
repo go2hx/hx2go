@@ -8,6 +8,6 @@ extern class Sym {
     @:native("Type") var type: go.Rune;
     @:native("Name") var name: String;
 
-    function new(value: go.UInt64, type: go.Rune, name: String);
+    function new(value: go.UInt64=0, type: go.Rune=0, name: String="");
 
 }

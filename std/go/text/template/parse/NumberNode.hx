@@ -16,7 +16,7 @@ extern class NumberNode {
     @:native("Complex128") var complex128: go.Complex128;
     @:native("Text") var text: String;
 
-    function new(nodeType: go.text.template.parse.NodeType, pos: go.text.template.parse.Pos, isInt: Bool, isUint: Bool, isFloat: Bool, isComplex: Bool, int64: go.Int64, uint64: go.UInt64, float64: Float, complex128: go.Complex128, text: String);
+    function new(nodeType: go.text.template.parse.NodeType=cast 0, pos: go.text.template.parse.Pos=cast 0, isInt: Bool=false, isUint: Bool=false, isFloat: Bool=false, isComplex: Bool=false, int64: go.Int64=0, uint64: go.UInt64=0, float64: Float=0.0, complex128: go.Complex128=0, text: String="");
 
     @:native("Copy") function copy(): (go.text.template.parse.Node);
     @:native("Position") function position(): (go.text.template.parse.Pos);

@@ -7,6 +7,6 @@ extern class ErrorContext {
     @:native("Struct") var struct: go.reflect.Type;
     @:native("FieldStack") var fieldStack: go.Slice<String>;
 
-    function new(struct: go.reflect.Type, fieldStack: go.Slice<String>);
+    function new(struct: go.reflect.Type=null, fieldStack: go.Slice<String>=null);
 
 }

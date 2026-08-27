@@ -11,6 +11,6 @@ extern class Header {
     @:native("PaddingLength") var paddingLength: go.UInt8;
     @:native("Reserved") var reserved: go.UInt8;
 
-    function new(version: go.UInt8, type: go.net.http.fcgi.RecType, id: go.UInt16, contentLength: go.UInt16, paddingLength: go.UInt8, reserved: go.UInt8);
+    function new(version: go.UInt8=0, type: go.net.http.fcgi.RecType=cast 0, id: go.UInt16=0, contentLength: go.UInt16=0, paddingLength: go.UInt8=0, reserved: go.UInt8=0);
 
 }

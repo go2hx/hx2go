@@ -8,7 +8,7 @@ extern class ListenConfig {
     @:native("KeepAlive") var keepAlive: go.time.Duration;
     @:native("KeepAliveConfig") var keepAliveConfig: go.net.KeepAliveConfig;
 
-    function new(control: (network: String, address: String, c: go.syscall.RawConn) -> (go.Error), keepAlive: go.time.Duration, keepAliveConfig: go.net.KeepAliveConfig);
+    function new(control: (network: String, address: String, c: go.syscall.RawConn) -> (go.Error)=null, keepAlive: go.time.Duration=cast 0, keepAliveConfig: go.net.KeepAliveConfig);
 
     @:native("Listen") function listen(ctx: go.context.Context, network: String, address: String): (go.Result<go.net.Listener>);
     @:native("ListenPacket") function listenPacket(ctx: go.context.Context, network: String, address: String): (go.Result<go.net.PacketConn>);

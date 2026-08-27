@@ -7,7 +7,7 @@ extern class UnknownLineError {
     @:native("File") var file: String;
     @:native("Line") var line: go.GoInt;
 
-    function new(file: String, line: go.GoInt);
+    function new(file: String="", line: go.GoInt=0);
 
     @:native("Error") function error(): (String);
 

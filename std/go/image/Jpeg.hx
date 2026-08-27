@@ -3,7 +3,7 @@ package go.image;
 @:go.Type({ name: "jpeg", instanceName: "jpeg.jpeg", imports: ["image/jpeg"] })
 extern class Jpeg {
 
-    @:native("DefaultQuality") static var DefaultQuality: go.GoInt;
+    @:native("DefaultQuality") static var defaultQuality: go.GoInt;
 
     @:native("Decode") static function decode(r: go.io.Reader): (go.Result<go.image.Image>);
     @:native("DecodeConfig") static function decodeConfig(r: go.io.Reader): (go.Result<go.image.Config>);

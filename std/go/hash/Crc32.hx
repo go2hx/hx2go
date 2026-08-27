@@ -3,10 +3,10 @@ package go.hash;
 @:go.Type({ name: "crc32", instanceName: "crc32.crc32", imports: ["hash/crc32"] })
 extern class Crc32 {
 
-    @:native("Castagnoli") static var Castagnoli: go.GoInt;
+    @:native("Castagnoli") static var castagnoli: go.GoInt;
     @:native("IEEE") static var IEEE: go.GoInt;
-    @:native("Koopman") static var Koopman: go.GoInt;
-    @:native("Size") static var Size: go.GoInt;
+    @:native("Koopman") static var koopman: go.GoInt;
+    @:native("Size") static var size: go.GoInt;
 
     @:native("IEEETable") static var iEEETable: go.Pointer<go.hash.crc32.Table>;
 

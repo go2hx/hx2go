@@ -9,6 +9,6 @@ extern class SRV {
     @:native("Priority") var priority: go.UInt16;
     @:native("Weight") var weight: go.UInt16;
 
-    function new(target: String, port: go.UInt16, priority: go.UInt16, weight: go.UInt16);
+    function new(target: String="", port: go.UInt16=0, priority: go.UInt16=0, weight: go.UInt16=0);
 
 }

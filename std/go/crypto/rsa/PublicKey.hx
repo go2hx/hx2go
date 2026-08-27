@@ -7,7 +7,7 @@ extern class PublicKey {
     @:native("N") var N: go.Pointer<go.math.big.Int>;
     @:native("E") var E: go.GoInt;
 
-    function new(N: go.Pointer<go.math.big.Int>, E: go.GoInt);
+    function new(N: go.Pointer<go.math.big.Int>=null, E: go.GoInt=0);
 
     @:native("Equal") function equal(x: go.crypto.PublicKey): (Bool);
     @:native("Size") function size(): (go.GoInt);

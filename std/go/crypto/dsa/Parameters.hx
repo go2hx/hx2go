@@ -8,6 +8,6 @@ extern class Parameters {
     @:native("Q") var Q: go.Pointer<go.math.big.Int>;
     @:native("G") var G: go.Pointer<go.math.big.Int>;
 
-    function new(P: go.Pointer<go.math.big.Int>, Q: go.Pointer<go.math.big.Int>, G: go.Pointer<go.math.big.Int>);
+    function new(P: go.Pointer<go.math.big.Int>=null, Q: go.Pointer<go.math.big.Int>=null, G: go.Pointer<go.math.big.Int>=null);
 
 }

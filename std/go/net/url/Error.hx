@@ -8,7 +8,7 @@ extern class Error {
     @:native("URL") var URL: String;
     @:native("Err") var err: go.Error;
 
-    function new(op: String, URL: String, err: go.Error);
+    function new(op: String="", URL: String="", err: go.Error=null);
 
     @:native("Error") function error(): (String);
     @:native("Temporary") function temporary(): (Bool);

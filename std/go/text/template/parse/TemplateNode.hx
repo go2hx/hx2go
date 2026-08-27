@@ -10,7 +10,7 @@ extern class TemplateNode {
     @:native("Name") var name: String;
     @:native("Pipe") var pipe: go.Pointer<go.text.template.parse.PipeNode>;
 
-    function new(nodeType: go.text.template.parse.NodeType, pos: go.text.template.parse.Pos, line: go.GoInt, name: String, pipe: go.Pointer<go.text.template.parse.PipeNode>);
+    function new(nodeType: go.text.template.parse.NodeType=cast 0, pos: go.text.template.parse.Pos=cast 0, line: go.GoInt=0, name: String="", pipe: go.Pointer<go.text.template.parse.PipeNode>=null);
 
     @:native("Copy") function copy(): (go.text.template.parse.Node);
     @:native("Position") function position(): (go.text.template.parse.Pos);

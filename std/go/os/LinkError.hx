@@ -9,7 +9,7 @@ extern class LinkError {
     @:native("New") var _new: String;
     @:native("Err") var err: go.Error;
 
-    function new(op: String, old: String, _new: String, err: go.Error);
+    function new(op: String="", old: String="", _new: String="", err: go.Error=null);
 
     @:native("Error") function error(): (String);
     @:native("Unwrap") function unwrap(): (go.Error);

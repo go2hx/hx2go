@@ -7,7 +7,7 @@ extern class ExitError {
     @:native("ProcessState") var processState: go.Pointer<go.os.ProcessState>;
     @:native("Stderr") var stderr: go.Slice<go.Byte>;
 
-    function new(processState: go.Pointer<go.os.ProcessState>, stderr: go.Slice<go.Byte>);
+    function new(processState: go.Pointer<go.os.ProcessState>=null, stderr: go.Slice<go.Byte>=null);
 
     @:native("Error") function error(): (String);
     @:native("ExitCode") function exitCode(): (go.GoInt);

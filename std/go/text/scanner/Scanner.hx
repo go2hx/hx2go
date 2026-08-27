@@ -15,7 +15,7 @@ extern class Scanner {
     @:native("Line") var line: go.GoInt;
     @:native("Column") var column: go.GoInt;
 
-    function new(error: (s: go.Pointer<go.text.scanner.Scanner>, msg: String) -> Void, errorCount: go.GoInt, mode: go.GoUInt, whitespace: go.UInt64, isIdentRune: (ch: go.Rune, i: go.GoInt) -> (Bool), position: go.text.scanner.Position);
+    function new(error: (s: go.Pointer<go.text.scanner.Scanner>, msg: String) -> Void=null, errorCount: go.GoInt=0, mode: go.GoUInt=0, whitespace: go.UInt64=0, isIdentRune: (ch: go.Rune, i: go.GoInt) -> (Bool)=null, position: go.text.scanner.Position);
 
     @:native("Init") function init(src: go.io.Reader): (go.Pointer<go.text.scanner.Scanner>);
     @:native("IsValid") function isValid(): (Bool);

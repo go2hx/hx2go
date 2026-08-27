@@ -8,6 +8,6 @@ extern class Range16 {
     @:native("Hi") var hi: go.UInt16;
     @:native("Stride") var stride: go.UInt16;
 
-    function new(lo: go.UInt16, hi: go.UInt16, stride: go.UInt16);
+    function new(lo: go.UInt16=0, hi: go.UInt16=0, stride: go.UInt16=0);
 
 }

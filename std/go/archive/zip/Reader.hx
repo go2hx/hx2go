@@ -7,7 +7,7 @@ extern class Reader {
     @:native("File") var file: go.Slice<go.Pointer<go.archive.zip.File>>;
     @:native("Comment") var comment: String;
 
-    function new(file: go.Slice<go.Pointer<go.archive.zip.File>>, comment: String);
+    function new(file: go.Slice<go.Pointer<go.archive.zip.File>>=null, comment: String="");
 
     @:native("Open") function open(name: String): (go.Result<go.io.fs.File>);
     @:native("RegisterDecompressor") function registerDecompressor(method: go.UInt16, dcomp: go.archive.zip.Decompressor): Void;

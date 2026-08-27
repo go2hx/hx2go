@@ -6,7 +6,7 @@ extern class Ring {
 
     @:native("Value") var value: Dynamic;
 
-    function new(value: Dynamic);
+    function new(value: Dynamic=null);
 
     @:native("Do") function _do(f: (p0: Dynamic) -> Void): Void;
     @:native("Len") function len(): (go.GoInt);

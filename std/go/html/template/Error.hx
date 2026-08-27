@@ -10,7 +10,7 @@ extern class Error {
     @:native("Line") var line: go.GoInt;
     @:native("Description") var description: String;
 
-    function new(errorCode: go.html.template.ErrorCode, node: go.text.template.parse.Node, name: String, line: go.GoInt, description: String);
+    function new(errorCode: go.html.template.ErrorCode=cast 0, node: go.text.template.parse.Node=null, name: String="", line: go.GoInt=0, description: String="");
 
     @:native("Error") function error(): (String);
 

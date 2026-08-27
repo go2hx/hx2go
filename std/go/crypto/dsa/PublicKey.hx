@@ -10,6 +10,6 @@ extern class PublicKey {
     @:native("Q") var Q: go.Pointer<go.math.big.Int>;
     @:native("G") var G: go.Pointer<go.math.big.Int>;
 
-    function new(parameters: go.crypto.dsa.Parameters, Y: go.Pointer<go.math.big.Int>);
+    function new(parameters: go.crypto.dsa.Parameters, Y: go.Pointer<go.math.big.Int>=null);
 
 }

@@ -15,6 +15,6 @@ extern class Module {
     @:native("GoVersion") var goVersion: String;
     @:native("Error") var error: go.Pointer<go.golang_org.x.tools.go.packages.ModuleError>;
 
-    function new(path: String, version: String, replace: go.Pointer<go.golang_org.x.tools.go.packages.Module>, time: go.Pointer<go.time.Time>, main: Bool, indirect: Bool, dir: String, goMod: String, goVersion: String, error: go.Pointer<go.golang_org.x.tools.go.packages.ModuleError>);
+    function new(path: String="", version: String="", replace: go.Pointer<go.golang_org.x.tools.go.packages.Module>=null, time: go.Pointer<go.time.Time>=null, main: Bool=false, indirect: Bool=false, dir: String="", goMod: String="", goVersion: String="", error: go.Pointer<go.golang_org.x.tools.go.packages.ModuleError>=null);
 
 }

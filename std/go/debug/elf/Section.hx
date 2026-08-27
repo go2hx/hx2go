@@ -18,7 +18,7 @@ extern class Section {
     @:native("Entsize") var entsize: go.UInt64;
     @:native("FileSize") var fileSize: go.UInt64;
 
-    function new(sectionHeader: go.debug.elf.SectionHeader, readerAt: go.io.ReaderAt);
+    function new(sectionHeader: go.debug.elf.SectionHeader, readerAt: go.io.ReaderAt=null);
 
     @:native("Data") function data(): (go.Result<go.Slice<go.Byte>>);
     @:native("Open") function open(): (go.io.ReadSeeker);

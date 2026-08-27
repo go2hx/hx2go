@@ -12,7 +12,7 @@ extern class Printer {
     @:native("TextCodePrefix") var textCodePrefix: String;
     @:native("TextWidth") var textWidth: go.GoInt;
 
-    function new(headingLevel: go.GoInt, headingID: (h: go.Pointer<go.go.doc.comment.Heading>) -> (String), docLinkURL: (link: go.Pointer<go.go.doc.comment.DocLink>) -> (String), docLinkBaseURL: String, textPrefix: String, textCodePrefix: String, textWidth: go.GoInt);
+    function new(headingLevel: go.GoInt=0, headingID: (h: go.Pointer<go.go.doc.comment.Heading>) -> (String)=null, docLinkURL: (link: go.Pointer<go.go.doc.comment.DocLink>) -> (String)=null, docLinkBaseURL: String="", textPrefix: String="", textCodePrefix: String="", textWidth: go.GoInt=0);
 
     @:native("Comment") function comment(d: go.Pointer<go.go.doc.comment.Doc>): (go.Slice<go.Byte>);
     @:native("HTML") function HTML(d: go.Pointer<go.go.doc.comment.Doc>): (go.Slice<go.Byte>);

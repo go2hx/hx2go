@@ -8,7 +8,7 @@ extern class TCPAddr {
     @:native("Port") var port: go.GoInt;
     @:native("Zone") var zone: String;
 
-    function new(IP: go.net.IP, port: go.GoInt, zone: String);
+    function new(IP: go.net.IP=null, port: go.GoInt=0, zone: String="");
 
     @:native("AddrPort") function addrPort(): (go.net.netip.AddrPort);
     @:native("Network") function network(): (String);

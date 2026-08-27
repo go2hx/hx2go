@@ -9,6 +9,6 @@ extern class CipherSuite {
     @:native("SupportedVersions") var supportedVersions: go.Slice<go.UInt16>;
     @:native("Insecure") var insecure: Bool;
 
-    function new(ID: go.UInt16, name: String, supportedVersions: go.Slice<go.UInt16>, insecure: Bool);
+    function new(ID: go.UInt16=0, name: String="", supportedVersions: go.Slice<go.UInt16>=null, insecure: Bool=false);
 
 }

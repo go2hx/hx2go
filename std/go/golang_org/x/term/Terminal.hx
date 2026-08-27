@@ -8,7 +8,7 @@ extern class Terminal {
     @:native("Escape") var escape: go.Pointer<go.golang_org.x.term.EscapeCodes>;
     @:native("History") var history: go.golang_org.x.term.History;
 
-    function new(autoCompleteCallback: (line: String, pos: go.GoInt, key: go.Rune) -> (go.Tuple<{ newLine: String, newPos: go.GoInt, ok: Bool }>), escape: go.Pointer<go.golang_org.x.term.EscapeCodes>, history: go.golang_org.x.term.History);
+    function new(autoCompleteCallback: (line: String, pos: go.GoInt, key: go.Rune) -> (go.Tuple<{ newLine: String, newPos: go.GoInt, ok: Bool }>)=null, escape: go.Pointer<go.golang_org.x.term.EscapeCodes>=null, history: go.golang_org.x.term.History=null);
 
     @:native("ReadLine") function readLine(): (go.Result<String>);
     @:native("ReadPassword") function readPassword(prompt: String): (go.Result<String>);

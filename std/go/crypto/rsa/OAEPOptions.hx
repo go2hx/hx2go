@@ -8,6 +8,6 @@ extern class OAEPOptions {
     @:native("MGFHash") var mGFHash: go.crypto.Hash;
     @:native("Label") var label: go.Slice<go.Byte>;
 
-    function new(hash: go.crypto.Hash, mGFHash: go.crypto.Hash, label: go.Slice<go.Byte>);
+    function new(hash: go.crypto.Hash=cast 0, mGFHash: go.crypto.Hash=cast 0, label: go.Slice<go.Byte>=null);
 
 }

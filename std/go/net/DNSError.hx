@@ -12,7 +12,7 @@ extern class DNSError {
     @:native("IsTemporary") var isTemporary: Bool;
     @:native("IsNotFound") var isNotFound: Bool;
 
-    function new(unwrapErr: go.Error, err: String, name: String, server: String, isTimeout: Bool, isTemporary: Bool, isNotFound: Bool);
+    function new(unwrapErr: go.Error=null, err: String="", name: String="", server: String="", isTimeout: Bool=false, isTemporary: Bool=false, isNotFound: Bool=false);
 
     @:native("Error") function error(): (String);
     @:native("Temporary") function temporary(): (Bool);

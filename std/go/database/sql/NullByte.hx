@@ -7,7 +7,7 @@ extern class NullByte {
     @:native("Byte") var byte: go.Byte;
     @:native("Valid") var valid: Bool;
 
-    function new(byte: go.Byte, valid: Bool);
+    function new(byte: go.Byte=0, valid: Bool=false);
 
     @:native("Scan") function scan(value: Dynamic): (go.Error);
     @:native("Value") function value(): (go.Result<go.database.sql.driver.Value>);

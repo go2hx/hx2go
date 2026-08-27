@@ -3,24 +3,24 @@ package go.log;
 @:go.Type({ name: "slog", instanceName: "slog.slog", imports: ["log/slog"] })
 extern class Slog {
 
-    @:native("KindAny") static var KindAny: go.log.slog.Kind;
-    @:native("KindBool") static var KindBool: go.log.slog.Kind;
-    @:native("KindDuration") static var KindDuration: go.log.slog.Kind;
-    @:native("KindFloat64") static var KindFloat64: go.log.slog.Kind;
-    @:native("KindGroup") static var KindGroup: go.log.slog.Kind;
-    @:native("KindInt64") static var KindInt64: go.log.slog.Kind;
-    @:native("KindLogValuer") static var KindLogValuer: go.log.slog.Kind;
-    @:native("KindString") static var KindString: go.log.slog.Kind;
-    @:native("KindTime") static var KindTime: go.log.slog.Kind;
-    @:native("KindUint64") static var KindUint64: go.log.slog.Kind;
-    @:native("LevelDebug") static var LevelDebug: go.log.slog.Level;
-    @:native("LevelError") static var LevelError: go.log.slog.Level;
-    @:native("LevelInfo") static var LevelInfo: go.log.slog.Level;
-    @:native("LevelKey") static var LevelKey: String;
-    @:native("LevelWarn") static var LevelWarn: go.log.slog.Level;
-    @:native("MessageKey") static var MessageKey: String;
-    @:native("SourceKey") static var SourceKey: String;
-    @:native("TimeKey") static var TimeKey: String;
+    @:native("KindAny") static var kindAny: go.log.slog.Kind;
+    @:native("KindBool") static var kindBool: go.log.slog.Kind;
+    @:native("KindDuration") static var kindDuration: go.log.slog.Kind;
+    @:native("KindFloat64") static var kindFloat64: go.log.slog.Kind;
+    @:native("KindGroup") static var kindGroup: go.log.slog.Kind;
+    @:native("KindInt64") static var kindInt64: go.log.slog.Kind;
+    @:native("KindLogValuer") static var kindLogValuer: go.log.slog.Kind;
+    @:native("KindString") static var kindString: go.log.slog.Kind;
+    @:native("KindTime") static var kindTime: go.log.slog.Kind;
+    @:native("KindUint64") static var kindUint64: go.log.slog.Kind;
+    @:native("LevelDebug") static var levelDebug: go.log.slog.Level;
+    @:native("LevelError") static var levelError: go.log.slog.Level;
+    @:native("LevelInfo") static var levelInfo: go.log.slog.Level;
+    @:native("LevelKey") static var levelKey: String;
+    @:native("LevelWarn") static var levelWarn: go.log.slog.Level;
+    @:native("MessageKey") static var messageKey: String;
+    @:native("SourceKey") static var sourceKey: String;
+    @:native("TimeKey") static var timeKey: String;
 
     @:native("DiscardHandler") static var discardHandler: go.log.slog.Handler;
 

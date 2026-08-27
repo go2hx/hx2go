@@ -6,7 +6,7 @@ extern class ReadWriteCloserBody {
 
     @:native("ReadWriteCloser") var readWriteCloser: go.io.ReadWriteCloser;
 
-    function new(readWriteCloser: go.io.ReadWriteCloser);
+    function new(readWriteCloser: go.io.ReadWriteCloser=null);
 
     @:native("Close") function close(): (go.Error);
     @:native("CloseWrite") function closeWrite(): (go.Error);

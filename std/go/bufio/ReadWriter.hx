@@ -7,7 +7,7 @@ extern class ReadWriter {
     @:native("Reader") var reader: go.Pointer<go.bufio.Reader>;
     @:native("Writer") var writer: go.Pointer<go.bufio.Writer>;
 
-    function new(reader: go.Pointer<go.bufio.Reader>, writer: go.Pointer<go.bufio.Writer>);
+    function new(reader: go.Pointer<go.bufio.Reader>=null, writer: go.Pointer<go.bufio.Writer>=null);
 
     @:native("Available") function available(): (go.GoInt);
     @:native("AvailableBuffer") function availableBuffer(): (go.Slice<go.Byte>);

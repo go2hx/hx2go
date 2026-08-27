@@ -8,6 +8,6 @@ extern class Response {
     @:native("Seq") var seq: go.UInt64;
     @:native("Error") var error: String;
 
-    function new(serviceMethod: String, seq: go.UInt64, error: String);
+    function new(serviceMethod: String="", seq: go.UInt64=0, error: String="");
 
 }

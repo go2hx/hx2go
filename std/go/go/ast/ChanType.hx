@@ -9,7 +9,7 @@ extern class ChanType {
     @:native("Dir") var dir: go.go.ast.ChanDir;
     @:native("Value") var value: go.go.ast.Expr;
 
-    function new(begin: go.go.token.Pos, arrow: go.go.token.Pos, dir: go.go.ast.ChanDir, value: go.go.ast.Expr);
+    function new(begin: go.go.token.Pos=cast 0, arrow: go.go.token.Pos=cast 0, dir: go.go.ast.ChanDir=cast 0, value: go.go.ast.Expr=null);
 
     @:native("End") function end(): (go.go.token.Pos);
     @:native("Pos") function pos(): (go.go.token.Pos);

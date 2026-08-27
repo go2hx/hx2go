@@ -3,12 +3,12 @@ package go.go;
 @:go.Type({ name: "constant", instanceName: "constant.constant", imports: ["go/constant"] })
 extern class Constant {
 
-    @:native("Bool") static var Bool: go.go.constant.Kind;
-    @:native("Complex") static var Complex: go.go.constant.Kind;
-    @:native("Float") static var Float: go.go.constant.Kind;
-    @:native("Int") static var Int: go.go.constant.Kind;
-    @:native("String") static var String: go.go.constant.Kind;
-    @:native("Unknown") static var Unknown: go.go.constant.Kind;
+    @:native("Bool") static var bool: go.go.constant.Kind;
+    @:native("Complex") static var complex: go.go.constant.Kind;
+    @:native("Float") static var float: go.go.constant.Kind;
+    @:native("Int") static var int: go.go.constant.Kind;
+    @:native("String") static var string: go.go.constant.Kind;
+    @:native("Unknown") static var unknown: go.go.constant.Kind;
 
     @:native("BinaryOp") static function binaryOp(x_: go.go.constant.Value, op: go.go.token.Token, y_: go.go.constant.Value): (go.go.constant.Value);
     @:native("BitLen") static function bitLen(x: go.go.constant.Value): (go.GoInt);

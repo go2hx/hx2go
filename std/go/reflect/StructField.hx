@@ -1,7 +1,7 @@
 package go.reflect;
 
 @:structInit
-@:go.Type({ name: "StructField", instanceName: "reflect.StructField", imports: ["reflect"] })
+@:go.Type({ name: "StructField", instanceName: "Reflect.StructField", imports: ["reflect"] })
 extern class StructField {
 
     @:native("Name") var name: String;
@@ -12,7 +12,7 @@ extern class StructField {
     @:native("Index") var index: go.Slice<go.GoInt>;
     @:native("Anonymous") var anonymous: Bool;
 
-    function new(name: String, pkgPath: String, type: go.reflect.Type, tag: go.reflect.StructTag, offset: go.UIntPtr, index: go.Slice<go.GoInt>, anonymous: Bool);
+    function new(name: String="", pkgPath: String="", type: go.reflect.Type=null, tag: go.reflect.StructTag=cast "", offset: go.UIntPtr=0, index: go.Slice<go.GoInt>=null, anonymous: Bool=false);
 
     @:native("IsExported") function isExported(): (Bool);
 

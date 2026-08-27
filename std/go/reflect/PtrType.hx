@@ -1,7 +1,7 @@
 package go.reflect;
 
 @:structInit
-@:go.Type({ name: "ptrType", instanceName: "reflect.ptrType", imports: ["reflect"] })
+@:go.Type({ name: "ptrType", instanceName: "Reflect.ptrType", imports: ["reflect"] })
 extern class PtrType {
 
     @:native("PtrType") var ptrType: Dynamic;

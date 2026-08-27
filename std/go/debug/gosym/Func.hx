@@ -18,7 +18,7 @@ extern class Func {
     @:native("GoType") var goType: go.UInt64;
     @:native("Func") var func: go.Pointer<go.debug.gosym.Func>;
 
-    function new(entry: go.UInt64, sym: go.Pointer<go.debug.gosym.Sym>, end: go.UInt64, params: go.Slice<go.Pointer<go.debug.gosym.Sym>>, locals: go.Slice<go.Pointer<go.debug.gosym.Sym>>, frameSize: go.GoInt, lineTable: go.Pointer<go.debug.gosym.LineTable>, obj: go.Pointer<go.debug.gosym.Obj>);
+    function new(entry: go.UInt64=0, sym: go.Pointer<go.debug.gosym.Sym>=null, end: go.UInt64=0, params: go.Slice<go.Pointer<go.debug.gosym.Sym>>=null, locals: go.Slice<go.Pointer<go.debug.gosym.Sym>>=null, frameSize: go.GoInt=0, lineTable: go.Pointer<go.debug.gosym.LineTable>=null, obj: go.Pointer<go.debug.gosym.Obj>=null);
 
     @:native("BaseName") function baseName(): (String);
     @:native("PackageName") function packageName(): (String);

@@ -2,7 +2,7 @@ package go.encoding.binary;
 
 @:structInit
 @:go.Type({ name: "littleEndian", instanceName: "binary.littleEndian", imports: ["encoding/binary"] })
-extern class LittleEndian {
+extern class LittleEndian_ {
 
     @:native("AppendUint16") function appendUint16(b: go.Slice<go.Byte>, v: go.UInt16): (go.Slice<go.Byte>);
     @:native("AppendUint32") function appendUint32(b: go.Slice<go.Byte>, v: go.UInt32): (go.Slice<go.Byte>);

@@ -6,7 +6,7 @@ extern class B {
 
     @:native("N") var N: go.GoInt;
 
-    function new(N: go.GoInt);
+    function new(N: go.GoInt=0);
 
     @:native("ArtifactDir") function artifactDir(): (String);
     @:native("Attr") function attr(key: String, value: String): Void;

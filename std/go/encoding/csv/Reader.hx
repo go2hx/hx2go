@@ -12,7 +12,7 @@ extern class Reader {
     @:native("ReuseRecord") var reuseRecord: Bool;
     @:native("TrailingComma") var trailingComma: Bool;
 
-    function new(comma: go.Rune, comment: go.Rune, fieldsPerRecord: go.GoInt, lazyQuotes: Bool, trimLeadingSpace: Bool, reuseRecord: Bool, trailingComma: Bool);
+    function new(comma: go.Rune=0, comment: go.Rune=0, fieldsPerRecord: go.GoInt=0, lazyQuotes: Bool=false, trimLeadingSpace: Bool=false, reuseRecord: Bool=false, trailingComma: Bool=false);
 
     @:go.Tuple("line", "column") @:native("FieldPos") function fieldPos(field: go.GoInt): (go.Tuple<{ line: go.GoInt, column: go.GoInt }>);
     @:native("InputOffset") function inputOffset(): (go.Int64);

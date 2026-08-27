@@ -28,7 +28,7 @@ extern class Dysymtab {
     @:native("Locreloff") var locreloff: go.UInt32;
     @:native("Nlocrel") var nlocrel: go.UInt32;
 
-    function new(loadBytes: go.debug.macho.LoadBytes, dysymtabCmd: go.debug.macho.DysymtabCmd, indirectSyms: go.Slice<go.UInt32>);
+    function new(loadBytes: go.debug.macho.LoadBytes=null, dysymtabCmd: go.debug.macho.DysymtabCmd, indirectSyms: go.Slice<go.UInt32>=null);
 
     @:native("Raw") function raw(): (go.Slice<go.Byte>);
 

@@ -14,7 +14,7 @@ extern class Handler {
     @:native("Stderr") var stderr: go.io.Writer;
     @:native("PathLocationHandler") var pathLocationHandler: go.net.http.Handler;
 
-    function new(path: String, root: String, dir: String, env: go.Slice<String>, inheritEnv: go.Slice<String>, logger: go.Pointer<go.log.Logger>, args: go.Slice<String>, stderr: go.io.Writer, pathLocationHandler: go.net.http.Handler);
+    function new(path: String="", root: String="", dir: String="", env: go.Slice<String>=null, inheritEnv: go.Slice<String>=null, logger: go.Pointer<go.log.Logger>=null, args: go.Slice<String>=null, stderr: go.io.Writer=null, pathLocationHandler: go.net.http.Handler=null);
 
     @:native("ServeHTTP") function serveHTTP(rw: go.net.http.ResponseWriter, req: go.Pointer<go.net.http.Request>): Void;
 

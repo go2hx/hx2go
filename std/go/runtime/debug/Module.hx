@@ -9,6 +9,6 @@ extern class Module {
     @:native("Sum") var sum: String;
     @:native("Replace") var replace: go.Pointer<go.runtime.debug.Module>;
 
-    function new(path: String, version: String, sum: String, replace: go.Pointer<go.runtime.debug.Module>);
+    function new(path: String="", version: String="", sum: String="", replace: go.Pointer<go.runtime.debug.Module>=null);
 
 }

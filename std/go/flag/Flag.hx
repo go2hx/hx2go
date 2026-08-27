@@ -9,6 +9,6 @@ extern class Flag {
     @:native("Value") var value: go.flag.Value;
     @:native("DefValue") var defValue: String;
 
-    function new(name: String, usage: String, value: go.flag.Value, defValue: String);
+    function new(name: String="", usage: String="", value: go.flag.Value=null, defValue: String="");
 
 }

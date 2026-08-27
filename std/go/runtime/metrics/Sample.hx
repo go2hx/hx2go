@@ -7,6 +7,6 @@ extern class Sample {
     @:native("Name") var name: String;
     @:native("Value") var value: go.runtime.metrics.Value;
 
-    function new(name: String, value: go.runtime.metrics.Value);
+    function new(name: String="", value: go.runtime.metrics.Value);
 
 }

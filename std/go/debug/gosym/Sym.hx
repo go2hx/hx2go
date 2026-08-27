@@ -10,7 +10,7 @@ extern class Sym {
     @:native("GoType") var goType: go.UInt64;
     @:native("Func") var func: go.Pointer<go.debug.gosym.Func>;
 
-    function new(value: go.UInt64, type: go.Byte, name: String, goType: go.UInt64, func: go.Pointer<go.debug.gosym.Func>);
+    function new(value: go.UInt64=0, type: go.Byte=0, name: String="", goType: go.UInt64=0, func: go.Pointer<go.debug.gosym.Func>=null);
 
     @:native("BaseName") function baseName(): (String);
     @:native("PackageName") function packageName(): (String);

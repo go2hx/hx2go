@@ -18,7 +18,7 @@ extern class File {
     @:native("Cmdsz") var cmdsz: go.UInt32;
     @:native("Flags") var flags: go.UInt32;
 
-    function new(fileHeader: go.debug.macho.FileHeader, byteOrder: go.encoding.binary.ByteOrder, loads: go.Slice<go.debug.macho.Load>, sections: go.Slice<go.Pointer<go.debug.macho.Section>>, symtab: go.Pointer<go.debug.macho.Symtab>, dysymtab: go.Pointer<go.debug.macho.Dysymtab>);
+    function new(fileHeader: go.debug.macho.FileHeader, byteOrder: go.encoding.binary.ByteOrder=null, loads: go.Slice<go.debug.macho.Load>=null, sections: go.Slice<go.Pointer<go.debug.macho.Section>>=null, symtab: go.Pointer<go.debug.macho.Symtab>=null, dysymtab: go.Pointer<go.debug.macho.Dysymtab>=null);
 
     @:native("Close") function close(): (go.Error);
     @:native("DWARF") function DWARF(): (go.Result<go.Pointer<go.debug.dwarf.Data>>);

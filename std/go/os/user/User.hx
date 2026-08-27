@@ -10,7 +10,7 @@ extern class User {
     @:native("Name") var name: String;
     @:native("HomeDir") var homeDir: String;
 
-    function new(uid: String, gid: String, username: String, name: String, homeDir: String);
+    function new(uid: String="", gid: String="", username: String="", name: String="", homeDir: String="");
 
     @:native("GroupIds") function groupIds(): (go.Result<go.Slice<String>>);
 

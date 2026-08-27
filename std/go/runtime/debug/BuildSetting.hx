@@ -7,6 +7,6 @@ extern class BuildSetting {
     @:native("Key") var key: String;
     @:native("Value") var value: String;
 
-    function new(key: String, value: String);
+    function new(key: String="", value: String="");
 
 }

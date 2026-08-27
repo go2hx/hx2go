@@ -19,7 +19,7 @@ extern class Segment {
     @:native("Nsect") var nsect: go.UInt32;
     @:native("Flag") var flag: go.UInt32;
 
-    function new(loadBytes: go.debug.macho.LoadBytes, segmentHeader: go.debug.macho.SegmentHeader, readerAt: go.io.ReaderAt);
+    function new(loadBytes: go.debug.macho.LoadBytes=null, segmentHeader: go.debug.macho.SegmentHeader, readerAt: go.io.ReaderAt=null);
 
     @:native("Data") function data(): (go.Result<go.Slice<go.Byte>>);
     @:native("Open") function open(): (go.io.ReadSeeker);

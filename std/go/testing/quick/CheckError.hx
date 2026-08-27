@@ -7,7 +7,7 @@ extern class CheckError {
     @:native("Count") var count: go.GoInt;
     @:native("In") var _in: go.Slice<Dynamic>;
 
-    function new(count: go.GoInt, _in: go.Slice<Dynamic>);
+    function new(count: go.GoInt=0, _in: go.Slice<Dynamic>=null);
 
     @:native("Error") function error(): (String);
 

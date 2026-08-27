@@ -7,7 +7,7 @@ extern class Point {
     @:native("X") var X: go.GoInt;
     @:native("Y") var Y: go.GoInt;
 
-    function new(X: go.GoInt, Y: go.GoInt);
+    function new(X: go.GoInt=0, Y: go.GoInt=0);
 
     @:native("Add") function add(q: go.image.Point): (go.image.Point);
     @:native("Div") function div(k: go.GoInt): (go.image.Point);

@@ -6,7 +6,7 @@ extern class SystemRootsError {
 
     @:native("Err") var err: go.Error;
 
-    function new(err: go.Error);
+    function new(err: go.Error=null);
 
     @:native("Error") function error(): (String);
     @:native("Unwrap") function unwrap(): (go.Error);

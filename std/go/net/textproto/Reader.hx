@@ -6,7 +6,7 @@ extern class Reader {
 
     @:native("R") var R: go.Pointer<go.bufio.Reader>;
 
-    function new(R: go.Pointer<go.bufio.Reader>);
+    function new(R: go.Pointer<go.bufio.Reader>=null);
 
     @:native("DotReader") function dotReader(): (go.io.Reader);
     @:go.Tuple("code", "message", "err") @:native("ReadCodeLine") function readCodeLine(expectCode: go.GoInt): (go.Tuple<{ code: go.GoInt, message: String, err: go.Error }>);

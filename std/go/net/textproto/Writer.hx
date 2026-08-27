@@ -6,7 +6,7 @@ extern class Writer {
 
     @:native("W") var W: go.Pointer<go.bufio.Writer>;
 
-    function new(W: go.Pointer<go.bufio.Writer>);
+    function new(W: go.Pointer<go.bufio.Writer>=null);
 
     @:native("DotWriter") function dotWriter(): (go.io.WriteCloser);
     @:native("PrintfLine") function printfLine(format: String, args: haxe.Rest<Dynamic>): (go.Error);

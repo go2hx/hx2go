@@ -8,6 +8,6 @@ extern class Block {
     @:native("Headers") var headers: go.Map<String, String>;
     @:native("Bytes") var bytes: go.Slice<go.Byte>;
 
-    function new(type: String, headers: go.Map<String, String>, bytes: go.Slice<go.Byte>);
+    function new(type: String="", headers: go.Map<String, String>=null, bytes: go.Slice<go.Byte>=null);
 
 }

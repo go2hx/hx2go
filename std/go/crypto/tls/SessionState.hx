@@ -7,7 +7,7 @@ extern class SessionState {
     @:native("Extra") var extra: go.Slice<go.Slice<go.Byte>>;
     @:native("EarlyData") var earlyData: Bool;
 
-    function new(extra: go.Slice<go.Slice<go.Byte>>, earlyData: Bool);
+    function new(extra: go.Slice<go.Slice<go.Byte>>=null, earlyData: Bool=false);
 
     @:native("Bytes") function bytes(): (go.Result<go.Slice<go.Byte>>);
 

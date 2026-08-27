@@ -9,6 +9,6 @@ extern class MapFile {
     @:native("ModTime") var modTime: go.time.Time;
     @:native("Sys") var sys: Dynamic;
 
-    function new(data: go.Slice<go.Byte>, mode: go.io.fs.FileMode, modTime: go.time.Time, sys: Dynamic);
+    function new(data: go.Slice<go.Byte>=null, mode: go.io.fs.FileMode=cast 0, modTime: go.time.Time, sys: Dynamic=null);
 
 }

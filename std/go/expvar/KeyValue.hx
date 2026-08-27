@@ -7,6 +7,6 @@ extern class KeyValue {
     @:native("Key") var key: String;
     @:native("Value") var value: go.expvar.Var;
 
-    function new(key: String, value: go.expvar.Var);
+    function new(key: String="", value: go.expvar.Var=null);
 
 }

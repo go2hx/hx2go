@@ -3,10 +3,10 @@ package go.go;
 @:go.Type({ name: "build", instanceName: "build.build", imports: ["go/build"] })
 extern class Build {
 
-    @:native("AllowBinary") static var AllowBinary: go.go.build.ImportMode;
-    @:native("FindOnly") static var FindOnly: go.go.build.ImportMode;
-    @:native("IgnoreVendor") static var IgnoreVendor: go.go.build.ImportMode;
-    @:native("ImportComment") static var ImportComment: go.go.build.ImportMode;
+    @:native("AllowBinary") static var allowBinary: go.go.build.ImportMode;
+    @:native("FindOnly") static var findOnly: go.go.build.ImportMode;
+    @:native("IgnoreVendor") static var ignoreVendor: go.go.build.ImportMode;
+    @:native("ImportComment") static var importComment: go.go.build.ImportMode;
 
     @:native("Default") static var _default: go.go.build.Context;
     @:native("ToolDir") static var toolDir: String;

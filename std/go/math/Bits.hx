@@ -3,7 +3,7 @@ package go.math;
 @:go.Type({ name: "bits", instanceName: "bits.bits", imports: ["math/bits"] })
 extern class Bits {
 
-    @:native("UintSize") static var UintSize: go.GoInt;
+    @:native("UintSize") static var uintSize: go.GoInt;
 
     @:go.Tuple("sum", "carryOut") @:native("Add") static function add(x: go.GoUInt, y: go.GoUInt, carry: go.GoUInt): (go.Tuple<{ sum: go.GoUInt, carryOut: go.GoUInt }>);
     @:go.Tuple("sum", "carryOut") @:native("Add32") static function add32(x: go.UInt32, y: go.UInt32, carry: go.UInt32): (go.Tuple<{ sum: go.UInt32, carryOut: go.UInt32 }>);

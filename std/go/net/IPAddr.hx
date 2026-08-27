@@ -7,7 +7,7 @@ extern class IPAddr {
     @:native("IP") var IP: go.net.IP;
     @:native("Zone") var zone: String;
 
-    function new(IP: go.net.IP, zone: String);
+    function new(IP: go.net.IP=null, zone: String="");
 
     @:native("Network") function network(): (String);
     @:native("String") function string(): (String);

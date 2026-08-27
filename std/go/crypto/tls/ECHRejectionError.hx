@@ -6,7 +6,7 @@ extern class ECHRejectionError {
 
     @:native("RetryConfigList") var retryConfigList: go.Slice<go.Byte>;
 
-    function new(retryConfigList: go.Slice<go.Byte>);
+    function new(retryConfigList: go.Slice<go.Byte>=null);
 
     @:native("Error") function error(): (String);
 

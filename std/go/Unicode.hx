@@ -3,16 +3,16 @@ package go;
 @:go.Type({ name: "unicode", instanceName: "unicode.unicode", imports: ["unicode"] })
 extern class Unicode {
 
-    @:native("LowerCase") static var LowerCase: go.GoInt;
-    @:native("MaxASCII") static var MaxASCII: go.Rune;
-    @:native("MaxCase") static var MaxCase: go.GoInt;
-    @:native("MaxLatin1") static var MaxLatin1: go.Rune;
-    @:native("MaxRune") static var MaxRune: go.Rune;
-    @:native("ReplacementChar") static var ReplacementChar: go.Rune;
-    @:native("TitleCase") static var TitleCase: go.GoInt;
-    @:native("UpperCase") static var UpperCase: go.GoInt;
-    @:native("UpperLower") static var UpperLower: go.Rune;
-    @:native("Version") static var Version: String;
+    @:native("LowerCase") static var lowerCase: go.GoInt;
+    @:native("MaxASCII") static var maxASCII: go.Rune;
+    @:native("MaxCase") static var maxCase: go.GoInt;
+    @:native("MaxLatin1") static var maxLatin1: go.Rune;
+    @:native("MaxRune") static var maxRune: go.Rune;
+    @:native("ReplacementChar") static var replacementChar: go.Rune;
+    @:native("TitleCase") static var titleCase: go.GoInt;
+    @:native("UpperCase") static var upperCase: go.GoInt;
+    @:native("UpperLower") static var upperLower: go.Rune;
+    @:native("Version") static var version: String;
 
     @:native("ASCII_Hex_Digit") static var aSCII_Hex_Digit: go.Pointer<go.unicode.RangeTable>;
     @:native("Adlam") static var adlam: go.Pointer<go.unicode.RangeTable>;

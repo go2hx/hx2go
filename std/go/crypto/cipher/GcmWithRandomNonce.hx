@@ -6,7 +6,7 @@ extern class GcmWithRandomNonce {
 
     @:native("GCM") var GCM: go.Pointer<Dynamic>;
 
-    function new(GCM: go.Pointer<Dynamic>);
+    function new(GCM: go.Pointer<Dynamic>=null);
 
     @:native("NonceSize") function nonceSize(): (go.GoInt);
     @:native("Open") function open(dst: go.Slice<go.Byte>, nonce: go.Slice<go.Byte>, ciphertext: go.Slice<go.Byte>, additionalData: go.Slice<go.Byte>): (go.Result<go.Slice<go.Byte>>);

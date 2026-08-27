@@ -15,7 +15,7 @@ extern class Prog {
     @:native("Memsz") var memsz: go.UInt64;
     @:native("Align") var align: go.UInt64;
 
-    function new(progHeader: go.debug.elf.ProgHeader, readerAt: go.io.ReaderAt);
+    function new(progHeader: go.debug.elf.ProgHeader, readerAt: go.io.ReaderAt=null);
 
     @:native("Open") function open(): (go.io.ReadSeeker);
     @:native("ReadAt") function readAt(p: go.Slice<go.Byte>, off: go.Int64): (go.Result<go.GoInt>);

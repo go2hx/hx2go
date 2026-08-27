@@ -9,7 +9,7 @@ extern class Record {
     @:native("Level") var level: go.log.slog.Level;
     @:native("PC") var PC: go.UIntPtr;
 
-    function new(time: go.time.Time, message: String, level: go.log.slog.Level, PC: go.UIntPtr);
+    function new(time: go.time.Time, message: String="", level: go.log.slog.Level=cast 0, PC: go.UIntPtr=0);
 
     @:native("Add") function add(args: haxe.Rest<Dynamic>): Void;
     @:native("AddAttrs") function addAttrs(attrs: haxe.Rest<go.log.slog.Attr>): Void;

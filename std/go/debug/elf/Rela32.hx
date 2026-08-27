@@ -8,6 +8,6 @@ extern class Rela32 {
     @:native("Info") var info: go.UInt32;
     @:native("Addend") var addend: go.Int32;
 
-    function new(off: go.UInt32, info: go.UInt32, addend: go.Int32);
+    function new(off: go.UInt32=0, info: go.UInt32=0, addend: go.Int32=0);
 
 }

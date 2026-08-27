@@ -15,7 +15,7 @@ extern class Checker {
     @:native("InitOrder") var initOrder: go.Slice<go.Pointer<go.go.types.Initializer>>;
     @:native("FileVersions") var fileVersions: go.Map<go.Pointer<go.go.ast.File>, String>;
 
-    function new(info: go.Pointer<go.go.types.Info>);
+    function new(info: go.Pointer<go.go.types.Info>=null);
 
     @:native("Files") function files(files: go.Slice<go.Pointer<go.go.ast.File>>): (go.Error);
     @:native("ObjectOf") function objectOf(id: go.Pointer<go.go.ast.Ident>): (go.go.types.Object);

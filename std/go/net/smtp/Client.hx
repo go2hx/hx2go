@@ -6,7 +6,7 @@ extern class Client {
 
     @:native("Text") var text: go.Pointer<go.net.textproto.Conn>;
 
-    function new(text: go.Pointer<go.net.textproto.Conn>);
+    function new(text: go.Pointer<go.net.textproto.Conn>=null);
 
     @:native("Auth") function auth(a: go.net.smtp.Auth): (go.Error);
     @:native("Close") function close(): (go.Error);

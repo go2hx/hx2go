@@ -9,7 +9,7 @@ extern class TypedefType {
     @:native("ByteSize") var byteSize: go.Int64;
     @:native("Name") var name: String;
 
-    function new(commonType: go.debug.dwarf.CommonType, type: go.debug.dwarf.Type);
+    function new(commonType: go.debug.dwarf.CommonType, type: go.debug.dwarf.Type=null);
 
     @:native("Common") function common(): (go.Pointer<go.debug.dwarf.CommonType>);
     @:native("Size") function size(): (go.Int64);

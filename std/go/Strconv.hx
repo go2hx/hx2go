@@ -3,7 +3,7 @@ package go;
 @:go.Type({ name: "strconv", instanceName: "strconv.strconv", imports: ["strconv"] })
 extern class Strconv {
 
-    @:native("IntSize") static var IntSize: go.GoInt;
+    @:native("IntSize") static var intSize: go.GoInt;
 
     @:native("AppendBool") static function appendBool(dst: go.Slice<go.Byte>, b: Bool): (go.Slice<go.Byte>);
     @:native("AppendFloat") static function appendFloat(dst: go.Slice<go.Byte>, f: Float, fmt: go.Byte, prec: go.GoInt, bitSize: go.GoInt): (go.Slice<go.Byte>);

@@ -6,7 +6,7 @@ extern class FileWithoutReadFrom {
 
     @:native("File") var file: go.Pointer<go.os.File>;
 
-    function new(file: go.Pointer<go.os.File>);
+    function new(file: go.Pointer<go.os.File>=null);
 
     @:native("Chdir") function chdir(): (go.Error);
     @:native("Chmod") function chmod(mode: go.os.FileMode): (go.Error);

@@ -8,6 +8,6 @@ extern class DynamicVersionDep {
     @:native("Index") var index: go.UInt16;
     @:native("Dep") var dep: String;
 
-    function new(flags: go.debug.elf.DynamicVersionFlag, index: go.UInt16, dep: String);
+    function new(flags: go.debug.elf.DynamicVersionFlag=cast 0, index: go.UInt16=0, dep: String="");
 
 }

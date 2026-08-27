@@ -11,7 +11,7 @@ extern class OnePassInst {
     @:native("Arg") var arg: go.UInt32;
     @:native("Rune") var rune: go.Slice<go.Rune>;
 
-    function new(inst: go.regexp.syntax.Inst, next: go.Slice<go.UInt32>);
+    function new(inst: go.regexp.syntax.Inst, next: go.Slice<go.UInt32>=null);
 
     @:native("MatchEmptyWidth") function matchEmptyWidth(before: go.Rune, after: go.Rune): (Bool);
     @:native("MatchRune") function matchRune(r: go.Rune): (Bool);

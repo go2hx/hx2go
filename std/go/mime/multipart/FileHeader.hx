@@ -8,7 +8,7 @@ extern class FileHeader {
     @:native("Header") var header: go.net.textproto.MIMEHeader;
     @:native("Size") var size: go.Int64;
 
-    function new(filename: String, header: go.net.textproto.MIMEHeader, size: go.Int64);
+    function new(filename: String="", header: go.net.textproto.MIMEHeader=null, size: go.Int64=0);
 
     @:native("Open") function open(): (go.Result<go.mime.multipart.File>);
 

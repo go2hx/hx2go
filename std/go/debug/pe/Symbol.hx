@@ -10,6 +10,6 @@ extern class Symbol {
     @:native("Type") var type: go.UInt16;
     @:native("StorageClass") var storageClass: go.UInt8;
 
-    function new(name: String, value: go.UInt32, sectionNumber: go.Int16, type: go.UInt16, storageClass: go.UInt8);
+    function new(name: String="", value: go.UInt32=0, sectionNumber: go.Int16=0, type: go.UInt16=0, storageClass: go.UInt8=0);
 
 }

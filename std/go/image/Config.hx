@@ -8,6 +8,6 @@ extern class Config {
     @:native("Width") var width: go.GoInt;
     @:native("Height") var height: go.GoInt;
 
-    function new(colorModel: go.image.color.Model, width: go.GoInt, height: go.GoInt);
+    function new(colorModel: go.image.color.Model=null, width: go.GoInt=0, height: go.GoInt=0);
 
 }

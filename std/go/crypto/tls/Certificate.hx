@@ -11,6 +11,6 @@ extern class Certificate {
     @:native("SignedCertificateTimestamps") var signedCertificateTimestamps: go.Slice<go.Slice<go.Byte>>;
     @:native("Leaf") var leaf: go.Pointer<go.crypto.x509.Certificate>;
 
-    function new(certificate: go.Slice<go.Slice<go.Byte>>, privateKey: go.crypto.PrivateKey, supportedSignatureAlgorithms: go.Slice<go.crypto.tls.SignatureScheme>, oCSPStaple: go.Slice<go.Byte>, signedCertificateTimestamps: go.Slice<go.Slice<go.Byte>>, leaf: go.Pointer<go.crypto.x509.Certificate>);
+    function new(certificate: go.Slice<go.Slice<go.Byte>>=null, privateKey: go.crypto.PrivateKey=null, supportedSignatureAlgorithms: go.Slice<go.crypto.tls.SignatureScheme>=null, oCSPStaple: go.Slice<go.Byte>=null, signedCertificateTimestamps: go.Slice<go.Slice<go.Byte>>=null, leaf: go.Pointer<go.crypto.x509.Certificate>=null);
 
 }

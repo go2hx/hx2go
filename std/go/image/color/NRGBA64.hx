@@ -9,7 +9,7 @@ extern class NRGBA64 {
     @:native("B") var B: go.UInt16;
     @:native("A") var A: go.UInt16;
 
-    function new(R: go.UInt16, G: go.UInt16, B: go.UInt16, A: go.UInt16);
+    function new(R: go.UInt16=0, G: go.UInt16=0, B: go.UInt16=0, A: go.UInt16=0);
 
     @:go.Tuple("r", "g", "b", "a") @:native("RGBA") function RGBA(): (go.Tuple<{ r: go.UInt32, g: go.UInt32, b: go.UInt32, a: go.UInt32 }>);
 

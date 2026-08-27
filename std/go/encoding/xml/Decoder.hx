@@ -10,7 +10,7 @@ extern class Decoder {
     @:native("CharsetReader") var charsetReader: (charset: String, input: go.io.Reader) -> (go.Result<go.io.Reader>);
     @:native("DefaultSpace") var defaultSpace: String;
 
-    function new(strict: Bool, autoClose: go.Slice<String>, entity: go.Map<String, String>, charsetReader: (charset: String, input: go.io.Reader) -> (go.Result<go.io.Reader>), defaultSpace: String);
+    function new(strict: Bool=false, autoClose: go.Slice<String>=null, entity: go.Map<String, String>=null, charsetReader: (charset: String, input: go.io.Reader) -> (go.Result<go.io.Reader>)=null, defaultSpace: String="");
 
     @:native("Decode") function decode(v: Dynamic): (go.Error);
     @:native("DecodeElement") function decodeElement(v: Dynamic, start: go.Pointer<go.encoding.xml.StartElement>): (go.Error);

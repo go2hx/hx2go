@@ -9,6 +9,6 @@ extern class Cover {
     @:native("Blocks") var blocks: go.Map<String, go.Slice<go.testing.CoverBlock>>;
     @:native("CoveredPackages") var coveredPackages: String;
 
-    function new(mode: String, counters: go.Map<String, go.Slice<go.UInt32>>, blocks: go.Map<String, go.Slice<go.testing.CoverBlock>>, coveredPackages: String);
+    function new(mode: String="", counters: go.Map<String, go.Slice<go.UInt32>>=null, blocks: go.Map<String, go.Slice<go.testing.CoverBlock>>=null, coveredPackages: String="");
 
 }

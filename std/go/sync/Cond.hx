@@ -6,7 +6,7 @@ extern class Cond {
 
     @:native("L") var L: go.sync.Locker;
 
-    function new(L: go.sync.Locker);
+    function new(L: go.sync.Locker=null);
 
     @:native("Broadcast") function broadcast(): Void;
     @:native("Signal") function signal(): Void;

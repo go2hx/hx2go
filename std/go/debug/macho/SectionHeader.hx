@@ -14,6 +14,6 @@ extern class SectionHeader {
     @:native("Nreloc") var nreloc: go.UInt32;
     @:native("Flags") var flags: go.UInt32;
 
-    function new(name: String, seg: String, addr: go.UInt64, size: go.UInt64, offset: go.UInt32, align: go.UInt32, reloff: go.UInt32, nreloc: go.UInt32, flags: go.UInt32);
+    function new(name: String="", seg: String="", addr: go.UInt64=0, size: go.UInt64=0, offset: go.UInt32=0, align: go.UInt32=0, reloff: go.UInt32=0, nreloc: go.UInt32=0, flags: go.UInt32=0);
 
 }

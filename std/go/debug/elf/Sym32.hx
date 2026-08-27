@@ -11,6 +11,6 @@ extern class Sym32 {
     @:native("Other") var other: go.UInt8;
     @:native("Shndx") var shndx: go.UInt16;
 
-    function new(name: go.UInt32, value: go.UInt32, size: go.UInt32, info: go.UInt8, other: go.UInt8, shndx: go.UInt16);
+    function new(name: go.UInt32=0, value: go.UInt32=0, size: go.UInt32=0, info: go.UInt8=0, other: go.UInt8=0, shndx: go.UInt16=0);
 
 }

@@ -10,6 +10,6 @@ extern class DriverRequest {
     @:native("Tests") var tests: Bool;
     @:native("Overlay") var overlay: go.Map<String, go.Slice<go.Byte>>;
 
-    function new(mode: go.golang_org.x.tools.go.packages.LoadMode, env: go.Slice<String>, buildFlags: go.Slice<String>, tests: Bool, overlay: go.Map<String, go.Slice<go.Byte>>);
+    function new(mode: go.golang_org.x.tools.go.packages.LoadMode=cast 0, env: go.Slice<String>=null, buildFlags: go.Slice<String>=null, tests: Bool=false, overlay: go.Map<String, go.Slice<go.Byte>>=null);
 
 }

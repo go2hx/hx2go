@@ -7,7 +7,7 @@ extern class Comment {
     @:native("Slash") var slash: go.go.token.Pos;
     @:native("Text") var text: String;
 
-    function new(slash: go.go.token.Pos, text: String);
+    function new(slash: go.go.token.Pos=cast 0, text: String="");
 
     @:native("End") function end(): (go.go.token.Pos);
     @:native("Pos") function pos(): (go.go.token.Pos);

@@ -9,7 +9,7 @@ extern class Tree {
     @:native("Root") var root: go.Pointer<go.text.template.parse.ListNode>;
     @:native("Mode") var mode: go.text.template.parse.Mode;
 
-    function new(name: String, parseName: String, root: go.Pointer<go.text.template.parse.ListNode>, mode: go.text.template.parse.Mode);
+    function new(name: String="", parseName: String="", root: go.Pointer<go.text.template.parse.ListNode>=null, mode: go.text.template.parse.Mode=cast 0);
 
     @:native("Copy") function copy(): (go.Pointer<go.text.template.parse.Tree>);
     @:go.Tuple("location", "context") @:native("ErrorContext") function errorContext(n: go.text.template.parse.Node): (go.Tuple<{ location: String, context: String }>);

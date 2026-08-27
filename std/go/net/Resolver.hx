@@ -8,7 +8,7 @@ extern class Resolver {
     @:native("StrictErrors") var strictErrors: Bool;
     @:native("Dial") var dial: (ctx: go.context.Context, network: String, address: String) -> (go.Result<go.net.Conn>);
 
-    function new(preferGo: Bool, strictErrors: Bool, dial: (ctx: go.context.Context, network: String, address: String) -> (go.Result<go.net.Conn>));
+    function new(preferGo: Bool=false, strictErrors: Bool=false, dial: (ctx: go.context.Context, network: String, address: String) -> (go.Result<go.net.Conn>)=null);
 
     @:native("LookupAddr") function lookupAddr(ctx: go.context.Context, addr: String): (go.Result<go.Slice<String>>);
     @:native("LookupCNAME") function lookupCNAME(ctx: go.context.Context, host: String): (go.Result<String>);

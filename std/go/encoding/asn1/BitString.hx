@@ -7,7 +7,7 @@ extern class BitString {
     @:native("Bytes") var bytes: go.Slice<go.Byte>;
     @:native("BitLength") var bitLength: go.GoInt;
 
-    function new(bytes: go.Slice<go.Byte>, bitLength: go.GoInt);
+    function new(bytes: go.Slice<go.Byte>=null, bitLength: go.GoInt=0);
 
     @:native("At") function at(i: go.GoInt): (go.GoInt);
     @:native("RightAlign") function rightAlign(): (go.Slice<go.Byte>);

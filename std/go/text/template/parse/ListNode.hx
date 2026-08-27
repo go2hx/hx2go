@@ -8,7 +8,7 @@ extern class ListNode {
     @:native("Pos") var pos: go.text.template.parse.Pos;
     @:native("Nodes") var nodes: go.Slice<go.text.template.parse.Node>;
 
-    function new(nodeType: go.text.template.parse.NodeType, pos: go.text.template.parse.Pos, nodes: go.Slice<go.text.template.parse.Node>);
+    function new(nodeType: go.text.template.parse.NodeType=cast 0, pos: go.text.template.parse.Pos=cast 0, nodes: go.Slice<go.text.template.parse.Node>=null);
 
     @:native("Copy") function copy(): (go.text.template.parse.Node);
     @:native("CopyList") function copyList(): (go.Pointer<go.text.template.parse.ListNode>);

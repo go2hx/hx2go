@@ -3,9 +3,9 @@ package go.encoding;
 @:go.Type({ name: "binary", instanceName: "binary.binary", imports: ["encoding/binary"] })
 extern class Binary {
 
-    @:native("MaxVarintLen16") static var MaxVarintLen16: go.GoInt;
-    @:native("MaxVarintLen32") static var MaxVarintLen32: go.GoInt;
-    @:native("MaxVarintLen64") static var MaxVarintLen64: go.GoInt;
+    @:native("MaxVarintLen16") static var maxVarintLen16: go.GoInt;
+    @:native("MaxVarintLen32") static var maxVarintLen32: go.GoInt;
+    @:native("MaxVarintLen64") static var maxVarintLen64: go.GoInt;
 
     @:native("Append") static function append(buf: go.Slice<go.Byte>, order: go.encoding.binary.ByteOrder, data: Dynamic): (go.Result<go.Slice<go.Byte>>);
     @:native("AppendUvarint") static function appendUvarint(buf: go.Slice<go.Byte>, x: go.UInt64): (go.Slice<go.Byte>);

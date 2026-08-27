@@ -3,7 +3,7 @@ package go;
 @:go.Type({ name: "bufio", instanceName: "bufio.bufio", imports: ["bufio"] })
 extern class Bufio {
 
-    @:native("MaxScanTokenSize") static var MaxScanTokenSize: go.GoInt;
+    @:native("MaxScanTokenSize") static var maxScanTokenSize: go.GoInt;
 
     @:native("NewReadWriter") static function newReadWriter(r: go.Pointer<go.bufio.Reader>, w: go.Pointer<go.bufio.Writer>): (go.Pointer<go.bufio.ReadWriter>);
     @:native("NewReader") static function newReader(rd: go.io.Reader): (go.Pointer<go.bufio.Reader>);

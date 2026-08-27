@@ -3,10 +3,10 @@ package go.unicode;
 @:go.Type({ name: "utf8", instanceName: "utf8.utf8", imports: ["unicode/utf8"] })
 extern class Utf8 {
 
-    @:native("MaxRune") static var MaxRune: go.Rune;
-    @:native("RuneError") static var RuneError: go.Rune;
-    @:native("RuneSelf") static var RuneSelf: go.GoInt;
-    @:native("UTFMax") static var UTFMax: go.GoInt;
+    @:native("MaxRune") static var maxRune: go.Rune;
+    @:native("RuneError") static var runeError: go.Rune;
+    @:native("RuneSelf") static var runeSelf: go.GoInt;
+    @:native("UTFMax") static var uTFMax: go.GoInt;
 
     @:native("AppendRune") static function appendRune(p: go.Slice<go.Byte>, r: go.Rune): (go.Slice<go.Byte>);
     @:go.Tuple("r", "size") @:native("DecodeLastRune") static function decodeLastRune(p: go.Slice<go.Byte>): (go.Tuple<{ r: go.Rune, size: go.GoInt }>);

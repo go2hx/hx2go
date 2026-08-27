@@ -11,6 +11,6 @@ extern class SymtabCmd {
     @:native("Stroff") var stroff: go.UInt32;
     @:native("Strsize") var strsize: go.UInt32;
 
-    function new(cmd: go.debug.macho.LoadCmd, len: go.UInt32, symoff: go.UInt32, nsyms: go.UInt32, stroff: go.UInt32, strsize: go.UInt32);
+    function new(cmd: go.debug.macho.LoadCmd=cast 0, len: go.UInt32=0, symoff: go.UInt32=0, nsyms: go.UInt32=0, stroff: go.UInt32=0, strsize: go.UInt32=0);
 
 }

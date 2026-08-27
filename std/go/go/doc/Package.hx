@@ -17,7 +17,7 @@ extern class Package {
     @:native("Funcs") var funcs: go.Slice<go.Pointer<go.go.doc.Func>>;
     @:native("Examples") var examples: go.Slice<go.Pointer<go.go.doc.Example>>;
 
-    function new(doc: String, name: String, importPath: String, imports: go.Slice<String>, filenames: go.Slice<String>, notes: go.Map<String, go.Slice<go.Pointer<go.go.doc.Note>>>, bugs: go.Slice<String>, consts: go.Slice<go.Pointer<go.go.doc.Value>>, types: go.Slice<go.Pointer<go.go.doc.Type>>, vars: go.Slice<go.Pointer<go.go.doc.Value>>, funcs: go.Slice<go.Pointer<go.go.doc.Func>>, examples: go.Slice<go.Pointer<go.go.doc.Example>>);
+    function new(doc: String="", name: String="", importPath: String="", imports: go.Slice<String>=null, filenames: go.Slice<String>=null, notes: go.Map<String, go.Slice<go.Pointer<go.go.doc.Note>>>=null, bugs: go.Slice<String>=null, consts: go.Slice<go.Pointer<go.go.doc.Value>>=null, types: go.Slice<go.Pointer<go.go.doc.Type>>=null, vars: go.Slice<go.Pointer<go.go.doc.Value>>=null, funcs: go.Slice<go.Pointer<go.go.doc.Func>>=null, examples: go.Slice<go.Pointer<go.go.doc.Example>>=null);
 
     @:native("Filter") function filter(f: go.go.doc.Filter): Void;
     @:native("HTML") function HTML(text: String): (go.Slice<go.Byte>);

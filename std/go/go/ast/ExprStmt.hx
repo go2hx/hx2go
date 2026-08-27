@@ -6,7 +6,7 @@ extern class ExprStmt {
 
     @:native("X") var X: go.go.ast.Expr;
 
-    function new(X: go.go.ast.Expr);
+    function new(X: go.go.ast.Expr=null);
 
     @:native("End") function end(): (go.go.token.Pos);
     @:native("Pos") function pos(): (go.go.token.Pos);

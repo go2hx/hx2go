@@ -27,7 +27,7 @@ extern class Request {
     @:native("Response") var response: go.Pointer<go.net.http.Response>;
     @:native("Pattern") var pattern: String;
 
-    function new(method: String, URL: go.Pointer<go.net.url.URL>, proto: String, protoMajor: go.GoInt, protoMinor: go.GoInt, header: go.net.http.Header, body: go.io.ReadCloser, getBody: () -> (go.Result<go.io.ReadCloser>), contentLength: go.Int64, transferEncoding: go.Slice<String>, close: Bool, host: String, form: go.net.url.Values, postForm: go.net.url.Values, multipartForm: go.Pointer<go.mime.multipart.Form>, trailer: go.net.http.Header, remoteAddr: String, requestURI: String, TLS: go.Pointer<go.crypto.tls.ConnectionState>, cancel: go.Chan<Dynamic>, response: go.Pointer<go.net.http.Response>, pattern: String);
+    function new(method: String="", URL: go.Pointer<go.net.url.URL>=null, proto: String="", protoMajor: go.GoInt=0, protoMinor: go.GoInt=0, header: go.net.http.Header=null, body: go.io.ReadCloser=null, getBody: () -> (go.Result<go.io.ReadCloser>)=null, contentLength: go.Int64=0, transferEncoding: go.Slice<String>=null, close: Bool=false, host: String="", form: go.net.url.Values=null, postForm: go.net.url.Values=null, multipartForm: go.Pointer<go.mime.multipart.Form>=null, trailer: go.net.http.Header=null, remoteAddr: String="", requestURI: String="", TLS: go.Pointer<go.crypto.tls.ConnectionState>=null, cancel: go.Chan<Dynamic>=null, response: go.Pointer<go.net.http.Response>=null, pattern: String="");
 
     @:native("AddCookie") function addCookie(c: go.Pointer<go.net.http.Cookie>): Void;
     @:go.Tuple("username", "password", "ok") @:native("BasicAuth") function basicAuth(): (go.Tuple<{ username: String, password: String, ok: Bool }>);

@@ -9,7 +9,7 @@ extern class ResponseRecorder {
     @:native("Body") var body: go.Pointer<go.bytes.Buffer>;
     @:native("Flushed") var flushed: Bool;
 
-    function new(code: go.GoInt, headerMap: go.net.http.Header, body: go.Pointer<go.bytes.Buffer>, flushed: Bool);
+    function new(code: go.GoInt=0, headerMap: go.net.http.Header=null, body: go.Pointer<go.bytes.Buffer>=null, flushed: Bool=false);
 
     @:native("Flush") function flush(): Void;
     @:native("Header") function header(): (go.net.http.Header);

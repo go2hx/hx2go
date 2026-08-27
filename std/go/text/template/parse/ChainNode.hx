@@ -9,7 +9,7 @@ extern class ChainNode {
     @:native("Node") var node: go.text.template.parse.Node;
     @:native("Field") var field: go.Slice<String>;
 
-    function new(nodeType: go.text.template.parse.NodeType, pos: go.text.template.parse.Pos, node: go.text.template.parse.Node, field: go.Slice<String>);
+    function new(nodeType: go.text.template.parse.NodeType=cast 0, pos: go.text.template.parse.Pos=cast 0, node: go.text.template.parse.Node=null, field: go.Slice<String>=null);
 
     @:native("Add") function add(field: String): Void;
     @:native("Copy") function copy(): (go.text.template.parse.Node);

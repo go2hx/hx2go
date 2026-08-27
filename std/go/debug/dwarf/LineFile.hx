@@ -8,6 +8,6 @@ extern class LineFile {
     @:native("Mtime") var mtime: go.UInt64;
     @:native("Length") var length: go.GoInt;
 
-    function new(name: String, mtime: go.UInt64, length: go.GoInt);
+    function new(name: String="", mtime: go.UInt64=0, length: go.GoInt=0);
 
 }

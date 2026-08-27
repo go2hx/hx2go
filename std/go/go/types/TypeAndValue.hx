@@ -7,7 +7,7 @@ extern class TypeAndValue {
     @:native("Type") var type: go.go.types.Type;
     @:native("Value") var value: go.go.constant.Value;
 
-    function new(type: go.go.types.Type, value: go.go.constant.Value);
+    function new(type: go.go.types.Type=null, value: go.go.constant.Value=null);
 
     @:native("Addressable") function addressable(): (Bool);
     @:native("Assignable") function assignable(): (Bool);

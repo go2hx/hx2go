@@ -1491,8 +1491,8 @@ extern class Elf {
     @:native("STV_HIDDEN") static var STV_HIDDEN: go.debug.elf.SymVis;
     @:native("STV_INTERNAL") static var STV_INTERNAL: go.debug.elf.SymVis;
     @:native("STV_PROTECTED") static var STV_PROTECTED: go.debug.elf.SymVis;
-    @:native("Sym32Size") static var Sym32Size: go.GoInt;
-    @:native("Sym64Size") static var Sym64Size: go.GoInt;
+    @:native("Sym32Size") static var sym32Size: go.GoInt;
+    @:native("Sym64Size") static var sym64Size: go.GoInt;
     @:native("VER_FLG_BASE") static var VER_FLG_BASE: go.debug.elf.DynamicVersionFlag;
     @:native("VER_FLG_INFO") static var VER_FLG_INFO: go.debug.elf.DynamicVersionFlag;
     @:native("VER_FLG_WEAK") static var VER_FLG_WEAK: go.debug.elf.DynamicVersionFlag;

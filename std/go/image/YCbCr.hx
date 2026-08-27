@@ -12,7 +12,7 @@ extern class YCbCr {
     @:native("SubsampleRatio") var subsampleRatio: go.image.YCbCrSubsampleRatio;
     @:native("Rect") var rect: go.image.Rectangle;
 
-    function new(Y: go.Slice<go.UInt8>, cb: go.Slice<go.UInt8>, cr: go.Slice<go.UInt8>, yStride: go.GoInt, cStride: go.GoInt, subsampleRatio: go.image.YCbCrSubsampleRatio, rect: go.image.Rectangle);
+    function new(Y: go.Slice<go.UInt8>=null, cb: go.Slice<go.UInt8>=null, cr: go.Slice<go.UInt8>=null, yStride: go.GoInt=0, cStride: go.GoInt=0, subsampleRatio: go.image.YCbCrSubsampleRatio=cast 0, rect: go.image.Rectangle);
 
     @:native("At") function at(x: go.GoInt, y: go.GoInt): (go.image.color.Color);
     @:native("Bounds") function bounds(): (go.image.Rectangle);

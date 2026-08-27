@@ -14,6 +14,6 @@ extern class FileHeader {
     @:native("Machine") var machine: go.debug.elf.Machine;
     @:native("Entry") var entry: go.UInt64;
 
-    function new(_class: go.debug.elf.Class, data: go.debug.elf.Data, version: go.debug.elf.Version, OSABI: go.debug.elf.OSABI, aBIVersion: go.UInt8, byteOrder: go.encoding.binary.ByteOrder, type: go.debug.elf.Type, machine: go.debug.elf.Machine, entry: go.UInt64);
+    function new(_class: go.debug.elf.Class=cast 0, data: go.debug.elf.Data=cast 0, version: go.debug.elf.Version=cast 0, OSABI: go.debug.elf.OSABI=cast 0, aBIVersion: go.UInt8=0, byteOrder: go.encoding.binary.ByteOrder=null, type: go.debug.elf.Type=cast 0, machine: go.debug.elf.Machine=cast 0, entry: go.UInt64=0);
 
 }

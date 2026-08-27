@@ -6,6 +6,6 @@ extern class Options {
 
     @:native("PublicSuffixList") var publicSuffixList: go.net.http.cookiejar.PublicSuffixList;
 
-    function new(publicSuffixList: go.net.http.cookiejar.PublicSuffixList);
+    function new(publicSuffixList: go.net.http.cookiejar.PublicSuffixList=null);
 
 }

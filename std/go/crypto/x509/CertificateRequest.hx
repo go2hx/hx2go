@@ -22,7 +22,7 @@ extern class CertificateRequest {
     @:native("IPAddresses") var iPAddresses: go.Slice<go.net.IP>;
     @:native("URIs") var uRIs: go.Slice<go.Pointer<go.net.url.URL>>;
 
-    function new(raw: go.Slice<go.Byte>, rawTBSCertificateRequest: go.Slice<go.Byte>, rawSubjectPublicKeyInfo: go.Slice<go.Byte>, rawSubject: go.Slice<go.Byte>, version: go.GoInt, signature: go.Slice<go.Byte>, signatureAlgorithm: go.crypto.x509.SignatureAlgorithm, publicKeyAlgorithm: go.crypto.x509.PublicKeyAlgorithm, publicKey: Dynamic, subject: go.crypto.x509.pkix.Name, attributes: go.Slice<go.crypto.x509.pkix.AttributeTypeAndValueSET>, extensions: go.Slice<go.crypto.x509.pkix.Extension>, extraExtensions: go.Slice<go.crypto.x509.pkix.Extension>, dNSNames: go.Slice<String>, emailAddresses: go.Slice<String>, iPAddresses: go.Slice<go.net.IP>, uRIs: go.Slice<go.Pointer<go.net.url.URL>>);
+    function new(raw: go.Slice<go.Byte>=null, rawTBSCertificateRequest: go.Slice<go.Byte>=null, rawSubjectPublicKeyInfo: go.Slice<go.Byte>=null, rawSubject: go.Slice<go.Byte>=null, version: go.GoInt=0, signature: go.Slice<go.Byte>=null, signatureAlgorithm: go.crypto.x509.SignatureAlgorithm=cast 0, publicKeyAlgorithm: go.crypto.x509.PublicKeyAlgorithm=cast 0, publicKey: Dynamic=null, subject: go.crypto.x509.pkix.Name, attributes: go.Slice<go.crypto.x509.pkix.AttributeTypeAndValueSET>=null, extensions: go.Slice<go.crypto.x509.pkix.Extension>=null, extraExtensions: go.Slice<go.crypto.x509.pkix.Extension>=null, dNSNames: go.Slice<String>=null, emailAddresses: go.Slice<String>=null, iPAddresses: go.Slice<go.net.IP>=null, uRIs: go.Slice<go.Pointer<go.net.url.URL>>=null);
 
     @:native("CheckSignature") function checkSignature(): (go.Error);
 

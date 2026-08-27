@@ -6,7 +6,7 @@ extern class UnknownAuthorityError {
 
     @:native("Cert") var cert: go.Pointer<go.crypto.x509.Certificate>;
 
-    function new(cert: go.Pointer<go.crypto.x509.Certificate>);
+    function new(cert: go.Pointer<go.crypto.x509.Certificate>=null);
 
     @:native("Error") function error(): (String);
 

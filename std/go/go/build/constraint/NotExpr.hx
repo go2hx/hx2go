@@ -6,7 +6,7 @@ extern class NotExpr {
 
     @:native("X") var X: go.go.build.constraint.Expr;
 
-    function new(X: go.go.build.constraint.Expr);
+    function new(X: go.go.build.constraint.Expr=null);
 
     @:native("Eval") function eval(ok: (tag: String) -> (Bool)): (Bool);
     @:native("String") function string(): (String);

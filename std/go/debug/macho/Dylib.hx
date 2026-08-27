@@ -10,7 +10,7 @@ extern class Dylib {
     @:native("CurrentVersion") var currentVersion: go.UInt32;
     @:native("CompatVersion") var compatVersion: go.UInt32;
 
-    function new(loadBytes: go.debug.macho.LoadBytes, name: String, time: go.UInt32, currentVersion: go.UInt32, compatVersion: go.UInt32);
+    function new(loadBytes: go.debug.macho.LoadBytes=null, name: String="", time: go.UInt32=0, currentVersion: go.UInt32=0, compatVersion: go.UInt32=0);
 
     @:native("Raw") function raw(): (go.Slice<go.Byte>);
 

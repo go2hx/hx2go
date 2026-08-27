@@ -10,6 +10,6 @@ extern class CoverBlock {
     @:native("Col1") var col1: go.UInt16;
     @:native("Stmts") var stmts: go.UInt16;
 
-    function new(line0: go.UInt32, col0: go.UInt16, line1: go.UInt32, col1: go.UInt16, stmts: go.UInt16);
+    function new(line0: go.UInt32=0, col0: go.UInt16=0, line1: go.UInt32=0, col1: go.UInt16=0, stmts: go.UInt16=0);
 
 }

@@ -16,7 +16,7 @@ extern class Name {
     @:native("Names") var names: go.Slice<go.crypto.x509.pkix.AttributeTypeAndValue>;
     @:native("ExtraNames") var extraNames: go.Slice<go.crypto.x509.pkix.AttributeTypeAndValue>;
 
-    function new(country: go.Slice<String>, organization: go.Slice<String>, organizationalUnit: go.Slice<String>, locality: go.Slice<String>, province: go.Slice<String>, streetAddress: go.Slice<String>, postalCode: go.Slice<String>, serialNumber: String, commonName: String, names: go.Slice<go.crypto.x509.pkix.AttributeTypeAndValue>, extraNames: go.Slice<go.crypto.x509.pkix.AttributeTypeAndValue>);
+    function new(country: go.Slice<String>=null, organization: go.Slice<String>=null, organizationalUnit: go.Slice<String>=null, locality: go.Slice<String>=null, province: go.Slice<String>=null, streetAddress: go.Slice<String>=null, postalCode: go.Slice<String>=null, serialNumber: String="", commonName: String="", names: go.Slice<go.crypto.x509.pkix.AttributeTypeAndValue>=null, extraNames: go.Slice<go.crypto.x509.pkix.AttributeTypeAndValue>=null);
 
     @:native("FillFromRDNSequence") function fillFromRDNSequence(rdns: go.Pointer<go.crypto.x509.pkix.RDNSequence>): Void;
     @:native("String") function string(): (String);

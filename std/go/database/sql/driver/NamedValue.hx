@@ -8,6 +8,6 @@ extern class NamedValue {
     @:native("Ordinal") var ordinal: go.GoInt;
     @:native("Value") var value: go.database.sql.driver.Value;
 
-    function new(name: String, ordinal: go.GoInt, value: go.database.sql.driver.Value);
+    function new(name: String="", ordinal: go.GoInt=0, value: go.database.sql.driver.Value=null);
 
 }

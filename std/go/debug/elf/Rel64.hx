@@ -7,6 +7,6 @@ extern class Rel64 {
     @:native("Off") var off: go.UInt64;
     @:native("Info") var info: go.UInt64;
 
-    function new(off: go.UInt64, info: go.UInt64);
+    function new(off: go.UInt64=0, info: go.UInt64=0);
 
 }

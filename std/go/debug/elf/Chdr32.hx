@@ -8,6 +8,6 @@ extern class Chdr32 {
     @:native("Size") var size: go.UInt32;
     @:native("Addralign") var addralign: go.UInt32;
 
-    function new(type: go.UInt32, size: go.UInt32, addralign: go.UInt32);
+    function new(type: go.UInt32=0, size: go.UInt32=0, addralign: go.UInt32=0);
 
 }

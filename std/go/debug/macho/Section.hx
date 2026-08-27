@@ -17,7 +17,7 @@ extern class Section {
     @:native("Nreloc") var nreloc: go.UInt32;
     @:native("Flags") var flags: go.UInt32;
 
-    function new(sectionHeader: go.debug.macho.SectionHeader, relocs: go.Slice<go.debug.macho.Reloc>, readerAt: go.io.ReaderAt);
+    function new(sectionHeader: go.debug.macho.SectionHeader, relocs: go.Slice<go.debug.macho.Reloc>=null, readerAt: go.io.ReaderAt=null);
 
     @:native("Data") function data(): (go.Result<go.Slice<go.Byte>>);
     @:native("Open") function open(): (go.io.ReadSeeker);

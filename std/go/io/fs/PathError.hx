@@ -8,7 +8,7 @@ extern class PathError {
     @:native("Path") var path: String;
     @:native("Err") var err: go.Error;
 
-    function new(op: String, path: String, err: go.Error);
+    function new(op: String="", path: String="", err: go.Error=null);
 
     @:native("Error") function error(): (String);
     @:native("Timeout") function timeout(): (Bool);

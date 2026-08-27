@@ -16,7 +16,7 @@ extern class Dialer {
     @:native("Control") var control: (network: String, address: String, c: go.syscall.RawConn) -> (go.Error);
     @:native("ControlContext") var controlContext: (ctx: go.context.Context, network: String, address: String, c: go.syscall.RawConn) -> (go.Error);
 
-    function new(timeout: go.time.Duration, deadline: go.time.Time, localAddr: go.net.Addr, dualStack: Bool, fallbackDelay: go.time.Duration, keepAlive: go.time.Duration, keepAliveConfig: go.net.KeepAliveConfig, resolver: go.Pointer<go.net.Resolver>, cancel: go.Chan<Dynamic>, control: (network: String, address: String, c: go.syscall.RawConn) -> (go.Error), controlContext: (ctx: go.context.Context, network: String, address: String, c: go.syscall.RawConn) -> (go.Error));
+    function new(timeout: go.time.Duration=cast 0, deadline: go.time.Time, localAddr: go.net.Addr=null, dualStack: Bool=false, fallbackDelay: go.time.Duration=cast 0, keepAlive: go.time.Duration=cast 0, keepAliveConfig: go.net.KeepAliveConfig, resolver: go.Pointer<go.net.Resolver>=null, cancel: go.Chan<Dynamic>=null, control: (network: String, address: String, c: go.syscall.RawConn) -> (go.Error)=null, controlContext: (ctx: go.context.Context, network: String, address: String, c: go.syscall.RawConn) -> (go.Error)=null);
 
     @:native("Dial") function dial(network: String, address: String): (go.Result<go.net.Conn>);
     @:native("DialContext") function dialContext(ctx: go.context.Context, network: String, address: String): (go.Result<go.net.Conn>);

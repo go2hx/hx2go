@@ -6,7 +6,7 @@ extern class SyntaxError {
 
     @:native("Msg") var msg: String;
 
-    function new(msg: String);
+    function new(msg: String="");
 
     @:native("Error") function error(): (String);
 

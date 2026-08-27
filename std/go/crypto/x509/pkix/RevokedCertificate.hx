@@ -8,6 +8,6 @@ extern class RevokedCertificate {
     @:native("RevocationTime") var revocationTime: go.time.Time;
     @:native("Extensions") var extensions: go.Slice<go.crypto.x509.pkix.Extension>;
 
-    function new(serialNumber: go.Pointer<go.math.big.Int>, revocationTime: go.time.Time, extensions: go.Slice<go.crypto.x509.pkix.Extension>);
+    function new(serialNumber: go.Pointer<go.math.big.Int>=null, revocationTime: go.time.Time, extensions: go.Slice<go.crypto.x509.pkix.Extension>=null);
 
 }

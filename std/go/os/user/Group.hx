@@ -7,6 +7,6 @@ extern class Group {
     @:native("Gid") var gid: String;
     @:native("Name") var name: String;
 
-    function new(gid: String, name: String);
+    function new(gid: String="", name: String="");
 
 }

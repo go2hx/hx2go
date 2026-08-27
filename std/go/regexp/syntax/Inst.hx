@@ -9,7 +9,7 @@ extern class Inst {
     @:native("Arg") var arg: go.UInt32;
     @:native("Rune") var rune: go.Slice<go.Rune>;
 
-    function new(op: go.regexp.syntax.InstOp, out: go.UInt32, arg: go.UInt32, rune: go.Slice<go.Rune>);
+    function new(op: go.regexp.syntax.InstOp=cast 0, out: go.UInt32=0, arg: go.UInt32=0, rune: go.Slice<go.Rune>=null);
 
     @:native("MatchEmptyWidth") function matchEmptyWidth(before: go.Rune, after: go.Rune): (Bool);
     @:native("MatchRune") function matchRune(r: go.Rune): (Bool);

@@ -5,7 +5,7 @@ extern class Crc64 {
 
     @:native("ECMA") static var ECMA: go.GoInt;
     @:native("ISO") static var ISO: go.GoInt;
-    @:native("Size") static var Size: go.GoInt;
+    @:native("Size") static var size: go.GoInt;
 
     @:native("Checksum") static function checksum(data: go.Slice<go.Byte>, tab: go.Pointer<go.hash.crc64.Table>): (go.UInt64);
     @:native("MakeTable") static function makeTable(poly: go.UInt64): (go.Pointer<go.hash.crc64.Table>);

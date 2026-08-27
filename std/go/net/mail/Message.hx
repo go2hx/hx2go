@@ -7,6 +7,6 @@ extern class Message {
     @:native("Header") var header: go.net.mail.Header;
     @:native("Body") var body: go.io.Reader;
 
-    function new(header: go.net.mail.Header, body: go.io.Reader);
+    function new(header: go.net.mail.Header=null, body: go.io.Reader=null);
 
 }

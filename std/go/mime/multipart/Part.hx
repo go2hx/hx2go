@@ -6,7 +6,7 @@ extern class Part {
 
     @:native("Header") var header: go.net.textproto.MIMEHeader;
 
-    function new(header: go.net.textproto.MIMEHeader);
+    function new(header: go.net.textproto.MIMEHeader=null);
 
     @:native("Close") function close(): (go.Error);
     @:native("FileName") function fileName(): (String);

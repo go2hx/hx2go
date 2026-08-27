@@ -11,6 +11,6 @@ extern class RevocationListEntry {
     @:native("Extensions") var extensions: go.Slice<go.crypto.x509.pkix.Extension>;
     @:native("ExtraExtensions") var extraExtensions: go.Slice<go.crypto.x509.pkix.Extension>;
 
-    function new(raw: go.Slice<go.Byte>, serialNumber: go.Pointer<go.math.big.Int>, revocationTime: go.time.Time, reasonCode: go.GoInt, extensions: go.Slice<go.crypto.x509.pkix.Extension>, extraExtensions: go.Slice<go.crypto.x509.pkix.Extension>);
+    function new(raw: go.Slice<go.Byte>=null, serialNumber: go.Pointer<go.math.big.Int>=null, revocationTime: go.time.Time, reasonCode: go.GoInt=0, extensions: go.Slice<go.crypto.x509.pkix.Extension>=null, extraExtensions: go.Slice<go.crypto.x509.pkix.Extension>=null);
 
 }

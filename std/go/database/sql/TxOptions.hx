@@ -7,6 +7,6 @@ extern class TxOptions {
     @:native("Isolation") var isolation: go.database.sql.IsolationLevel;
     @:native("ReadOnly") var readOnly: Bool;
 
-    function new(isolation: go.database.sql.IsolationLevel, readOnly: Bool);
+    function new(isolation: go.database.sql.IsolationLevel=cast 0, readOnly: Bool=false);
 
 }

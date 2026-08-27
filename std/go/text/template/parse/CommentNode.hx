@@ -8,7 +8,7 @@ extern class CommentNode {
     @:native("Pos") var pos: go.text.template.parse.Pos;
     @:native("Text") var text: String;
 
-    function new(nodeType: go.text.template.parse.NodeType, pos: go.text.template.parse.Pos, text: String);
+    function new(nodeType: go.text.template.parse.NodeType=cast 0, pos: go.text.template.parse.Pos=cast 0, text: String="");
 
     @:native("Copy") function copy(): (go.text.template.parse.Node);
     @:native("Position") function position(): (go.text.template.parse.Pos);

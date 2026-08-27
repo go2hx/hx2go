@@ -6,6 +6,6 @@ extern class PolicyInformation {
 
     @:native("Policy") var policy: go.encoding.asn1.ObjectIdentifier;
 
-    function new(policy: go.encoding.asn1.ObjectIdentifier);
+    function new(policy: go.encoding.asn1.ObjectIdentifier=null);
 
 }

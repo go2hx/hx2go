@@ -3,14 +3,14 @@ package go.database;
 @:go.Type({ name: "sql", instanceName: "sql.sql", imports: ["database/sql"] })
 extern class Sql {
 
-    @:native("LevelDefault") static var LevelDefault: go.database.sql.IsolationLevel;
-    @:native("LevelLinearizable") static var LevelLinearizable: go.database.sql.IsolationLevel;
-    @:native("LevelReadCommitted") static var LevelReadCommitted: go.database.sql.IsolationLevel;
-    @:native("LevelReadUncommitted") static var LevelReadUncommitted: go.database.sql.IsolationLevel;
-    @:native("LevelRepeatableRead") static var LevelRepeatableRead: go.database.sql.IsolationLevel;
-    @:native("LevelSerializable") static var LevelSerializable: go.database.sql.IsolationLevel;
-    @:native("LevelSnapshot") static var LevelSnapshot: go.database.sql.IsolationLevel;
-    @:native("LevelWriteCommitted") static var LevelWriteCommitted: go.database.sql.IsolationLevel;
+    @:native("LevelDefault") static var levelDefault: go.database.sql.IsolationLevel;
+    @:native("LevelLinearizable") static var levelLinearizable: go.database.sql.IsolationLevel;
+    @:native("LevelReadCommitted") static var levelReadCommitted: go.database.sql.IsolationLevel;
+    @:native("LevelReadUncommitted") static var levelReadUncommitted: go.database.sql.IsolationLevel;
+    @:native("LevelRepeatableRead") static var levelRepeatableRead: go.database.sql.IsolationLevel;
+    @:native("LevelSerializable") static var levelSerializable: go.database.sql.IsolationLevel;
+    @:native("LevelSnapshot") static var levelSnapshot: go.database.sql.IsolationLevel;
+    @:native("LevelWriteCommitted") static var levelWriteCommitted: go.database.sql.IsolationLevel;
 
     @:native("Drivers") static function drivers(): (go.Slice<String>);
     @:native("Named") static function named(name: String, value: Dynamic): (go.database.sql.NamedArg);

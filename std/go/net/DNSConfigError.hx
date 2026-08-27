@@ -6,7 +6,7 @@ extern class DNSConfigError {
 
     @:native("Err") var err: go.Error;
 
-    function new(err: go.Error);
+    function new(err: go.Error=null);
 
     @:native("Error") function error(): (String);
     @:native("Temporary") function temporary(): (Bool);

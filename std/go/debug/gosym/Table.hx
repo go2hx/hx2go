@@ -9,7 +9,7 @@ extern class Table {
     @:native("Files") var files: go.Map<String, go.Pointer<go.debug.gosym.Obj>>;
     @:native("Objs") var objs: go.Slice<go.debug.gosym.Obj>;
 
-    function new(syms: go.Slice<go.debug.gosym.Sym>, funcs: go.Slice<go.debug.gosym.Func>, files: go.Map<String, go.Pointer<go.debug.gosym.Obj>>, objs: go.Slice<go.debug.gosym.Obj>);
+    function new(syms: go.Slice<go.debug.gosym.Sym>=null, funcs: go.Slice<go.debug.gosym.Func>=null, files: go.Map<String, go.Pointer<go.debug.gosym.Obj>>=null, objs: go.Slice<go.debug.gosym.Obj>=null);
 
     @:go.Tuple("pc", "fn", "err") @:native("LineToPC") function lineToPC(file: String, line: go.GoInt): (go.Tuple<{ pc: go.UInt64, fn: go.Pointer<go.debug.gosym.Func>, err: go.Error }>);
     @:native("LookupFunc") function lookupFunc(name: String): (go.Pointer<go.debug.gosym.Func>);

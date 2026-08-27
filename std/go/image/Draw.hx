@@ -3,8 +3,8 @@ package go.image;
 @:go.Type({ name: "draw", instanceName: "draw.draw", imports: ["image/draw"] })
 extern class Draw {
 
-    @:native("Over") static var Over: go.image.draw.Op;
-    @:native("Src") static var Src: go.image.draw.Op;
+    @:native("Over") static var over: go.image.draw.Op;
+    @:native("Src") static var src: go.image.draw.Op;
 
     @:native("FloydSteinberg") static var floydSteinberg: go.image.draw.Drawer;
 

@@ -11,7 +11,7 @@ extern class BranchNode {
     @:native("List") var list: go.Pointer<go.text.template.parse.ListNode>;
     @:native("ElseList") var elseList: go.Pointer<go.text.template.parse.ListNode>;
 
-    function new(nodeType: go.text.template.parse.NodeType, pos: go.text.template.parse.Pos, line: go.GoInt, pipe: go.Pointer<go.text.template.parse.PipeNode>, list: go.Pointer<go.text.template.parse.ListNode>, elseList: go.Pointer<go.text.template.parse.ListNode>);
+    function new(nodeType: go.text.template.parse.NodeType=cast 0, pos: go.text.template.parse.Pos=cast 0, line: go.GoInt=0, pipe: go.Pointer<go.text.template.parse.PipeNode>=null, list: go.Pointer<go.text.template.parse.ListNode>=null, elseList: go.Pointer<go.text.template.parse.ListNode>=null);
 
     @:native("Copy") function copy(): (go.text.template.parse.Node);
     @:native("Position") function position(): (go.text.template.parse.Pos);

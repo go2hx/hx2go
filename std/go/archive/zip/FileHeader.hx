@@ -22,7 +22,7 @@ extern class FileHeader {
     @:native("Extra") var extra: go.Slice<go.Byte>;
     @:native("ExternalAttrs") var externalAttrs: go.UInt32;
 
-    function new(name: String, comment: String, nonUTF8: Bool, creatorVersion: go.UInt16, readerVersion: go.UInt16, flags: go.UInt16, method: go.UInt16, modified: go.time.Time, modifiedTime: go.UInt16, modifiedDate: go.UInt16, CRC32: go.UInt32, compressedSize: go.UInt32, uncompressedSize: go.UInt32, compressedSize64: go.UInt64, uncompressedSize64: go.UInt64, extra: go.Slice<go.Byte>, externalAttrs: go.UInt32);
+    function new(name: String="", comment: String="", nonUTF8: Bool=false, creatorVersion: go.UInt16=0, readerVersion: go.UInt16=0, flags: go.UInt16=0, method: go.UInt16=0, modified: go.time.Time, modifiedTime: go.UInt16=0, modifiedDate: go.UInt16=0, CRC32: go.UInt32=0, compressedSize: go.UInt32=0, uncompressedSize: go.UInt32=0, compressedSize64: go.UInt64=0, uncompressedSize64: go.UInt64=0, extra: go.Slice<go.Byte>=null, externalAttrs: go.UInt32=0);
 
     @:native("FileInfo") function fileInfo(): (go.io.fs.FileInfo);
     @:native("ModTime") function modTime(): (go.time.Time);

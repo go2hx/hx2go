@@ -10,6 +10,6 @@ extern class Call {
     @:native("Error") var error: go.Error;
     @:native("Done") var done: go.Chan<go.Pointer<go.net.rpc.Call>>;
 
-    function new(serviceMethod: String, args: Dynamic, reply: Dynamic, error: go.Error, done: go.Chan<go.Pointer<go.net.rpc.Call>>);
+    function new(serviceMethod: String="", args: Dynamic=null, reply: Dynamic=null, error: go.Error=null, done: go.Chan<go.Pointer<go.net.rpc.Call>>=null);
 
 }

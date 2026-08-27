@@ -3,11 +3,11 @@ package go.crypto;
 @:go.Type({ name: "sha512", instanceName: "sha512.sha512", imports: ["crypto/sha512"] })
 extern class Sha512_ {
 
-    @:native("BlockSize") static var BlockSize: go.GoInt;
-    @:native("Size") static var Size: go.GoInt;
-    @:native("Size224") static var Size224: go.GoInt;
-    @:native("Size256") static var Size256: go.GoInt;
-    @:native("Size384") static var Size384: go.GoInt;
+    @:native("BlockSize") static var blockSize: go.GoInt;
+    @:native("Size") static var size: go.GoInt;
+    @:native("Size224") static var size224: go.GoInt;
+    @:native("Size256") static var size256: go.GoInt;
+    @:native("Size384") static var size384: go.GoInt;
 
     @:native("New") static function _new(): (go.hash.Hash);
     @:native("New384") static function new384(): (go.hash.Hash);

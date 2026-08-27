@@ -6,7 +6,7 @@ extern class NotNull {
 
     @:native("Converter") var converter: go.database.sql.driver.ValueConverter;
 
-    function new(converter: go.database.sql.driver.ValueConverter);
+    function new(converter: go.database.sql.driver.ValueConverter=null);
 
     @:native("ConvertValue") function convertValue(v: Dynamic): (go.Result<go.database.sql.driver.Value>);
 

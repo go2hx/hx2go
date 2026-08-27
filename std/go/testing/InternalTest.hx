@@ -7,6 +7,6 @@ extern class InternalTest {
     @:native("Name") var name: String;
     @:native("F") var F: (p0: go.Pointer<go.testing.T>) -> Void;
 
-    function new(name: String, F: (p0: go.Pointer<go.testing.T>) -> Void);
+    function new(name: String="", F: (p0: go.Pointer<go.testing.T>) -> Void=null);
 
 }

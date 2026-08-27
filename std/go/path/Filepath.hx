@@ -3,8 +3,8 @@ package go.path;
 @:go.Type({ name: "filepath", instanceName: "filepath.filepath", imports: ["path/filepath"] })
 extern class Filepath {
 
-    @:native("ListSeparator") static var ListSeparator: go.Rune;
-    @:native("Separator") static var Separator: go.Rune;
+    @:native("ListSeparator") static var listSeparator: go.Rune;
+    @:native("Separator") static var separator: go.Rune;
 
     @:native("Abs") static function abs(path: String): (go.Result<String>);
     @:native("Base") static function base(path: String): (String);

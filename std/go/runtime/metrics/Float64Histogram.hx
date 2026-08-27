@@ -7,6 +7,6 @@ extern class Float64Histogram {
     @:native("Counts") var counts: go.Slice<go.UInt64>;
     @:native("Buckets") var buckets: go.Slice<Float>;
 
-    function new(counts: go.Slice<go.UInt64>, buckets: go.Slice<Float>);
+    function new(counts: go.Slice<go.UInt64>=null, buckets: go.Slice<Float>=null);
 
 }

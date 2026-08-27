@@ -3,8 +3,8 @@ package go.crypto;
 @:go.Type({ name: "rsa", instanceName: "rsa.rsa", imports: ["crypto/rsa"] })
 extern class Rsa {
 
-    @:native("PSSSaltLengthAuto") static var PSSSaltLengthAuto: go.GoInt;
-    @:native("PSSSaltLengthEqualsHash") static var PSSSaltLengthEqualsHash: go.GoInt;
+    @:native("PSSSaltLengthAuto") static var pSSSaltLengthAuto: go.GoInt;
+    @:native("PSSSaltLengthEqualsHash") static var pSSSaltLengthEqualsHash: go.GoInt;
 
     @:native("DecryptOAEP") static function decryptOAEP(hash: go.hash.Hash, random: go.io.Reader, priv: go.Pointer<go.crypto.rsa.PrivateKey>, ciphertext: go.Slice<go.Byte>, label: go.Slice<go.Byte>): (go.Result<go.Slice<go.Byte>>);
     @:native("DecryptPKCS1v15") static function decryptPKCS1v15(random: go.io.Reader, priv: go.Pointer<go.crypto.rsa.PrivateKey>, ciphertext: go.Slice<go.Byte>): (go.Result<go.Slice<go.Byte>>);

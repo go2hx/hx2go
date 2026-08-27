@@ -25,6 +25,6 @@ extern class DysymtabCmd {
     @:native("Locreloff") var locreloff: go.UInt32;
     @:native("Nlocrel") var nlocrel: go.UInt32;
 
-    function new(cmd: go.debug.macho.LoadCmd, len: go.UInt32, ilocalsym: go.UInt32, nlocalsym: go.UInt32, iextdefsym: go.UInt32, nextdefsym: go.UInt32, iundefsym: go.UInt32, nundefsym: go.UInt32, tocoffset: go.UInt32, ntoc: go.UInt32, modtaboff: go.UInt32, nmodtab: go.UInt32, extrefsymoff: go.UInt32, nextrefsyms: go.UInt32, indirectsymoff: go.UInt32, nindirectsyms: go.UInt32, extreloff: go.UInt32, nextrel: go.UInt32, locreloff: go.UInt32, nlocrel: go.UInt32);
+    function new(cmd: go.debug.macho.LoadCmd=cast 0, len: go.UInt32=0, ilocalsym: go.UInt32=0, nlocalsym: go.UInt32=0, iextdefsym: go.UInt32=0, nextdefsym: go.UInt32=0, iundefsym: go.UInt32=0, nundefsym: go.UInt32=0, tocoffset: go.UInt32=0, ntoc: go.UInt32=0, modtaboff: go.UInt32=0, nmodtab: go.UInt32=0, extrefsymoff: go.UInt32=0, nextrefsyms: go.UInt32=0, indirectsymoff: go.UInt32=0, nindirectsyms: go.UInt32=0, extreloff: go.UInt32=0, nextrel: go.UInt32=0, locreloff: go.UInt32=0, nlocrel: go.UInt32=0);
 
 }

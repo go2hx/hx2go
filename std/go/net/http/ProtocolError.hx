@@ -6,7 +6,7 @@ extern class ProtocolError {
 
     @:native("ErrorString") var errorString: String;
 
-    function new(errorString: String);
+    function new(errorString: String="");
 
     @:native("Error") function error(): (String);
     @:native("Is") function _is(err: go.Error): (Bool);

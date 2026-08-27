@@ -6,6 +6,6 @@ extern class ModuleError {
 
     @:native("Err") var err: String;
 
-    function new(err: String);
+    function new(err: String="");
 
 }

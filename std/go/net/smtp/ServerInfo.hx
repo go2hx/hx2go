@@ -8,6 +8,6 @@ extern class ServerInfo {
     @:native("TLS") var TLS: Bool;
     @:native("Auth") var auth: go.Slice<String>;
 
-    function new(name: String, TLS: Bool, auth: go.Slice<String>);
+    function new(name: String="", TLS: Bool=false, auth: go.Slice<String>=null);
 
 }

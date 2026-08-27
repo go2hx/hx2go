@@ -9,6 +9,6 @@ extern class Description {
     @:native("Kind") var kind: go.runtime.metrics.ValueKind;
     @:native("Cumulative") var cumulative: Bool;
 
-    function new(name: String, description: String, kind: go.runtime.metrics.ValueKind, cumulative: Bool);
+    function new(name: String="", description: String="", kind: go.runtime.metrics.ValueKind=cast 0, cumulative: Bool=false);
 
 }

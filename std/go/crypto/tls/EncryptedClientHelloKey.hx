@@ -8,6 +8,6 @@ extern class EncryptedClientHelloKey {
     @:native("PrivateKey") var privateKey: go.Slice<go.Byte>;
     @:native("SendAsRetry") var sendAsRetry: Bool;
 
-    function new(config: go.Slice<go.Byte>, privateKey: go.Slice<go.Byte>, sendAsRetry: Bool);
+    function new(config: go.Slice<go.Byte>=null, privateKey: go.Slice<go.Byte>=null, sendAsRetry: Bool=false);
 
 }

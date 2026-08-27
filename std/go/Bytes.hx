@@ -3,7 +3,7 @@ package go;
 @:go.Type({ name: "bytes", instanceName: "bytes.bytes", imports: ["bytes"] })
 extern class Bytes {
 
-    @:native("MinRead") static var MinRead: go.GoInt;
+    @:native("MinRead") static var minRead: go.GoInt;
 
     @:native("Clone") static function clone(b: go.Slice<go.Byte>): (go.Slice<go.Byte>);
     @:native("Compare") static function compare(a: go.Slice<go.Byte>, b: go.Slice<go.Byte>): (go.GoInt);

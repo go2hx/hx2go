@@ -6,7 +6,7 @@ extern class UnsupportedTypeError {
 
     @:native("Type") var type: go.reflect.Type;
 
-    function new(type: go.reflect.Type);
+    function new(type: go.reflect.Type=null);
 
     @:native("Error") function error(): (String);
 

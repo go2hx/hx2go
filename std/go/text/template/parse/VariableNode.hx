@@ -8,7 +8,7 @@ extern class VariableNode {
     @:native("Pos") var pos: go.text.template.parse.Pos;
     @:native("Ident") var ident: go.Slice<String>;
 
-    function new(nodeType: go.text.template.parse.NodeType, pos: go.text.template.parse.Pos, ident: go.Slice<String>);
+    function new(nodeType: go.text.template.parse.NodeType=cast 0, pos: go.text.template.parse.Pos=cast 0, ident: go.Slice<String>=null);
 
     @:native("Copy") function copy(): (go.text.template.parse.Node);
     @:native("Position") function position(): (go.text.template.parse.Pos);

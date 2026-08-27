@@ -15,7 +15,7 @@ extern class Regexp {
     @:native("Cap") var cap: go.GoInt;
     @:native("Name") var name: String;
 
-    function new(op: go.regexp.syntax.Op, flags: go.regexp.syntax.Flags, sub: go.Slice<go.Pointer<go.regexp.syntax.Regexp>>, sub0: go.GoArray<go.Pointer<go.regexp.syntax.Regexp>, 1>, rune: go.Slice<go.Rune>, rune0: go.GoArray<go.Rune, 2>, min: go.GoInt, max: go.GoInt, cap: go.GoInt, name: String);
+    function new(op: go.regexp.syntax.Op=cast 0, flags: go.regexp.syntax.Flags=cast 0, sub: go.Slice<go.Pointer<go.regexp.syntax.Regexp>>=null, sub0: go.GoArray<go.Pointer<go.regexp.syntax.Regexp>, 1>, rune: go.Slice<go.Rune>=null, rune0: go.GoArray<go.Rune, 2>, min: go.GoInt=0, max: go.GoInt=0, cap: go.GoInt=0, name: String="");
 
     @:native("CapNames") function capNames(): (go.Slice<String>);
     @:native("Equal") function equal(y: go.Pointer<go.regexp.syntax.Regexp>): (Bool);

@@ -9,6 +9,6 @@ extern class SliceType {
     @:native("Name") var name: String;
     @:native("Id") var id: go.encoding.gob.TypeId;
 
-    function new(commonType: go.encoding.gob.CommonType, elem: go.encoding.gob.TypeId);
+    function new(commonType: go.encoding.gob.CommonType, elem: go.encoding.gob.TypeId=cast 0);
 
 }

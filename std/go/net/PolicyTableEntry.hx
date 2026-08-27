@@ -8,6 +8,6 @@ extern class PolicyTableEntry {
     @:native("Precedence") var precedence: go.UInt8;
     @:native("Label") var label: go.UInt8;
 
-    function new(prefix: go.net.netip.Prefix, precedence: go.UInt8, label: go.UInt8);
+    function new(prefix: go.net.netip.Prefix, precedence: go.UInt8=0, label: go.UInt8=0);
 
 }

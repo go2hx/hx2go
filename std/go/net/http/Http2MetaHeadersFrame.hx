@@ -12,7 +12,7 @@ extern class Http2MetaHeadersFrame {
     @:native("Length") var length: go.UInt32;
     @:native("StreamID") var streamID: go.UInt32;
 
-    function new(fields: go.Slice<Dynamic>, truncated: Bool);
+    function new(fields: go.Slice<Dynamic>=null, truncated: Bool=false);
 
     @:native("HasPriority") function hasPriority(): (Bool);
     @:native("Header") function header(): (go.net.http.Http2FrameHeader);

@@ -7,6 +7,6 @@ extern class InterfaceAddrMessage {
     @:native("Header") var header: go.syscall.IfaMsghdr;
     @:native("Data") var data: go.Slice<go.Byte>;
 
-    function new(header: go.syscall.IfaMsghdr, data: go.Slice<go.Byte>);
+    function new(header: go.syscall.IfaMsghdr, data: go.Slice<go.Byte>=null);
 
 }

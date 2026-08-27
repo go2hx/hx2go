@@ -3,10 +3,10 @@ package go;
 @:go.Type({ name: "crypto", instanceName: "crypto.crypto", imports: ["crypto"] })
 extern class Crypto {
 
-    @:native("BLAKE2b_256") static var BLAKE2b_256: go.crypto.Hash;
-    @:native("BLAKE2b_384") static var BLAKE2b_384: go.crypto.Hash;
-    @:native("BLAKE2b_512") static var BLAKE2b_512: go.crypto.Hash;
-    @:native("BLAKE2s_256") static var BLAKE2s_256: go.crypto.Hash;
+    @:native("BLAKE2b_256") static var bLAKE2b_256: go.crypto.Hash;
+    @:native("BLAKE2b_384") static var bLAKE2b_384: go.crypto.Hash;
+    @:native("BLAKE2b_512") static var bLAKE2b_512: go.crypto.Hash;
+    @:native("BLAKE2s_256") static var bLAKE2s_256: go.crypto.Hash;
     @:native("MD4") static var MD4: go.crypto.Hash;
     @:native("MD5") static var MD5: go.crypto.Hash;
     @:native("MD5SHA1") static var MD5SHA1: go.crypto.Hash;

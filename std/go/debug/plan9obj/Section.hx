@@ -10,7 +10,7 @@ extern class Section {
     @:native("Size") var size: go.UInt32;
     @:native("Offset") var offset: go.UInt32;
 
-    function new(sectionHeader: go.debug.plan9obj.SectionHeader, readerAt: go.io.ReaderAt);
+    function new(sectionHeader: go.debug.plan9obj.SectionHeader, readerAt: go.io.ReaderAt=null);
 
     @:native("Data") function data(): (go.Result<go.Slice<go.Byte>>);
     @:native("Open") function open(): (go.io.ReadSeeker);

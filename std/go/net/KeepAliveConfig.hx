@@ -9,6 +9,6 @@ extern class KeepAliveConfig {
     @:native("Interval") var interval: go.time.Duration;
     @:native("Count") var count: go.GoInt;
 
-    function new(enable: Bool, idle: go.time.Duration, interval: go.time.Duration, count: go.GoInt);
+    function new(enable: Bool=false, idle: go.time.Duration=cast 0, interval: go.time.Duration=cast 0, count: go.GoInt=0);
 
 }

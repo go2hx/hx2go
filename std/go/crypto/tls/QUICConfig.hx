@@ -7,6 +7,6 @@ extern class QUICConfig {
     @:native("TLSConfig") var tLSConfig: go.Pointer<go.crypto.tls.Config>;
     @:native("EnableSessionEvents") var enableSessionEvents: Bool;
 
-    function new(tLSConfig: go.Pointer<go.crypto.tls.Config>, enableSessionEvents: Bool);
+    function new(tLSConfig: go.Pointer<go.crypto.tls.Config>=null, enableSessionEvents: Bool=false);
 
 }

@@ -3,9 +3,9 @@ package go.image;
 @:go.Type({ name: "gif", instanceName: "gif.gif", imports: ["image/gif"] })
 extern class Gif {
 
-    @:native("DisposalBackground") static var DisposalBackground: go.GoInt;
-    @:native("DisposalNone") static var DisposalNone: go.GoInt;
-    @:native("DisposalPrevious") static var DisposalPrevious: go.GoInt;
+    @:native("DisposalBackground") static var disposalBackground: go.GoInt;
+    @:native("DisposalNone") static var disposalNone: go.GoInt;
+    @:native("DisposalPrevious") static var disposalPrevious: go.GoInt;
 
     @:native("Decode") static function decode(r: go.io.Reader): (go.Result<go.image.Image>);
     @:native("DecodeAll") static function decodeAll(r: go.io.Reader): (go.Result<go.Pointer<go.image.gif.GIF>>);

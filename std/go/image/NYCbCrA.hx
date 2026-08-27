@@ -15,7 +15,7 @@ extern class NYCbCrA {
     @:native("SubsampleRatio") var subsampleRatio: go.image.YCbCrSubsampleRatio;
     @:native("Rect") var rect: go.image.Rectangle;
 
-    function new(yCbCr: go.image.YCbCr, A: go.Slice<go.UInt8>, aStride: go.GoInt);
+    function new(yCbCr: go.image.YCbCr, A: go.Slice<go.UInt8>=null, aStride: go.GoInt=0);
 
     @:native("AOffset") function aOffset(x: go.GoInt, y: go.GoInt): (go.GoInt);
     @:native("At") function at(x: go.GoInt, y: go.GoInt): (go.image.color.Color);

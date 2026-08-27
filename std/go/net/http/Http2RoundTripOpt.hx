@@ -6,6 +6,6 @@ extern class Http2RoundTripOpt {
 
     @:native("OnlyCachedConn") var onlyCachedConn: Bool;
 
-    function new(onlyCachedConn: Bool);
+    function new(onlyCachedConn: Bool=false);
 
 }

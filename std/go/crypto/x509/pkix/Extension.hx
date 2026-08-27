@@ -8,6 +8,6 @@ extern class Extension {
     @:native("Critical") var critical: Bool;
     @:native("Value") var value: go.Slice<go.Byte>;
 
-    function new(id: go.encoding.asn1.ObjectIdentifier, critical: Bool, value: go.Slice<go.Byte>);
+    function new(id: go.encoding.asn1.ObjectIdentifier=null, critical: Bool=false, value: go.Slice<go.Byte>=null);
 
 }

@@ -8,7 +8,7 @@ extern class RecordHeaderError {
     @:native("RecordHeader") var recordHeader: go.GoArray<go.Byte, 5>;
     @:native("Conn") var conn: go.net.Conn;
 
-    function new(msg: String, recordHeader: go.GoArray<go.Byte, 5>, conn: go.net.Conn);
+    function new(msg: String="", recordHeader: go.GoArray<go.Byte, 5>, conn: go.net.Conn=null);
 
     @:native("Error") function error(): (String);
 

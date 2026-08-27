@@ -8,7 +8,7 @@ extern class DecodeError {
     @:native("Offset") var offset: go.debug.dwarf.Offset;
     @:native("Err") var err: String;
 
-    function new(name: String, offset: go.debug.dwarf.Offset, err: String);
+    function new(name: String="", offset: go.debug.dwarf.Offset=cast 0, err: String="");
 
     @:native("Error") function error(): (String);
 

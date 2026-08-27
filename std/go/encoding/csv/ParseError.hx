@@ -9,7 +9,7 @@ extern class ParseError {
     @:native("Column") var column: go.GoInt;
     @:native("Err") var err: go.Error;
 
-    function new(startLine: go.GoInt, line: go.GoInt, column: go.GoInt, err: go.Error);
+    function new(startLine: go.GoInt=0, line: go.GoInt=0, column: go.GoInt=0, err: go.Error=null);
 
     @:native("Error") function error(): (String);
     @:native("Unwrap") function unwrap(): (go.Error);

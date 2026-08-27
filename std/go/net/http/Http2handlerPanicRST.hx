@@ -6,6 +6,6 @@ extern class Http2handlerPanicRST {
 
     @:native("StreamID") var streamID: go.UInt32;
 
-    function new(streamID: go.UInt32);
+    function new(streamID: go.UInt32=0);
 
 }

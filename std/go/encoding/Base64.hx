@@ -3,8 +3,8 @@ package go.encoding;
 @:go.Type({ name: "base64", instanceName: "base64.base64", imports: ["encoding/base64"] })
 extern class Base64 {
 
-    @:native("NoPadding") static var NoPadding: go.Rune;
-    @:native("StdPadding") static var StdPadding: go.Rune;
+    @:native("NoPadding") static var noPadding: go.Rune;
+    @:native("StdPadding") static var stdPadding: go.Rune;
 
     @:native("RawStdEncoding") static var rawStdEncoding: go.Pointer<go.encoding.base64.Encoding>;
     @:native("RawURLEncoding") static var rawURLEncoding: go.Pointer<go.encoding.base64.Encoding>;

@@ -13,7 +13,7 @@ extern class File {
     @:native("LoadAddress") var loadAddress: go.UInt64;
     @:native("HdrSize") var hdrSize: go.UInt64;
 
-    function new(fileHeader: go.debug.plan9obj.FileHeader, sections: go.Slice<go.Pointer<go.debug.plan9obj.Section>>);
+    function new(fileHeader: go.debug.plan9obj.FileHeader, sections: go.Slice<go.Pointer<go.debug.plan9obj.Section>>=null);
 
     @:native("Close") function close(): (go.Error);
     @:native("Section") function section(name: String): (go.Pointer<go.debug.plan9obj.Section>);

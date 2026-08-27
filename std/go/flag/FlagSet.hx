@@ -6,7 +6,7 @@ extern class FlagSet {
 
     @:native("Usage") var usage: () -> Void;
 
-    function new(usage: () -> Void);
+    function new(usage: () -> Void=null);
 
     @:native("Arg") function arg(i: go.GoInt): (String);
     @:native("Args") function args(): (go.Slice<String>);

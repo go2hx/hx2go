@@ -6,7 +6,7 @@ extern class Uniform {
 
     @:native("C") var C: go.image.color.Color;
 
-    function new(C: go.image.color.Color);
+    function new(C: go.image.color.Color=null);
 
     @:native("At") function at(x: go.GoInt, y: go.GoInt): (go.image.color.Color);
     @:native("Bounds") function bounds(): (go.image.Rectangle);

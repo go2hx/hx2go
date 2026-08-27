@@ -8,6 +8,6 @@ extern class Source {
     @:native("File") var file: String;
     @:native("Line") var line: go.GoInt;
 
-    function new(_function: String, file: String, line: go.GoInt);
+    function new(_function: String="", file: String="", line: go.GoInt=0);
 
 }

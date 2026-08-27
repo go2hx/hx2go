@@ -7,6 +7,6 @@ extern class Name {
     @:native("Space") var space: String;
     @:native("Local") var local: String;
 
-    function new(space: String, local: String);
+    function new(space: String="", local: String="");
 
 }

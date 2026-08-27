@@ -4,13 +4,13 @@ package go;
 extern class Log {
 
     @:native("LUTC") static var LUTC: go.GoInt;
-    @:native("Ldate") static var Ldate: go.GoInt;
-    @:native("Llongfile") static var Llongfile: go.GoInt;
-    @:native("Lmicroseconds") static var Lmicroseconds: go.GoInt;
-    @:native("Lmsgprefix") static var Lmsgprefix: go.GoInt;
-    @:native("Lshortfile") static var Lshortfile: go.GoInt;
-    @:native("LstdFlags") static var LstdFlags: go.GoInt;
-    @:native("Ltime") static var Ltime: go.GoInt;
+    @:native("Ldate") static var ldate: go.GoInt;
+    @:native("Llongfile") static var llongfile: go.GoInt;
+    @:native("Lmicroseconds") static var lmicroseconds: go.GoInt;
+    @:native("Lmsgprefix") static var lmsgprefix: go.GoInt;
+    @:native("Lshortfile") static var lshortfile: go.GoInt;
+    @:native("LstdFlags") static var lstdFlags: go.GoInt;
+    @:native("Ltime") static var ltime: go.GoInt;
 
     @:native("Default") static function _default(): (go.Pointer<go.log.Logger>);
     @:native("Fatal") static function fatal(v: haxe.Rest<Dynamic>): Void;

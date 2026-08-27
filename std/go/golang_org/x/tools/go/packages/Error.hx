@@ -8,7 +8,7 @@ extern class Error {
     @:native("Msg") var msg: String;
     @:native("Kind") var kind: go.golang_org.x.tools.go.packages.ErrorKind;
 
-    function new(pos: String, msg: String, kind: go.golang_org.x.tools.go.packages.ErrorKind);
+    function new(pos: String="", msg: String="", kind: go.golang_org.x.tools.go.packages.ErrorKind=cast 0);
 
     @:native("Error") function error(): (String);
 

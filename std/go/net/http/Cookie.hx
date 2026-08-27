@@ -19,7 +19,7 @@ extern class Cookie {
     @:native("Raw") var raw: String;
     @:native("Unparsed") var unparsed: go.Slice<String>;
 
-    function new(name: String, value: String, quoted: Bool, path: String, domain: String, expires: go.time.Time, rawExpires: String, maxAge: go.GoInt, secure: Bool, httpOnly: Bool, sameSite: go.net.http.SameSite, partitioned: Bool, raw: String, unparsed: go.Slice<String>);
+    function new(name: String="", value: String="", quoted: Bool=false, path: String="", domain: String="", expires: go.time.Time, rawExpires: String="", maxAge: go.GoInt=0, secure: Bool=false, httpOnly: Bool=false, sameSite: go.net.http.SameSite=cast 0, partitioned: Bool=false, raw: String="", unparsed: go.Slice<String>=null);
 
     @:native("String") function string(): (String);
     @:native("Valid") function valid(): (go.Error);

@@ -6,7 +6,7 @@ extern class SocksConn {
 
     @:native("Conn") var conn: go.net.Conn;
 
-    function new(conn: go.net.Conn);
+    function new(conn: go.net.Conn=null);
 
     @:native("BoundAddr") function boundAddr(): (go.net.Addr);
     @:native("Close") function close(): (go.Error);

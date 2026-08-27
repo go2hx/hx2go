@@ -17,7 +17,7 @@ extern class File {
     @:native("Machine") var machine: go.debug.elf.Machine;
     @:native("Entry") var entry: go.UInt64;
 
-    function new(fileHeader: go.debug.elf.FileHeader, sections: go.Slice<go.Pointer<go.debug.elf.Section>>, progs: go.Slice<go.Pointer<go.debug.elf.Prog>>);
+    function new(fileHeader: go.debug.elf.FileHeader, sections: go.Slice<go.Pointer<go.debug.elf.Section>>=null, progs: go.Slice<go.Pointer<go.debug.elf.Prog>>=null);
 
     @:native("Close") function close(): (go.Error);
     @:native("DWARF") function DWARF(): (go.Result<go.Pointer<go.debug.dwarf.Data>>);

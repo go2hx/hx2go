@@ -6,7 +6,7 @@ extern class Element {
 
     @:native("Value") var value: Dynamic;
 
-    function new(value: Dynamic);
+    function new(value: Dynamic=null);
 
     @:native("Next") function next(): (go.Pointer<go.container.list.Element>);
     @:native("Prev") function prev(): (go.Pointer<go.container.list.Element>);

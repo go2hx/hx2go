@@ -3,21 +3,21 @@ package go.io;
 @:go.Type({ name: "fs", instanceName: "fs.fs", imports: ["io/fs"] })
 extern class Fs {
 
-    @:native("ModeAppend") static var ModeAppend: go.io.fs.FileMode;
-    @:native("ModeCharDevice") static var ModeCharDevice: go.io.fs.FileMode;
-    @:native("ModeDevice") static var ModeDevice: go.io.fs.FileMode;
-    @:native("ModeDir") static var ModeDir: go.io.fs.FileMode;
-    @:native("ModeExclusive") static var ModeExclusive: go.io.fs.FileMode;
-    @:native("ModeIrregular") static var ModeIrregular: go.io.fs.FileMode;
-    @:native("ModeNamedPipe") static var ModeNamedPipe: go.io.fs.FileMode;
-    @:native("ModePerm") static var ModePerm: go.io.fs.FileMode;
-    @:native("ModeSetgid") static var ModeSetgid: go.io.fs.FileMode;
-    @:native("ModeSetuid") static var ModeSetuid: go.io.fs.FileMode;
-    @:native("ModeSocket") static var ModeSocket: go.io.fs.FileMode;
-    @:native("ModeSticky") static var ModeSticky: go.io.fs.FileMode;
-    @:native("ModeSymlink") static var ModeSymlink: go.io.fs.FileMode;
-    @:native("ModeTemporary") static var ModeTemporary: go.io.fs.FileMode;
-    @:native("ModeType") static var ModeType: go.io.fs.FileMode;
+    @:native("ModeAppend") static var modeAppend: go.io.fs.FileMode;
+    @:native("ModeCharDevice") static var modeCharDevice: go.io.fs.FileMode;
+    @:native("ModeDevice") static var modeDevice: go.io.fs.FileMode;
+    @:native("ModeDir") static var modeDir: go.io.fs.FileMode;
+    @:native("ModeExclusive") static var modeExclusive: go.io.fs.FileMode;
+    @:native("ModeIrregular") static var modeIrregular: go.io.fs.FileMode;
+    @:native("ModeNamedPipe") static var modeNamedPipe: go.io.fs.FileMode;
+    @:native("ModePerm") static var modePerm: go.io.fs.FileMode;
+    @:native("ModeSetgid") static var modeSetgid: go.io.fs.FileMode;
+    @:native("ModeSetuid") static var modeSetuid: go.io.fs.FileMode;
+    @:native("ModeSocket") static var modeSocket: go.io.fs.FileMode;
+    @:native("ModeSticky") static var modeSticky: go.io.fs.FileMode;
+    @:native("ModeSymlink") static var modeSymlink: go.io.fs.FileMode;
+    @:native("ModeTemporary") static var modeTemporary: go.io.fs.FileMode;
+    @:native("ModeType") static var modeType: go.io.fs.FileMode;
 
     @:native("FileInfoToDirEntry") static function fileInfoToDirEntry(info: go.io.fs.FileInfo): (go.io.fs.DirEntry);
     @:native("FormatDirEntry") static function formatDirEntry(dir: go.io.fs.DirEntry): (String);

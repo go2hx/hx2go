@@ -11,6 +11,6 @@ extern class COFFSymbolAuxFormat5 {
     @:native("SecNum") var secNum: go.UInt16;
     @:native("Selection") var selection: go.UInt8;
 
-    function new(size: go.UInt32, numRelocs: go.UInt16, numLineNumbers: go.UInt16, checksum: go.UInt32, secNum: go.UInt16, selection: go.UInt8);
+    function new(size: go.UInt32=0, numRelocs: go.UInt16=0, numLineNumbers: go.UInt16=0, checksum: go.UInt32=0, secNum: go.UInt16=0, selection: go.UInt8=0);
 
 }

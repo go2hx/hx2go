@@ -10,6 +10,6 @@ extern class SerializedFile {
     @:native("Lines") var lines: go.Slice<go.GoInt>;
     @:native("Infos") var infos: go.Slice<go.go.token.LineInfo>;
 
-    function new(name: String, base: go.GoInt, size: go.GoInt, lines: go.Slice<go.GoInt>, infos: go.Slice<go.go.token.LineInfo>);
+    function new(name: String="", base: go.GoInt=0, size: go.GoInt=0, lines: go.Slice<go.GoInt>=null, infos: go.Slice<go.go.token.LineInfo>=null);
 
 }

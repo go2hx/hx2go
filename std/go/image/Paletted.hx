@@ -9,7 +9,7 @@ extern class Paletted {
     @:native("Rect") var rect: go.image.Rectangle;
     @:native("Palette") var palette: go.image.color.Palette;
 
-    function new(pix: go.Slice<go.UInt8>, stride: go.GoInt, rect: go.image.Rectangle, palette: go.image.color.Palette);
+    function new(pix: go.Slice<go.UInt8>=null, stride: go.GoInt=0, rect: go.image.Rectangle, palette: go.image.color.Palette=null);
 
     @:native("At") function at(x: go.GoInt, y: go.GoInt): (go.image.color.Color);
     @:native("Bounds") function bounds(): (go.image.Rectangle);

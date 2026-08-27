@@ -7,6 +7,6 @@ extern class CommentedNode {
     @:native("Node") var node: Dynamic;
     @:native("Comments") var comments: go.Slice<go.Pointer<go.go.ast.CommentGroup>>;
 
-    function new(node: Dynamic, comments: go.Slice<go.Pointer<go.go.ast.CommentGroup>>);
+    function new(node: Dynamic=null, comments: go.Slice<go.Pointer<go.go.ast.CommentGroup>>=null);
 
 }

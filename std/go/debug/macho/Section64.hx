@@ -17,6 +17,6 @@ extern class Section64 {
     @:native("Reserve2") var reserve2: go.UInt32;
     @:native("Reserve3") var reserve3: go.UInt32;
 
-    function new(name: go.GoArray<go.Byte, 16>, seg: go.GoArray<go.Byte, 16>, addr: go.UInt64, size: go.UInt64, offset: go.UInt32, align: go.UInt32, reloff: go.UInt32, nreloc: go.UInt32, flags: go.UInt32, reserve1: go.UInt32, reserve2: go.UInt32, reserve3: go.UInt32);
+    function new(name: go.GoArray<go.Byte, 16>, seg: go.GoArray<go.Byte, 16>, addr: go.UInt64=0, size: go.UInt64=0, offset: go.UInt32=0, align: go.UInt32=0, reloff: go.UInt32=0, nreloc: go.UInt32=0, flags: go.UInt32=0, reserve1: go.UInt32=0, reserve2: go.UInt32=0, reserve3: go.UInt32=0);
 
 }

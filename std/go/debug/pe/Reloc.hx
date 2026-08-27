@@ -8,6 +8,6 @@ extern class Reloc {
     @:native("SymbolTableIndex") var symbolTableIndex: go.UInt32;
     @:native("Type") var type: go.UInt16;
 
-    function new(virtualAddress: go.UInt32, symbolTableIndex: go.UInt32, type: go.UInt16);
+    function new(virtualAddress: go.UInt32=0, symbolTableIndex: go.UInt32=0, type: go.UInt16=0);
 
 }

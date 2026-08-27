@@ -7,6 +7,6 @@ extern class Request {
     @:native("ServiceMethod") var serviceMethod: String;
     @:native("Seq") var seq: go.UInt64;
 
-    function new(serviceMethod: String, seq: go.UInt64);
+    function new(serviceMethod: String="", seq: go.UInt64=0);
 
 }

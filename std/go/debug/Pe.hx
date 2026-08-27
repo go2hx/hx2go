@@ -3,7 +3,7 @@ package go.debug;
 @:go.Type({ name: "pe", instanceName: "pe.pe", imports: ["debug/pe"] })
 extern class Pe {
 
-    @:native("COFFSymbolSize") static var COFFSymbolSize: go.GoInt;
+    @:native("COFFSymbolSize") static var cOFFSymbolSize: go.GoInt;
     @:native("IMAGE_COMDAT_SELECT_ANY") static var IMAGE_COMDAT_SELECT_ANY: go.GoInt;
     @:native("IMAGE_COMDAT_SELECT_ASSOCIATIVE") static var IMAGE_COMDAT_SELECT_ASSOCIATIVE: go.GoInt;
     @:native("IMAGE_COMDAT_SELECT_EXACT_MATCH") static var IMAGE_COMDAT_SELECT_EXACT_MATCH: go.GoInt;

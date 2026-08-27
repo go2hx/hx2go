@@ -3,9 +3,9 @@ package go.go;
 @:go.Type({ name: "doc", instanceName: "doc.doc", imports: ["go/doc"] })
 extern class Doc {
 
-    @:native("AllDecls") static var AllDecls: go.go.doc.Mode;
-    @:native("AllMethods") static var AllMethods: go.go.doc.Mode;
-    @:native("PreserveAST") static var PreserveAST: go.go.doc.Mode;
+    @:native("AllDecls") static var allDecls: go.go.doc.Mode;
+    @:native("AllMethods") static var allMethods: go.go.doc.Mode;
+    @:native("PreserveAST") static var preserveAST: go.go.doc.Mode;
 
     @:native("IllegalPrefixes") static var illegalPrefixes: go.Slice<String>;
 

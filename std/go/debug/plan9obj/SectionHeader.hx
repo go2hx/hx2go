@@ -8,6 +8,6 @@ extern class SectionHeader {
     @:native("Size") var size: go.UInt32;
     @:native("Offset") var offset: go.UInt32;
 
-    function new(name: String, size: go.UInt32, offset: go.UInt32);
+    function new(name: String="", size: go.UInt32=0, offset: go.UInt32=0);
 
 }

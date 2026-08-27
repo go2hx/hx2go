@@ -6,6 +6,6 @@ extern class PKCS1v15DecryptOptions {
 
     @:native("SessionKeyLen") var sessionKeyLen: go.GoInt;
 
-    function new(sessionKeyLen: go.GoInt);
+    function new(sessionKeyLen: go.GoInt=0);
 
 }

@@ -9,6 +9,6 @@ extern class DynamicVersion {
     @:native("Flags") var flags: go.debug.elf.DynamicVersionFlag;
     @:native("Deps") var deps: go.Slice<String>;
 
-    function new(name: String, index: go.UInt16, flags: go.debug.elf.DynamicVersionFlag, deps: go.Slice<String>);
+    function new(name: String="", index: go.UInt16=0, flags: go.debug.elf.DynamicVersionFlag=cast 0, deps: go.Slice<String>=null);
 
 }

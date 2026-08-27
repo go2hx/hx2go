@@ -7,6 +7,6 @@ extern class AttributeTypeAndValue {
     @:native("Type") var type: go.encoding.asn1.ObjectIdentifier;
     @:native("Value") var value: Dynamic;
 
-    function new(type: go.encoding.asn1.ObjectIdentifier, value: Dynamic);
+    function new(type: go.encoding.asn1.ObjectIdentifier=null, value: Dynamic=null);
 
 }

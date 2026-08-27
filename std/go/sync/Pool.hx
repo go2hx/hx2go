@@ -6,7 +6,7 @@ extern class Pool {
 
     @:native("New") var _new: () -> (Dynamic);
 
-    function new(_new: () -> (Dynamic));
+    function new(_new: () -> (Dynamic)=null);
 
     @:native("Get") function get(): (Dynamic);
     @:native("Put") function put(x: Dynamic): Void;

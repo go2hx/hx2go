@@ -9,6 +9,6 @@ extern class Config {
     @:native("Rand") var rand: go.Pointer<go.math.rand.Rand>;
     @:native("Values") var values: (p0: go.Slice<go.reflect.Value>, p1: go.Pointer<go.math.rand.Rand>) -> Void;
 
-    function new(maxCount: go.GoInt, maxCountScale: Float, rand: go.Pointer<go.math.rand.Rand>, values: (p0: go.Slice<go.reflect.Value>, p1: go.Pointer<go.math.rand.Rand>) -> Void);
+    function new(maxCount: go.GoInt=0, maxCountScale: Float=0.0, rand: go.Pointer<go.math.rand.Rand>=null, values: (p0: go.Slice<go.reflect.Value>, p1: go.Pointer<go.math.rand.Rand>) -> Void=null);
 
 }

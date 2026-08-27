@@ -27,7 +27,7 @@ class Normaliser {
     public function iterateExpr(e: HxbTypedExpr, scope: Scope, ancestor: Null<Ancestor>) {
         var children = []; // flatten / copy to prevent issues if mutating
         TypedExprTools.iter(e, child -> {
-            if (child != null) children.push(child); 
+            if (child != null) children.push(child);
         });
 
         for (idx in 0...children.length) {
@@ -117,6 +117,17 @@ class Normaliser {
                 null;
 
             case TBinop(OpAssignOp(op), left, right):
+                left.expr = switch left.expr {
+                    case TArray(e, idx): {
+                        TArray(
+                            scope.temp(expr, e, this, scope, ancestor),
+                            scope.temp(expr, idx, this, scope, ancestor)
+                        );
+                    }
+
+                    case _: left.expr;
+                }
+
                 expr.expr = TBinop(
                     OpAssign,
                     ExprCopy.copy(left),
@@ -207,6 +218,10 @@ class Normaliser {
                 if (eelse != null) {
                     eelse.expr = ensureBlock(eelse).expr;
                 }
+
+            case TUnop(op, _, e) if (op.match(OpIncrement | OpDecrement) && e.expr.match(TArray(_))):
+                toExpr(expr, scope, ancestor); // ugly hack
+                toStmt(expr, scope, ancestor);
 
             case TUnop(op, false, e) if (op.match(OpIncrement | OpDecrement)):
                 expr.expr = TUnop(op, true, e); // at this point it is guarenteed to be used as a stmt, so we can just use x++
@@ -309,8 +324,8 @@ class Normaliser {
 
             case TReturn(e) if (scope.activeTry != null):
                 expr.expr = e == null
-                    ? ExprHelper.createUntyped('hx_try_state = 1; return', []).expr
-                    : ExprHelper.createUntyped('hx_try_state = 1; hx_try_return = {0}; return', [ExprCopy.copy(e)]).expr;
+                ? ExprHelper.createUntyped('hx_try_state = 1; return', []).expr
+                : ExprHelper.createUntyped('hx_try_state = 1; hx_try_return = {0}; return', [ExprCopy.copy(e)]).expr;
 
             case TBreak if (scope.activeTryOwnsBreak):
                 expr.expr = ExprHelper.createUntyped('hx_try_state = 2; return', []).expr;

@@ -2,7 +2,6 @@ import go.Slice;
 import go.Fmt;
 import go.haxe.HxDynamic;
 import go.Reflect;
-import go.haxe.HxArray;
 import go.Go;
 import go.haxe.HxEnumValue;
 import go.haxe.HxEnum;
@@ -105,16 +104,6 @@ class Std {
             return string(value.elem());
         }
 
-        if (kind == Reflect.Array || kind == Reflect.Slice) {
-            var buf = new StringBuf();
-
-            buf.add('[');
-            buf.add(HxArray.map(value._interface(), string).join(","));
-            buf.add(']');
-
-            return buf.toString();
-        }
-
         if (kind == Reflect.Map) {
             var buf = new StringBuf();
             var keys = value.mapKeys();
@@ -171,6 +160,8 @@ class Std {
                     return string(toStr.call([])[0]);
                 }
             }
+
+            // TODO: haxe array printing
 
             return Fmt.sprintf("%v", value._interface());
         }

@@ -322,6 +322,8 @@ class Context {
         removeStaleFiles();
         cache.save();
 
+        copyRuntime();
+
         var closeFmt = times.start("gofmt");
         var proc = new sys.io.Process('gofmt -w $outputDirectory');
 
@@ -931,6 +933,23 @@ class Context {
         closeNorm();
 
         writer.types.importTarget = old;
+    }
+
+    function copyRuntime() {
+        #if go
+        var libPath = Path.join([ Sys.programPath(), '..', '..', '..', '..' ]);
+        #else
+        var libPath = Path.join([ Path.directory(Sys.programPath()), '..', '..' ]);
+        #end
+
+        var runtimePath = Path.join([ libPath, 'runtime' ]);
+        var runtimeFiles = FileSystem.readDirectory(runtimePath);
+
+        for (entry in runtimeFiles) {
+            var src = Path.join([ runtimePath, entry ]);
+            var dst = Path.join([ outputDirectory, entry ]);
+            File.saveContent(dst, File.getContent(src));
+        }
     }
 
     public function defineImportOnModule(moduleKey: String, goImport: String): Void {

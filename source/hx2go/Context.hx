@@ -103,6 +103,7 @@ class Context {
             new hx2go.passes.FunctionCompare(this),
             new hx2go.passes.TypeNormaliserCallReturn(this),
             new hx2go.passes.RewriteSyntaxCode(this),
+            new hx2go.passes.RewriteArrayLength(this),
             new hx2go.passes.RewriteGoUIntNegativeConst(this),
             new hx2go.passes.TypeNormaliserCall(this), // TODO: c2
             new hx2go.passes.TypeNormaliserNew(this),
@@ -156,7 +157,6 @@ class Context {
             new hx2go.passes.RewriteGoBuiltinCreation(this),
             new hx2go.passes.RewriteStringMethod(this),
             new hx2go.passes.RewriteStringLength(this),
-            new hx2go.passes.RewriteArrayLength(this),
             new hx2go.passes.RewriteSyntaxSelect(this),
             new hx2go.passes.RewriteSyntaxDefer(this),
             new hx2go.passes.RewriteSyntaxGo(this),
@@ -588,26 +588,6 @@ class Context {
                     }
                 }
 
-            case TInst({ name: "Array", pack: [] }, [inner]):
-                var n = normalize(inner);
-
-                switch (n) {
-                    case TDynamicAny | TDynamic(_):
-                        TDynamicAny;
-                    case _:
-                        TInst({ name: "Array", moduleName: "Array", pack: [] }, [n]);
-                }
-
-            case TAbstract({ pack: ["haxe", "ds"], name: "Vector" }, [inner]):
-                var n = normalize(inner);
-
-                switch (n) {
-                    case TDynamicAny | TDynamic(_):
-                        TDynamicAny;
-                    case _:
-                        TAbstract({ name: "Vector", moduleName: "Vector", pack: ["haxe", "ds"] }, [n]);
-                }
-
             case TTypeParam(_) | TUnboundTypeParam(_) | TAnon(_):
                 TDynamicAny;
 
@@ -627,6 +607,8 @@ class Context {
 
                 if (fwdNorm.match(TDynamic(_) | TDynamicAny)) {
                     TDynamicAny;
+                } else if (fwdNorm.match(TInst({ name: "Array", pack: [] }, [TDynamic(_) | TDynamicAny]))) {
+                    fwdNorm;
                 } else {
                     TType(path, params.map(normalize));
                 }
@@ -710,6 +692,15 @@ class Context {
 
             case TCall(e, _) if (e.t != null && e.t.match(TDynamic(_) | TDynamicAny)):
                 expr.t = TDynamicAny;
+
+            case TArray(e, _) if (e.t != null && e.t.match(TInst({ name: "Array", pack: [] }, [TDynamic(_) | TDynamicAny]))):
+                expr.t = TDynamicAny;
+
+            case TFunction(f):
+                f.t = normalize(f.t);
+                for (a in f.args) {
+                    a.v.type = normalize(a.v.type);
+                } // prepass is already done on a.value.t
 
             case TMeta(_, e):
                 expr.expr = e.expr;

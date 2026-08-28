@@ -20,6 +20,7 @@ type HxArray[T any] interface {
 	HxArrayDyn
 	Set(idx int32, val T)
 	Get(idx int32) T
+	Dyn() HxArray[any]
 	Underlying() []T
 }
 
@@ -58,6 +59,14 @@ func (this *HxArrayImpl[T]) Grow(elements int32) {
 
 func (this HxArrayView[T]) Grow(elements int32) {
 	this.source.Grow(elements)
+}
+
+func (this *HxArrayImpl[T]) Dyn() HxArray[any] {
+	return HxMakeArrayView[any](this)
+}
+
+func (this HxArrayView[T]) Dyn() HxArray[any] {
+	return HxMakeArrayView[any](this.source)
 }
 
 func (this *HxArrayImpl[T]) ElemType() reflect.Type {

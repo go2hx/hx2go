@@ -10,6 +10,8 @@ import (
 type HxArrayDyn interface {
 	Set_Dyn(idx int32, val any)
 	Get_Dyn(idx int32) any
+	FastSet_Dyn(idx int32, val any)
+	FastGet_Dyn(idx int32) any
 	Pop_Dyn() any
 	Shift_Dyn() any
 	Underlying_Dyn() []any
@@ -23,6 +25,8 @@ type HxArray[T any] interface {
 	HxArrayDyn
 	Set(idx int32, val T)
 	Get(idx int32) T
+	FastSet(idx int32, val T)
+	FastGet(idx int32) T
 	Pop() HxNullable[T]
 	Shift() HxNullable[T]
 	Dyn() HxArray[any]
@@ -145,6 +149,39 @@ func (this *HxArrayImpl[T]) Get(idx int32) T {
 	}
 
 	return this.data[idx]
+}
+
+func (this *HxArrayImpl[T]) FastSet(idx int32, val T) {
+	this.data[idx] = val
+}
+
+func (this *HxArrayImpl[T]) FastGet(idx int32) T {
+	return this.data[idx]
+}
+
+func (this *HxArrayImpl[T]) FastSet_Dyn(idx int32, val any) {
+	this.data[idx] = HxConvert[T](val)
+}
+
+func (this *HxArrayImpl[T]) FastGet_Dyn(idx int32) any {
+	return this.data[idx]
+}
+
+func (this HxArrayView[T]) FastSet_Dyn(idx int32, val any) {
+	this.source.FastSet_Dyn(idx, val)
+}
+
+func (this HxArrayView[T]) FastGet_Dyn(idx int32) any {
+	return this.source.FastGet_Dyn(idx)
+}
+
+func (this HxArrayView[T]) FastSet(idx int32, val T) {
+	this.source.FastSet_Dyn(idx, val)
+}
+
+func (this HxArrayView[T]) FastGet(idx int32) T {
+	r_dyn := this.source.FastGet_Dyn(idx)
+	return HxConvert[T](r_dyn)
 }
 
 func (this *HxArrayImpl[T]) Underlying() []T {

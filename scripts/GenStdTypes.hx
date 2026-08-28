@@ -216,6 +216,9 @@ function main() {
         File.saveContent(path, content.toString());
     }
 
+    // Comparable.hx
+    File.saveContent(Path.join([path, 'Comparable.hx']), 'package go;\n\n@:go.Type({ name: "comparable" })\ninterface Comparable {}');
+
     var convPath = Path.join([ path, 'Go.hx' ]);
     var convContent = new StringBuf();
 

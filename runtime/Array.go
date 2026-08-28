@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"reflect"
 	"strings"
 )
 
@@ -9,6 +10,7 @@ type HxArrayDyn interface {
 	Set_Dyn(idx int32, val any)
 	Get_Dyn(idx int32) any
 	Underlying_Dyn() []any
+	ElemType() reflect.Type
 	Len() int32
 	String() string
 }
@@ -28,6 +30,14 @@ func HxMakeArray[T any](items ...T) HxArray[T] {
 	local := make([]T, len(items))
 	copy(local, items)
 	return HxArrayImpl[T]{local}
+}
+
+func (this HxArrayImpl[T]) ElemType() reflect.Type {
+	return reflect.TypeOf((*T)(nil)).Elem()
+}
+
+func (this HxArrayView[T]) ElemType() reflect.Type {
+	return reflect.TypeOf((*T)(nil)).Elem()
 }
 
 func (this HxArrayImpl[T]) Set_Dyn(idx int32, val any) {

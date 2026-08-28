@@ -1,5 +1,9 @@
 package go.go.ast;
 
+/**
+    A KeyValueExpr node represents (key : value) pairs
+    in composite literals.
+**/
 @:structInit
 @:go.Type({ name: "KeyValueExpr", instanceName: "ast.KeyValueExpr", imports: ["go/ast"] })
 extern class KeyValueExpr {

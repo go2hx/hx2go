@@ -1,5 +1,8 @@
 package go.go.build.constraint;
 
+/**
+    A SyntaxError reports a syntax error in a parsed build expression.
+**/
 @:structInit
 @:go.Type({ name: "SyntaxError", instanceName: "constraint.SyntaxError", imports: ["go/build/constraint"] })
 extern class SyntaxError {

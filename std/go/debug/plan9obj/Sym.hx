@@ -1,5 +1,8 @@
 package go.debug.plan9obj;
 
+/**
+    A Symbol represents an entry in a Plan 9 a.out symbol table section.
+**/
 @:structInit
 @:go.Type({ name: "Sym", instanceName: "plan9obj.Sym", imports: ["debug/plan9obj"] })
 extern class Sym {

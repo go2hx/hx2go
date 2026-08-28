@@ -1,5 +1,8 @@
 package go.go.ast;
 
+/**
+    A SwitchStmt node represents an expression switch statement.
+**/
 @:structInit
 @:go.Type({ name: "SwitchStmt", instanceName: "ast.SwitchStmt", imports: ["go/ast"] })
 extern class SwitchStmt {

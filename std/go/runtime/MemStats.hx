@@ -1,5 +1,8 @@
 package go.runtime;
 
+/**
+    A MemStats records statistics about the memory allocator.
+**/
 @:structInit
 @:go.Type({ name: "MemStats", instanceName: "runtime.MemStats", imports: ["runtime"] })
 extern class MemStats {

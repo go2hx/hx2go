@@ -1,5 +1,8 @@
 package go.debug.elf;
 
+/**
+    A ProgHeader represents a single ELF program header.
+**/
 @:structInit
 @:go.Type({ name: "ProgHeader", instanceName: "elf.ProgHeader", imports: ["debug/elf"] })
 extern class ProgHeader {

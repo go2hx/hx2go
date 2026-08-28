@@ -1,5 +1,8 @@
 package go.go.ast;
 
+/**
+    An IfStmt node represents an if statement.
+**/
 @:structInit
 @:go.Type({ name: "IfStmt", instanceName: "ast.IfStmt", imports: ["go/ast"] })
 extern class IfStmt {

@@ -1,5 +1,8 @@
 package go.debug.elf;
 
+/**
+    ELF64 Dynamic structure. The ".dynamic" section contains an array of them.
+**/
 @:structInit
 @:go.Type({ name: "Dyn64", instanceName: "elf.Dyn64", imports: ["debug/elf"] })
 extern class Dyn64 {

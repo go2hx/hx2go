@@ -1,5 +1,8 @@
 package go.debug.plan9obj;
 
+/**
+    A FileHeader represents a Plan 9 a.out file header.
+**/
 @:structInit
 @:go.Type({ name: "FileHeader", instanceName: "plan9obj.FileHeader", imports: ["debug/plan9obj"] })
 extern class FileHeader {

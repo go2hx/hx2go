@@ -1,5 +1,8 @@
 package go.debug.macho;
 
+/**
+    A RpathCmd is a Mach-O rpath command.
+**/
 @:structInit
 @:go.Type({ name: "RpathCmd", instanceName: "macho.RpathCmd", imports: ["debug/macho"] })
 extern class RpathCmd {

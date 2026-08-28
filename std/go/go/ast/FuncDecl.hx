@@ -1,5 +1,8 @@
 package go.go.ast;
 
+/**
+    A FuncDecl node represents a function declaration.
+**/
 @:structInit
 @:go.Type({ name: "FuncDecl", instanceName: "ast.FuncDecl", imports: ["go/ast"] })
 extern class FuncDecl {

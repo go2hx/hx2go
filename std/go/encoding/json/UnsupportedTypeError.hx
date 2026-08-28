@@ -1,5 +1,9 @@
 package go.encoding.json;
 
+/**
+    An UnsupportedTypeError is returned by [Marshal] when attempting
+    to encode an unsupported value type.
+**/
 @:structInit
 @:go.Type({ name: "UnsupportedTypeError", instanceName: "json.UnsupportedTypeError", imports: ["encoding/json"] })
 extern class UnsupportedTypeError {

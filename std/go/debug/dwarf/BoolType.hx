@@ -1,5 +1,8 @@
 package go.debug.dwarf;
 
+/**
+    A BoolType represents a boolean type.
+**/
 @:structInit
 @:go.Type({ name: "BoolType", instanceName: "dwarf.BoolType", imports: ["debug/dwarf"] })
 extern class BoolType {

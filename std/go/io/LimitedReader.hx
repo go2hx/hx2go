@@ -1,5 +1,11 @@
 package go.io;
 
+/**
+    A LimitedReader reads from R but limits the amount of
+    data returned to just N bytes. Each call to Read
+    updates N to reflect the new amount remaining.
+    Read returns EOF when N <= 0 or when the underlying R returns EOF.
+**/
 @:structInit
 @:go.Type({ name: "LimitedReader", instanceName: "io.LimitedReader", imports: ["io"] })
 extern class LimitedReader {

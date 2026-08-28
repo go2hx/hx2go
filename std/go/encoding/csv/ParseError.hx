@@ -1,5 +1,9 @@
 package go.encoding.csv;
 
+/**
+    A ParseError is returned for parsing errors.
+    Line and column numbers are 1-indexed.
+**/
 @:structInit
 @:go.Type({ name: "ParseError", instanceName: "csv.ParseError", imports: ["encoding/csv"] })
 extern class ParseError {

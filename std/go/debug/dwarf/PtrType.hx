@@ -1,5 +1,8 @@
 package go.debug.dwarf;
 
+/**
+    A PtrType represents a pointer type.
+**/
 @:structInit
 @:go.Type({ name: "PtrType", instanceName: "dwarf.PtrType", imports: ["debug/dwarf"] })
 extern class PtrType {

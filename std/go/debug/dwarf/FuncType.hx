@@ -1,5 +1,8 @@
 package go.debug.dwarf;
 
+/**
+    A FuncType represents a function type.
+**/
 @:structInit
 @:go.Type({ name: "FuncType", instanceName: "dwarf.FuncType", imports: ["debug/dwarf"] })
 extern class FuncType {

@@ -1,5 +1,8 @@
 package go.debug.dwarf;
 
+/**
+    An ArrayType represents a fixed size array type.
+**/
 @:structInit
 @:go.Type({ name: "ArrayType", instanceName: "dwarf.ArrayType", imports: ["debug/dwarf"] })
 extern class ArrayType {

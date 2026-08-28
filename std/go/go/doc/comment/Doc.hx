@@ -1,5 +1,8 @@
 package go.go.doc.comment;
 
+/**
+    A Doc is a parsed Go doc comment.
+**/
 @:structInit
 @:go.Type({ name: "Doc", instanceName: "comment.Doc", imports: ["go/doc/comment"] })
 extern class Doc {

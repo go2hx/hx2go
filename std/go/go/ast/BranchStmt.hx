@@ -1,5 +1,9 @@
 package go.go.ast;
 
+/**
+    A BranchStmt node represents a break, continue, goto,
+    or fallthrough statement.
+**/
 @:structInit
 @:go.Type({ name: "BranchStmt", instanceName: "ast.BranchStmt", imports: ["go/ast"] })
 extern class BranchStmt {

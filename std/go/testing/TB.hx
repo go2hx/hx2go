@@ -1,5 +1,8 @@
 package go.testing;
 
+/**
+    TB is the interface common to [T], [B], and [F].
+**/
 @:go.Type({ name: "TB", instanceName: "testing.TB", imports: ["testing"] })
 extern typedef TB = {
 

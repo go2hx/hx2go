@@ -1,5 +1,8 @@
 package go.go.ast;
 
+/**
+    A CaseClause represents a case of an expression or type switch statement.
+**/
 @:structInit
 @:go.Type({ name: "CaseClause", instanceName: "ast.CaseClause", imports: ["go/ast"] })
 extern class CaseClause {

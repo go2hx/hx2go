@@ -1,5 +1,8 @@
 package go.testing.quick;
 
+/**
+    A Config structure contains options for running a test.
+**/
 @:structInit
 @:go.Type({ name: "Config", instanceName: "quick.Config", imports: ["testing/quick"] })
 extern class Config {

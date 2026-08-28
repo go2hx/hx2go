@@ -1,5 +1,8 @@
 package go.image.gif;
 
+/**
+    GIF represents the possibly multiple images stored in a GIF file.
+**/
 @:structInit
 @:go.Type({ name: "GIF", instanceName: "gif.GIF", imports: ["image/gif"] })
 extern class GIF {

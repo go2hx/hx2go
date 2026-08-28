@@ -1,5 +1,28 @@
 package go;
 
+/**
+    Package syscall contains an interface to the low-level operating system
+    primitives. The details vary depending on the underlying system, and
+    by default, godoc will display the syscall documentation for the current
+    system. If you want godoc to display syscall documentation for another
+    system, set $GOOS and $GOARCH to the desired system. For example, if
+    you want to view documentation for freebsd/arm on linux/amd64, set $GOOS
+    to freebsd and $GOARCH to arm.
+    The primary use of syscall is inside other packages that provide a more
+    portable interface to the system, such as "os", "time" and "net".  Use
+    those packages rather than this one if you can.
+    For details of the functions and data types in this package consult
+    the manuals for the appropriate operating system.
+    These calls return err == nil to indicate success; otherwise
+    err is an operating system error describing the failure.
+    On most systems, that error has type [Errno].
+    
+    NOTE: Most of the functions, types, and constants defined in
+    this package are also available in the [golang.org/x/sys] package.
+    That package has more system call support than this one,
+    and most new code should prefer that package where possible.
+    See https://golang.org/s/go1.4-syscall for more information.
+**/
 @:go.Type({ name: "syscall", instanceName: "syscall.syscall", imports: ["syscall"] })
 extern class Syscall {
 
@@ -179,22 +202,73 @@ extern class Syscall {
     @:native("DT_SOCK") static var DT_SOCK: go.GoInt;
     @:native("DT_UNKNOWN") static var DT_UNKNOWN: go.GoInt;
     @:native("DT_WHT") static var DT_WHT: go.GoInt;
+    /**
+        Errors
+    **/
     @:native("E2BIG") static var E2BIG: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("EACCES") static var EACCES: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("EADDRINUSE") static var EADDRINUSE: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("EADDRNOTAVAIL") static var EADDRNOTAVAIL: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("EAFNOSUPPORT") static var EAFNOSUPPORT: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("EAGAIN") static var EAGAIN: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("EALREADY") static var EALREADY: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("EAUTH") static var EAUTH: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("EBADARCH") static var EBADARCH: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("EBADEXEC") static var EBADEXEC: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("EBADF") static var EBADF: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("EBADMACHO") static var EBADMACHO: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("EBADMSG") static var EBADMSG: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("EBADRPC") static var EBADRPC: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("EBUSY") static var EBUSY: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("ECANCELED") static var ECANCELED: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("ECHILD") static var ECHILD: go.syscall.Errno;
     @:native("ECHO") static var ECHO: go.GoInt;
     @:native("ECHOCTL") static var ECHOCTL: go.GoInt;
@@ -203,93 +277,357 @@ extern class Syscall {
     @:native("ECHOKE") static var ECHOKE: go.GoInt;
     @:native("ECHONL") static var ECHONL: go.GoInt;
     @:native("ECHOPRT") static var ECHOPRT: go.GoInt;
+    /**
+        Errors
+    **/
     @:native("ECONNABORTED") static var ECONNABORTED: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("ECONNREFUSED") static var ECONNREFUSED: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("ECONNRESET") static var ECONNRESET: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("EDEADLK") static var EDEADLK: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("EDESTADDRREQ") static var EDESTADDRREQ: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("EDEVERR") static var EDEVERR: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("EDOM") static var EDOM: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("EDQUOT") static var EDQUOT: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("EEXIST") static var EEXIST: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("EFAULT") static var EFAULT: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("EFBIG") static var EFBIG: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("EFTYPE") static var EFTYPE: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("EHOSTDOWN") static var EHOSTDOWN: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("EHOSTUNREACH") static var EHOSTUNREACH: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("EIDRM") static var EIDRM: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("EILSEQ") static var EILSEQ: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("EINPROGRESS") static var EINPROGRESS: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("EINTR") static var EINTR: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("EINVAL") static var EINVAL: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("EIO") static var EIO: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("EISCONN") static var EISCONN: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("EISDIR") static var EISDIR: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("ELAST") static var ELAST: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("ELOOP") static var ELOOP: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("EMFILE") static var EMFILE: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("EMLINK") static var EMLINK: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("EMSGSIZE") static var EMSGSIZE: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("EMULTIHOP") static var EMULTIHOP: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("ENAMETOOLONG") static var ENAMETOOLONG: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("ENEEDAUTH") static var ENEEDAUTH: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("ENETDOWN") static var ENETDOWN: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("ENETRESET") static var ENETRESET: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("ENETUNREACH") static var ENETUNREACH: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("ENFILE") static var ENFILE: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("ENOATTR") static var ENOATTR: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("ENOBUFS") static var ENOBUFS: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("ENODATA") static var ENODATA: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("ENODEV") static var ENODEV: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("ENOENT") static var ENOENT: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("ENOEXEC") static var ENOEXEC: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("ENOLCK") static var ENOLCK: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("ENOLINK") static var ENOLINK: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("ENOMEM") static var ENOMEM: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("ENOMSG") static var ENOMSG: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("ENOPOLICY") static var ENOPOLICY: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("ENOPROTOOPT") static var ENOPROTOOPT: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("ENOSPC") static var ENOSPC: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("ENOSR") static var ENOSR: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("ENOSTR") static var ENOSTR: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("ENOSYS") static var ENOSYS: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("ENOTBLK") static var ENOTBLK: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("ENOTCONN") static var ENOTCONN: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("ENOTDIR") static var ENOTDIR: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("ENOTEMPTY") static var ENOTEMPTY: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("ENOTRECOVERABLE") static var ENOTRECOVERABLE: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("ENOTSOCK") static var ENOTSOCK: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("ENOTSUP") static var ENOTSUP: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("ENOTTY") static var ENOTTY: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("ENXIO") static var ENXIO: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("EOPNOTSUPP") static var EOPNOTSUPP: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("EOVERFLOW") static var EOVERFLOW: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("EOWNERDEAD") static var EOWNERDEAD: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("EPERM") static var EPERM: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("EPFNOSUPPORT") static var EPFNOSUPPORT: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("EPIPE") static var EPIPE: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("EPROCLIM") static var EPROCLIM: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("EPROCUNAVAIL") static var EPROCUNAVAIL: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("EPROGMISMATCH") static var EPROGMISMATCH: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("EPROGUNAVAIL") static var EPROGUNAVAIL: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("EPROTO") static var EPROTO: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("EPROTONOSUPPORT") static var EPROTONOSUPPORT: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("EPROTOTYPE") static var EPROTOTYPE: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("EPWROFF") static var EPWROFF: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("ERANGE") static var ERANGE: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("EREMOTE") static var EREMOTE: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("EROFS") static var EROFS: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("ERPCMISMATCH") static var ERPCMISMATCH: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("ESHLIBVERS") static var ESHLIBVERS: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("ESHUTDOWN") static var ESHUTDOWN: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("ESOCKTNOSUPPORT") static var ESOCKTNOSUPPORT: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("ESPIPE") static var ESPIPE: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("ESRCH") static var ESRCH: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("ESTALE") static var ESTALE: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("ETIME") static var ETIME: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("ETIMEDOUT") static var ETIMEDOUT: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("ETOOMANYREFS") static var ETOOMANYREFS: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("ETXTBSY") static var ETXTBSY: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("EUSERS") static var EUSERS: go.syscall.Errno;
     @:native("EVFILT_AIO") static var EVFILT_AIO: go.GoInt;
     @:native("EVFILT_FS") static var EVFILT_FS: go.GoInt;
@@ -319,7 +657,13 @@ extern class Syscall {
     @:native("EV_POLL") static var EV_POLL: go.GoInt;
     @:native("EV_RECEIPT") static var EV_RECEIPT: go.GoInt;
     @:native("EV_SYSFLAGS") static var EV_SYSFLAGS: go.GoInt;
+    /**
+        Errors
+    **/
     @:native("EWOULDBLOCK") static var EWOULDBLOCK: go.syscall.Errno;
+    /**
+        Errors
+    **/
     @:native("EXDEV") static var EXDEV: go.syscall.Errno;
     @:native("EXTA") static var EXTA: go.GoInt;
     @:native("EXTB") static var EXTB: go.GoInt;
@@ -967,37 +1311,133 @@ extern class Syscall {
     @:native("SHUT_RD") static var SHUT_RD: go.GoInt;
     @:native("SHUT_RDWR") static var SHUT_RDWR: go.GoInt;
     @:native("SHUT_WR") static var SHUT_WR: go.GoInt;
+    /**
+        Signals
+    **/
     @:native("SIGABRT") static var SIGABRT: go.syscall.Signal;
+    /**
+        Signals
+    **/
     @:native("SIGALRM") static var SIGALRM: go.syscall.Signal;
+    /**
+        Signals
+    **/
     @:native("SIGBUS") static var SIGBUS: go.syscall.Signal;
+    /**
+        Signals
+    **/
     @:native("SIGCHLD") static var SIGCHLD: go.syscall.Signal;
+    /**
+        Signals
+    **/
     @:native("SIGCONT") static var SIGCONT: go.syscall.Signal;
+    /**
+        Signals
+    **/
     @:native("SIGEMT") static var SIGEMT: go.syscall.Signal;
+    /**
+        Signals
+    **/
     @:native("SIGFPE") static var SIGFPE: go.syscall.Signal;
+    /**
+        Signals
+    **/
     @:native("SIGHUP") static var SIGHUP: go.syscall.Signal;
+    /**
+        Signals
+    **/
     @:native("SIGILL") static var SIGILL: go.syscall.Signal;
+    /**
+        Signals
+    **/
     @:native("SIGINFO") static var SIGINFO: go.syscall.Signal;
+    /**
+        Signals
+    **/
     @:native("SIGINT") static var SIGINT: go.syscall.Signal;
+    /**
+        Signals
+    **/
     @:native("SIGIO") static var SIGIO: go.syscall.Signal;
+    /**
+        Signals
+    **/
     @:native("SIGIOT") static var SIGIOT: go.syscall.Signal;
+    /**
+        Signals
+    **/
     @:native("SIGKILL") static var SIGKILL: go.syscall.Signal;
+    /**
+        Signals
+    **/
     @:native("SIGPIPE") static var SIGPIPE: go.syscall.Signal;
+    /**
+        Signals
+    **/
     @:native("SIGPROF") static var SIGPROF: go.syscall.Signal;
+    /**
+        Signals
+    **/
     @:native("SIGQUIT") static var SIGQUIT: go.syscall.Signal;
+    /**
+        Signals
+    **/
     @:native("SIGSEGV") static var SIGSEGV: go.syscall.Signal;
+    /**
+        Signals
+    **/
     @:native("SIGSTOP") static var SIGSTOP: go.syscall.Signal;
+    /**
+        Signals
+    **/
     @:native("SIGSYS") static var SIGSYS: go.syscall.Signal;
+    /**
+        Signals
+    **/
     @:native("SIGTERM") static var SIGTERM: go.syscall.Signal;
+    /**
+        Signals
+    **/
     @:native("SIGTRAP") static var SIGTRAP: go.syscall.Signal;
+    /**
+        Signals
+    **/
     @:native("SIGTSTP") static var SIGTSTP: go.syscall.Signal;
+    /**
+        Signals
+    **/
     @:native("SIGTTIN") static var SIGTTIN: go.syscall.Signal;
+    /**
+        Signals
+    **/
     @:native("SIGTTOU") static var SIGTTOU: go.syscall.Signal;
+    /**
+        Signals
+    **/
     @:native("SIGURG") static var SIGURG: go.syscall.Signal;
+    /**
+        Signals
+    **/
     @:native("SIGUSR1") static var SIGUSR1: go.syscall.Signal;
+    /**
+        Signals
+    **/
     @:native("SIGUSR2") static var SIGUSR2: go.syscall.Signal;
+    /**
+        Signals
+    **/
     @:native("SIGVTALRM") static var SIGVTALRM: go.syscall.Signal;
+    /**
+        Signals
+    **/
     @:native("SIGWINCH") static var SIGWINCH: go.syscall.Signal;
+    /**
+        Signals
+    **/
     @:native("SIGXCPU") static var SIGXCPU: go.syscall.Signal;
+    /**
+        Signals
+    **/
     @:native("SIGXFSZ") static var SIGXFSZ: go.syscall.Signal;
     @:native("SIOCADDMULTI") static var SIOCADDMULTI: go.GoInt;
     @:native("SIOCAIFADDR") static var SIOCAIFADDR: go.GoInt;
@@ -1646,7 +2086,59 @@ extern class Syscall {
     @:native("WSTOPPED") static var WSTOPPED: go.GoInt;
     @:native("WUNTRACED") static var WUNTRACED: go.GoInt;
 
+    /**
+        ForkLock is used to synchronize creation of new file descriptors
+        with fork.
+        
+        We want the child in a fork/exec sequence to inherit only the
+        file descriptors we intend. To do that, we mark all file
+        descriptors close-on-exec and then, in the child, explicitly
+        unmark the ones we want the exec'ed program to keep.
+        Unix doesn't make this easy: there is, in general, no way to
+        allocate a new file descriptor close-on-exec. Instead you
+        have to allocate the descriptor and then mark it close-on-exec.
+        If a fork happens between those two events, the child's exec
+        will inherit an unwanted file descriptor.
+        
+        This lock solves that race: the create new fd/mark close-on-exec
+        operation is done holding ForkLock for reading, and the fork itself
+        is done holding ForkLock for writing. At least, that's the idea.
+        There are some complications.
+        
+        Some system calls that create new file descriptors can block
+        for arbitrarily long times: open on a hung NFS server or named
+        pipe, accept on a socket, and so on. We can't reasonably grab
+        the lock across those operations.
+        
+        It is worse to inherit some file descriptors than others.
+        If a non-malicious child accidentally inherits an open ordinary file,
+        that's not a big deal. On the other hand, if a long-lived child
+        accidentally inherits the write end of a pipe, then the reader
+        of that pipe will not see EOF until that child exits, potentially
+        causing the parent program to hang. This is a common problem
+        in threaded C programs that use popen.
+        
+        Luckily, the file descriptors that are most important not to
+        inherit are not the ones that can take an arbitrarily long time
+        to create: pipe returns instantly, and the net package uses
+        non-blocking I/O to accept on a listening socket.
+        The rules for which file descriptor-creating operations use the
+        ForkLock are as follows:
+        
+          - [Pipe]. Use pipe2 if available. Otherwise, does not block,
+            so use ForkLock.
+          - [Socket]. Use SOCK_CLOEXEC if available. Otherwise, does not
+            block, so use ForkLock.
+          - [Open]. Use [O_CLOEXEC] if available. Otherwise, may block,
+            so live with the race.
+          - [Dup]. Use [F_DUPFD_CLOEXEC] or dup3 if available. Otherwise,
+            does not block, so use ForkLock.
+    **/
     @:native("ForkLock") static var forkLock: go.sync.RWMutex;
+    /**
+        For testing: clients can set this flag to force
+        creation of IPv6 sockets to return [EAFNOSUPPORT].
+    **/
     @:native("SocketDisableIPv6") static var socketDisableIPv6: Bool;
     @:native("Stderr") static var stderr: go.GoInt;
     @:native("Stdin") static var stdin: go.GoInt;
@@ -1656,17 +2148,54 @@ extern class Syscall {
     @:native("Access") static function access(path: String, mode: go.UInt32): (go.Error);
     @:native("Adjtime") static function adjtime(delta: go.Pointer<go.syscall.Timeval>, olddelta: go.Pointer<go.syscall.Timeval>): (go.Error);
     @:native("Bind") static function bind(fd: go.GoInt, sa: go.syscall.Sockaddr): (go.Error);
+    /**
+        Deprecated: Use golang.org/x/net/bpf instead.
+    **/
     @:native("BpfBuflen") static function bpfBuflen(fd: go.GoInt): (go.Result<go.GoInt>);
+    /**
+        Deprecated: Use golang.org/x/net/bpf instead.
+    **/
     @:native("BpfDatalink") static function bpfDatalink(fd: go.GoInt): (go.Result<go.GoInt>);
+    /**
+        Deprecated: Use golang.org/x/net/bpf instead.
+    **/
     @:native("BpfHeadercmpl") static function bpfHeadercmpl(fd: go.GoInt): (go.Result<go.GoInt>);
+    /**
+        Deprecated: Use golang.org/x/net/bpf instead.
+    **/
     @:native("BpfInterface") static function bpfInterface(fd: go.GoInt, name: String): (go.Result<String>);
+    /**
+        Deprecated: Use golang.org/x/net/bpf instead.
+    **/
     @:native("BpfJump") static function bpfJump(code: go.GoInt, k: go.GoInt, jt: go.GoInt, jf: go.GoInt): (go.Pointer<go.syscall.BpfInsn>);
+    /**
+        Deprecated: Use golang.org/x/net/bpf instead.
+    **/
     @:native("BpfStats") static function bpfStats(fd: go.GoInt): (go.Result<go.Pointer<go.syscall.BpfStat>>);
+    /**
+        Deprecated: Use golang.org/x/net/bpf instead.
+    **/
     @:native("BpfStmt") static function bpfStmt(code: go.GoInt, k: go.GoInt): (go.Pointer<go.syscall.BpfInsn>);
+    /**
+        Deprecated: Use golang.org/x/net/bpf instead.
+    **/
     @:native("BpfTimeout") static function bpfTimeout(fd: go.GoInt): (go.Result<go.Pointer<go.syscall.Timeval>>);
+    /**
+        BytePtrFromString returns a pointer to a NUL-terminated array of
+        bytes containing the text of s. If s contains a NUL byte at any
+        location, it returns (nil, [EINVAL]).
+    **/
     @:native("BytePtrFromString") static function bytePtrFromString(s: String): (go.Result<go.Pointer<go.Byte>>);
+    /**
+        ByteSliceFromString returns a NUL-terminated slice of bytes
+        containing the text of s. If s contains a NUL byte at any
+        location, it returns (nil, [EINVAL]).
+    **/
     @:native("ByteSliceFromString") static function byteSliceFromString(s: String): (go.Result<go.Slice<go.Byte>>);
     @:native("Chdir") static function chdir(path: String): (go.Error);
+    /**
+        Deprecated: Use golang.org/x/net/bpf instead.
+    **/
     @:native("CheckBpfVersion") static function checkBpfVersion(fd: go.GoInt): (go.Error);
     @:native("Chflags") static function chflags(path: String, flags: go.GoInt): (go.Error);
     @:native("Chmod") static function chmod(path: String, mode: go.UInt32): (go.Error);
@@ -1675,22 +2204,42 @@ extern class Syscall {
     @:native("Clearenv") static function clearenv(): Void;
     @:native("Close") static function close(fd: go.GoInt): (go.Error);
     @:native("CloseOnExec") static function closeOnExec(fd: go.GoInt): Void;
+    /**
+        CmsgLen returns the value to store in the Len field of the [Cmsghdr]
+        structure, taking into account any necessary alignment.
+    **/
     @:native("CmsgLen") static function cmsgLen(datalen: go.GoInt): (go.GoInt);
+    /**
+        CmsgSpace returns the number of bytes an ancillary element with
+        payload of the passed data length occupies.
+    **/
     @:native("CmsgSpace") static function cmsgSpace(datalen: go.GoInt): (go.GoInt);
     @:native("Connect") static function connect(fd: go.GoInt, sa: go.syscall.Sockaddr): (go.Error);
     @:native("Dup") static function dup(fd: go.GoInt): (go.Result<go.GoInt>);
     @:native("Dup2") static function dup2(_from: go.GoInt, _to: go.GoInt): (go.Error);
     @:native("Environ") static function environ(): (go.Slice<String>);
     @:native("Exchangedata") static function exchangedata(path1: String, path2: String, options: go.GoInt): (go.Error);
+    /**
+        Exec invokes the execve(2) system call.
+    **/
     @:native("Exec") static function exec(argv0: String, argv: go.Slice<String>, envv: go.Slice<String>): (go.Error);
     @:native("Exit") static function exit(code: go.GoInt): Void;
     @:native("Fchdir") static function fchdir(fd: go.GoInt): (go.Error);
     @:native("Fchflags") static function fchflags(fd: go.GoInt, flags: go.GoInt): (go.Error);
     @:native("Fchmod") static function fchmod(fd: go.GoInt, mode: go.UInt32): (go.Error);
     @:native("Fchown") static function fchown(fd: go.GoInt, uid: go.GoInt, gid: go.GoInt): (go.Error);
+    /**
+        FcntlFlock performs a fcntl syscall for the [F_GETLK], [F_SETLK] or [F_SETLKW] command.
+    **/
     @:native("FcntlFlock") static function fcntlFlock(fd: go.UIntPtr, cmd: go.GoInt, lk: go.Pointer<go.syscall.Flock_t>): (go.Error);
     @:native("Flock") static function flock(fd: go.GoInt, how: go.GoInt): (go.Error);
+    /**
+        Deprecated: Use golang.org/x/net/bpf instead.
+    **/
     @:native("FlushBpf") static function flushBpf(fd: go.GoInt): (go.Error);
+    /**
+        Combination of fork and exec, careful to be thread safe.
+    **/
     @:native("ForkExec") static function forkExec(argv0: String, argv: go.Slice<String>, attr: go.Pointer<go.syscall.ProcAttr>): (go.Result<go.GoInt>);
     @:native("Fpathconf") static function fpathconf(fd: go.GoInt, name: go.GoInt): (go.Result<go.GoInt>);
     @:native("Fstat") static function fstat(fd: go.GoInt, stat: go.Pointer<go.syscall.Stat_t>): (go.Error);
@@ -1745,13 +2294,45 @@ extern class Syscall {
     @:native("Munlock") static function munlock(b: go.Slice<go.Byte>): (go.Error);
     @:native("Munlockall") static function munlockall(): (go.Error);
     @:native("Munmap") static function munmap(b: go.Slice<go.Byte>): (go.Error);
+    /**
+        NsecToTimespec converts a number of nanoseconds into a [Timespec].
+    **/
     @:native("NsecToTimespec") static function nsecToTimespec(nsec: go.Int64): (go.syscall.Timespec);
+    /**
+        NsecToTimeval converts a number of nanoseconds into a [Timeval].
+    **/
     @:native("NsecToTimeval") static function nsecToTimeval(nsec: go.Int64): (go.syscall.Timeval);
     @:native("Open") static function open(path: String, mode: go.GoInt, perm: go.UInt32): (go.Result<go.GoInt>);
+    /**
+        ParseDirent parses up to max directory entries in buf,
+        appending the names to names. It returns the number of
+        bytes consumed from buf, the number of entries added
+        to names, and the new names slice.
+    **/
     @:go.Tuple("consumed", "count", "newnames") @:native("ParseDirent") static function parseDirent(buf: go.Slice<go.Byte>, max: go.GoInt, names: go.Slice<String>): (go.Tuple<{ consumed: go.GoInt, count: go.GoInt, newnames: go.Slice<String> }>);
+    /**
+        ParseRoutingMessage parses b as routing messages and returns the
+        slice containing the [RoutingMessage] interfaces.
+        
+        Deprecated: Use golang.org/x/net/route instead.
+    **/
     @:native("ParseRoutingMessage") static function parseRoutingMessage(b: go.Slice<go.Byte>): (go.Result<go.Slice<go.syscall.RoutingMessage>>);
+    /**
+        ParseRoutingSockaddr parses msg's payload as raw sockaddrs and
+        returns the slice containing the [Sockaddr] interfaces.
+        
+        Deprecated: Use golang.org/x/net/route instead.
+    **/
     @:native("ParseRoutingSockaddr") static function parseRoutingSockaddr(msg: go.syscall.RoutingMessage): (go.Result<go.Slice<go.syscall.Sockaddr>>);
+    /**
+        ParseSocketControlMessage parses b as an array of socket control
+        messages.
+    **/
     @:native("ParseSocketControlMessage") static function parseSocketControlMessage(b: go.Slice<go.Byte>): (go.Result<go.Slice<go.syscall.SocketControlMessage>>);
+    /**
+        ParseUnixRights decodes a socket control message that contains an
+        integer array of open file descriptors from another process.
+    **/
     @:native("ParseUnixRights") static function parseUnixRights(m: go.Pointer<go.syscall.SocketControlMessage>): (go.Result<go.Slice<go.GoInt>>);
     @:native("Pathconf") static function pathconf(path: String, name: go.GoInt): (go.Result<go.GoInt>);
     @:native("Pipe") static function pipe(p: go.Slice<go.GoInt>): (go.Error);
@@ -1764,11 +2345,18 @@ extern class Syscall {
     @:native("Read") static function read(fd: go.GoInt, p: go.Slice<go.Byte>): (go.Result<go.GoInt>);
     @:native("ReadDirent") static function readDirent(fd: go.GoInt, buf: go.Slice<go.Byte>): (go.Result<go.GoInt>);
     @:native("Readlink") static function readlink(path: String, buf: go.Slice<go.Byte>): (go.Result<go.GoInt>);
-    @:go.Tuple("n", "from", "err") @:native("Recvfrom") static function recvfrom(fd: go.GoInt, p: go.Slice<go.Byte>, flags: go.GoInt): (go.Tuple<{ n: go.GoInt, _from: go.syscall.Sockaddr, err: go.Error }>);
-    @:go.Tuple("n", "oobn", "recvflags", "from", "err") @:native("Recvmsg") static function recvmsg(fd: go.GoInt, p: go.Slice<go.Byte>, oob: go.Slice<go.Byte>, flags: go.GoInt): (go.Tuple<{ n: go.GoInt, oobn: go.GoInt, recvflags: go.GoInt, _from: go.syscall.Sockaddr, err: go.Error }>);
+    @:go.Tuple("n", "_from", "err") @:native("Recvfrom") static function recvfrom(fd: go.GoInt, p: go.Slice<go.Byte>, flags: go.GoInt): (go.Tuple<{ n: go.GoInt, _from: go.syscall.Sockaddr, err: go.Error }>);
+    @:go.Tuple("n", "oobn", "recvflags", "_from", "err") @:native("Recvmsg") static function recvmsg(fd: go.GoInt, p: go.Slice<go.Byte>, oob: go.Slice<go.Byte>, flags: go.GoInt): (go.Tuple<{ n: go.GoInt, oobn: go.GoInt, recvflags: go.GoInt, _from: go.syscall.Sockaddr, err: go.Error }>);
     @:native("Rename") static function rename(_from: String, _to: String): (go.Error);
     @:native("Revoke") static function revoke(path: String): (go.Error);
     @:native("Rmdir") static function rmdir(path: String): (go.Error);
+    /**
+        RouteRIB returns routing information base, as known as RIB,
+        which consists of network facility information, states and
+        parameters.
+        
+        Deprecated: Use golang.org/x/net/route instead.
+    **/
     @:native("RouteRIB") static function routeRIB(facility: go.GoInt, param: go.GoInt): (go.Result<go.Slice<go.Byte>>);
     @:native("Seek") static function seek(fd: go.GoInt, offset: go.Int64, whence: go.GoInt): (go.Result<go.Int64>);
     @:native("Select") static function select(n: go.GoInt, r: go.Pointer<go.syscall.FdSet>, w: go.Pointer<go.syscall.FdSet>, e: go.Pointer<go.syscall.FdSet>, timeout: go.Pointer<go.syscall.Timeval>): (go.Error);
@@ -1776,13 +2364,37 @@ extern class Syscall {
     @:native("Sendmsg") static function sendmsg(fd: go.GoInt, p: go.Slice<go.Byte>, oob: go.Slice<go.Byte>, _to: go.syscall.Sockaddr, flags: go.GoInt): (go.Error);
     @:native("SendmsgN") static function sendmsgN(fd: go.GoInt, p: go.Slice<go.Byte>, oob: go.Slice<go.Byte>, _to: go.syscall.Sockaddr, flags: go.GoInt): (go.Result<go.GoInt>);
     @:native("Sendto") static function sendto(fd: go.GoInt, p: go.Slice<go.Byte>, flags: go.GoInt, _to: go.syscall.Sockaddr): (go.Error);
+    /**
+        Deprecated: Use golang.org/x/net/bpf instead.
+    **/
     @:native("SetBpf") static function setBpf(fd: go.GoInt, i: go.Slice<go.syscall.BpfInsn>): (go.Error);
+    /**
+        Deprecated: Use golang.org/x/net/bpf instead.
+    **/
     @:native("SetBpfBuflen") static function setBpfBuflen(fd: go.GoInt, l: go.GoInt): (go.Result<go.GoInt>);
+    /**
+        Deprecated: Use golang.org/x/net/bpf instead.
+    **/
     @:native("SetBpfDatalink") static function setBpfDatalink(fd: go.GoInt, t: go.GoInt): (go.Result<go.GoInt>);
+    /**
+        Deprecated: Use golang.org/x/net/bpf instead.
+    **/
     @:native("SetBpfHeadercmpl") static function setBpfHeadercmpl(fd: go.GoInt, f: go.GoInt): (go.Error);
+    /**
+        Deprecated: Use golang.org/x/net/bpf instead.
+    **/
     @:native("SetBpfImmediate") static function setBpfImmediate(fd: go.GoInt, m: go.GoInt): (go.Error);
+    /**
+        Deprecated: Use golang.org/x/net/bpf instead.
+    **/
     @:native("SetBpfInterface") static function setBpfInterface(fd: go.GoInt, name: String): (go.Error);
+    /**
+        Deprecated: Use golang.org/x/net/bpf instead.
+    **/
     @:native("SetBpfPromisc") static function setBpfPromisc(fd: go.GoInt, m: go.GoInt): (go.Error);
+    /**
+        Deprecated: Use golang.org/x/net/bpf instead.
+    **/
     @:native("SetBpfTimeout") static function setBpfTimeout(fd: go.GoInt, tv: go.Pointer<go.syscall.Timeval>): (go.Error);
     @:native("SetKevent") static function setKevent(k: go.Pointer<go.syscall.Kevent_t>, fd: go.GoInt, mode: go.GoInt, flags: go.GoInt): Void;
     @:native("SetNonblock") static function setNonblock(fd: go.GoInt, nonblocking: Bool): (go.Error);
@@ -1811,14 +2423,43 @@ extern class Syscall {
     @:native("Settimeofday") static function settimeofday(tp: go.Pointer<go.syscall.Timeval>): (go.Error);
     @:native("Setuid") static function setuid(uid: go.GoInt): (go.Error);
     @:native("Shutdown") static function shutdown(s: go.GoInt, how: go.GoInt): (go.Error);
+    /**
+        SlicePtrFromStrings converts a slice of strings to a slice of
+        pointers to NUL-terminated byte arrays. If any string contains
+        a NUL byte, it returns (nil, [EINVAL]).
+    **/
     @:native("SlicePtrFromStrings") static function slicePtrFromStrings(ss: go.Slice<String>): (go.Result<go.Slice<go.Pointer<go.Byte>>>);
     @:native("Socket") static function socket(domain: go.GoInt, typ: go.GoInt, proto: go.GoInt): (go.Result<go.GoInt>);
     @:native("Socketpair") static function socketpair(domain: go.GoInt, typ: go.GoInt, proto: go.GoInt): (go.Result<go.GoArray<go.GoInt, 2>>);
+    /**
+        StartProcess wraps [ForkExec] for package os.
+    **/
     @:go.Tuple("pid", "handle", "err") @:native("StartProcess") static function startProcess(argv0: String, argv: go.Slice<String>, attr: go.Pointer<go.syscall.ProcAttr>): (go.Tuple<{ pid: go.GoInt, handle: go.UIntPtr, err: go.Error }>);
     @:native("Stat") static function stat(path: String, stat: go.Pointer<go.syscall.Stat_t>): (go.Error);
     @:native("Statfs") static function statfs(path: String, stat: go.Pointer<go.syscall.Statfs_t>): (go.Error);
+    /**
+        StringBytePtr returns a pointer to a NUL-terminated array of bytes.
+        If s contains a NUL byte this function panics instead of returning
+        an error.
+        
+        Deprecated: Use [BytePtrFromString] instead.
+    **/
     @:native("StringBytePtr") static function stringBytePtr(s: String): (go.Pointer<go.Byte>);
+    /**
+        StringByteSlice converts a string to a NUL-terminated []byte,
+        If s contains a NUL byte this function panics instead of
+        returning an error.
+        
+        Deprecated: Use ByteSliceFromString instead.
+    **/
     @:native("StringByteSlice") static function stringByteSlice(s: String): (go.Slice<go.Byte>);
+    /**
+        StringSlicePtr converts a slice of strings to a slice of pointers
+        to NUL-terminated byte arrays. If any string contains a NUL byte
+        this function panics instead of returning an error.
+        
+        Deprecated: Use [SlicePtrFromStrings] instead.
+    **/
     @:native("StringSlicePtr") static function stringSlicePtr(ss: go.Slice<String>): (go.Slice<go.Pointer<go.Byte>>);
     @:native("Symlink") static function symlink(path: String, link: String): (go.Error);
     @:native("Sync") static function sync(): (go.Error);
@@ -1827,11 +2468,21 @@ extern class Syscall {
     @:go.Tuple("r1", "r2", "err") @:native("Syscall9") static function syscall9(trap: go.UIntPtr, a1: go.UIntPtr, a2: go.UIntPtr, a3: go.UIntPtr, a4: go.UIntPtr, a5: go.UIntPtr, a6: go.UIntPtr, a7: go.UIntPtr, a8: go.UIntPtr, a9: go.UIntPtr): (go.Tuple<{ r1: go.UIntPtr, r2: go.UIntPtr, err: go.syscall.Errno }>);
     @:native("Sysctl") static function sysctl(name: String): (go.Result<String>);
     @:native("SysctlUint32") static function sysctlUint32(name: String): (go.Result<go.UInt32>);
+    /**
+        TimespecToNsec returns the time stored in ts as nanoseconds.
+    **/
     @:native("TimespecToNsec") static function timespecToNsec(ts: go.syscall.Timespec): (go.Int64);
+    /**
+        TimevalToNsec returns the time stored in tv as nanoseconds.
+    **/
     @:native("TimevalToNsec") static function timevalToNsec(tv: go.syscall.Timeval): (go.Int64);
     @:native("Truncate") static function truncate(path: String, length: go.Int64): (go.Error);
     @:native("Umask") static function umask(newmask: go.GoInt): (go.GoInt);
     @:native("Undelete") static function undelete(path: String): (go.Error);
+    /**
+        UnixRights encodes a set of open file descriptors into a socket
+        control message for sending to another process.
+    **/
     @:native("UnixRights") static function unixRights(fds: haxe.Rest<go.GoInt>): (go.Slice<go.Byte>);
     @:native("Unlink") static function unlink(path: String): (go.Error);
     @:native("Unmount") static function unmount(path: String, flags: go.GoInt): (go.Error);

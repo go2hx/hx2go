@@ -1,5 +1,8 @@
 package go.debug.dwarf;
 
+/**
+    A StructType represents a struct, union, or C++ class type.
+**/
 @:structInit
 @:go.Type({ name: "StructType", instanceName: "dwarf.StructType", imports: ["debug/dwarf"] })
 extern class StructType {

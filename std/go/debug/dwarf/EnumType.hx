@@ -1,5 +1,10 @@
 package go.debug.dwarf;
 
+/**
+    An EnumType represents an enumerated type.
+    The only indication of its native integer type is its ByteSize
+    (inside [CommonType]).
+**/
 @:structInit
 @:go.Type({ name: "EnumType", instanceName: "dwarf.EnumType", imports: ["debug/dwarf"] })
 extern class EnumType {

@@ -1,5 +1,8 @@
 package go.debug.gosym;
 
+/**
+    A Func collects information about a single function.
+**/
 @:structInit
 @:go.Type({ name: "Func", instanceName: "gosym.Func", imports: ["debug/gosym"] })
 extern class Func {

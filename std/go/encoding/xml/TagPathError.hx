@@ -1,5 +1,9 @@
 package go.encoding.xml;
 
+/**
+    A TagPathError represents an error in the unmarshaling process
+    caused by the use of field tags with conflicting paths.
+**/
 @:structInit
 @:go.Type({ name: "TagPathError", instanceName: "xml.TagPathError", imports: ["encoding/xml"] })
 extern class TagPathError {

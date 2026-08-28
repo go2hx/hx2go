@@ -1,5 +1,8 @@
 package go.crypto.x509;
 
+/**
+    SystemRootsError results when we fail to load the system root certificates.
+**/
 @:structInit
 @:go.Type({ name: "SystemRootsError", instanceName: "x509.SystemRootsError", imports: ["crypto/x509"] })
 extern class SystemRootsError {

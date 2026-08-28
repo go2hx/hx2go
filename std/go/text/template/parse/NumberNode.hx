@@ -1,5 +1,10 @@
 package go.text.template.parse;
 
+/**
+    NumberNode holds a number: signed or unsigned integer, float, or complex.
+    The value is parsed and stored under all the types that can represent the value.
+    This simulates in a small amount of code the behavior of Go's ideal constants.
+**/
 @:structInit
 @:go.Type({ name: "NumberNode", instanceName: "parse.NumberNode", imports: ["text/template/parse"] })
 extern class NumberNode {

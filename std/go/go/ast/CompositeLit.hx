@@ -1,5 +1,8 @@
 package go.go.ast;
 
+/**
+    A CompositeLit node represents a composite literal.
+**/
 @:structInit
 @:go.Type({ name: "CompositeLit", instanceName: "ast.CompositeLit", imports: ["go/ast"] })
 extern class CompositeLit {

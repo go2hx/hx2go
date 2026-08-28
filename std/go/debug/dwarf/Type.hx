@@ -1,5 +1,9 @@
 package go.debug.dwarf;
 
+/**
+    A Type conventionally represents a pointer to any of the
+    specific Type structures ([CharType], [StructType], etc.).
+**/
 @:go.Type({ name: "Type", instanceName: "dwarf.Type", imports: ["debug/dwarf"] })
 extern typedef Type = {
 

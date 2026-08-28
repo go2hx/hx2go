@@ -1,5 +1,9 @@
 package go.crypto.x509.pkix;
 
+/**
+    Extension represents the ASN.1 structure of the same name. See RFC
+    5280, section 4.2.
+**/
 @:structInit
 @:go.Type({ name: "Extension", instanceName: "pkix.Extension", imports: ["crypto/x509/pkix"] })
 extern class Extension {

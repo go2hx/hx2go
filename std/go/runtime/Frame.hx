@@ -1,5 +1,8 @@
 package go.runtime;
 
+/**
+    Frame is the information returned by [Frames] for each call frame.
+**/
 @:structInit
 @:go.Type({ name: "Frame", instanceName: "runtime.Frame", imports: ["runtime"] })
 extern class Frame {

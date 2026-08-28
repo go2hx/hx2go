@@ -1,5 +1,8 @@
 package go.debug.elf;
 
+/**
+    ELF64 Program header.
+**/
 @:structInit
 @:go.Type({ name: "Prog64", instanceName: "elf.Prog64", imports: ["debug/elf"] })
 extern class Prog64 {

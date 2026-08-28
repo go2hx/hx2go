@@ -1,5 +1,8 @@
 package go.runtime.metrics;
 
+/**
+    Description describes a runtime metric.
+**/
 @:structInit
 @:go.Type({ name: "Description", instanceName: "metrics.Description", imports: ["runtime/metrics"] })
 extern class Description {

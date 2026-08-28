@@ -1,5 +1,8 @@
 package go.text.template.parse;
 
+/**
+    NilNode holds the special identifier 'nil' representing an untyped nil constant.
+**/
 @:structInit
 @:go.Type({ name: "NilNode", instanceName: "parse.NilNode", imports: ["text/template/parse"] })
 extern class NilNode {

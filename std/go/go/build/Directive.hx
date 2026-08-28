@@ -1,5 +1,8 @@
 package go.go.build;
 
+/**
+    A Directive is a Go directive comment (//go:zzz...) found in a source file.
+**/
 @:structInit
 @:go.Type({ name: "Directive", instanceName: "build.Directive", imports: ["go/build"] })
 extern class Directive {

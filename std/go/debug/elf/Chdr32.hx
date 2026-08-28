@@ -1,5 +1,8 @@
 package go.debug.elf;
 
+/**
+    ELF32 Compression header.
+**/
 @:structInit
 @:go.Type({ name: "Chdr32", instanceName: "elf.Chdr32", imports: ["debug/elf"] })
 extern class Chdr32 {

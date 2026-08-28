@@ -1,5 +1,8 @@
 package go.net.http.httptrace;
 
+/**
+    DNSDoneInfo contains information about the results of a DNS lookup.
+**/
 @:structInit
 @:go.Type({ name: "DNSDoneInfo", instanceName: "httptrace.DNSDoneInfo", imports: ["net/http/httptrace"] })
 extern class DNSDoneInfo {

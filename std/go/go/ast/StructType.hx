@@ -1,5 +1,8 @@
 package go.go.ast;
 
+/**
+    A StructType node represents a struct type.
+**/
 @:structInit
 @:go.Type({ name: "StructType", instanceName: "ast.StructType", imports: ["go/ast"] })
 extern class StructType {

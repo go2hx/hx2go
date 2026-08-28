@@ -1,5 +1,8 @@
 package go.debug.dwarf;
 
+/**
+    An EnumValue represents a single enumeration value.
+**/
 @:structInit
 @:go.Type({ name: "EnumValue", instanceName: "dwarf.EnumValue", imports: ["debug/dwarf"] })
 extern class EnumValue {

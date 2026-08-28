@@ -1,5 +1,8 @@
 package go.io;
 
+/**
+    ReadWriteSeeker is the interface that groups the basic Read, Write and Seek methods.
+**/
 @:go.Type({ name: "ReadWriteSeeker", instanceName: "io.ReadWriteSeeker", imports: ["io"] })
 extern typedef ReadWriteSeeker = {
 

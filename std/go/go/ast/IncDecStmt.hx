@@ -1,5 +1,8 @@
 package go.go.ast;
 
+/**
+    An IncDecStmt node represents an increment or decrement statement.
+**/
 @:structInit
 @:go.Type({ name: "IncDecStmt", instanceName: "ast.IncDecStmt", imports: ["go/ast"] })
 extern class IncDecStmt {

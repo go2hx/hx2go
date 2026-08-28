@@ -1,5 +1,8 @@
 package go.go.doc.comment;
 
+/**
+    A ListItem is a single item in a numbered or bullet list.
+**/
 @:structInit
 @:go.Type({ name: "ListItem", instanceName: "comment.ListItem", imports: ["go/doc/comment"] })
 extern class ListItem {

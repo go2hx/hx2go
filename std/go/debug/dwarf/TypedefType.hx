@@ -1,5 +1,8 @@
 package go.debug.dwarf;
 
+/**
+    A TypedefType represents a named type.
+**/
 @:structInit
 @:go.Type({ name: "TypedefType", instanceName: "dwarf.TypedefType", imports: ["debug/dwarf"] })
 extern class TypedefType {

@@ -1,5 +1,8 @@
 package go.image;
 
+/**
+    NRGBA is an in-memory image whose At method returns [color.NRGBA] values.
+**/
 @:structInit
 @:go.Type({ name: "NRGBA", instanceName: "image.NRGBA", imports: ["image"] })
 extern class NRGBA {
@@ -14,12 +17,23 @@ extern class NRGBA {
     @:native("Bounds") function bounds(): (go.image.Rectangle);
     @:native("ColorModel") function colorModel(): (go.image.color.Model);
     @:native("NRGBAAt") function nRGBAAt(x: go.GoInt, y: go.GoInt): (go.image.color.NRGBA);
+    /**
+        Opaque scans the entire image and reports whether it is fully opaque.
+    **/
     @:native("Opaque") function opaque(): (Bool);
+    /**
+        PixOffset returns the index of the first element of Pix that corresponds to
+        the pixel at (x, y).
+    **/
     @:native("PixOffset") function pixOffset(x: go.GoInt, y: go.GoInt): (go.GoInt);
     @:native("RGBA64At") function rGBA64At(x: go.GoInt, y: go.GoInt): (go.image.color.RGBA64);
     @:native("Set") function set(x: go.GoInt, y: go.GoInt, c: go.image.color.Color): Void;
     @:native("SetNRGBA") function setNRGBA(x: go.GoInt, y: go.GoInt, c: go.image.color.NRGBA): Void;
     @:native("SetRGBA64") function setRGBA64(x: go.GoInt, y: go.GoInt, c: go.image.color.RGBA64): Void;
+    /**
+        SubImage returns an image representing the portion of the image p visible
+        through r. The returned value shares pixels with the original image.
+    **/
     @:native("SubImage") function subImage(r: go.image.Rectangle): (go.image.Image);
 
 }

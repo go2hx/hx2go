@@ -1,5 +1,17 @@
 package go.net.http.httptrace;
 
+/**
+    ClientTrace is a set of hooks to run at various stages of an outgoing
+    HTTP request. Any particular hook may be nil. Functions may be
+    called concurrently from different goroutines and some may be called
+    after the request has completed or failed.
+    
+    ClientTrace currently traces a single HTTP request & response
+    during a single round trip and has no hooks that span a series
+    of redirected requests.
+    
+    See https://go.dev/blog/http-tracing for more.
+**/
 @:structInit
 @:go.Type({ name: "ClientTrace", instanceName: "httptrace.ClientTrace", imports: ["net/http/httptrace"] })
 extern class ClientTrace {

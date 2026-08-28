@@ -1,5 +1,10 @@
 package go.net;
 
+/**
+    PacketConn is a generic packet-oriented network connection.
+    
+    Multiple goroutines may invoke methods on a PacketConn simultaneously.
+**/
 @:go.Type({ name: "PacketConn", instanceName: "net.PacketConn", imports: ["net"] })
 extern typedef PacketConn = {
 

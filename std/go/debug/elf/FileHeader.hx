@@ -1,5 +1,8 @@
 package go.debug.elf;
 
+/**
+    A FileHeader represents an ELF file header.
+**/
 @:structInit
 @:go.Type({ name: "FileHeader", instanceName: "elf.FileHeader", imports: ["debug/elf"] })
 extern class FileHeader {

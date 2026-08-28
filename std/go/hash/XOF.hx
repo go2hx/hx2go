@@ -1,5 +1,8 @@
 package go.hash;
 
+/**
+    XOF (extendable output function) is a hash function with arbitrary or unlimited output length.
+**/
 @:go.Type({ name: "XOF", instanceName: "hash.XOF", imports: ["hash"] })
 extern typedef XOF = {
 

@@ -1,5 +1,8 @@
 package go.text.template.parse;
 
+/**
+    BranchNode is the common representation of if, range, and with.
+**/
 @:structInit
 @:go.Type({ name: "BranchNode", instanceName: "parse.BranchNode", imports: ["text/template/parse"] })
 extern class BranchNode {

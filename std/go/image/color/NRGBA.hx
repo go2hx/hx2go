@@ -1,5 +1,8 @@
 package go.image.color;
 
+/**
+    NRGBA represents a non-alpha-premultiplied 32-bit color.
+**/
 @:structInit
 @:go.Type({ name: "NRGBA", instanceName: "color.NRGBA", imports: ["image/color"] })
 extern class NRGBA {

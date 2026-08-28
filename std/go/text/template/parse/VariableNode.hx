@@ -1,5 +1,9 @@
 package go.text.template.parse;
 
+/**
+    VariableNode holds a list of variable names, possibly with chained field
+    accesses. The dollar sign is part of the (first) name.
+**/
 @:structInit
 @:go.Type({ name: "VariableNode", instanceName: "parse.VariableNode", imports: ["text/template/parse"] })
 extern class VariableNode {

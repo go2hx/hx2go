@@ -1,5 +1,8 @@
 package go.testing.fstest;
 
+/**
+    A MapFile describes a single file in a [MapFS].
+**/
 @:structInit
 @:go.Type({ name: "MapFile", instanceName: "fstest.MapFile", imports: ["testing/fstest"] })
 extern class MapFile {

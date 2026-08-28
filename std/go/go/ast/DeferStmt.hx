@@ -1,5 +1,8 @@
 package go.go.ast;
 
+/**
+    A DeferStmt node represents a defer statement.
+**/
 @:structInit
 @:go.Type({ name: "DeferStmt", instanceName: "ast.DeferStmt", imports: ["go/ast"] })
 extern class DeferStmt {

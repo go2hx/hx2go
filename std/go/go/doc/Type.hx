@@ -1,5 +1,8 @@
 package go.go.doc;
 
+/**
+    Type is the documentation for a type declaration.
+**/
 @:structInit
 @:go.Type({ name: "Type", instanceName: "doc.Type", imports: ["go/doc"] })
 extern class Type {

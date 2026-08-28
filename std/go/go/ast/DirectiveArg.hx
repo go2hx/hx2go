@@ -1,5 +1,8 @@
 package go.go.ast;
 
+/**
+    A DirectiveArg is an argument to a directive comment.
+**/
 @:structInit
 @:go.Type({ name: "DirectiveArg", instanceName: "ast.DirectiveArg", imports: ["go/ast"] })
 extern class DirectiveArg {

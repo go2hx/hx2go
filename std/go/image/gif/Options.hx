@@ -1,5 +1,8 @@
 package go.image.gif;
 
+/**
+    Options are the encoding parameters.
+**/
 @:structInit
 @:go.Type({ name: "Options", instanceName: "gif.Options", imports: ["image/gif"] })
 extern class Options {

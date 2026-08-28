@@ -1,5 +1,8 @@
 package go.debug.macho;
 
+/**
+    A Symbol is a Mach-O 32-bit or 64-bit symbol table entry.
+**/
 @:structInit
 @:go.Type({ name: "Symbol", instanceName: "macho.Symbol", imports: ["debug/macho"] })
 extern class Symbol {

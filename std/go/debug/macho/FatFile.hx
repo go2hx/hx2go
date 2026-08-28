@@ -1,5 +1,8 @@
 package go.debug.macho;
 
+/**
+    A FatFile is a Mach-O universal binary that contains at least one architecture.
+**/
 @:structInit
 @:go.Type({ name: "FatFile", instanceName: "macho.FatFile", imports: ["debug/macho"] })
 extern class FatFile {

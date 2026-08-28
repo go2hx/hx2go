@@ -1,5 +1,8 @@
 package go.go.ast;
 
+/**
+    An ImportSpec node represents a single package import.
+**/
 @:structInit
 @:go.Type({ name: "ImportSpec", instanceName: "ast.ImportSpec", imports: ["go/ast"] })
 extern class ImportSpec {

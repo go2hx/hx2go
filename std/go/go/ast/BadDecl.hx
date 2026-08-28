@@ -1,5 +1,10 @@
 package go.go.ast;
 
+/**
+    A BadDecl node is a placeholder for a declaration containing
+    syntax errors for which a correct declaration node cannot be
+    created.
+**/
 @:structInit
 @:go.Type({ name: "BadDecl", instanceName: "ast.BadDecl", imports: ["go/ast"] })
 extern class BadDecl {

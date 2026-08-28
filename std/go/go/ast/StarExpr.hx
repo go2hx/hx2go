@@ -1,5 +1,9 @@
 package go.go.ast;
 
+/**
+    A StarExpr node represents an expression of the form "*" Expression.
+    Semantically it could be a unary "*" expression, or a pointer type.
+**/
 @:structInit
 @:go.Type({ name: "StarExpr", instanceName: "ast.StarExpr", imports: ["go/ast"] })
 extern class StarExpr {

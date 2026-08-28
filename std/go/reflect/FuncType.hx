@@ -1,4 +1,4 @@
 package go.reflect;
 
-@:go.Type({ name: "funcType", instanceName: "Reflect.funcType", imports: ["reflect"] })
+@:go.Type({ name: "funcType", instanceName: "reflect.funcType", imports: ["reflect"] })
 extern typedef FuncType = Dynamic

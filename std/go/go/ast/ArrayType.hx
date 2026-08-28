@@ -1,5 +1,8 @@
 package go.go.ast;
 
+/**
+    An ArrayType node represents an array or slice type.
+**/
 @:structInit
 @:go.Type({ name: "ArrayType", instanceName: "ast.ArrayType", imports: ["go/ast"] })
 extern class ArrayType {

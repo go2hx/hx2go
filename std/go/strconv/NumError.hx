@@ -1,5 +1,8 @@
 package go.strconv;
 
+/**
+    A NumError records a failed conversion.
+**/
 @:structInit
 @:go.Type({ name: "NumError", instanceName: "strconv.NumError", imports: ["strconv"] })
 extern class NumError {

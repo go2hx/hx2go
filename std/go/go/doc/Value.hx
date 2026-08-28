@@ -1,5 +1,8 @@
 package go.go.doc;
 
+/**
+    Value is the documentation for a (possibly grouped) var or const declaration.
+**/
 @:structInit
 @:go.Type({ name: "Value", instanceName: "doc.Value", imports: ["go/doc"] })
 extern class Value {

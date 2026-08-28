@@ -1,5 +1,8 @@
 package go.encoding.xml;
 
+/**
+    An EndElement represents an XML end element.
+**/
 @:structInit
 @:go.Type({ name: "EndElement", instanceName: "xml.EndElement", imports: ["encoding/xml"] })
 extern class EndElement {

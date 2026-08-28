@@ -1,5 +1,9 @@
 package go.runtime;
 
+/**
+    BlockProfileRecord describes blocking events originated
+    at a particular call sequence (stack trace).
+**/
 @:structInit
 @:go.Type({ name: "BlockProfileRecord", instanceName: "runtime.BlockProfileRecord", imports: ["runtime"] })
 extern class BlockProfileRecord {

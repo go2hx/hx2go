@@ -1,5 +1,9 @@
 package go.unicode;
 
+/**
+    Range16 represents of a range of 16-bit Unicode code points. The range runs from Lo to Hi
+    inclusive and has the specified stride.
+**/
 @:structInit
 @:go.Type({ name: "Range16", instanceName: "unicode.Range16", imports: ["unicode"] })
 extern class Range16 {

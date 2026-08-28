@@ -1,5 +1,8 @@
 package go.crypto.dsa;
 
+/**
+    PrivateKey represents a DSA private key.
+**/
 @:structInit
 @:go.Type({ name: "PrivateKey", instanceName: "dsa.PrivateKey", imports: ["crypto/dsa"] })
 extern class PrivateKey {

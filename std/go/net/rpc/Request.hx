@@ -1,5 +1,10 @@
 package go.net.rpc;
 
+/**
+    Request is a header written before every RPC call. It is used internally
+    but documented here as an aid to debugging, such as when analyzing
+    network traffic.
+**/
 @:structInit
 @:go.Type({ name: "Request", instanceName: "rpc.Request", imports: ["net/rpc"] })
 extern class Request {

@@ -1,5 +1,8 @@
 package go.net.http;
 
+/**
+    PushOptions describes options for [Pusher.Push].
+**/
 @:structInit
 @:go.Type({ name: "PushOptions", instanceName: "http.PushOptions", imports: ["net/http"] })
 extern class PushOptions {

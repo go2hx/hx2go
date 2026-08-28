@@ -1,5 +1,11 @@
 package go.image.color;
 
+/**
+    CMYK represents a fully opaque CMYK color, having 8 bits for each of cyan,
+    magenta, yellow and black.
+    
+    It is not associated with any particular color profile.
+**/
 @:structInit
 @:go.Type({ name: "CMYK", instanceName: "color.CMYK", imports: ["image/color"] })
 extern class CMYK {

@@ -1,5 +1,9 @@
 package go.crypto.x509.pkix;
 
+/**
+    AttributeTypeAndValueSET represents a set of ASN.1 sequences of
+    [AttributeTypeAndValue] sequences from RFC 2986 (PKCS #10).
+**/
 @:structInit
 @:go.Type({ name: "AttributeTypeAndValueSET", instanceName: "pkix.AttributeTypeAndValueSET", imports: ["crypto/x509/pkix"] })
 extern class AttributeTypeAndValueSET {

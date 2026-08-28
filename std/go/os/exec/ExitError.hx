@@ -1,5 +1,8 @@
 package go.os.exec;
 
+/**
+    An ExitError reports an unsuccessful exit by a command.
+**/
 @:structInit
 @:go.Type({ name: "ExitError", instanceName: "exec.ExitError", imports: ["os/exec"] })
 extern class ExitError {

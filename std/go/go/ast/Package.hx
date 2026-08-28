@@ -1,5 +1,11 @@
 package go.go.ast;
 
+/**
+    A Package node represents a set of source files
+    collectively building a Go package.
+    
+    Deprecated: use the type checker [go/types] instead; see [Object].
+**/
 @:structInit
 @:go.Type({ name: "Package", instanceName: "ast.Package", imports: ["go/ast"] })
 extern class Package {

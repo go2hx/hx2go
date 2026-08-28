@@ -1,5 +1,9 @@
 package go.debug.pe;
 
+/**
+    Symbol is similar to [COFFSymbol] with Name field replaced
+    by Go string. Symbol also does not have NumberOfAuxSymbols.
+**/
 @:structInit
 @:go.Type({ name: "Symbol", instanceName: "pe.Symbol", imports: ["debug/pe"] })
 extern class Symbol {

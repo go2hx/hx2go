@@ -1,5 +1,9 @@
 package go.net.http.httptrace;
 
+/**
+    GotConnInfo is the argument to the [ClientTrace.GotConn] function and
+    contains information about the obtained connection.
+**/
 @:structInit
 @:go.Type({ name: "GotConnInfo", instanceName: "httptrace.GotConnInfo", imports: ["net/http/httptrace"] })
 extern class GotConnInfo {

@@ -1,5 +1,8 @@
 package go.net;
 
+/**
+    An Error represents a network error.
+**/
 @:go.Type({ name: "Error", instanceName: "net.Error", imports: ["net"] })
 extern typedef Error = {
 

@@ -1,5 +1,8 @@
 package go.go.ast;
 
+/**
+    An InterfaceType node represents an interface type.
+**/
 @:structInit
 @:go.Type({ name: "InterfaceType", instanceName: "ast.InterfaceType", imports: ["go/ast"] })
 extern class InterfaceType {

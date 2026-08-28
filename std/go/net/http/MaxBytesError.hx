@@ -1,5 +1,8 @@
 package go.net.http;
 
+/**
+    MaxBytesError is returned by [MaxBytesReader] when its read limit is exceeded.
+**/
 @:structInit
 @:go.Type({ name: "MaxBytesError", instanceName: "http.MaxBytesError", imports: ["net/http"] })
 extern class MaxBytesError {

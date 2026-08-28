@@ -1,5 +1,8 @@
 package go.crypto.x509;
 
+/**
+    VerifyOptions contains parameters for Certificate.Verify.
+**/
 @:structInit
 @:go.Type({ name: "VerifyOptions", instanceName: "x509.VerifyOptions", imports: ["crypto/x509"] })
 extern class VerifyOptions {

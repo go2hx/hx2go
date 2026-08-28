@@ -1,5 +1,8 @@
 package go.testing.quick;
 
+/**
+    A CheckError is the result of Check finding an error.
+**/
 @:structInit
 @:go.Type({ name: "CheckError", instanceName: "quick.CheckError", imports: ["testing/quick"] })
 extern class CheckError {

@@ -5,6 +5,6 @@ package go.go.types;
 extern class Operand {
 
     @:native("Pos") function pos(): (go.go.token.Pos);
-    @:native("String") function string(): (String);
+    @:native("String") function string(): (std.String);
 
 }

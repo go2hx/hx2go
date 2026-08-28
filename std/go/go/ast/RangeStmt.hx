@@ -1,5 +1,8 @@
 package go.go.ast;
 
+/**
+    A RangeStmt represents a for statement with a range clause.
+**/
 @:structInit
 @:go.Type({ name: "RangeStmt", instanceName: "ast.RangeStmt", imports: ["go/ast"] })
 extern class RangeStmt {

@@ -1,5 +1,8 @@
 package go.debug.macho;
 
+/**
+    Regs386 is the Mach-O 386 register structure.
+**/
 @:structInit
 @:go.Type({ name: "Regs386", instanceName: "macho.Regs386", imports: ["debug/macho"] })
 extern class Regs386 {

@@ -1,5 +1,10 @@
 package go.text.template.parse;
 
+/**
+    FieldNode holds a field (identifier starting with '.').
+    The names may be chained ('.x.y').
+    The period is dropped from each ident.
+**/
 @:structInit
 @:go.Type({ name: "FieldNode", instanceName: "parse.FieldNode", imports: ["text/template/parse"] })
 extern class FieldNode {

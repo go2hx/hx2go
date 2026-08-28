@@ -1,5 +1,8 @@
 package go.net.http.cgi;
 
+/**
+    Handler runs an executable in a subprocess with a CGI environment.
+**/
 @:structInit
 @:go.Type({ name: "Handler", instanceName: "cgi.Handler", imports: ["net/http/cgi"] })
 extern class Handler {

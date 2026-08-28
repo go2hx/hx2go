@@ -1,5 +1,8 @@
 package go.debug.macho;
 
+/**
+    A Section32 is a 32-bit Mach-O section header.
+**/
 @:structInit
 @:go.Type({ name: "Section32", instanceName: "macho.Section32", imports: ["debug/macho"] })
 extern class Section32 {

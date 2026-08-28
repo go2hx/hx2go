@@ -1,5 +1,8 @@
 package go.image.color;
 
+/**
+    Alpha represents an 8-bit alpha color.
+**/
 @:structInit
 @:go.Type({ name: "Alpha", instanceName: "color.Alpha", imports: ["image/color"] })
 extern class Alpha {

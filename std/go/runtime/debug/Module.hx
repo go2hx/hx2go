@@ -1,5 +1,8 @@
 package go.runtime.debug;
 
+/**
+    A Module describes a single module included in a build.
+**/
 @:structInit
 @:go.Type({ name: "Module", instanceName: "debug.Module", imports: ["runtime/debug"] })
 extern class Module {

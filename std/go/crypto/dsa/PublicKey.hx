@@ -1,5 +1,8 @@
 package go.crypto.dsa;
 
+/**
+    PublicKey represents a DSA public key.
+**/
 @:structInit
 @:go.Type({ name: "PublicKey", instanceName: "dsa.PublicKey", imports: ["crypto/dsa"] })
 extern class PublicKey {

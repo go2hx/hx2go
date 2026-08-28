@@ -1,5 +1,9 @@
 package go.os;
 
+/**
+    ProcAttr holds the attributes that will be applied to a new process
+    started by StartProcess.
+**/
 @:structInit
 @:go.Type({ name: "ProcAttr", instanceName: "os.ProcAttr", imports: ["os"] })
 extern class ProcAttr {

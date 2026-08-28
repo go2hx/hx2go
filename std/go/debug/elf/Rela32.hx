@@ -1,5 +1,8 @@
 package go.debug.elf;
 
+/**
+    ELF32 Relocations that need an addend field.
+**/
 @:structInit
 @:go.Type({ name: "Rela32", instanceName: "elf.Rela32", imports: ["debug/elf"] })
 extern class Rela32 {

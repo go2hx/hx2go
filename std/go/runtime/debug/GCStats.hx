@@ -1,5 +1,8 @@
 package go.runtime.debug;
 
+/**
+    GCStats collect information about recent garbage collections.
+**/
 @:structInit
 @:go.Type({ name: "GCStats", instanceName: "debug.GCStats", imports: ["runtime/debug"] })
 extern class GCStats {

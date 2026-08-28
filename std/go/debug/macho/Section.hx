@@ -19,7 +19,13 @@ extern class Section {
 
     function new(sectionHeader: go.debug.macho.SectionHeader, relocs: go.Slice<go.debug.macho.Reloc>=null, readerAt: go.io.ReaderAt=null);
 
+    /**
+        Data reads and returns the contents of the Mach-O section.
+    **/
     @:native("Data") function data(): (go.Result<go.Slice<go.Byte>>);
+    /**
+        Open returns a new ReadSeeker reading the Mach-O section.
+    **/
     @:native("Open") function open(): (go.io.ReadSeeker);
     @:native("ReadAt") function readAt(p: go.Slice<go.Byte>, off: go.Int64): (go.Result<go.GoInt>);
 

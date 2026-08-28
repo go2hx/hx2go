@@ -1,5 +1,8 @@
 package go.database.sql;
 
+/**
+    DBStats contains database statistics.
+**/
 @:structInit
 @:go.Type({ name: "DBStats", instanceName: "sql.DBStats", imports: ["database/sql"] })
 extern class DBStats {

@@ -1,5 +1,8 @@
 package go.runtime.metrics;
 
+/**
+    Sample captures a single metric sample.
+**/
 @:structInit
 @:go.Type({ name: "Sample", instanceName: "metrics.Sample", imports: ["runtime/metrics"] })
 extern class Sample {

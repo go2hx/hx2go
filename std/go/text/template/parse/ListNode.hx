@@ -1,5 +1,8 @@
 package go.text.template.parse;
 
+/**
+    ListNode holds a sequence of nodes.
+**/
 @:structInit
 @:go.Type({ name: "ListNode", instanceName: "parse.ListNode", imports: ["text/template/parse"] })
 extern class ListNode {

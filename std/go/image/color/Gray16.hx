@@ -1,5 +1,8 @@
 package go.image.color;
 
+/**
+    Gray16 represents a 16-bit grayscale color.
+**/
 @:structInit
 @:go.Type({ name: "Gray16", instanceName: "color.Gray16", imports: ["image/color"] })
 extern class Gray16 {

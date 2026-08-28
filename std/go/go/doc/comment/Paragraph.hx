@@ -1,5 +1,8 @@
 package go.go.doc.comment;
 
+/**
+    A Paragraph is a paragraph of text.
+**/
 @:structInit
 @:go.Type({ name: "Paragraph", instanceName: "comment.Paragraph", imports: ["go/doc/comment"] })
 extern class Paragraph {

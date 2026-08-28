@@ -1,5 +1,8 @@
 package go.go.ast;
 
+/**
+    A SliceExpr node represents an expression followed by slice indices.
+**/
 @:structInit
 @:go.Type({ name: "SliceExpr", instanceName: "ast.SliceExpr", imports: ["go/ast"] })
 extern class SliceExpr {

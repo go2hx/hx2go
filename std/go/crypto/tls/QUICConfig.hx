@@ -1,5 +1,8 @@
 package go.crypto.tls;
 
+/**
+    A QUICConfig configures a [QUICConn].
+**/
 @:structInit
 @:go.Type({ name: "QUICConfig", instanceName: "tls.QUICConfig", imports: ["crypto/tls"] })
 extern class QUICConfig {

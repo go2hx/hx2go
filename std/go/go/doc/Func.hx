@@ -1,5 +1,8 @@
 package go.go.doc;
 
+/**
+    Func is the documentation for a func declaration.
+**/
 @:structInit
 @:go.Type({ name: "Func", instanceName: "doc.Func", imports: ["go/doc"] })
 extern class Func {

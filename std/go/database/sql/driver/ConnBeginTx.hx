@@ -1,5 +1,8 @@
 package go.database.sql.driver;
 
+/**
+    ConnBeginTx enhances the [Conn] interface with context and [TxOptions].
+**/
 @:go.Type({ name: "ConnBeginTx", instanceName: "driver.ConnBeginTx", imports: ["database/sql/driver"] })
 extern typedef ConnBeginTx = {
 

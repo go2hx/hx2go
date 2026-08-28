@@ -1,5 +1,9 @@
 package go.net.http;
 
+/**
+    HTTP2Config defines HTTP/2 configuration parameters common to
+    both [Transport] and [Server].
+**/
 @:structInit
 @:go.Type({ name: "HTTP2Config", instanceName: "http.HTTP2Config", imports: ["net/http"] })
 extern class HTTP2Config {

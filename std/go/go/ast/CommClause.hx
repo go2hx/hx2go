@@ -1,5 +1,8 @@
 package go.go.ast;
 
+/**
+    A CommClause node represents a case of a select statement.
+**/
 @:structInit
 @:go.Type({ name: "CommClause", instanceName: "ast.CommClause", imports: ["go/ast"] })
 extern class CommClause {

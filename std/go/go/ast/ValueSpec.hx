@@ -1,5 +1,9 @@
 package go.go.ast;
 
+/**
+    A ValueSpec node represents a constant or variable declaration
+    (ConstSpec or VarSpec production).
+**/
 @:structInit
 @:go.Type({ name: "ValueSpec", instanceName: "ast.ValueSpec", imports: ["go/ast"] })
 extern class ValueSpec {

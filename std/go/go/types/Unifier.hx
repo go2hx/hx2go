@@ -4,6 +4,6 @@ package go.go.types;
 @:go.Type({ name: "unifier", instanceName: "types.unifier", imports: ["go/types"] })
 extern class Unifier {
 
-    @:native("String") function string(): (String);
+    @:native("String") function string(): (std.String);
 
 }

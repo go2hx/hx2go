@@ -1,5 +1,8 @@
 package go.runtime.metrics;
 
+/**
+    Float64Histogram represents a distribution of float64 values.
+**/
 @:structInit
 @:go.Type({ name: "Float64Histogram", instanceName: "metrics.Float64Histogram", imports: ["runtime/metrics"] })
 extern class Float64Histogram {

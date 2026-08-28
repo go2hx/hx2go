@@ -1,5 +1,10 @@
 package go.go.ast;
 
+/**
+    A BadExpr node is a placeholder for an expression containing
+    syntax errors for which a correct expression node cannot be
+    created.
+**/
 @:structInit
 @:go.Type({ name: "BadExpr", instanceName: "ast.BadExpr", imports: ["go/ast"] })
 extern class BadExpr {

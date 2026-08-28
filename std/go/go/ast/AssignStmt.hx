@@ -1,5 +1,9 @@
 package go.go.ast;
 
+/**
+    An AssignStmt node represents an assignment or
+    a short variable declaration.
+**/
 @:structInit
 @:go.Type({ name: "AssignStmt", instanceName: "ast.AssignStmt", imports: ["go/ast"] })
 extern class AssignStmt {

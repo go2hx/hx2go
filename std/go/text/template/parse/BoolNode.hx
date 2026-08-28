@@ -1,5 +1,8 @@
 package go.text.template.parse;
 
+/**
+    BoolNode holds a boolean constant.
+**/
 @:structInit
 @:go.Type({ name: "BoolNode", instanceName: "parse.BoolNode", imports: ["text/template/parse"] })
 extern class BoolNode {

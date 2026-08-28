@@ -1,5 +1,8 @@
 package go.crypto.tls;
 
+/**
+    CertificateVerificationError is returned when certificate verification fails during the handshake.
+**/
 @:structInit
 @:go.Type({ name: "CertificateVerificationError", instanceName: "tls.CertificateVerificationError", imports: ["crypto/tls"] })
 extern class CertificateVerificationError {

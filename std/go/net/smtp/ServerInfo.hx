@@ -1,5 +1,8 @@
 package go.net.smtp;
 
+/**
+    ServerInfo records information about an SMTP server.
+**/
 @:structInit
 @:go.Type({ name: "ServerInfo", instanceName: "smtp.ServerInfo", imports: ["net/smtp"] })
 extern class ServerInfo {

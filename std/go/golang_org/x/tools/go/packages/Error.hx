@@ -1,5 +1,8 @@
 package go.golang_org.x.tools.go.packages;
 
+/**
+    An Error describes a problem with a package's metadata, syntax, or types.
+**/
 @:structInit
 @:go.Type({ name: "Error", instanceName: "packages.Error", imports: ["golang.org/x/tools/go/packages"] })
 extern class Error {

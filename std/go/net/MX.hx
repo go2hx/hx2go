@@ -1,5 +1,8 @@
 package go.net;
 
+/**
+    An MX represents a single DNS MX record.
+**/
 @:structInit
 @:go.Type({ name: "MX", instanceName: "net.MX", imports: ["net"] })
 extern class MX {

@@ -1,5 +1,8 @@
 package go.testing.quick;
 
+/**
+    A Generator can generate random values of its own type.
+**/
 @:go.Type({ name: "Generator", instanceName: "quick.Generator", imports: ["testing/quick"] })
 extern typedef Generator = {
 

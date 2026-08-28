@@ -1,5 +1,10 @@
 package go.go.ast;
 
+/**
+    An EmptyStmt node represents an empty statement.
+    The "position" of the empty statement is the position
+    of the immediately following (explicit or implicit) semicolon.
+**/
 @:structInit
 @:go.Type({ name: "EmptyStmt", instanceName: "ast.EmptyStmt", imports: ["go/ast"] })
 extern class EmptyStmt {

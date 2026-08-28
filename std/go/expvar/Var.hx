@@ -1,5 +1,8 @@
 package go.expvar;
 
+/**
+    Var is an abstract type for all exported variables.
+**/
 @:go.Type({ name: "Var", instanceName: "expvar.Var", imports: ["expvar"] })
 extern typedef Var = {
 

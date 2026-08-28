@@ -1,5 +1,11 @@
 package go.encoding.json;
 
+/**
+    An UnmarshalFieldError describes a JSON object key that
+    led to an unexported (and therefore unwritable) struct field.
+    
+    Deprecated: No longer used; kept for compatibility.
+**/
 @:structInit
 @:go.Type({ name: "UnmarshalFieldError", instanceName: "json.UnmarshalFieldError", imports: ["encoding/json"] })
 extern class UnmarshalFieldError {

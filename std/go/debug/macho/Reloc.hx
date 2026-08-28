@@ -1,5 +1,8 @@
 package go.debug.macho;
 
+/**
+    A Reloc represents a Mach-O relocation.
+**/
 @:structInit
 @:go.Type({ name: "Reloc", instanceName: "macho.Reloc", imports: ["debug/macho"] })
 extern class Reloc {

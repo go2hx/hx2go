@@ -1,5 +1,8 @@
 package go.debug.elf;
 
+/**
+    ELF64 relocations that don't need an addend field.
+**/
 @:structInit
 @:go.Type({ name: "Rel64", instanceName: "elf.Rel64", imports: ["debug/elf"] })
 extern class Rel64 {

@@ -1,5 +1,8 @@
 package go.debug.macho;
 
+/**
+    RegsAMD64 is the Mach-O AMD64 register structure.
+**/
 @:structInit
 @:go.Type({ name: "RegsAMD64", instanceName: "macho.RegsAMD64", imports: ["debug/macho"] })
 extern class RegsAMD64 {

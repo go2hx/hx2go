@@ -1,5 +1,8 @@
 package go.testing.quick;
 
+/**
+    A CheckEqualError is the result [CheckEqual] finding an error.
+**/
 @:structInit
 @:go.Type({ name: "CheckEqualError", instanceName: "quick.CheckEqualError", imports: ["testing/quick"] })
 extern class CheckEqualError {

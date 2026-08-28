@@ -1,5 +1,9 @@
 package go.go.printer;
 
+/**
+    A CommentedNode bundles an AST node and corresponding comments.
+    It may be provided as argument to any of the [Fprint] functions.
+**/
 @:structInit
 @:go.Type({ name: "CommentedNode", instanceName: "printer.CommentedNode", imports: ["go/printer"] })
 extern class CommentedNode {

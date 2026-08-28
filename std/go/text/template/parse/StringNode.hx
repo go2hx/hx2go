@@ -1,5 +1,8 @@
 package go.text.template.parse;
 
+/**
+    StringNode holds a string constant. The value has been "unquoted".
+**/
 @:structInit
 @:go.Type({ name: "StringNode", instanceName: "parse.StringNode", imports: ["text/template/parse"] })
 extern class StringNode {

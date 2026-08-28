@@ -1,5 +1,8 @@
 package go.text.template.parse;
 
+/**
+    CommandNode holds a command (a pipeline inside an evaluating action).
+**/
 @:structInit
 @:go.Type({ name: "CommandNode", instanceName: "parse.CommandNode", imports: ["text/template/parse"] })
 extern class CommandNode {

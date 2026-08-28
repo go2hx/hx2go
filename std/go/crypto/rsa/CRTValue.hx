@@ -1,5 +1,8 @@
 package go.crypto.rsa;
 
+/**
+    CRTValue contains the precomputed Chinese remainder theorem values.
+**/
 @:structInit
 @:go.Type({ name: "CRTValue", instanceName: "rsa.CRTValue", imports: ["crypto/rsa"] })
 extern class CRTValue {

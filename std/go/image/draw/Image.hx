@@ -1,5 +1,8 @@
 package go.image.draw;
 
+/**
+    Image is an image.Image with a Set method to change a single pixel.
+**/
 @:go.Type({ name: "Image", instanceName: "draw.Image", imports: ["image/draw"] })
 extern typedef Image = {
 

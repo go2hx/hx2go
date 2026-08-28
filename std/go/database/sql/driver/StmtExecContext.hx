@@ -1,5 +1,8 @@
 package go.database.sql.driver;
 
+/**
+    StmtExecContext enhances the [Stmt] interface by providing Exec with context.
+**/
 @:go.Type({ name: "StmtExecContext", instanceName: "driver.StmtExecContext", imports: ["database/sql/driver"] })
 extern typedef StmtExecContext = {
 

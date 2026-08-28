@@ -1,5 +1,8 @@
 package go.debug.macho;
 
+/**
+    An Nlist64 is a Mach-O 64-bit symbol table entry.
+**/
 @:structInit
 @:go.Type({ name: "Nlist64", instanceName: "macho.Nlist64", imports: ["debug/macho"] })
 extern class Nlist64 {

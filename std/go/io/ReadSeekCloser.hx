@@ -1,5 +1,9 @@
 package go.io;
 
+/**
+    ReadSeekCloser is the interface that groups the basic Read, Seek and Close
+    methods.
+**/
 @:go.Type({ name: "ReadSeekCloser", instanceName: "io.ReadSeekCloser", imports: ["io"] })
 extern typedef ReadSeekCloser = {
 

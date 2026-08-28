@@ -1,5 +1,9 @@
 package go.encoding.json;
 
+/**
+    An UnmarshalTypeError describes a JSON value that was
+    not appropriate for a value of a specific Go type.
+**/
 @:structInit
 @:go.Type({ name: "UnmarshalTypeError", instanceName: "json.UnmarshalTypeError", imports: ["encoding/json"] })
 extern class UnmarshalTypeError {

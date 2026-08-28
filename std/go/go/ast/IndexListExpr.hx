@@ -1,5 +1,9 @@
 package go.go.ast;
 
+/**
+    An IndexListExpr node represents an expression followed by multiple
+    indices.
+**/
 @:structInit
 @:go.Type({ name: "IndexListExpr", instanceName: "ast.IndexListExpr", imports: ["go/ast"] })
 extern class IndexListExpr {

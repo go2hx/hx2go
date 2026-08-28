@@ -1,5 +1,8 @@
 package go.net.mail;
 
+/**
+    A Message represents a parsed mail message.
+**/
 @:structInit
 @:go.Type({ name: "Message", instanceName: "mail.Message", imports: ["net/mail"] })
 extern class Message {

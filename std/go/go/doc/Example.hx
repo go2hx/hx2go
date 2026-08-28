@@ -1,5 +1,8 @@
 package go.go.doc;
 
+/**
+    An Example represents an example function found in a test source file.
+**/
 @:structInit
 @:go.Type({ name: "Example", instanceName: "doc.Example", imports: ["go/doc"] })
 extern class Example {

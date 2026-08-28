@@ -1,5 +1,8 @@
 package go.debug.elf;
 
+/**
+    ELF64 symbol table entries.
+**/
 @:structInit
 @:go.Type({ name: "Sym64", instanceName: "elf.Sym64", imports: ["debug/elf"] })
 extern class Sym64 {

@@ -1,5 +1,8 @@
 package go.go.ast;
 
+/**
+    A CallExpr node represents an expression followed by an argument list.
+**/
 @:structInit
 @:go.Type({ name: "CallExpr", instanceName: "ast.CallExpr", imports: ["go/ast"] })
 extern class CallExpr {

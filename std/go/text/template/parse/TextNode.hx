@@ -1,5 +1,8 @@
 package go.text.template.parse;
 
+/**
+    TextNode holds plain text.
+**/
 @:structInit
 @:go.Type({ name: "TextNode", instanceName: "parse.TextNode", imports: ["text/template/parse"] })
 extern class TextNode {

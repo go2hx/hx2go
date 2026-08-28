@@ -1,5 +1,9 @@
 package go.crypto.x509;
 
+/**
+    RevocationListEntry represents an entry in the revokedCertificates
+    sequence of a CRL.
+**/
 @:structInit
 @:go.Type({ name: "RevocationListEntry", instanceName: "x509.RevocationListEntry", imports: ["crypto/x509"] })
 extern class RevocationListEntry {

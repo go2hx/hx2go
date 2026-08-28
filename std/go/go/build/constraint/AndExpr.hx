@@ -1,5 +1,8 @@
 package go.go.build.constraint;
 
+/**
+    An AndExpr represents the expression X && Y.
+**/
 @:structInit
 @:go.Type({ name: "AndExpr", instanceName: "constraint.AndExpr", imports: ["go/build/constraint"] })
 extern class AndExpr {

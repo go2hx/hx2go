@@ -1,5 +1,9 @@
 package go.debug.pe;
 
+/**
+    Reloc represents a PE COFF relocation.
+    Each section contains its own relocation list.
+**/
 @:structInit
 @:go.Type({ name: "Reloc", instanceName: "pe.Reloc", imports: ["debug/pe"] })
 extern class Reloc {

@@ -1,5 +1,10 @@
 package go.go.ast;
 
+/**
+    A BadStmt node is a placeholder for statements containing
+    syntax errors for which no correct statement nodes can be
+    created.
+**/
 @:structInit
 @:go.Type({ name: "BadStmt", instanceName: "ast.BadStmt", imports: ["go/ast"] })
 extern class BadStmt {

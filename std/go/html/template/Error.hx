@@ -1,5 +1,8 @@
 package go.html.template;
 
+/**
+    Error describes a problem encountered during template Escaping.
+**/
 @:structInit
 @:go.Type({ name: "Error", instanceName: "template.Error", imports: ["html/template"] })
 extern class Error {

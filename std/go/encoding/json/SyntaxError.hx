@@ -1,5 +1,9 @@
 package go.encoding.json;
 
+/**
+    A SyntaxError is a description of a JSON syntax error.
+    [Unmarshal] will return a SyntaxError if the JSON can't be parsed.
+**/
 @:structInit
 @:go.Type({ name: "SyntaxError", instanceName: "json.SyntaxError", imports: ["encoding/json"] })
 extern class SyntaxError {

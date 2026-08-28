@@ -1,5 +1,8 @@
 package go.go.build;
 
+/**
+    A Package describes the Go package found in a directory.
+**/
 @:structInit
 @:go.Type({ name: "Package", instanceName: "build.Package", imports: ["go/build"] })
 extern class Package {
@@ -59,6 +62,11 @@ extern class Package {
 
     function new(dir: String="", name: String="", importComment: String="", doc: String="", importPath: String="", root: String="", srcRoot: String="", pkgRoot: String="", pkgTargetRoot: String="", binDir: String="", goroot: Bool=false, pkgObj: String="", allTags: go.Slice<String>=null, conflictDir: String="", binaryOnly: Bool=false, goFiles: go.Slice<String>=null, cgoFiles: go.Slice<String>=null, ignoredGoFiles: go.Slice<String>=null, invalidGoFiles: go.Slice<String>=null, ignoredOtherFiles: go.Slice<String>=null, cFiles: go.Slice<String>=null, cXXFiles: go.Slice<String>=null, mFiles: go.Slice<String>=null, hFiles: go.Slice<String>=null, fFiles: go.Slice<String>=null, sFiles: go.Slice<String>=null, swigFiles: go.Slice<String>=null, swigCXXFiles: go.Slice<String>=null, sysoFiles: go.Slice<String>=null, cgoCFLAGS: go.Slice<String>=null, cgoCPPFLAGS: go.Slice<String>=null, cgoCXXFLAGS: go.Slice<String>=null, cgoFFLAGS: go.Slice<String>=null, cgoLDFLAGS: go.Slice<String>=null, cgoPkgConfig: go.Slice<String>=null, testGoFiles: go.Slice<String>=null, xTestGoFiles: go.Slice<String>=null, directives: go.Slice<go.go.build.Directive>=null, testDirectives: go.Slice<go.go.build.Directive>=null, xTestDirectives: go.Slice<go.go.build.Directive>=null, imports: go.Slice<String>=null, importPos: go.Map<String, go.Slice<go.go.token.Position>>=null, testImports: go.Slice<String>=null, testImportPos: go.Map<String, go.Slice<go.go.token.Position>>=null, xTestImports: go.Slice<String>=null, xTestImportPos: go.Map<String, go.Slice<go.go.token.Position>>=null, embedPatterns: go.Slice<String>=null, embedPatternPos: go.Map<String, go.Slice<go.go.token.Position>>=null, testEmbedPatterns: go.Slice<String>=null, testEmbedPatternPos: go.Map<String, go.Slice<go.go.token.Position>>=null, xTestEmbedPatterns: go.Slice<String>=null, xTestEmbedPatternPos: go.Map<String, go.Slice<go.go.token.Position>>=null);
 
+    /**
+        IsCommand reports whether the package is considered a
+        command to be installed (not just a library).
+        Packages named "main" are treated as commands.
+    **/
     @:native("IsCommand") function isCommand(): (Bool);
 
 }

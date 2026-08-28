@@ -1,5 +1,8 @@
 package go.image.png;
 
+/**
+    Encoder configures encoding PNG images.
+**/
 @:structInit
 @:go.Type({ name: "Encoder", instanceName: "png.Encoder", imports: ["image/png"] })
 extern class Encoder {
@@ -9,6 +12,9 @@ extern class Encoder {
 
     function new(compressionLevel: go.image.png.CompressionLevel=cast 0, bufferPool: go.image.png.EncoderBufferPool=null);
 
+    /**
+        Encode writes the Image m to w in PNG format.
+    **/
     @:native("Encode") function encode(w: go.io.Writer, m: go.image.Image): (go.Error);
 
 }

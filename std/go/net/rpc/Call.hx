@@ -1,5 +1,8 @@
 package go.net.rpc;
 
+/**
+    Call represents an active RPC.
+**/
 @:structInit
 @:go.Type({ name: "Call", instanceName: "rpc.Call", imports: ["net/rpc"] })
 extern class Call {

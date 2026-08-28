@@ -1,5 +1,8 @@
 package go.go.ast;
 
+/**
+    A ChanType node represents a channel type.
+**/
 @:structInit
 @:go.Type({ name: "ChanType", instanceName: "ast.ChanType", imports: ["go/ast"] })
 extern class ChanType {

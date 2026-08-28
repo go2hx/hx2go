@@ -1,5 +1,8 @@
 package go.text.template.parse;
 
+/**
+    PipeNode holds a pipeline with optional declaration
+**/
 @:structInit
 @:go.Type({ name: "PipeNode", instanceName: "parse.PipeNode", imports: ["text/template/parse"] })
 extern class PipeNode {

@@ -1,5 +1,10 @@
 package go.net.rpc;
 
+/**
+    Response is a header written before every RPC return. It is used internally
+    but documented here as an aid to debugging, such as when analyzing
+    network traffic.
+**/
 @:structInit
 @:go.Type({ name: "Response", instanceName: "rpc.Response", imports: ["net/rpc"] })
 extern class Response {

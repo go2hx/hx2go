@@ -1,5 +1,10 @@
 package go.text.template.parse;
 
+/**
+    ActionNode holds an action (something bounded by delimiters).
+    Control actions have their own nodes; ActionNode represents simple
+    ones such as field evaluations and parenthesized pipelines.
+**/
 @:structInit
 @:go.Type({ name: "ActionNode", instanceName: "parse.ActionNode", imports: ["text/template/parse"] })
 extern class ActionNode {

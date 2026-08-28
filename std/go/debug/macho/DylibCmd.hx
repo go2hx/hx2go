@@ -1,5 +1,8 @@
 package go.debug.macho;
 
+/**
+    A DylibCmd is a Mach-O load dynamic library command.
+**/
 @:structInit
 @:go.Type({ name: "DylibCmd", instanceName: "macho.DylibCmd", imports: ["debug/macho"] })
 extern class DylibCmd {

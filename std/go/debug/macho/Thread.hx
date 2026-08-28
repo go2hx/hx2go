@@ -1,5 +1,8 @@
 package go.debug.macho;
 
+/**
+    A Thread is a Mach-O thread state command.
+**/
 @:structInit
 @:go.Type({ name: "Thread", instanceName: "macho.Thread", imports: ["debug/macho"] })
 extern class Thread {

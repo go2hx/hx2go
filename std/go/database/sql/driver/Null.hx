@@ -1,5 +1,9 @@
 package go.database.sql.driver;
 
+/**
+    Null is a type that implements [ValueConverter] by allowing nil
+    values but otherwise delegating to another [ValueConverter].
+**/
 @:structInit
 @:go.Type({ name: "Null", instanceName: "driver.Null", imports: ["database/sql/driver"] })
 extern class Null {

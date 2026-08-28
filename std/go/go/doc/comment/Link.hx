@@ -1,5 +1,8 @@
 package go.go.doc.comment;
 
+/**
+    A Link is a link to a specific URL.
+**/
 @:structInit
 @:go.Type({ name: "Link", instanceName: "comment.Link", imports: ["go/doc/comment"] })
 extern class Link {

@@ -1,5 +1,10 @@
 package go.compress.flate;
 
+/**
+    A WriteError reports an error encountered while writing output.
+    
+    Deprecated: No longer returned.
+**/
 @:structInit
 @:go.Type({ name: "WriteError", instanceName: "flate.WriteError", imports: ["compress/flate"] })
 extern class WriteError {

@@ -1,5 +1,8 @@
 package go.debug.macho;
 
+/**
+    A Segment32 is a 32-bit Mach-O segment load command.
+**/
 @:structInit
 @:go.Type({ name: "Segment32", instanceName: "macho.Segment32", imports: ["debug/macho"] })
 extern class Segment32 {

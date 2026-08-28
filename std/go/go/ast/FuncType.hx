@@ -1,5 +1,8 @@
 package go.go.ast;
 
+/**
+    A FuncType node represents a function type.
+**/
 @:structInit
 @:go.Type({ name: "FuncType", instanceName: "ast.FuncType", imports: ["go/ast"] })
 extern class FuncType {

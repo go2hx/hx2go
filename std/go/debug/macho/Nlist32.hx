@@ -1,5 +1,8 @@
 package go.debug.macho;
 
+/**
+    An Nlist32 is a Mach-O 32-bit symbol table entry.
+**/
 @:structInit
 @:go.Type({ name: "Nlist32", instanceName: "macho.Nlist32", imports: ["debug/macho"] })
 extern class Nlist32 {

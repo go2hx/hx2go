@@ -1,5 +1,8 @@
 package go.debug.dwarf;
 
+/**
+    A DotDotDotType represents the variadic ... function parameter.
+**/
 @:structInit
 @:go.Type({ name: "DotDotDotType", instanceName: "dwarf.DotDotDotType", imports: ["debug/dwarf"] })
 extern class DotDotDotType {

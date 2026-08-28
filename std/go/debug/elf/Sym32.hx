@@ -1,5 +1,8 @@
 package go.debug.elf;
 
+/**
+    ELF32 Symbol.
+**/
 @:structInit
 @:go.Type({ name: "Sym32", instanceName: "elf.Sym32", imports: ["debug/elf"] })
 extern class Sym32 {

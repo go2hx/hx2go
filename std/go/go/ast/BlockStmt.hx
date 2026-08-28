@@ -1,5 +1,8 @@
 package go.go.ast;
 
+/**
+    A BlockStmt node represents a braced statement list.
+**/
 @:structInit
 @:go.Type({ name: "BlockStmt", instanceName: "ast.BlockStmt", imports: ["go/ast"] })
 extern class BlockStmt {

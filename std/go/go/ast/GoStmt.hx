@@ -1,5 +1,8 @@
 package go.go.ast;
 
+/**
+    A GoStmt node represents a go statement.
+**/
 @:structInit
 @:go.Type({ name: "GoStmt", instanceName: "ast.GoStmt", imports: ["go/ast"] })
 extern class GoStmt {

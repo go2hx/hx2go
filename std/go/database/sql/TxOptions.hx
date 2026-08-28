@@ -1,5 +1,8 @@
 package go.database.sql;
 
+/**
+    TxOptions holds the transaction options to be used in [DB.BeginTx].
+**/
 @:structInit
 @:go.Type({ name: "TxOptions", instanceName: "sql.TxOptions", imports: ["database/sql"] })
 extern class TxOptions {

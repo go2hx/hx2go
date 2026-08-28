@@ -1,5 +1,8 @@
 package go.syscall;
 
+/**
+    SocketControlMessage represents a socket control message.
+**/
 @:structInit
 @:go.Type({ name: "SocketControlMessage", instanceName: "syscall.SocketControlMessage", imports: ["syscall"] })
 extern class SocketControlMessage {

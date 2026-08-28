@@ -1,5 +1,8 @@
 package go.debug.macho;
 
+/**
+    A Dysymtab represents a Mach-O dynamic symbol table command.
+**/
 @:structInit
 @:go.Type({ name: "Dysymtab", instanceName: "macho.Dysymtab", imports: ["debug/macho"] })
 extern class Dysymtab {

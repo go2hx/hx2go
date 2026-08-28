@@ -1,5 +1,9 @@
 package go.crypto.tls;
 
+/**
+    CipherSuite is a TLS cipher suite. Note that most functions in this package
+    accept and expose cipher suite IDs instead of this type.
+**/
 @:structInit
 @:go.Type({ name: "CipherSuite", instanceName: "tls.CipherSuite", imports: ["crypto/tls"] })
 extern class CipherSuite {

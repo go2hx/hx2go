@@ -1,5 +1,10 @@
 package go.debug.plan9obj;
 
+/**
+    A SectionHeader represents a single Plan 9 a.out section header.
+    This structure doesn't exist on-disk, but eases navigation
+    through the object file.
+**/
 @:structInit
 @:go.Type({ name: "SectionHeader", instanceName: "plan9obj.SectionHeader", imports: ["debug/plan9obj"] })
 extern class SectionHeader {

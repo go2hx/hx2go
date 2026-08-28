@@ -1,5 +1,9 @@
 package go.go.ast;
 
+/**
+    A TypeAssertExpr node represents an expression followed by a
+    type assertion.
+**/
 @:structInit
 @:go.Type({ name: "TypeAssertExpr", instanceName: "ast.TypeAssertExpr", imports: ["go/ast"] })
 extern class TypeAssertExpr {

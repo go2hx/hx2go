@@ -1,5 +1,8 @@
 package go.go.build.constraint;
 
+/**
+    An OrExpr represents the expression X || Y.
+**/
 @:structInit
 @:go.Type({ name: "OrExpr", instanceName: "constraint.OrExpr", imports: ["go/build/constraint"] })
 extern class OrExpr {

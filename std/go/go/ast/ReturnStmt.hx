@@ -1,5 +1,8 @@
 package go.go.ast;
 
+/**
+    A ReturnStmt node represents a return statement.
+**/
 @:structInit
 @:go.Type({ name: "ReturnStmt", instanceName: "ast.ReturnStmt", imports: ["go/ast"] })
 extern class ReturnStmt {

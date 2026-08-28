@@ -1,5 +1,20 @@
 package go.net.http.httputil;
 
+/**
+    ReverseProxy is an HTTP Handler that takes an incoming request and
+    sends it to another server, proxying the response back to the
+    client.
+    
+    1xx responses are forwarded to the client if the underlying
+    transport supports ClientTrace.Got1xxResponse.
+    
+    Hop-by-hop headers (see RFC 9110, section 7.6.1), including
+    Connection, Proxy-Connection, Keep-Alive, Proxy-Authenticate,
+    Proxy-Authorization, TE, Trailer, Transfer-Encoding, and Upgrade,
+    are removed from client requests and backend responses.
+    The Rewrite function may be used to add hop-by-hop headers to the request,
+    and the ModifyResponse function may be used to remove them from the response.
+**/
 @:structInit
 @:go.Type({ name: "ReverseProxy", instanceName: "httputil.ReverseProxy", imports: ["net/http/httputil"] })
 extern class ReverseProxy {

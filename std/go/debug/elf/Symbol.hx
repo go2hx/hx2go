@@ -1,5 +1,8 @@
 package go.debug.elf;
 
+/**
+    A Symbol represents an entry in an ELF symbol table section.
+**/
 @:structInit
 @:go.Type({ name: "Symbol", instanceName: "elf.Symbol", imports: ["debug/elf"] })
 extern class Symbol {

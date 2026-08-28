@@ -1,5 +1,8 @@
 package go.expvar;
 
+/**
+    KeyValue represents a single entry in a [Map].
+**/
 @:structInit
 @:go.Type({ name: "KeyValue", instanceName: "expvar.KeyValue", imports: ["expvar"] })
 extern class KeyValue {

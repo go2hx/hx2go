@@ -1,5 +1,8 @@
 package go.go.ast;
 
+/**
+    A SelectorExpr node represents an expression followed by a selector.
+**/
 @:structInit
 @:go.Type({ name: "SelectorExpr", instanceName: "ast.SelectorExpr", imports: ["go/ast"] })
 extern class SelectorExpr {

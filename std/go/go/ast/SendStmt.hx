@@ -1,5 +1,8 @@
 package go.go.ast;
 
+/**
+    A SendStmt node represents a send statement.
+**/
 @:structInit
 @:go.Type({ name: "SendStmt", instanceName: "ast.SendStmt", imports: ["go/ast"] })
 extern class SendStmt {

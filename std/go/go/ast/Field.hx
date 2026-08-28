@@ -1,5 +1,12 @@
 package go.go.ast;
 
+/**
+    A Field represents a Field declaration list in a struct type,
+    a method list in an interface type, or a parameter/result declaration
+    in a signature.
+    [Field.Names] is nil for unnamed parameters (parameter lists which only contain types)
+    and embedded struct fields. In the latter case, the field name is the type name.
+**/
 @:structInit
 @:go.Type({ name: "Field", instanceName: "ast.Field", imports: ["go/ast"] })
 extern class Field {

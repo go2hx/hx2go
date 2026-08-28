@@ -1,5 +1,8 @@
 package go.go.ast;
 
+/**
+    An IndexExpr node represents an expression followed by an index.
+**/
 @:structInit
 @:go.Type({ name: "IndexExpr", instanceName: "ast.IndexExpr", imports: ["go/ast"] })
 extern class IndexExpr {

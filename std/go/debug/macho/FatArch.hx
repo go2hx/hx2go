@@ -1,5 +1,8 @@
 package go.debug.macho;
 
+/**
+    A FatArch is a Mach-O File inside a FatFile.
+**/
 @:structInit
 @:go.Type({ name: "FatArch", instanceName: "macho.FatArch", imports: ["debug/macho"] })
 extern class FatArch {

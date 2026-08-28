@@ -1,5 +1,8 @@
 package go.debug.macho;
 
+/**
+    A Section64 is a 64-bit Mach-O section header.
+**/
 @:structInit
 @:go.Type({ name: "Section64", instanceName: "macho.Section64", imports: ["debug/macho"] })
 extern class Section64 {

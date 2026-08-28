@@ -1,5 +1,8 @@
 package go.debug.dwarf;
 
+/**
+    An AddrType represents a machine address type.
+**/
 @:structInit
 @:go.Type({ name: "AddrType", instanceName: "dwarf.AddrType", imports: ["debug/dwarf"] })
 extern class AddrType {

@@ -1,5 +1,9 @@
 package go.syscall;
 
+/**
+    Credential holds user and group identities to be assumed
+    by a child process started by [StartProcess].
+**/
 @:structInit
 @:go.Type({ name: "Credential", instanceName: "syscall.Credential", imports: ["syscall"] })
 extern class Credential {

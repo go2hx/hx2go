@@ -1,5 +1,8 @@
 package go.debug.elf;
 
+/**
+    ELF32 Dynamic structure. The ".dynamic" section contains an array of them.
+**/
 @:structInit
 @:go.Type({ name: "Dyn32", instanceName: "elf.Dyn32", imports: ["debug/elf"] })
 extern class Dyn32 {

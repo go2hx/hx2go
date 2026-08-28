@@ -1,5 +1,8 @@
 package go.text.template.parse;
 
+/**
+    CommentNode holds a comment.
+**/
 @:structInit
 @:go.Type({ name: "CommentNode", instanceName: "parse.CommentNode", imports: ["text/template/parse"] })
 extern class CommentNode {

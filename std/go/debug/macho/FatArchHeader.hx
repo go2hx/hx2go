@@ -1,5 +1,8 @@
 package go.debug.macho;
 
+/**
+    A FatArchHeader represents a fat header for a specific image architecture.
+**/
 @:structInit
 @:go.Type({ name: "FatArchHeader", instanceName: "macho.FatArchHeader", imports: ["debug/macho"] })
 extern class FatArchHeader {

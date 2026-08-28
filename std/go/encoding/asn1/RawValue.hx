@@ -1,5 +1,8 @@
 package go.encoding.asn1;
 
+/**
+    A RawValue represents an undecoded ASN.1 object.
+**/
 @:structInit
 @:go.Type({ name: "RawValue", instanceName: "asn1.RawValue", imports: ["encoding/asn1"] })
 extern class RawValue {

@@ -1,5 +1,10 @@
 package go.testing;
 
+/**
+    Cover records information about test coverage checking.
+    NOTE: This struct is internal to the testing infrastructure and may change.
+    It is not covered (yet) by the Go 1 compatibility guidelines.
+**/
 @:structInit
 @:go.Type({ name: "Cover", instanceName: "testing.Cover", imports: ["testing"] })
 extern class Cover {

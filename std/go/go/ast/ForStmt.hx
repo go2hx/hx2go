@@ -1,5 +1,8 @@
 package go.go.ast;
 
+/**
+    A ForStmt represents a for statement.
+**/
 @:structInit
 @:go.Type({ name: "ForStmt", instanceName: "ast.ForStmt", imports: ["go/ast"] })
 extern class ForStmt {

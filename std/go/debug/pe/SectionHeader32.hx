@@ -1,5 +1,8 @@
 package go.debug.pe;
 
+/**
+    SectionHeader32 represents real PE COFF section header.
+**/
 @:structInit
 @:go.Type({ name: "SectionHeader32", instanceName: "pe.SectionHeader32", imports: ["debug/pe"] })
 extern class SectionHeader32 {

@@ -1,5 +1,8 @@
 package go.debug.macho;
 
+/**
+    A SymtabCmd is a Mach-O symbol table command.
+**/
 @:structInit
 @:go.Type({ name: "SymtabCmd", instanceName: "macho.SymtabCmd", imports: ["debug/macho"] })
 extern class SymtabCmd {

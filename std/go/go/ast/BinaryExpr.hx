@@ -1,5 +1,8 @@
 package go.go.ast;
 
+/**
+    A BinaryExpr node represents a binary expression.
+**/
 @:structInit
 @:go.Type({ name: "BinaryExpr", instanceName: "ast.BinaryExpr", imports: ["go/ast"] })
 extern class BinaryExpr {

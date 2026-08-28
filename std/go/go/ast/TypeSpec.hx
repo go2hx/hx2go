@@ -1,5 +1,8 @@
 package go.go.ast;
 
+/**
+    A TypeSpec node represents a type declaration (TypeSpec production).
+**/
 @:structInit
 @:go.Type({ name: "TypeSpec", instanceName: "ast.TypeSpec", imports: ["go/ast"] })
 extern class TypeSpec {

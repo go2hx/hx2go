@@ -1,5 +1,14 @@
 package go.archive.tar;
 
+/**
+    A Header represents a single header in a tar archive.
+    Some fields may not be populated.
+    
+    For forward compatibility, users that retrieve a Header from Reader.Next,
+    mutate it in some ways, and then pass it back to Writer.WriteHeader
+    should do so by creating a new Header and copying the fields
+    that they are interested in preserving.
+**/
 @:structInit
 @:go.Type({ name: "Header", instanceName: "tar.Header", imports: ["archive/tar"] })
 extern class Header {
@@ -24,6 +33,9 @@ extern class Header {
 
     function new(typeflag: go.Byte=0, name: String="", linkname: String="", size: go.Int64=0, mode: go.Int64=0, uid: go.GoInt=0, gid: go.GoInt=0, uname: String="", gname: String="", modTime: go.time.Time, accessTime: go.time.Time, changeTime: go.time.Time, devmajor: go.Int64=0, devminor: go.Int64=0, xattrs: go.Map<String, String>=null, pAXRecords: go.Map<String, String>=null, format: go.archive.tar.Format=cast 0);
 
+    /**
+        FileInfo returns an fs.FileInfo for the Header.
+    **/
     @:native("FileInfo") function fileInfo(): (go.io.fs.FileInfo);
 
 }

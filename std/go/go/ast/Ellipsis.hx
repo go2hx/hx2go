@@ -1,5 +1,9 @@
 package go.go.ast;
 
+/**
+    An Ellipsis node stands for the "..." type in a
+    parameter list or the "..." length in an array type.
+**/
 @:structInit
 @:go.Type({ name: "Ellipsis", instanceName: "ast.Ellipsis", imports: ["go/ast"] })
 extern class Ellipsis {

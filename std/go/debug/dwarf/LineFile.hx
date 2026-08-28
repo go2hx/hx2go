@@ -1,5 +1,8 @@
 package go.debug.dwarf;
 
+/**
+    A LineFile is a source file referenced by a DWARF line table entry.
+**/
 @:structInit
 @:go.Type({ name: "LineFile", instanceName: "dwarf.LineFile", imports: ["debug/dwarf"] })
 extern class LineFile {

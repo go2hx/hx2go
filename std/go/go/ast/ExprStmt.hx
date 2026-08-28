@@ -1,5 +1,9 @@
 package go.go.ast;
 
+/**
+    An ExprStmt node represents a (stand-alone) expression
+    in a statement list.
+**/
 @:structInit
 @:go.Type({ name: "ExprStmt", instanceName: "ast.ExprStmt", imports: ["go/ast"] })
 extern class ExprStmt {

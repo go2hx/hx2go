@@ -1,5 +1,8 @@
 package go.crypto.tls;
 
+/**
+    RecordHeaderError is returned when a TLS record header is invalid.
+**/
 @:structInit
 @:go.Type({ name: "RecordHeaderError", instanceName: "tls.RecordHeaderError", imports: ["crypto/tls"] })
 extern class RecordHeaderError {

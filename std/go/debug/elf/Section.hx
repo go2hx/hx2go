@@ -1,5 +1,8 @@
 package go.debug.elf;
 
+/**
+    A Section represents a single section in an ELF file.
+**/
 @:structInit
 @:go.Type({ name: "Section", instanceName: "elf.Section", imports: ["debug/elf"] })
 extern class Section {
@@ -20,7 +23,22 @@ extern class Section {
 
     function new(sectionHeader: go.debug.elf.SectionHeader, readerAt: go.io.ReaderAt=null);
 
+    /**
+        Data reads and returns the contents of the ELF section.
+        Even if the section is stored compressed in the ELF file,
+        Data returns uncompressed data.
+        
+        For an [SHT_NOBITS] section, Data always returns a non-nil error.
+    **/
     @:native("Data") function data(): (go.Result<go.Slice<go.Byte>>);
+    /**
+        Open returns a new ReadSeeker reading the ELF section.
+        Even if the section is stored compressed in the ELF file,
+        the ReadSeeker reads uncompressed data.
+        
+        For an [SHT_NOBITS] section, all calls to the opened reader
+        will return a non-nil error.
+    **/
     @:native("Open") function open(): (go.io.ReadSeeker);
     @:native("ReadAt") function readAt(p: go.Slice<go.Byte>, off: go.Int64): (go.Result<go.GoInt>);
 

@@ -1,5 +1,8 @@
 package go.go.build.constraint;
 
+/**
+    A NotExpr represents the expression !X (the negation of X).
+**/
 @:structInit
 @:go.Type({ name: "NotExpr", instanceName: "constraint.NotExpr", imports: ["go/build/constraint"] })
 extern class NotExpr {

@@ -1,5 +1,11 @@
 package go.crypto.tls;
 
+/**
+    A QUICEvent is an event occurring on a QUIC connection.
+    
+    The type of event is specified by the Kind field.
+    The contents of the other fields are kind-specific.
+**/
 @:structInit
 @:go.Type({ name: "QUICEvent", instanceName: "tls.QUICEvent", imports: ["crypto/tls"] })
 extern class QUICEvent {

@@ -1,5 +1,8 @@
 package go.debug.elf;
 
+/**
+    ELF32 File header.
+**/
 @:structInit
 @:go.Type({ name: "Header32", instanceName: "elf.Header32", imports: ["debug/elf"] })
 extern class Header32 {

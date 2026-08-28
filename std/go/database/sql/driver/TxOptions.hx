@@ -1,5 +1,10 @@
 package go.database.sql.driver;
 
+/**
+    TxOptions holds the transaction options.
+    
+    This type should be considered identical to [database/sql.TxOptions].
+**/
 @:structInit
 @:go.Type({ name: "TxOptions", instanceName: "driver.TxOptions", imports: ["database/sql/driver"] })
 extern class TxOptions {

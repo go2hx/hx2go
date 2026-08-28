@@ -1,5 +1,8 @@
 package go.go.ast;
 
+/**
+    A SelectStmt node represents a select statement.
+**/
 @:structInit
 @:go.Type({ name: "SelectStmt", instanceName: "ast.SelectStmt", imports: ["go/ast"] })
 extern class SelectStmt {

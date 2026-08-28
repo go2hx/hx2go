@@ -1,5 +1,8 @@
 package go.net;
 
+/**
+    A ParseError is the error type of literal network address parsers.
+**/
 @:structInit
 @:go.Type({ name: "ParseError", instanceName: "net.ParseError", imports: ["net"] })
 extern class ParseError {

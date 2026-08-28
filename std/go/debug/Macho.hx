@@ -1,5 +1,16 @@
 package go.debug;
 
+/**
+    Package macho implements access to Mach-O object files.
+    
+    # Security
+    
+    This package is not designed to be hardened against adversarial inputs, and is
+    outside the scope of https://go.dev/security/policy. In particular, only basic
+    validation is done when parsing object files. As such, care should be taken when
+    parsing untrusted inputs, as parsing malformed files may consume significant
+    resources, or cause panics.
+**/
 @:go.Type({ name: "macho", instanceName: "macho.macho", imports: ["debug/macho"] })
 extern class Macho {
 
@@ -89,11 +100,31 @@ extern class Macho {
     @:native("X86_64_RELOC_TLV") static var X86_64_RELOC_TLV: go.debug.macho.RelocTypeX86_64;
     @:native("X86_64_RELOC_UNSIGNED") static var X86_64_RELOC_UNSIGNED: go.debug.macho.RelocTypeX86_64;
 
+    /**
+        ErrNotFat is returned from [NewFatFile] or [OpenFat] when the file is not a
+        universal binary but may be a thin binary, based on its magic number.
+    **/
     @:native("ErrNotFat") static var errNotFat: go.Pointer<go.debug.macho.FormatError>;
 
+    /**
+        NewFatFile creates a new [FatFile] for accessing all the Mach-O images in a
+        universal binary. The Mach-O binary is expected to start at position 0 in
+        the ReaderAt.
+    **/
     @:native("NewFatFile") static function newFatFile(r: go.io.ReaderAt): (go.Result<go.Pointer<go.debug.macho.FatFile>>);
+    /**
+        NewFile creates a new [File] for accessing a Mach-O binary in an underlying reader.
+        The Mach-O binary is expected to start at position 0 in the ReaderAt.
+    **/
     @:native("NewFile") static function newFile(r: go.io.ReaderAt): (go.Result<go.Pointer<go.debug.macho.File>>);
+    /**
+        Open opens the named file using [os.Open] and prepares it for use as a Mach-O binary.
+    **/
     @:native("Open") static function open(name: String): (go.Result<go.Pointer<go.debug.macho.File>>);
+    /**
+        OpenFat opens the named file using [os.Open] and prepares it for use as a Mach-O
+        universal binary.
+    **/
     @:native("OpenFat") static function openFat(name: String): (go.Result<go.Pointer<go.debug.macho.FatFile>>);
 
 }

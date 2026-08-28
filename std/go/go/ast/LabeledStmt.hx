@@ -1,5 +1,8 @@
 package go.go.ast;
 
+/**
+    A LabeledStmt node represents a labeled statement.
+**/
 @:structInit
 @:go.Type({ name: "LabeledStmt", instanceName: "ast.LabeledStmt", imports: ["go/ast"] })
 extern class LabeledStmt {

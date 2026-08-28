@@ -1,5 +1,17 @@
 package go.go.ast;
 
+/**
+    A GenDecl node (generic declaration node) represents an import,
+    constant, type or variable declaration. A valid Lparen position
+    (Lparen.IsValid()) indicates a parenthesized declaration.
+    
+    Relationship between Tok value and Specs element type:
+    
+    	token.IMPORT  *ImportSpec
+    	token.CONST   *ValueSpec
+    	token.TYPE    *TypeSpec
+    	token.VAR     *ValueSpec
+**/
 @:structInit
 @:go.Type({ name: "GenDecl", instanceName: "ast.GenDecl", imports: ["go/ast"] })
 extern class GenDecl {

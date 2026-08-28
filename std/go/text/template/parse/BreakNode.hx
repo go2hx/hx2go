@@ -1,5 +1,8 @@
 package go.text.template.parse;
 
+/**
+    BreakNode represents a {{break}} action.
+**/
 @:structInit
 @:go.Type({ name: "BreakNode", instanceName: "parse.BreakNode", imports: ["text/template/parse"] })
 extern class BreakNode {

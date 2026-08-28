@@ -1,5 +1,11 @@
 package go.golang_org.x.tools.go.packages;
 
+/**
+    A Config specifies details about how packages should be loaded.
+    The zero value is a valid configuration.
+    
+    Calls to [Load] do not modify this struct.
+**/
 @:structInit
 @:go.Type({ name: "Config", instanceName: "packages.Config", imports: ["golang.org/x/tools/go/packages"] })
 extern class Config {

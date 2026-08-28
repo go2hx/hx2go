@@ -1,5 +1,8 @@
 package go.debug.elf;
 
+/**
+    A SectionHeader represents a single ELF section header.
+**/
 @:structInit
 @:go.Type({ name: "SectionHeader", instanceName: "elf.SectionHeader", imports: ["debug/elf"] })
 extern class SectionHeader {

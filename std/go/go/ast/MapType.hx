@@ -1,5 +1,8 @@
 package go.go.ast;
 
+/**
+    A MapType node represents a map type.
+**/
 @:structInit
 @:go.Type({ name: "MapType", instanceName: "ast.MapType", imports: ["go/ast"] })
 extern class MapType {

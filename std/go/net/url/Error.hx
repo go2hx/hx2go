@@ -1,5 +1,8 @@
 package go.net.url;
 
+/**
+    Error reports an error and the operation and URL that caused it.
+**/
 @:structInit
 @:go.Type({ name: "Error", instanceName: "url.Error", imports: ["net/url"] })
 extern class Error {

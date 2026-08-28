@@ -1,5 +1,8 @@
 package go.debug.macho;
 
+/**
+    A FileHeader represents a Mach-O file header.
+**/
 @:structInit
 @:go.Type({ name: "FileHeader", instanceName: "macho.FileHeader", imports: ["debug/macho"] })
 extern class FileHeader {

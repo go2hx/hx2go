@@ -1,5 +1,9 @@
 package go.debug.pe;
 
+/**
+    SectionHeader is similar to [SectionHeader32] with Name
+    field replaced by Go string.
+**/
 @:structInit
 @:go.Type({ name: "SectionHeader", instanceName: "pe.SectionHeader", imports: ["debug/pe"] })
 extern class SectionHeader {

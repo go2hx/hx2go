@@ -1,5 +1,8 @@
 package go.debug.elf;
 
+/**
+    ELF64 Compression header.
+**/
 @:structInit
 @:go.Type({ name: "Chdr64", instanceName: "elf.Chdr64", imports: ["debug/elf"] })
 extern class Chdr64 {

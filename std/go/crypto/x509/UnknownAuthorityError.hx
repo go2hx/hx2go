@@ -1,5 +1,8 @@
 package go.crypto.x509;
 
+/**
+    UnknownAuthorityError results when the certificate issuer is unknown
+**/
 @:structInit
 @:go.Type({ name: "UnknownAuthorityError", instanceName: "x509.UnknownAuthorityError", imports: ["crypto/x509"] })
 extern class UnknownAuthorityError {

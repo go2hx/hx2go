@@ -1,5 +1,8 @@
 package go.debug.dwarf;
 
+/**
+    A CharType represents a signed character type.
+**/
 @:structInit
 @:go.Type({ name: "CharType", instanceName: "dwarf.CharType", imports: ["debug/dwarf"] })
 extern class CharType {

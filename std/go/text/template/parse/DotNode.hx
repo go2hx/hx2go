@@ -1,5 +1,8 @@
 package go.text.template.parse;
 
+/**
+    DotNode holds the special identifier '.'.
+**/
 @:structInit
 @:go.Type({ name: "DotNode", instanceName: "parse.DotNode", imports: ["text/template/parse"] })
 extern class DotNode {

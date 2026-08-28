@@ -1,5 +1,9 @@
 package go.crypto.cipher;
 
+/**
+    StreamReader wraps a [Stream] into an [io.Reader]. It calls XORKeyStream
+    to process each slice of data which passes through.
+**/
 @:structInit
 @:go.Type({ name: "StreamReader", instanceName: "cipher.StreamReader", imports: ["crypto/cipher"] })
 extern class StreamReader {

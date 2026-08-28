@@ -1,5 +1,8 @@
 package go.go.ast;
 
+/**
+    A FuncLit node represents a function literal.
+**/
 @:structInit
 @:go.Type({ name: "FuncLit", instanceName: "ast.FuncLit", imports: ["go/ast"] })
 extern class FuncLit {

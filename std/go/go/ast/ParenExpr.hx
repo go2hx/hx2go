@@ -1,5 +1,8 @@
 package go.go.ast;
 
+/**
+    A ParenExpr node represents a parenthesized expression.
+**/
 @:structInit
 @:go.Type({ name: "ParenExpr", instanceName: "ast.ParenExpr", imports: ["go/ast"] })
 extern class ParenExpr {

@@ -1,5 +1,11 @@
 package go.syscall;
 
+/**
+    RouteMessage represents a routing message containing routing
+    entries.
+    
+    Deprecated: Use golang.org/x/net/route instead.
+**/
 @:structInit
 @:go.Type({ name: "RouteMessage", instanceName: "syscall.RouteMessage", imports: ["syscall"] })
 extern class RouteMessage {

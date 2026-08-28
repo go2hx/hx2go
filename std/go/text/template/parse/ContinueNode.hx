@@ -1,5 +1,8 @@
 package go.text.template.parse;
 
+/**
+    ContinueNode represents a {{continue}} action.
+**/
 @:structInit
 @:go.Type({ name: "ContinueNode", instanceName: "parse.ContinueNode", imports: ["text/template/parse"] })
 extern class ContinueNode {

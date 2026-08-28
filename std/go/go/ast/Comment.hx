@@ -1,5 +1,13 @@
 package go.go.ast;
 
+/**
+    A Comment node represents a single //-style or /*-style comment.
+    
+    The Text field contains the comment text without carriage returns (\r) that
+    may have been present in the source. Because a comment's end position is
+    computed using len(Text), the position reported by [Comment.End] does not match the
+    true source end position for comments containing carriage returns.
+**/
 @:structInit
 @:go.Type({ name: "Comment", instanceName: "ast.Comment", imports: ["go/ast"] })
 extern class Comment {

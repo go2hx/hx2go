@@ -1,5 +1,8 @@
 package go.go.ast;
 
+/**
+    A DeclStmt node represents a declaration in a statement list.
+**/
 @:structInit
 @:go.Type({ name: "DeclStmt", instanceName: "ast.DeclStmt", imports: ["go/ast"] })
 extern class DeclStmt {

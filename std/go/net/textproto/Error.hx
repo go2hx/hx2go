@@ -1,5 +1,8 @@
 package go.net.textproto;
 
+/**
+    An Error represents a numeric error response from a server.
+**/
 @:structInit
 @:go.Type({ name: "Error", instanceName: "textproto.Error", imports: ["net/textproto"] })
 extern class Error {

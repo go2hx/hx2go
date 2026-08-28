@@ -1,5 +1,8 @@
 package go.text.template.parse;
 
+/**
+    TemplateNode represents a {{template}} action.
+**/
 @:structInit
 @:go.Type({ name: "TemplateNode", instanceName: "parse.TemplateNode", imports: ["text/template/parse"] })
 extern class TemplateNode {

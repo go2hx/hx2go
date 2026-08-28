@@ -1,5 +1,9 @@
 package go.crypto.rsa;
 
+/**
+    OAEPOptions allows passing options to OAEP encryption and decryption
+    through the [PrivateKey.Decrypt] and [EncryptOAEPWithOptions] functions.
+**/
 @:structInit
 @:go.Type({ name: "OAEPOptions", instanceName: "rsa.OAEPOptions", imports: ["crypto/rsa"] })
 extern class OAEPOptions {

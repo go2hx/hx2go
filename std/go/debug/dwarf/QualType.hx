@@ -1,5 +1,8 @@
 package go.debug.dwarf;
 
+/**
+    A QualType represents a type that has the C/C++ "const", "restrict", or "volatile" qualifier.
+**/
 @:structInit
 @:go.Type({ name: "QualType", instanceName: "dwarf.QualType", imports: ["debug/dwarf"] })
 extern class QualType {

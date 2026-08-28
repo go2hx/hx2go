@@ -1,5 +1,11 @@
 package go.golang_org.x.tools.go.packages;
 
+/**
+    Module provides module information for a package.
+    
+    It also defines part of the JSON schema of [DriverResponse].
+    See the package documentation for an overview.
+**/
 @:structInit
 @:go.Type({ name: "Module", instanceName: "packages.Module", imports: ["golang.org/x/tools/go/packages"] })
 extern class Module {

@@ -1,5 +1,8 @@
 package go.image;
 
+/**
+    Alpha16 is an in-memory image whose At method returns [color.Alpha16] values.
+**/
 @:structInit
 @:go.Type({ name: "Alpha16", instanceName: "image.Alpha16", imports: ["image"] })
 extern class Alpha16 {
@@ -14,12 +17,23 @@ extern class Alpha16 {
     @:native("At") function at(x: go.GoInt, y: go.GoInt): (go.image.color.Color);
     @:native("Bounds") function bounds(): (go.image.Rectangle);
     @:native("ColorModel") function colorModel(): (go.image.color.Model);
+    /**
+        Opaque scans the entire image and reports whether it is fully opaque.
+    **/
     @:native("Opaque") function opaque(): (Bool);
+    /**
+        PixOffset returns the index of the first element of Pix that corresponds to
+        the pixel at (x, y).
+    **/
     @:native("PixOffset") function pixOffset(x: go.GoInt, y: go.GoInt): (go.GoInt);
     @:native("RGBA64At") function rGBA64At(x: go.GoInt, y: go.GoInt): (go.image.color.RGBA64);
     @:native("Set") function set(x: go.GoInt, y: go.GoInt, c: go.image.color.Color): Void;
     @:native("SetAlpha16") function setAlpha16(x: go.GoInt, y: go.GoInt, c: go.image.color.Alpha16): Void;
     @:native("SetRGBA64") function setRGBA64(x: go.GoInt, y: go.GoInt, c: go.image.color.RGBA64): Void;
+    /**
+        SubImage returns an image representing the portion of the image p visible
+        through r. The returned value shares pixels with the original image.
+    **/
     @:native("SubImage") function subImage(r: go.image.Rectangle): (go.image.Image);
 
 }

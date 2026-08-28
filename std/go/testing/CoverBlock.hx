@@ -1,5 +1,13 @@
 package go.testing;
 
+/**
+    CoverBlock records the coverage data for a single basic block.
+    The fields are 1-indexed, as in an editor: The opening line of
+    the file is number 1, for example. Columns are measured
+    in bytes.
+    NOTE: This struct is internal to the testing infrastructure and may change.
+    It is not covered (yet) by the Go 1 compatibility guidelines.
+**/
 @:structInit
 @:go.Type({ name: "CoverBlock", instanceName: "testing.CoverBlock", imports: ["testing"] })
 extern class CoverBlock {

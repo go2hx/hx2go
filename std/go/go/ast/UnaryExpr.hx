@@ -1,5 +1,9 @@
 package go.go.ast;
 
+/**
+    A UnaryExpr node represents a unary expression.
+    Unary "*" expressions are represented via StarExpr nodes.
+**/
 @:structInit
 @:go.Type({ name: "UnaryExpr", instanceName: "ast.UnaryExpr", imports: ["go/ast"] })
 extern class UnaryExpr {

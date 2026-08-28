@@ -1,5 +1,9 @@
 package go.testing;
 
+/**
+    InternalTest is an internal type but exported because it is cross-package;
+    it is part of the implementation of the "go test" command.
+**/
 @:structInit
 @:go.Type({ name: "InternalTest", instanceName: "testing.InternalTest", imports: ["testing"] })
 extern class InternalTest {

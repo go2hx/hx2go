@@ -1,5 +1,13 @@
 package go.golang_org.x.tools.go.packages;
 
+/**
+    DriverResponse defines the schema of a response from an external
+    driver program, providing the results of a query for package
+    metadata. The driver program must write a JSON-encoded
+    DriverResponse message to its standard output.
+    
+    See the package documentation for an overview.
+**/
 @:structInit
 @:go.Type({ name: "DriverResponse", instanceName: "packages.DriverResponse", imports: ["golang.org/x/tools/go/packages"] })
 extern class DriverResponse {

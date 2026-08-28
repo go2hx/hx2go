@@ -1,5 +1,10 @@
 package go.compress.flate;
 
+/**
+    A ReadError reports an error encountered while reading input.
+    
+    Deprecated: No longer returned.
+**/
 @:structInit
 @:go.Type({ name: "ReadError", instanceName: "flate.ReadError", imports: ["compress/flate"] })
 extern class ReadError {

@@ -1,5 +1,9 @@
 package go.syscall;
 
+/**
+    ProcAttr holds attributes that will be applied to a new process started
+    by [StartProcess].
+**/
 @:structInit
 @:go.Type({ name: "ProcAttr", instanceName: "syscall.ProcAttr", imports: ["syscall"] })
 extern class ProcAttr {

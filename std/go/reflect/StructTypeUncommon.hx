@@ -1,7 +1,7 @@
 package go.reflect;
 
 @:structInit
-@:go.Type({ name: "structTypeUncommon", instanceName: "Reflect.structTypeUncommon", imports: ["reflect"] })
+@:go.Type({ name: "structTypeUncommon", instanceName: "reflect.structTypeUncommon", imports: ["reflect"] })
 extern class StructTypeUncommon {
 
     @:native("StructType") var structType: Dynamic;
@@ -29,8 +29,8 @@ extern class StructTypeUncommon {
     @:native("Field") function field(i: go.GoInt): (go.reflect.StructField);
     @:native("FieldAlign") function fieldAlign(): (go.GoInt);
     @:native("FieldByIndex") function fieldByIndex(index: go.Slice<go.GoInt>): (go.reflect.StructField);
-    @:go.Tuple("f", "present") @:native("FieldByName") function fieldByName(name: String): (go.Tuple<{ f: go.reflect.StructField, present: Bool }>);
-    @:go.Tuple("result", "ok") @:native("FieldByNameFunc") function fieldByNameFunc(match: (p0: String) -> (Bool)): (go.Tuple<{ result: go.reflect.StructField, ok: Bool }>);
+    @:go.Tuple("f", "present") @:native("FieldByName") function fieldByName(name: std.String): (go.Tuple<{ f: go.reflect.StructField, present: Bool }>);
+    @:go.Tuple("result", "ok") @:native("FieldByNameFunc") function fieldByNameFunc(match: (p0: std.String) -> (Bool)): (go.Tuple<{ result: go.reflect.StructField, ok: Bool }>);
     @:native("FuncType") function funcType(): (go.Pointer<Dynamic>);
     @:native("GcSlice") function gcSlice(begin: go.UIntPtr, end: go.UIntPtr): (go.Slice<go.Byte>);
     @:native("HasName") function hasName(): (Bool);

@@ -1,5 +1,11 @@
 package go.encoding.binary;
 
+/**
+    AppendByteOrder specifies how to append 16-, 32-, or 64-bit unsigned integers
+    into a byte slice.
+    
+    It is implemented by [LittleEndian], [BigEndian], and [NativeEndian].
+**/
 @:go.Type({ name: "AppendByteOrder", instanceName: "binary.AppendByteOrder", imports: ["encoding/binary"] })
 extern typedef AppendByteOrder = {
 

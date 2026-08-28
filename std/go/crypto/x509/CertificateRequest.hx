@@ -1,5 +1,8 @@
 package go.crypto.x509;
 
+/**
+    CertificateRequest represents a PKCS #10, certificate signature request.
+**/
 @:structInit
 @:go.Type({ name: "CertificateRequest", instanceName: "x509.CertificateRequest", imports: ["crypto/x509"] })
 extern class CertificateRequest {
@@ -24,6 +27,9 @@ extern class CertificateRequest {
 
     function new(raw: go.Slice<go.Byte>=null, rawTBSCertificateRequest: go.Slice<go.Byte>=null, rawSubjectPublicKeyInfo: go.Slice<go.Byte>=null, rawSubject: go.Slice<go.Byte>=null, version: go.GoInt=0, signature: go.Slice<go.Byte>=null, signatureAlgorithm: go.crypto.x509.SignatureAlgorithm=cast 0, publicKeyAlgorithm: go.crypto.x509.PublicKeyAlgorithm=cast 0, publicKey: Dynamic=null, subject: go.crypto.x509.pkix.Name, attributes: go.Slice<go.crypto.x509.pkix.AttributeTypeAndValueSET>=null, extensions: go.Slice<go.crypto.x509.pkix.Extension>=null, extraExtensions: go.Slice<go.crypto.x509.pkix.Extension>=null, dNSNames: go.Slice<String>=null, emailAddresses: go.Slice<String>=null, iPAddresses: go.Slice<go.net.IP>=null, uRIs: go.Slice<go.Pointer<go.net.url.URL>>=null);
 
+    /**
+        CheckSignature reports whether the signature on c is valid.
+    **/
     @:native("CheckSignature") function checkSignature(): (go.Error);
 
 }

@@ -1,5 +1,8 @@
 package go.debug.macho;
 
+/**
+    A SegmentHeader is the header for a Mach-O 32-bit or 64-bit load segment command.
+**/
 @:structInit
 @:go.Type({ name: "SegmentHeader", instanceName: "macho.SegmentHeader", imports: ["debug/macho"] })
 extern class SegmentHeader {

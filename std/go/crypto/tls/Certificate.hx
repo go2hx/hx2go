@@ -1,5 +1,8 @@
 package go.crypto.tls;
 
+/**
+    A Certificate is a chain of one or more certificates, leaf first.
+**/
 @:structInit
 @:go.Type({ name: "Certificate", instanceName: "tls.Certificate", imports: ["crypto/tls"] })
 extern class Certificate {

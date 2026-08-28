@@ -1,5 +1,8 @@
 package go.debug.macho;
 
+/**
+    A Segment64 is a 64-bit Mach-O segment load command.
+**/
 @:structInit
 @:go.Type({ name: "Segment64", instanceName: "macho.Segment64", imports: ["debug/macho"] })
 extern class Segment64 {

@@ -1,5 +1,11 @@
 package go.debug.dwarf;
 
+/**
+    A BasicType holds fields common to all basic types.
+    
+    See the documentation for [StructField] for more info on the interpretation of
+    the BitSize/BitOffset/DataBitOffset fields.
+**/
 @:structInit
 @:go.Type({ name: "BasicType", instanceName: "dwarf.BasicType", imports: ["debug/dwarf"] })
 extern class BasicType {

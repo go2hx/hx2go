@@ -1,5 +1,9 @@
 package go.golang_org.x.term;
 
+/**
+    EscapeCodes contains escape sequences that can be written to the terminal in
+    order to achieve different styles of text.
+**/
 @:structInit
 @:go.Type({ name: "EscapeCodes", instanceName: "term.EscapeCodes", imports: ["golang.org/x/term"] })
 extern class EscapeCodes {

@@ -1,5 +1,9 @@
 package go.bufio;
 
+/**
+    ReadWriter stores pointers to a [Reader] and a [Writer].
+    It implements [io.ReadWriter].
+**/
 @:structInit
 @:go.Type({ name: "ReadWriter", instanceName: "bufio.ReadWriter", imports: ["bufio"] })
 extern class ReadWriter {

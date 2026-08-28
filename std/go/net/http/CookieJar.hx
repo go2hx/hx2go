@@ -1,5 +1,13 @@
 package go.net.http;
 
+/**
+    A CookieJar manages storage and use of cookies in HTTP requests.
+    
+    Implementations of CookieJar must be safe for concurrent use by multiple
+    goroutines.
+    
+    The net/http/cookiejar package provides a CookieJar implementation.
+**/
 @:go.Type({ name: "CookieJar", instanceName: "http.CookieJar", imports: ["net/http"] })
 extern typedef CookieJar = {
 

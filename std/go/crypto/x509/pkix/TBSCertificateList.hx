@@ -1,5 +1,11 @@
 package go.crypto.x509.pkix;
 
+/**
+    TBSCertificateList represents the ASN.1 structure of the same name. See RFC
+    5280, section 5.1.
+    
+    Deprecated: x509.RevocationList should be used instead.
+**/
 @:structInit
 @:go.Type({ name: "TBSCertificateList", instanceName: "pkix.TBSCertificateList", imports: ["crypto/x509/pkix"] })
 extern class TBSCertificateList {

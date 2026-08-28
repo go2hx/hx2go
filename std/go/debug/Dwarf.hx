@@ -1,5 +1,18 @@
 package go.debug;
 
+/**
+    Package dwarf provides access to DWARF debugging information loaded from
+    executable files, as defined in the DWARF 2.0 Standard at
+    http://dwarfstd.org/doc/dwarf-2.0.0.pdf.
+    
+    # Security
+    
+    This package is not designed to be hardened against adversarial inputs, and is
+    outside the scope of https://go.dev/security/policy. In particular, only basic
+    validation is done when parsing object files. As such, care should be taken when
+    parsing untrusted inputs, as parsing malformed files may consume significant
+    resources, or cause panics.
+**/
 @:go.Type({ name: "dwarf", instanceName: "dwarf.dwarf", imports: ["debug/dwarf"] })
 extern class Dwarf {
 
@@ -214,6 +227,16 @@ extern class Dwarf {
     @:native("TagVolatileType") static var tagVolatileType: go.debug.dwarf.Tag;
     @:native("TagWithStmt") static var tagWithStmt: go.debug.dwarf.Tag;
 
+    /**
+        New returns a new [Data] object initialized from the given parameters.
+        Rather than calling this function directly, clients should typically use
+        the DWARF method of the File type of the appropriate package [debug/elf],
+        [debug/macho], or [debug/pe].
+        
+        The []byte arguments are the data from the corresponding debug section
+        in the object file; for example, for an ELF object, abbrev is the contents of
+        the ".debug_abbrev" section.
+    **/
     @:native("New") static function _new(abbrev: go.Slice<go.Byte>, aranges: go.Slice<go.Byte>, frame: go.Slice<go.Byte>, info: go.Slice<go.Byte>, line: go.Slice<go.Byte>, pubnames: go.Slice<go.Byte>, ranges: go.Slice<go.Byte>, str: go.Slice<go.Byte>): (go.Result<go.Pointer<go.debug.dwarf.Data>>);
 
 }

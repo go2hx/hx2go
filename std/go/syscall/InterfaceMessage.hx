@@ -1,5 +1,11 @@
 package go.syscall;
 
+/**
+    InterfaceMessage represents a routing message containing
+    network interface entries.
+    
+    Deprecated: Use golang.org/x/net/route instead.
+**/
 @:structInit
 @:go.Type({ name: "InterfaceMessage", instanceName: "syscall.InterfaceMessage", imports: ["syscall"] })
 extern class InterfaceMessage {

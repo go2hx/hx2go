@@ -1,5 +1,8 @@
 package go.debug.dwarf;
 
+/**
+    An UnspecifiedType represents an implicit, unknown, ambiguous or nonexistent type.
+**/
 @:structInit
 @:go.Type({ name: "UnspecifiedType", instanceName: "dwarf.UnspecifiedType", imports: ["debug/dwarf"] })
 extern class UnspecifiedType {

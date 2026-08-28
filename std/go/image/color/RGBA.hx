@@ -1,5 +1,12 @@
 package go.image.color;
 
+/**
+    RGBA represents a traditional 32-bit alpha-premultiplied color, having 8
+    bits for each of red, green, blue and alpha.
+    
+    An alpha-premultiplied color component C has been scaled by alpha (A), so
+    has valid values 0 <= C <= A.
+**/
 @:structInit
 @:go.Type({ name: "RGBA", instanceName: "color.RGBA", imports: ["image/color"] })
 extern class RGBA {

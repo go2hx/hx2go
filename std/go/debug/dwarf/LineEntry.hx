@@ -1,5 +1,8 @@
 package go.debug.dwarf;
 
+/**
+    A LineEntry is a row in a DWARF line table.
+**/
 @:structInit
 @:go.Type({ name: "LineEntry", instanceName: "dwarf.LineEntry", imports: ["debug/dwarf"] })
 extern class LineEntry {

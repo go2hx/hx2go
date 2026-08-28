@@ -1,5 +1,8 @@
 package go.debug.elf;
 
+/**
+    ELF64 Section header.
+**/
 @:structInit
 @:go.Type({ name: "Section64", instanceName: "elf.Section64", imports: ["debug/elf"] })
 extern class Section64 {

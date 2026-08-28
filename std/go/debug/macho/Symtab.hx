@@ -1,5 +1,8 @@
 package go.debug.macho;
 
+/**
+    A Symtab represents a Mach-O symbol table command.
+**/
 @:structInit
 @:go.Type({ name: "Symtab", instanceName: "macho.Symtab", imports: ["debug/macho"] })
 extern class Symtab {

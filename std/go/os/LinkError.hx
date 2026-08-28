@@ -1,5 +1,9 @@
 package go.os;
 
+/**
+    LinkError records an error during a link or symlink or rename
+    system call and the paths that caused it.
+**/
 @:structInit
 @:go.Type({ name: "LinkError", instanceName: "os.LinkError", imports: ["os"] })
 extern class LinkError {

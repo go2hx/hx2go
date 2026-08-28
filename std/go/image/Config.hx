@@ -1,5 +1,8 @@
 package go.image;
 
+/**
+    Config holds an image's color model and dimensions.
+**/
 @:structInit
 @:go.Type({ name: "Config", instanceName: "image.Config", imports: ["image"] })
 extern class Config {

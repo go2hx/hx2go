@@ -1,5 +1,9 @@
 package go.debug.dwarf;
 
+/**
+    An UnsupportedType is a placeholder returned in situations where we
+    encounter a type that isn't supported.
+**/
 @:structInit
 @:go.Type({ name: "UnsupportedType", instanceName: "dwarf.UnsupportedType", imports: ["debug/dwarf"] })
 extern class UnsupportedType {

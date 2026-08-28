@@ -269,3 +269,7 @@ func (this HxArrayView[T]) Pop() HxNullable[T] {
 func Hx_Array_Pop[T any](this HxArray[T]) HxNullable[T] {
 	return this.Pop()
 }
+
+func Hx_Array_Map[T any, S any](this HxArray[T], f func(T) S) HxArray[S] {
+	return HxMakeArray[S]()
+}

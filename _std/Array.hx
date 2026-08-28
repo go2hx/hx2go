@@ -66,9 +66,7 @@ extern class Array<T> {
         return new ArrayKeyValueIterator(this);
     }
 
-    @:runtime inline function map<S>(f:T->S):Array<S> {
-        return [];
-    }
+    function map<S>(f:T->S):Array<S>;
 
     @:runtime inline function filter(f:T->Bool):Array<T> {
         return [];

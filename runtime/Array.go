@@ -11,6 +11,7 @@ type HxArrayDyn interface {
 	Get_Dyn(idx int32) any
 	Underlying_Dyn() []any
 	ElemType() reflect.Type
+	Grow(elements int32)
 	Len() int32
 	String() string
 }
@@ -29,30 +30,78 @@ type HxArrayImpl[T any] struct {
 func HxMakeArray[T any](items ...T) HxArray[T] {
 	local := make([]T, len(items))
 	copy(local, items)
-	return HxArrayImpl[T]{local}
+	return &HxArrayImpl[T]{local}
 }
 
-func (this HxArrayImpl[T]) ElemType() reflect.Type {
+func (this *HxArrayImpl[T]) Grow(elements int32) {
+	oldLen := int32(len(this.data))
+	oldCap := int32(cap(this.data))
+	newLen := oldLen + elements
+
+	if newLen > oldCap {
+		newCap := oldCap
+		if newCap == 0 {
+			newCap = newLen
+		}
+
+		for newCap < newLen {
+			newCap *= 2
+		}
+
+		data := make([]T, newLen, newCap)
+		copy(data, this.data)
+		this.data = data
+	} else {
+		this.data = this.data[:newLen]
+	}
+}
+
+func (this HxArrayView[T]) Grow(elements int32) {
+	this.source.Grow(elements)
+}
+
+func (this *HxArrayImpl[T]) ElemType() reflect.Type {
 	return reflect.TypeOf((*T)(nil)).Elem()
 }
 
 func (this HxArrayView[T]) ElemType() reflect.Type {
-	return reflect.TypeOf((*T)(nil)).Elem()
+	return this.source.ElemType()
 }
 
-func (this HxArrayImpl[T]) Set_Dyn(idx int32, val any) {
+func (this *HxArrayImpl[T]) Set_Dyn(idx int32, val any) {
+	length := int32(len(this.data))
+
+	if idx < 0 {
+		panic("Array index out of bounds")
+	}
+
+	if idx >= length {
+		this.Grow(idx - length + 1)
+	}
+
 	if obj, ok := val.(T); ok {
 		this.data[idx] = obj
 		return
 	}
+
 	this.data[idx] = Default[T]()
 }
 
-func (this HxArrayImpl[T]) Get_Dyn(idx int32) any {
+func (this *HxArrayImpl[T]) Get_Dyn(idx int32) any {
+	length := int32(len(this.data))
+
+	if idx < 0 {
+		panic("Array index out of bounds")
+	}
+
+	if idx >= length {
+		return Default[T]()
+	}
+
 	return this.data[idx]
 }
 
-func (this HxArrayImpl[T]) Underlying_Dyn() []any {
+func (this *HxArrayImpl[T]) Underlying_Dyn() []any {
 	out := make([]any, this.Len())
 	for i := 0; i < int(this.Len()); i++ {
 		out[i] = this.Get(int32(i))
@@ -61,15 +110,35 @@ func (this HxArrayImpl[T]) Underlying_Dyn() []any {
 	return out
 }
 
-func (this HxArrayImpl[T]) Set(idx int32, val T) {
+func (this *HxArrayImpl[T]) Set(idx int32, val T) {
+	length := int32(len(this.data))
+
+	if idx < 0 {
+		panic("Array index out of bounds")
+	}
+
+	if idx >= length {
+		this.Grow(idx - length + 1)
+	}
+
 	this.data[idx] = val
 }
 
-func (this HxArrayImpl[T]) Get(idx int32) T {
+func (this *HxArrayImpl[T]) Get(idx int32) T {
+	length := int32(len(this.data))
+
+	if idx < 0 {
+		panic("Array index out of bounds")
+	}
+
+	if idx >= length {
+		return Default[T]()
+	}
+
 	return this.data[idx]
 }
 
-func (this HxArrayImpl[T]) Underlying() []T {
+func (this *HxArrayImpl[T]) Underlying() []T {
 	return this.data
 }
 
@@ -82,11 +151,11 @@ func (this HxArrayView[T]) Underlying() []T {
 	return out
 }
 
-func (this HxArrayImpl[T]) Len() int32 {
+func (this *HxArrayImpl[T]) Len() int32 {
 	return int32(len(this.data))
 }
 
-func (this HxArrayImpl[T]) String() string {
+func (this *HxArrayImpl[T]) String() string {
 	var r strings.Builder
 	r.WriteString("[")
 

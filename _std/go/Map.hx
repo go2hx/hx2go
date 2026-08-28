@@ -12,22 +12,22 @@ abstract Map<K, V> {
 
     @:arrayAccess
     public inline extern function set(key: K, value: V): Void {
-        Syntax.code("{0}[{1}] = {2}", this, (key : K), (value : V));
+        Syntax.code("{0}[{1}] = {2}", this, (cast key : K), (cast value : V));
     }
 
     @:arrayAccess
     @:pure
     public inline extern function get(key: K): V {
-        return Syntax.code("{0}[{1}]", this, (key : K));
+        return Syntax.code("{0}[{1}]", this, (cast key : K));
     }
 
     public inline extern function exists(key: K): Bool {
-        Syntax.code("_, ok := {0}[{1}]", this, (key : K));
+        Syntax.code("_, ok := {0}[{1}]", this, (cast key : K));
         return Syntax.code("ok");
     }
 
     public inline extern function remove(key: K): Void {
-        Syntax.code("delete({0}, {1})", this, (key : K));
+        Syntax.code("delete({0}, {1})", this, (cast key : K));
     }
 
     public inline extern function size(): GoInt {

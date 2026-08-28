@@ -21,7 +21,7 @@ class ArrayAccessDynamicSet extends CompilerPass {
         return switch expr.expr {
             case TBinop(OpAssign | OpAssignOp(_), { expr: TArray({ t: t }, _) }, _):
                 switch (TypeHelper.follow(context, t)) {
-                    case TInst({ name: "Array", pack: [] }, [TDynamic(_) | TDynamicAny]) | TDynamic(_) | TDynamicAny: true;
+                    case TDynamic(_) | TDynamicAny: true;
                     case _: false;
                 }
             case _: false;

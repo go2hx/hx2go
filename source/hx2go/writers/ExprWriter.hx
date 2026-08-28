@@ -251,18 +251,18 @@ class ExprWriter extends WriterImpl {
 
     public function writeArrayDecl(t:HxbType, elements: Array<HxbTypedExpr>): OutputBuffer {
         var buf = new OutputBuffer();
+        var elem = switch TypeHelper.followToDef(writer.context, t) {
+            case TInst(_, params) | TAbstract(_, params): params[0];
+            case TDynamic(_) | TDynamicAny: t;
+            case _: throw "type is not array type for arrayDecl?";
+        };
 
         buf.addInline("HxMakeArray[");
-        buf.addBufferInline(switch t {
-            case TInst(_, params): writer.types.writeHxbType(params[0]);
-            case TDynamic(_) | TDynamicAny: writer.types.writeHxbType(t);
-            case _: throw "type is not array type for arrayDecl?";
-        });
-        buf.addInline("]");
+        buf.addBufferInline(writer.types.writeHxbType(elem));
 
-        if (elements.length == 0) buf.addInline('()');
+        if (elements.length == 0) buf.addInline(']()');
         else {
-            buf.addInline('( ');
+            buf.addInline(']( ');
 
             for (idx in 0...elements.length) {
                 buf.addBufferInline(writeExpr(elements[idx]));
@@ -272,6 +272,10 @@ class ExprWriter extends WriterImpl {
             }
 
             buf.addInline(' )');
+        }
+
+        if (elem.match(TDynamic(_) | TDynamicAny | TTypeParam(_))) {
+            buf.addInline('.Dyn()');
         }
 
         return buf;
@@ -440,6 +444,18 @@ class ExprWriter extends WriterImpl {
         switch [e.t, expr.t] {
             case [_, TVoid]:
                 buf.addBufferInline(writeExpr(e));
+
+            case [TInst({ name: "Array", pack: [] }, [fp]) | TAbstract({ name: "Vector", pack: ["haxe", "ds"] }, [fp]), TInst({ name: "Array", pack: []}, [tp]) | TAbstract({ name: "Vector", pack: ["haxe", "ds"] }, [tp])]:
+                var want = writer.types.writeHxbType(tp).toString();
+                var have = writer.types.writeHxbType(fp).toString();
+
+                if (want == have) {
+                    buf.addBufferInline(writeExpr(e));
+                } else {
+                    buf.addInline('HxMakeArrayView[${want}]( ');
+                    buf.addBufferInline(writeExpr(e));
+                    buf.addInline(' )');
+                }
 
             case [(TDynamic(_) | TDynamicAny), (TDynamic(_) | TDynamicAny)]:
                 buf.addBufferInline(writeExpr(e));

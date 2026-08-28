@@ -30,9 +30,9 @@ import hxb.Typed.HxbTypedExprDef;
 import hx2go.normaliser.Semantics;
 import hx2go.passes.RewriteDynamicBinop;
 
-#if go
-import go.Map;
-#end
+// #if go
+// import go.Map;
+// #end
 
 class Context {
 
@@ -132,7 +132,6 @@ class Context {
             new hx2go.passes.RewriteTupleCreation(this),
             new hx2go.passes.SuperCtor(this),
             new hx2go.passes.CastClosure(this),
-            new hx2go.passes.CastArray(this),
             new hx2go.passes.CastNullableTo(this),
             new hx2go.passes.CastNullableFrom(this),
             new hx2go.passes.CastString(this),
@@ -226,7 +225,7 @@ class Context {
                 break;
             }
         }
-        
+
         var profileType: TypePath = { name: "HxProfile", moduleName: "HxProfile", pack: ["go", "haxe"] };
         resolve(profileType);
 
@@ -334,7 +333,7 @@ class Context {
     function installGoDeps(imports:Map<String, Array<String>>) {
         final previousCwd = Sys.getCwd();
         Sys.setCwd(outputDirectory);
-        
+
         var seen: Map<String, Bool> = new Map();
         var deps: Array<String> = [];
         for (moduleDeps in imports) {

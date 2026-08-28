@@ -813,8 +813,6 @@ class Context {
         writer.types.importTarget = moduleKey;
 
         for (f in roots) {
-            if (f.expr?.expr == null) continue;
-
             if (baseInstFields.exists(f.name)) {
                 var base = baseInstFields.get(f.name);
                 var assign: Array<HxbTypedExpr> = [];
@@ -854,14 +852,16 @@ class Context {
                         case _: f.type;
                     }
 
-                    f.expr.expr.expr = switch f.expr.expr.expr {
-                        case TFunction({ args: args, t: t, expr: { expr: TBlock(exprs), t: blockt, pos: blockpos } }) if (assign.length > 0): TFunction({
-                            args: args,
-                            t: t,
-                            expr: new HxbTypedExpr(TBlock(assign.concat(exprs)), blockt, blockpos)
-                        });
+                    if (f.expr?.expr != null) {
+                        f.expr.expr.expr = switch f.expr.expr.expr {
+                            case TFunction({ args: args, t: t, expr: { expr: TBlock(exprs), t: blockt, pos: blockpos } }) if (assign.length > 0): TFunction({
+                                args: args,
+                                t: t,
+                                expr: new HxbTypedExpr(TBlock(assign.concat(exprs)), blockt, blockpos)
+                            });
 
-                        case _: f.expr.expr.expr;
+                            case _: f.expr.expr.expr;
+                        }
                     }
                 }
             }

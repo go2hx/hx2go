@@ -1,6 +1,7 @@
 package go.haxe;
 
-class HxArray {
+@:go.Type({ topLevel: true })
+extern class HxArray {
 
     public static inline extern function fastGet<T>(arr: Array<T>, index: Int): T {
         return Syntax.code("{0}.FastGet({1})", (cast arr : Array<T>), (cast index : Int));
@@ -14,4 +15,5 @@ class HxArray {
         return Syntax.code("{0}.ElemType()", (cast arr : Array<T>));
     }
 
+    @:native("Hx_Array_Push") static function push<T>(arr: Array<T>, val: T): Int;
 }

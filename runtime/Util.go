@@ -12,6 +12,10 @@ func HxConvert[T any](from any) T {
 		return r
 	}
 
+	if from == nil {
+		return HxDefault[T]()
+	}
+
 	var t T
 	tt := reflect.TypeOf(t)
 	fv := reflect.ValueOf(from)

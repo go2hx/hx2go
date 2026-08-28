@@ -677,9 +677,16 @@ class HxDynamic {
             if (fieldName == "length") {
                 return arr.len();
             }
+
             if (fieldName == "iterator") {
                 return () -> toAnySlice(dyn).toArray().iterator();
             }
+
+            if (fieldName == "push") {
+                return HxArray.push.bind(dyn);
+            }
+
+            throw "runtime.HxDynamic.field array field access not found: " + fieldName;
         }
 
         var value = ensureValue(dyn);

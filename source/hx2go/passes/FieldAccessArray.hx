@@ -9,6 +9,7 @@ import hx2go.util.StringConversions;
 import hx2go.util.TypeHelper;
 import hx2go.normaliser.Semantics;
 import hxb.HxbType;
+import hx2go.normaliser.ExprCopy;
 
 class FieldAccessArray extends CompilerPass {
 

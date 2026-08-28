@@ -14,6 +14,9 @@ type HxArrayDyn interface {
 	FastGet_Dyn(idx int32) any
 	Pop_Dyn() any
 	Shift_Dyn() any
+	Insert_Dyn(idx int32, val any)
+	Unshift_Dyn(val any)
+	Remove_Dyn(val any) bool
 	Underlying_Dyn() []any
 	ElemType() reflect.Type
 	Grow(elements int32)
@@ -27,6 +30,9 @@ type HxArray[T any] interface {
 	Get(idx int32) T
 	FastSet(idx int32, val T)
 	FastGet(idx int32) T
+	Unshift(val T) T
+	Remove(val T) bool
+	Insert(idx int32, val T)
 	Pop() HxNullable[T]
 	Shift() HxNullable[T]
 	Dyn() HxArray[any]
@@ -341,6 +347,72 @@ func (this HxArrayView[T]) Shift() HxNullable[T] {
 	return HxNullable[T]{Value: HxConvert[T](value), Valid: value != nil}
 }
 
+func (this *HxArrayImpl[T]) Unshift(val T) T {
+	this.data = append([]T{val}, this.data...)
+	return val
+}
+
+func (this *HxArrayImpl[T]) Unshift_Dyn(val any) {
+	this.Unshift(HxConvert[T](val))
+}
+
+func (this HxArrayView[T]) Unshift(val T) T {
+	this.source.Unshift_Dyn(val)
+	return val
+}
+
+func (this HxArrayView[T]) Unshift_Dyn(val any) {
+	this.source.Unshift_Dyn(val)
+}
+
+func (this *HxArrayImpl[T]) Remove(val T) bool {
+	for i := int32(0); i < this.Len(); i++ {
+		if reflect.DeepEqual(this.data[i], val) {
+			this.data = append(this.data[:i], this.data[i+1:]...)
+			return true
+		}
+	}
+
+	return false
+}
+
+func (this *HxArrayImpl[T]) Remove_Dyn(val any) bool {
+	return this.Remove(HxConvert[T](val))
+}
+
+func (this HxArrayView[T]) Remove(val T) bool {
+	return this.source.Remove_Dyn(val)
+}
+
+func (this HxArrayView[T]) Remove_Dyn(val any) bool {
+	return this.source.Remove_Dyn(val)
+}
+
+func (this *HxArrayImpl[T]) Insert(idx int32, val T) {
+	if idx < 0 {
+		idx = this.Len() + idx
+		if idx < 0 {
+			idx = 0
+		}
+	} else if idx > this.Len() {
+		idx = this.Len()
+	}
+
+	this.data = append(this.data[:idx], append([]T{val}, this.data[idx:]...)...)
+}
+
+func (this *HxArrayImpl[T]) Insert_Dyn(idx int32, val any) {
+	this.Insert(idx, HxConvert[T](val))
+}
+
+func (this HxArrayView[T]) Insert(idx int32, val T) {
+	this.source.Insert_Dyn(idx, val)
+}
+
+func (this HxArrayView[T]) Insert_Dyn(idx int32, val any) {
+	this.source.Insert_Dyn(idx, val)
+}
+
 func Hx_Array_Pop[T any](this HxArray[T]) HxNullable[T] {
 	return this.Pop()
 }
@@ -433,3 +505,170 @@ func Hx_Array_Sort[T any](this HxArray[T], f func(a T, b T) int32) {
 		}
 	}
 }
+
+func Hx_Array_Unshift[T any](this HxArray[T], val T) T {
+	return this.Unshift(val)
+}
+
+func Hx_Array_Remove[T any](this HxArray[T], val T) bool {
+	return this.Remove(val)
+}
+
+func Hx_Array_Insert[T any](this HxArray[T], idx int32, val T) {
+	this.Insert(idx, val)
+}
+
+func Hx_Array_Slice[T any](this HxArray[T], pos int32, end HxNullable[int32]) HxArray[T] {
+	length := this.Len()
+
+	if pos < 0 {
+		pos = length + pos
+		if pos < 0 {
+			pos = 0
+		}
+	}
+
+	e := length
+	if end.Valid {
+		e = end.Value
+		if e < 0 {
+			e = length + e
+			if e < 0 {
+				e = 0
+			}
+		} else if e > length {
+			e = length
+		}
+	}
+
+	if pos > length || e <= pos {
+		return HxMakeArray[T]()
+	}
+
+	if arr, ok := this.(*HxArrayImpl[T]); ok {
+		out := make([]T, e-pos)
+		copy(out, arr.data[pos:e])
+		return &HxArrayImpl[T]{out}
+	}
+
+	out := HxMakeArray[T]()
+	for i := pos; i < e; i++ {
+		out.Set(out.Len(), this.Get(i))
+	}
+
+	return out
+}
+
+func Hx_Array_Splice[T any](this HxArray[T], pos int32, count int32) HxArray[T] {
+	length := this.Len()
+
+	if count < 0 {
+		return HxMakeArray[T]()
+	}
+
+	if pos < 0 {
+		pos = length + pos
+		if pos < 0 {
+			pos = 0
+		}
+	}
+
+	if pos > length {
+		pos = length
+		count = 0
+	} else if pos+count > length {
+		count = length - pos
+	}
+
+	if arr, ok := this.(*HxArrayImpl[T]); ok {
+		removed := make([]T, count)
+		copy(removed, arr.data[pos:pos+count])
+		arr.data = append(arr.data[:pos], arr.data[pos+count:]...)
+		return &HxArrayImpl[T]{removed}
+	}
+
+	removed := HxMakeArray[T]()
+	for i := int32(0); i < count; i++ {
+		removed.Set(i, this.Get(pos+i))
+	}
+
+	for i := pos + count; i < length; i++ {
+		this.Set(i-count, this.Get(i))
+	}
+
+	Hx_Array_Resize[T](this, length-count)
+
+	return removed
+}
+
+func Hx_Array_IndexOf[T any](this HxArray[T], x T, fromIndex HxNullable[int32]) int32 {
+	length := this.Len()
+	start := int32(0)
+
+	if fromIndex.Valid {
+		start = fromIndex.Value
+		if start < 0 {
+			start = length + start
+			if start < 0 {
+				start = 0
+			}
+		}
+	}
+
+	if start >= length {
+		return -1
+	}
+
+	if arr, ok := this.(*HxArrayImpl[T]); ok {
+		for i := start; i < length; i++ {
+			if reflect.DeepEqual(arr.data[i], x) {
+				return i
+			}
+		}
+		return -1
+	}
+
+	for i := start; i < length; i++ {
+		if reflect.DeepEqual(this.Get(i), x) {
+			return i
+		}
+	}
+
+	return -1
+}
+
+func Hx_Array_LastIndexOf[T any](this HxArray[T], x T, fromIndex HxNullable[int32]) int32 {
+	length := this.Len()
+	start := length - 1
+
+	if fromIndex.Valid {
+		start = fromIndex.Value
+		if start < 0 {
+			start = length + start
+			if start < 0 {
+				return -1
+			}
+		} else if start >= length {
+			start = length - 1
+		}
+	}
+
+	if arr, ok := this.(*HxArrayImpl[T]); ok {
+		for i := start; i >= 0; i-- {
+			if reflect.DeepEqual(arr.data[i], x) {
+				return i
+			}
+		}
+		return -1
+	}
+
+	for i := start; i >= 0; i-- {
+		if reflect.DeepEqual(this.Get(i), x) {
+			return i
+		}
+	}
+
+	return -1
+}
+
+// TODO: KV-iterator and V-iterator

@@ -196,7 +196,7 @@ class TypeNormaliserCall extends CompilerPass {
         var isDynamic = inner.t == null || inner.t.match(TDynamic(_) | TDynamicAny);
         var slice = isDynamic
             ? ExprHelper.createCallStatic(context, { pack: ['go', 'haxe'], name: 'HxDynamic', moduleName: 'HxDynamic' }, 'toAnySlice', [hx2go.normaliser.ExprCopy.copy(inner)])
-            : ExprHelper.createUntyped("(*({0}))", [hx2go.normaliser.ExprCopy.copy(inner)]);
+            : ExprHelper.createUntyped("{0}.Underlying()", [hx2go.normaliser.ExprCopy.copy(inner)]);
 
         arg.expr = ExprHelper.createUntyped("{0}...", [slice]).expr;
         arg.t = elementType;

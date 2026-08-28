@@ -37,6 +37,9 @@ class ArrayAccessDynamicSet extends CompilerPass {
             case TBinop(OpAssign, { expr: TArray(e, eidx) }, right):
                 setArrayIndex(e, eidx, right);
 
+            case TBinop(OpAssignOp(op), arr = { expr: TArray(e, eidx) }, right):
+                setArrayIndex(e, eidx, { expr: TBinop(op, arr, right), t: arr.t, pos: expr.pos });
+
             case _: expr;
         }
 

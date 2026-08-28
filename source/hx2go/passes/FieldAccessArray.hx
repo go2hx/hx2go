@@ -6,6 +6,8 @@ import hx2go.util.ExprHelper;
 import hxb.flags.HxbClassFieldFlag;
 import hxb.flags.HxbClassFlag;
 import hx2go.util.StringConversions;
+import hx2go.util.TypeHelper;
+import hx2go.normaliser.Semantics;
 
 class FieldAccessArray extends CompilerPass {
 
@@ -38,12 +40,21 @@ class FieldAccessArray extends CompilerPass {
                     case _: false;
                 }
 
-                var name = 'Hx_Array_${StringConversions.toPascalCase(cf.name)}';
+                var field = cls.fields.filter(f -> f.name == cf.name)[0];
+                if (field == null) {
+                    return;
+                }
 
+                var needsNullCast = switch field.type {
+                    case TFun(_, ret) if (TypeHelper.followToDef(context, ret).match(TAbstract({ name: "Null", pack: [] }, _)) && !expr.t.match(TAbstract({ name: "Null", pack: [] }, _))): true;
+                    case _: false;
+                }
+
+                var name = 'Hx_Array_${StringConversions.toPascalCase(cf.name)}';
                 var staticArgs = [e].concat(args);
                 var neededParams = params.map(p -> context.getWriter().types.writeHxbType(p));
 
-                expr.expr = ExprHelper.createUntyped('$name${neededParams.length > 0 ? '[${neededParams.join(", ")}]' : ''}(${[for (i in 0...staticArgs.length) i].map(v -> '{$v}').join(", ")})', staticArgs).expr;
+                expr.expr = ExprHelper.createUntyped('$name${neededParams.length > 0 ? '[${neededParams.join(", ")}]' : ''}(${[for (i in 0...staticArgs.length) i].map(v -> '{$v}').join(", ")})${needsNullCast ? '.Value' : ''}', staticArgs).expr;
             }
 
             case _: null;

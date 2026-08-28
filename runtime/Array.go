@@ -9,6 +9,7 @@ import (
 type HxArrayDyn interface {
 	Set_Dyn(idx int32, val any)
 	Get_Dyn(idx int32) any
+	Pop_Dyn() any
 	Underlying_Dyn() []any
 	ElemType() reflect.Type
 	Grow(elements int32)
@@ -20,6 +21,7 @@ type HxArray[T any] interface {
 	HxArrayDyn
 	Set(idx int32, val T)
 	Get(idx int32) T
+	Pop() HxNullable[T]
 	Dyn() HxArray[any]
 	Underlying() []T
 }
@@ -88,12 +90,7 @@ func (this *HxArrayImpl[T]) Set_Dyn(idx int32, val any) {
 		this.Grow(idx - length + 1)
 	}
 
-	if obj, ok := val.(T); ok {
-		this.data[idx] = obj
-		return
-	}
-
-	this.data[idx] = Default[T]()
+	this.data[idx] = HxConvert[T](val)
 }
 
 func (this *HxArrayImpl[T]) Get_Dyn(idx int32) any {
@@ -104,7 +101,7 @@ func (this *HxArrayImpl[T]) Get_Dyn(idx int32) any {
 	}
 
 	if idx >= length {
-		return Default[T]()
+		return HxDefault[T]()
 	}
 
 	return this.data[idx]
@@ -141,7 +138,7 @@ func (this *HxArrayImpl[T]) Get(idx int32) T {
 	}
 
 	if idx >= length {
-		return Default[T]()
+		return HxDefault[T]()
 	}
 
 	return this.data[idx]
@@ -189,25 +186,24 @@ func HxMakeArrayView[T any](src HxArrayDyn) HxArray[T] {
 }
 
 func (this HxArrayView[T]) Set_Dyn(idx int32, val any) {
-	(this.source).Set_Dyn(idx, val)
+	this.source.Set_Dyn(idx, val)
 }
 
 func (this HxArrayView[T]) Get_Dyn(idx int32) any {
-	return (this.source).Get_Dyn(idx)
+	return this.source.Get_Dyn(idx)
 }
 
 func (this HxArrayView[T]) Underlying_Dyn() []any {
-	return (this.source).Underlying_Dyn()
+	return this.source.Underlying_Dyn()
 }
 
 func (this HxArrayView[T]) Set(idx int32, val T) {
-	(this.source).Set_Dyn(idx, val)
+	this.source.Set_Dyn(idx, val)
 }
 
 func (this HxArrayView[T]) Get(idx int32) T {
-	r_Dyn := (this.source).Get_Dyn(idx)
-	r, _ := r_Dyn.(T)
-	return r
+	r_dyn := this.source.Get_Dyn(idx)
+	return HxConvert[T](r_dyn)
 }
 
 func (this HxArrayView[T]) Len() int32 {
@@ -216,4 +212,60 @@ func (this HxArrayView[T]) Len() int32 {
 
 func (this HxArrayView[T]) String() string {
 	return this.source.String()
+}
+
+func Hx_Array_Push[T any](this HxArray[T], val T) int32 {
+	this.Set(this.Len(), val)
+	return this.Len()
+}
+
+func Hx_Array_Concat[T any](this HxArray[T], arr HxArray[T]) HxArray[T] {
+	data := make([]T, 0)
+	data = append(data, this.Underlying()...)
+	data = append(data, arr.Underlying()...)
+
+	return HxMakeArray[T](data...)
+}
+
+func Hx_Array_Copy[T any](this HxArray[T]) HxArray[T] {
+	return HxMakeArray[T](this.Underlying()...)
+}
+
+func (this *HxArrayImpl[T]) Pop() HxNullable[T] {
+	length := int32(len(this.data))
+
+	if length == 0 {
+		return HxNullable[T]{}
+	}
+
+	item := this.data[length-1]
+	this.data = this.data[:length-1]
+
+	return HxNullable[T]{Value: item, Valid: true}
+}
+
+func (this *HxArrayImpl[T]) Pop_Dyn() any {
+	length := this.Len()
+
+	if length == 0 {
+		return nil
+	}
+
+	item := this.data[length-1]
+	this.data = this.data[:length-1]
+
+	return item
+}
+
+func (this HxArrayView[T]) Pop_Dyn() any {
+	return this.source.Pop_Dyn()
+}
+
+func (this HxArrayView[T]) Pop() HxNullable[T] {
+	value := this.source.Pop_Dyn()
+	return HxNullable[T]{Value: HxConvert[T](value), Valid: value != nil}
+}
+
+func Hx_Array_Pop[T any](this HxArray[T]) HxNullable[T] {
+	return this.Pop()
 }

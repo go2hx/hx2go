@@ -5,21 +5,10 @@ extern class Array<T> {
 
     var length(default, null):Int;
 
-    inline function push(x: T):Int {
-        return 0;
-    }
-
-    inline function concat(a:Array<T>):Array<T> {
-        return [];
-    }
-
-    inline function copy():Array<T> {
-        return [];
-    }
-
-    inline function pop():Null<T> {
-        return null;
-    }
+    function push(x: T):Int;
+    function concat(a:Array<T>):Array<T>;
+    function copy():Array<T>;
+    function pop():Null<T>;
 
     inline function reverse():Void {
         return;

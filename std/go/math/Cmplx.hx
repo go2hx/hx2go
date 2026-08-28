@@ -22,9 +22,9 @@ extern class Cmplx {
     @:native("Log10") static function log10(x: go.Complex128): (go.Complex128);
     @:native("NaN") static function naN(): (go.Complex128);
     @:native("Phase") static function phase(x: go.Complex128): (Float);
-    @:go.Tuple("r", "θ") @:native("Polar") static function polar(x: go.Complex128): (go.Tuple<{ r: Float, θ: Float }>);
+    @:go.Tuple("r", "_u3B8") @:native("Polar") static function polar(x: go.Complex128): (go.Tuple<{ r: Float, _u3B8: Float }>);
     @:native("Pow") static function pow(x: go.Complex128, y: go.Complex128): (go.Complex128);
-    @:native("Rect") static function rect(r: Float, θ: Float): (go.Complex128);
+    @:native("Rect") static function rect(r: Float, _u3B8: Float): (go.Complex128);
     @:native("Sin") static function sin(x: go.Complex128): (go.Complex128);
     @:native("Sinh") static function sinh(x: go.Complex128): (go.Complex128);
     @:native("Sqrt") static function sqrt(x: go.Complex128): (go.Complex128);

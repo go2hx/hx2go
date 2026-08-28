@@ -6,7 +6,7 @@ extern class Float {
 
     @:native("Add") function add(delta: Float): Void;
     @:native("Set") function set(value: Float): Void;
-    @:native("String") function string(): (String);
+    @:native("String") function string(): (std.String);
     @:native("Value") function value(): (Float);
 
 }

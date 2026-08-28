@@ -7,6 +7,10 @@ extern class Binary {
     @:native("MaxVarintLen32") static var maxVarintLen32: go.GoInt;
     @:native("MaxVarintLen64") static var maxVarintLen64: go.GoInt;
 
+    @:native("BigEndian") static var bigEndian: go.encoding.binary.BigEndian_;
+    @:native("LittleEndian") static var littleEndian: go.encoding.binary.LittleEndian_;
+    @:native("NativeEndian") static var nativeEndian: go.encoding.binary.NativeEndian_;
+
     @:native("Append") static function append(buf: go.Slice<go.Byte>, order: go.encoding.binary.ByteOrder, data: Dynamic): (go.Result<go.Slice<go.Byte>>);
     @:native("AppendUvarint") static function appendUvarint(buf: go.Slice<go.Byte>, x: go.UInt64): (go.Slice<go.Byte>);
     @:native("AppendVarint") static function appendVarint(buf: go.Slice<go.Byte>, x: go.Int64): (go.Slice<go.Byte>);

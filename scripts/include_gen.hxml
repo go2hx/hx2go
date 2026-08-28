@@ -1,0 +1,6 @@
+-cp testbed
+-m Main
+-L hx2go
+--macro include("go")
+--custom-target go=output/testbed
+--no-output

@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"reflect"
+	"slices"
 	"strings"
 )
 
@@ -10,6 +11,7 @@ type HxArrayDyn interface {
 	Set_Dyn(idx int32, val any)
 	Get_Dyn(idx int32) any
 	Pop_Dyn() any
+	Shift_Dyn() any
 	Underlying_Dyn() []any
 	ElemType() reflect.Type
 	Grow(elements int32)
@@ -22,6 +24,7 @@ type HxArray[T any] interface {
 	Set(idx int32, val T)
 	Get(idx int32) T
 	Pop() HxNullable[T]
+	Shift() HxNullable[T]
 	Dyn() HxArray[any]
 	Underlying() []T
 }
@@ -266,6 +269,41 @@ func (this HxArrayView[T]) Pop() HxNullable[T] {
 	return HxNullable[T]{Value: HxConvert[T](value), Valid: value != nil}
 }
 
+func (this *HxArrayImpl[T]) Shift() HxNullable[T] {
+	length := int32(len(this.data))
+
+	if length == 0 {
+		return HxNullable[T]{}
+	}
+
+	item := this.data[0]
+	this.data = this.data[1:]
+
+	return HxNullable[T]{Value: item, Valid: true}
+}
+
+func (this *HxArrayImpl[T]) Shift_Dyn() any {
+	length := this.Len()
+
+	if length == 0 {
+		return nil
+	}
+
+	item := this.data[0]
+	this.data = this.data[1:]
+
+	return item
+}
+
+func (this HxArrayView[T]) Shift_Dyn() any {
+	return this.source.Shift_Dyn()
+}
+
+func (this HxArrayView[T]) Shift() HxNullable[T] {
+	value := this.source.Shift_Dyn()
+	return HxNullable[T]{Value: HxConvert[T](value), Valid: value != nil}
+}
+
 func Hx_Array_Pop[T any](this HxArray[T]) HxNullable[T] {
 	return this.Pop()
 }
@@ -278,4 +316,83 @@ func Hx_Array_Map[T any, S any](this HxArray[T], f func(T) S) HxArray[S] {
 	}
 
 	return out
+}
+
+func Hx_Array_Reverse[T any](this HxArray[T]) {
+	for i := int32(0); i < this.Len()/2; i++ {
+		j := this.Len() - 1 - i
+		temp := this.Get(i)
+		this.Set(i, this.Get(j))
+		this.Set(j, temp)
+	}
+}
+
+func Hx_Array_Shift[T any](this HxArray[T]) HxNullable[T] {
+	return this.Shift()
+}
+
+func Hx_Array_ToString[T any](this HxArray[T]) string {
+	return this.String()
+}
+
+func Hx_Array_Contains[T any](this HxArray[T], value T) bool {
+	for i := int32(0); i < this.Len(); i++ {
+		if reflect.DeepEqual(this.Get(i), value) {
+			return true
+		}
+	}
+
+	return false
+}
+
+func Hx_Array_Filter[T any](this HxArray[T], f func(T) bool) HxArray[T] {
+	out := HxMakeArray[T]()
+
+	for i := int32(0); i < this.Len(); i++ {
+		item := this.Get(i)
+
+		if f(item) {
+			out.Set(out.Len(), item)
+		}
+	}
+
+	return out
+}
+
+func Hx_Array_Resize[T any](this HxArray[T], size int32) {
+	this.Grow(size - this.Len())
+}
+
+func Hx_Array_Join[T any](this HxArray[T], sep string) string {
+	var sb strings.Builder
+
+	for i := int32(0); i < this.Len(); i++ {
+		if i > 0 {
+			sb.WriteString(sep)
+		}
+
+		sb.WriteString(fmt.Sprintf("%v", this.Get(i)))
+	}
+
+	return sb.String()
+}
+
+func Hx_Array_Sort[T any](this HxArray[T], f func(a T, b T) int32) {
+	switch arr := this.(type) {
+	case *HxArrayImpl[T]: // optimised path
+		slices.SortFunc(arr.data, func(a T, b T) int {
+			return int(f(a, b))
+		})
+
+	default: // slow(er) fallback for array views where we cannot directly access data
+		for i := int32(0); i < this.Len(); i++ {
+			for j := i + 1; j < this.Len(); j++ {
+				if f(this.Get(i), this.Get(j)) > 0 {
+					temp := this.Get(i)
+					this.Set(i, this.Get(j))
+					this.Set(j, temp)
+				}
+			}
+		}
+	}
 }

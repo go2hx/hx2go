@@ -9,14 +9,15 @@ extern class Array<T> {
     function concat(a:Array<T>):Array<T>;
     function copy():Array<T>;
     function pop():Null<T>;
-
-    inline function reverse():Void {
-        return;
-    }
-
-    inline function shift():Null<T> {
-        return null;
-    }
+    function map<S>(f:T->S):Array<S>;
+    function reverse():Void;
+    function shift():Null<T>;
+    function toString():String;
+    @:pure function contains(x: T): Bool;
+    @:runtime function filter(f:T->Bool):Array<T>;
+    function resize(len:Int):Void;
+    function join(sep:String):String;
+    function sort(f:T->T->Int):Void;
 
     inline function unshift(x:T):Void {
         return;
@@ -46,38 +47,12 @@ extern class Array<T> {
         return -1;
     }
 
-    @:pure inline function contains( x : T ) : Bool {
-        return false;
-    }
-
-    inline function join(sep:String):String {
-        return "";
-    }
-
-    inline function toString():String {
-        return "";
-    }
-
     @:runtime inline function iterator():haxe.iterators.ArrayIterator<T> {
         return new haxe.iterators.ArrayIterator(this);
     }
 
     @:pure @:runtime public inline function keyValueIterator() : ArrayKeyValueIterator<T> {
         return new ArrayKeyValueIterator(this);
-    }
-
-    function map<S>(f:T->S):Array<S>;
-
-    @:runtime inline function filter(f:T->Bool):Array<T> {
-        return [];
-    }
-
-    inline function sort(f:T->T->Int):Void {
-        return;
-    }
-
-    inline function resize(len:Int):Void {
-        return;
     }
 
     function new(): Void;

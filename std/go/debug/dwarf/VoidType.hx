@@ -1,5 +1,8 @@
 package go.debug.dwarf;
 
+/**
+    A VoidType represents the C void type.
+**/
 @:structInit
 @:go.Type({ name: "VoidType", instanceName: "dwarf.VoidType", imports: ["debug/dwarf"] })
 extern class VoidType {

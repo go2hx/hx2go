@@ -1,5 +1,11 @@
 package go.crypto;
 
+/**
+    Decapsulator is an interface for an opaque private KEM key that can be used for
+    decapsulation operations. For example, an ML-KEM key kept in a hardware module.
+    
+    It is implemented, for example, by [crypto/mlkem.DecapsulationKey768].
+**/
 @:go.Type({ name: "Decapsulator", instanceName: "crypto.Decapsulator", imports: ["crypto"] })
 extern typedef Decapsulator = {
 

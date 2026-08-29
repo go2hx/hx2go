@@ -100,17 +100,27 @@ class Std {
         }
 
         var kind = value.kind();
-        if (kind == Reflect.Ptr) {
+        if (kind == Reflect.ptr) {
             return string(value.elem());
         }
 
-        if (kind == Reflect.Map) {
+        if (kind == Reflect.array || kind == Reflect.slice) {
+            var buf = new StringBuf();
+
+            buf.add('[');
+            buf.add(HxArray.map(value._interface(), string).join(","));
+            buf.add(']');
+
+            return buf.toString();
+        }
+
+        if (kind == Reflect.map) {
             var buf = new StringBuf();
             var keys = value.mapKeys();
 
             if (keys.length > 0) {
                 for (key in keys) {
-                    if (key.kind() == Reflect.String) {
+                    if (key.kind() == Reflect.string) {
                         if (key.string() == "toString") {
                             return HxDynamic.call(value.mapIndex(key)._interface(), []);
                         }
@@ -127,7 +137,7 @@ class Std {
             return buf.toString();
         }
 
-        if (kind == Reflect.Struct) {
+        if (kind == Reflect.struct) {
             var enumIndexMethod = value.methodByName("Hx_Field_enumIndex");
             var enumTypeMethod = value.methodByName("Hx_Field_enumType");
 
@@ -166,7 +176,7 @@ class Std {
             return Fmt.sprintf("%v", value._interface());
         }
 
-        if (kind == Reflect.Interface && value.isNil()) {
+        if (kind == Reflect._interface && value.isNil()) {
             return "null";
         }
 

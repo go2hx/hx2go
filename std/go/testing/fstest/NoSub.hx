@@ -6,7 +6,7 @@ extern class NoSub {
 
     @:native("MapFS") var mapFS: go.testing.fstest.MapFS;
 
-    function new(mapFS: go.testing.fstest.MapFS);
+    function new(mapFS: go.testing.fstest.MapFS=null);
 
     @:native("Glob") function glob(pattern: String): (go.Result<go.Slice<String>>);
     @:native("Lstat") function lstat(name: String): (go.Result<go.io.fs.FileInfo>);

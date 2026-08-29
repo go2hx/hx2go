@@ -17,6 +17,6 @@ extern class TransferWriter {
     @:native("FlushHeaders") var flushHeaders: Bool;
     @:native("ByteReadCh") var byteReadCh: go.Chan<go.net.http.ReadResult>;
 
-    function new(method: String, body: go.io.Reader, bodyCloser: go.io.Closer, responseToHEAD: Bool, contentLength: go.Int64, close: Bool, transferEncoding: go.Slice<String>, header: go.net.http.Header, trailer: go.net.http.Header, isResponse: Bool, flushHeaders: Bool, byteReadCh: go.Chan<go.net.http.ReadResult>);
+    function new(method: String="", body: go.io.Reader=null, bodyCloser: go.io.Closer=null, responseToHEAD: Bool=false, contentLength: go.Int64=0, close: Bool=false, transferEncoding: go.Slice<String>=null, header: go.net.http.Header=null, trailer: go.net.http.Header=null, isResponse: Bool=false, flushHeaders: Bool=false, byteReadCh: go.Chan<go.net.http.ReadResult>=null);
 
 }

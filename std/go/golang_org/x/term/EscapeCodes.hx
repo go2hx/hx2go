@@ -1,5 +1,9 @@
 package go.golang_org.x.term;
 
+/**
+    EscapeCodes contains escape sequences that can be written to the terminal in
+    order to achieve different styles of text.
+**/
 @:structInit
 @:go.Type({ name: "EscapeCodes", instanceName: "term.EscapeCodes", imports: ["golang.org/x/term"] })
 extern class EscapeCodes {
@@ -14,6 +18,6 @@ extern class EscapeCodes {
     @:native("White") var white: go.Slice<go.Byte>;
     @:native("Reset") var reset: go.Slice<go.Byte>;
 
-    function new(black: go.Slice<go.Byte>, red: go.Slice<go.Byte>, green: go.Slice<go.Byte>, yellow: go.Slice<go.Byte>, blue: go.Slice<go.Byte>, magenta: go.Slice<go.Byte>, cyan: go.Slice<go.Byte>, white: go.Slice<go.Byte>, reset: go.Slice<go.Byte>);
+    function new(black: go.Slice<go.Byte>=null, red: go.Slice<go.Byte>=null, green: go.Slice<go.Byte>=null, yellow: go.Slice<go.Byte>=null, blue: go.Slice<go.Byte>=null, magenta: go.Slice<go.Byte>=null, cyan: go.Slice<go.Byte>=null, white: go.Slice<go.Byte>=null, reset: go.Slice<go.Byte>=null);
 
 }

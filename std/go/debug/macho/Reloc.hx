@@ -1,5 +1,8 @@
 package go.debug.macho;
 
+/**
+    A Reloc represents a Mach-O relocation.
+**/
 @:structInit
 @:go.Type({ name: "Reloc", instanceName: "macho.Reloc", imports: ["debug/macho"] })
 extern class Reloc {
@@ -12,6 +15,6 @@ extern class Reloc {
     @:native("Extern") var _extern: Bool;
     @:native("Scattered") var scattered: Bool;
 
-    function new(addr: go.UInt32, value: go.UInt32, type: go.UInt8, len: go.UInt8, pcrel: Bool, _extern: Bool, scattered: Bool);
+    function new(addr: go.UInt32=0, value: go.UInt32=0, type: go.UInt8=0, len: go.UInt8=0, pcrel: Bool=false, _extern: Bool=false, scattered: Bool=false);
 
 }

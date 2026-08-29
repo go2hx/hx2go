@@ -23,7 +23,7 @@ extern class Header {
     @:native("Extra") var extra: go.Slice<go.Byte>;
     @:native("ExternalAttrs") var externalAttrs: go.UInt32;
 
-    function new(fileHeader: go.Pointer<go.archive.zip.FileHeader>);
+    function new(fileHeader: go.Pointer<go.archive.zip.FileHeader>=null);
 
     @:native("FileInfo") function fileInfo(): (go.io.fs.FileInfo);
     @:native("ModTime") function modTime(): (go.time.Time);

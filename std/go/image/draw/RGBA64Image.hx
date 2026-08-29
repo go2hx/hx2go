@@ -1,5 +1,11 @@
 package go.image.draw;
 
+/**
+    RGBA64Image extends both the [Image] and [image.RGBA64Image] interfaces with a
+    SetRGBA64 method to change a single pixel. SetRGBA64 is equivalent to
+    calling Set, but it can avoid allocations from converting concrete color
+    types to the [color.Color] interface type.
+**/
 @:go.Type({ name: "RGBA64Image", instanceName: "draw.RGBA64Image", imports: ["image/draw"] })
 extern typedef RGBA64Image = {
 

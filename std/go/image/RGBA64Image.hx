@@ -1,5 +1,9 @@
 package go.image;
 
+/**
+    RGBA64Image is an [Image] whose pixels can be converted directly to a
+    color.RGBA64.
+**/
 @:go.Type({ name: "RGBA64Image", instanceName: "image.RGBA64Image", imports: ["image"] })
 extern typedef RGBA64Image = {
 

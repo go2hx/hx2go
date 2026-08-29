@@ -8,6 +8,6 @@ extern class OnePassProg {
     @:native("Start") var start: go.GoInt;
     @:native("NumCap") var numCap: go.GoInt;
 
-    function new(inst: go.Slice<go.regexp.OnePassInst>, start: go.GoInt, numCap: go.GoInt);
+    function new(inst: go.Slice<go.regexp.OnePassInst>=null, start: go.GoInt=0, numCap: go.GoInt=0);
 
 }

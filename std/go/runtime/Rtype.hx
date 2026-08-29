@@ -17,7 +17,7 @@ extern class Rtype {
     @:native("Str") var str: Dynamic;
     @:native("PtrToThis") var ptrToThis: Dynamic;
 
-    function new(type: go.Pointer<Dynamic>);
+    function new(type: go.Pointer<Dynamic>=null);
 
     @:native("Align") function align(): (go.GoInt);
     @:native("ArrayType") function arrayType(): (go.Pointer<Dynamic>);

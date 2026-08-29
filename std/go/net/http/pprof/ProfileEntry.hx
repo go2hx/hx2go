@@ -9,6 +9,6 @@ extern class ProfileEntry {
     @:native("Desc") var desc: String;
     @:native("Count") var count: go.GoInt;
 
-    function new(name: String, href: String, desc: String, count: go.GoInt);
+    function new(name: String="", href: String="", desc: String="", count: go.GoInt=0);
 
 }

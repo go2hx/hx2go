@@ -1,5 +1,9 @@
 package go.go.types;
 
+/**
+    A Checker maintains the state of the type checker.
+    It must be created with [NewChecker].
+**/
 @:structInit
 @:go.Type({ name: "Checker", instanceName: "types.Checker", imports: ["go/types"] })
 extern class Checker {
@@ -13,10 +17,13 @@ extern class Checker {
     @:native("Selections") var selections: go.Map<go.Pointer<go.go.ast.SelectorExpr>, go.Pointer<go.go.types.Selection>>;
     @:native("Scopes") var scopes: go.Map<go.go.ast.Node, go.Pointer<go.go.types.Scope>>;
     @:native("InitOrder") var initOrder: go.Slice<go.Pointer<go.go.types.Initializer>>;
-    @:native("FileVersions") var fileVersions: go.Map<go.Pointer<go.go.ast.File>, String>;
+    @:native("FileVersions") var fileVersions: go.Map<go.Pointer<go.go.ast.File>, std.String>;
 
-    function new(info: go.Pointer<go.go.types.Info>);
+    function new(info: go.Pointer<go.go.types.Info>=null);
 
+    /**
+        Files checks the provided files as part of the checker's package.
+    **/
     @:native("Files") function files(files: go.Slice<go.Pointer<go.go.ast.File>>): (go.Error);
     @:native("ObjectOf") function objectOf(id: go.Pointer<go.go.ast.Ident>): (go.go.types.Object);
     @:native("PkgNameOf") function pkgNameOf(imp: go.Pointer<go.go.ast.ImportSpec>): (go.Pointer<go.go.types.PkgName>);

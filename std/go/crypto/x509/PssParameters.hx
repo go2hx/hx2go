@@ -9,6 +9,6 @@ extern class PssParameters {
     @:native("SaltLength") var saltLength: go.GoInt;
     @:native("TrailerField") var trailerField: go.GoInt;
 
-    function new(hash: go.crypto.x509.pkix.AlgorithmIdentifier, MGF: go.crypto.x509.pkix.AlgorithmIdentifier, saltLength: go.GoInt, trailerField: go.GoInt);
+    function new(hash: go.crypto.x509.pkix.AlgorithmIdentifier, MGF: go.crypto.x509.pkix.AlgorithmIdentifier, saltLength: go.GoInt=0, trailerField: go.GoInt=0);
 
 }

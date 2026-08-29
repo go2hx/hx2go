@@ -1,5 +1,8 @@
 package go.hash;
 
+/**
+    Hash32 is the common interface implemented by all 32-bit hash functions.
+**/
 @:go.Type({ name: "Hash32", instanceName: "hash.Hash32", imports: ["hash"] })
 extern typedef Hash32 = {
 

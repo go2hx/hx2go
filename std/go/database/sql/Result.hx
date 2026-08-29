@@ -1,5 +1,8 @@
 package go.database.sql;
 
+/**
+    A Result summarizes an executed SQL command.
+**/
 @:go.Type({ name: "Result", instanceName: "sql.Result", imports: ["database/sql"] })
 extern typedef Result = {
 

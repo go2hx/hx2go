@@ -1,12 +1,16 @@
 package go.net;
 
+/**
+    DNSConfigError represents an error reading the machine's DNS configuration.
+    (No longer used; kept for compatibility.)
+**/
 @:structInit
 @:go.Type({ name: "DNSConfigError", instanceName: "net.DNSConfigError", imports: ["net"] })
 extern class DNSConfigError {
 
     @:native("Err") var err: go.Error;
 
-    function new(err: go.Error);
+    function new(err: go.Error=null);
 
     @:native("Error") function error(): (String);
     @:native("Temporary") function temporary(): (Bool);

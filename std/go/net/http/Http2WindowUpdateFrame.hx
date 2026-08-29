@@ -10,7 +10,7 @@ extern class Http2WindowUpdateFrame {
     @:native("Length") var length: go.UInt32;
     @:native("StreamID") var streamID: go.UInt32;
 
-    function new(increment: go.UInt32);
+    function new(increment: go.UInt32=0);
 
     @:native("Header") function header(): (go.net.http.Http2FrameHeader);
     @:native("String") function string(): (String);

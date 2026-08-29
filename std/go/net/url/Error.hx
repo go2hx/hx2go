@@ -1,5 +1,8 @@
 package go.net.url;
 
+/**
+    Error reports an error and the operation and URL that caused it.
+**/
 @:structInit
 @:go.Type({ name: "Error", instanceName: "url.Error", imports: ["net/url"] })
 extern class Error {
@@ -8,7 +11,7 @@ extern class Error {
     @:native("URL") var URL: String;
     @:native("Err") var err: go.Error;
 
-    function new(op: String, URL: String, err: go.Error);
+    function new(op: String="", URL: String="", err: go.Error=null);
 
     @:native("Error") function error(): (String);
     @:native("Temporary") function temporary(): (Bool);

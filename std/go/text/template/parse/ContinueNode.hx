@@ -1,5 +1,8 @@
 package go.text.template.parse;
 
+/**
+    ContinueNode represents a {{continue}} action.
+**/
 @:structInit
 @:go.Type({ name: "ContinueNode", instanceName: "parse.ContinueNode", imports: ["text/template/parse"] })
 extern class ContinueNode {
@@ -8,7 +11,7 @@ extern class ContinueNode {
     @:native("Pos") var pos: go.text.template.parse.Pos;
     @:native("Line") var line: go.GoInt;
 
-    function new(nodeType: go.text.template.parse.NodeType, pos: go.text.template.parse.Pos, line: go.GoInt);
+    function new(nodeType: go.text.template.parse.NodeType=cast 0, pos: go.text.template.parse.Pos=cast 0, line: go.GoInt=0);
 
     @:native("Copy") function copy(): (go.text.template.parse.Node);
     @:native("Position") function position(): (go.text.template.parse.Pos);

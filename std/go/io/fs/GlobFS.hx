@@ -1,5 +1,8 @@
 package go.io.fs;
 
+/**
+    A GlobFS is a file system with a Glob method.
+**/
 @:go.Type({ name: "GlobFS", instanceName: "fs.GlobFS", imports: ["io/fs"] })
 extern typedef GlobFS = {
 

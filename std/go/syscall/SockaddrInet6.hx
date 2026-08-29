@@ -8,6 +8,6 @@ extern class SockaddrInet6 {
     @:native("ZoneId") var zoneId: go.UInt32;
     @:native("Addr") var addr: go.GoArray<go.Byte, 16>;
 
-    function new(port: go.GoInt, zoneId: go.UInt32, addr: go.GoArray<go.Byte, 16>);
+    function new(port: go.GoInt=0, zoneId: go.UInt32=0, addr: go.GoArray<go.Byte, 16>);
 
 }

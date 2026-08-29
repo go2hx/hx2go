@@ -1,5 +1,19 @@
 package go.log;
 
+/**
+    Package syslog provides a simple interface to the system log
+    service. It can send messages to the syslog daemon using UNIX
+    domain sockets, UDP or TCP.
+    
+    Only one call to Dial is necessary. On write failures,
+    the syslog client will attempt to reconnect to the server
+    and write again.
+    
+    The syslog package is frozen and is not accepting new features.
+    Some external packages provide more functionality. See:
+    
+    	https://godoc.org/?q=syslog
+**/
 @:go.Type({ name: "syslog", instanceName: "syslog.syslog", imports: ["log/syslog"] })
 extern class Syslog {
 
@@ -32,8 +46,29 @@ extern class Syslog {
     @:native("LOG_UUCP") static var LOG_UUCP: go.log.syslog.Priority;
     @:native("LOG_WARNING") static var LOG_WARNING: go.log.syslog.Priority;
 
+    /**
+        Dial establishes a connection to a log daemon by connecting to
+        address raddr on the specified network. Each write to the returned
+        writer sends a log message with the facility and severity
+        (from priority) and tag. If tag is empty, the [os.Args][0] is used.
+        If network is empty, Dial will connect to the local syslog server.
+        Otherwise, see the documentation for net.Dial for valid values
+        of network and raddr.
+    **/
     @:native("Dial") static function dial(network: String, raddr: String, priority: go.log.syslog.Priority, tag: String): (go.Result<go.Pointer<go.log.syslog.Writer>>);
+    /**
+        New establishes a new connection to the system log daemon. Each
+        write to the returned writer sends a log message with the given
+        priority (a combination of the syslog facility and severity) and
+        prefix tag. If tag is empty, the [os.Args][0] is used.
+    **/
     @:native("New") static function _new(priority: go.log.syslog.Priority, tag: String): (go.Result<go.Pointer<go.log.syslog.Writer>>);
+    /**
+        NewLogger creates a [log.Logger] whose output is written to the
+        system log service with the specified priority, a combination of
+        the syslog facility and severity. The logFlag argument is the flag
+        set passed through to [log.New] to create the Logger.
+    **/
     @:native("NewLogger") static function newLogger(p: go.log.syslog.Priority, logFlag: go.GoInt): (go.Result<go.Pointer<go.log.Logger>>);
 
 }

@@ -1,5 +1,8 @@
 package go.os.user;
 
+/**
+    User represents a user account.
+**/
 @:structInit
 @:go.Type({ name: "User", instanceName: "user.User", imports: ["os/user"] })
 extern class User {
@@ -10,8 +13,11 @@ extern class User {
     @:native("Name") var name: String;
     @:native("HomeDir") var homeDir: String;
 
-    function new(uid: String, gid: String, username: String, name: String, homeDir: String);
+    function new(uid: String="", gid: String="", username: String="", name: String="", homeDir: String="");
 
+    /**
+        GroupIds returns the list of group IDs that the user is a member of.
+    **/
     @:native("GroupIds") function groupIds(): (go.Result<go.Slice<String>>);
 
 }

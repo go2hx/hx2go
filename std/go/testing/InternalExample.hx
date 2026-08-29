@@ -9,6 +9,6 @@ extern class InternalExample {
     @:native("Output") var output: String;
     @:native("Unordered") var unordered: Bool;
 
-    function new(name: String, F: () -> Void, output: String, unordered: Bool);
+    function new(name: String="", F: () -> Void=null, output: String="", unordered: Bool=false);
 
 }

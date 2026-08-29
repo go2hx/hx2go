@@ -1,5 +1,8 @@
 package go.debug.dwarf;
 
+/**
+    A ComplexType represents a complex floating point type.
+**/
 @:structInit
 @:go.Type({ name: "ComplexType", instanceName: "dwarf.ComplexType", imports: ["debug/dwarf"] })
 extern class ComplexType {

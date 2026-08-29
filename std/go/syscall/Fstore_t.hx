@@ -10,6 +10,6 @@ extern class Fstore_t {
     @:native("Length") var length: go.Int64;
     @:native("Bytesalloc") var bytesalloc: go.Int64;
 
-    function new(flags: go.UInt32, posmode: go.Int32, offset: go.Int64, length: go.Int64, bytesalloc: go.Int64);
+    function new(flags: go.UInt32=0, posmode: go.Int32=0, offset: go.Int64=0, length: go.Int64=0, bytesalloc: go.Int64=0);
 
 }

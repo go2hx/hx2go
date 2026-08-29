@@ -7,6 +7,6 @@ extern class BasicConstraints {
     @:native("IsCA") var isCA: Bool;
     @:native("MaxPathLen") var maxPathLen: go.GoInt;
 
-    function new(isCA: Bool, maxPathLen: go.GoInt);
+    function new(isCA: Bool=false, maxPathLen: go.GoInt=0);
 
 }

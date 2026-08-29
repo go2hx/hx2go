@@ -8,6 +8,6 @@ extern class ServerRequest {
     @:native("Params") var params: go.Pointer<go.encoding.json.RawMessage>;
     @:native("Id") var id: go.Pointer<go.encoding.json.RawMessage>;
 
-    function new(method: String, params: go.Pointer<go.encoding.json.RawMessage>, id: go.Pointer<go.encoding.json.RawMessage>);
+    function new(method: String="", params: go.Pointer<go.encoding.json.RawMessage>=null, id: go.Pointer<go.encoding.json.RawMessage>=null);
 
 }

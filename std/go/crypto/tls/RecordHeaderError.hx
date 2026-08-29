@@ -1,5 +1,8 @@
 package go.crypto.tls;
 
+/**
+    RecordHeaderError is returned when a TLS record header is invalid.
+**/
 @:structInit
 @:go.Type({ name: "RecordHeaderError", instanceName: "tls.RecordHeaderError", imports: ["crypto/tls"] })
 extern class RecordHeaderError {
@@ -8,7 +11,7 @@ extern class RecordHeaderError {
     @:native("RecordHeader") var recordHeader: go.GoArray<go.Byte, 5>;
     @:native("Conn") var conn: go.net.Conn;
 
-    function new(msg: String, recordHeader: go.GoArray<go.Byte, 5>, conn: go.net.Conn);
+    function new(msg: String="", recordHeader: go.GoArray<go.Byte, 5>, conn: go.net.Conn=null);
 
     @:native("Error") function error(): (String);
 

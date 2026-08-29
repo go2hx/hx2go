@@ -6,6 +6,6 @@ extern class TraceFrame {
 
     @:native("PC") var PC: go.UIntPtr;
 
-    function new(PC: go.UIntPtr);
+    function new(PC: go.UIntPtr=0);
 
 }

@@ -7,7 +7,7 @@ extern class SectionReadCloser {
     @:native("SectionReader") var sectionReader: go.Pointer<go.io.SectionReader>;
     @:native("Closer") var closer: go.io.Closer;
 
-    function new(sectionReader: go.Pointer<go.io.SectionReader>, closer: go.io.Closer);
+    function new(sectionReader: go.Pointer<go.io.SectionReader>=null, closer: go.io.Closer=null);
 
     @:native("Close") function close(): (go.Error);
     @:go.Tuple("r", "off", "n") @:native("Outer") function outer(): (go.Tuple<{ r: go.io.ReaderAt, off: go.Int64, n: go.Int64 }>);

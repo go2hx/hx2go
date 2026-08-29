@@ -1,5 +1,8 @@
 package go.debug.dwarf;
 
+/**
+    A StructType represents a struct, union, or C++ class type.
+**/
 @:structInit
 @:go.Type({ name: "StructType", instanceName: "dwarf.StructType", imports: ["debug/dwarf"] })
 extern class StructType {
@@ -12,7 +15,7 @@ extern class StructType {
     @:native("ByteSize") var byteSize: go.Int64;
     @:native("Name") var name: String;
 
-    function new(commonType: go.debug.dwarf.CommonType, structName: String, kind: String, field: go.Slice<go.Pointer<go.debug.dwarf.StructField>>, incomplete: Bool);
+    function new(commonType: go.debug.dwarf.CommonType, structName: String="", kind: String="", field: go.Slice<go.Pointer<go.debug.dwarf.StructField>>=null, incomplete: Bool=false);
 
     @:native("Common") function common(): (go.Pointer<go.debug.dwarf.CommonType>);
     @:native("Defn") function defn(): (String);

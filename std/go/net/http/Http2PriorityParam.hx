@@ -8,7 +8,7 @@ extern class Http2PriorityParam {
     @:native("Exclusive") var exclusive: Bool;
     @:native("Weight") var weight: go.UInt8;
 
-    function new(streamDep: go.UInt32, exclusive: Bool, weight: go.UInt8);
+    function new(streamDep: go.UInt32=0, exclusive: Bool=false, weight: go.UInt8=0);
 
     @:native("IsZero") function isZero(): (Bool);
 

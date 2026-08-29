@@ -1,5 +1,8 @@
 package go.debug.macho;
 
+/**
+    A Segment represents a Mach-O 32-bit or 64-bit load segment command.
+**/
 @:structInit
 @:go.Type({ name: "Segment", instanceName: "macho.Segment", imports: ["debug/macho"] })
 extern class Segment {
@@ -19,9 +22,15 @@ extern class Segment {
     @:native("Nsect") var nsect: go.UInt32;
     @:native("Flag") var flag: go.UInt32;
 
-    function new(loadBytes: go.debug.macho.LoadBytes, segmentHeader: go.debug.macho.SegmentHeader, readerAt: go.io.ReaderAt);
+    function new(loadBytes: go.debug.macho.LoadBytes=null, segmentHeader: go.debug.macho.SegmentHeader, readerAt: go.io.ReaderAt=null);
 
+    /**
+        Data reads and returns the contents of the segment.
+    **/
     @:native("Data") function data(): (go.Result<go.Slice<go.Byte>>);
+    /**
+        Open returns a new ReadSeeker reading the segment.
+    **/
     @:native("Open") function open(): (go.io.ReadSeeker);
     @:native("Raw") function raw(): (go.Slice<go.Byte>);
     @:native("ReadAt") function readAt(p: go.Slice<go.Byte>, off: go.Int64): (go.Result<go.GoInt>);

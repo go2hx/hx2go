@@ -1,5 +1,8 @@
 package go.debug.elf;
 
+/**
+    DynamicVersionDep is a version needed from some shared library.
+**/
 @:structInit
 @:go.Type({ name: "DynamicVersionDep", instanceName: "elf.DynamicVersionDep", imports: ["debug/elf"] })
 extern class DynamicVersionDep {
@@ -8,6 +11,6 @@ extern class DynamicVersionDep {
     @:native("Index") var index: go.UInt16;
     @:native("Dep") var dep: String;
 
-    function new(flags: go.debug.elf.DynamicVersionFlag, index: go.UInt16, dep: String);
+    function new(flags: go.debug.elf.DynamicVersionFlag=cast 0, index: go.UInt16=0, dep: String="");
 
 }

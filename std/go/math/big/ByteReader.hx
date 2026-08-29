@@ -6,7 +6,7 @@ extern class ByteReader {
 
     @:native("ScanState") var scanState: go.fmt.ScanState;
 
-    function new(scanState: go.fmt.ScanState);
+    function new(scanState: go.fmt.ScanState=null);
 
     @:native("Read") function read(buf: go.Slice<go.Byte>): (go.Result<go.GoInt>);
     @:native("ReadByte") function readByte(): (go.Result<go.Byte>);

@@ -7,6 +7,6 @@ extern class FlightRecorderConfig {
     @:native("MinAge") var minAge: go.time.Duration;
     @:native("MaxBytes") var maxBytes: go.UInt64;
 
-    function new(minAge: go.time.Duration, maxBytes: go.UInt64);
+    function new(minAge: go.time.Duration=cast 0, maxBytes: go.UInt64=0);
 
 }

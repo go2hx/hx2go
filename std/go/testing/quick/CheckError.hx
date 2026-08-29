@@ -1,5 +1,8 @@
 package go.testing.quick;
 
+/**
+    A CheckError is the result of Check finding an error.
+**/
 @:structInit
 @:go.Type({ name: "CheckError", instanceName: "quick.CheckError", imports: ["testing/quick"] })
 extern class CheckError {
@@ -7,7 +10,7 @@ extern class CheckError {
     @:native("Count") var count: go.GoInt;
     @:native("In") var _in: go.Slice<Dynamic>;
 
-    function new(count: go.GoInt, _in: go.Slice<Dynamic>);
+    function new(count: go.GoInt=0, _in: go.Slice<Dynamic>=null);
 
     @:native("Error") function error(): (String);
 

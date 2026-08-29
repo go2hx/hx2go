@@ -1,11 +1,11 @@
 import go.Go;
-import go.math.Rand_ as Rand;
+import go.math.Rand;
 
 @:pure
 class Math {
 
     // Core type declares these as (default, null); initialise once rather than via getters.
-    public static var PI(default, null): Float = go.Math.Pi;
+    public static var PI(default, null): Float = go.Math.pi;
     public static var NEGATIVE_INFINITY(default, null): Float = go.Math.inf(-1);
     public static var POSITIVE_INFINITY(default, null): Float = go.Math.inf(1);
     public static var NaN(default, null): Float = go.Math.naN();

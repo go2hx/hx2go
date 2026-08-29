@@ -1,5 +1,9 @@
 package go.image.color;
 
+/**
+    Color can convert itself to alpha-premultiplied 16-bits per channel RGBA.
+    The conversion may be lossy.
+**/
 @:go.Type({ name: "Color", instanceName: "color.Color", imports: ["image/color"] })
 extern typedef Color = {
 

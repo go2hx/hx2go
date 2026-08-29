@@ -7,6 +7,6 @@ extern class DistributionPointName {
     @:native("FullName") var fullName: go.Slice<go.encoding.asn1.RawValue>;
     @:native("RelativeName") var relativeName: go.crypto.x509.pkix.RDNSequence;
 
-    function new(fullName: go.Slice<go.encoding.asn1.RawValue>, relativeName: go.crypto.x509.pkix.RDNSequence);
+    function new(fullName: go.Slice<go.encoding.asn1.RawValue>=null, relativeName: go.crypto.x509.pkix.RDNSequence=null);
 
 }

@@ -6,7 +6,7 @@ extern class WriterOnly {
 
     @:native("Writer") var writer: go.io.Writer;
 
-    function new(writer: go.io.Writer);
+    function new(writer: go.io.Writer=null);
 
     @:native("Write") function write(p: go.Slice<go.Byte>): (go.Result<go.GoInt>);
 

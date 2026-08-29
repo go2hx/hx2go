@@ -1,5 +1,8 @@
 package go.image.draw;
 
+/**
+    Quantizer produces a palette for an image.
+**/
 @:go.Type({ name: "Quantizer", instanceName: "draw.Quantizer", imports: ["image/draw"] })
 extern typedef Quantizer = {
 

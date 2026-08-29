@@ -8,6 +8,6 @@ extern class Pkcs1AdditionalRSAPrime {
     @:native("Exp") var exp: go.Pointer<go.math.big.Int>;
     @:native("Coeff") var coeff: go.Pointer<go.math.big.Int>;
 
-    function new(prime: go.Pointer<go.math.big.Int>, exp: go.Pointer<go.math.big.Int>, coeff: go.Pointer<go.math.big.Int>);
+    function new(prime: go.Pointer<go.math.big.Int>=null, exp: go.Pointer<go.math.big.Int>=null, coeff: go.Pointer<go.math.big.Int>=null);
 
 }

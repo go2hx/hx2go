@@ -1,5 +1,8 @@
 package go.debug.dwarf;
 
+/**
+    A FuncType represents a function type.
+**/
 @:structInit
 @:go.Type({ name: "FuncType", instanceName: "dwarf.FuncType", imports: ["debug/dwarf"] })
 extern class FuncType {
@@ -10,7 +13,7 @@ extern class FuncType {
     @:native("ByteSize") var byteSize: go.Int64;
     @:native("Name") var name: String;
 
-    function new(commonType: go.debug.dwarf.CommonType, returnType: go.debug.dwarf.Type, paramType: go.Slice<go.debug.dwarf.Type>);
+    function new(commonType: go.debug.dwarf.CommonType, returnType: go.debug.dwarf.Type=null, paramType: go.Slice<go.debug.dwarf.Type>=null);
 
     @:native("Common") function common(): (go.Pointer<go.debug.dwarf.CommonType>);
     @:native("Size") function size(): (go.Int64);

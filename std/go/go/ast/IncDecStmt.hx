@@ -1,5 +1,8 @@
 package go.go.ast;
 
+/**
+    An IncDecStmt node represents an increment or decrement statement.
+**/
 @:structInit
 @:go.Type({ name: "IncDecStmt", instanceName: "ast.IncDecStmt", imports: ["go/ast"] })
 extern class IncDecStmt {
@@ -8,7 +11,7 @@ extern class IncDecStmt {
     @:native("TokPos") var tokPos: go.go.token.Pos;
     @:native("Tok") var tok: go.go.token.Token;
 
-    function new(X: go.go.ast.Expr, tokPos: go.go.token.Pos, tok: go.go.token.Token);
+    function new(X: go.go.ast.Expr=null, tokPos: go.go.token.Pos=cast 0, tok: go.go.token.Token=cast 0);
 
     @:native("End") function end(): (go.go.token.Pos);
     @:native("Pos") function pos(): (go.go.token.Pos);

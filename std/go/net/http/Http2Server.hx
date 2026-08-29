@@ -19,7 +19,7 @@ extern class Http2Server {
     @:native("NewWriteScheduler") var newWriteScheduler: () -> (go.net.http.Http2WriteScheduler);
     @:native("CountError") var countError: (errType: String) -> Void;
 
-    function new(maxHandlers: go.GoInt, maxConcurrentStreams: go.UInt32, maxDecoderHeaderTableSize: go.UInt32, maxEncoderHeaderTableSize: go.UInt32, maxReadFrameSize: go.UInt32, permitProhibitedCipherSuites: Bool, idleTimeout: go.time.Duration, readIdleTimeout: go.time.Duration, pingTimeout: go.time.Duration, writeByteTimeout: go.time.Duration, maxUploadBufferPerConnection: go.Int32, maxUploadBufferPerStream: go.Int32, newWriteScheduler: () -> (go.net.http.Http2WriteScheduler), countError: (errType: String) -> Void);
+    function new(maxHandlers: go.GoInt=0, maxConcurrentStreams: go.UInt32=0, maxDecoderHeaderTableSize: go.UInt32=0, maxEncoderHeaderTableSize: go.UInt32=0, maxReadFrameSize: go.UInt32=0, permitProhibitedCipherSuites: Bool=false, idleTimeout: go.time.Duration=cast 0, readIdleTimeout: go.time.Duration=cast 0, pingTimeout: go.time.Duration=cast 0, writeByteTimeout: go.time.Duration=cast 0, maxUploadBufferPerConnection: go.Int32=0, maxUploadBufferPerStream: go.Int32=0, newWriteScheduler: () -> (go.net.http.Http2WriteScheduler)=null, countError: (errType: String) -> Void=null);
 
     @:native("ServeConn") function serveConn(c: go.net.Conn, opts: go.Pointer<go.net.http.Http2ServeConnOpts>): Void;
 

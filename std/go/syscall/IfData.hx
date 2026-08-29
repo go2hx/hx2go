@@ -34,6 +34,6 @@ extern class IfData {
     @:native("Reserved1") var reserved1: go.UInt32;
     @:native("Reserved2") var reserved2: go.UInt32;
 
-    function new(type: go.UInt8, typelen: go.UInt8, physical: go.UInt8, addrlen: go.UInt8, hdrlen: go.UInt8, recvquota: go.UInt8, xmitquota: go.UInt8, unused1: go.UInt8, mtu: go.UInt32, metric: go.UInt32, baudrate: go.UInt32, ipackets: go.UInt32, ierrors: go.UInt32, opackets: go.UInt32, oerrors: go.UInt32, collisions: go.UInt32, ibytes: go.UInt32, obytes: go.UInt32, imcasts: go.UInt32, omcasts: go.UInt32, iqdrops: go.UInt32, noproto: go.UInt32, recvtiming: go.UInt32, xmittiming: go.UInt32, lastchange: go.syscall.Timeval32, unused2: go.UInt32, hwassist: go.UInt32, reserved1: go.UInt32, reserved2: go.UInt32);
+    function new(type: go.UInt8=0, typelen: go.UInt8=0, physical: go.UInt8=0, addrlen: go.UInt8=0, hdrlen: go.UInt8=0, recvquota: go.UInt8=0, xmitquota: go.UInt8=0, unused1: go.UInt8=0, mtu: go.UInt32=0, metric: go.UInt32=0, baudrate: go.UInt32=0, ipackets: go.UInt32=0, ierrors: go.UInt32=0, opackets: go.UInt32=0, oerrors: go.UInt32=0, collisions: go.UInt32=0, ibytes: go.UInt32=0, obytes: go.UInt32=0, imcasts: go.UInt32=0, omcasts: go.UInt32=0, iqdrops: go.UInt32=0, noproto: go.UInt32=0, recvtiming: go.UInt32=0, xmittiming: go.UInt32=0, lastchange: go.syscall.Timeval32, unused2: go.UInt32=0, hwassist: go.UInt32=0, reserved1: go.UInt32=0, reserved2: go.UInt32=0);
 
 }

@@ -29,7 +29,7 @@ extern class LoaderPackage {
     @:native("TypesSizes") var typesSizes: go.go.types.Sizes;
     @:native("ForTest") var forTest: String;
 
-    function new(_package: go.Pointer<go.golang_org.x.tools.go.packages.Package>);
+    function new(_package: go.Pointer<go.golang_org.x.tools.go.packages.Package>=null);
 
     @:native("MarshalJSON") function marshalJSON(): (go.Result<go.Slice<go.Byte>>);
     @:native("String") function string(): (String);

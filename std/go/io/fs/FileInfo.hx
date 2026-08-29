@@ -1,5 +1,8 @@
 package go.io.fs;
 
+/**
+    A FileInfo describes a file and is returned by [Stat].
+**/
 @:go.Type({ name: "FileInfo", instanceName: "fs.FileInfo", imports: ["io/fs"] })
 extern typedef FileInfo = {
 

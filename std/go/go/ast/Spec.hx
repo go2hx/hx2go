@@ -1,5 +1,8 @@
 package go.go.ast;
 
+/**
+    The Spec type stands for any of *ImportSpec, *ValueSpec, and *TypeSpec.
+**/
 @:go.Type({ name: "Spec", instanceName: "ast.Spec", imports: ["go/ast"] })
 extern typedef Spec = {
 

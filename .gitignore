@@ -4,6 +4,7 @@
 go.work.
 *.pprof
 .hx2go_cache
+.hx2go_extern_cache
 .go2hx_cache
 needed_imports.json
 .repo-version

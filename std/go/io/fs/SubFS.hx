@@ -1,5 +1,8 @@
 package go.io.fs;
 
+/**
+    A SubFS is a file system with a Sub method.
+**/
 @:go.Type({ name: "SubFS", instanceName: "fs.SubFS", imports: ["io/fs"] })
 extern typedef SubFS = {
 

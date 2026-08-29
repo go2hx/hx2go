@@ -1,5 +1,8 @@
 package go.go.types;
 
+/**
+    Sizes defines the sizing functions for package unsafe.
+**/
 @:go.Type({ name: "Sizes", instanceName: "types.Sizes", imports: ["go/types"] })
 extern typedef Sizes = {
 

@@ -5,7 +5,7 @@ import haxe.iterators.RestKeyValueIterator;
 import go.Slice;
 import go.haxe.HxDynamic;
 
-private typedef NativeRest<T> = Dynamic;
+private typedef NativeRest<T> = Array<T>;
 
 @:coreApi
 abstract Rest<T>(NativeRest<T>) {

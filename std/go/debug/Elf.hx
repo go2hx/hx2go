@@ -1,8 +1,22 @@
 package go.debug;
 
+/**
+    Package elf implements access to ELF object files.
+    
+    # Security
+    
+    This package is not designed to be hardened against adversarial inputs, and is
+    outside the scope of https://go.dev/security/policy. In particular, only basic
+    validation is done when parsing object files. As such, care should be taken when
+    parsing untrusted inputs, as parsing malformed files may consume significant
+    resources, or cause panics.
+**/
 @:go.Type({ name: "elf", instanceName: "elf.elf", imports: ["debug/elf"] })
 extern class Elf {
 
+    /**
+        Magic number for the elf trampoline, chosen wisely to be an immediate value.
+    **/
     @:native("ARM_MAGIC_TRAMP_NUMBER") static var ARM_MAGIC_TRAMP_NUMBER: go.GoInt;
     @:native("COMPRESS_HIOS") static var COMPRESS_HIOS: go.debug.elf.CompressionType;
     @:native("COMPRESS_HIPROC") static var COMPRESS_HIPROC: go.debug.elf.CompressionType;
@@ -175,12 +189,33 @@ extern class Elf {
     @:native("DT_VERNEED") static var DT_VERNEED: go.debug.elf.DynTag;
     @:native("DT_VERNEEDNUM") static var DT_VERNEEDNUM: go.debug.elf.DynTag;
     @:native("DT_VERSYM") static var DT_VERSYM: go.debug.elf.DynTag;
+    /**
+        Indexes into the Header.Ident array.
+    **/
     @:native("EI_ABIVERSION") static var EI_ABIVERSION: go.GoInt;
+    /**
+        Indexes into the Header.Ident array.
+    **/
     @:native("EI_CLASS") static var EI_CLASS: go.GoInt;
+    /**
+        Indexes into the Header.Ident array.
+    **/
     @:native("EI_DATA") static var EI_DATA: go.GoInt;
+    /**
+        Indexes into the Header.Ident array.
+    **/
     @:native("EI_NIDENT") static var EI_NIDENT: go.GoInt;
+    /**
+        Indexes into the Header.Ident array.
+    **/
     @:native("EI_OSABI") static var EI_OSABI: go.GoInt;
+    /**
+        Indexes into the Header.Ident array.
+    **/
     @:native("EI_PAD") static var EI_PAD: go.GoInt;
+    /**
+        Indexes into the Header.Ident array.
+    **/
     @:native("EI_VERSION") static var EI_VERSION: go.GoInt;
     @:native("ELFCLASS32") static var ELFCLASS32: go.debug.elf.Class;
     @:native("ELFCLASS64") static var ELFCLASS64: go.debug.elf.Class;
@@ -188,6 +223,9 @@ extern class Elf {
     @:native("ELFDATA2LSB") static var ELFDATA2LSB: go.debug.elf.Data;
     @:native("ELFDATA2MSB") static var ELFDATA2MSB: go.debug.elf.Data;
     @:native("ELFDATANONE") static var ELFDATANONE: go.debug.elf.Data;
+    /**
+        Initial magic number for ELF files.
+    **/
     @:native("ELFMAG") static var ELFMAG: String;
     @:native("ELFOSABI_86OPEN") static var ELFOSABI_86OPEN: go.debug.elf.OSABI;
     @:native("ELFOSABI_AIX") static var ELFOSABI_AIX: go.debug.elf.OSABI;
@@ -1491,13 +1529,20 @@ extern class Elf {
     @:native("STV_HIDDEN") static var STV_HIDDEN: go.debug.elf.SymVis;
     @:native("STV_INTERNAL") static var STV_INTERNAL: go.debug.elf.SymVis;
     @:native("STV_PROTECTED") static var STV_PROTECTED: go.debug.elf.SymVis;
-    @:native("Sym32Size") static var Sym32Size: go.GoInt;
-    @:native("Sym64Size") static var Sym64Size: go.GoInt;
+    @:native("Sym32Size") static var sym32Size: go.GoInt;
+    @:native("Sym64Size") static var sym64Size: go.GoInt;
     @:native("VER_FLG_BASE") static var VER_FLG_BASE: go.debug.elf.DynamicVersionFlag;
     @:native("VER_FLG_INFO") static var VER_FLG_INFO: go.debug.elf.DynamicVersionFlag;
     @:native("VER_FLG_WEAK") static var VER_FLG_WEAK: go.debug.elf.DynamicVersionFlag;
 
+    /**
+        NewFile creates a new [File] for accessing an ELF binary in an underlying reader.
+        The ELF binary is expected to start at position 0 in the ReaderAt.
+    **/
     @:native("NewFile") static function newFile(r: go.io.ReaderAt): (go.Result<go.Pointer<go.debug.elf.File>>);
+    /**
+        Open opens the named file using [os.Open] and prepares it for use as an ELF binary.
+    **/
     @:native("Open") static function open(name: String): (go.Result<go.Pointer<go.debug.elf.File>>);
     @:native("R_INFO") static function R_INFO(sym: go.UInt32, typ: go.UInt32): (go.UInt64);
     @:native("R_INFO32") static function R_INFO32(sym: go.UInt32, typ: go.UInt32): (go.UInt32);

@@ -10,6 +10,6 @@ extern class ImportDirectory {
     @:native("Name") var name: go.UInt32;
     @:native("FirstThunk") var firstThunk: go.UInt32;
 
-    function new(originalFirstThunk: go.UInt32, timeDateStamp: go.UInt32, forwarderChain: go.UInt32, name: go.UInt32, firstThunk: go.UInt32);
+    function new(originalFirstThunk: go.UInt32=0, timeDateStamp: go.UInt32=0, forwarderChain: go.UInt32=0, name: go.UInt32=0, firstThunk: go.UInt32=0);
 
 }

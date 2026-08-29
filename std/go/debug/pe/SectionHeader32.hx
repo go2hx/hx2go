@@ -1,5 +1,8 @@
 package go.debug.pe;
 
+/**
+    SectionHeader32 represents real PE COFF section header.
+**/
 @:structInit
 @:go.Type({ name: "SectionHeader32", instanceName: "pe.SectionHeader32", imports: ["debug/pe"] })
 extern class SectionHeader32 {
@@ -15,6 +18,6 @@ extern class SectionHeader32 {
     @:native("NumberOfLineNumbers") var numberOfLineNumbers: go.UInt16;
     @:native("Characteristics") var characteristics: go.UInt32;
 
-    function new(name: go.GoArray<go.UInt8, 8>, virtualSize: go.UInt32, virtualAddress: go.UInt32, sizeOfRawData: go.UInt32, pointerToRawData: go.UInt32, pointerToRelocations: go.UInt32, pointerToLineNumbers: go.UInt32, numberOfRelocations: go.UInt16, numberOfLineNumbers: go.UInt16, characteristics: go.UInt32);
+    function new(name: go.GoArray<go.UInt8, 8>, virtualSize: go.UInt32=0, virtualAddress: go.UInt32=0, sizeOfRawData: go.UInt32=0, pointerToRawData: go.UInt32=0, pointerToRelocations: go.UInt32=0, pointerToLineNumbers: go.UInt32=0, numberOfRelocations: go.UInt16=0, numberOfLineNumbers: go.UInt16=0, characteristics: go.UInt32=0);
 
 }

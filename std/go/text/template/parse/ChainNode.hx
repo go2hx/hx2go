@@ -1,5 +1,10 @@
 package go.text.template.parse;
 
+/**
+    ChainNode holds a term followed by a chain of field accesses (identifier starting with '.').
+    The names may be chained ('.x.y').
+    The periods are dropped from each ident.
+**/
 @:structInit
 @:go.Type({ name: "ChainNode", instanceName: "parse.ChainNode", imports: ["text/template/parse"] })
 extern class ChainNode {
@@ -9,8 +14,11 @@ extern class ChainNode {
     @:native("Node") var node: go.text.template.parse.Node;
     @:native("Field") var field: go.Slice<String>;
 
-    function new(nodeType: go.text.template.parse.NodeType, pos: go.text.template.parse.Pos, node: go.text.template.parse.Node, field: go.Slice<String>);
+    function new(nodeType: go.text.template.parse.NodeType=cast 0, pos: go.text.template.parse.Pos=cast 0, node: go.text.template.parse.Node=null, field: go.Slice<String>=null);
 
+    /**
+        Add adds the named field (which should start with a period) to the end of the chain.
+    **/
     @:native("Add") function add(field: String): Void;
     @:native("Copy") function copy(): (go.text.template.parse.Node);
     @:native("Position") function position(): (go.text.template.parse.Pos);

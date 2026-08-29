@@ -131,24 +131,24 @@ class Type {
 
 		var kind = value.kind();
 
-		if (kind == Reflect.Int32) {
+		if (kind == Reflect.int32) {
 			return ValueType.TInt;
-		} else if (kind == Reflect.Int64) {
+		} else if (kind == Reflect.int64) {
 			return ValueType.TInt64;
-		} else if (kind == Reflect.Float64) {
+		} else if (kind == Reflect.float64) {
 			return ValueType.TFloat;
-		} else if (kind == Reflect.Bool) {
+		} else if (kind == Reflect.bool) {
 			return ValueType.TBool;
-		} else if (kind == Reflect.String) {
+		} else if (kind == Reflect.string) {
 			 return ValueType.TClass(String);
-		} else if (kind == Reflect.Slice) {
+		} else if (kind == Reflect.slice) {
 			// return ValueType.TClass(Slice);
 			return ValueType.TObject; // TODO: wait until externs generate RTTI
-		} else if (kind == Reflect.Func) {
+		} else if (kind == Reflect.func) {
 			return ValueType.TFunction;
 		}
 
-		if (kind == Reflect.Ptr || kind == Reflect.Interface) {
+		if (kind == Reflect.ptr || kind == Reflect._interface) {
 			if (value.isNil()) {
 				return ValueType.TNull;
 			}
@@ -157,7 +157,7 @@ class Type {
 			kind = value.kind();
 		}
 
-		if (kind == Reflect.Struct) {
+		if (kind == Reflect.struct) {
 			if (HxReflect.isEnumValue(v)) {
 				return ValueType.TEnum(( cast v : Enum<Dynamic> ));
 			}
@@ -171,11 +171,11 @@ class Type {
 			return ValueType.TClass(( v : Class<Dynamic> ));
 		}
 
-		if (kind == Reflect.Map) {
+		if (kind == Reflect.map) {
 			return ValueType.TObject;
 		}
 
-		if (kind == Reflect.Slice) { // was a pointer to a map, so its an array
+		if (kind == Reflect.slice) { // was a pointer to a map, so its an array
 			return ValueType.TClass(Array);
 		}
 

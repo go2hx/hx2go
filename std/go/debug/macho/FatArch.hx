@@ -1,5 +1,8 @@
 package go.debug.macho;
 
+/**
+    A FatArch is a Mach-O File inside a FatFile.
+**/
 @:structInit
 @:go.Type({ name: "FatArch", instanceName: "macho.FatArch", imports: ["debug/macho"] })
 extern class FatArch {
@@ -23,7 +26,7 @@ extern class FatArch {
     @:native("Cmdsz") var cmdsz: go.UInt32;
     @:native("Flags") var flags: go.UInt32;
 
-    function new(fatArchHeader: go.debug.macho.FatArchHeader, file: go.Pointer<go.debug.macho.File>);
+    function new(fatArchHeader: go.debug.macho.FatArchHeader, file: go.Pointer<go.debug.macho.File>=null);
 
     @:native("Close") function close(): (go.Error);
     @:native("DWARF") function DWARF(): (go.Result<go.Pointer<go.debug.dwarf.Data>>);

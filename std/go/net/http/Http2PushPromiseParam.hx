@@ -10,6 +10,6 @@ extern class Http2PushPromiseParam {
     @:native("EndHeaders") var endHeaders: Bool;
     @:native("PadLength") var padLength: go.UInt8;
 
-    function new(streamID: go.UInt32, promiseID: go.UInt32, blockFragment: go.Slice<go.Byte>, endHeaders: Bool, padLength: go.UInt8);
+    function new(streamID: go.UInt32=0, promiseID: go.UInt32=0, blockFragment: go.Slice<go.Byte>=null, endHeaders: Bool=false, padLength: go.UInt8=0);
 
 }

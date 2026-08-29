@@ -18,6 +18,6 @@ extern class Entry {
     @:native("Creation") var creation: go.time.Time;
     @:native("LastAccess") var lastAccess: go.time.Time;
 
-    function new(name: String, value: String, quoted: Bool, domain: String, path: String, sameSite: String, secure: Bool, httpOnly: Bool, persistent: Bool, hostOnly: Bool, expires: go.time.Time, creation: go.time.Time, lastAccess: go.time.Time);
+    function new(name: String="", value: String="", quoted: Bool=false, domain: String="", path: String="", sameSite: String="", secure: Bool=false, httpOnly: Bool=false, persistent: Bool=false, hostOnly: Bool=false, expires: go.time.Time, creation: go.time.Time, lastAccess: go.time.Time);
 
 }

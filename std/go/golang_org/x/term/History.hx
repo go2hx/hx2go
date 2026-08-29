@@ -1,5 +1,8 @@
 package go.golang_org.x.term;
 
+/**
+    A History provides a (possibly bounded) queue of input lines read by [Terminal.ReadLine].
+**/
 @:go.Type({ name: "History", instanceName: "term.History", imports: ["golang.org/x/term"] })
 extern typedef History = {
 

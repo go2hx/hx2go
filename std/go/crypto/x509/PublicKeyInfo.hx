@@ -8,6 +8,6 @@ extern class PublicKeyInfo {
     @:native("Algorithm") var algorithm: go.crypto.x509.pkix.AlgorithmIdentifier;
     @:native("PublicKey") var publicKey: go.encoding.asn1.BitString;
 
-    function new(raw: go.encoding.asn1.RawContent, algorithm: go.crypto.x509.pkix.AlgorithmIdentifier, publicKey: go.encoding.asn1.BitString);
+    function new(raw: go.encoding.asn1.RawContent=null, algorithm: go.crypto.x509.pkix.AlgorithmIdentifier, publicKey: go.encoding.asn1.BitString);
 
 }

@@ -1,5 +1,9 @@
 package go.debug.pe;
 
+/**
+    SectionHeader is similar to [SectionHeader32] with Name
+    field replaced by Go string.
+**/
 @:structInit
 @:go.Type({ name: "SectionHeader", instanceName: "pe.SectionHeader", imports: ["debug/pe"] })
 extern class SectionHeader {
@@ -15,6 +19,6 @@ extern class SectionHeader {
     @:native("NumberOfLineNumbers") var numberOfLineNumbers: go.UInt16;
     @:native("Characteristics") var characteristics: go.UInt32;
 
-    function new(name: String, virtualSize: go.UInt32, virtualAddress: go.UInt32, size: go.UInt32, offset: go.UInt32, pointerToRelocations: go.UInt32, pointerToLineNumbers: go.UInt32, numberOfRelocations: go.UInt16, numberOfLineNumbers: go.UInt16, characteristics: go.UInt32);
+    function new(name: String="", virtualSize: go.UInt32=0, virtualAddress: go.UInt32=0, size: go.UInt32=0, offset: go.UInt32=0, pointerToRelocations: go.UInt32=0, pointerToLineNumbers: go.UInt32=0, numberOfRelocations: go.UInt16=0, numberOfLineNumbers: go.UInt16=0, characteristics: go.UInt32=0);
 
 }

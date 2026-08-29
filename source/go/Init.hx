@@ -307,6 +307,26 @@ class Init {
 			metadata: "go.Export",
 			doc: "",
 		});
+		Compiler.registerCustomMetadata({
+			metadata: "go.Tag",
+			doc: "Go struct tag",
+			platforms: [CustomTarget("go")],
+		});
+		Compiler.registerCustomMetadata({
+			metadata: "tag",
+			doc: "Go struct tag",
+			platforms: [CustomTarget("go")],
+		});
+		Compiler.registerCustomMetadata({
+			metadata: "go.VTableTag",
+			doc: "Go struct tag on VTable field",
+			platforms: [CustomTarget("go")],
+		});
+		Compiler.registerCustomMetadata({
+			metadata: "vtableTag",
+			doc: "Go struct tag on VTable field",
+			platforms: [CustomTarget("go")],
+		});
 	}
 
 	private static function executable(path: String): String {

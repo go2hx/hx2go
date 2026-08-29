@@ -1,0 +1,6 @@
+-cp examples/go_lua
+-m Main
+-L hx2go
+-D go-lib=github.com/Shopify/go-lua/...
+--custom-target go=output/examples/go_lua
+--cmd go -C output/examples/go_lua/main run .

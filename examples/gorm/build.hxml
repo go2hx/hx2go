@@ -1,0 +1,7 @@
+-cp examples/gorm
+-m Main
+-L hx2go
+-D go-lib=gorm.io/gorm/...
+-D go-lib=gorm.io/driver/sqlite/...
+--custom-target go=output/examples/gorm
+--cmd go -C output/examples/gorm/main run .

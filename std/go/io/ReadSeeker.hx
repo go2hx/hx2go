@@ -1,5 +1,8 @@
 package go.io;
 
+/**
+    ReadSeeker is the interface that groups the basic Read and Seek methods.
+**/
 @:go.Type({ name: "ReadSeeker", instanceName: "io.ReadSeeker", imports: ["io"] })
 extern typedef ReadSeeker = {
 

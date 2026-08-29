@@ -206,7 +206,23 @@ class ClassWriter extends WriterImpl {
         }
 
         if (!canOmitVTable) {
-            buf.add('VTable ${StringConversions.typePathClassVTableName(cls.path)}', 1);
+            var tag = "";
+            if (cls.meta != null) {
+                for (m in cls.meta) {
+                    switch m.name {
+                        case ":go.VTableTag" | ":vtableTag" | "go.VTableTag" | "vtableTag":
+                            if (m.params != null && m.params.length > 0) {
+                                switch m.params[0].expr {
+                                    case EConst(CString(s, _)):
+                                        tag = " " + s;
+                                    default:
+                                }
+                            }
+                        default:
+                    }
+                }
+            }
+            buf.add('VTable ${StringConversions.typePathClassVTableName(cls.path)} `json:"-" xml:"-" yaml:"-" gorm:"-:all"`$tag', 1);
         }
 
         for (f in cls.fields) {
@@ -217,10 +233,36 @@ class ClassWriter extends WriterImpl {
                 case _: continue;
             }
 
+            var tag: Null<String> = null;
+            if (f.meta != null) {
+                for (m in f.meta) {
+                    switch m.name {
+                        case ":go.Tag" | ":tag" | "go.Tag" | "tag":
+                            if (m.params != null && m.params.length > 0) {
+                                switch m.params[0].expr {
+                                    case EConst(CString(s, _)):
+                                        tag = s;
+                                    case _:
+                                }
+                            }
+                        case _:
+                    }
+                }
+            }
+
+            var typeBuf = writer.types.writeHxbType(fRes.type);
+
             var vBuf = new OutputBuffer();
             vBuf.addInline(fRes.name);
             vBuf.addInline(' ');
-            vBuf.addBufferInline(writer.types.writeHxbType(fRes.type));
+            vBuf.addBufferInline(typeBuf);
+            if (tag != null && tag != "") {
+                if (tag.indexOf("`") == -1) {
+                    vBuf.addInline(' `$tag`');
+                } else {
+                    vBuf.addInline(' $tag');
+                }
+            }
             buf.addBuffer(vBuf, 1);
         }
 

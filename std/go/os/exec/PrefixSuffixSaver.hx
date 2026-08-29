@@ -6,7 +6,7 @@ extern class PrefixSuffixSaver {
 
     @:native("N") var N: go.GoInt;
 
-    function new(N: go.GoInt);
+    function new(N: go.GoInt=0);
 
     @:native("Bytes") function bytes(): (go.Slice<go.Byte>);
     @:native("Write") function write(p: go.Slice<go.Byte>): (go.Result<go.GoInt>);

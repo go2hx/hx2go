@@ -1,5 +1,8 @@
 package go.debug.elf;
 
+/**
+    ELF64 Section header.
+**/
 @:structInit
 @:go.Type({ name: "Section64", instanceName: "elf.Section64", imports: ["debug/elf"] })
 extern class Section64 {
@@ -15,6 +18,6 @@ extern class Section64 {
     @:native("Addralign") var addralign: go.UInt64;
     @:native("Entsize") var entsize: go.UInt64;
 
-    function new(name: go.UInt32, type: go.UInt32, flags: go.UInt64, addr: go.UInt64, off: go.UInt64, size: go.UInt64, link: go.UInt32, info: go.UInt32, addralign: go.UInt64, entsize: go.UInt64);
+    function new(name: go.UInt32=0, type: go.UInt32=0, flags: go.UInt64=0, addr: go.UInt64=0, off: go.UInt64=0, size: go.UInt64=0, link: go.UInt32=0, info: go.UInt32=0, addralign: go.UInt64=0, entsize: go.UInt64=0);
 
 }

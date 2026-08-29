@@ -1,5 +1,10 @@
 package go.net;
 
+/**
+    Conn is a generic stream-oriented network connection.
+    
+    Multiple goroutines may invoke methods on a Conn simultaneously.
+**/
 @:go.Type({ name: "Conn", instanceName: "net.Conn", imports: ["net"] })
 extern typedef Conn = {
 

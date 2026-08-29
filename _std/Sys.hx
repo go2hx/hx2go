@@ -1,4 +1,4 @@
-import go.Time_ as Time;
+import go.Time;
 import go.Os;
 import go.haxe.HxArray;
 import go.Runtime;
@@ -44,7 +44,7 @@ class Sys {
     }
 
     public static function sleep(seconds: Float): Void {
-        Time.sleep(cast (seconds * 1000 * cast(Time.Millisecond, Float)));
+        Time.sleep(cast (seconds * 1000 * cast(Time.millisecond, Float)));
     }
 
     public static function setTimeLocale(loc: String): Bool {
@@ -116,7 +116,7 @@ class Sys {
 
     public static function time(): Float {
         var tn = Time.now();
-        var sec = tn.unixNano().toFloat() / cast(Time.Second, Float);
+        var sec = tn.unixNano().toFloat() / cast(Time.second, Float);
         var off = tn.local().zone().offset;
 
         return sec + off.toFloat();

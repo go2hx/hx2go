@@ -8,6 +8,6 @@ extern class Pkcs8 {
     @:native("Algo") var algo: go.crypto.x509.pkix.AlgorithmIdentifier;
     @:native("PrivateKey") var privateKey: go.Slice<go.Byte>;
 
-    function new(version: go.GoInt, algo: go.crypto.x509.pkix.AlgorithmIdentifier, privateKey: go.Slice<go.Byte>);
+    function new(version: go.GoInt=0, algo: go.crypto.x509.pkix.AlgorithmIdentifier, privateKey: go.Slice<go.Byte>=null);
 
 }

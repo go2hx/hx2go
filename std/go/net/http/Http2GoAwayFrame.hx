@@ -11,7 +11,7 @@ extern class Http2GoAwayFrame {
     @:native("Length") var length: go.UInt32;
     @:native("StreamID") var streamID: go.UInt32;
 
-    function new(lastStreamID: go.UInt32, errCode: go.net.http.Http2ErrCode);
+    function new(lastStreamID: go.UInt32=0, errCode: go.net.http.Http2ErrCode=cast 0);
 
     @:native("DebugData") function debugData(): (go.Slice<go.Byte>);
     @:native("Header") function header(): (go.net.http.Http2FrameHeader);

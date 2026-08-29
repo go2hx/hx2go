@@ -1,5 +1,8 @@
 package go.debug.dwarf;
 
+/**
+    A UintType represents an unsigned integer type.
+**/
 @:structInit
 @:go.Type({ name: "UintType", instanceName: "dwarf.UintType", imports: ["debug/dwarf"] })
 extern class UintType {

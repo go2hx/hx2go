@@ -1,5 +1,8 @@
 package go.debug.macho;
 
+/**
+    A Rpath represents a Mach-O rpath command.
+**/
 @:structInit
 @:go.Type({ name: "Rpath", instanceName: "macho.Rpath", imports: ["debug/macho"] })
 extern class Rpath {
@@ -7,7 +10,7 @@ extern class Rpath {
     @:native("LoadBytes") var loadBytes: go.debug.macho.LoadBytes;
     @:native("Path") var path: String;
 
-    function new(loadBytes: go.debug.macho.LoadBytes, path: String);
+    function new(loadBytes: go.debug.macho.LoadBytes=null, path: String="");
 
     @:native("Raw") function raw(): (go.Slice<go.Byte>);
 

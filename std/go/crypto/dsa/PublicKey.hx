@@ -1,5 +1,8 @@
 package go.crypto.dsa;
 
+/**
+    PublicKey represents a DSA public key.
+**/
 @:structInit
 @:go.Type({ name: "PublicKey", instanceName: "dsa.PublicKey", imports: ["crypto/dsa"] })
 extern class PublicKey {
@@ -10,6 +13,6 @@ extern class PublicKey {
     @:native("Q") var Q: go.Pointer<go.math.big.Int>;
     @:native("G") var G: go.Pointer<go.math.big.Int>;
 
-    function new(parameters: go.crypto.dsa.Parameters, Y: go.Pointer<go.math.big.Int>);
+    function new(parameters: go.crypto.dsa.Parameters, Y: go.Pointer<go.math.big.Int>=null);
 
 }

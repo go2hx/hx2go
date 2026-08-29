@@ -21,7 +21,7 @@
  */
 
 import haxe.Int64Helper;
-import go.Time_ as Time;
+import go.Time;
 
 @:coreApi final class Date {
 	private var t: go.time.Time;
@@ -126,19 +126,19 @@ import go.Time_ as Time;
         // The first two formats expressed a date in local time. The third is a time relative to the UTC epoch.
 		var d:Date = createEmpty();
 		
-		var res = Time.parse(Time.DateTime, s);
+		var res = Time.parse(Time.dateTime, s);
 		if (res.isOk()) {
 			d.t = res.sure();
 			return d;
 		}
 
-		res = Time.parse(Time.DateOnly, s);
+		res = Time.parse(Time.dateOnly, s);
 		if (res.isOk()) {
 			d.t = res.sure();
 			return d;
 		}
 
-		res = Time.parse(Time.TimeOnly, s);
+		res = Time.parse(Time.timeOnly, s);
 		if (res.isOk()) {
 			d.t = res.sure();
 			return d;

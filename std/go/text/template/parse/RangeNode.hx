@@ -1,5 +1,8 @@
 package go.text.template.parse;
 
+/**
+    RangeNode represents a {{range}} action and its commands.
+**/
 @:structInit
 @:go.Type({ name: "RangeNode", instanceName: "parse.RangeNode", imports: ["text/template/parse"] })
 extern class RangeNode {

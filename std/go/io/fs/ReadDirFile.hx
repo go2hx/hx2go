@@ -1,5 +1,11 @@
 package go.io.fs;
 
+/**
+    A ReadDirFile is a directory file whose entries can be read with the ReadDir method.
+    Every directory file should implement this interface.
+    (It is permissible for any file to implement this interface,
+    but if so ReadDir should return an error for non-directories.)
+**/
 @:go.Type({ name: "ReadDirFile", instanceName: "fs.ReadDirFile", imports: ["io/fs"] })
 extern typedef ReadDirFile = {
 

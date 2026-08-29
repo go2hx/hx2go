@@ -38,7 +38,7 @@ extern class InterfaceType {
     @:native("Len") function len(): (go.GoInt);
     @:native("MapType") function mapType(): (go.Pointer<Dynamic>);
     @:native("Method") function method(i: go.GoInt): (go.reflect.Method);
-    @:go.Tuple("m", "ok") @:native("MethodByName") function methodByName(name: String): (go.Tuple<{ m: go.reflect.Method, ok: Bool }>);
+    @:go.Tuple("m", "ok") @:native("MethodByName") function methodByName(name: std.String): (go.Tuple<{ m: go.reflect.Method, ok: Bool }>);
     @:native("NumMethod") function numMethod(): (go.GoInt);
     @:native("Pointers") function pointers(): (Bool);
     @:native("Size") function size(): (go.UIntPtr);

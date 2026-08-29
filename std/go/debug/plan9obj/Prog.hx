@@ -13,6 +13,6 @@ extern class Prog {
     @:native("Spsz") var spsz: go.UInt32;
     @:native("Pcsz") var pcsz: go.UInt32;
 
-    function new(magic: go.UInt32, text: go.UInt32, data: go.UInt32, bss: go.UInt32, syms: go.UInt32, entry: go.UInt32, spsz: go.UInt32, pcsz: go.UInt32);
+    function new(magic: go.UInt32=0, text: go.UInt32=0, data: go.UInt32=0, bss: go.UInt32=0, syms: go.UInt32=0, entry: go.UInt32=0, spsz: go.UInt32=0, pcsz: go.UInt32=0);
 
 }

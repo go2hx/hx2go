@@ -1,5 +1,11 @@
 package go.net.http;
 
+/**
+    A ResponseWriter interface is used by an HTTP handler to
+    construct an HTTP response.
+    
+    A ResponseWriter may not be used after [Handler.ServeHTTP] has returned.
+**/
 @:go.Type({ name: "ResponseWriter", instanceName: "http.ResponseWriter", imports: ["net/http"] })
 extern typedef ResponseWriter = {
 

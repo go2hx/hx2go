@@ -1,5 +1,11 @@
 package go.crypto;
 
+/**
+    Encapsulator is an interface for a public KEM key that can be used for
+    encapsulation operations.
+    
+    It is implemented, for example, by [crypto/mlkem.EncapsulationKey768].
+**/
 @:go.Type({ name: "Encapsulator", instanceName: "crypto.Encapsulator", imports: ["crypto"] })
 extern typedef Encapsulator = {
 

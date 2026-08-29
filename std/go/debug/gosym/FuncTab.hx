@@ -9,7 +9,7 @@ extern class FuncTab {
     @:native("PC") var PC: go.UInt64;
     @:native("Line") var line: go.GoInt;
 
-    function new(lineTable: go.Pointer<go.debug.gosym.LineTable>);
+    function new(lineTable: go.Pointer<go.debug.gosym.LineTable>=null);
 
     @:native("Count") function count(): (go.GoInt);
     @:native("LineToPC") function lineToPC(line: go.GoInt, maxpc: go.UInt64): (go.UInt64);

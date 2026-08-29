@@ -1,5 +1,10 @@
 package go.fmt;
 
+/**
+    State represents the printer state passed to custom formatters.
+    It provides access to the [io.Writer] interface plus information about
+    the flags and options for the operand's format specifier.
+**/
 @:go.Type({ name: "State", instanceName: "fmt.State", imports: ["fmt"] })
 extern typedef State = {
 

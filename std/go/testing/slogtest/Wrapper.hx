@@ -6,7 +6,7 @@ extern class Wrapper {
 
     @:native("Handler") var handler: go.log.slog.Handler;
 
-    function new(handler: go.log.slog.Handler);
+    function new(handler: go.log.slog.Handler=null);
 
     @:native("Enabled") function enabled(p0: go.context.Context, p1: go.log.slog.Level): (Bool);
     @:native("Handle") function handle(ctx: go.context.Context, r: go.log.slog.Record): (go.Error);

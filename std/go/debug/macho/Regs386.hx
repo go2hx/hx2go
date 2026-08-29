@@ -1,5 +1,8 @@
 package go.debug.macho;
 
+/**
+    Regs386 is the Mach-O 386 register structure.
+**/
 @:structInit
 @:go.Type({ name: "Regs386", instanceName: "macho.Regs386", imports: ["debug/macho"] })
 extern class Regs386 {
@@ -21,6 +24,6 @@ extern class Regs386 {
     @:native("FS") var FS: go.UInt32;
     @:native("GS") var GS: go.UInt32;
 
-    function new(AX: go.UInt32, BX: go.UInt32, CX: go.UInt32, DX: go.UInt32, DI: go.UInt32, SI: go.UInt32, BP: go.UInt32, SP: go.UInt32, SS: go.UInt32, FLAGS: go.UInt32, IP: go.UInt32, CS: go.UInt32, DS: go.UInt32, ES: go.UInt32, FS: go.UInt32, GS: go.UInt32);
+    function new(AX: go.UInt32=0, BX: go.UInt32=0, CX: go.UInt32=0, DX: go.UInt32=0, DI: go.UInt32=0, SI: go.UInt32=0, BP: go.UInt32=0, SP: go.UInt32=0, SS: go.UInt32=0, FLAGS: go.UInt32=0, IP: go.UInt32=0, CS: go.UInt32=0, DS: go.UInt32=0, ES: go.UInt32=0, FS: go.UInt32=0, GS: go.UInt32=0);
 
 }

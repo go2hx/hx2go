@@ -89,6 +89,9 @@ jobs:
         
       - name: Extern tests
         run: cd hx2go-extern && haxe Testbed.hxml
+      
+      - name: Go stdlib include test
+        run: haxe scripts/include_gen.hxml
           
       - name: Run haxe unit tests
         run: haxe scripts/haxeunit.hxml

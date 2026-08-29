@@ -7,6 +7,6 @@ extern class DebugMethod {
     @:native("Type") var type: go.Pointer<go.net.rpc.MethodType>;
     @:native("Name") var name: String;
 
-    function new(type: go.Pointer<go.net.rpc.MethodType>, name: String);
+    function new(type: go.Pointer<go.net.rpc.MethodType>=null, name: String="");
 
 }

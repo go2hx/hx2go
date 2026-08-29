@@ -14,7 +14,7 @@ class Copy {
             return v;
         }
 
-        if ((val.kind() == Reflect.Ptr || val.kind() == Reflect.Interface) && val.isNil()) {
+        if ((val.kind() == Reflect.ptr || val.kind() == Reflect._interface) && val.isNil()) {
             return null;
         }
 
@@ -31,7 +31,7 @@ class Copy {
     static function deepCopy(v: Value, seen: Map<Int, Dynamic>): Value {
         var k = v.kind();
 
-        if (k == Reflect.Ptr) {
+        if (k == Reflect.ptr) {
             if (v.isNil()) {
                 return v;
             }
@@ -46,7 +46,7 @@ class Copy {
 
             // copy the pointer elem by kind
             var pointerElem = v.elem();
-            if (pointerElem.kind() == Reflect.Struct) {
+            if (pointerElem.kind() == Reflect.struct) {
                 copyStruct(pointerElem, nv.elem(), seen);
             } else {
                 nv.elem().set(deepCopy(pointerElem, seen));
@@ -54,14 +54,14 @@ class Copy {
             return nv;
         }
 
-        if (k == Reflect.Interface) {
+        if (k == Reflect._interface) {
             if (v.isNil()) {
                 return v;
             }
             return deepCopy(v.elem(), seen);
         }
 
-        if (k == Reflect.Slice) {
+        if (k == Reflect.slice) {
             if (v.isNil()) {
                 return v;
             }
@@ -74,7 +74,7 @@ class Copy {
             return nv;
         }
 
-        if (k == Reflect.Map) {
+        if (k == Reflect.map) {
             if (v.isNil()) {
                 return v;
             }
@@ -88,7 +88,7 @@ class Copy {
             return nv;
         }
 
-        if (k == Reflect.Struct) {
+        if (k == Reflect.struct) {
             var nv = Reflect._new(v.type()).elem();
             copyStruct(v, nv, seen);
             return nv;

@@ -1,5 +1,8 @@
 package go.net.http.httptrace;
 
+/**
+    DNSDoneInfo contains information about the results of a DNS lookup.
+**/
 @:structInit
 @:go.Type({ name: "DNSDoneInfo", instanceName: "httptrace.DNSDoneInfo", imports: ["net/http/httptrace"] })
 extern class DNSDoneInfo {
@@ -8,6 +11,6 @@ extern class DNSDoneInfo {
     @:native("Err") var err: go.Error;
     @:native("Coalesced") var coalesced: Bool;
 
-    function new(addrs: go.Slice<go.net.IPAddr>, err: go.Error, coalesced: Bool);
+    function new(addrs: go.Slice<go.net.IPAddr>=null, err: go.Error=null, coalesced: Bool=false);
 
 }

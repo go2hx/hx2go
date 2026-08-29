@@ -1,5 +1,11 @@
 package go.context;
 
+/**
+    A Context carries a deadline, a cancellation signal, and other values across
+    API boundaries.
+    
+    Context's methods may be called by multiple goroutines simultaneously.
+**/
 @:go.Type({ name: "Context", instanceName: "context.Context", imports: ["context"] })
 extern typedef Context = {
 

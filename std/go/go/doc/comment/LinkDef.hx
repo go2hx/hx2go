@@ -1,5 +1,8 @@
 package go.go.doc.comment;
 
+/**
+    A LinkDef is a single link definition.
+**/
 @:structInit
 @:go.Type({ name: "LinkDef", instanceName: "comment.LinkDef", imports: ["go/doc/comment"] })
 extern class LinkDef {
@@ -8,6 +11,6 @@ extern class LinkDef {
     @:native("URL") var URL: String;
     @:native("Used") var used: Bool;
 
-    function new(text: String, URL: String, used: Bool);
+    function new(text: String="", URL: String="", used: Bool=false);
 
 }

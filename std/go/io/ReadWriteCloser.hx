@@ -1,5 +1,8 @@
 package go.io;
 
+/**
+    ReadWriteCloser is the interface that groups the basic Read, Write and Close methods.
+**/
 @:go.Type({ name: "ReadWriteCloser", instanceName: "io.ReadWriteCloser", imports: ["io"] })
 extern typedef ReadWriteCloser = {
 

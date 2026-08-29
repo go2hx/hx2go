@@ -7,6 +7,6 @@ extern class SparseEntry {
     @:native("Offset") var offset: go.Int64;
     @:native("Length") var length: go.Int64;
 
-    function new(offset: go.Int64, length: go.Int64);
+    function new(offset: go.Int64=0, length: go.Int64=0);
 
 }

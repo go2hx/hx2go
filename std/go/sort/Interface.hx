@@ -1,5 +1,9 @@
 package go.sort;
 
+/**
+    An implementation of Interface can be sorted by the routines in this package.
+    The methods refer to elements of the underlying collection by integer index.
+**/
 @:go.Type({ name: "Interface", instanceName: "sort.Interface", imports: ["sort"] })
 extern typedef Interface = {
 

@@ -1,5 +1,8 @@
 package go.debug.dwarf;
 
+/**
+    A FloatType represents a floating point type.
+**/
 @:structInit
 @:go.Type({ name: "FloatType", instanceName: "dwarf.FloatType", imports: ["debug/dwarf"] })
 extern class FloatType {

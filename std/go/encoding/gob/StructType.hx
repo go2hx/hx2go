@@ -9,6 +9,6 @@ extern class StructType {
     @:native("Name") var name: String;
     @:native("Id") var id: go.encoding.gob.TypeId;
 
-    function new(commonType: go.encoding.gob.CommonType, field: go.Slice<go.encoding.gob.FieldType>);
+    function new(commonType: go.encoding.gob.CommonType, field: go.Slice<go.encoding.gob.FieldType>=null);
 
 }

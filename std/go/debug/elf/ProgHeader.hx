@@ -1,5 +1,8 @@
 package go.debug.elf;
 
+/**
+    A ProgHeader represents a single ELF program header.
+**/
 @:structInit
 @:go.Type({ name: "ProgHeader", instanceName: "elf.ProgHeader", imports: ["debug/elf"] })
 extern class ProgHeader {
@@ -13,6 +16,6 @@ extern class ProgHeader {
     @:native("Memsz") var memsz: go.UInt64;
     @:native("Align") var align: go.UInt64;
 
-    function new(type: go.debug.elf.ProgType, flags: go.debug.elf.ProgFlag, off: go.UInt64, vaddr: go.UInt64, paddr: go.UInt64, filesz: go.UInt64, memsz: go.UInt64, align: go.UInt64);
+    function new(type: go.debug.elf.ProgType=cast 0, flags: go.debug.elf.ProgFlag=cast 0, off: go.UInt64=0, vaddr: go.UInt64=0, paddr: go.UInt64=0, filesz: go.UInt64=0, memsz: go.UInt64=0, align: go.UInt64=0);
 
 }

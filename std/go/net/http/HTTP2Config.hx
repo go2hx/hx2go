@@ -1,5 +1,9 @@
 package go.net.http;
 
+/**
+    HTTP2Config defines HTTP/2 configuration parameters common to
+    both [Transport] and [Server].
+**/
 @:structInit
 @:go.Type({ name: "HTTP2Config", instanceName: "http.HTTP2Config", imports: ["net/http"] })
 extern class HTTP2Config {
@@ -17,6 +21,6 @@ extern class HTTP2Config {
     @:native("PermitProhibitedCipherSuites") var permitProhibitedCipherSuites: Bool;
     @:native("CountError") var countError: (errType: String) -> Void;
 
-    function new(maxConcurrentStreams: go.GoInt, strictMaxConcurrentRequests: Bool, maxDecoderHeaderTableSize: go.GoInt, maxEncoderHeaderTableSize: go.GoInt, maxReadFrameSize: go.GoInt, maxReceiveBufferPerConnection: go.GoInt, maxReceiveBufferPerStream: go.GoInt, sendPingTimeout: go.time.Duration, pingTimeout: go.time.Duration, writeByteTimeout: go.time.Duration, permitProhibitedCipherSuites: Bool, countError: (errType: String) -> Void);
+    function new(maxConcurrentStreams: go.GoInt=0, strictMaxConcurrentRequests: Bool=false, maxDecoderHeaderTableSize: go.GoInt=0, maxEncoderHeaderTableSize: go.GoInt=0, maxReadFrameSize: go.GoInt=0, maxReceiveBufferPerConnection: go.GoInt=0, maxReceiveBufferPerStream: go.GoInt=0, sendPingTimeout: go.time.Duration=cast 0, pingTimeout: go.time.Duration=cast 0, writeByteTimeout: go.time.Duration=cast 0, permitProhibitedCipherSuites: Bool=false, countError: (errType: String) -> Void=null);
 
 }

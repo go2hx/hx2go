@@ -9,7 +9,7 @@ extern class Http2Framer {
     @:native("ReadMetaHeaders") var readMetaHeaders: go.Pointer<Dynamic>;
     @:native("MaxHeaderListSize") var maxHeaderListSize: go.UInt32;
 
-    function new(allowIllegalWrites: Bool, allowIllegalReads: Bool, readMetaHeaders: go.Pointer<Dynamic>, maxHeaderListSize: go.UInt32);
+    function new(allowIllegalWrites: Bool=false, allowIllegalReads: Bool=false, readMetaHeaders: go.Pointer<Dynamic>=null, maxHeaderListSize: go.UInt32=0);
 
     @:native("ErrorDetail") function errorDetail(): (go.Error);
     @:native("ReadFrame") function readFrame(): (go.Result<go.net.http.Http2Frame>);

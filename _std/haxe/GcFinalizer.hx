@@ -89,7 +89,7 @@ class GcFinalizer<T> {
 
         Syntax.code("
             switch {0}.Kind() {
-                case reflect.Map, reflect.Slice:
+                case Reflect.map, Reflect.slice:
                     {1} = (*byte)(this.Hx_Field_makePtr({0}))
                     {2} = true
                 default:

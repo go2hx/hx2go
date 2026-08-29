@@ -12,6 +12,6 @@ extern class WireType {
     @:native("BinaryMarshalerT") var binaryMarshalerT: go.Pointer<go.encoding.gob.GobEncoderType>;
     @:native("TextMarshalerT") var textMarshalerT: go.Pointer<go.encoding.gob.GobEncoderType>;
 
-    function new(arrayT: go.Pointer<go.encoding.gob.ArrayType>, sliceT: go.Pointer<go.encoding.gob.SliceType>, structT: go.Pointer<go.encoding.gob.StructType>, mapT: go.Pointer<go.encoding.gob.MapType>, gobEncoderT: go.Pointer<go.encoding.gob.GobEncoderType>, binaryMarshalerT: go.Pointer<go.encoding.gob.GobEncoderType>, textMarshalerT: go.Pointer<go.encoding.gob.GobEncoderType>);
+    function new(arrayT: go.Pointer<go.encoding.gob.ArrayType>=null, sliceT: go.Pointer<go.encoding.gob.SliceType>=null, structT: go.Pointer<go.encoding.gob.StructType>=null, mapT: go.Pointer<go.encoding.gob.MapType>=null, gobEncoderT: go.Pointer<go.encoding.gob.GobEncoderType>=null, binaryMarshalerT: go.Pointer<go.encoding.gob.GobEncoderType>=null, textMarshalerT: go.Pointer<go.encoding.gob.GobEncoderType>=null);
 
 }

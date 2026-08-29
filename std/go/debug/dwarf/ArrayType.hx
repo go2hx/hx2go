@@ -1,5 +1,8 @@
 package go.debug.dwarf;
 
+/**
+    An ArrayType represents a fixed size array type.
+**/
 @:structInit
 @:go.Type({ name: "ArrayType", instanceName: "dwarf.ArrayType", imports: ["debug/dwarf"] })
 extern class ArrayType {
@@ -11,7 +14,7 @@ extern class ArrayType {
     @:native("ByteSize") var byteSize: go.Int64;
     @:native("Name") var name: String;
 
-    function new(commonType: go.debug.dwarf.CommonType, type: go.debug.dwarf.Type, strideBitSize: go.Int64, count: go.Int64);
+    function new(commonType: go.debug.dwarf.CommonType, type: go.debug.dwarf.Type=null, strideBitSize: go.Int64=0, count: go.Int64=0);
 
     @:native("Common") function common(): (go.Pointer<go.debug.dwarf.CommonType>);
     @:native("Size") function size(): (go.Int64);

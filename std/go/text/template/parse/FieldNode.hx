@@ -1,5 +1,10 @@
 package go.text.template.parse;
 
+/**
+    FieldNode holds a field (identifier starting with '.').
+    The names may be chained ('.x.y').
+    The period is dropped from each ident.
+**/
 @:structInit
 @:go.Type({ name: "FieldNode", instanceName: "parse.FieldNode", imports: ["text/template/parse"] })
 extern class FieldNode {
@@ -8,7 +13,7 @@ extern class FieldNode {
     @:native("Pos") var pos: go.text.template.parse.Pos;
     @:native("Ident") var ident: go.Slice<String>;
 
-    function new(nodeType: go.text.template.parse.NodeType, pos: go.text.template.parse.Pos, ident: go.Slice<String>);
+    function new(nodeType: go.text.template.parse.NodeType=cast 0, pos: go.text.template.parse.Pos=cast 0, ident: go.Slice<String>=null);
 
     @:native("Copy") function copy(): (go.text.template.parse.Node);
     @:native("Position") function position(): (go.text.template.parse.Pos);

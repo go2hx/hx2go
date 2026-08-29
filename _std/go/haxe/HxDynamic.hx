@@ -36,7 +36,7 @@ class HxDynamic {
     //
     public static function not(d:Dynamic):Bool {
         var dV = ensureConcreteValue(d);
-        if (dV.kind() == Reflect.Bool) {
+        if (dV.kind() == Reflect.bool) {
             var dB:Bool = dV.bool();
             return !dB;
         }
@@ -93,7 +93,7 @@ class HxDynamic {
     public static function and(a:Dynamic, b:Dynamic):Bool {
         var aV = ensureConcreteValue(a);
         var bV = ensureConcreteValue(b);
-        if (aV.kind() == Reflect.Bool && bV.kind() == Reflect.Bool)
+        if (aV.kind() == Reflect.bool && bV.kind() == Reflect.bool)
             return aV.bool() && bV.bool();
         else
             throw "runtime.HxDynamic.and invalid operands: " + aV.string() + " and " + bV.string();
@@ -102,7 +102,7 @@ class HxDynamic {
     public static function or(a:Dynamic, b:Dynamic):Bool {
         var aV = ensureConcreteValue(a);
         var bV = ensureConcreteValue(b);
-        if (aV.kind() == Reflect.Bool && bV.kind() == Reflect.Bool)
+        if (aV.kind() == Reflect.bool && bV.kind() == Reflect.bool)
             return aV.bool() || bV.bool();
         else
             throw "runtime.HxDynamic.or invalid operands: " + aV.string() + " and " + bV.string();
@@ -113,13 +113,13 @@ class HxDynamic {
         var avCi = aV.canInt() || aV.canUint();
         var bvCi = bV.canInt() || bV.canUint();
         if (avCi && bvCi)
-            return Reflect.Int;
+            return Reflect.int;
         else if ((aV.canFloat() || avCi) && (bV.canFloat() || bvCi))
-            return Reflect.Float64;
-        else if (aV.kind() == Reflect.String || bV.kind() == Reflect.String)
-            return Reflect.String;
+            return Reflect.float64;
+        else if (aV.kind() == Reflect.string || bV.kind() == Reflect.string)
+            return Reflect.string;
 
-        return Reflect.Invalid;
+        return Reflect.invalid;
     }
 
     public static function toAnySlice(v: Dynamic): Slice<Dynamic> {
@@ -147,9 +147,9 @@ class HxDynamic {
         }
 
         var k = v.kind();
-        if (k == Reflect.Ptr || k == Reflect.Interface || k == Reflect.Map
-            || k == Reflect.Slice || k == Reflect.Func || k == Reflect.Chan
-            || k == Reflect.UnsafePointer) {
+        if (k == Reflect.ptr || k == Reflect._interface || k == Reflect.map
+            || k == Reflect.slice || k == Reflect.func|| k == Reflect.chan
+            || k == Reflect.unsafePointer) {
             return v.isNil();
         }
 
@@ -182,15 +182,15 @@ class HxDynamic {
 
         // Bool == special case
         // Note: not promoting bool to int
-        if (aK == Reflect.Bool || bK == Reflect.Bool) {
-            if (aK == Reflect.Bool && bK == Reflect.Bool) {
+        if (aK == Reflect.bool || bK == Reflect.bool) {
+            if (aK == Reflect.bool && bK == Reflect.bool) {
                 return aV.bool() == bV.bool();
             } else {
                 return false; // bool only equal other bool
             }
         }
 
-        if (aK == Reflect.Func && bK == Reflect.Func) {
+        if (aK == Reflect.func && bK == Reflect.func) {
             if (aV.pointer() != bV.pointer()) {
                 return false;
             }
@@ -199,11 +199,11 @@ class HxDynamic {
         }
 
         var k = jointKind(aV, bV);
-        if (k == Reflect.Int32 || k == Reflect.Int)
+        if (k == Reflect.int32 || k == Reflect.int)
             return valueToInt(aV) == valueToInt(bV);
-        else if (k == Reflect.Float64)
+        else if (k == Reflect.float64)
             return valueToFloat(aV) == valueToFloat(bV);
-        else if (k == Reflect.String)
+        else if (k == Reflect.string)
             return toString(a) == toString(b);
         else
             return Syntax.code("reflect.DeepEqual({0}, {1})", aV._interface(), bV._interface());
@@ -217,11 +217,11 @@ class HxDynamic {
         var aV = ensureConcreteValue(a);
         var bV = ensureConcreteValue(b);
         var k = jointKind(aV, bV);
-        if (k == Reflect.Int32 || k == Reflect.Int)
+        if (k == Reflect.int32 || k == Reflect.int)
             return valueToInt(aV) < valueToInt(bV);
-        else if (k == Reflect.Float64)
+        else if (k == Reflect.float64)
             return valueToFloat(aV) < valueToFloat(bV);
-        else if (k == Reflect.String)
+        else if (k == Reflect.string)
             return toString(a) < toString(b);
         else
             throw "runtime.HxDynamic.lt invalid operands: " + aV.string() + " and " + bV.string();
@@ -235,11 +235,11 @@ class HxDynamic {
         var aV = ensureConcreteValue(a);
         var bV = ensureConcreteValue(b);
         var k = jointKind(aV, bV);
-        if (k == Reflect.Int32 || k == Reflect.Int)
+        if (k == Reflect.int32 || k == Reflect.int)
             return valueToInt(aV) > valueToInt(bV);
-        else if (k == Reflect.Float64)
+        else if (k == Reflect.float64)
             return valueToFloat(aV) > valueToFloat(bV);
-        else if (k == Reflect.String)
+        else if (k == Reflect.string)
             return toString(a) > toString(b);
         else
             throw "runtime.HxDynamic.gt invalid operands: " + aV.string() + " and " + bV.string();
@@ -253,11 +253,11 @@ class HxDynamic {
         var aV = ensureConcreteValue(a);
         var bV = ensureConcreteValue(b);
         var k = jointKind(aV, bV);
-        if (k == Reflect.Int32 || k == Reflect.Int)
+        if (k == Reflect.int32 || k == Reflect.int)
             return (valueToInt(aV) + valueToInt(bV) : Dynamic);
-        else if (k == Reflect.Float64)
+        else if (k == Reflect.float64)
             return (valueToFloat(aV) + valueToFloat(bV) : Dynamic);
-        else if (k == Reflect.String)
+        else if (k == Reflect.string)
             return (toString(a) + toString(b):Dynamic);
         else
             throw "runtime.HxDynamic.add invalid operands: " + aV.string() + " and " + bV.string();
@@ -267,9 +267,9 @@ class HxDynamic {
         var aV = ensureConcreteValue(a);
         var bV = ensureConcreteValue(b);
         var k = jointKind(aV, bV);
-        if (k == Reflect.Int32 || k == Reflect.Int)
+        if (k == Reflect.int32 || k == Reflect.int)
             return (valueToInt(aV) - valueToInt(bV) : Dynamic);
-        else if (k == Reflect.Float64)
+        else if (k == Reflect.float64)
             return (valueToFloat(aV) - valueToFloat(bV) : Dynamic);
         else
             throw "runtime.HxDynamic.subtract invalid operands: " + aV.string() + " and " + bV.string();
@@ -279,9 +279,9 @@ class HxDynamic {
         var aV = ensureConcreteValue(a);
         var bV = ensureConcreteValue(b);
         var k = jointKind(aV, bV);
-        if (k == Reflect.Int32 || k == Reflect.Int)
+        if (k == Reflect.int32 || k == Reflect.int)
             return (valueToInt(aV) * valueToInt(bV) : Dynamic);
-        else if (k == Reflect.Float64)
+        else if (k == Reflect.float64)
             return (valueToFloat(aV) * valueToFloat(bV) : Dynamic);
         else
             throw "runtime.HxDynamic.multiply invalid operands: " + aV.string() + " and " + bV.string();
@@ -292,7 +292,7 @@ class HxDynamic {
         var bV = ensureConcreteValue(b);
         var k = jointKind(aV, bV);
         // In Haxe, the standard division operator (/) always produces a Float result, even if both operands are integers.
-        if (k == Reflect.Int || k == Reflect.Float64)
+        if (k == Reflect.int || k == Reflect.float64)
             return (valueToFloat(aV) / valueToFloat(bV) : Dynamic);
         else
             throw "runtime.HxDynamic.divide invalid operands: " + aV.string() + " and " + bV.string();
@@ -303,9 +303,9 @@ class HxDynamic {
         var bV = ensureConcreteValue(b);
         var k = jointKind(aV, bV);
         // In Haxe, modulo on Float is fmod
-        if (k == Reflect.Int32 || k == Reflect.Int)
+        if (k == Reflect.int32 || k == Reflect.int)
             return (valueToInt(aV) % valueToInt(bV) : Dynamic);
-        else if (k == Reflect.Float64)
+        else if (k == Reflect.float64)
             return (valueToFloat(aV) % valueToFloat(bV) : Dynamic);
         else
             throw "runtime.HxDynamic.modulo invalid operands: " + aV.string() + " and " + bV.string();
@@ -315,7 +315,7 @@ class HxDynamic {
         var aV = ensureConcreteValue(a);
         var bV = ensureConcreteValue(b);
         var k = jointKind(aV, bV);
-        if (k == Reflect.Int32 || k == Reflect.Int)
+        if (k == Reflect.int32 || k == Reflect.int)
             return (valueToInt(aV) & valueToInt(bV) : Dynamic);
         else
             throw "runtime.HxDynamic.bitand invalid operands: " + aV.string() + " and " + bV.string();
@@ -325,7 +325,7 @@ class HxDynamic {
         var aV = ensureConcreteValue(a);
         var bV = ensureConcreteValue(b);
         var k = jointKind(aV, bV);
-        if (k == Reflect.Int32 || k == Reflect.Int)
+        if (k == Reflect.int32 || k == Reflect.int)
             return (valueToInt(aV) | valueToInt(bV) : Dynamic);
         else
             throw "runtime.HxDynamic.bitor invalid operands: " + aV.string() + " and " + bV.string();
@@ -335,7 +335,7 @@ class HxDynamic {
         var aV = ensureConcreteValue(a);
         var bV = ensureConcreteValue(b);
         var k = jointKind(aV, bV);
-        if (k == Reflect.Int32 || k == Reflect.Int)
+        if (k == Reflect.int32 || k == Reflect.int)
             return (valueToInt(aV) ^ valueToInt(bV) : Dynamic);
         else
             throw "runtime.HxDynamic.bitxor invalid operands: " + aV.string() + " and " + bV.string();
@@ -345,7 +345,7 @@ class HxDynamic {
         var aV = ensureConcreteValue(a);
         var bV = ensureConcreteValue(b);
         var k = jointKind(aV, bV);
-        if (k == Reflect.Int32 || k == Reflect.Int)
+        if (k == Reflect.int32 || k == Reflect.int)
             return (valueToInt(aV) << valueToInt(bV) : Dynamic);
         else
             throw "runtime.HxDynamic.lbitshift invalid operands: " + aV.string() + " and " + bV.string();
@@ -355,7 +355,7 @@ class HxDynamic {
         var aV = ensureConcreteValue(a);
         var bV = ensureConcreteValue(b);
         var k = jointKind(aV, bV);
-        if (k == Reflect.Int32 || k == Reflect.Int)
+        if (k == Reflect.int32 || k == Reflect.int)
             return (valueToInt(aV) >> valueToInt(bV) : Dynamic);
         else
             throw "runtime.HxDynamic.rbitshift invalid operands: " + aV.string() + " and " + bV.string();
@@ -365,7 +365,7 @@ class HxDynamic {
         var aV = ensureConcreteValue(a);
         var bV = ensureConcreteValue(b);
         var k = jointKind(aV, bV);
-        if (k == Reflect.Int32 || k == Reflect.Int)
+        if (k == Reflect.int32 || k == Reflect.int)
             return (valueToInt(aV) >>> valueToInt(bV) : Dynamic);
         else
             throw "runtime.HxDynamic.urbitshift invalid operands: " + aV.string() + " and " + bV.string();
@@ -377,7 +377,7 @@ class HxDynamic {
 
     public static function toString(d:Dynamic):String {
         // var dV = ensureConcreteValue(d);
-        // if (dV.kind() == Reflect.String) {
+        // if (dV.kind() == Reflect.string) {
         // 	return dV.string(); // gives a string showing the type of the value, not a representation of the value
         // }
         return Std.string(d);
@@ -385,7 +385,7 @@ class HxDynamic {
 
     public static function toBool(d:Dynamic):Bool {
         var dV = ensureConcreteValue(d);
-        if (dV.kind() == Reflect.Bool) {
+        if (dV.kind() == Reflect.bool) {
             return dV.bool();
         }
         return valueToInt(dV) != 0;
@@ -394,7 +394,7 @@ class HxDynamic {
     // internal function to convert Value to Int
     static function valueToInt(dV:Value):Int {
         // NOTE not converting bool to int
-        // if (dV.kind() == Reflect.Bool) {
+        // if (dV.kind() == Reflect.bool) {
         //  return if (dV.bool()) 1 else 0;
         // } else
         if (dV.canUint()) {
@@ -410,11 +410,11 @@ class HxDynamic {
 
     static function isClass(v: Value): Bool {
         var kind = v.kind();
-        if (kind == Reflect.Ptr || kind == Reflect.Interface) {
+        if (kind == Reflect.ptr || kind == Reflect._interface) {
             return isClass(v.elem());
         }
 
-        if (kind != Reflect.Struct) {
+        if (kind != Reflect.struct) {
             return false;
         }
 
@@ -429,14 +429,14 @@ class HxDynamic {
         var cv = ensureConcreteValue(v._interface());
         var k = t.kind();
 
-        if (k == Reflect.Int32 || k == Reflect.Int) return Reflect.valueOf(valueToInt(cv));
-        if (k == Reflect.Float64) return Reflect.valueOf(valueToFloat(cv));
-        if (k == Reflect.String) return Reflect.valueOf(toString(cv._interface()));
-        if (k == Reflect.Bool) return Reflect.valueOf(toBool(cv));
-        if (k == Reflect.Ptr && t.elem().kind() == Reflect.Struct) {
+        if (k == Reflect.int32 || k == Reflect.int) return Reflect.valueOf(valueToInt(cv));
+        if (k == Reflect.float64) return Reflect.valueOf(valueToFloat(cv));
+        if (k == Reflect.string) return Reflect.valueOf(toString(cv._interface()));
+        if (k == Reflect.bool) return Reflect.valueOf(toBool(cv));
+        if (k == Reflect.ptr && t.elem().kind() == Reflect.struct) {
             var cls = valueToClass(cv, t.elem().name());
             if (cls.isValid()) {
-                if (cls.kind() == Reflect.Ptr) return cls;
+                if (cls.kind() == Reflect.ptr) return cls;
                 if (cls.canAddr()) return cls.addr();
             }
         }
@@ -452,7 +452,7 @@ class HxDynamic {
             throw "runtime.HxDynamic.call null function value";
         }
 
-        if (fV.kind() != Reflect.Func) {
+        if (fV.kind() != Reflect.func) {
             throw "runtime.HxDynamic.call value not callable: " + Std.string(fn);
         }
 
@@ -523,7 +523,7 @@ class HxDynamic {
     // internal function to convert Value to Float
     static function valueToFloat(dV:Value):Float {
         // NOTE not converting bool to int
-        // if (dV.kind() == Reflect.Bool) {
+        // if (dV.kind() == Reflect.bool) {
         //  return if (dV.bool()) 1.0 else 0.0;
         // } else
         if (dV.canUint()) {
@@ -548,14 +548,14 @@ class HxDynamic {
 
         var kind = value.kind();
 
-        if (kind == Reflect.Ptr || kind == Reflect.Interface) {
+        if (kind == Reflect.ptr || kind == Reflect._interface) {
             if (value.isNil()) {
                 return Null;
             }
             return valueToClass(value.elem(), className, hoppedVTable);
         }
 
-        if (kind != Reflect.Struct) {
+        if (kind != Reflect.struct) {
             return Null;
         }
 
@@ -594,7 +594,7 @@ class HxDynamic {
         }
 
         // already the class reference.
-        if (cls.kind() == Reflect.Ptr) {
+        if (cls.kind() == Reflect.ptr) {
             return cls._interface();
         }
 
@@ -609,13 +609,13 @@ class HxDynamic {
     }
 
     static function isNullableType(t: Type): Bool {
-        if (t.kind() != Reflect.Struct || t.numField() != 2 || t.name() != "") {
+        if (t.kind() != Reflect.struct || t.numField() != 2 || t.name() != "") {
             return false;
         }
 
         return t.field(0).name == "Value"
             && t.field(1).name == "Valid"
-            && t.field(1).type.kind() == Reflect.Bool;
+            && t.field(1).type.kind() == Reflect.bool;
     }
     
     public static function unwrapNullable(value: Value): Value {
@@ -624,7 +624,7 @@ class HxDynamic {
         }
 
         var v = value;
-        if (v.kind() == Reflect.Interface) {
+        if (v.kind() == Reflect._interface) {
             if (v.isNil()) {
                 return value;
             }
@@ -661,11 +661,11 @@ class HxDynamic {
             throw "runtime.HxDynamic.field null field access: " + fieldName;
         }
 
-        if (kind == Reflect.Ptr || kind == Reflect.Interface) {
+        if (kind == Reflect.ptr || kind == Reflect._interface) {
             return getFieldFrom(value.elem(), fieldName, hop);
         }
 
-        if (kind == Reflect.Struct) {
+        if (kind == Reflect.struct) {
             var f = value.fieldByName(formatField(fieldName));
             if (f.isValid()) {
                 found = true;
@@ -675,7 +675,7 @@ class HxDynamic {
                     f = vtable.methodByName(formatField(fieldName));
                     if (f.isValid()) {
                         found = true;
-                    } else if (hop && vtable.kind() == Reflect.Interface && !vtable.isNil()) {
+                    } else if (hop && vtable.kind() == Reflect._interface && !vtable.isNil()) {
                         var self = vtable.elem();
                         if (self.isValid() && self.canInterface()) {
                             return getFieldFrom(self._interface(), fieldName, false);
@@ -692,7 +692,7 @@ class HxDynamic {
             value = f;
         }
 
-        if (kind == Reflect.Map) {
+        if (kind == Reflect.map) {
             var mi = value.mapIndex(
                 ensureValue(fieldName)
             );
@@ -703,7 +703,7 @@ class HxDynamic {
             }
         }
 
-        if (kind == Reflect.Array || kind == Reflect.Slice) {
+        if (kind == Reflect.array || kind == Reflect.slice) {
             if (fieldName == "length") {
                 value = ensureValue(getArrayLength(dyn));
                 found = true;
@@ -715,7 +715,7 @@ class HxDynamic {
             }
         }
 
-        if (kind == Reflect.String) {
+        if (kind == Reflect.string) {
             if (fieldName == "length") {
                 value = ensureValue(toString(dyn).length);
                 found = true;
@@ -739,16 +739,16 @@ class HxDynamic {
         var value = ensureValue(dyn);
         var kind = value.kind();
 
-        if (kind == Reflect.Interface) {
+        if (kind == Reflect._interface) {
             return setField(value.elem(), fieldName, v);
         }
 
-        if (kind == Reflect.Ptr) {
+        if (kind == Reflect.ptr) {
             value = value.elem();
             kind = value.kind();
         }
 
-        if (kind == Reflect.Struct) {
+        if (kind == Reflect.struct) {
             var field = value.fieldByName(formatField(fieldName));
             if (!field.isValid()) {
                 throw 'runtime.HxDynamic.setField field "$fieldName" not present on "$value"';
@@ -763,7 +763,7 @@ class HxDynamic {
             );
         }
 
-        if (kind == Reflect.Map) {
+        if (kind == Reflect.map) {
             var fn = ensureValue(fieldName);
             value.setMapIndex(fn, valueToAssign(v, value.type().elem()));
         }
@@ -780,20 +780,20 @@ class HxDynamic {
             throw "runtime.HxDynamic.setArrayIndex null array access";
         }
 
-        if (kind == Reflect.Interface) {
+        if (kind == Reflect._interface) {
             value = value.elem();
             kind = value.kind();
         }
 
-        if (kind == Reflect.Ptr) {
+        if (kind == Reflect.ptr) {
             value = value.elem();
             kind = value.kind();
         }
 
-        if (kind == Reflect.Slice || kind == Reflect.Array) {
+        if (kind == Reflect.slice || kind == Reflect.array) {
             var length = value.len();
             if (index >= length) {
-                if (kind == Reflect.Array) {
+                if (kind == Reflect.array) {
                     throw "runtime.HxDynamic.setArrayIndex out of bounds exception, cannot grow go array";
                 }
 
@@ -820,11 +820,11 @@ class HxDynamic {
             throw "runtime.HxDynamic.getArrayIndex null array access";
         }
 
-        if (kind == Reflect.Ptr || kind == Reflect.Interface) {
+        if (kind == Reflect.ptr || kind == Reflect._interface) {
             return getArrayIndex(value.elem(), index);
         }
 
-        if (kind == Reflect.Slice || kind == Reflect.Array) {
+        if (kind == Reflect.slice || kind == Reflect.array) {
             var length = value.len();
             if (index >= length) {
                 return null;
@@ -847,11 +847,11 @@ class HxDynamic {
             return 0;
         }
 
-        if (kind == Reflect.Ptr || kind == Reflect.Interface) {
+        if (kind == Reflect.ptr || kind == Reflect._interface) {
             return getArrayLength(value.elem());
         }
 
-        if (kind == Reflect.Slice || kind == Reflect.Array) {
+        if (kind == Reflect.slice || kind == Reflect.array) {
             return value.len();
         }
 
@@ -901,7 +901,7 @@ class HxDynamic {
         var v = ensureValue(dyn);
         var k = v.kind();
 
-        while (k == Reflect.Interface) {
+        while (k == Reflect._interface) {
             v = v.elem();
             k = v.kind();
         }

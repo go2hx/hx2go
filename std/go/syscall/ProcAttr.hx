@@ -1,5 +1,9 @@
 package go.syscall;
 
+/**
+    ProcAttr holds attributes that will be applied to a new process started
+    by [StartProcess].
+**/
 @:structInit
 @:go.Type({ name: "ProcAttr", instanceName: "syscall.ProcAttr", imports: ["syscall"] })
 extern class ProcAttr {
@@ -9,6 +13,6 @@ extern class ProcAttr {
     @:native("Files") var files: go.Slice<go.UIntPtr>;
     @:native("Sys") var sys: go.Pointer<go.syscall.SysProcAttr>;
 
-    function new(dir: String, env: go.Slice<String>, files: go.Slice<go.UIntPtr>, sys: go.Pointer<go.syscall.SysProcAttr>);
+    function new(dir: String="", env: go.Slice<String>=null, files: go.Slice<go.UIntPtr>=null, sys: go.Pointer<go.syscall.SysProcAttr>=null);
 
 }

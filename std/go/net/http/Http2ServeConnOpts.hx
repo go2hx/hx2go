@@ -11,6 +11,6 @@ extern class Http2ServeConnOpts {
     @:native("Settings") var settings: go.Slice<go.Byte>;
     @:native("SawClientPreface") var sawClientPreface: Bool;
 
-    function new(context: go.context.Context, baseConfig: go.Pointer<go.net.http.Server>, handler: go.net.http.Handler, upgradeRequest: go.Pointer<go.net.http.Request>, settings: go.Slice<go.Byte>, sawClientPreface: Bool);
+    function new(context: go.context.Context=null, baseConfig: go.Pointer<go.net.http.Server>=null, handler: go.net.http.Handler=null, upgradeRequest: go.Pointer<go.net.http.Request>=null, settings: go.Slice<go.Byte>=null, sawClientPreface: Bool=false);
 
 }

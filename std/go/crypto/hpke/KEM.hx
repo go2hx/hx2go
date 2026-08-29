@@ -1,5 +1,9 @@
 package go.crypto.hpke;
 
+/**
+    A KEM is a Key Encapsulation Mechanism, one of the three components of an
+    HPKE ciphersuite.
+**/
 @:go.Type({ name: "KEM", instanceName: "hpke.KEM", imports: ["crypto/hpke"] })
 extern typedef KEM = {
 

@@ -12,6 +12,6 @@ extern class FileHeader {
     @:native("SizeOfOptionalHeader") var sizeOfOptionalHeader: go.UInt16;
     @:native("Characteristics") var characteristics: go.UInt16;
 
-    function new(machine: go.UInt16, numberOfSections: go.UInt16, timeDateStamp: go.UInt32, pointerToSymbolTable: go.UInt32, numberOfSymbols: go.UInt32, sizeOfOptionalHeader: go.UInt16, characteristics: go.UInt16);
+    function new(machine: go.UInt16=0, numberOfSections: go.UInt16=0, timeDateStamp: go.UInt32=0, pointerToSymbolTable: go.UInt32=0, numberOfSymbols: go.UInt32=0, sizeOfOptionalHeader: go.UInt16=0, characteristics: go.UInt16=0);
 
 }

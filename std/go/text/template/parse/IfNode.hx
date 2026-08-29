@@ -1,5 +1,8 @@
 package go.text.template.parse;
 
+/**
+    IfNode represents an {{if}} action and its commands.
+**/
 @:structInit
 @:go.Type({ name: "IfNode", instanceName: "parse.IfNode", imports: ["text/template/parse"] })
 extern class IfNode {

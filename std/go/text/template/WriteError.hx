@@ -6,6 +6,6 @@ extern class WriteError {
 
     @:native("Err") var err: go.Error;
 
-    function new(err: go.Error);
+    function new(err: go.Error=null);
 
 }

@@ -6,7 +6,7 @@ extern class OnceCloseListener {
 
     @:native("Listener") var listener: go.net.Listener;
 
-    function new(listener: go.net.Listener);
+    function new(listener: go.net.Listener=null);
 
     @:native("Accept") function accept(): (go.Result<go.net.Conn>);
     @:native("Addr") function addr(): (go.net.Addr);

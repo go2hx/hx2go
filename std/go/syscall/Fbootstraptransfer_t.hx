@@ -8,6 +8,6 @@ extern class Fbootstraptransfer_t {
     @:native("Length") var length: go.UInt64;
     @:native("Buffer") var buffer: go.Pointer<go.Byte>;
 
-    function new(offset: go.Int64, length: go.UInt64, buffer: go.Pointer<go.Byte>);
+    function new(offset: go.Int64=0, length: go.UInt64=0, buffer: go.Pointer<go.Byte>=null);
 
 }

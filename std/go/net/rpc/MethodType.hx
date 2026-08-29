@@ -8,7 +8,7 @@ extern class MethodType {
     @:native("ArgType") var argType: go.reflect.Type;
     @:native("ReplyType") var replyType: go.reflect.Type;
 
-    function new(mutex: go.sync.Mutex, argType: go.reflect.Type, replyType: go.reflect.Type);
+    function new(mutex: go.sync.Mutex, argType: go.reflect.Type=null, replyType: go.reflect.Type=null);
 
     @:native("Lock") function lock(): Void;
     @:native("NumCalls") function numCalls(): (go.GoUInt);

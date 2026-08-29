@@ -1,5 +1,10 @@
 package go.text.template.parse;
 
+/**
+    A Node is an element in the parse tree. The interface is trivial.
+    The interface contains an unexported method so that only
+    types local to this package can satisfy it.
+**/
 @:go.Type({ name: "Node", instanceName: "parse.Node", imports: ["text/template/parse"] })
 extern typedef Node = {
 

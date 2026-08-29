@@ -15,6 +15,6 @@ extern class Pkcs1PrivateKey {
     @:native("Qinv") var qinv: go.Pointer<go.math.big.Int>;
     @:native("AdditionalPrimes") var additionalPrimes: go.Slice<go.crypto.x509.Pkcs1AdditionalRSAPrime>;
 
-    function new(version: go.GoInt, N: go.Pointer<go.math.big.Int>, E: go.GoInt, D: go.Pointer<go.math.big.Int>, P: go.Pointer<go.math.big.Int>, Q: go.Pointer<go.math.big.Int>, dp: go.Pointer<go.math.big.Int>, dq: go.Pointer<go.math.big.Int>, qinv: go.Pointer<go.math.big.Int>, additionalPrimes: go.Slice<go.crypto.x509.Pkcs1AdditionalRSAPrime>);
+    function new(version: go.GoInt=0, N: go.Pointer<go.math.big.Int>=null, E: go.GoInt=0, D: go.Pointer<go.math.big.Int>=null, P: go.Pointer<go.math.big.Int>=null, Q: go.Pointer<go.math.big.Int>=null, dp: go.Pointer<go.math.big.Int>=null, dq: go.Pointer<go.math.big.Int>=null, qinv: go.Pointer<go.math.big.Int>=null, additionalPrimes: go.Slice<go.crypto.x509.Pkcs1AdditionalRSAPrime>=null);
 
 }

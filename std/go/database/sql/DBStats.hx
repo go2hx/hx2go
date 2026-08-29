@@ -1,5 +1,8 @@
 package go.database.sql;
 
+/**
+    DBStats contains database statistics.
+**/
 @:structInit
 @:go.Type({ name: "DBStats", instanceName: "sql.DBStats", imports: ["database/sql"] })
 extern class DBStats {
@@ -14,6 +17,6 @@ extern class DBStats {
     @:native("MaxIdleTimeClosed") var maxIdleTimeClosed: go.Int64;
     @:native("MaxLifetimeClosed") var maxLifetimeClosed: go.Int64;
 
-    function new(maxOpenConnections: go.GoInt, openConnections: go.GoInt, inUse: go.GoInt, idle: go.GoInt, waitCount: go.Int64, waitDuration: go.time.Duration, maxIdleClosed: go.Int64, maxIdleTimeClosed: go.Int64, maxLifetimeClosed: go.Int64);
+    function new(maxOpenConnections: go.GoInt=0, openConnections: go.GoInt=0, inUse: go.GoInt=0, idle: go.GoInt=0, waitCount: go.Int64=0, waitDuration: go.time.Duration=cast 0, maxIdleClosed: go.Int64=0, maxIdleTimeClosed: go.Int64=0, maxLifetimeClosed: go.Int64=0);
 
 }

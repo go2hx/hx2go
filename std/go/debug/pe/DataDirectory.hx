@@ -7,6 +7,6 @@ extern class DataDirectory {
     @:native("VirtualAddress") var virtualAddress: go.UInt32;
     @:native("Size") var size: go.UInt32;
 
-    function new(virtualAddress: go.UInt32, size: go.UInt32);
+    function new(virtualAddress: go.UInt32=0, size: go.UInt32=0);
 
 }

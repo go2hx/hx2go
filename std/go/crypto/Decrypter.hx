@@ -1,5 +1,10 @@
 package go.crypto;
 
+/**
+    Decrypter is an interface for an opaque private key that can be used for
+    asymmetric decryption operations. An example would be an RSA key
+    kept in a hardware module.
+**/
 @:go.Type({ name: "Decrypter", instanceName: "crypto.Decrypter", imports: ["crypto"] })
 extern typedef Decrypter = {
 

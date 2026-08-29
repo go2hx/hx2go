@@ -1,5 +1,8 @@
 package go.syscall;
 
+/**
+    A RawConn is a raw network connection.
+**/
 @:go.Type({ name: "RawConn", instanceName: "syscall.RawConn", imports: ["syscall"] })
 extern typedef RawConn = {
 

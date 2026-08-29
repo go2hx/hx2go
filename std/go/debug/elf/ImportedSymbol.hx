@@ -8,6 +8,6 @@ extern class ImportedSymbol {
     @:native("Version") var version: String;
     @:native("Library") var library: String;
 
-    function new(name: String, version: String, library: String);
+    function new(name: String="", version: String="", library: String="");
 
 }

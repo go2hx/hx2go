@@ -1,5 +1,9 @@
 package go.io.fs;
 
+/**
+    A DirEntry is an entry read from a directory
+    (using the [ReadDir] function or a [ReadDirFile]'s ReadDir method).
+**/
 @:go.Type({ name: "DirEntry", instanceName: "fs.DirEntry", imports: ["io/fs"] })
 extern typedef DirEntry = {
 

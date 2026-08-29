@@ -1,4 +1,4 @@
-import go.Regexp_ as GoRegexp;
+import go.Regexp as GoRegexp;
 import go.regexp.Regexp;
 import go.haxe.HxArray;
 import go.Slice;

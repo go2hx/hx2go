@@ -1,5 +1,8 @@
 package go.image.draw;
 
+/**
+    Drawer contains the [Draw] method.
+**/
 @:go.Type({ name: "Drawer", instanceName: "draw.Drawer", imports: ["image/draw"] })
 extern typedef Drawer = {
 

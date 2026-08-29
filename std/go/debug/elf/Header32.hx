@@ -1,5 +1,8 @@
 package go.debug.elf;
 
+/**
+    ELF32 File header.
+**/
 @:structInit
 @:go.Type({ name: "Header32", instanceName: "elf.Header32", imports: ["debug/elf"] })
 extern class Header32 {
@@ -19,6 +22,6 @@ extern class Header32 {
     @:native("Shnum") var shnum: go.UInt16;
     @:native("Shstrndx") var shstrndx: go.UInt16;
 
-    function new(ident: go.GoArray<go.Byte, 16>, type: go.UInt16, machine: go.UInt16, version: go.UInt32, entry: go.UInt32, phoff: go.UInt32, shoff: go.UInt32, flags: go.UInt32, ehsize: go.UInt16, phentsize: go.UInt16, phnum: go.UInt16, shentsize: go.UInt16, shnum: go.UInt16, shstrndx: go.UInt16);
+    function new(ident: go.GoArray<go.Byte, 16>, type: go.UInt16=0, machine: go.UInt16=0, version: go.UInt32=0, entry: go.UInt32=0, phoff: go.UInt32=0, shoff: go.UInt32=0, flags: go.UInt32=0, ehsize: go.UInt16=0, phentsize: go.UInt16=0, phnum: go.UInt16=0, shentsize: go.UInt16=0, shnum: go.UInt16=0, shstrndx: go.UInt16=0);
 
 }

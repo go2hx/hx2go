@@ -1,5 +1,8 @@
 package go.crypto.x509;
 
+/**
+    PolicyMapping represents a policy mapping entry in the policyMappings extension.
+**/
 @:structInit
 @:go.Type({ name: "PolicyMapping", instanceName: "x509.PolicyMapping", imports: ["crypto/x509"] })
 extern class PolicyMapping {

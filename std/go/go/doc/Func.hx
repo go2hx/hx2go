@@ -1,5 +1,8 @@
 package go.go.doc;
 
+/**
+    Func is the documentation for a func declaration.
+**/
 @:structInit
 @:go.Type({ name: "Func", instanceName: "doc.Func", imports: ["go/doc"] })
 extern class Func {
@@ -12,6 +15,6 @@ extern class Func {
     @:native("Level") var level: go.GoInt;
     @:native("Examples") var examples: go.Slice<go.Pointer<go.go.doc.Example>>;
 
-    function new(doc: String, name: String, decl: go.Pointer<go.go.ast.FuncDecl>, recv: String, orig: String, level: go.GoInt, examples: go.Slice<go.Pointer<go.go.doc.Example>>);
+    function new(doc: String="", name: String="", decl: go.Pointer<go.go.ast.FuncDecl>=null, recv: String="", orig: String="", level: go.GoInt=0, examples: go.Slice<go.Pointer<go.go.doc.Example>>=null);
 
 }

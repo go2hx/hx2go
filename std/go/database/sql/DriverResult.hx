@@ -6,7 +6,7 @@ extern class DriverResult {
 
     @:native("Locker") var locker: go.sync.Locker;
 
-    function new(locker: go.sync.Locker);
+    function new(locker: go.sync.Locker=null);
 
     @:native("LastInsertId") function lastInsertId(): (go.Result<go.Int64>);
     @:native("Lock") function lock(): Void;

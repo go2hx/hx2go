@@ -16,6 +16,6 @@ extern class CpuStats {
     @:native("UserTime") var userTime: go.Int64;
     @:native("TotalTime") var totalTime: go.Int64;
 
-    function new(gCAssistTime: go.Int64, gCDedicatedTime: go.Int64, gCIdleTime: go.Int64, gCPauseTime: go.Int64, gCTotalTime: go.Int64, scavengeAssistTime: go.Int64, scavengeBgTime: go.Int64, scavengeTotalTime: go.Int64, idleTime: go.Int64, userTime: go.Int64, totalTime: go.Int64);
+    function new(gCAssistTime: go.Int64=0, gCDedicatedTime: go.Int64=0, gCIdleTime: go.Int64=0, gCPauseTime: go.Int64=0, gCTotalTime: go.Int64=0, scavengeAssistTime: go.Int64=0, scavengeBgTime: go.Int64=0, scavengeTotalTime: go.Int64=0, idleTime: go.Int64=0, userTime: go.Int64=0, totalTime: go.Int64=0);
 
 }

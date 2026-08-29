@@ -6,7 +6,7 @@ extern class DebugHTTP {
 
     @:native("Server") var server: go.Pointer<go.net.rpc.Server>;
 
-    function new(server: go.Pointer<go.net.rpc.Server>);
+    function new(server: go.Pointer<go.net.rpc.Server>=null);
 
     @:native("Accept") function accept(lis: go.net.Listener): Void;
     @:native("HandleHTTP") function handleHTTP(rpcPath: String, debugPath: String): Void;

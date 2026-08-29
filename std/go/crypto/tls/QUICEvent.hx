@@ -1,5 +1,11 @@
 package go.crypto.tls;
 
+/**
+    A QUICEvent is an event occurring on a QUIC connection.
+    
+    The type of event is specified by the Kind field.
+    The contents of the other fields are kind-specific.
+**/
 @:structInit
 @:go.Type({ name: "QUICEvent", instanceName: "tls.QUICEvent", imports: ["crypto/tls"] })
 extern class QUICEvent {
@@ -11,6 +17,6 @@ extern class QUICEvent {
     @:native("SessionState") var sessionState: go.Pointer<go.crypto.tls.SessionState>;
     @:native("Err") var err: go.Error;
 
-    function new(kind: go.crypto.tls.QUICEventKind, level: go.crypto.tls.QUICEncryptionLevel, data: go.Slice<go.Byte>, suite: go.UInt16, sessionState: go.Pointer<go.crypto.tls.SessionState>, err: go.Error);
+    function new(kind: go.crypto.tls.QUICEventKind=cast 0, level: go.crypto.tls.QUICEncryptionLevel=cast 0, data: go.Slice<go.Byte>=null, suite: go.UInt16=0, sessionState: go.Pointer<go.crypto.tls.SessionState>=null, err: go.Error=null);
 
 }

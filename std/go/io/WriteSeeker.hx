@@ -1,5 +1,8 @@
 package go.io;
 
+/**
+    WriteSeeker is the interface that groups the basic Write and Seek methods.
+**/
 @:go.Type({ name: "WriteSeeker", instanceName: "io.WriteSeeker", imports: ["io"] })
 extern typedef WriteSeeker = {
 

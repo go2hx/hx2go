@@ -104,16 +104,6 @@ class Std {
             return string(value.elem());
         }
 
-        if (kind == Reflect.array || kind == Reflect.slice) {
-            var buf = new StringBuf();
-
-            buf.add('[');
-            buf.add(HxArray.map(value._interface(), string).join(","));
-            buf.add(']');
-
-            return buf.toString();
-        }
-
         if (kind == Reflect.map) {
             var buf = new StringBuf();
             var keys = value.mapKeys();

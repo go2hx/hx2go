@@ -690,6 +690,10 @@ class HxDynamic {
                 return HxArray.join.bind(dyn);
             }
 
+            if (fieldName == "copy") {
+                return HxArray.copy.bind(dyn);
+            }
+
             throw "runtime.HxDynamic.field array field access not found: " + fieldName;
         }
 

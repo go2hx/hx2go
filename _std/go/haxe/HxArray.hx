@@ -26,4 +26,6 @@ extern class HxArray {
 
     @:native("Hx_Array_Push") static function push<T>(arr: DynamicArray, val: T): Int;
     @:native("Hx_Array_Join") static function join<T>(arr: DynamicArray, sep: String): String;
+    @:native("Hx_Array_Copy") static function copy<T>(arr: DynamicArray): Array<T>;
+
 }

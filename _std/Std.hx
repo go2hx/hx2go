@@ -161,8 +161,6 @@ class Std {
                 }
             }
 
-            // TODO: haxe array printing
-
             return Fmt.sprintf("%v", value._interface());
         }
 

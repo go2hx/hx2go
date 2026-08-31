@@ -12,19 +12,42 @@ func HxConvert[T any](from any) T {
 		return r
 	}
 
+	var t T
+	tt := reflect.TypeOf(t)
+	targetNullable := Hx_Field_go_haxe_hxdynamic_isNullableType(tt)
+
+	var fv reflect.Value
+	if from != nil {
+		fv = reflect.ValueOf(from)
+		if Hx_Field_go_haxe_hxdynamic_isNullableType(fv.Type()) {
+			if !fv.Field(1).Bool() {
+				from = nil
+			} else {
+				from = fv.Field(0).Interface()
+				fv = reflect.ValueOf(from)
+			}
+		}
+	}
+
+	if targetNullable {
+		box := reflect.New(tt).Elem()
+		if from != nil {
+			ft := tt.Field(0).Type
+			if fv.Type().ConvertibleTo(ft) {
+				box.Field(0).Set(fv.Convert(ft))
+				box.Field(1).SetBool(true)
+			}
+		}
+
+		return box.Interface().(T)
+	}
+
 	if from == nil {
 		return HxDefault[T]()
 	}
 
-	var t T
-	tt := reflect.TypeOf(t)
-	fv := reflect.ValueOf(from)
-
-	if fv.CanConvert(tt) {
-		to := fv.Convert(tt)
-		if rta, ok := reflect.TypeAssert[T](to); ok {
-			return rta
-		}
+	if fv.Type().ConvertibleTo(tt) {
+		return fv.Convert(tt).Interface().(T)
 	}
 
 	return HxDefault[T]()

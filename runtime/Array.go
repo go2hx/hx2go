@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"reflect"
 	"slices"
 	"strings"
@@ -479,6 +480,7 @@ func Hx_Array_Join[T any](this HxArray[T], sep string) string {
 			sb.WriteString(sep)
 		}
 
+		fmt.Println(this, i, this.Get(i))
 		sb.WriteString(HxString(this.Get(i)))
 	}
 

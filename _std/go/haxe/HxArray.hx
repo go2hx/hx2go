@@ -1,5 +1,14 @@
 package go.haxe;
 
+@:coreType
+@:go.Type({ name: "HxArray[any]" })
+private extern abstract DynamicArray {
+
+    @:from public static inline function fromDynamic<T>(v: Dynamic): DynamicArray {
+        return Syntax.code("HxAnyToArray({0})", v);
+    }
+}
+
 @:go.Type({ topLevel: true })
 extern class HxArray {
 
@@ -15,5 +24,6 @@ extern class HxArray {
         return Syntax.code("{0}.ElemType()", (cast arr : Array<T>));
     }
 
-    @:native("Hx_Array_Push") static function push<T>(arr: Array<T>, val: T): Int;
+    @:native("Hx_Array_Push") static function push<T>(arr: DynamicArray, val: T): Int;
+    @:native("Hx_Array_Join") static function join<T>(arr: DynamicArray, sep: String): String;
 }

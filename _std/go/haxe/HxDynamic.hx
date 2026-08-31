@@ -673,7 +673,7 @@ class HxDynamic {
         }
 
         var arr = tryDynamicArray(dyn);
-        if (arr != null) {
+        if (arr != null) { // TODO: smarter approach
             if (fieldName == "length") {
                 return arr.len();
             }
@@ -684,6 +684,10 @@ class HxDynamic {
 
             if (fieldName == "push") {
                 return HxArray.push.bind(dyn);
+            }
+
+            if (fieldName == "join") {
+                return HxArray.join.bind(dyn);
             }
 
             throw "runtime.HxDynamic.field array field access not found: " + fieldName;

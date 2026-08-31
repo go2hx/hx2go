@@ -68,6 +68,11 @@ class FieldAccessArray extends CompilerPass {
                     case _: false;
                 }
 
+                if (e.t.match(TDynamic(_) | TDynamicAny)) {
+                    e = ExprHelper.createUntyped("HxAnyToArray({0})", [e]);
+                    e.t = TInst({ name: "Array", moduleName: "Array", pack: [] }, [TDynamicAny]);
+                }
+
                 var name = 'Hx_Array_${StringConversions.toPascalCase(cf.name)}';
                 var staticArgs = [e].concat(args);
                 var neededParams = params.map(p -> context.getWriter().types.writeHxbType(p));

@@ -172,9 +172,12 @@ class Std {
     }
 
     public static function isOfType(v: Dynamic, t: Dynamic): Bool {
+        if (v == null) {
+            return false;
+        }
+
         var vt = std.Type.typeof(v);
-        // TODO: finish impl
-        switch t {
+        switch t { // TODO: finish impl
             case Int:
                 return vt == TInt;
             case Float:

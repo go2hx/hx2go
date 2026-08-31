@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"reflect"
 	"slices"
 	"strings"
@@ -229,6 +228,15 @@ type HxArrayView[T any] struct {
 
 func HxMakeArrayView[T any](src HxArrayDyn) HxArray[T] {
 	return HxArrayView[T]{src}
+}
+
+func HxAnyToArray(v any) HxArray[any] {
+	arr, ok := v.(HxArrayDyn)
+	if !ok {
+		panic("dynamic is not array")
+	}
+
+	return HxMakeArrayView[any](arr)
 }
 
 func (this HxArrayView[T]) Set_Dyn(idx int32, val any) {
@@ -480,7 +488,6 @@ func Hx_Array_Join[T any](this HxArray[T], sep string) string {
 			sb.WriteString(sep)
 		}
 
-		fmt.Println(this, i, this.Get(i))
 		sb.WriteString(HxString(this.Get(i)))
 	}
 

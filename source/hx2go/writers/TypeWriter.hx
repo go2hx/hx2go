@@ -132,7 +132,7 @@ class TypeWriter extends WriterImpl {
             case { name: "Byte", pack: ['go'] }: "byte";
             case { name: "Rune", pack: ['go'] }: "rune";
             case { name: "Class", pack: [] }: "*Hx_Obj_go_haxe_hxclass";
-            case { name: "Rest", pack: ['haxe'] }: "any";
+            case { name: "Rest", pack: ['haxe'] }: "HxArray[any]";
             case _: null;
         }
 

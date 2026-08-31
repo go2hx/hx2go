@@ -142,9 +142,16 @@ function main() {
             var opChar = op.format.replace("A", "").replace("B", "").trim();
 
             if (op.commutative) {
-                content.add('   @:op(${op.format}) @:commutative private inline function hx_${op.name}_a(other: Float): ${returnType} {\n');
-                content.add('       return ${op.outBool ? 'Go.float64(this) ${opChar} other' : 'this ${opChar} Go.$t(other)'};\n');
-                content.add('   }\n');
+                switch op.name {
+                    case "mul":
+                        content.add('   @:op(${op.format}) @:commutative private inline function hx_${op.name}_a(other: Float): Float {\n');
+                        content.add('       return Go.float64(this) ${opChar} other;\n');
+                        content.add('   }\n');
+                    default:
+                        content.add('   @:op(${op.format}) @:commutative private inline function hx_${op.name}_a(other: Float): ${returnType} {\n');
+                        content.add('       return ${op.outBool ? 'Go.float64(this) ${opChar} other' : 'this ${opChar} Go.$t(other)'};\n');
+                        content.add('   }\n');
+                }
                 content.add('   @:op(${op.format}) @:commutative private inline function hx_${op.name}_b(other: Int): ${returnType} {\n');
                 content.add('       return this ${opChar} Go.$t(other);\n');
                 content.add('   }\n');

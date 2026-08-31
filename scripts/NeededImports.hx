@@ -12,9 +12,18 @@ function main() {
     getImports(imps, "./output/bootstrap/main");
     getGoImports(imps, "std");
 
-    var dir = runCommandReturnLine("haxelib", ["path", "hx2go-extern"]);
-    getImports(imps, Path.join([dir, "..", "/output/main"]));
-    Sys.command('haxelib run hx2go-extern -stdgen ${imps.join(" ")} ./std');
+    var externDir = Path.join([root, "hx2go-extern"]);
+    var bin = Path.join([externDir, "output", "main", "main"]);
+    if (Sys.systemName().toLowerCase() == "windows") bin += ".exe";
+    if (!FileSystem.exists(bin)) {
+        Sys.println("Building hx2go-extern...");
+        var oldCwd = Sys.getCwd();
+        Sys.setCwd(externDir);
+        Sys.command("haxe", ["Compile.hxml"]);
+        Sys.setCwd(oldCwd);
+    }
+    getImports(imps, Path.join([externDir, "output/main"]));
+    Sys.command(bin, ["-stdgen"].concat(imps).concat(["./std", root]));
 }
 
 function runCommand(cmd:String, args:Array<String>):String {
@@ -28,9 +37,7 @@ function runCommand(cmd:String, args:Array<String>):String {
     return s;
 }
 
-function runCommandReturnLine(cmd:String, args:Array<String>):String {
-    return runCommand(cmd, args).split("\n")[0];
-}
+
 
 function getImports(imps:Array<String>, path:String) {
     if (FileSystem.exists(path)) {

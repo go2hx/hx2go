@@ -1,0 +1,6 @@
+-cp examples/asciigraph
+-m Main
+-L hx2go
+-D go-lib=github.com/guptarohit/asciigraph
+--custom-target go=output/examples/asciigraph
+--cmd go -C output/examples/asciigraph/main run .

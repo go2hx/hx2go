@@ -12,8 +12,9 @@ class HxClass {
     public var interfaces: Array<HxClass>;
     public var createInstance: (Array<Dynamic>) -> Dynamic;
     public var createEmptyInstance: () -> Dynamic;
+    public var __meta__: Dynamic;
 
-    public function new(name: String, staticFields: Array<String>, instanceFields: Array<String>, superClass: HxClass, interfaces: Array<HxClass>, createInstance: (Array<Dynamic>) -> Dynamic, createEmptyInstance: () -> Dynamic) {
+    public function new(name: String, staticFields: Array<String>, instanceFields: Array<String>, superClass: HxClass, interfaces: Array<HxClass>, createInstance: (Array<Dynamic>) -> Dynamic, createEmptyInstance: () -> Dynamic, __meta__: Dynamic) {
         this.name = name;
         this.staticFields = staticFields;
         this.instanceFields = instanceFields;
@@ -21,6 +22,7 @@ class HxClass {
         this.interfaces = interfaces;
         this.createInstance = createInstance;
         this.createEmptyInstance = createEmptyInstance;
+        this.__meta__ = __meta__;
         _registry.set(name, this);
     }
 

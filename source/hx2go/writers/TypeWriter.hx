@@ -54,9 +54,15 @@ class TypeWriter extends WriterImpl {
         buf.add('func () any {', 1);
         buf.add('return nil', 2);
         buf.add('},', 1);
+        buf.add('${abstractMeta(a)},', 1);
         buf.add(')');
 
         return buf;
+    }
+
+    function abstractMeta(a: HxbAbstract): String {
+        var meta = MetaWriter.build(a.meta, [], []);
+        return meta == null ? "nil" : writer.exprs.writeExpr(meta).toString();
     }
 
     public function writeTypedef(t: HxbTypedef): OutputBuffer {

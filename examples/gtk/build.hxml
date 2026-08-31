@@ -1,0 +1,6 @@
+-cp examples/gtk
+-m Main
+-L hx2go
+-D go-lib=github.com/diamondburned/gotk4/pkg/...
+--custom-target go=output/examples/gtk
+--cmd go -C output/examples/gtk/main run .

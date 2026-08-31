@@ -108,10 +108,12 @@ class Type {
 	}
 
 	public static function getInstanceFields(c:Class<Dynamic>):Array<String> {
+        if (c == null) return [];
         return (untyped c.instanceFields : Array<String>).copy();
 	}
 
 	public static function getClassFields(c:Class<Dynamic>):Array<String> {
+    if (c == null) return [];
 		return (untyped c.staticFields : Array<String>).copy();
 	}
 

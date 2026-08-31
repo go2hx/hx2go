@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"reflect"
 	"slices"
 	"strings"
@@ -207,7 +206,7 @@ func (this *HxArrayImpl[T]) Len() int32 {
 	return int32(len(this.data))
 }
 
-func (this *HxArrayImpl[T]) String() string {
+func (this HxArrayImpl[T]) String() string {
 	var r strings.Builder
 	r.WriteString("[")
 
@@ -216,7 +215,7 @@ func (this *HxArrayImpl[T]) String() string {
 			r.WriteString(",")
 		}
 
-		r.WriteString(fmt.Sprintf("%v", this.Get(int32(i))))
+		r.WriteString(HxString(this.Get(int32(i))))
 	}
 
 	r.WriteString("]")
@@ -480,7 +479,7 @@ func Hx_Array_Join[T any](this HxArray[T], sep string) string {
 			sb.WriteString(sep)
 		}
 
-		sb.WriteString(fmt.Sprintf("%v", this.Get(i)))
+		sb.WriteString(HxString(this.Get(i)))
 	}
 
 	return sb.String()

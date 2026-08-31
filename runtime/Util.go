@@ -30,6 +30,10 @@ func HxConvert[T any](from any) T {
 	return HxDefault[T]()
 }
 
+func HxString[T any](val T) string {
+	return Hx_Field_std_string(val)
+}
+
 type HxNullable[T any] = struct {
 	Value T
 	Valid bool

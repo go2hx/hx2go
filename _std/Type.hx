@@ -109,10 +109,12 @@ class Type {
 	}
 
 	public static function getInstanceFields(c:Class<Dynamic>):Array<String> {
+        if (c == null) return [];
         return HxArray.copy(untyped c.instanceFields);
 	}
 
 	public static function getClassFields(c:Class<Dynamic>):Array<String> {
+        if (c == null) return [];
 		return HxArray.copy(untyped c.staticFields);
 	}
 

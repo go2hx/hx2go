@@ -142,9 +142,16 @@ class EnumWriter extends WriterImpl {
         buf.add('default: return nil', 3);
         buf.add('}', 2);
         buf.add('},', 1);
+        buf.add('${enumMeta(e)},', 1);
         buf.add(')');
 
         return buf;
+    }
+
+    function enumMeta(e: HxbEnum): String {
+        var fields = e.constructors.map(c -> { name: c.name, meta: c.meta });
+        var meta = MetaWriter.build(e.meta, fields, []);
+        return meta == null ? "nil" : writer.exprs.writeExpr(meta).toString();
     }
 
 }

@@ -1,5 +1,8 @@
 package go.runtime.debug;
 
+/**
+    A Module describes a single module included in a build.
+**/
 @:structInit
 @:go.Type({ name: "Module", instanceName: "debug.Module", imports: ["runtime/debug"] })
 extern class Module {
@@ -9,6 +12,6 @@ extern class Module {
     @:native("Sum") var sum: String;
     @:native("Replace") var replace: go.Pointer<go.runtime.debug.Module>;
 
-    function new(path: String, version: String, sum: String, replace: go.Pointer<go.runtime.debug.Module>);
+    function new(path: String="", version: String="", sum: String="", replace: go.Pointer<go.runtime.debug.Module>=null);
 
 }

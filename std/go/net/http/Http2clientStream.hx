@@ -6,6 +6,6 @@ extern class Http2clientStream {
 
     @:native("ID") var ID: go.UInt32;
 
-    function new(ID: go.UInt32);
+    function new(ID: go.UInt32=0);
 
 }

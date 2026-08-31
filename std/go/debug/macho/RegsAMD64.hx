@@ -1,5 +1,8 @@
 package go.debug.macho;
 
+/**
+    RegsAMD64 is the Mach-O AMD64 register structure.
+**/
 @:structInit
 @:go.Type({ name: "RegsAMD64", instanceName: "macho.RegsAMD64", imports: ["debug/macho"] })
 extern class RegsAMD64 {
@@ -26,6 +29,6 @@ extern class RegsAMD64 {
     @:native("FS") var FS: go.UInt64;
     @:native("GS") var GS: go.UInt64;
 
-    function new(AX: go.UInt64, BX: go.UInt64, CX: go.UInt64, DX: go.UInt64, DI: go.UInt64, SI: go.UInt64, BP: go.UInt64, SP: go.UInt64, R8: go.UInt64, R9: go.UInt64, R10: go.UInt64, R11: go.UInt64, R12: go.UInt64, R13: go.UInt64, R14: go.UInt64, R15: go.UInt64, IP: go.UInt64, FLAGS: go.UInt64, CS: go.UInt64, FS: go.UInt64, GS: go.UInt64);
+    function new(AX: go.UInt64=0, BX: go.UInt64=0, CX: go.UInt64=0, DX: go.UInt64=0, DI: go.UInt64=0, SI: go.UInt64=0, BP: go.UInt64=0, SP: go.UInt64=0, R8: go.UInt64=0, R9: go.UInt64=0, R10: go.UInt64=0, R11: go.UInt64=0, R12: go.UInt64=0, R13: go.UInt64=0, R14: go.UInt64=0, R15: go.UInt64=0, IP: go.UInt64=0, FLAGS: go.UInt64=0, CS: go.UInt64=0, FS: go.UInt64=0, GS: go.UInt64=0);
 
 }

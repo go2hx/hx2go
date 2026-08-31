@@ -15,6 +15,6 @@ extern class TransferReader {
     @:native("Close") var close: Bool;
     @:native("Trailer") var trailer: go.net.http.Header;
 
-    function new(header: go.net.http.Header, statusCode: go.GoInt, requestMethod: String, protoMajor: go.GoInt, protoMinor: go.GoInt, body: go.io.ReadCloser, contentLength: go.Int64, chunked: Bool, close: Bool, trailer: go.net.http.Header);
+    function new(header: go.net.http.Header=null, statusCode: go.GoInt=0, requestMethod: String="", protoMajor: go.GoInt=0, protoMinor: go.GoInt=0, body: go.io.ReadCloser=null, contentLength: go.Int64=0, chunked: Bool=false, close: Bool=false, trailer: go.net.http.Header=null);
 
 }

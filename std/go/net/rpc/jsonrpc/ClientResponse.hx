@@ -8,6 +8,6 @@ extern class ClientResponse {
     @:native("Result") var result: go.Pointer<go.encoding.json.RawMessage>;
     @:native("Error") var error: Dynamic;
 
-    function new(id: go.UInt64, result: go.Pointer<go.encoding.json.RawMessage>, error: Dynamic);
+    function new(id: go.UInt64=0, result: go.Pointer<go.encoding.json.RawMessage>=null, error: Dynamic=null);
 
 }

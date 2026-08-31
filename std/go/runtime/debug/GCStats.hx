@@ -1,5 +1,8 @@
 package go.runtime.debug;
 
+/**
+    GCStats collect information about recent garbage collections.
+**/
 @:structInit
 @:go.Type({ name: "GCStats", instanceName: "debug.GCStats", imports: ["runtime/debug"] })
 extern class GCStats {
@@ -11,6 +14,6 @@ extern class GCStats {
     @:native("PauseEnd") var pauseEnd: go.Slice<go.time.Time>;
     @:native("PauseQuantiles") var pauseQuantiles: go.Slice<go.time.Duration>;
 
-    function new(lastGC: go.time.Time, numGC: go.Int64, pauseTotal: go.time.Duration, pause: go.Slice<go.time.Duration>, pauseEnd: go.Slice<go.time.Time>, pauseQuantiles: go.Slice<go.time.Duration>);
+    function new(lastGC: go.time.Time, numGC: go.Int64=0, pauseTotal: go.time.Duration=cast 0, pause: go.Slice<go.time.Duration>=null, pauseEnd: go.Slice<go.time.Time>=null, pauseQuantiles: go.Slice<go.time.Duration>=null);
 
 }

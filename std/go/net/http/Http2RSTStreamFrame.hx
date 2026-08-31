@@ -10,7 +10,7 @@ extern class Http2RSTStreamFrame {
     @:native("Length") var length: go.UInt32;
     @:native("StreamID") var streamID: go.UInt32;
 
-    function new(errCode: go.net.http.Http2ErrCode);
+    function new(errCode: go.net.http.Http2ErrCode=cast 0);
 
     @:native("Header") function header(): (go.net.http.Http2FrameHeader);
     @:native("String") function string(): (String);

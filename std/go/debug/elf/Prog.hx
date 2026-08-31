@@ -1,5 +1,8 @@
 package go.debug.elf;
 
+/**
+    A Prog represents a single ELF program header in an ELF binary.
+**/
 @:structInit
 @:go.Type({ name: "Prog", instanceName: "elf.Prog", imports: ["debug/elf"] })
 extern class Prog {
@@ -15,8 +18,11 @@ extern class Prog {
     @:native("Memsz") var memsz: go.UInt64;
     @:native("Align") var align: go.UInt64;
 
-    function new(progHeader: go.debug.elf.ProgHeader, readerAt: go.io.ReaderAt);
+    function new(progHeader: go.debug.elf.ProgHeader, readerAt: go.io.ReaderAt=null);
 
+    /**
+        Open returns a new ReadSeeker reading the ELF program body.
+    **/
     @:native("Open") function open(): (go.io.ReadSeeker);
     @:native("ReadAt") function readAt(p: go.Slice<go.Byte>, off: go.Int64): (go.Result<go.GoInt>);
 

@@ -1,5 +1,8 @@
 package go.debug.elf;
 
+/**
+    A SectionHeader represents a single ELF section header.
+**/
 @:structInit
 @:go.Type({ name: "SectionHeader", instanceName: "elf.SectionHeader", imports: ["debug/elf"] })
 extern class SectionHeader {
@@ -16,6 +19,6 @@ extern class SectionHeader {
     @:native("Entsize") var entsize: go.UInt64;
     @:native("FileSize") var fileSize: go.UInt64;
 
-    function new(name: String, type: go.debug.elf.SectionType, flags: go.debug.elf.SectionFlag, addr: go.UInt64, offset: go.UInt64, size: go.UInt64, link: go.UInt32, info: go.UInt32, addralign: go.UInt64, entsize: go.UInt64, fileSize: go.UInt64);
+    function new(name: String="", type: go.debug.elf.SectionType=cast 0, flags: go.debug.elf.SectionFlag=cast 0, addr: go.UInt64=0, offset: go.UInt64=0, size: go.UInt64=0, link: go.UInt32=0, info: go.UInt32=0, addralign: go.UInt64=0, entsize: go.UInt64=0, fileSize: go.UInt64=0);
 
 }

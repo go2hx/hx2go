@@ -7,6 +7,6 @@ extern class LessSwap {
     @:native("Less") var less: (i: go.GoInt, j: go.GoInt) -> (Bool);
     @:native("Swap") var swap: (i: go.GoInt, j: go.GoInt) -> Void;
 
-    function new(less: (i: go.GoInt, j: go.GoInt) -> (Bool), swap: (i: go.GoInt, j: go.GoInt) -> Void);
+    function new(less: (i: go.GoInt, j: go.GoInt) -> (Bool)=null, swap: (i: go.GoInt, j: go.GoInt) -> Void=null);
 
 }

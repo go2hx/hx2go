@@ -16,6 +16,6 @@ extern class RtMetrics {
     @:native("Pksent") var pksent: go.UInt32;
     @:native("Filler") var filler: go.GoArray<go.UInt32, 4>;
 
-    function new(locks: go.UInt32, mtu: go.UInt32, hopcount: go.UInt32, expire: go.Int32, recvpipe: go.UInt32, sendpipe: go.UInt32, ssthresh: go.UInt32, rtt: go.UInt32, rttvar: go.UInt32, pksent: go.UInt32, filler: go.GoArray<go.UInt32, 4>);
+    function new(locks: go.UInt32=0, mtu: go.UInt32=0, hopcount: go.UInt32=0, expire: go.Int32=0, recvpipe: go.UInt32=0, sendpipe: go.UInt32=0, ssthresh: go.UInt32=0, rtt: go.UInt32=0, rttvar: go.UInt32=0, pksent: go.UInt32=0, filler: go.GoArray<go.UInt32, 4>);
 
 }

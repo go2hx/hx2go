@@ -1,5 +1,8 @@
 package go.debug.macho;
 
+/**
+    An Nlist64 is a Mach-O 64-bit symbol table entry.
+**/
 @:structInit
 @:go.Type({ name: "Nlist64", instanceName: "macho.Nlist64", imports: ["debug/macho"] })
 extern class Nlist64 {
@@ -10,6 +13,6 @@ extern class Nlist64 {
     @:native("Desc") var desc: go.UInt16;
     @:native("Value") var value: go.UInt64;
 
-    function new(name: go.UInt32, type: go.UInt8, sect: go.UInt8, desc: go.UInt16, value: go.UInt64);
+    function new(name: go.UInt32=0, type: go.UInt8=0, sect: go.UInt8=0, desc: go.UInt16=0, value: go.UInt64=0);
 
 }

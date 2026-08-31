@@ -7,7 +7,7 @@ extern class DumpConn {
     @:native("Writer") var writer: go.io.Writer;
     @:native("Reader") var reader: go.io.Reader;
 
-    function new(writer: go.io.Writer, reader: go.io.Reader);
+    function new(writer: go.io.Writer=null, reader: go.io.Reader=null);
 
     @:native("Close") function close(): (go.Error);
     @:native("LocalAddr") function localAddr(): (go.net.Addr);

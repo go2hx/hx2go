@@ -8,6 +8,6 @@ extern class AnyMessage {
     @:native("Version") var version: go.UInt8;
     @:native("Type") var type: go.UInt8;
 
-    function new(msglen: go.UInt16, version: go.UInt8, type: go.UInt8);
+    function new(msglen: go.UInt16=0, version: go.UInt8=0, type: go.UInt8=0);
 
 }

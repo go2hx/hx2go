@@ -10,6 +10,6 @@ extern class BpfHdr {
     @:native("Hdrlen") var hdrlen: go.UInt16;
     @:native("Pad_cgo_0") var pad_cgo_0: go.GoArray<go.Byte, 2>;
 
-    function new(tstamp: go.syscall.Timeval32, caplen: go.UInt32, datalen: go.UInt32, hdrlen: go.UInt16, pad_cgo_0: go.GoArray<go.Byte, 2>);
+    function new(tstamp: go.syscall.Timeval32, caplen: go.UInt32=0, datalen: go.UInt32=0, hdrlen: go.UInt16=0, pad_cgo_0: go.GoArray<go.Byte, 2>);
 
 }

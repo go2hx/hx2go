@@ -17,6 +17,6 @@ extern class Http2http2Config {
     @:native("PermitProhibitedCipherSuites") var permitProhibitedCipherSuites: Bool;
     @:native("CountError") var countError: (errType: String) -> Void;
 
-    function new(maxConcurrentStreams: go.UInt32, strictMaxConcurrentRequests: Bool, maxDecoderHeaderTableSize: go.UInt32, maxEncoderHeaderTableSize: go.UInt32, maxReadFrameSize: go.UInt32, maxUploadBufferPerConnection: go.Int32, maxUploadBufferPerStream: go.Int32, sendPingTimeout: go.time.Duration, pingTimeout: go.time.Duration, writeByteTimeout: go.time.Duration, permitProhibitedCipherSuites: Bool, countError: (errType: String) -> Void);
+    function new(maxConcurrentStreams: go.UInt32=0, strictMaxConcurrentRequests: Bool=false, maxDecoderHeaderTableSize: go.UInt32=0, maxEncoderHeaderTableSize: go.UInt32=0, maxReadFrameSize: go.UInt32=0, maxUploadBufferPerConnection: go.Int32=0, maxUploadBufferPerStream: go.Int32=0, sendPingTimeout: go.time.Duration=cast 0, pingTimeout: go.time.Duration=cast 0, writeByteTimeout: go.time.Duration=cast 0, permitProhibitedCipherSuites: Bool=false, countError: (errType: String) -> Void=null);
 
 }

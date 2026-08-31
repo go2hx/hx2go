@@ -9,6 +9,6 @@ extern class EcPrivateKey {
     @:native("NamedCurveOID") var namedCurveOID: go.encoding.asn1.ObjectIdentifier;
     @:native("PublicKey") var publicKey: go.encoding.asn1.BitString;
 
-    function new(version: go.GoInt, privateKey: go.Slice<go.Byte>, namedCurveOID: go.encoding.asn1.ObjectIdentifier, publicKey: go.encoding.asn1.BitString);
+    function new(version: go.GoInt=0, privateKey: go.Slice<go.Byte>=null, namedCurveOID: go.encoding.asn1.ObjectIdentifier=null, publicKey: go.encoding.asn1.BitString);
 
 }

@@ -1,5 +1,8 @@
 package go.debug.pe;
 
+/**
+    Section provides access to PE COFF section.
+**/
 @:structInit
 @:go.Type({ name: "Section", instanceName: "pe.Section", imports: ["debug/pe"] })
 extern class Section {
@@ -18,9 +21,21 @@ extern class Section {
     @:native("NumberOfLineNumbers") var numberOfLineNumbers: go.UInt16;
     @:native("Characteristics") var characteristics: go.UInt32;
 
-    function new(sectionHeader: go.debug.pe.SectionHeader, relocs: go.Slice<go.debug.pe.Reloc>, readerAt: go.io.ReaderAt);
+    function new(sectionHeader: go.debug.pe.SectionHeader, relocs: go.Slice<go.debug.pe.Reloc>=null, readerAt: go.io.ReaderAt=null);
 
+    /**
+        Data reads and returns the contents of the PE section s.
+        
+        If s.Offset is 0, the section has no contents,
+        and Data will always return a non-nil error.
+    **/
     @:native("Data") function data(): (go.Result<go.Slice<go.Byte>>);
+    /**
+        Open returns a new ReadSeeker reading the PE section s.
+        
+        If s.Offset is 0, the section has no contents, and all calls
+        to the returned reader will return a non-nil error.
+    **/
     @:native("Open") function open(): (go.io.ReadSeeker);
     @:native("ReadAt") function readAt(p: go.Slice<go.Byte>, off: go.Int64): (go.Result<go.GoInt>);
 

@@ -1,5 +1,12 @@
 package go.io;
 
+/**
+    RuneReader is the interface that wraps the ReadRune method.
+    
+    ReadRune reads a single encoded Unicode character
+    and returns the rune and its size in bytes. If no character is
+    available, err will be set.
+**/
 @:go.Type({ name: "RuneReader", instanceName: "io.RuneReader", imports: ["io"] })
 extern typedef RuneReader = {
 

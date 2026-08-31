@@ -1,5 +1,8 @@
 package go.io;
 
+/**
+    An OffsetWriter maps writes at offset base to offset base+off in the underlying writer.
+**/
 @:structInit
 @:go.Type({ name: "OffsetWriter", instanceName: "io.OffsetWriter", imports: ["io"] })
 extern class OffsetWriter {

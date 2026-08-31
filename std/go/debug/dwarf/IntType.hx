@@ -1,5 +1,8 @@
 package go.debug.dwarf;
 
+/**
+    An IntType represents a signed integer type.
+**/
 @:structInit
 @:go.Type({ name: "IntType", instanceName: "dwarf.IntType", imports: ["debug/dwarf"] })
 extern class IntType {

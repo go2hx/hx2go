@@ -6,7 +6,7 @@ extern class BufWriter {
 
     @:native("Writer") var writer: go.Pointer<go.bufio.Writer>;
 
-    function new(writer: go.Pointer<go.bufio.Writer>);
+    function new(writer: go.Pointer<go.bufio.Writer>=null);
 
     @:native("Available") function available(): (go.GoInt);
     @:native("AvailableBuffer") function availableBuffer(): (go.Slice<go.Byte>);

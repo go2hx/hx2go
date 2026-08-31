@@ -1,5 +1,8 @@
 package go.io;
 
+/**
+    ReadCloser is the interface that groups the basic Read and Close methods.
+**/
 @:go.Type({ name: "ReadCloser", instanceName: "io.ReadCloser", imports: ["io"] })
 extern typedef ReadCloser = {
 

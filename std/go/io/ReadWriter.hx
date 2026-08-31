@@ -1,5 +1,8 @@
 package go.io;
 
+/**
+    ReadWriter is the interface that groups the basic Read and Write methods.
+**/
 @:go.Type({ name: "ReadWriter", instanceName: "io.ReadWriter", imports: ["io"] })
 extern typedef ReadWriter = {
 

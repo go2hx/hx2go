@@ -6,7 +6,7 @@ extern class LoggingConn {
 
     @:native("Conn") var conn: go.net.Conn;
 
-    function new(conn: go.net.Conn);
+    function new(conn: go.net.Conn=null);
 
     @:native("Close") function close(): (go.Error);
     @:native("LocalAddr") function localAddr(): (go.net.Addr);

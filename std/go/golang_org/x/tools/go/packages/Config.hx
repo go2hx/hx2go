@@ -1,5 +1,11 @@
 package go.golang_org.x.tools.go.packages;
 
+/**
+    A Config specifies details about how packages should be loaded.
+    The zero value is a valid configuration.
+    
+    Calls to [Load] do not modify this struct.
+**/
 @:structInit
 @:go.Type({ name: "Config", instanceName: "packages.Config", imports: ["golang.org/x/tools/go/packages"] })
 extern class Config {
@@ -15,6 +21,6 @@ extern class Config {
     @:native("Tests") var tests: Bool;
     @:native("Overlay") var overlay: go.Map<String, go.Slice<go.Byte>>;
 
-    function new(mode: go.golang_org.x.tools.go.packages.LoadMode, context: go.context.Context, logf: (format: String, args: haxe.Rest<Dynamic>) -> Void, dir: String, env: go.Slice<String>, buildFlags: go.Slice<String>, fset: go.Pointer<go.go.token.FileSet>, parseFile: (fset: go.Pointer<go.go.token.FileSet>, filename: String, src: go.Slice<go.Byte>) -> (go.Result<go.Pointer<go.go.ast.File>>), tests: Bool, overlay: go.Map<String, go.Slice<go.Byte>>);
+    function new(mode: go.golang_org.x.tools.go.packages.LoadMode=cast 0, context: go.context.Context=null, logf: (format: String, args: haxe.Rest<Dynamic>) -> Void=null, dir: String="", env: go.Slice<String>=null, buildFlags: go.Slice<String>=null, fset: go.Pointer<go.go.token.FileSet>=null, parseFile: (fset: go.Pointer<go.go.token.FileSet>, filename: String, src: go.Slice<go.Byte>) -> (go.Result<go.Pointer<go.go.ast.File>>)=null, tests: Bool=false, overlay: go.Map<String, go.Slice<go.Byte>>=null);
 
 }

@@ -1,5 +1,10 @@
 package go.fmt;
 
+/**
+    ScanState represents the scanner state passed to custom scanners.
+    Scanners may do rune-at-a-time scanning or ask the ScanState
+    to discover the next space-delimited token.
+**/
 @:go.Type({ name: "ScanState", instanceName: "fmt.ScanState", imports: ["fmt"] })
 extern typedef ScanState = {
 

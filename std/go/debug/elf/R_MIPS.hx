@@ -1,5 +1,8 @@
 package go.debug.elf;
 
+/**
+    Relocation types for MIPS.
+**/
 @:go.Type({ name: "R_MIPS", instanceName: "elf.R_MIPS", imports: ["debug/elf"] })
 extern typedef R_MIPS = haxe.extern.EitherType<go.GoInt, {
     @:native("GoString") function goString(): (String);

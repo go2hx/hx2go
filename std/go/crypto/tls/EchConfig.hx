@@ -14,6 +14,6 @@ extern class EchConfig {
     @:native("PublicName") var publicName: go.Slice<go.Byte>;
     @:native("Extensions") var extensions: go.Slice<go.crypto.tls.EchExtension>;
 
-    function new(version: go.UInt16, length: go.UInt16, configID: go.UInt8, kemID: go.UInt16, publicKey: go.Slice<go.Byte>, symmetricCipherSuite: go.Slice<go.crypto.tls.EchCipher>, maxNameLength: go.UInt8, publicName: go.Slice<go.Byte>, extensions: go.Slice<go.crypto.tls.EchExtension>);
+    function new(version: go.UInt16=0, length: go.UInt16=0, configID: go.UInt8=0, kemID: go.UInt16=0, publicKey: go.Slice<go.Byte>=null, symmetricCipherSuite: go.Slice<go.crypto.tls.EchCipher>=null, maxNameLength: go.UInt8=0, publicName: go.Slice<go.Byte>=null, extensions: go.Slice<go.crypto.tls.EchExtension>=null);
 
 }

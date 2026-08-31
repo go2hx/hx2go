@@ -1,5 +1,8 @@
 package go.text.template.parse;
 
+/**
+    WithNode represents a {{with}} action and its commands.
+**/
 @:structInit
 @:go.Type({ name: "WithNode", instanceName: "parse.WithNode", imports: ["text/template/parse"] })
 extern class WithNode {

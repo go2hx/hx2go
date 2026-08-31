@@ -28,7 +28,7 @@ extern class TransportRequest {
     @:native("Response") var response: go.Pointer<go.net.http.Response>;
     @:native("Pattern") var pattern: String;
 
-    function new(request: go.Pointer<go.net.http.Request>);
+    function new(request: go.Pointer<go.net.http.Request>=null);
 
     @:native("AddCookie") function addCookie(c: go.Pointer<go.net.http.Cookie>): Void;
     @:go.Tuple("username", "password", "ok") @:native("BasicAuth") function basicAuth(): (go.Tuple<{ username: String, password: String, ok: Bool }>);

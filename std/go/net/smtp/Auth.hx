@@ -1,5 +1,8 @@
 package go.net.smtp;
 
+/**
+    Auth is implemented by an SMTP authentication mechanism.
+**/
 @:go.Type({ name: "Auth", instanceName: "smtp.Auth", imports: ["net/smtp"] })
 extern typedef Auth = {
 

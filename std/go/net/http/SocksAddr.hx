@@ -8,7 +8,7 @@ extern class SocksAddr {
     @:native("IP") var IP: go.net.IP;
     @:native("Port") var port: go.GoInt;
 
-    function new(name: String, IP: go.net.IP, port: go.GoInt);
+    function new(name: String="", IP: go.net.IP=null, port: go.GoInt=0);
 
     @:native("Network") function network(): (String);
     @:native("String") function string(): (String);

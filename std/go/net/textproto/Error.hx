@@ -1,5 +1,8 @@
 package go.net.textproto;
 
+/**
+    An Error represents a numeric error response from a server.
+**/
 @:structInit
 @:go.Type({ name: "Error", instanceName: "textproto.Error", imports: ["net/textproto"] })
 extern class Error {
@@ -7,7 +10,7 @@ extern class Error {
     @:native("Code") var code: go.GoInt;
     @:native("Msg") var msg: String;
 
-    function new(code: go.GoInt, msg: String);
+    function new(code: go.GoInt=0, msg: String="");
 
     @:native("Error") function error(): (String);
 

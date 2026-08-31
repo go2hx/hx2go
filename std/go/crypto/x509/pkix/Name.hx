@@ -1,5 +1,11 @@
 package go.crypto.x509.pkix;
 
+/**
+    Name represents an X.509 distinguished name. This only includes the common
+    elements of a DN. Note that Name is only an approximation of the X.509
+    structure. If an accurate representation is needed, asn1.Unmarshal the raw
+    subject or issuer as an [RDNSequence].
+**/
 @:structInit
 @:go.Type({ name: "Name", instanceName: "pkix.Name", imports: ["crypto/x509/pkix"] })
 extern class Name {
@@ -16,10 +22,33 @@ extern class Name {
     @:native("Names") var names: go.Slice<go.crypto.x509.pkix.AttributeTypeAndValue>;
     @:native("ExtraNames") var extraNames: go.Slice<go.crypto.x509.pkix.AttributeTypeAndValue>;
 
-    function new(country: go.Slice<String>, organization: go.Slice<String>, organizationalUnit: go.Slice<String>, locality: go.Slice<String>, province: go.Slice<String>, streetAddress: go.Slice<String>, postalCode: go.Slice<String>, serialNumber: String, commonName: String, names: go.Slice<go.crypto.x509.pkix.AttributeTypeAndValue>, extraNames: go.Slice<go.crypto.x509.pkix.AttributeTypeAndValue>);
+    function new(country: go.Slice<String>=null, organization: go.Slice<String>=null, organizationalUnit: go.Slice<String>=null, locality: go.Slice<String>=null, province: go.Slice<String>=null, streetAddress: go.Slice<String>=null, postalCode: go.Slice<String>=null, serialNumber: String="", commonName: String="", names: go.Slice<go.crypto.x509.pkix.AttributeTypeAndValue>=null, extraNames: go.Slice<go.crypto.x509.pkix.AttributeTypeAndValue>=null);
 
+    /**
+        FillFromRDNSequence populates n from the provided [RDNSequence].
+        Multi-entry RDNs are flattened, all entries are added to the
+        relevant n fields, and the grouping is not preserved.
+    **/
     @:native("FillFromRDNSequence") function fillFromRDNSequence(rdns: go.Pointer<go.crypto.x509.pkix.RDNSequence>): Void;
+    /**
+        String returns the string form of n, roughly following
+        the RFC 2253 Distinguished Names syntax.
+    **/
     @:native("String") function string(): (String);
+    /**
+        ToRDNSequence converts n into a single [RDNSequence]. The following
+        attributes are encoded as multi-value RDNs:
+        
+          - Country
+          - Organization
+          - OrganizationalUnit
+          - Locality
+          - Province
+          - StreetAddress
+          - PostalCode
+        
+        Each ExtraNames entry is encoded as an individual RDN.
+    **/
     @:native("ToRDNSequence") function toRDNSequence(): (go.crypto.x509.pkix.RDNSequence);
 
 }

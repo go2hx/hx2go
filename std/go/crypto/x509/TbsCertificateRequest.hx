@@ -10,6 +10,6 @@ extern class TbsCertificateRequest {
     @:native("PublicKey") var publicKey: go.crypto.x509.PublicKeyInfo;
     @:native("RawAttributes") var rawAttributes: go.Slice<go.encoding.asn1.RawValue>;
 
-    function new(raw: go.encoding.asn1.RawContent, version: go.GoInt, subject: go.encoding.asn1.RawValue, publicKey: go.crypto.x509.PublicKeyInfo, rawAttributes: go.Slice<go.encoding.asn1.RawValue>);
+    function new(raw: go.encoding.asn1.RawContent=null, version: go.GoInt=0, subject: go.encoding.asn1.RawValue, publicKey: go.crypto.x509.PublicKeyInfo, rawAttributes: go.Slice<go.encoding.asn1.RawValue>=null);
 
 }

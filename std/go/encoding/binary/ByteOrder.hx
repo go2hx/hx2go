@@ -1,5 +1,11 @@
 package go.encoding.binary;
 
+/**
+    A ByteOrder specifies how to convert byte slices into
+    16-, 32-, or 64-bit unsigned integers.
+    
+    It is implemented by [LittleEndian], [BigEndian], and [NativeEndian].
+**/
 @:go.Type({ name: "ByteOrder", instanceName: "binary.ByteOrder", imports: ["encoding/binary"] })
 extern typedef ByteOrder = {
 

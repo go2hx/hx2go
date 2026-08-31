@@ -1,5 +1,8 @@
 package go.hash;
 
+/**
+    Hash64 is the common interface implemented by all 64-bit hash functions.
+**/
 @:go.Type({ name: "Hash64", instanceName: "hash.Hash64", imports: ["hash"] })
 extern typedef Hash64 = {
 

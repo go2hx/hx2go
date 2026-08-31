@@ -7,7 +7,7 @@ extern class AtLeastReader {
     @:native("R") var R: go.io.Reader;
     @:native("N") var N: go.Int64;
 
-    function new(R: go.io.Reader, N: go.Int64);
+    function new(R: go.io.Reader=null, N: go.Int64=0);
 
     @:native("Read") function read(p: go.Slice<go.Byte>): (go.Result<go.GoInt>);
 

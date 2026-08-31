@@ -16,6 +16,6 @@ extern class TbsCertificate {
     @:native("SubjectUniqueId") var subjectUniqueId: go.encoding.asn1.BitString;
     @:native("Extensions") var extensions: go.Slice<go.crypto.x509.pkix.Extension>;
 
-    function new(raw: go.encoding.asn1.RawContent, version: go.GoInt, serialNumber: go.Pointer<go.math.big.Int>, signatureAlgorithm: go.crypto.x509.pkix.AlgorithmIdentifier, issuer: go.encoding.asn1.RawValue, validity: go.crypto.x509.Validity, subject: go.encoding.asn1.RawValue, publicKey: go.crypto.x509.PublicKeyInfo, uniqueId: go.encoding.asn1.BitString, subjectUniqueId: go.encoding.asn1.BitString, extensions: go.Slice<go.crypto.x509.pkix.Extension>);
+    function new(raw: go.encoding.asn1.RawContent=null, version: go.GoInt=0, serialNumber: go.Pointer<go.math.big.Int>=null, signatureAlgorithm: go.crypto.x509.pkix.AlgorithmIdentifier, issuer: go.encoding.asn1.RawValue, validity: go.crypto.x509.Validity, subject: go.encoding.asn1.RawValue, publicKey: go.crypto.x509.PublicKeyInfo, uniqueId: go.encoding.asn1.BitString, subjectUniqueId: go.encoding.asn1.BitString, extensions: go.Slice<go.crypto.x509.pkix.Extension>=null);
 
 }

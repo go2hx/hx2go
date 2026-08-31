@@ -1,5 +1,8 @@
 package go.database.sql.driver;
 
+/**
+    StmtQueryContext enhances the [Stmt] interface by providing Query with context.
+**/
 @:go.Type({ name: "StmtQueryContext", instanceName: "driver.StmtQueryContext", imports: ["database/sql/driver"] })
 extern typedef StmtQueryContext = {
 

@@ -10,6 +10,6 @@ extern class MapType {
     @:native("Name") var name: String;
     @:native("Id") var id: go.encoding.gob.TypeId;
 
-    function new(commonType: go.encoding.gob.CommonType, key: go.encoding.gob.TypeId, elem: go.encoding.gob.TypeId);
+    function new(commonType: go.encoding.gob.CommonType, key: go.encoding.gob.TypeId=cast 0, elem: go.encoding.gob.TypeId=cast 0);
 
 }

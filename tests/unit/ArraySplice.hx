@@ -8,4 +8,11 @@ function main() {
 	assert(a[0] == 1);
 	assert(a[1] == 3);
 	assert(a[2] == null);
+
+	var b = [-2, 0, 0, 2, 2, 0, 0, -2];
+	var bs = b.splice(6, 2);
+	assert(bs.length == 2);
+	assert(bs[0] == 0);
+	assert(bs[1] == -2);
+	assert(b.length == 6);
 }

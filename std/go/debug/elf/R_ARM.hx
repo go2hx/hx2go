@@ -1,5 +1,8 @@
 package go.debug.elf;
 
+/**
+    Relocation types for ARM.
+**/
 @:go.Type({ name: "R_ARM", instanceName: "elf.R_ARM", imports: ["debug/elf"] })
 extern typedef R_ARM = haxe.extern.EitherType<go.GoInt, {
     @:native("GoString") function goString(): (String);

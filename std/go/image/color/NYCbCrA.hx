@@ -1,5 +1,9 @@
 package go.image.color;
 
+/**
+    NYCbCrA represents a non-alpha-premultiplied Y'CbCr-with-alpha color, having
+    8 bits each for one luma, two chroma and one alpha component.
+**/
 @:structInit
 @:go.Type({ name: "NYCbCrA", instanceName: "color.NYCbCrA", imports: ["image/color"] })
 extern class NYCbCrA {
@@ -10,7 +14,7 @@ extern class NYCbCrA {
     @:native("Cb") var cb: go.UInt8;
     @:native("Cr") var cr: go.UInt8;
 
-    function new(yCbCr: go.image.color.YCbCr, A: go.UInt8);
+    function new(yCbCr: go.image.color.YCbCr, A: go.UInt8=0);
 
     @:go.Tuple("p0", "p1", "p2", "p3") @:native("RGBA") function RGBA(): (go.Tuple<{ p0: go.UInt32, p1: go.UInt32, p2: go.UInt32, p3: go.UInt32 }>);
 

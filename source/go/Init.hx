@@ -17,6 +17,9 @@ class Init {
 	// --macro go.Init.addStd()
 	public static function addStd() {
 		if (!Context.defined("custom-target")) {
+			if (getGoLibs().length > 0) {
+				Context.warning("-D go-lib has no effect outside the Go target", Context.currentPos());
+			}
 			return;
 		}
 		var self = Context.resolvePath("go/Init.hx");
@@ -51,14 +54,21 @@ class Init {
 				builtLibs = libraries;
 				return;
 			}
-			var code = Sys.command('haxelib', ['dev', 'hx2go-extern', Path.join([path, "hx2go-extern"])]);
-			if (code != 0)
-				Sys.exit(code);
-			var args = [];
-			if (forceRebuild) {
-				args.push("rebuild");
+			var externDir = Path.join([path, "hx2go-extern"]);
+			if (!FileSystem.exists(externDir)) {
+				fail('hx2go-extern submodule not found at $externDir — run: git submodule update --init hx2go-extern');
 			}
-			code = Sys.command('haxelib', ['run', 'hx2go-extern'].concat(args).concat(libraries).concat([librariesOutput]));
+			var bin = Path.join([externDir, "output/main", executable("main")]);
+			if (!FileSystem.exists(bin) || forceRebuild) {
+				Sys.println("Building hx2go-extern...");
+				var oldCwd = Sys.getCwd();
+				Sys.setCwd(externDir);
+				var code = Sys.command("haxe", ["Compile.hxml"]);
+				Sys.setCwd(oldCwd);
+				if (code != 0)
+					Sys.exit(code);
+			}
+			var code = Sys.command(bin, libraries.concat([librariesOutput, Sys.getCwd()]));
 			if (code != 0)
 				Sys.exit(code);
 			File.saveContent(libCachePath, libCache);
@@ -306,6 +316,26 @@ class Init {
 		Compiler.registerCustomMetadata({
 			metadata: "go.Export",
 			doc: "",
+		});
+		Compiler.registerCustomMetadata({
+			metadata: "go.Tag",
+			doc: "Go struct tag",
+			platforms: [CustomTarget("go")],
+		});
+		Compiler.registerCustomMetadata({
+			metadata: "tag",
+			doc: "Go struct tag",
+			platforms: [CustomTarget("go")],
+		});
+		Compiler.registerCustomMetadata({
+			metadata: "go.VTableTag",
+			doc: "Go struct tag on VTable field",
+			platforms: [CustomTarget("go")],
+		});
+		Compiler.registerCustomMetadata({
+			metadata: "vtableTag",
+			doc: "Go struct tag on VTable field",
+			platforms: [CustomTarget("go")],
 		});
 	}
 

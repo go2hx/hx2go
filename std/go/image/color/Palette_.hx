@@ -1,9 +1,32 @@
 package go.image.color;
 
+/**
+    Package palette provides standard color palettes.
+**/
 @:go.Type({ name: "palette", instanceName: "palette.palette", imports: ["image/color/palette"] })
 extern class Palette_ {
 
+    /**
+        Plan9 is a 256-color palette that partitions the 24-bit RGB space
+        into 4×4×4 subdivision, with 4 shades in each subcube. Compared to the
+        [WebSafe], the idea is to reduce the color resolution by dicing the
+        color cube into fewer cells, and to use the extra space to increase the
+        intensity resolution. This results in 16 gray shades (4 gray subcubes with
+        4 samples in each), 13 shades of each primary and secondary color (3
+        subcubes with 4 samples plus black) and a reasonable selection of colors
+        covering the rest of the color cube. The advantage is better representation
+        of continuous tones.
+        
+        This palette was used in the Plan 9 Operating System, described at
+        https://9p.io/magic/man2html/6/color
+    **/
     @:native("Plan9") static var plan9: go.Slice<go.image.color.Color>;
+    /**
+        WebSafe is a 216-color palette that was popularized by early versions
+        of Netscape Navigator. It is also known as the Netscape Color Cube.
+        
+        See https://en.wikipedia.org/wiki/Web_colors#Web-safe_colors for details.
+    **/
     @:native("WebSafe") static var webSafe: go.Slice<go.image.color.Color>;
 
 }

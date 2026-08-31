@@ -1,5 +1,8 @@
 package go.debug.macho;
 
+/**
+    A Segment32 is a 32-bit Mach-O segment load command.
+**/
 @:structInit
 @:go.Type({ name: "Segment32", instanceName: "macho.Segment32", imports: ["debug/macho"] })
 extern class Segment32 {
@@ -16,6 +19,6 @@ extern class Segment32 {
     @:native("Nsect") var nsect: go.UInt32;
     @:native("Flag") var flag: go.UInt32;
 
-    function new(cmd: go.debug.macho.LoadCmd, len: go.UInt32, name: go.GoArray<go.Byte, 16>, addr: go.UInt32, memsz: go.UInt32, offset: go.UInt32, filesz: go.UInt32, maxprot: go.UInt32, prot: go.UInt32, nsect: go.UInt32, flag: go.UInt32);
+    function new(cmd: go.debug.macho.LoadCmd=cast 0, len: go.UInt32=0, name: go.GoArray<go.Byte, 16>, addr: go.UInt32=0, memsz: go.UInt32=0, offset: go.UInt32=0, filesz: go.UInt32=0, maxprot: go.UInt32=0, prot: go.UInt32=0, nsect: go.UInt32=0, flag: go.UInt32=0);
 
 }

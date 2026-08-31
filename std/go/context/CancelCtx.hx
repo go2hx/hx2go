@@ -6,7 +6,7 @@ extern class CancelCtx {
 
     @:native("Context") var context: go.context.Context;
 
-    function new(context: go.context.Context);
+    function new(context: go.context.Context=null);
 
     @:go.Tuple("deadline", "ok") @:native("Deadline") function deadline(): (go.Tuple<{ deadline: go.time.Time, ok: Bool }>);
     @:native("Done") function done(): (go.Chan<Dynamic>);

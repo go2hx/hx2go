@@ -7,6 +7,6 @@ extern class RelocInfo {
     @:native("Addr") var addr: go.UInt32;
     @:native("Symnum") var symnum: go.UInt32;
 
-    function new(addr: go.UInt32, symnum: go.UInt32);
+    function new(addr: go.UInt32=0, symnum: go.UInt32=0);
 
 }

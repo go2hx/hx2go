@@ -1,5 +1,8 @@
 package go.text.template.parse;
 
+/**
+    CommandNode holds a command (a pipeline inside an evaluating action).
+**/
 @:structInit
 @:go.Type({ name: "CommandNode", instanceName: "parse.CommandNode", imports: ["text/template/parse"] })
 extern class CommandNode {
@@ -8,7 +11,7 @@ extern class CommandNode {
     @:native("Pos") var pos: go.text.template.parse.Pos;
     @:native("Args") var args: go.Slice<go.text.template.parse.Node>;
 
-    function new(nodeType: go.text.template.parse.NodeType, pos: go.text.template.parse.Pos, args: go.Slice<go.text.template.parse.Node>);
+    function new(nodeType: go.text.template.parse.NodeType=cast 0, pos: go.text.template.parse.Pos=cast 0, args: go.Slice<go.text.template.parse.Node>=null);
 
     @:native("Copy") function copy(): (go.text.template.parse.Node);
     @:native("Position") function position(): (go.text.template.parse.Pos);

@@ -12,7 +12,7 @@ extern class ParseDoc {
     @:native("Content") var content: go.Slice<go.go.doc.comment.Block>;
     @:native("Links") var links: go.Slice<go.Pointer<go.go.doc.comment.LinkDef>>;
 
-    function new(parser: go.Pointer<go.go.doc.comment.Parser>, doc: go.Pointer<go.go.doc.comment.Doc>);
+    function new(parser: go.Pointer<go.go.doc.comment.Parser>=null, doc: go.Pointer<go.go.doc.comment.Doc>=null);
 
     @:native("Parse") function parse(text: String): (go.Pointer<go.go.doc.comment.Doc>);
 

@@ -1,5 +1,8 @@
 package go.go.ast;
 
+/**
+    An InterfaceType node represents an interface type.
+**/
 @:structInit
 @:go.Type({ name: "InterfaceType", instanceName: "ast.InterfaceType", imports: ["go/ast"] })
 extern class InterfaceType {
@@ -8,7 +11,7 @@ extern class InterfaceType {
     @:native("Methods") var methods: go.Pointer<go.go.ast.FieldList>;
     @:native("Incomplete") var incomplete: Bool;
 
-    function new(_interface: go.go.token.Pos, methods: go.Pointer<go.go.ast.FieldList>, incomplete: Bool);
+    function new(_interface: go.go.token.Pos=cast 0, methods: go.Pointer<go.go.ast.FieldList>=null, incomplete: Bool=false);
 
     @:native("End") function end(): (go.go.token.Pos);
     @:native("Pos") function pos(): (go.go.token.Pos);

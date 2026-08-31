@@ -7,6 +7,6 @@ extern class SerializedFileSet {
     @:native("Base") var base: go.GoInt;
     @:native("Files") var files: go.Slice<go.go.token.SerializedFile>;
 
-    function new(base: go.GoInt, files: go.Slice<go.go.token.SerializedFile>);
+    function new(base: go.GoInt=0, files: go.Slice<go.go.token.SerializedFile>=null);
 
 }

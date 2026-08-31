@@ -6,6 +6,6 @@ extern class Http2OpenStreamOptions {
 
     @:native("PusherID") var pusherID: go.UInt32;
 
-    function new(pusherID: go.UInt32);
+    function new(pusherID: go.UInt32=0);
 
 }

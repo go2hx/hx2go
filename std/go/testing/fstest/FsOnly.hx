@@ -6,7 +6,7 @@ extern class FsOnly {
 
     @:native("FS") var FS: go.io.fs.FS;
 
-    function new(FS: go.io.fs.FS);
+    function new(FS: go.io.fs.FS=null);
 
     @:native("Open") function open(name: String): (go.Result<go.io.fs.File>);
 

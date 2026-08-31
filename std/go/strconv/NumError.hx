@@ -1,5 +1,8 @@
 package go.strconv;
 
+/**
+    A NumError records a failed conversion.
+**/
 @:structInit
 @:go.Type({ name: "NumError", instanceName: "strconv.NumError", imports: ["strconv"] })
 extern class NumError {
@@ -8,7 +11,7 @@ extern class NumError {
     @:native("Num") var num: String;
     @:native("Err") var err: go.Error;
 
-    function new(func: String, num: String, err: go.Error);
+    function new(func: String="", num: String="", err: go.Error=null);
 
     @:native("Error") function error(): (String);
     @:native("Unwrap") function unwrap(): (go.Error);

@@ -6,7 +6,7 @@ extern class TcpConnWithoutReadFrom {
 
     @:native("TCPConn") var tCPConn: go.Pointer<go.net.TCPConn>;
 
-    function new(tCPConn: go.Pointer<go.net.TCPConn>);
+    function new(tCPConn: go.Pointer<go.net.TCPConn>=null);
 
     @:native("Close") function close(): (go.Error);
     @:native("CloseRead") function closeRead(): (go.Error);

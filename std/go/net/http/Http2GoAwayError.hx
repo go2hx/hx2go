@@ -8,7 +8,7 @@ extern class Http2GoAwayError {
     @:native("ErrCode") var errCode: go.net.http.Http2ErrCode;
     @:native("DebugData") var debugData: String;
 
-    function new(lastStreamID: go.UInt32, errCode: go.net.http.Http2ErrCode, debugData: String);
+    function new(lastStreamID: go.UInt32=0, errCode: go.net.http.Http2ErrCode=cast 0, debugData: String="");
 
     @:native("Error") function error(): (String);
 

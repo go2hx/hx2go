@@ -1,5 +1,8 @@
 package go.io;
 
+/**
+    ByteWriter is the interface that wraps the WriteByte method.
+**/
 @:go.Type({ name: "ByteWriter", instanceName: "io.ByteWriter", imports: ["io"] })
 extern typedef ByteWriter = {
 

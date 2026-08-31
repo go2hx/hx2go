@@ -1,5 +1,8 @@
 package go.debug.dwarf;
 
+/**
+    A UcharType represents an unsigned character type.
+**/
 @:structInit
 @:go.Type({ name: "UcharType", instanceName: "dwarf.UcharType", imports: ["debug/dwarf"] })
 extern class UcharType {

@@ -13,6 +13,6 @@ extern class SockaddrDatalink {
     @:native("Slen") var slen: go.UInt8;
     @:native("Data") var data: go.GoArray<go.Int8, 12>;
 
-    function new(len: go.UInt8, family: go.UInt8, index: go.UInt16, type: go.UInt8, nlen: go.UInt8, alen: go.UInt8, slen: go.UInt8, data: go.GoArray<go.Int8, 12>);
+    function new(len: go.UInt8=0, family: go.UInt8=0, index: go.UInt16=0, type: go.UInt8=0, nlen: go.UInt8=0, alen: go.UInt8=0, slen: go.UInt8=0, data: go.GoArray<go.Int8, 12>);
 
 }

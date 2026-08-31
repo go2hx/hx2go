@@ -1,5 +1,9 @@
 package go.crypto.x509;
 
+/**
+    HostnameError results when the set of authorized names doesn't match the
+    requested name.
+**/
 @:structInit
 @:go.Type({ name: "HostnameError", instanceName: "x509.HostnameError", imports: ["crypto/x509"] })
 extern class HostnameError {
@@ -7,7 +11,7 @@ extern class HostnameError {
     @:native("Certificate") var certificate: go.Pointer<go.crypto.x509.Certificate>;
     @:native("Host") var host: String;
 
-    function new(certificate: go.Pointer<go.crypto.x509.Certificate>, host: String);
+    function new(certificate: go.Pointer<go.crypto.x509.Certificate>=null, host: String="");
 
     @:native("Error") function error(): (String);
 

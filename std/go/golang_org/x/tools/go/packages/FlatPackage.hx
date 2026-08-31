@@ -17,6 +17,6 @@ extern class FlatPackage {
     @:native("ExportFile") var exportFile: String;
     @:native("Imports") var imports: go.Map<String, String>;
 
-    function new(ID: String, name: String, pkgPath: String, errors: go.Slice<go.golang_org.x.tools.go.packages.Error>, goFiles: go.Slice<String>, compiledGoFiles: go.Slice<String>, otherFiles: go.Slice<String>, embedFiles: go.Slice<String>, embedPatterns: go.Slice<String>, ignoredFiles: go.Slice<String>, exportFile: String, imports: go.Map<String, String>);
+    function new(ID: String="", name: String="", pkgPath: String="", errors: go.Slice<go.golang_org.x.tools.go.packages.Error>=null, goFiles: go.Slice<String>=null, compiledGoFiles: go.Slice<String>=null, otherFiles: go.Slice<String>=null, embedFiles: go.Slice<String>=null, embedPatterns: go.Slice<String>=null, ignoredFiles: go.Slice<String>=null, exportFile: String="", imports: go.Map<String, String>=null);
 
 }

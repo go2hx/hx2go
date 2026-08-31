@@ -46,7 +46,7 @@ class Reflect {
         }
 
         var kind = value.kind();
-        if (kind == go.Reflect.Ptr || kind == go.Reflect.Interface) {
+        if (kind == go.Reflect.ptr || kind == go.Reflect._interface) {
             if (value.isNil()) {
                 return [];
             }
@@ -55,12 +55,12 @@ class Reflect {
             kind = value.kind();
         }
 
-        if (kind == go.Reflect.Map) {
+        if (kind == go.Reflect.map) {
             var keys = value.mapKeys();
             return keys.toArray().map(k -> Std.string(k));
         }
 
-        if (kind == go.Reflect.Struct) {
+        if (kind == go.Reflect.struct) {
             return Type.getInstanceFields(Type.getClass(o));
         }
 
@@ -70,7 +70,7 @@ class Reflect {
     public static function isFunction(f: Dynamic): Bool {
         if (f == null)
             return false;
-        return go.Reflect.typeOf(f).kind() == go.Reflect.Func;
+        return go.Reflect.typeOf(f).kind() == go.Reflect.func;
     }
 
     public static function compare<T>(a: T, b: T): Int {
@@ -96,7 +96,7 @@ class Reflect {
         }
 
         var kind = value.kind();
-        if (kind == go.Reflect.Ptr || kind == go.Reflect.Interface) {
+        if (kind == go.Reflect.ptr || kind == go.Reflect._interface) {
             if (value.isNil()) {
                 return false;
             }
@@ -106,7 +106,7 @@ class Reflect {
         }
 
         var type = value.type();
-        return (kind == go.Reflect.String) || (kind == go.Reflect.Struct) || (kind == go.Reflect.Map && type.key().kind() == go.Reflect.String && type.elem().kind() == go.Reflect.Interface);
+        return (kind == go.Reflect.string) || (kind == go.Reflect.struct) || (kind == go.Reflect.map && type.key().kind() == go.Reflect.string && type.elem().kind() == go.Reflect._interface);
     }
 
     public static function isEnumValue(v: Dynamic): Bool {
@@ -128,7 +128,7 @@ class Reflect {
         }
 
         var kind = value.kind();
-        if (kind == go.Reflect.Ptr || kind == go.Reflect.Interface) {
+        if (kind == go.Reflect.ptr || kind == go.Reflect._interface) {
             if (value.isNil()) {
                 return false;
             }
@@ -137,9 +137,9 @@ class Reflect {
             kind = value.kind();
         }
 
-        if (kind == go.Reflect.Map) {
+        if (kind == go.Reflect.map) {
             var kt = value.type().key();
-            if (kt.kind() != go.Reflect.String) {
+            if (kt.kind() != go.Reflect.string) {
                 return false;
             }
 
@@ -159,7 +159,7 @@ class Reflect {
         }
 
         var kind = value.kind();
-        if (kind == go.Reflect.Ptr || kind == go.Reflect.Interface) {
+        if (kind == go.Reflect.ptr || kind == go.Reflect._interface) {
             if (value.isNil()) {
                 return null;
             }
@@ -168,9 +168,9 @@ class Reflect {
             kind = value.kind();
         }
 
-        if (kind == go.Reflect.Map) {
+        if (kind == go.Reflect.map) {
             var mt = value.type();
-            if (mt.key().kind() != go.Reflect.String || mt.elem().kind() != go.Reflect.Interface) {
+            if (mt.key().kind() != go.Reflect.string || mt.elem().kind() != go.Reflect._interface) {
                 return null;
             }
 

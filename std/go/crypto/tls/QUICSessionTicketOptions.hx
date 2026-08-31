@@ -7,6 +7,6 @@ extern class QUICSessionTicketOptions {
     @:native("EarlyData") var earlyData: Bool;
     @:native("Extra") var extra: go.Slice<go.Slice<go.Byte>>;
 
-    function new(earlyData: Bool, extra: go.Slice<go.Slice<go.Byte>>);
+    function new(earlyData: Bool=false, extra: go.Slice<go.Slice<go.Byte>>=null);
 
 }

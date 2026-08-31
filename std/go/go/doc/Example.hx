@@ -1,5 +1,8 @@
 package go.go.doc;
 
+/**
+    An Example represents an example function found in a test source file.
+**/
 @:structInit
 @:go.Type({ name: "Example", instanceName: "doc.Example", imports: ["go/doc"] })
 extern class Example {
@@ -15,6 +18,6 @@ extern class Example {
     @:native("EmptyOutput") var emptyOutput: Bool;
     @:native("Order") var order: go.GoInt;
 
-    function new(name: String, suffix: String, doc: String, code: go.go.ast.Node, play: go.Pointer<go.go.ast.File>, comments: go.Slice<go.Pointer<go.go.ast.CommentGroup>>, output: String, unordered: Bool, emptyOutput: Bool, order: go.GoInt);
+    function new(name: String="", suffix: String="", doc: String="", code: go.go.ast.Node=null, play: go.Pointer<go.go.ast.File>=null, comments: go.Slice<go.Pointer<go.go.ast.CommentGroup>>=null, output: String="", unordered: Bool=false, emptyOutput: Bool=false, order: go.GoInt=0);
 
 }

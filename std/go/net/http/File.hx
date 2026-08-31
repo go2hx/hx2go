@@ -1,5 +1,11 @@
 package go.net.http;
 
+/**
+    A File is returned by a [FileSystem]'s Open method and can be
+    served by the [FileServer] implementation.
+    
+    The methods should behave the same as those on an [*os.File].
+**/
 @:go.Type({ name: "File", instanceName: "http.File", imports: ["net/http"] })
 extern typedef File = {
 

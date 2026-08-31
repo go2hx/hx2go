@@ -4,6 +4,6 @@ package go.go.types;
 @:go.Type({ name: "term", instanceName: "types.term", imports: ["go/types"] })
 extern class Term_ {
 
-    @:native("String") function string(): (String);
+    @:native("String") function string(): (std.String);
 
 }

@@ -1,5 +1,8 @@
 package go.go.ast;
 
+/**
+    A CompositeLit node represents a composite literal.
+**/
 @:structInit
 @:go.Type({ name: "CompositeLit", instanceName: "ast.CompositeLit", imports: ["go/ast"] })
 extern class CompositeLit {
@@ -10,7 +13,7 @@ extern class CompositeLit {
     @:native("Rbrace") var rbrace: go.go.token.Pos;
     @:native("Incomplete") var incomplete: Bool;
 
-    function new(type: go.go.ast.Expr, lbrace: go.go.token.Pos, elts: go.Slice<go.go.ast.Expr>, rbrace: go.go.token.Pos, incomplete: Bool);
+    function new(type: go.go.ast.Expr=null, lbrace: go.go.token.Pos=cast 0, elts: go.Slice<go.go.ast.Expr>=null, rbrace: go.go.token.Pos=cast 0, incomplete: Bool=false);
 
     @:native("End") function end(): (go.go.token.Pos);
     @:native("Pos") function pos(): (go.go.token.Pos);

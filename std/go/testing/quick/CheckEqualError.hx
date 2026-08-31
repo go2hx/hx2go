@@ -1,5 +1,8 @@
 package go.testing.quick;
 
+/**
+    A CheckEqualError is the result [CheckEqual] finding an error.
+**/
 @:structInit
 @:go.Type({ name: "CheckEqualError", instanceName: "quick.CheckEqualError", imports: ["testing/quick"] })
 extern class CheckEqualError {
@@ -10,7 +13,7 @@ extern class CheckEqualError {
     @:native("Count") var count: go.GoInt;
     @:native("In") var _in: go.Slice<Dynamic>;
 
-    function new(checkError: go.testing.quick.CheckError, out1: go.Slice<Dynamic>, out2: go.Slice<Dynamic>);
+    function new(checkError: go.testing.quick.CheckError, out1: go.Slice<Dynamic>=null, out2: go.Slice<Dynamic>=null);
 
     @:native("Error") function error(): (String);
 

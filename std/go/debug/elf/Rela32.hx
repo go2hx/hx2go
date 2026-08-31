@@ -1,5 +1,8 @@
 package go.debug.elf;
 
+/**
+    ELF32 Relocations that need an addend field.
+**/
 @:structInit
 @:go.Type({ name: "Rela32", instanceName: "elf.Rela32", imports: ["debug/elf"] })
 extern class Rela32 {
@@ -8,6 +11,6 @@ extern class Rela32 {
     @:native("Info") var info: go.UInt32;
     @:native("Addend") var addend: go.Int32;
 
-    function new(off: go.UInt32, info: go.UInt32, addend: go.Int32);
+    function new(off: go.UInt32=0, info: go.UInt32=0, addend: go.Int32=0);
 
 }

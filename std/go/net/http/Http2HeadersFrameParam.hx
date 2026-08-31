@@ -11,6 +11,6 @@ extern class Http2HeadersFrameParam {
     @:native("PadLength") var padLength: go.UInt8;
     @:native("Priority") var priority: go.net.http.Http2PriorityParam;
 
-    function new(streamID: go.UInt32, blockFragment: go.Slice<go.Byte>, endStream: Bool, endHeaders: Bool, padLength: go.UInt8, priority: go.net.http.Http2PriorityParam);
+    function new(streamID: go.UInt32=0, blockFragment: go.Slice<go.Byte>=null, endStream: Bool=false, endHeaders: Bool=false, padLength: go.UInt8=0, priority: go.net.http.Http2PriorityParam);
 
 }

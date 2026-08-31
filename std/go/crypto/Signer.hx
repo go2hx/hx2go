@@ -1,5 +1,9 @@
 package go.crypto;
 
+/**
+    Signer is an interface for an opaque private key that can be used for
+    signing operations. For example, an RSA key kept in a hardware module.
+**/
 @:go.Type({ name: "Signer", instanceName: "crypto.Signer", imports: ["crypto"] })
 extern typedef Signer = {
 

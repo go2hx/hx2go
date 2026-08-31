@@ -13,7 +13,7 @@ extern class CommentPrinter {
     @:native("TextCodePrefix") var textCodePrefix: String;
     @:native("TextWidth") var textWidth: go.GoInt;
 
-    function new(printer: go.Pointer<go.go.doc.comment.Printer>);
+    function new(printer: go.Pointer<go.go.doc.comment.Printer>=null);
 
     @:native("Comment") function comment(d: go.Pointer<go.go.doc.comment.Doc>): (go.Slice<go.Byte>);
     @:native("HTML") function HTML(d: go.Pointer<go.go.doc.comment.Doc>): (go.Slice<go.Byte>);

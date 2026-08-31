@@ -8,7 +8,7 @@ extern class Http2StreamError {
     @:native("Code") var code: go.net.http.Http2ErrCode;
     @:native("Cause") var cause: go.Error;
 
-    function new(streamID: go.UInt32, code: go.net.http.Http2ErrCode, cause: go.Error);
+    function new(streamID: go.UInt32=0, code: go.net.http.Http2ErrCode=cast 0, cause: go.Error=null);
 
     @:native("As") function as(target: Dynamic): (Bool);
     @:native("Error") function error(): (String);

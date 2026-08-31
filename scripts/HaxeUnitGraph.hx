@@ -2,7 +2,7 @@ import go.github_com.go_echarts.go_echarts.v2.Types;
 import go.time.Time as TimeType;
 import go.Int64;
 import go.Go;
-import go.Time_ as Time;
+import go.Time;
 import go.github_com.go_echarts.go_echarts.v2.Charts;
 import go.github_com.go_echarts.go_echarts.v2.Opts;
 

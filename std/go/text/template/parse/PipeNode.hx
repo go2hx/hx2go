@@ -1,5 +1,8 @@
 package go.text.template.parse;
 
+/**
+    PipeNode holds a pipeline with optional declaration
+**/
 @:structInit
 @:go.Type({ name: "PipeNode", instanceName: "parse.PipeNode", imports: ["text/template/parse"] })
 extern class PipeNode {
@@ -11,7 +14,7 @@ extern class PipeNode {
     @:native("Decl") var decl: go.Slice<go.Pointer<go.text.template.parse.VariableNode>>;
     @:native("Cmds") var cmds: go.Slice<go.Pointer<go.text.template.parse.CommandNode>>;
 
-    function new(nodeType: go.text.template.parse.NodeType, pos: go.text.template.parse.Pos, line: go.GoInt, isAssign: Bool, decl: go.Slice<go.Pointer<go.text.template.parse.VariableNode>>, cmds: go.Slice<go.Pointer<go.text.template.parse.CommandNode>>);
+    function new(nodeType: go.text.template.parse.NodeType=cast 0, pos: go.text.template.parse.Pos=cast 0, line: go.GoInt=0, isAssign: Bool=false, decl: go.Slice<go.Pointer<go.text.template.parse.VariableNode>>=null, cmds: go.Slice<go.Pointer<go.text.template.parse.CommandNode>>=null);
 
     @:native("Copy") function copy(): (go.text.template.parse.Node);
     @:native("CopyPipe") function copyPipe(): (go.Pointer<go.text.template.parse.PipeNode>);

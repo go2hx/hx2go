@@ -1,5 +1,10 @@
 package go.archive.tar;
 
+/**
+    FileInfoNames extends [fs.FileInfo].
+    Passing an instance of this to [FileInfoHeader] permits the caller
+    to avoid a system-dependent name lookup by specifying the Uname and Gname directly.
+**/
 @:go.Type({ name: "FileInfoNames", instanceName: "tar.FileInfoNames", imports: ["archive/tar"] })
 extern typedef FileInfoNames = {
 

@@ -2,8 +2,9 @@ function main() {
 	for (dir in sys.FileSystem.readDirectory("examples")) {
 		// skip
 		switch dir {
-			case "miqt", "gtk", "http_fileserver", "ebiten"
+			case "miqt", "gtk", "http_fileserver", "ebiten":
 				continue;
+			default:
 		}
 		// run
 		var command = 'haxe examples/$dir/build.hxml';

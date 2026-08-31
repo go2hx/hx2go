@@ -157,6 +157,10 @@ class Type {
 			kind = value.kind();
 		}
 
+		if (HxDynamic.tryDynamicArray(v) != null) {
+			return ValueType.TClass(Array);
+		}
+
 		if (kind == Reflect.struct) {
 			if (HxReflect.isEnumValue(v)) {
 				return ValueType.TEnum(( cast v : Enum<Dynamic> ));
@@ -173,10 +177,6 @@ class Type {
 
 		if (kind == Reflect.map) {
 			return ValueType.TObject;
-		}
-
-		if (kind == Reflect.slice) { // was a pointer to a map, so its an array
-			return ValueType.TClass(Array);
 		}
 
 		return ValueType.TUnknown;

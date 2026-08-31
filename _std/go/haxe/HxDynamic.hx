@@ -812,7 +812,7 @@ class HxDynamic {
         // TODO: throw when Null<T> is supported.
     }
 
-    static function tryDynamicArray(dyn: Dynamic): Null<HxDynamicArray> {
+    public static function tryDynamicArray(dyn: Dynamic): Null<HxDynamicArray> {
         var arr: HxDynamicArray = null;
         var ok: Bool = false;
         Syntax.code("{0}, {1} = {2}.(HxArrayDyn)", arr, ok, dyn);

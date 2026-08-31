@@ -2,6 +2,6 @@
 -cp scripts
 -main HaxeUnitGraph
 -D analyzer-optimize
--D go-lib=github.com/go-echarts/go-echarts/v2
+-D go-lib=github.com/go-echarts/go-echarts/v2/...
 --custom-target go=output/haxeunitgraph
 --cmd go run -C output/haxeunitgraph/main . ../../../haxe/tests/unit/bin/go/main/unittests.json graph.png

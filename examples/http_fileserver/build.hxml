@@ -1,0 +1,6 @@
+-cp examples/http_fileserver
+-m Main
+-L hx2go
+# as this code calls the Go standard library, there is no need for a '-D go-lib=' entry here
+--custom-target go=output/examples/http_fileserver
+--cmd go -C output/examples/http_fileserver/main run .

@@ -1,0 +1,6 @@
+-cp examples/ebiten
+-m Main
+-L hx2go
+-D go-lib=github.com/hajimehoshi/ebiten/v2/...
+--custom-target go=output/examples/ebiten
+--cmd go -C output/examples/ebiten/main run .

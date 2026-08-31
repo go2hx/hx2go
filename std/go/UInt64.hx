@@ -29,8 +29,8 @@ extern abstract UInt64 {
        return a - Go.uint64(b);
    }
    @:op(A * B) private function mul(other: UInt64): UInt64;
-   @:op(A * B) @:commutative private inline function hx_mul_a(other: Float): UInt64 {
-       return this * Go.uint64(other);
+   @:op(A * B) @:commutative private inline function hx_mul_a(other: Float): Float {
+       return Go.float64(this) * other;
    }
    @:op(A * B) @:commutative private inline function hx_mul_b(other: Int): UInt64 {
        return this * Go.uint64(other);

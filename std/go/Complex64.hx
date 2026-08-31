@@ -29,8 +29,8 @@ extern abstract Complex64 {
        return a - Go.complex64(b);
    }
    @:op(A * B) private function mul(other: Complex64): Complex64;
-   @:op(A * B) @:commutative private inline function hx_mul_a(other: Float): Complex64 {
-       return this * Go.complex64(other);
+   @:op(A * B) @:commutative private inline function hx_mul_a(other: Float): Float {
+       return Go.float64(this) * other;
    }
    @:op(A * B) @:commutative private inline function hx_mul_b(other: Int): Complex64 {
        return this * Go.complex64(other);

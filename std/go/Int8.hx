@@ -29,8 +29,8 @@ extern abstract Int8 {
        return a - Go.int8(b);
    }
    @:op(A * B) private function mul(other: Int8): Int8;
-   @:op(A * B) @:commutative private inline function hx_mul_a(other: Float): Int8 {
-       return this * Go.int8(other);
+   @:op(A * B) @:commutative private inline function hx_mul_a(other: Float): Float {
+       return Go.float64(this) * other;
    }
    @:op(A * B) @:commutative private inline function hx_mul_b(other: Int): Int8 {
        return this * Go.int8(other);

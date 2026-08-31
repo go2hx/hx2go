@@ -231,6 +231,10 @@ func HxMakeArrayView[T any](src HxArrayDyn) HxArray[T] {
 }
 
 func HxAnyToArray(v any) HxArray[any] {
+	if v == nil {
+		return nil
+	}
+
 	arr, ok := v.(HxArrayDyn)
 	if !ok {
 		panic("dynamic is not array")

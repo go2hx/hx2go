@@ -329,6 +329,18 @@ class ExprWriter extends WriterImpl {
         }
     }
 
+    function isDynamicArrayType(t: HxbType): Bool {
+        if (t == null) {
+            return false;
+        }
+
+        return switch TypeHelper.followToDef(writer.context, t) {
+            case TInst({ name: 'Array', pack: [] }, [el]):
+                el == null || el.match(TDynamic(_) | TDynamicAny);
+            case _: false;
+        }
+    }
+
     public function writeObjectDecl(expr: HxbTypedExpr, fields: Array<HxbTObjectField>): OutputBuffer {
         var buf = new OutputBuffer();
         buf.addInline('any(map[string]any{ ');
@@ -463,6 +475,11 @@ class ExprWriter extends WriterImpl {
             case [(TDynamic(_) | TDynamicAny), _] if (concreteArrayElement(expr.t) != null):
                 buf.addBufferInline(writeExpr(e));
                 buf.addInline('.(${writer.types.writeHxbType(expr.t)})'); // TODO: review behaviour, perhaps make a view?
+
+            case [(TDynamic(_) | TDynamicAny), _] if (isDynamicArrayType(expr.t)):
+                buf.addInline('HxAnyToArray(');
+                buf.addBufferInline(writeExpr(e));
+                buf.addInline(')');
 
             case [(TDynamic(_) | TDynamicAny), _]:
                 var box = expr.pos?.file.endsWith("HxDynamic.hx") ? 'any' : 'Hx_Field_go_haxe_hxdynamic_ensureInterface'; // this is a really bad hack, I know...

@@ -371,7 +371,7 @@ class ExprWriter extends WriterImpl {
 
     public function writeObjectDecl(expr: HxbTypedExpr, fields: Array<HxbTObjectField>): OutputBuffer {
         var buf = new OutputBuffer();
-        buf.addInline('any(struct {');
+        buf.addInline('any(&struct {');
 
         for (i in 0...fields.length) {
             var field = fields[i];

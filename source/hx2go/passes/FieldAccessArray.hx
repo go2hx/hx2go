@@ -84,7 +84,7 @@ class FieldAccessArray extends CompilerPass {
                     }
                 }
 
-                expr.expr = ExprHelper.createUntyped('$name${neededParams.length > 0 ? '[${neededParams.join(", ")}]' : ''}(${[for (i in 0...staticArgs.length) i].map(v -> '{$v}').join(", ")})${needsNullCast ? '.Value' : ''}', staticArgs).expr;
+                expr.expr = TParenthesis(ExprHelper.createUntyped('$name${neededParams.length > 0 ? '[${neededParams.join(", ")}]' : ''}(${[for (i in 0...staticArgs.length) i].map(v -> '{$v}').join(", ")})${needsNullCast ? '.Value' : ''}', staticArgs));
             }
 
             case _: null;

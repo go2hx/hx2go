@@ -21,6 +21,7 @@ type HxArrayDyn interface {
 	Grow(elements int32)
 	Len() int32
 	String() string
+	Clone_Dyn() HxArrayDyn
 }
 
 type HxArray[T any] interface {
@@ -45,6 +46,21 @@ type HxArrayImpl[T any] struct {
 func HxMakeArray[T any](items ...T) HxArray[T] {
 	local := make([]T, len(items))
 	copy(local, items)
+	return &HxArrayImpl[T]{local}
+}
+
+func (this *HxArrayImpl[T]) Clone_Dyn() HxArrayDyn {
+	local := make([]T, len(this.data))
+	copy(local, this.data)
+	return &HxArrayImpl[T]{local}
+}
+
+func (this HxArrayView[T]) Clone_Dyn() HxArrayDyn {
+	n := this.source.Len()
+	local := make([]T, n)
+	for i := int32(0); i < n; i++ {
+		local[i] = this.Get(i)
+	}
 	return &HxArrayImpl[T]{local}
 }
 
@@ -231,7 +247,7 @@ func HxMakeArrayView[T any](src HxArrayDyn) HxArray[T] {
 }
 
 func HxAnyToArray(v any) HxArray[any] {
-	if v == nil {
+	if v == nil || isNilArraySource(v) {
 		return nil
 	}
 
@@ -243,8 +259,17 @@ func HxAnyToArray(v any) HxArray[any] {
 	return HxMakeArrayView[any](arr)
 }
 
+func isNilArraySource(v any) bool {
+	rv := reflect.ValueOf(v)
+	switch rv.Kind() {
+	case reflect.Ptr, reflect.Slice, reflect.Map, reflect.Interface, reflect.Func, reflect.Chan:
+		return rv.IsNil()
+	}
+	return false
+}
+
 func HxAnyToTypedArray[T any](v any) HxArray[T] {
-	if v == nil {
+	if v == nil || isNilArraySource(v) {
 		return nil
 	}
 

@@ -31,6 +31,26 @@ class Copy {
     static function deepCopy(v: Value, seen: Map<Int, Dynamic>): Value {
         var k = v.kind();
 
+        if (k == Reflect._interface && !v.isNil()) {
+            return deepCopy(v.elem(), seen);
+        }
+
+        if (k == Reflect.ptr && !v.isNil() && v.canInterface()) {
+            var dyn: Dynamic = v._interface();
+            var isArray: Bool = false;
+            Syntax.code("_, {0} = {1}.(HxArrayDyn)", isArray, dyn);
+            if (isArray) {
+                var addr: Int = cast v.pointer();
+                if (seen.exists(addr)) {
+                    return Reflect.valueOf(seen.get(addr));
+                }
+                var cloned: Dynamic = null;
+                Syntax.code("{0} = {1}.(HxArrayDyn).Clone_Dyn()", cloned, dyn);
+                seen.set(addr, cloned);
+                return Reflect.valueOf(cloned);
+            }
+        }
+
         if (k == Reflect.ptr) {
             if (v.isNil()) {
                 return v;

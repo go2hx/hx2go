@@ -19,6 +19,8 @@ import hxb.Ast.HxbUnop;
 import hxb.Typed.HxbTypedExprDef;
 import hxb.Typed.HxbTObjectField;
 import hxb.HxbType;
+import hxb.HxbModuleType;
+import hxb.flags.HxbClassFlag;
 import hxb.TypePath;
 import hxb.tools.TypedExprTools;
 import hxb.EnumFieldRef;
@@ -311,10 +313,30 @@ class ExprWriter extends WriterImpl {
         var toType = writer.types.writeHxbType(target).toString();
         var inner = Semantics.getNullableType(writer.context, target);
         var value = inner == null
-            ? '_hx_d.($toType)'
-            : '$toType{ Value: _hx_d.(${writer.types.writeHxbType(inner)}), Valid: true }';
+            ? castFromAny(target, toType, '_hx_d')
+            : '$toType{ Value: ${castFromAny(inner, writer.types.writeHxbType(inner).toString(), '_hx_d')}, Valid: true }';
 
         return 'func() $toType { _hx_d := $anyExpr; if _hx_d == nil { var _hx_z $toType; return _hx_z }; return $value }()';
+    }
+
+    function castFromAny(t: HxbType, goType: String, valueVar: String): String {
+        var ifaceName = interfaceInstanceName(t);
+        if (ifaceName != null) {
+            return 'Hx_Field_go_haxe_hxdynamic_toClass($valueVar, "$ifaceName").($goType)';
+        }
+        return '$valueVar.($goType)';
+    }
+
+    function interfaceInstanceName(t: HxbType): Null<String> {
+        return switch TypeHelper.follow(writer.context, t) {
+            case TInst(tp, _):
+                switch writer.context.resolve(tp) {
+                    case MClass(cls) if (cls.flags & HxbClassFlag.CInterface != 0):
+                        StringConversions.typePathClassInstanceName(cls.path);
+                    case _: null;
+                }
+            case _: null;
+        }
     }
 
     function concreteArrayElement(t: HxbType): Null<HxbType> {
@@ -473,8 +495,9 @@ class ExprWriter extends WriterImpl {
                 buf.addBufferInline(writeExpr(e));
 
             case [(TDynamic(_) | TDynamicAny), _] if (concreteArrayElement(expr.t) != null):
+                buf.addInline('HxAnyToTypedArray[${writer.types.writeHxbType(concreteArrayElement(expr.t))}](');
                 buf.addBufferInline(writeExpr(e));
-                buf.addInline('.(${writer.types.writeHxbType(expr.t)})'); // TODO: review behaviour, perhaps make a view?
+                buf.addInline(')');
 
             case [(TDynamic(_) | TDynamicAny), _] if (isDynamicArrayType(expr.t)):
                 buf.addInline('HxAnyToArray(');

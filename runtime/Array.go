@@ -243,6 +243,19 @@ func HxAnyToArray(v any) HxArray[any] {
 	return HxMakeArrayView[any](arr)
 }
 
+func HxAnyToTypedArray[T any](v any) HxArray[T] {
+	if v == nil {
+		return nil
+	}
+
+	arr, ok := v.(HxArrayDyn)
+	if !ok {
+		panic("dynamic is not array")
+	}
+
+	return HxMakeArrayView[T](arr)
+}
+
 func (this HxArrayView[T]) Set_Dyn(idx int32, val any) {
 	this.source.Set_Dyn(idx, val)
 }

@@ -76,6 +76,17 @@ class FieldAccessArray extends CompilerPass {
                 var name = 'Hx_Array_${StringConversions.toPascalCase(cf.name)}';
                 var staticArgs = [e].concat(args);
                 var neededParams = params.map(p -> context.getWriter().types.writeHxbType(p));
+                
+                if (params.length > 0) {
+                    var elemGo = context.getWriter().types.writeHxbType(params[0]).toString();
+                    var recvGo = context.getWriter().types.writeHxbType(e.t).toString();
+                    if (recvGo == "HxArray[any]" && elemGo != "any") {
+                        var recv = ExprCopy.copy(staticArgs[0]);
+                        var viewed = ExprHelper.createUntyped('HxMakeArrayView[$elemGo]({0})', [recv]);
+                        viewed.t = TInst({ name: "Array", moduleName: "Array", pack: [] }, [params[0]]);
+                        staticArgs[0] = viewed;
+                    }
+                }
 
                 if (field.params.length > 0) {
                     var subst = new Map<Int, HxbType>();

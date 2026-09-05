@@ -682,6 +682,10 @@ class HxDynamic {
                 return () -> toAnySlice(dyn).toArray().iterator();
             }
 
+            if (fieldName == "keyValueIterator") {
+                return () -> toAnySlice(dyn).toArray().keyValueIterator();
+            }
+
             if (fieldName == "push") {
                 return HxArray.push.bind(dyn);
             }

@@ -351,6 +351,17 @@ class ExprWriter extends WriterImpl {
         }
     }
 
+    function goArrayElem(t: HxbType): Null<String> {
+        if (t == null) {
+            return null;
+        }
+        var go = writer.types.writeHxbType(t).toString();
+        if (StringTools.startsWith(go, "HxArray[") && StringTools.endsWith(go, "]")) {
+            return go.substring("HxArray[".length, go.length - 1);
+        }
+        return null;
+    }
+
     function isDynamicArrayType(t: HxbType): Bool {
         if (t == null) {
             return false;
@@ -517,15 +528,39 @@ class ExprWriter extends WriterImpl {
                 buf.addBufferInline(writeExpr(e));
                 buf.addInline('))');
 
+            case _ if (goArrayElem(e.t) != null && goArrayElem(expr.t) != null):
+                var want = goArrayElem(expr.t);
+                var have = goArrayElem(e.t);
+                if (want == have) {
+                    buf.addBufferInline(writeExpr(e));
+                } else {
+                    buf.addInline('HxMakeArrayView[${want}]( ');
+                    buf.addBufferInline(writeExpr(e));
+                    buf.addInline(' )');
+                }
+
             case _:
-                buf.addInline('(');
-                buf.addInline('(');
-                buf.addBufferInline(writer.types.writeHxbType(expr.t));
-                buf.addInline(')');
-                buf.addInline('(');
-                buf.addBufferInline(writeExpr(e));
-                buf.addInline(')');
-                buf.addInline(')');
+                var targetElem = goArrayElem(expr.t);
+                if (targetElem != null && goArrayElem(e.t) == null) {
+                    if (targetElem == "any") {
+                        buf.addInline('HxAnyToArray(');
+                        buf.addBufferInline(writeExpr(e));
+                        buf.addInline(')');
+                    } else {
+                        buf.addInline('HxAnyToTypedArray[${targetElem}](');
+                        buf.addBufferInline(writeExpr(e));
+                        buf.addInline(')');
+                    }
+                } else {
+                    buf.addInline('(');
+                    buf.addInline('(');
+                    buf.addBufferInline(writer.types.writeHxbType(expr.t));
+                    buf.addInline(')');
+                    buf.addInline('(');
+                    buf.addBufferInline(writeExpr(e));
+                    buf.addInline(')');
+                    buf.addInline(')');
+                }
 
         }
 
@@ -605,12 +640,12 @@ class ExprWriter extends WriterImpl {
         if (estr.toString() == "__resources__") {
             var cpy = args.copy();
             // {name:String, data:String, str:String}
-            buf.add('[]any{\n');
+            buf.add('HxMakeArray[any](\n');
             for (name => value in writer.context.res) {
                 var valueString = haxe.crypto.Base64.encode(value).toString();
                 buf.add('any(map[string]any{"name": any(`$name`), "data": any(`$valueString`), "str": any(``)}),\n');
             }
-            buf.add("},");
+            buf.add("),");
             return buf;
         }
 

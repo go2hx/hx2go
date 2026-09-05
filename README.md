@@ -30,7 +30,7 @@ can build with the standard `go` toolchain.
 - [Haxe nightly](https://haxe.org/download/nightlies/) 
   - `5.0.0-preview.1+957b2c7` or newer
 - [Go](https://go.dev/dl/) 
-  - `1.26` or newer
+  - `1.27` or newer
 
 ## Installation
 

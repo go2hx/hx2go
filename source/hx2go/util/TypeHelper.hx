@@ -63,7 +63,7 @@ class TypeHelper {
             return null;
         }
 
-        var inner = Copy.copy(valueExpr);
+        var inner = hx2go.normaliser.ExprCopy.copy(valueExpr);
         inner.t = goEraseType(emitted);
         return new HxbTypedExpr(TCast(inner, null), wanted, valueExpr.pos);
     }

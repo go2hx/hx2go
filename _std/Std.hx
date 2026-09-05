@@ -2,7 +2,6 @@ import go.Slice;
 import go.Fmt;
 import go.haxe.HxDynamic;
 import go.Reflect;
-import go.haxe.HxArray;
 import go.Go;
 import go.haxe.HxEnumValue;
 import go.haxe.HxEnum;
@@ -105,16 +104,6 @@ class Std {
             return string(value.elem());
         }
 
-        if (kind == Reflect.array || kind == Reflect.slice) {
-            var buf = new StringBuf();
-
-            buf.add('[');
-            buf.add(HxArray.map(value._interface(), string).join(","));
-            buf.add(']');
-
-            return buf.toString();
-        }
-
         if (kind == Reflect.map) {
             var buf = new StringBuf();
             var keys = value.mapKeys();
@@ -183,9 +172,12 @@ class Std {
     }
 
     public static function isOfType(v: Dynamic, t: Dynamic): Bool {
+        if (v == null) {
+            return false;
+        }
+
         var vt = std.Type.typeof(v);
-        // TODO: finish impl
-        switch t {
+        switch t { // TODO: finish impl
             case Int:
                 return vt == TInt;
             case Float:

@@ -30,9 +30,9 @@ import hxb.Typed.HxbTypedExprDef;
 import hx2go.normaliser.Semantics;
 import hx2go.passes.RewriteDynamicBinop;
 
-#if go
-import go.Map;
-#end
+// #if go
+// import go.Map;
+// #end
 
 class Context {
 
@@ -103,6 +103,7 @@ class Context {
             new hx2go.passes.FunctionCompare(this),
             new hx2go.passes.TypeNormaliserCallReturn(this),
             new hx2go.passes.RewriteSyntaxCode(this),
+            new hx2go.passes.RewriteArrayLength(this),
             new hx2go.passes.RewriteGoUIntNegativeConst(this),
             new hx2go.passes.TypeNormaliserCall(this), // TODO: c2
             new hx2go.passes.TypeNormaliserNew(this),
@@ -114,7 +115,6 @@ class Context {
             new hx2go.passes.NullableCall(this),
             new hx2go.passes.CastInstToClass(this),
             new hx2go.passes.CastInstToEnum(this),
-            new hx2go.passes.ArrayAccessAssignOp(this),
             new hx2go.passes.RewriteDynamicCall(this),
             new hx2go.passes.RewriteDynamicUnop(this),
             new hx2go.passes.RewriteDynamicBinop(this),
@@ -132,19 +132,17 @@ class Context {
             new hx2go.passes.RewriteTupleCreation(this),
             new hx2go.passes.SuperCtor(this),
             new hx2go.passes.CastClosure(this),
-            new hx2go.passes.CastArray(this),
             new hx2go.passes.CastNullableTo(this),
             new hx2go.passes.CastNullableFrom(this),
             new hx2go.passes.CastString(this),
-            new hx2go.passes.CastDynamicFrom(this),
             new hx2go.passes.CastClass(this),
             new hx2go.passes.CastPointerInterface(this),
             new hx2go.passes.RewriteThrow(this),
             new hx2go.passes.FloatMod(this),
             new hx2go.passes.ArrayAccessDynamicSet(this),
             new hx2go.passes.ArrayAccessDynamicGet(this),
-            new hx2go.passes.ArrayAccessSet(this),
             new hx2go.passes.FieldAccessSuper(this),
+            new hx2go.passes.CastDynamicFrom(this),
             new hx2go.passes.RewriteTupleAssign(this),
             new hx2go.passes.RewriteResultAssign(this),
             new hx2go.passes.RewriteResultSwitch(this),
@@ -158,18 +156,17 @@ class Context {
             new hx2go.passes.RewriteGoBuiltinCreation(this),
             new hx2go.passes.RewriteStringMethod(this),
             new hx2go.passes.RewriteStringLength(this),
-            new hx2go.passes.RewriteArrayLength(this),
             new hx2go.passes.RewriteSyntaxSelect(this),
             new hx2go.passes.RewriteSyntaxDefer(this),
             new hx2go.passes.RewriteSyntaxGo(this),
-            new hx2go.passes.RewriteArrayGetData(this),
-            new hx2go.passes.RewriteArraySetData(this),
             new hx2go.passes.RewriteArrayCreation(this),
             new hx2go.passes.RewriteStringCreation(this),
             new hx2go.passes.RewritePointerCastFrom(this),
             new hx2go.passes.RewritePointerCastTo(this),
             new hx2go.passes.CoerceDynamicInt(this),
             new hx2go.passes.OptimiseEnumParameter(this),
+            new hx2go.passes.FieldAccessArrayClosure(this),
+            new hx2go.passes.FieldAccessArray(this),
 //            new hx2go.passes.ResolveVarDecl(this),
 //            new hx2go.passes.ResolveCast(this),
         ];
@@ -230,7 +227,7 @@ class Context {
                 break;
             }
         }
-        
+
         var profileType: TypePath = { name: "HxProfile", moduleName: "HxProfile", pack: ["go", "haxe"] };
         resolve(profileType);
 
@@ -322,6 +319,8 @@ class Context {
         removeStaleFiles();
         cache.save();
 
+        copyRuntime();
+
         var closeFmt = times.start("gofmt");
         var proc = new sys.io.Process('gofmt -w $outputDirectory');
 
@@ -336,7 +335,7 @@ class Context {
     function installGoDeps(imports:Map<String, Array<String>>) {
         final previousCwd = Sys.getCwd();
         Sys.setCwd(outputDirectory);
-        
+
         var seen: Map<String, Bool> = new Map();
         var deps: Array<String> = [];
         for (moduleDeps in imports) {
@@ -579,7 +578,7 @@ class Context {
                     default:
                 }
 
-                if (!Semantics.isBoolType(this, n) && !Semantics.isIntegerType(this, n) && !Semantics.isFloatType(this, n) && !Semantics.isStringType(this, n)) {
+                if (Semantics.canBypassNull(this, n)) {
                     n;
                 }else{
                     switch (n) {
@@ -588,26 +587,6 @@ class Context {
                         case _:
                             TAbstract({ name: "Null", moduleName: mName, pack: [] }, [n]);
                     }
-                }
-
-            case TInst({ name: "Array", pack: [] }, [inner]):
-                var n = normalize(inner);
-
-                switch (n) {
-                    case TDynamicAny | TDynamic(_):
-                        TDynamicAny;
-                    case _:
-                        TInst({ name: "Array", moduleName: "Array", pack: [] }, [n]);
-                }
-
-            case TAbstract({ pack: ["haxe", "ds"], name: "Vector" }, [inner]):
-                var n = normalize(inner);
-
-                switch (n) {
-                    case TDynamicAny | TDynamic(_):
-                        TDynamicAny;
-                    case _:
-                        TAbstract({ name: "Vector", moduleName: "Vector", pack: ["haxe", "ds"] }, [n]);
                 }
 
             case TTypeParam(_) | TUnboundTypeParam(_) | TAnon(_):
@@ -629,6 +608,8 @@ class Context {
 
                 if (fwdNorm.match(TDynamic(_) | TDynamicAny)) {
                     TDynamicAny;
+                } else if (fwdNorm.match(TInst({ name: "Array", pack: [] }, [TDynamic(_) | TDynamicAny]))) {
+                    fwdNorm;
                 } else {
                     TType(path, params.map(normalize));
                 }
@@ -712,6 +693,15 @@ class Context {
 
             case TCall(e, _) if (e.t != null && e.t.match(TDynamic(_) | TDynamicAny)):
                 expr.t = TDynamicAny;
+
+            case TArray(e, _) if (e.t != null && e.t.match(TInst({ name: "Array", pack: [] }, [TDynamic(_) | TDynamicAny]))):
+                expr.t = TDynamicAny;
+
+            case TFunction(f):
+                f.t = normalize(f.t);
+                for (a in f.args) {
+                    a.v.type = normalize(a.v.type);
+                } // prepass is already done on a.value.t
 
             case TMeta(_, e):
                 expr.expr = e.expr;
@@ -815,8 +805,6 @@ class Context {
         writer.types.importTarget = moduleKey;
 
         for (f in roots) {
-            if (f.expr?.expr == null) continue;
-
             if (baseInstFields.exists(f.name)) {
                 var base = baseInstFields.get(f.name);
                 var assign: Array<HxbTypedExpr> = [];
@@ -856,14 +844,16 @@ class Context {
                         case _: f.type;
                     }
 
-                    f.expr.expr.expr = switch f.expr.expr.expr {
-                        case TFunction({ args: args, t: t, expr: { expr: TBlock(exprs), t: blockt, pos: blockpos } }) if (assign.length > 0): TFunction({
-                            args: args,
-                            t: t,
-                            expr: new HxbTypedExpr(TBlock(assign.concat(exprs)), blockt, blockpos)
-                        });
+                    if (f.expr?.expr != null) {
+                        f.expr.expr.expr = switch f.expr.expr.expr {
+                            case TFunction({ args: args, t: t, expr: { expr: TBlock(exprs), t: blockt, pos: blockpos } }) if (assign.length > 0): TFunction({
+                                args: args,
+                                t: t,
+                                expr: new HxbTypedExpr(TBlock(assign.concat(exprs)), blockt, blockpos)
+                            });
 
-                        case _: f.expr.expr.expr;
+                            case _: f.expr.expr.expr;
+                        }
                     }
                 }
             }
@@ -931,6 +921,23 @@ class Context {
         closeNorm();
 
         writer.types.importTarget = old;
+    }
+
+    function copyRuntime() {
+        #if go
+        var libPath = Path.join([ Sys.programPath(), '..', '..', '..', '..' ]);
+        #else
+        var libPath = Path.join([ Path.directory(Sys.programPath()), '..', '..' ]);
+        #end
+
+        var runtimePath = Path.join([ libPath, 'runtime' ]);
+        var runtimeFiles = FileSystem.readDirectory(runtimePath);
+
+        for (entry in runtimeFiles) {
+            var src = Path.join([ runtimePath, entry ]);
+            var dst = Path.join([ outputDirectory, entry ]);
+            File.saveContent(dst, File.getContent(src));
+        }
     }
 
     public function defineImportOnModule(moduleKey: String, goImport: String): Void {

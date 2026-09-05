@@ -28,6 +28,10 @@ class CastClass extends CompilerPass {
         switch expr {
             case { expr: TCast(e, _), t: TInst(tp, _) }:
                 switch e.t {
+                    case TInst({ name: "Array", pack: [] }, _): {
+                        return;
+                    }
+
                     case TInst(ftp, _) if (ftp.dotPath() == tp.dotPath()): {
                         expr.expr = e.expr;
                         expr.t = e.t;

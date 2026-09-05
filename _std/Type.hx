@@ -28,7 +28,6 @@ import go.haxe.HxDynamic;
 import go.Slice;
 import go.haxe.HxEnumValue;
 import go.haxe.HxEnum;
-import go.haxe.HxArray;
 import go.haxe.HxClass;
 
 enum ValueType {
@@ -110,16 +109,16 @@ class Type {
 
 	public static function getInstanceFields(c:Class<Dynamic>):Array<String> {
         if (c == null) return [];
-        return HxArray.copy(untyped c.instanceFields);
+        return (untyped c.instanceFields : Array<String>).copy();
 	}
 
 	public static function getClassFields(c:Class<Dynamic>):Array<String> {
-        if (c == null) return [];
-		return HxArray.copy(untyped c.staticFields);
+    if (c == null) return [];
+		return (untyped c.staticFields : Array<String>).copy();
 	}
 
 	public static function getEnumConstructs(e:Enum<Dynamic>):Array<String> {
-		return HxArray.copy(untyped e.constructorName);
+		return (untyped e.constructorName : Array<String>).copy();
 	}
 
 	public static function typeof(v:Dynamic):ValueType {
@@ -160,6 +159,10 @@ class Type {
 			kind = value.kind();
 		}
 
+		if (HxDynamic.tryDynamicArray(v) != null) {
+			return ValueType.TClass(Array);
+		}
+
 		if (kind == Reflect.struct) {
 			if (HxReflect.isEnumValue(v)) {
 				return ValueType.TEnum(( cast v : Enum<Dynamic> ));
@@ -176,10 +179,6 @@ class Type {
 
 		if (kind == Reflect.map) {
 			return ValueType.TObject;
-		}
-
-		if (kind == Reflect.slice) { // was a pointer to a map, so its an array
-			return ValueType.TClass(Array);
 		}
 
 		return ValueType.TUnknown;

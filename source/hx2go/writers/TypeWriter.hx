@@ -44,11 +44,11 @@ class TypeWriter extends WriterImpl {
         buf.add('');
         buf.add('var ${StringConversions.typePathAbstractName(a.path)}_RTTI = Hx_Obj_go_haxe_hxclass_CreateInstance(');
         buf.add('"${a.path.dotPath()}",', 1);
-        buf.add('&[]string{${statics.map(f -> '"${f}"').join(", ")}},', 1);
-        buf.add('&[]string{},', 1);
+        buf.add('HxMakeArray[string](${statics.map(f -> '"${f}"').join(", ")}),', 1);
+        buf.add('HxMakeArray[string](),', 1);
         buf.add('nil,', 1);
-        buf.add("&[]*Hx_Obj_go_haxe_hxclass{},", 1);
-        buf.add('func (params any) any {', 1);
+        buf.add("HxMakeArray[*Hx_Obj_go_haxe_hxclass](),", 1);
+        buf.add('func (params HxArray[any]) any {', 1);
         buf.add('return nil', 2);
         buf.add('},', 1);
         buf.add('func () any {', 1);
@@ -138,7 +138,7 @@ class TypeWriter extends WriterImpl {
             case { name: "Byte", pack: ['go'] }: "byte";
             case { name: "Rune", pack: ['go'] }: "rune";
             case { name: "Class", pack: [] }: "*Hx_Obj_go_haxe_hxclass";
-            case { name: "Rest", pack: ['haxe'] }: "any";
+            case { name: "Rest", pack: ['haxe'] }: "HxArray[any]";
             case _: null;
         }
 
@@ -213,7 +213,7 @@ class TypeWriter extends WriterImpl {
                 'struct { ${fields.map(f -> '${StringConversions.toPascalCase(f.name)} ${writeHxbType(f.type)}').join('; ')} }';
             }
             case TAbstract({ pack: [], name: 'Null' }, params): 'struct { Value ${writeHxbType(params[0])}; Valid bool }';
-            case TInst({ pack: [], name: 'Array' }, params) | TAbstract({ pack: ["haxe", "ds"], name: "Vector" }, params): '*[]${writeHxbType(params[0])}';
+            case TInst({ pack: [], name: 'Array' }, params) | TAbstract({ pack: ["haxe", "ds"], name: "Vector" }, params): 'HxArray[${writeHxbType(params[0])}]';
             case TAbstract({ pack: ['go'], name: 'Slice' }, params): '[]${writeHxbType(params[0])}';
             case TAbstract({ pack: ['go'], name: 'GoArray' }, params): '[${writeHxbType(params[1])}]${writeHxbType(params[0])}';
             case TAbstract({ pack: ['go'], name: 'Chan' }, params): 'chan ${writeHxbType(params[0])}';

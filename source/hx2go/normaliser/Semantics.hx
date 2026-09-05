@@ -225,14 +225,18 @@ class Semantics {
             case _: 64; // abstract should not cause this code path anyway.
         }
     }
-    
+
+    public static function canBypassNull(context: Context, n: HxbType): Bool {
+        return !Semantics.isBoolType(context, n) && !Semantics.isIntegerType(context, n) && !Semantics.isFloatType(context, n) && !Semantics.isStringType(context, n);
+    }
+
     public static function isFloatType(context:Context, t: HxbType): Bool {
         return switch TypeHelper.follow(context, t) {
             case TAbstract({ pack: [], name: "Float" }, _) | TAbstract({ pack: ["go"], name: "Float32" | "Float64" }, _) | TFloat: true;
             case _: false;
         }
     }
-    
+
     public static function isBoolType(context:Context, t: HxbType): Bool {
         return switch TypeHelper.follow(context, t) {
             case TAbstract({ pack: [], name: "Bool" }, _) | TBool: true;

@@ -12,6 +12,7 @@ import hxb.Typed.HxbTypedExprDef;
 import hxb.Ast.HxbExpr;
 import hx2go.passes.FieldAccessExtern.ExternKind;
 import hxb.flags.HxbClassFlag;
+import hx2go.normaliser.ExprCopy;
 
 class TypeNormaliserCall extends CompilerPass {
 
@@ -168,6 +169,10 @@ class TypeNormaliserCall extends CompilerPass {
     }
 
     static function isSpreadOfRest(arg: HxbTypedExpr): Bool {
+        if (arg.t == null) {
+            trace(arg);
+        }
+
         return arg.t.match(TAbstract({ pack: ['haxe'], name: 'Rest' }, _))
             && arg.expr.match(TUnop(OpSpread, _, _));
     }
@@ -196,7 +201,7 @@ class TypeNormaliserCall extends CompilerPass {
         var isDynamic = inner.t == null || inner.t.match(TDynamic(_) | TDynamicAny);
         var slice = isDynamic
             ? ExprHelper.createCallStatic(context, { pack: ['go', 'haxe'], name: 'HxDynamic', moduleName: 'HxDynamic' }, 'toAnySlice', [hx2go.normaliser.ExprCopy.copy(inner)])
-            : ExprHelper.createUntyped("(*({0}))", [hx2go.normaliser.ExprCopy.copy(inner)]);
+            : ExprHelper.createUntyped("{0}.Underlying()", [hx2go.normaliser.ExprCopy.copy(inner)]);
 
         arg.expr = ExprHelper.createUntyped("{0}...", [slice]).expr;
         arg.t = elementType;
@@ -205,21 +210,23 @@ class TypeNormaliserCall extends CompilerPass {
     function collapseRestArgs(expr: HxbTypedExpr, restStart: Int, elementType: HxbType): Void {
         expr.expr = switch expr.expr {
             case TCall(callee, args):
-                var goType = context.getWriter().types.writeHxbType(elementType);
                 var placeholders = [for (i in 0...args.length - restStart) '{$i}'].join(", ");
-                var slice = ExprHelper.createUntyped('[]$goType{ $placeholders }', args.slice(restStart));
+                var slice = ExprHelper.createUntyped('HxMakeArray[any]($placeholders)', args.slice(restStart).map(a -> ExprHelper.createCast(ExprCopy.copy(a), elementType)));
+                slice.t = elementType;
+                context.submitNode(slice, true);
 
                 TCall(callee, args.slice(0, restStart).concat([slice]));
 
             case TNew(tp, params, args):
-                var goType = context.getWriter().types.writeHxbType(elementType);
                 var placeholders = [for (i in 0...args.length - restStart) '{$i}'].join(", ");
-                var slice = ExprHelper.createUntyped('[]$goType{ $placeholders }', args.slice(restStart));
+                var slice = ExprHelper.createUntyped('HxMakeArray[any]($placeholders)', args.slice(restStart).map(a -> ExprHelper.createCast(ExprCopy.copy(a), elementType)));
+                slice.t = elementType;
+                context.submitNode(slice, true);
 
                 TNew(tp, params, args.slice(0, restStart).concat([slice]));
 
             case _:
-                expr.expr;
+                return;
         }
     }
 

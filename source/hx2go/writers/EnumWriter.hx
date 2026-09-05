@@ -104,7 +104,7 @@ class EnumWriter extends WriterImpl {
             buf.add('func (this ${ctorName}) M_${StringConversions.typePathEnumName(e.path)}() {}');
             buf.add('func (this ${ctorName}) Hx_Field_enumIndex() int32 { return ${cs.index} }');
             buf.add('func (this ${ctorName}) Hx_Field_enumType() *Hx_Obj_go_haxe_hxenum { return ${StringConversions.typePathEnumName(e.path)}_RTTI }');
-            buf.add('func (this ${ctorName}) Hx_Field_enumParams() any { return &([]any{ ${ctorArgCount == 0 ? "" : ctorArgVars.map(v -> 'any(this.$v)').join(", ") + " " }}) }');
+            buf.add('func (this ${ctorName}) Hx_Field_enumParams() HxArray[any] { return HxMakeArray[any]( ${ctorArgCount == 0 ? "" : ctorArgVars.map(v -> 'any(this.$v)').join(", ") + " " }) }');
             buf.add('func (this ${ctorName}) Hx_Field_enumParameter(index int32) any {');
             buf.add('switch index {', 1);
 
@@ -123,9 +123,9 @@ class EnumWriter extends WriterImpl {
         buf.add('');
         buf.add('var ${StringConversions.typePathEnumName(e.path)}_RTTI = Hx_Obj_go_haxe_hxenum_CreateInstance(');
         buf.add('"${e.path.toString()}",', 1);
-        buf.add('&([]string{ ${e.names.map(n -> '"$n"').join(", ")} }),', 1);
-        buf.add('&([]int32{ ${e.names.map(n -> counts[n]).join(", ") } }),', 1);
-        buf.add('func (index int32, params any) Hx_Obj_VTable_go_haxe__hxenumvalue__hxenumvalue {', 1);
+        buf.add('HxMakeArray[string]( ${e.names.map(n -> '"$n"').join(", ")} ),', 1);
+        buf.add('HxMakeArray[int32]( ${e.names.map(n -> counts[n]).join(", ") } ),', 1);
+        buf.add('func (index int32, params HxArray[any]) Hx_Obj_VTable_go_haxe__hxenumvalue__hxenumvalue {', 1);
         buf.add('switch index {', 2);
 
         for (i in 0...e.names.length) {
@@ -133,7 +133,7 @@ class EnumWriter extends WriterImpl {
             var args = [];
 
             for (j in 0...counts[e.names[i]]) {
-                args.push(dynamicTo(types[e.names[i]][j], ExprHelper.createUntyped('Hx_Field_go_haxe_hxdynamic_getArrayIndex(params, $j)', [])));
+                args.push(dynamicTo(types[e.names[i]][j], ExprHelper.createUntyped('params.Get_Dyn($j)', [])));
             }
 
             buf.add('case ${i}: return ${name}{${args.join(', ')}}', 3);

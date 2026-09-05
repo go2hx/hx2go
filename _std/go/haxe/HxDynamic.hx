@@ -25,6 +25,16 @@ private extern class Unsafe {
     @:native("Add") static function add(ptr: UnsafePointer, len: go.UIntPtr): UnsafePointer;
     @:native("Sizeof") static function sizeof(v: Dynamic): go.UIntPtr;
 }
+
+@:go.Type({ name: "HxArrayDyn" })
+private extern class HxDynamicArray {
+    @:native("Set_Dyn") function set(i: Int, v: Dynamic): Void;
+    @:native("Get_Dyn") function get(i: Int): Dynamic;
+    @:native("Underlying_Dyn") function underlying(): Slice<Dynamic>;
+    @:native("ElemType") function elemType(): Type;
+    @:native("Len") function len(): Int;
+}
+
 @:keep
 @:analyzer(ignore)
 class HxDynamic {
@@ -123,6 +133,11 @@ class HxDynamic {
     }
 
     public static function toAnySlice(v: Dynamic): Slice<Dynamic> {
+        var arr = tryDynamicArray(v);
+        if (arr != null) {
+            return arr.underlying();
+        }
+
         var len: Int = getArrayLength(v);
         var slice: Slice<Dynamic> = new Slice();
 
@@ -617,7 +632,7 @@ class HxDynamic {
             && t.field(1).name == "Valid"
             && t.field(1).type.kind() == Reflect.bool;
     }
-    
+
     public static function unwrapNullable(value: Value): Value {
         if (!value.isValid()) {
             return value;
@@ -642,7 +657,7 @@ class HxDynamic {
     public static function getField(dyn: Dynamic, fieldName: String): Dynamic {
         return getFieldFrom(dyn, fieldName, true);
     }
-    
+
     static function getFieldFrom(dyn: Dynamic, fieldName: String, hop: Bool): Dynamic {
         Syntax.code("
             switch m := {0}.(type) {
@@ -652,6 +667,39 @@ class HxDynamic {
                     break
             }
         ", dyn, fieldName);
+
+        if (isNull(dyn)) {
+            throw "runtime.HxDynamic.field null field access: " + fieldName;
+        }
+
+        var arr = tryDynamicArray(dyn);
+        if (arr != null) { // TODO: smarter approach
+            if (fieldName == "length") {
+                return arr.len();
+            }
+
+            if (fieldName == "iterator") {
+                return () -> toAnySlice(dyn).toArray().iterator();
+            }
+
+            if (fieldName == "keyValueIterator") {
+                return () -> toAnySlice(dyn).toArray().keyValueIterator();
+            }
+
+            if (fieldName == "push") {
+                return HxArray.push.bind(dyn);
+            }
+
+            if (fieldName == "join") {
+                return HxArray.join.bind(dyn);
+            }
+
+            if (fieldName == "copy") {
+                return HxArray.copy.bind(dyn);
+            }
+
+            throw "runtime.HxDynamic.field array field access not found: " + fieldName;
+        }
 
         var value = ensureValue(dyn);
         var kind = value.kind();
@@ -772,13 +820,30 @@ class HxDynamic {
         // TODO: throw when Null<T> is supported.
     }
 
-    public static function setArrayIndex(dyn: Dynamic, index: Dynamic, v: Dynamic): Dynamic {
-        var value = ensureValue(dyn);
-        var kind = value.kind();
+    public static function tryDynamicArray(dyn: Dynamic): Null<HxDynamicArray> {
+        var arr: HxDynamicArray = null;
+        var ok: Bool = false;
+        Syntax.code("{0}, {1} = {2}.(HxArrayDyn)", arr, ok, dyn);
+        return ok ? arr : null;
+    }
 
-        if (isNull(dyn) || !value.isValid()) {
+    public static function setArrayIndex(dyn: Dynamic, index: Dynamic, v: Dynamic): Dynamic {
+        if (isNull(dyn)) {
             throw "runtime.HxDynamic.setArrayIndex null array access";
         }
+
+        var arr = tryDynamicArray(dyn);
+        if (arr != null) {
+            try arr.set(toInt(index), ensureInterface(v)) catch (_) {
+                var assigned = valueToAssign(v, arr.elemType());
+                arr.set(toInt(index), assigned.canInterface() ? assigned._interface() : null);
+            }
+
+            return v;
+        }
+
+        var value = ensureValue(dyn);
+        var kind = value.kind();
 
         if (kind == Reflect._interface) {
             value = value.elem();
@@ -813,12 +878,17 @@ class HxDynamic {
     }
 
     public static function getArrayIndex(dyn: Dynamic, index: Dynamic): Dynamic {
-        var value = ensureValue(dyn);
-        var kind = value.kind();
-
-        if (isNull(dyn) || !value.isValid()) {
+        if (isNull(dyn)) {
             throw "runtime.HxDynamic.getArrayIndex null array access";
         }
+
+        var arr = tryDynamicArray(dyn);
+        if (arr != null) {
+            return arr.get(toInt(index));
+        }
+
+        var value = ensureValue(dyn);
+        var kind = value.kind();
 
         if (kind == Reflect.ptr || kind == Reflect._interface) {
             return getArrayIndex(value.elem(), index);
@@ -840,12 +910,17 @@ class HxDynamic {
     }
 
     public static function getArrayLength(dyn: Dynamic): Int {
-        var value = ensureValue(dyn);
-        var kind = value.kind();
-
-        if (isNull(value) || !value.isValid()) {
+        if (isNull(dyn)) {
             return 0;
         }
+
+        var arr = tryDynamicArray(dyn);
+        if (arr != null) {
+            return arr.len();
+        }
+
+        var value = ensureValue(dyn);
+        var kind = value.kind();
 
         if (kind == Reflect.ptr || kind == Reflect._interface) {
             return getArrayLength(value.elem());

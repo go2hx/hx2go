@@ -1,6 +1,5 @@
 import go.Regexp as GoRegexp;
 import go.regexp.Regexp;
-import go.haxe.HxArray;
 import go.Slice;
 import go.Byte;
 import go.Go;
@@ -40,10 +39,8 @@ class EReg {
             return false;
         }
 
-        matchPos = [];
+        matchPos = idx;
         str = s;
-
-        HxArray.setData(matchPos, idx);
 
         return true;
     }
@@ -101,10 +98,8 @@ class EReg {
             return false;
         }
 
-        matchPos = [];
+        matchPos = idx;
         str = s;
-
-        HxArray.setData(matchPos, idx);
 
         for (i in 0...matchPos.length) {
             if (matchPos[i] >= 0) matchPos[i] += pos;
@@ -118,12 +113,7 @@ class EReg {
     }
 
     public function split(s: String): Array<String> {
-        var parts: Slice<String> = re.split(s, -1);
-        var result: Array<String> = [];
-
-        HxArray.setData(result, parts);
-
-        return result;
+        return re.split(s, -1).toArray();
     }
 
     public function replace(s: String, by: String): String {
@@ -158,10 +148,8 @@ class EReg {
             var end = idx[1] + pos;
             buf.add(s.substring(pos, start));
 
-            matchPos = [];
+            matchPos = idx;
             str = s;
-
-            HxArray.setData(matchPos, idx);
 
             for (i in 0...matchPos.length) {
                 if (matchPos[i] >= 0) matchPos[i] += pos;

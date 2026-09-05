@@ -61,12 +61,12 @@ extern abstract Slice<T> {
 
     @:to public inline function toArray(): Array<T> {
         var self: Slice<T> = this;
-        return Syntax.code("new({0})", self);
+        return Syntax.code("HxMakeArray({0}...)", self);
     }
 
     @:from public static inline function fromArray<T>(arr: Array<T>): Slice<T> {
         var self: Array<T> = arr;
-        return Syntax.code("(*{0})", self);
+        return Syntax.code("{0}.Underlying()", self);
     }
 
     @:from public static inline function fromString(str: String): Slice<Byte> {

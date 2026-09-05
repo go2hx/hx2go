@@ -19,6 +19,8 @@ import hxb.Ast.HxbUnop;
 import hxb.Typed.HxbTypedExprDef;
 import hxb.Typed.HxbTObjectField;
 import hxb.HxbType;
+import hxb.HxbModuleType;
+import hxb.flags.HxbClassFlag;
 import hxb.TypePath;
 import hxb.tools.TypedExprTools;
 import hxb.EnumFieldRef;
@@ -251,17 +253,18 @@ class ExprWriter extends WriterImpl {
 
     public function writeArrayDecl(t:HxbType, elements: Array<HxbTypedExpr>): OutputBuffer {
         var buf = new OutputBuffer();
-
-        buf.addInline("&([]");
-        buf.addBufferInline(switch t {
-            case TInst(_, params): writer.types.writeHxbType(params[0]);
-            case TDynamic(_) | TDynamicAny: writer.types.writeHxbType(t);
+        var elem = switch TypeHelper.followToDef(writer.context, t) {
+            case TInst(_, params) | TAbstract(_, params): params[0];
+            case TDynamic(_) | TDynamicAny: t;
             case _: throw "type is not array type for arrayDecl?";
-        });
+        };
 
-        if (elements.length == 0) buf.addInline('{}');
+        buf.addInline("HxMakeArray[");
+        buf.addBufferInline(writer.types.writeHxbType(elem));
+
+        if (elements.length == 0) buf.addInline(']()');
         else {
-            buf.addInline('{ ');
+            buf.addInline(']( ');
 
             for (idx in 0...elements.length) {
                 buf.addBufferInline(writeExpr(elements[idx]));
@@ -270,64 +273,23 @@ class ExprWriter extends WriterImpl {
                 }
             }
 
-            buf.addInline(' }');
+            buf.addInline(' )');
         }
 
-        buf.addInline(')');
+        if (elem.match(TDynamic(_) | TDynamicAny | TTypeParam(_))) {
+            buf.addInline('.Dyn()');
+        }
 
         return buf;
     }
 
     public function writeArrayAccess(expr: HxbTypedExpr, e: HxbTypedExpr, eidx: HxbTypedExpr): OutputBuffer {
         var buf = new OutputBuffer();
-        var scalarConv = scalarElementConversion(expr, e);
 
-        if (scalarConv == null && expr.t != null) {
-            var elem = writer.types.writeHxbType(expr.t).toString();
-
-            buf.addInline('func() ${elem} { _hx_a := ');
-            buf.addBufferInline(writeExpr(e));
-            buf.addInline('; _hx_i := ');
-            buf.addBufferInline(writeExpr(eidx));
-            buf.addInline('; if _hx_i >= 0 && int(_hx_i) < len((*_hx_a)) { return (*_hx_a)[_hx_i] }; var _hx_z ${elem}; return _hx_z }()');
-
-            return buf;
-        }
-
-        if (scalarConv != null) {
-            buf.addInline('${scalarConv}(');
-        }
-
-        buf.addInline('(*');
         buf.addBufferInline(writeExpr(e));
-        buf.addInline(')');
-        buf.addInline('[');
+        buf.addInline('.Get(');
         buf.addBufferInline(writeExpr(eidx));
-        buf.addInline(']');
-
-        if (scalarConv != null) {
-            buf.addInline(')');
-        }
-
-        return buf;
-    }
-
-    function writeLvalue(expr: HxbTypedExpr): OutputBuffer {
-        return switch expr.expr {
-            case TArray(e, eidx): writePlainArrayAccess(expr, e, eidx);
-            case _: writeExpr(expr);
-        }
-    }
-
-    function writePlainArrayAccess(expr: HxbTypedExpr, e: HxbTypedExpr, eidx: HxbTypedExpr): OutputBuffer {
-        var buf = new OutputBuffer();
-
-        buf.addInline('(*');
-        buf.addBufferInline(writeExpr(e));
         buf.addInline(')');
-        buf.addInline('[');
-        buf.addBufferInline(writeExpr(eidx));
-        buf.addInline(']');
 
         return buf;
     }
@@ -351,10 +313,30 @@ class ExprWriter extends WriterImpl {
         var toType = writer.types.writeHxbType(target).toString();
         var inner = Semantics.getNullableType(writer.context, target);
         var value = inner == null
-            ? '_hx_d.($toType)'
-            : '$toType{ Value: _hx_d.(${writer.types.writeHxbType(inner)}), Valid: true }';
+            ? castFromAny(target, toType, '_hx_d')
+            : '$toType{ Value: ${castFromAny(inner, writer.types.writeHxbType(inner).toString(), '_hx_d')}, Valid: true }';
 
         return 'func() $toType { _hx_d := $anyExpr; if _hx_d == nil { var _hx_z $toType; return _hx_z }; return $value }()';
+    }
+
+    function castFromAny(t: HxbType, goType: String, valueVar: String): String {
+        var ifaceName = interfaceInstanceName(t);
+        if (ifaceName != null) {
+            return 'Hx_Field_go_haxe_hxdynamic_toClass($valueVar, "$ifaceName").($goType)';
+        }
+        return '$valueVar.($goType)';
+    }
+
+    function interfaceInstanceName(t: HxbType): Null<String> {
+        return switch TypeHelper.follow(writer.context, t) {
+            case TInst(tp, _):
+                switch writer.context.resolve(tp) {
+                    case MClass(cls) if (cls.flags & HxbClassFlag.CInterface != 0):
+                        StringConversions.typePathClassInstanceName(cls.path);
+                    case _: null;
+                }
+            case _: null;
+        }
     }
 
     function concreteArrayElement(t: HxbType): Null<HxbType> {
@@ -366,6 +348,29 @@ class ExprWriter extends WriterImpl {
             case TInst({ name: 'Array', pack: [] }, [el]):
                 (el == null || el.match(TDynamic(_) | TDynamicAny)) ? null : el;
             case _: null;
+        }
+    }
+
+    function goArrayElem(t: HxbType): Null<String> {
+        if (t == null) {
+            return null;
+        }
+        var go = writer.types.writeHxbType(t).toString();
+        if (StringTools.startsWith(go, "HxArray[") && StringTools.endsWith(go, "]")) {
+            return go.substring("HxArray[".length, go.length - 1);
+        }
+        return null;
+    }
+
+    function isDynamicArrayType(t: HxbType): Bool {
+        if (t == null) {
+            return false;
+        }
+
+        return switch TypeHelper.followToDef(writer.context, t) {
+            case TInst({ name: 'Array', pack: [] }, [el]):
+                el == null || el.match(TDynamic(_) | TDynamicAny);
+            case _: false;
         }
     }
 
@@ -485,20 +490,30 @@ class ExprWriter extends WriterImpl {
             case [_, TVoid]:
                 buf.addBufferInline(writeExpr(e));
 
+            case [TInst({ name: "Array", pack: [] }, [fp]) | TAbstract({ name: "Vector", pack: ["haxe", "ds"] }, [fp]), TInst({ name: "Array", pack: []}, [tp]) | TAbstract({ name: "Vector", pack: ["haxe", "ds"] }, [tp])]:
+                var want = writer.types.writeHxbType(tp).toString();
+                var have = writer.types.writeHxbType(fp).toString();
+
+                if (want == have) {
+                    buf.addBufferInline(writeExpr(e));
+                } else {
+                    buf.addInline('HxMakeArrayView[${want}]( ');
+                    buf.addBufferInline(writeExpr(e));
+                    buf.addInline(' )');
+                }
+
             case [(TDynamic(_) | TDynamicAny), (TDynamic(_) | TDynamicAny)]:
                 buf.addBufferInline(writeExpr(e));
 
             case [(TDynamic(_) | TDynamicAny), _] if (concreteArrayElement(expr.t) != null):
-                // converting each element out of its any box
-                var elemType = concreteArrayElement(expr.t);
-                var elemGo = writer.types.writeHxbType(elemType).toString();
-                var inHxDynamic = expr.pos?.file.endsWith("HxDynamic.hx") == true;
-                buf.addInline('func() *[]${elemGo} { _hx_d := ');
-                buf.addInline(inHxDynamic ? '(' : 'Hx_Field_go_haxe_hxdynamic_ensureInterface(');
+                buf.addInline('HxAnyToTypedArray[${writer.types.writeHxbType(concreteArrayElement(expr.t))}](');
                 buf.addBufferInline(writeExpr(e));
-                buf.addInline('); if _hx_c, _hx_ok := _hx_d.(*[]${elemGo}); _hx_ok { return _hx_c }; ');
-                buf.addInline('_hx_src := *(_hx_d.(*[]any)); _hx_out := make([]${elemGo}, len(_hx_src)); ');
-                buf.addInline('for _hx_i, _hx_v := range _hx_src { _hx_out[_hx_i] = ${fromAny(elemType, "_hx_v")} }; return &_hx_out }()');
+                buf.addInline(')');
+
+            case [(TDynamic(_) | TDynamicAny), _] if (isDynamicArrayType(expr.t)):
+                buf.addInline('HxAnyToArray(');
+                buf.addBufferInline(writeExpr(e));
+                buf.addInline(')');
 
             case [(TDynamic(_) | TDynamicAny), _]:
                 var box = expr.pos?.file.endsWith("HxDynamic.hx") ? 'any' : 'Hx_Field_go_haxe_hxdynamic_ensureInterface'; // this is a really bad hack, I know...
@@ -513,15 +528,39 @@ class ExprWriter extends WriterImpl {
                 buf.addBufferInline(writeExpr(e));
                 buf.addInline('))');
 
+            case _ if (goArrayElem(e.t) != null && goArrayElem(expr.t) != null):
+                var want = goArrayElem(expr.t);
+                var have = goArrayElem(e.t);
+                if (want == have) {
+                    buf.addBufferInline(writeExpr(e));
+                } else {
+                    buf.addInline('HxMakeArrayView[${want}]( ');
+                    buf.addBufferInline(writeExpr(e));
+                    buf.addInline(' )');
+                }
+
             case _:
-                buf.addInline('(');
-                buf.addInline('(');
-                buf.addBufferInline(writer.types.writeHxbType(expr.t));
-                buf.addInline(')');
-                buf.addInline('(');
-                buf.addBufferInline(writeExpr(e));
-                buf.addInline(')');
-                buf.addInline(')');
+                var targetElem = goArrayElem(expr.t);
+                if (targetElem != null && goArrayElem(e.t) == null) {
+                    if (targetElem == "any") {
+                        buf.addInline('HxAnyToArray(');
+                        buf.addBufferInline(writeExpr(e));
+                        buf.addInline(')');
+                    } else {
+                        buf.addInline('HxAnyToTypedArray[${targetElem}](');
+                        buf.addBufferInline(writeExpr(e));
+                        buf.addInline(')');
+                    }
+                } else {
+                    buf.addInline('(');
+                    buf.addInline('(');
+                    buf.addBufferInline(writer.types.writeHxbType(expr.t));
+                    buf.addInline(')');
+                    buf.addInline('(');
+                    buf.addBufferInline(writeExpr(e));
+                    buf.addInline(')');
+                    buf.addInline(')');
+                }
 
         }
 
@@ -601,12 +640,12 @@ class ExprWriter extends WriterImpl {
         if (estr.toString() == "__resources__") {
             var cpy = args.copy();
             // {name:String, data:String, str:String}
-            buf.add('[]any{\n');
+            buf.add('HxMakeArray[any](\n');
             for (name => value in writer.context.res) {
                 var valueString = haxe.crypto.Base64.encode(value).toString();
                 buf.add('any(map[string]any{"name": any(`$name`), "data": any(`$valueString`), "str": any(``)}),\n');
             }
-            buf.add("},");
+            buf.add("),");
             return buf;
         }
 
@@ -651,6 +690,7 @@ class ExprWriter extends WriterImpl {
 
         return buf;
     }
+
 
     public function writeBinop(expr: HxbTypedExpr, op: HxbBinop, left: HxbTypedExpr, right: HxbTypedExpr): OutputBuffer {
         var buf = new OutputBuffer();
@@ -702,9 +742,20 @@ class ExprWriter extends WriterImpl {
             buf.addInline('(');
         }
 
-        buf.addBufferInline(op.match(OpAssign | OpAssignOp(_)) ? writeLvalue(left) : writeExpr(left));
-        buf.addInline(' $opStr ');
-        buf.addBufferInline(writeExpr(right));
+        switch left.expr {
+            case TArray(e, idx) if (op == OpAssign):
+                buf.addBufferInline(writeExpr(e));
+                buf.addInline('.Set(');
+                buf.addBufferInline(writeExpr(idx));
+                buf.addInline(', ');
+                buf.addBufferInline(writeExpr(right));
+                buf.addInline(')');
+
+            case _:
+                buf.addBufferInline(writeExpr(left));
+                buf.addInline(' $opStr ');
+                buf.addBufferInline(writeExpr(right));
+        }
 
         if (op != OpAssign) {
             buf.addInline(')');
@@ -728,7 +779,7 @@ class ExprWriter extends WriterImpl {
             buf.addInline(opStr);
         }
 
-        buf.addBufferInline(op == OpIncrement || op == OpDecrement ? writeLvalue(e) : writeExpr(e));
+        buf.addBufferInline(writeExpr(e));
 
         if (postFix) {
             buf.addInline(opStr);

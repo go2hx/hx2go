@@ -28,8 +28,38 @@ class Copy {
         return cast result._interface();
     }
 
+    static function isNilValue(v: Value): Bool {
+        var k = v.kind();
+        if (k == Reflect.ptr || k == Reflect._interface || k == Reflect.slice || k == Reflect.map || k == Reflect.chan || k == Reflect.func) {
+            return v.isNil();
+        }
+        return false;
+    }
+
     static function deepCopy(v: Value, seen: Map<Int, Dynamic>): Value {
         var k = v.kind();
+
+        if ((k == Reflect.ptr || k == Reflect.struct || k == Reflect._interface) && !isNilValue(v) && v.canInterface()) {
+            var dyn: Dynamic = v._interface();
+            var isArray: Bool = false;
+            Syntax.code("_, {0} = {1}.(HxArrayDyn)", isArray, dyn);
+            if (isArray) {
+                if (k == Reflect.ptr) {
+                    var addr: Int = cast v.pointer();
+                    if (seen.exists(addr)) {
+                        return Reflect.valueOf(seen.get(addr));
+                    }
+                    var cloned: Dynamic = null;
+                    Syntax.code("{0} = {1}.(HxArrayCloner).Clone_Dyn()", cloned, dyn);
+                    seen.set(addr, cloned);
+                    return Reflect.valueOf(cloned);
+                }
+
+                var cloned: Dynamic = null;
+                Syntax.code("{0} = {1}.(HxArrayCloner).Clone_Dyn()", cloned, dyn);
+                return Reflect.valueOf(cloned);
+            }
+        }
 
         if (k == Reflect.ptr) {
             if (v.isNil()) {

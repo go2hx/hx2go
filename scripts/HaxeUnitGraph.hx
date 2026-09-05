@@ -50,9 +50,10 @@ function main() {
 	}
 
 	var maxTotal = 0;
-	for (r in records)
+	for (r in records) {
 		if (r.total > maxTotal)
 			maxTotal = r.total;
+	}
 	// headroom above the largest series so the top band isn't clipped
 	var yMax = maxTotal + Std.int(Math.max(5, maxTotal * 0.1));
 
@@ -91,21 +92,21 @@ function main() {
 	);
 
 	line.addSeries("Passed Methods", [for (r in records) {
-		value: [Time.unixMilli(Go.int64(r.time)).UTC(), r.passed],
+		value: (([(Time.unixMilli(Go.int64(r.time)).UTC() : Dynamic), (r.passed : Dynamic)] : Array<Dynamic>) : go.Slice<Dynamic>),
 	}],
 		Charts.withLineChartOpts({ stack: "tests", smooth: Opts.bool(false), step: "start" }),
 		Charts.withAreaStyleOpts({ opacity: Opts.float(0.9) }),
 		Charts.withItemStyleOpts({ color: passedColor })
 	);
 	line.addSeries("Failed Methods", [for (r in records) {
-		value: [Time.unixMilli(Go.int64(r.time)).UTC(), r.failed],
+		value: (([(Time.unixMilli(Go.int64(r.time)).UTC() : Dynamic), (r.failed : Dynamic)] : Array<Dynamic>) : go.Slice<Dynamic>),
 	}],
 		Charts.withLineChartOpts({ stack: "tests", smooth: Opts.bool(false), step: "start" }),
 		Charts.withAreaStyleOpts({ opacity: Opts.float(0.9) }),
 		Charts.withItemStyleOpts({ color: failedColor })
 	);
 	line.addSeries("Errored Methods (caught throw)", [for (r in records) {
-		value: [Time.unixMilli(Go.int64(r.time)).UTC(), r.errored],
+		value: (([(Time.unixMilli(Go.int64(r.time)).UTC() : Dynamic), (r.errored : Dynamic)] : Array<Dynamic>) : go.Slice<Dynamic>),
 	}],
 		Charts.withLineChartOpts({ stack: "tests", smooth: Opts.bool(false), step: "start" }),
 		Charts.withAreaStyleOpts({ opacity: Opts.float(0.9) }),

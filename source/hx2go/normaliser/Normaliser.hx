@@ -349,6 +349,14 @@ class Normaliser {
                 scope.temp(expr, left, this, scope, ancestor);
 
             case TUnop(op, postFix, e) if (op.match(OpIncrement | OpDecrement)): {
+                switch removeCast(e).expr {
+                    case TArray(_, idx):
+                        var idxTmp = scope.temp(expr, idx, this, scope, ancestor);
+                        idx.expr = idxTmp.expr;
+                        idx.t = idxTmp.t;
+                    case _:
+                }
+
                 var inc = new HxbTypedExpr(TBinop(
                     OpAssignOp(op.match(OpIncrement) ? OpAdd : OpSub),
                     removeCast(ExprCopy.copy(e)),

@@ -105,8 +105,6 @@ class FieldAccessArray extends CompilerPass {
 
             case _: null;
         }
-
-        // TODO: closure capture
     }
 
 }

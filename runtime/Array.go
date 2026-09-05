@@ -720,4 +720,10 @@ func Hx_Array_LastIndexOf[T any](this HxArray[T], x T, fromIndex HxNullable[int3
 	return -1
 }
 
-// TODO: KV-iterator and V-iterator
+func Hx_Array_KeyValueIterator[T any](this HxArray[T]) *Hx_Obj_haxe_iterators_arraykeyvalueiterator {
+	return Hx_Obj_haxe_iterators_arraykeyvalueiterator_CreateInstance(this.Dyn())
+}
+
+func Hx_Array_Iterator[T any](this HxArray[T]) *Hx_Obj_haxe_iterators_arrayiterator {
+	return Hx_Obj_haxe_iterators_arrayiterator_CreateInstance(this.Dyn())
+}

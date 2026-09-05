@@ -21,6 +21,9 @@ type HxArrayDyn interface {
 	Grow(elements int32)
 	Len() int32
 	String() string
+}
+
+type HxArrayCloner interface {
 	Clone_Dyn() HxArrayDyn
 }
 
@@ -124,11 +127,7 @@ func (this *HxArrayImpl[T]) Set_Dyn(idx int32, val any) {
 func (this *HxArrayImpl[T]) Get_Dyn(idx int32) any {
 	length := int32(len(this.data))
 
-	if idx < 0 {
-		panic("Array index out of bounds")
-	}
-
-	if idx >= length {
+	if idx < 0 || idx >= length {
 		return HxDefault[T]()
 	}
 
@@ -161,11 +160,7 @@ func (this *HxArrayImpl[T]) Set(idx int32, val T) {
 func (this *HxArrayImpl[T]) Get(idx int32) T {
 	length := int32(len(this.data))
 
-	if idx < 0 {
-		panic("Array index out of bounds")
-	}
-
-	if idx >= length {
+	if idx < 0 || idx >= length {
 		return HxDefault[T]()
 	}
 
@@ -210,6 +205,10 @@ func (this *HxArrayImpl[T]) Underlying() []T {
 }
 
 func (this HxArrayView[T]) Underlying() []T {
+	if impl, ok := this.source.(*HxArrayImpl[T]); ok {
+		return impl.data
+	}
+
 	out := make([]T, this.Len())
 	for i := 0; i < int(this.Len()); i++ {
 		out[i] = this.Get(int32(i))

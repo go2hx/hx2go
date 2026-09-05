@@ -77,15 +77,15 @@ class FieldAccessArray extends CompilerPass {
                 var staticArgs = [e].concat(args);
                 var neededParams = params.map(p -> context.getWriter().types.writeHxbType(p));
                 
-                if (params.length > 0) {
+                var recvIsAnyArray = switch e.t {
+                    case TInst({ name: "Array" }, [el]): el.match(TDynamicAny | TDynamic(_));
+                    case _: false;
+                }
+                if (recvIsAnyArray && params.length > 0 && !params[0].match(TDynamicAny | TDynamic(_))) {
                     var elemGo = context.getWriter().types.writeHxbType(params[0]).toString();
-                    var recvGo = context.getWriter().types.writeHxbType(e.t).toString();
-                    if (recvGo == "HxArray[any]" && elemGo != "any") {
-                        var recv = ExprCopy.copy(staticArgs[0]);
-                        var viewed = ExprHelper.createUntyped('HxMakeArrayView[$elemGo]({0})', [recv]);
-                        viewed.t = TInst({ name: "Array", moduleName: "Array", pack: [] }, [params[0]]);
-                        staticArgs[0] = viewed;
-                    }
+                    var viewed = ExprHelper.createUntyped('HxMakeArrayView[$elemGo]({0})', [ExprCopy.copy(staticArgs[0])]);
+                    viewed.t = TInst({ name: "Array", moduleName: "Array", pack: [] }, [params[0]]);
+                    staticArgs[0] = viewed;
                 }
 
                 if (field.params.length > 0) {

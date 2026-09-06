@@ -8,7 +8,6 @@
   <a href="https://github.com/go2hx/hx2go/actions/workflows/main.yml"><img src="https://github.com/go2hx/hx2go/actions/workflows/main.yml/badge.svg" alt="Build Status"></a>
   <a href="#license"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License"></a>
   <img src="https://img.shields.io/badge/status-experimental-orange.svg" alt="Status: released">
-  <img src="https://img.shields.io/github/languages/top/go2hx/hx2go">
 </p>
 
 ---
@@ -19,7 +18,7 @@ can build with the standard `go` toolchain.
 - **Go interop** - [automatic extern generation](#automatic-extern-generation), and interop between Haxe and Go types.
 - **Self compiled** - the compiler runs on the Go target itself.
 - **Custom target** - integrates through Haxe's `--custom-target` define; no forked compiler required.
-- **Written in Haxe** - entire compiler + stdlib code is written in Haxe.
+- **Written in Haxe** - entire compiler is written in Haxe.
 - **Concurrency** - use goroutines, channels, and `select` (``go.Syntax.select``).
 
 > ⚠️ **Experimental.** hx2go is under active development.

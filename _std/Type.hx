@@ -185,6 +185,10 @@ class Type {
 	}
 
 	public static function enumEq<T:EnumValue>(a:T, b:T):Bool {
+		if (a == null || b == null) {
+			return b == null && a == null;
+		}
+
 		if (a == b) {
 			return true;
 		}

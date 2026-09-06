@@ -14,6 +14,11 @@ func HxConvert[T any](from any) T {
 
 	var t T
 	tt := reflect.TypeOf(t)
+
+	if tt == nil {
+		return HxDefault[T]()
+	}
+
 	targetNullable := Hx_Field_go_haxe_hxdynamic_isNullableType(tt)
 
 	var fv reflect.Value

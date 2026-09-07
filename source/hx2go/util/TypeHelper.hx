@@ -10,6 +10,14 @@ import haxe.runtime.Copy;
 
 class TypeHelper {
 
+    public static function isNullConst(e: HxbTypedExpr): Bool {
+        return switch e.expr {
+            case TConst(TNull): true;
+            case TParenthesis(inner) | TMeta(_, inner) | TCast(inner, _): isNullConst(inner);
+            case _: false;
+        }
+    }
+
     public static function goEraseType(t: HxbType): HxbType {
         return switch (t) {
             case TTypeParam(_) | TUnboundTypeParam(_):

@@ -78,9 +78,9 @@ class Init {
 
 	static function rebuildBool(path:String, change:Bool):Bool {
 		var rebuild = false;
-		#if rebuild
+		#if (rebuild || go_rebuild)
 		rebuild = true;
-		#elseif !no_rebuild
+		#elseif (!no_rebuild && !go_no_rebuild)
 		if (!FileSystem.exists(getBin(path)) || Version.stale(path, change))
 			rebuild = true;
 		#end
@@ -111,12 +111,12 @@ class Init {
 		return libs;
 	}
 	// --custom-target go=output
-    public static function init() {
+	public static function init() {
 		addCustomDefines();
-        var anyPath = {
-            pack: ["go"],
-            name: "InitRandomPackage"
-        };
+		var anyPath = {
+			pack: ["go"],
+			name: "InitRandomPackage"
+		};
 
 		var newConfig: PlatformConfig = {
 			staticTypeSystem: true,
@@ -147,7 +147,7 @@ class Init {
 				], // TODO: review
 			},
 			supportsAtomics: true
-		}
+		};
 
 		var relativeOutput = Compiler.getOutput();
 		var root = Sys.getCwd();
@@ -173,7 +173,7 @@ class Init {
 			return;
 		}
 
-        var hxbConf: WriterConfig = {
+		var hxbConf: WriterConfig = {
 			archivePath: archiveOutput,
 			targetConfig: {
 				generate: true,
@@ -209,10 +209,10 @@ class Init {
 			var singleFile = Context.defined("go-single-file");
 			var sourcelineComments = Context.defined("go-sourceline-comments");
 			var times = Context.defined("go-times");
-			var disableIncrementalCache = Context.defined("go-disable-cache") || Context.defined("go-no-cache");
-
 			var self = Context.resolvePath("go/Init.hx");
 			var path = Path.join([ Path.directory(self), '..', '..' ]);
+			var disableIncrementalCache = rebuildBool(path, false) || Context.defined("go-disable-cache") || Context.defined("go-no-cache");
+
 			var codegenVersion = Version.gitVersion(path);
 
 			var resMap: Map<String, String> = [];
@@ -228,12 +228,12 @@ class Init {
 			var res = haxe.Serializer.run(resMap);
 
 			if (!Context.defined("no-compilation")) {
-				if (!Context.defined("no-go-bootstrap")) {
+				if (!Context.defined("go-no-bootstrap")) {
 					final bin = getBin(path);
 					if (rebuildBool(path, false)) {
 						Sys.println("Creating a Go version of the compiler");
 						Sys.setCwd(path);
-						var code = Sys.command('haxe Bootstrap.hxml -D no-rebuild');
+						var code = Sys.command('haxe Bootstrap.hxml -D go-no-rebuild');
 						if (code != 0)
 							fail('bootstrap failed, $bin might be stale');
 						Sys.setCwd(root);
@@ -254,7 +254,7 @@ class Init {
 				}
 			}
 		});
-    }
+	}
 
 	static function addCustomDefines() {
 		// register custom defines
@@ -263,7 +263,7 @@ class Init {
 			doc: "rebuild the hx2go compiler (bootstrapped)",
 		});
 		Compiler.registerCustomDefine({
-			define: "no-go-bootstrap",
+			define: "go-no-bootstrap",
 			doc: "do not use the bootrapped version of the compiler (running on the Go target)",
 		});
 		Compiler.registerCustomDefine({

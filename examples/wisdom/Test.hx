@@ -1,5 +1,5 @@
 package;
-
+// This file is dual liscensed with MIT/ZLib
 import wisdom.Node;
 import haxe.xml.Access;
 import wisdom.VNode;

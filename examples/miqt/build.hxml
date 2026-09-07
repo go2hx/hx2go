@@ -3,4 +3,4 @@
 -L hx2go
 -D go-lib=github.com/mappu/miqt
 --custom-target go=output/examples/miqt
---cmd go -C output/examples/gorm/miqt run .
+--cmd go -C output/examples/miqt/main run .

@@ -272,6 +272,10 @@ func HxAnyToTypedArray[T any](v any) HxArray[T] {
 		return nil
 	}
 
+	if typed, ok := v.(HxArray[T]); ok {
+		return typed
+	}
+
 	arr, ok := v.(HxArrayDyn)
 	if !ok {
 		panic("dynamic is not array")

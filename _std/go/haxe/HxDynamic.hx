@@ -623,6 +623,33 @@ class HxDynamic {
         return cls.addr()._interface();
     }
 
+    // if mismatch, throw instead of returning nil
+    public static function castClass(d: Dynamic, className: String): Dynamic {
+        if (isNull(d)) {
+            return null;
+        }
+
+        var v = ensureValue(d);
+        var cls = valueToClass(v, className);
+        if (!cls.isValid()) {
+            throw "Can't cast " + v.type().string() + " to " + className;
+        }
+
+        // already the class reference.
+        if (cls.kind() == Reflect.ptr) {
+            return cls._interface();
+        }
+
+        // return a pointer to the value
+        if (!cls.canAddr()) {
+            var boxed = Reflect._new(cls.type());
+            boxed.elem().set(cls);
+            return boxed._interface();
+        }
+
+        return cls.addr()._interface();
+    }
+
     static function isNullableType(t: Type): Bool {
         if (t.kind() != Reflect.struct || t.numField() != 2 || t.name() != "") {
             return false;

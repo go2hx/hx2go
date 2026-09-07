@@ -181,13 +181,15 @@ class Std {
             case Int:
                 return vt == TInt;
             case Float:
-                return vt == TFloat;
+                return vt == TFloat || vt == TInt;
             case Bool:
                 return vt == TBool;
             case String:
                 return vt.match(TClass(String));
             case Array:
                 return vt.match(TClass(Array));
+            case Dynamic:
+                return true;
             case _: return switch vt {
                 case TClass(q): {
                     var target: HxClass = cast t;

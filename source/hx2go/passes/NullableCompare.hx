@@ -62,14 +62,6 @@ class NullableCompare extends CompilerPass {
             case _: null;
         }
     }
-
-    static function isNullConst(e: HxbTypedExpr): Bool {
-        return switch e.expr {
-            case TConst(TNull): true;
-            case TParenthesis(inner) | TMeta(_, inner) | TCast(inner, _): isNullConst(inner);
-            case _: false;
-        }
-    }
     
     // <, <=, >, >= against null are false, unless both sides are null and the op allows equality
     function executeRelational(expr: HxbTypedExpr, op: HxbBinop, left: HxbTypedExpr, right: HxbTypedExpr): Void {
@@ -77,8 +69,8 @@ class NullableCompare extends CompilerPass {
         var opStr = switch op { case OpGt: ">"; case OpGte: ">="; case OpLt: "<"; case _: "<="; }
         var raw = (template: String, args: Array<HxbTypedExpr>) -> ExprHelper.createUntyped(template, args).expr;
 
-        if (isNullConst(left) || isNullConst(right)) {
-            var other = isNullConst(left) ? right : left;
+        if (TypeHelper.isNullConst(left) || TypeHelper.isNullConst(right)) {
+            var other = TypeHelper.isNullConst(left) ? right : left;
             expr.expr = eq && Semantics.isNullableExpr(context, other)
                 ? raw("!{0}.Valid", [hx2go.normaliser.ExprCopy.copy(other)])
                 : TConst(TBool(false));

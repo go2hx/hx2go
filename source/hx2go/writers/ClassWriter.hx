@@ -81,11 +81,11 @@ class ClassWriter extends WriterImpl {
                     continue;
                 }
 
-                if (!f.kind.match(KMethod(_))) {
-                    if (!fieldNames.contains(f.name)) {
+                if (!fieldNames.contains(f.name)) {
                         fieldNames.push(f.name);
-                    }
+                }
 
+                if (!f.kind.match(KMethod(_))) {
                     continue;
                 }
 

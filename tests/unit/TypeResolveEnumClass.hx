@@ -2,16 +2,16 @@ package unit;
 import haxe.Exception;
 import haxe.CallStack;
 
-function u( s : String ) : String {
+private function u( s : String ) : String {
 		return s;
 	}
 
-function u2( s : String, s2 ) : String {
+private function u2( s : String, s2 ) : String {
 		//return u(s) + "." + u(s2);
 		return u(s2);
 	}
 
-var TNAMES = [
+private var TNAMES = [
 		"null","Int","String","Bool","Float",
 		"Array",u("haxe.ds.StringMap"),u("haxe.ds.List"),"Date","Xml","Math",
 		u2("unit","MyEnum"),u2("unit","MyClass"),u2("unit","MySubClass"),
@@ -43,21 +43,21 @@ function main() {
 	}
 }
 
-enum MyEnum {
+private enum MyEnum {
 	A;
 	B;
 	C( a : Int, b : String );
 	D( e : MyEnum );
 }
 
-class MyClass {
+private class MyClass {
 	public function new() {}
 	public function get() {
 		return 10;
 	}
 }
 
-class MySubClass extends MyClass {
+private class MySubClass extends MyClass {
 
 	public override function get() {
 		return 2;
@@ -67,6 +67,6 @@ class MySubClass extends MyClass {
 
 }
 
-interface MyInterface
+private interface MyInterface
 {
 }

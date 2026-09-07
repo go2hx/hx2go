@@ -15,6 +15,14 @@ import hxb.Typed.HxbFieldAccess;
 
 class CastInstToClass extends CompilerPass {
 
+    static function isTypeExpr(e: HxbTypedExpr): Bool {
+        return switch e.expr {
+            case TTypeExpr(_): true;
+            case TCast(inner, _) | TParenthesis(inner) | TMeta(_, inner): isTypeExpr(inner);
+            case _: false;
+        }
+    }
+
     public function match(expr: HxbTypedExpr): Bool {
         return switch expr {
             case { expr: TCast({ t: TInst(_) | TDynamic(_) | TDynamicAny }, _), t: TAbstract({ name: "Class", pack: [] }, _) }: true;
@@ -26,6 +34,22 @@ class CastInstToClass extends CompilerPass {
         switch expr {
             case { expr: TCast(e, _), t: t }: {
                 var isDyn = e.t.match(TDynamicAny | TDynamic(_));
+                // A type expression already IS the HxClass; no `_RTTI` fetch.
+                if (isDyn && isTypeExpr(e)) {
+                    return;
+                }
+                if (isDyn) {
+                    var o = ExprHelper.createCast(ExprHelper.createCallStatic(
+                        context,
+                        { name: 'HxDynamic', moduleName: 'HxDynamic', pack: ['go', 'haxe'] },
+                        'asClass',
+                        [hx2go.normaliser.ExprCopy.copy(e)]
+                    ), t);
+                    expr.expr = o.expr;
+                    expr.t = o.t;
+                    context.submitNode(expr, true, 1);
+                    return;
+                }
                 var o = ExprHelper.createCast(new HxbTypedExpr(TCall(
                     new HxbTypedExpr(
                         TField(hx2go.normaliser.ExprCopy.copy(e), isDyn ? FDynamic("_RTTI") : FInstance(switch e.t {

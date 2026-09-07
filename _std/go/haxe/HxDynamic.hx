@@ -623,6 +623,32 @@ class HxDynamic {
         return cls.addr()._interface();
     }
 
+    public static function asEnum(d: Dynamic): Dynamic {
+        if (isNull(d)) {
+            return null;
+        }
+        var e: Dynamic = null;
+        var ok: Bool = false;
+        Syntax.code("{0}, {1} = {2}.(*Hx_Obj_go_haxe_hxenum)", e, ok, d);
+        if (ok) {
+            return e;
+        }
+        return call(getField(d, "enumType"), []);
+    }
+
+    public static function asClass(d: Dynamic): Dynamic {
+        if (isNull(d)) {
+            return null;
+        }
+        var c: Dynamic = null;
+        var ok: Bool = false;
+        Syntax.code("{0}, {1} = {2}.(*Hx_Obj_go_haxe_hxclass)", c, ok, d);
+        if (ok) {
+            return c;
+        }
+        return call(getField(d, "_RTTI"), []);
+    }
+
     static function isNullableType(t: Type): Bool {
         if (t.kind() != Reflect.struct || t.numField() != 2 || t.name() != "") {
             return false;

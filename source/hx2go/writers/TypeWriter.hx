@@ -73,7 +73,11 @@ class TypeWriter extends WriterImpl {
         }
 
         buf.add("");
-        buf.add('type ${StringConversions.typePathTypedefName(t.path)} = ${writeHxbType(t.type)}');
+        // required as otherwise an internal Go compiler error occurs
+        // by an alias forcing an eager underlying resolution returning nil
+        var isFunc = writer.context.normalize(t.type).match(TFun(_, _));
+        var eq = isFunc ? "" : "= ";
+        buf.add('type ${StringConversions.typePathTypedefName(t.path)} ${eq}${writeHxbType(t.type)}');
 
         return buf;
     }

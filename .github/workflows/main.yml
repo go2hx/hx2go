@@ -89,7 +89,8 @@ jobs:
         
       - name: Extern tests
         run: cd hx2go-extern && haxe Testbed.hxml
-
+      - name: Install libraries for examples
+        run: haxelib git wisdom https://github.com/jeremyfa/wisdom
       - name: Test examples
         run: haxe scripts/test_examples.hxml
       

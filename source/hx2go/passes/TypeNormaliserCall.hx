@@ -138,6 +138,20 @@ class TypeNormaliserCall extends CompilerPass {
                     declaredParams(callee)
                 );
 
+            // follow the typedef of function types, as they are no longer aliases, see TypeWriter writeTypedef func
+            case TCall({ t: t = TType(_, _), expr: callee }, args) if (TypeHelper.follow(context, t).match(TFun(_, _))):
+                switch TypeHelper.follow(context, t) {
+                    case TFun(params, ret):
+                        norm(
+                            FieldAccessExtern.getExternInfo(context, new HxbTypedExpr(callee, TFun(params, ret), expr.pos)),
+                            args,
+                            params,
+                            expr,
+                            declaredParams(callee)
+                        );
+                    case _:
+                }
+
             case TCall({ expr: TConst(TSuper), t: TInst(tp, _) }, args) | TNew(tp, _, args): {
                 var m = context.resolve(tp);
                 if (m == null) {

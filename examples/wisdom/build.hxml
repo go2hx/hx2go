@@ -1,0 +1,7 @@
+-cp examples/wisdom
+-L hx2go
+-main Test
+-L wisdom
+--custom-target go=output/examples/wisdom
+-w -WIfDisplay
+--cmd go -C output/examples/wisdom/main run .

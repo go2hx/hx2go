@@ -63,7 +63,7 @@ class CastClass extends CompilerPass {
                         name: "HxDynamic",
                         moduleName: "HxDynamic",
                         pack: ["go", "haxe"]
-                    }, "toClass", [e, new HxbTypedExpr(TConst(TString(StringConversions.typePathClassInstanceName(cls.path))), TString, null)]);
+                    }, "castClass", [e, new HxbTypedExpr(TConst(TString(StringConversions.typePathClassInstanceName(cls.path))), TString, null)]);
 
                     var name = StringConversions.typePathClassInstanceName(cls.path);
                     var tmp = new HxbVar(-1, 'hx_dyncast_${castId++}', VUser(TVOLocalVariable), 0, [], e.pos, callExpr.t);

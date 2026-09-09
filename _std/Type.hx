@@ -118,7 +118,7 @@ class Type {
 	}
 
 	public static function getEnumConstructs(e:Enum<Dynamic>):Array<String> {
-		return (untyped e.constructorName : Array<String>).copy();
+		return (untyped e.constructorNames : Array<String>).copy();
 	}
 
 	public static function typeof(v:Dynamic):ValueType {

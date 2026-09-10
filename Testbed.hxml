@@ -3,5 +3,6 @@
 --macro AddTest.init()
 -main Main
 --custom-target go=output/testbed
+#-D go-lib=github.com/Shopify/go-lua
 --cmd git update-index --skip-worktree testbed/Main.hx
 --cmd go -C output/testbed/main run .

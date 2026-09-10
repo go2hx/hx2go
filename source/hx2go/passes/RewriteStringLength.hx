@@ -12,6 +12,7 @@ import hx2go.util.ExprHelper;
 import hx2go.util.StringConversions;
 import hxb.Ast.HxbObjectField;
 import hx2go.util.ObjectFieldHelper;
+import hx2go.util.TypeHelper;
 
 class RewriteStringLength extends CompilerPass {
 
@@ -30,8 +31,15 @@ class RewriteStringLength extends CompilerPass {
             case _: expr;
         }
 
+        if (!TypeHelper.compare(expr.t, TInt)) {
+            o = ExprHelper.createCast(o, expr.t);
+        } else {
+            o.t = TInt;
+        }
+
         expr.expr = o.expr;
-        expr.t = TInt;
+        expr.t = o.t;
+
         context.submitNode(expr, true);
     }
 

@@ -6,17 +6,23 @@ function main() {
 	// static var
 	// look up
 	var cl = Type.resolveClass("ClassWithProp");
-	assert(Reflect.field(cl, "STAT_X") == 6);
-	Reflect.setField(cl, "STAT_X", 11);
-	assert(Reflect.field(cl, "STAT_X") == 11);
-	assert(Reflect.fields(cl).length > 0);
+	assert(Reflect.field(cl, "STAT_X") == null);
+	var fail = false;
+	try {
+		Reflect.setField(cl, "STAT_X", 11);
+	}catch(_) {
+		fail = true;
+	}
+	assert(fail);
+	assert(Reflect.field(cl, "STAT_X") == null);
+	assert(Reflect.fields(cl).length == 0);
 	// access directly
 	assert(Reflect.field(ClassWithProp, "STAT_Y") == 10);
 	assert(Reflect.hasField(ClassWithProp, "STAT_Y"));
 	Reflect.setField(ClassWithProp, "STAT_Y", 11);
 	assert(Reflect.field(ClassWithProp, "STAT_Y") == 11);
 	// static prop
-	assert(ClassWithProp.STAT_X == 11);
+	assert(ClassWithProp.STAT_X == 6);
 
 	Reflect.setProperty(ClassWithProp, "STAT_X", 8);
 

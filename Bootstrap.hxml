@@ -4,6 +4,7 @@
 -L hx2go
 -D go-sourceline-comments
 -cp hxb-parser
+-D go-no-cache
 -D go-no-bootstrap
 --custom-target go=output/bootstrap
 --cmd go -C output/bootstrap/main build .

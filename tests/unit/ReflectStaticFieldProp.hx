@@ -26,11 +26,6 @@ function main() {
 
 }
 
-
-function eq(a, b) {
-	assert(a, b);
-}
-
 class ClassWithProp {
 	public function new() {}
 	public static var STAT_X(default, set) : Int;

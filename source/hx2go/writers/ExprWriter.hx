@@ -120,13 +120,6 @@ class ExprWriter extends WriterImpl {
             buf.add('');
             buf.add('default: ', 1);
             buf.addBuffer(writeExpr(edef), 2, false);
-        } else if ({
-            var p = Semantics.allPathsReturn(expr);
-            p.allPathsReturn && !p.isVoidType;
-        }) {
-            buf.add('');
-            buf.add('default: ', 1);
-            buf.add('panic("exhaustiveness check mismatch, you shouldn\'t be able to reach this! please report!")', 2, false);
         }
 
         buf.add('');

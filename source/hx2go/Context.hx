@@ -137,6 +137,7 @@ class Context {
             new hx2go.passes.CastString(this),
             new hx2go.passes.CastClass(this),
             new hx2go.passes.CastPointerInterface(this),
+            new hx2go.passes.SwitchDefault(this),
             new hx2go.passes.RewriteThrow(this),
             new hx2go.passes.FloatMod(this),
             new hx2go.passes.ArrayAccess(this),

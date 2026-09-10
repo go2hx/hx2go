@@ -139,6 +139,7 @@ class Context {
             new hx2go.passes.CastPointerInterface(this),
             new hx2go.passes.RewriteThrow(this),
             new hx2go.passes.FloatMod(this),
+            new hx2go.passes.ArrayAccess(this),
             new hx2go.passes.ArrayAccessDynamicSet(this),
             new hx2go.passes.ArrayAccessDynamicGet(this),
             new hx2go.passes.FieldAccessSuper(this),

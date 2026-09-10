@@ -722,7 +722,7 @@ class HxDynamic {
         ", dyn, fieldName);
 
         if (isNull(dyn)) {
-            return null;
+            throw "runtime.HxDynamic.field null field access: " + fieldName;
         }
 
         var hxCls = tryHxClass(dyn);

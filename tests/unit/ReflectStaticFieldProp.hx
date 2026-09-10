@@ -5,7 +5,7 @@ function main() {
 	assert(Reflect.fields(c).length == 0);
 	// static var
 	// look up
-	var cl = Type.resolveClass("ClassWithProp");
+	var cl = Type.resolveClass("unit.ClassWithProp");
 	assert(Reflect.field(cl, "STAT_X") == 6);
 	Reflect.setField(cl, "STAT_X", 11);
 	assert(Reflect.field(cl, "STAT_X") == 11);

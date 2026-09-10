@@ -29,15 +29,11 @@ class SwitchDefault extends CompilerPass {
     public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
         var p = Semantics.allPathsReturn(expr);
 
-        if (!p.allPathsReturn && expr.t.match(TVoid)) {
+        if (!(p.allPathsReturn && !p.isVoidType)) {
             return;
         }
 
-        var o = if (p.allPathsReturn) {
-            new HxbTypedExpr(TThrow(ExprHelper.createUntyped('"unreachable"', [])), TVoid, null);
-        } else {
-            new HxbTypedExpr(TReturn(ExprHelper.createUntyped('return HxDefault[${context.getWriter().types.writeHxbType(expr.t)}]()', [])), expr.t, null);
-        }
+        var o = new HxbTypedExpr(TThrow(ExprHelper.createUntyped('"unreachable"', [])), TVoid, null);
 
         context.submitNode(o, true);
 

@@ -78,7 +78,7 @@ abstract Vector<T>(VectorData<T>) {
 	}
 
 	public inline extern function copy<T>():Vector<T> {
-        return cast fromArrayCopy(this.copy());
+        return cast fromArrayCopy(this);
 	}
 
 	public inline function join<T>(sep:String):String {

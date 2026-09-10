@@ -25,14 +25,13 @@ class Reflect {
     }
 
     public static function setProperty(o: Dynamic, field: String, value: Dynamic): Void {
-        try HxDynamic.setField(o, field, value) catch(_) {
-            var fn = HxDynamic.getField(o, 'set_${field}');
-            if (fn == null) {
-                throw 'Reflect.setProperty "${o}" does not contain field or setter "${field}"';
-            }
-
-            HxDynamic.call(fn, [value]);
+        var fn = HxDynamic.getField(o, 'set_${field}');
+        if (fn == null) {
+            HxDynamic.setField(o, field, value);
+            return;
         }
+
+        HxDynamic.call(fn, [value]);
     }
 
     public static function callMethod(o: Dynamic, func: haxe.Constraints.Function, args: Array<Dynamic>): Dynamic {
@@ -61,7 +60,13 @@ class Reflect {
         }
 
         if (kind == go.Reflect.struct) {
-            return Type.getInstanceFields(Type.getClass(o));
+            var t = Type.typeof(o);
+            switch t {
+                case TClass(c):
+                    return Type.getInstanceFields(c);
+                default:
+                    return o.staticFields;
+            }
         }
 
         return [];

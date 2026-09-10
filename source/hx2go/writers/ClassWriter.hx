@@ -19,7 +19,7 @@ import hx2go.util.ExprHelper;
 
 class ClassWriter extends WriterImpl {
 
-    function classMeta(cls: HxbClass): String {
+    public function classMeta(cls: HxbClass): String {
         var fields: Array<{ name: String, meta: Array<hxb.Ast.HxbMetaEntry> }> =
             cls.fields.map(f -> { name: f.name, meta: f.meta });
         if (cls.constructor != null) {
@@ -60,6 +60,8 @@ class ClassWriter extends WriterImpl {
             buf.add('panic("Cannot dynamically create instance of extern class")', 2);
             buf.add('},', 1);
             buf.add('nil,', 1);
+            buf.addBuffer(writeStaticFieldPtrClosure(cls), 1, false);
+            buf.addInline(',\n');
             buf.add(')');
 
             return buf;
@@ -370,6 +372,8 @@ class ClassWriter extends WriterImpl {
             buf.add('return ${StringConversions.typePathClassInstanceName(cls.path)}_CreateEmptyInstance()', 2);
             buf.add('},', 1);
             buf.add('${classMeta(cls)},', 1);
+            buf.addBuffer(writeStaticFieldPtrClosure(cls), 1, false);
+            buf.addInline(',\n');
             buf.add(')');
 
             buf.add('');
@@ -400,6 +404,8 @@ class ClassWriter extends WriterImpl {
             buf.add('return nil', 2);
             buf.add('},', 1);
             buf.add('${classMeta(cls)},', 1);
+            buf.addBuffer(writeStaticFieldPtrClosure(cls), 1, false);
+            buf.addInline(',\n');
             buf.add(')');
         }
 
@@ -411,6 +417,49 @@ class ClassWriter extends WriterImpl {
 
             buf.addBuffer(res);
         }
+
+        return buf;
+    }
+
+    public function writeStaticFieldPtrClosure(cls: HxbClass): OutputBuffer {
+        var buf = new OutputBuffer();
+        var isExternCls = cls.flags & HxbClassFlag.CExtern != 0;
+
+        buf.addInline('func (name string) any {');
+
+        if (!isExternCls) {
+            var cases: Array<{ name: String, expr: String }> = [];
+
+            for (f in cls.statics) {
+                if (f.flags & HxbClassFieldFlag.CfExtern != 0) continue;
+                if (f.flags & HxbClassFieldFlag.CfGeneric != 0) continue;
+
+                var sfName = StringConversions.typePathStaticFieldName(f.name, cls.path);
+
+                switch f.kind {
+                    case KVar(_, _):
+                        if (!shouldGenVar(f)) continue;
+                        // package var exists -> return its address (settable)
+                        cases.push({ name: f.name, expr: '&$sfName' });
+                    case KMethod(_):
+                        if (f.expr == null) continue; // abstract, no func emitted
+                        // return the func value directly
+                        cases.push({ name: f.name, expr: sfName });
+                }
+            }
+
+            if (cases.length > 0) {
+                buf.add('switch name {', 1);
+                for (c in cases) {
+                    buf.add('case "${c.name}":', 1);
+                    buf.add('return ${c.expr}', 2);
+                }
+                buf.add('}', 1);
+            }
+        }
+
+        buf.add('return nil', 1);
+        buf.addInline('}');
 
         return buf;
     }

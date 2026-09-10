@@ -55,6 +55,7 @@ class TypeWriter extends WriterImpl {
         buf.add('return nil', 2);
         buf.add('},', 1);
         buf.add('${abstractMeta(a)},', 1);
+        buf.add('func (name string) any { return nil },', 1);
         buf.add(')');
 
         return buf;

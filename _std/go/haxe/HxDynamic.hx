@@ -9,6 +9,7 @@ import go.Syntax;
 import go.Fmt;
 import go.Pointer;
 import go.unsafe.Pointer as UnsafePointer;
+import go.haxe.HxClass;
 
 // HxDynamic implements Dynamic runtime manipulation required by Haxe
 // using go.reflect.Reflect and naming from http://haxedev.wikidot.com/article:operator-overloading
@@ -685,6 +686,31 @@ class HxDynamic {
         return getFieldFrom(dyn, fieldName, true);
     }
 
+    static function tryHxClass(dyn: Dynamic): HxClass {
+        var cls: HxClass = null;
+        var ok: Bool = false;
+        Syntax.code("{0}, {1} = {2}.(*Hx_Obj_go_haxe_hxclass)", cls, ok, dyn);
+        return ok ? cls : null;
+    }
+
+    static function hxClassStaticValue(cls: HxClass, fieldName: String): Value {
+        if (cls.getStaticFieldPtr == null) {
+            return Null;
+        }
+
+        var ptr: Dynamic = cls.getStaticFieldPtr(fieldName);
+        if (isNull(ptr)) {
+            return Null;
+        }
+
+        var pv = ensureConcreteValue(ptr);
+        if (pv.kind() == Reflect.ptr) {
+            return pv.elem();
+        }
+
+        return pv;
+    }
+
     static function getFieldFrom(dyn: Dynamic, fieldName: String, hop: Bool): Dynamic {
         Syntax.code("
             switch m := {0}.(type) {
@@ -697,6 +723,20 @@ class HxDynamic {
 
         if (isNull(dyn)) {
             throw "runtime.HxDynamic.field null field access: " + fieldName;
+        }
+
+        var hxCls = tryHxClass(dyn);
+        if (hxCls != null) {
+            var sv = hxClassStaticValue(hxCls, fieldName);
+            if (sv.isValid()) {
+                sv = unwrapNullable(sv);
+                if (!sv.isValid()) {
+                    return null;
+                }
+
+                return sv.canInterface() ? sv._interface() : null;
+            }
+            // fall through
         }
 
         var arr = tryDynamicArray(dyn);
@@ -811,6 +851,20 @@ class HxDynamic {
 
     // write field access on dynamic (class, anon, etc)
     public static function setField(dyn: Dynamic, fieldName: String, v: Dynamic): Dynamic {
+        var hxCls = tryHxClass(dyn);
+        if (hxCls != null) {
+            var sv = hxClassStaticValue(hxCls, fieldName);
+            if (sv.isValid()) {
+                if (!sv.canSet()) {
+                    throw 'runtime.HxDynamic.setField cannot set static "$fieldName" on "${hxCls.name}"';
+                }
+
+                sv.set(valueToAssign(v, sv.type()));
+                return v;
+            }
+            // fall through
+        }
+
         var value = ensureValue(dyn);
         var kind = value.kind();
 

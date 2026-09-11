@@ -33,18 +33,19 @@ class NativeStackTrace {
 		return nativeStackTrace;
 	}
 
-	static function isHaxeCallStackFrame(fn: String): Bool {
-		return fn == "runtime.Callers"
-			|| fn.indexOf("haxe_nativestacktrace") != -1
-			|| fn.indexOf("haxe__callstack") != -1
-			|| isConstructorFrame(fn);
+	static function isHaxeCallStackFrame(f:String):Bool {
+		return f == "runtime.Callers"
+			|| f.indexOf("haxe_nativestacktrace") != -1
+			|| f.indexOf("haxe__callstack") != -1
+			|| isConstructorFrame(f);
 	}
 
-	static function isConstructorFrame(fn: String): Bool {
-		return StringTools.endsWith(fn, ".Hx_New")
-			|| fn.indexOf("_CreateInstance") != -1
-			|| fn.indexOf("haxe_exception_thrown") != -1
-			|| fn.indexOf("haxe_exception_caught") != -1;
+	static function isConstructorFrame(f:String):Bool {
+		return StringTools.endsWith(f, ".Hx_New")
+			|| f.indexOf("_CreateEmptyInstance") != -1
+			|| f.indexOf("_CreateInstance") != -1
+			|| f.indexOf("haxe_exception_thrown") != -1
+			|| f.indexOf("haxe_exception_caught") != -1;
 	}
 
 	static function capture(): Array<StackItem> {

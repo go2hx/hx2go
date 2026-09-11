@@ -83,6 +83,11 @@ class Reflect {
     }
 
     public static function compare<T>(a: T, b: T): Int {
+        var aIsNull = go.haxe.HxStringNull.dynIsStringNull(a);
+        var bIsNull = go.haxe.HxStringNull.dynIsStringNull(b);
+        if (aIsNull || bIsNull) {
+            return (aIsNull && bIsNull) ? 0 : -1;
+        }
         return try (a == b) ? 0 : (((a : Dynamic) > (b : Dynamic)) ? 1 : -1) catch (_) -1;
     }
 
@@ -112,6 +117,11 @@ class Reflect {
 
             value = value.elem();
             kind = value.kind();
+        }
+
+        // null String is not an object
+        if (kind == go.Reflect.string && go.haxe.HxStringNull.isNull(value.string())) {
+            return false;
         }
 
         var type = value.type();

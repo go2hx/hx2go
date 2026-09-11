@@ -196,11 +196,20 @@ class Std {
                 return HxDynamic.isHxEnum(v);
             case _: return switch vt {
                 case TClass(q): {
+                    if (!HxDynamic.isHxClass(t)) {
+                        return false;
+                    }
                     var target: HxClass = cast t;
+                    if (target == null) {
+                        return false;
+                    }
                     var queue: Array<HxClass> = [(cast q : HxClass)];
 
                     while (queue.length > 0) {
                         var current = queue.shift();
+                        if (current == null) {
+                            continue;
+                        }
                         if (current.name == target.name) {
                             return true;
                         }
@@ -218,9 +227,12 @@ class Std {
                 };
 
                 case TEnum(q): {
+                    if (!HxDynamic.isHxEnum(t)) {
+                        return false;
+                    }
                     var v1: HxEnum = cast t;
                     var v2: HxEnum = cast q;
-                    v1.name == v2.name;
+                    v1 != null && v2 != null && v1.name == v2.name;
                 }
 
                 case _: false;

@@ -698,8 +698,16 @@ class ExprWriter extends WriterImpl {
     public function writeVarDecl(expr: HxbTypedExpr, v: HxbVar, vexpr: HxbTypedExpr): OutputBuffer {
         var buf = new OutputBuffer();
 
-        var hasInit = vexpr != null
-            && !vexpr.expr.match(TConst(TNull) | TCast({ expr: TConst(TNull) }, _));
+        var isNullInit = vexpr != null
+            && vexpr.expr.match(TConst(TNull) | TCast({ expr: TConst(TNull) }, _));
+        var isStringType = v.type != null && switch TypeHelper.follow(writer.context, v.type, false) {
+            case TString
+               | TInst({ name: "String", pack: [] }, _)
+               | TAbstract({ name: "String", pack: [] }, _): true;
+            case _: false;
+        }
+
+        var hasInit = vexpr != null && (!isNullInit || isStringType);
 
         buf.addInline('var ${v.name} ');
         buf.addBufferInline(writer.types.writeHxbType(v.type));
@@ -709,7 +717,11 @@ class ExprWriter extends WriterImpl {
 
         if (hasInit) {
             buf.addInline('\n${v.name} = ');
-            buf.addBufferInline(writeExpr(vexpr));
+            if (isNullInit && isStringType) {
+                buf.addInline("HxStringNull");
+            } else {
+                buf.addBufferInline(writeExpr(vexpr));
+            }
         }
 
         return buf;
@@ -817,7 +829,9 @@ class ExprWriter extends WriterImpl {
             case TNull: switch TypeHelper.follow(writer.context, expr.t, false) {
                 case TString
                    | TInst({ name: "String", pack: [] }, _)
-                   | TAbstract({ name: "String", pack: [] }, _): "``";
+                   | TAbstract({ name: "String", pack: [] }, _):
+                        var goType = writer.types.writeHxbType(expr.t).toString();
+                        goType == "string" ? "HxStringNull" : '(($goType)(HxStringNull))';
                 case _: "nil";
             }
             case TThis: "this";

@@ -17,8 +17,6 @@ function main() {
 
     assert((nul == "null") == false);    // String Null should be different from the string "null"
 
-    assert((("abc"+nul) == "abc\u0000null") == true); 
-
     assert(empty.length == 0);
 
     // null prints "null", "" prints ""

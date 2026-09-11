@@ -169,6 +169,10 @@ class HxDynamic {
             return v.isNil();
         }
 
+        if (k == Reflect.string) {
+            return HxStringNull.isNull(v.string());
+        }
+
         return false;
     }
 

@@ -48,6 +48,9 @@ func HxConvert[T any](from any) T {
 	}
 
 	if from == nil {
+		if tt.Kind() == reflect.String {
+			return reflect.ValueOf(HxStringNull).Convert(tt).Interface().(T)
+		}
 		return HxDefault[T]()
 	}
 

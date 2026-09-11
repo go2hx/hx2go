@@ -56,14 +56,16 @@ class TypeNormaliserNew extends CompilerPass {
                                 var arg = el[idx];
                                 var field = cls.fields.filter(f -> f.name == params[idx].name)[0];
 
-                                // @:structInit String type always set empty string if not set
-                                if (field != null && TypeHelper.isNullConst(arg) && Semantics.isStringType(context, field.type)) {
+                                // @:structInit String type always set empty string if not set, exclude Null<String>
+                                if (field != null && TypeHelper.isNullConst(arg)
+                                    && Semantics.isStringType(context, field.type)
+                                    && !Semantics.isNullableType(context, field.type)) {
                                     arg.expr = TConst(TString(""));
                                     arg.t = field.type;
                                     argStr.push('${StringConversions.toPascalCase(params[idx].name)}: {${idx}}');
                                     continue;
                                 }
-                                
+
                                 if (field != null && arg.t != null && !TypeHelper.compare(arg.t, field.type)) {
                                     var c = ExprHelper.createCast(arg, field.type);
                                     arg.expr = c.expr;

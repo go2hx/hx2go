@@ -190,6 +190,10 @@ class Std {
                 return vt.match(TClass(Array));
             case Dynamic:
                 return true;
+            case Class:
+                return HxDynamic.isHxClass(v);
+            case Enum:
+                return HxDynamic.isHxEnum(v);
             case _: return switch vt {
                 case TClass(q): {
                     var target: HxClass = cast t;

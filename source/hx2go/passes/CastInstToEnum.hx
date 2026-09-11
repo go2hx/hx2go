@@ -38,9 +38,19 @@ class CastInstToEnum extends CompilerPass {
                 if (isDyn && isTypeExpr(e)) {
                     return;
                 }
+                if (isDyn) {
+                    var call = ExprHelper.createCallStatic(context, {
+                        name: "HxDynamic", moduleName: "HxDynamic", pack: ['go', 'haxe']
+                    }, "asEnum", [hx2go.normaliser.ExprCopy.copy(e)]);
+                    var o = ExprHelper.createCast(call, t);
+                    expr.expr = o.expr;
+                    expr.t = o.t;
+                    context.submitNode(expr, true, 1);
+                    return;
+                }
                 var o = ExprHelper.createCast(new HxbTypedExpr(TCall(
                     new HxbTypedExpr(
-                    TField(hx2go.normaliser.ExprCopy.copy(e), isDyn ? FDynamic("enumType") : FInstance(switch e.t {
+                    TField(hx2go.normaliser.ExprCopy.copy(e), FInstance(switch e.t {
                         case TEnum(tp, _) | TAbstract(tp, _): tp;
                         case _: return;
                     }, [], {

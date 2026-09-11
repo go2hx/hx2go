@@ -366,7 +366,8 @@ class ClassWriter extends WriterImpl {
             buf.add('${firstSuper != null ? '${StringConversions.typePathClassInstanceName(firstSuper.path)}_RTTI' : 'nil'},', 1);
             buf.add('HxMakeArray[*Hx_Obj_go_haxe_hxclass](${cls.interfaces.map(i -> '${writer.context.resolvedInstanceName(i.t)}_RTTI').join(", ")}),', 1);
             buf.add('func (params HxArray[any]) any {', 1);
-            buf.add('return nil', 2);
+            var ctorCallArgs = [ for (i in 0...ctor.args.length) 'HxConvert[${writer.types.writeHxbType(ctor.args[i].t).toString()}](params.Get(${i}))' ];
+            buf.add('return ${StringConversions.typePathClassInstanceName(cls.path)}_CreateInstance(${ctorCallArgs.join(", ")})', 2);
             buf.add('},', 1);
             buf.add('func () any {', 1);
             buf.add('return ${StringConversions.typePathClassInstanceName(cls.path)}_CreateEmptyInstance()', 2);

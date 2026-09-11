@@ -56,14 +56,18 @@ class Reflect {
 
         if (kind == go.Reflect.map) {
             var keys = value.mapKeys();
-            return keys.toArray().map(k -> Std.string(k));
+            var names = keys.toArray().map(k -> Std.string(k));
+            names.sort(Reflect.compare);
+            return names;
         }
 
         if (kind == go.Reflect.struct) {
             var t = Type.typeof(o);
             switch t {
                 case TClass(c):
-                    return Type.getInstanceFields(c);
+                    // keep fields backed by an actual struct field
+                    return Type.getInstanceFields(c).filter(name ->
+                        value.fieldByName(HxDynamic.formatField(name)).isValid());
                 default:
                     return o.staticFields;
             }

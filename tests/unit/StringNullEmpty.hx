@@ -1,5 +1,6 @@
 package unit;
 
+
 function main() {
     var empty:String = "";
     var nul:String = null;
@@ -13,6 +14,8 @@ function main() {
     assert((nul == nul2) == true);       // two nulls are equal
     assert((empty == nul) == false);     // "" is not null, both operand orders
     assert((nul == empty) == false);
+
+    assert((nul == "null") == false);    // String Null should be different from the string "null"
 
     assert(empty.length == 0);
 

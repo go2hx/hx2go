@@ -409,6 +409,7 @@ class HxDynamic {
 
     // internal function to convert Value to Int
     static function valueToInt(dV:Value):Int {
+        dV = unwrapNullable(dV);
         // NOTE not converting bool to int
         // if (dV.kind() == Reflect.bool) {
         //  return if (dV.bool()) 1 else 0;
@@ -521,6 +522,7 @@ class HxDynamic {
     }
 
     static function valueToInt64(dV:Value):go.Int64 {
+        dV = unwrapNullable(dV);
         if (dV.canInt()) {
             return dV.int();
         } else if (dV.canUint()) {
@@ -538,6 +540,7 @@ class HxDynamic {
 
     // internal function to convert Value to Float
     static function valueToFloat(dV:Value):Float {
+        dV = unwrapNullable(dV);
         // NOTE not converting bool to int
         // if (dV.kind() == Reflect.bool) {
         //  return if (dV.bool()) 1.0 else 0.0;
@@ -691,6 +694,46 @@ class HxDynamic {
         var ok: Bool = false;
         Syntax.code("{0}, {1} = {2}.(*Hx_Obj_go_haxe_hxclass)", cls, ok, dyn);
         return ok ? cls : null;
+    }
+
+    public static function isHxClass(dyn: Dynamic): Bool {
+        if (isNull(dyn)) return false;
+        var cls: Dynamic = null;
+        var ok: Bool = false;
+        Syntax.code("{0}, {1} = {2}.(*Hx_Obj_go_haxe_hxclass)", cls, ok, dyn);
+        return ok;
+    }
+    
+    public static function isHxEnum(dyn: Dynamic): Bool {
+        if (isNull(dyn)) return false;
+        var en: Dynamic = null;
+        var ok: Bool = false;
+        Syntax.code("{0}, {1} = {2}.(*Hx_Obj_go_haxe_hxenum)", en, ok, dyn);
+        return ok;
+    }
+
+    // Disambiguate a Dynamic that a `Dynamic -> Class<T>` cast must resolve: it
+    // may already hold the RTTI type-object (from a type-ref stored in a
+    // container/field/return) or a class INSTANCE. For the former return it as-is;
+    // for the latter call its `_RTTI()` accessor. Compile-time `isTypeExpr` in
+    // CastInstToClass handles bare type refs; this covers the runtime cases.
+    public static function asClass(d: Dynamic): Dynamic {
+        if (isNull(d)) return null;
+        var c: Dynamic = null;
+        var ok: Bool = false;
+        Syntax.code("{0}, {1} = {2}.(*Hx_Obj_go_haxe_hxclass)", c, ok, d);
+        if (ok) return c;
+        return call(getField(d, "_RTTI"), []);
+    }
+
+    // Twin of asClass for `Dynamic -> Enum<T>` casts.
+    public static function asEnum(d: Dynamic): Dynamic {
+        if (isNull(d)) return null;
+        var e: Dynamic = null;
+        var ok: Bool = false;
+        Syntax.code("{0}, {1} = {2}.(*Hx_Obj_go_haxe_hxenum)", e, ok, d);
+        if (ok) return e;
+        return call(getField(d, "enumType"), []);
     }
 
     static function hxClassStaticValue(cls: HxClass, fieldName: String): Value {

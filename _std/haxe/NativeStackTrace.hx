@@ -76,10 +76,41 @@ class NativeStackTrace {
 	}
 
 	static function createMethod(fn: String): StackItem {
+		fn = stripClosureSuffix(fn);
 		var dot = fn.lastIndexOf(".");
 		if (dot <= 0) {
 			return Method(null, fn);
 		}
 		return Method(fn.substr(0, dot), fn.substr(dot + 1));
+	}
+
+	// strip trailing funcN
+	static function stripClosureSuffix(fn: String): String {
+		while (true) {
+			var dot = fn.lastIndexOf(".");
+			if (dot <= 0) {
+				return fn;
+			}
+			var seg = fn.substr(dot + 1);
+			if (isClosureSegment(seg)) {
+				fn = fn.substr(0, dot);
+			} else {
+				return fn;
+			}
+		}
+	}
+
+	static function isClosureSegment(seg: String): Bool {
+		var body = StringTools.startsWith(seg, "func") ? seg.substr(4) : seg;
+		if (body.length == 0) {
+			return false;
+		}
+		for (i in 0...body.length) {
+			var c = body.charCodeAt(i);
+			if (c < "0".code || c > "9".code) {
+				return false;
+			}
+		}
+		return true;
 	}
 }

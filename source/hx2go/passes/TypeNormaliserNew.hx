@@ -1,5 +1,6 @@
 package hx2go.passes;
 
+import hx2go.normaliser.Semantics;
 import hxb.Typed.HxbTypedExpr;
 import hxb.flags.HxbClassFlag;
 import hxb.Typed.HxbFieldAccess;
@@ -54,6 +55,15 @@ class TypeNormaliserNew extends CompilerPass {
                                 // cast each arg to the actual Go struct field type
                                 var arg = el[idx];
                                 var field = cls.fields.filter(f -> f.name == params[idx].name)[0];
+
+                                // @:structInit String type always set empty string if not set
+                                if (field != null && TypeHelper.isNullConst(arg) && Semantics.isStringType(context, field.type)) {
+                                    arg.expr = TConst(TString(""));
+                                    arg.t = field.type;
+                                    argStr.push('${StringConversions.toPascalCase(params[idx].name)}: {${idx}}');
+                                    continue;
+                                }
+                                
                                 if (field != null && arg.t != null && !TypeHelper.compare(arg.t, field.type)) {
                                     var c = ExprHelper.createCast(arg, field.type);
                                     arg.expr = c.expr;

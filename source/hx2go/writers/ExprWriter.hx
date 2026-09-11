@@ -798,7 +798,9 @@ class ExprWriter extends WriterImpl {
             case TNull: switch TypeHelper.follow(writer.context, expr.t, false) {
                 case TString
                    | TInst({ name: "String", pack: [] }, _)
-                   | TAbstract({ name: "String", pack: [] }, _): "HxStringNull";
+                   | TAbstract({ name: "String", pack: [] }, _):
+                        var goType = writer.types.writeHxbType(expr.t).toString();
+                        goType == "string" ? "HxStringNull" : '(($goType)(HxStringNull))';
                 case _: "nil";
             }
             case TThis: "this";

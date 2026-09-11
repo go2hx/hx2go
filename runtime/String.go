@@ -6,7 +6,7 @@ import (
 )
 
 var ASCIInullStr = "\u0000"
-var HxStringNull, _ = strings.CutSuffix("《null》"+ASCIInullStr, ASCIInullStr)
+var HxStringNull, _ = strings.CutSuffix(ASCIInullStr+"null"+ASCIInullStr, ASCIInullStr)
 
 func isStringNull(s string) bool {
 	if len(s) != len(HxStringNull) {

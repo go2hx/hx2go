@@ -636,7 +636,7 @@ class ExprWriter extends WriterImpl {
             buf.add('HxMakeArray[any](\n');
             for (name => value in writer.context.res) {
                 var valueString = haxe.crypto.Base64.encode(value).toString();
-                buf.add('any(map[string]any{"name": any(`$name`), "data": any(`$valueString`), "str": any(``)}),\n');
+                buf.add('any(map[string]any{"name": any(`$name`), "data": any(`$valueString`), "str": any(HxStringNull)}),\n');
             }
             buf.add("),");
             return buf;

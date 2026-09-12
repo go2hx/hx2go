@@ -15,7 +15,8 @@ function main() {
     assert((empty == nul) == false);     // "" is not null, both operand orders
     assert((nul == empty) == false);
 
-    assert((nul == "null") == false);    // String Null should be different from the string "null"
+    assert(nul != "null");               // String Null should be different from the string "null"
+    assert(nul == "\x00null");           // String Null should be equal to the string "\x00null"
 
     assert(empty.length == 0);
 

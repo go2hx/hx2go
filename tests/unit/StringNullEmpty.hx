@@ -16,7 +16,7 @@ function main() {
     assert((nul == empty) == false);
 
     assert(nul != "null");               // String Null should be different from the string "null"
-    assert(nul == "\x00null");           // String Null should be equal to the string "\x00null"
+    assert(nul == "\u0000null");         // String Null should be equal to the string "\u0000null"
 
     assert(empty.length == 0);
 

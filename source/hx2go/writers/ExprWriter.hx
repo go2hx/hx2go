@@ -437,8 +437,13 @@ class ExprWriter extends WriterImpl {
             if (writer.context.sourcelineComments && topLevel) {
                 buf.addInline(addJumpComment(e));
             }
-
-            buf.addBuffer(writeExpr(e), 1);
+            var stmt = writeExpr(e);
+            var directive = writer.context.lineDirectives ? lineDirective(e) : '';
+            if (directive != '') {
+                buf.add(stampLines(stmt.toString(), directive), 1);
+            } else {
+                buf.addBuffer(stmt, 1);
+            }
         }
 
         buf.addInline("}");
@@ -460,6 +465,32 @@ class ExprWriter extends WriterImpl {
             return '// file://' + path + "#" + lineNumber + "\n";
         }
         #end
+        return '';
+    }
+
+    function stampLines(text:String, directive:String):String {
+        var lines = text.split("\n");
+        var out = new StringBuf();
+        for (i in 0...lines.length) {
+            if (i > 0) out.add("\n");
+            var line = lines[i];
+            if (StringTools.ltrim(line).substr(0, 6) == "/*line") {
+                out.add(line);
+            } else {
+                out.add(directive + line);
+            }
+        }
+        return out.toString();
+    }
+
+    function lineDirective(e:HxbTypedExpr):String {
+        if (e.pos != null) {
+            var lineNumber = toLocation(e.pos)?.range.start.line;
+            if (lineNumber == null)
+                return '';
+            var path = haxe.io.Path.normalize(e.pos.file);
+            return '/*line ' + path + ':' + lineNumber + '*/ ';
+        }
         return '';
     }
 

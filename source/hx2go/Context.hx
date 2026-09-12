@@ -69,14 +69,16 @@ class Context {
     private var processList: Array<Process>;
     private var writtenFiles: Map<String, Bool>;
     public var sourcelineComments:Bool = false;
+    public var lineDirectives:Bool = true;
     public var times: hx2go.util.Times;
 
     private var codegenVersion:String;
     private var disableIncrementalCache:Bool = false;
     private var cache:Cache;
 
-    public function new(archive: HxbArchive, outputDirectory: String, sourcelineComments:Bool, times:hx2go.util.Times, codegenVersion:String, disableIncrementalCache:Bool) {
+    public function new(archive: HxbArchive, outputDirectory: String, sourcelineComments:Bool, times:hx2go.util.Times, codegenVersion:String, disableIncrementalCache:Bool, lineDirectives:Bool = true) {
         this.sourcelineComments = sourcelineComments;
+        this.lineDirectives = lineDirectives;
         this.times = times;
         this.types = new Map();
         this.imports = new Map();

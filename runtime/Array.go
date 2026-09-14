@@ -4,7 +4,36 @@ import (
 	"reflect"
 	"slices"
 	"strings"
+	"sync"
 )
+
+// used to build a dynamic array
+var hxArrayConstructors sync.Map
+
+func hxRegisterArrayConstructor[T any]() {
+	target := reflect.TypeOf((*HxArray[T])(nil)).Elem()
+	if _, ok := hxArrayConstructors.Load(target); !ok {
+		hxArrayConstructors.Store(target, func(src HxArrayDyn) any { return HxArrayView[T]{src} })
+	}
+}
+
+func HxCoerceArray(val any, target reflect.Type) any {
+	src, ok := val.(HxArrayDyn)
+	if !ok {
+		return nil
+	}
+
+	if reflect.TypeOf(val).Implements(target) {
+		return nil
+	}
+
+	ctor, ok := hxArrayConstructors.Load(target)
+	if !ok {
+		return nil
+	}
+
+	return ctor.(func(HxArrayDyn) any)(src)
+}
 
 type HxArrayDyn interface {
 	Set_Dyn(idx int32, val any)

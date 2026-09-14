@@ -15,6 +15,31 @@ class TypeWriter extends WriterImpl {
 
     public var importTarget: String = "";
 
+    // flushed by takeArrayInit() into the given module
+    public var arrayElemTypes: Map<String, Bool> = new Map();
+
+    // creates a func init() of all of the arrayElemTypes
+    public function takeArrayInit(): OutputBuffer {
+        var buf = new OutputBuffer();
+
+        var elems = [for (k in arrayElemTypes.keys()) k];
+        arrayElemTypes.clear();
+        if (elems.length == 0) {
+            return buf;
+        }
+
+        elems.sort((a, b) -> a < b ? -1 : (a > b ? 1 : 0));
+
+        buf.add("");
+        buf.add("func init() {");
+        for (e in elems) {
+            buf.add('hxRegisterArrayConstructor[${e}]()', 1);
+        }
+        buf.add("}");
+
+        return buf;
+    }
+
     public function writeModuleTypeDecl(type: HxbModuleType): OutputBuffer {
         return switch type {
             case MClass(v): writer.classes.writeClass(v);
@@ -218,7 +243,11 @@ class TypeWriter extends WriterImpl {
                 'struct { ${fields.map(f -> '${StringConversions.toPascalCase(f.name)} ${writeHxbType(f.type)}').join('; ')} }';
             }
             case TAbstract({ pack: [], name: 'Null' }, params): 'struct { Value ${writeHxbType(params[0])}; Valid bool }';
-            case TInst({ pack: [], name: 'Array' }, params) | TAbstract({ pack: ["haxe", "ds"], name: "Vector" }, params): 'HxArray[${writeHxbType(params[0])}]';
+            case TInst({ pack: [], name: 'Array' }, params) | TAbstract({ pack: ["haxe", "ds"], name: "Vector" }, params): {
+                var elem = writeHxbType(params[0]).toString();
+                arrayElemTypes.set(elem, true);
+                'HxArray[${elem}]';
+            }
             case TAbstract({ pack: ['go'], name: 'Slice' }, params): '[]${writeHxbType(params[0])}';
             case TAbstract({ pack: ['go'], name: 'GoArray' }, params): '[${writeHxbType(params[1])}]${writeHxbType(params[0])}';
             case TAbstract({ pack: ['go'], name: 'Chan' }, params): 'chan ${writeHxbType(params[0])}';

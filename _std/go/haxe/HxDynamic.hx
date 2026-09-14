@@ -462,6 +462,11 @@ class HxDynamic {
             }
         }
 
+        var coerced: Dynamic = Syntax.code("HxCoerceArray({0}, {1})", cv._interface(), t);
+        if (!isNull(coerced)) {
+            return Reflect.valueOf(coerced);
+        }
+
         // TODO: null<T> types?
 
         return cv;
@@ -700,6 +705,29 @@ class HxDynamic {
         return ok ? cls : null;
     }
 
+    static function tryHxEnum(dyn: Dynamic): HxEnum {
+        var en: HxEnum = null;
+        var ok: Bool = false;
+        Syntax.code("{0}, {1} = {2}.(*Hx_Obj_go_haxe_hxenum)", en, ok, dyn);
+        return ok ? en : null;
+    }
+
+    static function hxEnumConstructor(en: HxEnum, fieldName: String): Dynamic {
+        var i = en.constructorNames.indexOf(fieldName);
+        if (i < 0) {
+            return null;
+        }
+
+        if (en.constructorArgCounts[i] == 0) {
+            return en.createByIndex(i, []);
+        }
+        
+        return Syntax.code(
+            "func(args ...any) any { return {0}.Hx_Field_createByIndex({1}, HxMakeArray(args...)) }",
+            en, i
+        );
+    }
+
     public static function isHxClass(dyn: Dynamic): Bool {
         if (isNull(dyn)) return false;
         var cls: Dynamic = null;
@@ -782,6 +810,15 @@ class HxDynamic {
                 }
 
                 return sv.canInterface() ? sv._interface() : null;
+            }
+            // fall through
+        }
+
+        var hxEn = tryHxEnum(dyn);
+        if (hxEn != null) {
+            var ctor = hxEnumConstructor(hxEn, fieldName);
+            if (ctor != null) {
+                return ctor;
             }
             // fall through
         }

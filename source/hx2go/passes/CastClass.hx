@@ -112,7 +112,9 @@ class CastClass extends CompilerPass {
                         ]), expr.t, expr.pos).expr;
 
                     } else if (srcPath != null && ExprHelper.isBaseOf(context, context.resolvedInstanceName(cls.path), srcPath)) {
-                        expr.expr = ExprHelper.createUntyped('&{0}.$name', [e]).expr;
+                        expr.expr = ExprHelper.createUntyped(
+                            '(func() *$name { _hx_up := {0}; if _hx_up != nil { return &_hx_up.$name }; return nil })()',
+                            [e]).expr;
                     } else {
                         expr.expr = ExprHelper.createUntyped('{0}.VTable.(*$name)', [e]).expr;
                     }

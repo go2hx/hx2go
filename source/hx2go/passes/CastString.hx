@@ -24,15 +24,26 @@ class CastString extends CompilerPass {
     }
 
     public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
-        var o = switch expr.expr {
+        switch expr.expr {
+            case TCast(e, _) if (e != null && isPlainString(e.t)):
+                expr.expr = e.expr;
+                expr.t = e.t;
+                context.submitNode(expr);
+
             case TCast(e, _):
-                ExprHelper.createCallStatic(context, { pack: [], name: 'Std', moduleName: 'Std' }, 'string', [e]);
+                var o = ExprHelper.createCallStatic(context, { pack: [], name: 'Std', moduleName: 'Std' }, 'string', [e]);
+                expr.expr = o.expr;
+                expr.t = o.t;
 
-            case _: expr;
+            case _:
         }
+    }
 
-        expr.expr = o.expr;
-        expr.t = o.t;
+    function isPlainString(t: HxbType): Bool {
+        if (t == null) {
+            return false;
+        }
+        return context.getWriter().types.writeHxbType(t).toString() == "string";
     }
 
 }

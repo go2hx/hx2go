@@ -33,16 +33,11 @@ class Exception {
 	}
 
 	static private function thrown(value: Any): Exception {
-		// if(Std.isOfType(value, Exception)) {
-		// 	return (value:Exception).native;
-		// } else {
-		// 	var e = new ValueException(value);
-		// 	// e.__shiftStack();
-		// 	return e;
-		// }
-		var e = new ValueException(value);
-		// e.__shiftStack();
-		return e;
+		var exc: Dynamic = go.haxe.HxDynamic.toClass(value, "Hx_Obj_haxe_exception");
+		if (exc != null) {
+			return exc;
+		}
+		return new ValueException(value);
 	}
 
 	var _message: String;

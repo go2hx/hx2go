@@ -249,6 +249,7 @@ class Context {
 
             var hasWrittenSomething = false;
             var closeEmit = times.start("emit");
+            writer.types.arrayElemTypes.clear();
             for (entry in module) {
                 var old = writer.types.importTarget;
                 writer.types.importTarget = entry.module;
@@ -261,6 +262,7 @@ class Context {
 
                 file.addBufferInline(localBuf);
             }
+            file.addBufferInline(writer.types.takeArrayInit());
             closeEmit();
 
             var imports = imports.exists(path) ? imports[path] : [];

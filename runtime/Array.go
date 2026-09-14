@@ -78,7 +78,6 @@ type HxArrayImpl[T any] struct {
 func HxMakeArray[T any](items ...T) HxArray[T] {
 	local := make([]T, len(items))
 	copy(local, items)
-	hxRegisterArrayConstructor[T]()
 	return &HxArrayImpl[T]{local}
 }
 
@@ -272,7 +271,6 @@ type HxArrayView[T any] struct {
 }
 
 func HxMakeArrayView[T any](src HxArrayDyn) HxArray[T] {
-	hxRegisterArrayConstructor[T]()
 	return HxArrayView[T]{src}
 }
 

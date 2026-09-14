@@ -225,8 +225,15 @@ class HxDynamic {
             return valueToFloat(aV) == valueToFloat(bV);
         else if (k == Reflect.string)
             return toString(a) == toString(b);
-        else
+        else {
+            if (isClass(aV) && isClass(bV)) {
+                var aVt = classVTable(aV);
+                var bVt = classVTable(bV);
+                if (aVt.isValid() && bVt.isValid())
+                    return aVt.pointer() == bVt.pointer();
+            }
             return Syntax.code("reflect.DeepEqual({0}, {1})", aV._interface(), bV._interface());
+        }
     }
 
     public static function nequals(a:Dynamic, b:Dynamic):Bool {
@@ -440,6 +447,30 @@ class HxDynamic {
         }
 
         return v.fieldByName("VTable").isValid();
+    }
+
+    static function classVTable(v: Value): Value {
+        var kind = v.kind();
+        while (kind == Reflect.ptr || kind == Reflect._interface) {
+            if (v.isNil()) return Null;
+            v = v.elem();
+            kind = v.kind();
+        }
+        if (kind != Reflect.struct) return Null;
+
+        var vtable = v.fieldByName("VTable");
+        while (vtable.isValid()) {
+            var vk = vtable.kind();
+            if (vk == Reflect.ptr) {
+                return vtable.isNil() ? Null : vtable;
+            } else if (vk == Reflect._interface) {
+                if (vtable.isNil()) return Null;
+                vtable = vtable.elem();
+            } else {
+                break;
+            }
+        }
+        return Null;
     }
 
     static function convertToType(v: Value, t: Type): Value {

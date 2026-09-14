@@ -208,6 +208,7 @@ class Init {
 
 			var singleFile = Context.defined("go-single-file");
 			var sourcelineComments = Context.defined("go-sourceline-comments");
+			var lineDirectives = !Context.defined("go-no-line-directives");
 			var times = Context.defined("go-times");
 			var self = Context.resolvePath("go/Init.hx");
 			var path = Path.join([ Path.directory(self), '..', '..' ]);
@@ -238,13 +239,13 @@ class Init {
 							fail('bootstrap failed, $bin might be stale');
 						Sys.setCwd(root);
 					}
-					var args = [archiveOutput, sourceOutput, mainClassName, singleFile ? "1" : "0", sourcelineComments ? "1" : "0", res, times ? "1" : "0", codegenVersion, disableIncrementalCache ? "1" : "0"];
+					var args = [archiveOutput, sourceOutput, mainClassName, singleFile ? "1" : "0", sourcelineComments ? "1" : "0", res, times ? "1" : "0", codegenVersion, disableIncrementalCache ? "1" : "0", lineDirectives ? "1" : "0"];
 					var code = Sys.command(bin, args);
 					if (code != 0)
 						fail("compiler failed");
 				} else {
 					final bin = Path.join(["Compile-eval.hxml"]);
-					var args = [bin, archiveOutput, sourceOutput, mainClassName, singleFile ? "1" : "0", sourcelineComments ? "1" : "0", res, times ? "1" : "0", codegenVersion, disableIncrementalCache ? "1" : "0"];
+					var args = [bin, archiveOutput, sourceOutput, mainClassName, singleFile ? "1" : "0", sourcelineComments ? "1" : "0", res, times ? "1" : "0", codegenVersion, disableIncrementalCache ? "1" : "0", lineDirectives ? "1" : "0"];
 					var oldCwd = Sys.getCwd();
 					Sys.setCwd(path);
 					var code = Sys.command("haxe", args);

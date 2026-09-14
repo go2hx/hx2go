@@ -11,11 +11,11 @@ class Exception {
 
 	public var stack(get,set): CallStack;
 	private function get_stack(): CallStack {
-		return [];
+		return _stack;
 	}
 
 	private function set_stack(stack: CallStack): CallStack {
-		return [];
+		return _stack = stack;
 	}
 
 	public var previous(get, never): Null<Exception>;
@@ -42,15 +42,13 @@ class Exception {
 
 	var _message: String;
     var _native: Any;
-	// var _previous: Null<cxx.SharedPtr<Exception>>;
-	// var _stack: CallStack;
+	var _stack: CallStack;
 
 	public function new(message: String, ?previous: Exception, ?native: Any): Void {
 
 		_message = message;
 		_native = native;
-		// _previous = previous != null ? cxx.SharedPtr.make((previous : Exception)) : null;
-		// _stack = NativeStackTrace.toHaxe(NativeStackTrace.callStack());
+		_stack = NativeStackTrace.toHaxe(NativeStackTrace.callStack());
 	}
 
 	private function unwrap(): Any {

@@ -18,8 +18,10 @@ class RewriteThrow extends CompilerPass {
     public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
         var o = switch expr.expr {
             case TThrow(e):
-                // ExprHelper.createCallStatic(context, { name: 'Go', moduleName: 'Go', pack: ['go'] }, 'panic', [ hx2go.normaliser.ExprCopy.copy(e) ]);
-                var arg = ExprHelper.createCallStatic(context, { name: 'Exception', moduleName: 'Exception', pack: ["haxe"]}, 'thrown', [ hx2go.normaliser.ExprCopy.copy(e)]);
+                var argExpr = (e != null && e.t != null && !e.t.match(TDynamic(_) | TDynamicAny))
+                    ? ExprHelper.createCast(hx2go.normaliser.ExprCopy.copy(e), TDynamicAny)
+                    : hx2go.normaliser.ExprCopy.copy(e);
+                var arg = ExprHelper.createCallStatic(context, { name: 'Exception', moduleName: 'Exception', pack: ["haxe"]}, 'thrown', [ argExpr ]);
                 ExprHelper.createCallStatic(context, { name: 'Go', moduleName: 'Go', pack: ['go'] }, 'panic', [ arg ]);
             case _: expr;
         }

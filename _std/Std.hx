@@ -177,9 +177,17 @@ class Std {
         }
 
         var vt = std.Type.typeof(v);
-        switch t { // TODO: finish impl
+        switch t {
             case Int:
-                return vt == TInt;
+                switch vt {
+                    case TInt:
+                        return true;
+                    case TFloat:
+                        var f:Float = v;
+                        return std.Math.isFinite(f) && std.Math.ffloor(f) == f && f >= go.Math.minInt32 && f <= go.Math.maxInt32;
+                    case _:
+                        return false;
+                }
             case Float:
                 return vt == TFloat || vt == TInt;
             case Bool:

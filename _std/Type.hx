@@ -98,12 +98,27 @@ class Type {
 		if (i < 0) {
 			throw "Unknown constructor " + constr + " for enum " + e.name;
 		}
-
-		return cast e.createByIndex(i, params);
+		return createEnumIndex(cast e, i, params);
 	}
 
 	public static function createEnumIndex<T>(e:Enum<T>, index:Int, ?params:Array<Dynamic>):T {
 		var e: HxEnum = cast e;
+		if (index < 0 || index >= e.constructorNames.length) {
+			throw "Invalid enum index " + e.name + "." + index;
+		}
+
+		var expected = e.constructorArgCounts[index];
+		if (params == null || params.length == 0) {
+			if (expected != 0) {
+				throw "Constructor " + e.name + "." + e.constructorNames[index] + " takes parameters";
+			}
+			return cast e.createByIndex(index, params);
+		}
+
+		if (params.length != expected) {
+			throw "Constructor " + e.name + "." + e.constructorNames[index] + " does not takes " + params.length + " parameters";
+		}
+
 		return cast e.createByIndex(index, params);
 	}
 

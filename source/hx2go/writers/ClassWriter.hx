@@ -83,7 +83,7 @@ class ClassWriter extends WriterImpl {
                     continue;
                 }
 
-                if (!fieldNames.contains(f.name)) {
+                if (shouldGenVar(f) && !fieldNames.contains(f.name)) {
                         fieldNames.push(f.name);
                 }
 
@@ -361,7 +361,7 @@ class ClassWriter extends WriterImpl {
 
             buf.add('var ${StringConversions.typePathClassInstanceName(cls.path)}_RTTI = Hx_Obj_go_haxe_hxclass_CreateInstance(');
             buf.add('"${cls.path.dotPath()}",', 1);
-            buf.add('HxMakeArray[string](${cls.statics.map(f -> '"${f.name}"').join(", ")}),', 1);
+            buf.add('HxMakeArray[string](${cls.statics.filter(shouldGenVar).map(f -> '"${f.name}"').join(", ")}),', 1);
             buf.add('HxMakeArray[string](${fieldNames.map(f -> '"${f}"').join(", ")}),', 1);
             buf.add('${firstSuper != null ? '${StringConversions.typePathClassInstanceName(firstSuper.path)}_RTTI' : 'nil'},', 1);
             buf.add('HxMakeArray[*Hx_Obj_go_haxe_hxclass](${cls.interfaces.map(i -> '${writer.context.resolvedInstanceName(i.t)}_RTTI').join(", ")}),', 1);
@@ -394,7 +394,7 @@ class ClassWriter extends WriterImpl {
             buf.add('');
             buf.add('var ${StringConversions.typePathClassInstanceName(cls.path)}_RTTI = Hx_Obj_go_haxe_hxclass_CreateInstance(');
             buf.add('"${cls.path.dotPath()}",', 1);
-            buf.add('HxMakeArray[string](${cls.statics.map(f -> '"${f.name}"').join(", ")}),', 1);
+            buf.add('HxMakeArray[string](${cls.statics.filter(shouldGenVar).map(f -> '"${f.name}"').join(", ")}),', 1);
             buf.add('HxMakeArray[string](${fieldNames.map(f -> '"${f}"').join(", ")}),', 1);
             buf.add('nil,', 1);
             buf.add('HxMakeArray[*Hx_Obj_go_haxe_hxclass](${cls.interfaces.map(i -> '${writer.context.resolvedInstanceName(i.t)}_RTTI').join(", ")}),', 1);

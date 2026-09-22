@@ -45,10 +45,42 @@ class Semantics {
 
             case TMeta(_, e):
                 getExprKind(e);
+            case TCall({ expr: TIdent("__go__") }, params) if (isGoExpressionSnippet(params)):
+                KExpr;
 
             case TCall(_):
                 KEither;
         }
+    }
+
+    static function isGoExpressionSnippet(params: Array<HxbTypedExpr>): Bool {
+        var template = switch (params[0] != null ? params[0].expr : null) {
+            case TConst(TString(s)): s;
+            case _: return false;
+        }
+
+        var t = StringTools.trim(template);
+        if (t.indexOf(" = ") != -1 || t.indexOf(":=") != -1 || t.indexOf("<-") != -1) {
+            return false;
+        }
+
+        for (builtin in ["delete(", "clear(", "panic("]) {
+            if (StringTools.startsWith(t, builtin)) {
+                return false;
+            }
+        }
+
+        if (t.length == 0 || t.charAt(0) == "}" || t.charAt(0) == "{") {
+            return false;
+        }
+
+        for (kw in ["for ", "return", "go ", "defer ", "select", "switch ", "if ", "case ", "default:"]) {
+            if (StringTools.startsWith(t, kw)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public static function canHold(p: HxbTypedExpr, expr: HxbTypedExpr): Bool {

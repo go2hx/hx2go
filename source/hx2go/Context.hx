@@ -761,6 +761,7 @@ class Context {
                     var needsCoerce = switch f.type {
                         case TType(_): true;
                         case TAbstract({ pack: ['haxe', 'ds'], name: 'Map' }, _): true;
+                        case TAbstract({name:"Null", pack:[]}, [_]): true;
                         case _: false;
                     };
                     if (f.kind.match(KVar(_)) && f.expr?.expr != null && needsCoerce) {

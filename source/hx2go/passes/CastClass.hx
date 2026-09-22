@@ -12,6 +12,7 @@ import hx2go.normaliser.Semantics;
 import hx2go.util.StringConversions;
 import hxb.flags.HxbClassFlag;
 import hxb.TypePath;
+import hx2go.normaliser.ExprCopy;
 
 class CastClass extends CompilerPass {
 
@@ -26,7 +27,7 @@ class CastClass extends CompilerPass {
 
     public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
         switch expr {
-            case { expr: TCast(e, _), t: TInst(tp, _) }:
+            case { expr: TCast(e, tm), t: TInst(tp, _) }:
                 switch e.t {
                     case TInst({ name: "Array", pack: [] }, _): {
                         return;
@@ -55,6 +56,13 @@ class CastClass extends CompilerPass {
 
                 if (cls.flags & HxbClassFlag.CExtern != 0) {
                     return;
+                }
+
+                var pre: HxbTypedExpr = null;
+                if (tm != null) {
+                    var tmp = new HxbVar(-1, 'hx_cast_ex_${castId++}', VUser(TVOLocalVariable), 0, [], e.pos, e.t);
+                    pre = new HxbTypedExpr(TVar(tmp, e), e.t, e.pos);
+                    e = new HxbTypedExpr(TLocal(tmp), e.t, e.pos);
                 }
 
                 var isDyn = e.t.match(TDynamic(_) | TDynamicAny | TAbstract({ name: "Any", pack: [] }, _));
@@ -118,6 +126,38 @@ class CastClass extends CompilerPass {
                     } else {
                         expr.expr = ExprHelper.createUntyped('{0}.VTable.(*$name)', [e]).expr;
                     }
+                }
+
+                // check validity check, see: https://github.com/go2hx/hx2go/issues/198
+                if (tm != null) {
+                    expr.expr = new HxbTypedExpr(
+                    TBlock([
+                        pre,
+                        new HxbTypedExpr(TIf(
+                            new HxbTypedExpr(
+                            TUnop(
+                                OpNot,
+                                false,
+                                ExprHelper.createCallStatic(context, { name: "Std", moduleName: "Std", pack: [] }, "isOfType", [
+                                    ExprCopy.copy(e),
+                                    new HxbTypedExpr(TTypeExpr(MTClass(tp)), TDynamicAny, null)
+                                ])
+                            ),
+                            TBool, expr.pos
+                            ),
+                            new HxbTypedExpr(
+                            TThrow(
+                                new HxbTypedExpr(TConst(TString("Class cast error")), TString, expr.pos)
+                            ),
+                            TVoid, expr.pos
+                            ),
+                            null
+                        ), TVoid, expr.pos),
+                        ExprCopy.copy(expr)
+                    ]), expr.t, expr.pos
+                    ).expr;
+
+                    context.submitNode(expr, true, 1);
                 }
 
             case _: null;

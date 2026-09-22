@@ -6,8 +6,6 @@ function main() {
     var tst = Rtti.getRtti(Tst);
     assert(tst.path.indexOf("Tst") != -1);
     assert(tst.superClass.path.indexOf("Tst0") != -1);
-    trace(tst.meta.length);
-    trace(tst.meta.map(m -> m.name));
     assert(tst.meta.length >= 2);
     var index = -1;
     for (i in 0...tst.meta.length) {
@@ -17,7 +15,6 @@ function main() {
         }
     }
     assert(index != -1);
-    trace(tst.meta[index].params, tst.meta[index].params[0]);
     assert(removeQuotes(tst.meta[index].params[0]) == "was here");
     assert(tst.interfaces[1].path.indexOf("I1") != -1);
     assert(tst.statics[0].name == "sf");

@@ -1,6 +1,6 @@
 package unit;
 @:rtti
-class Main {
+class Rtti1 {
   var x:String;
   static function main() {
     var rtti = haxe.rtti.Rtti.getRtti(Main);

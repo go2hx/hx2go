@@ -1,4 +1,4 @@
-package tests.unit;
+package unit;
 
 typedef CF = {
 	var name:String;

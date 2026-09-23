@@ -135,25 +135,32 @@ class EReg {
     }
 
     public function map(s: String, f: EReg->String): String {
+        var matches: Slice<Slice<GoInt>> = global ? re.findAllStringSubmatchIndex(s, -1) : {
+            var m = re.findStringSubmatchIndex(s);
+            m == null ? [] : [m];
+        }
+
         var buf = new StringBuf();
         var pos = 0;
-        while (pos <= s.length) {
-            var sub = s.substring(pos);
-            var idx: Slice<GoInt> = re.findStringSubmatchIndex(sub);
-            if (idx == null || idx.length == 0) {
+        var mi = 0;
+
+        while (pos < s.length) {
+            while (mi < matches.length && matches[mi][0] < pos) {
+                mi++;
+            }
+
+            if (mi >= matches.length) {
                 break;
             }
 
-            var start = idx[0] + pos;
-            var end = idx[1] + pos;
+            var idx = matches[mi];
+            var start = idx[0];
+            var end = idx[1];
+
             buf.add(s.substring(pos, start));
 
             matchPos = idx;
             str = s;
-
-            for (i in 0...matchPos.length) {
-                if (matchPos[i] >= 0) matchPos[i] += pos;
-            }
 
             buf.add(f(this));
 
@@ -163,6 +170,8 @@ class EReg {
             } else {
                 pos = end;
             }
+
+            mi++;
 
             if (!global) {
                 break;

@@ -57,7 +57,10 @@ jobs:
         with:
           path: haxe/tests/unit/bin/go/main/unittests.txt
           key: ${{ github.ref_name }}-regression-${{ github.run_id }}
-          restore-keys: ${{ github.ref_name }}-regression-
+          restore-keys: |
+            ${{ github.ref_name }}-regression-
+            ${{ github.base_ref }}-regression-
+            main-regression-
 
       - uses: actions/cache@v4
         if: matrix.os == 'ubuntu-latest'

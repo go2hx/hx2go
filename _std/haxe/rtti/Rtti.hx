@@ -1,4 +1,5 @@
 package haxe.rtti;
+import go.plugin.T_Ctype__GoString_;
 import go.haxe.HxDynamic;
 import haxe.rtti.Meta;
 import haxe.rtti.CType;
@@ -21,8 +22,8 @@ class Rtti {
             out.push({
                 type: null,
                 set: null,
-                platforms: null,
-                params: null,
+                platforms: [],
+                params:  [], 
                 overloads: null,
                 name: fld,
                 meta: meta.exists(fld) ? metaToArray(meta.get(fld)) : [],
@@ -56,7 +57,7 @@ class Rtti {
 		var sc = HxDynamic.getField(c, "superClass");
 		var scV:Null<PathParams> = null;
 		if (sc != null)
-			scV = {path: HxDynamic.getField(sc, "name"), params: null}; // TODO: add params
+			scV = {path: HxDynamic.getField(sc, "name"), params: []}; // TODO: add params
 
 		// interfaces
 		var interfaces:Array<go.haxe.HxClass> = HxDynamic.getField(c, "interfaces");
@@ -70,9 +71,9 @@ class Rtti {
 			tdynamic: null, // maybe? CClass(HxDynamic.getField(c, "name"), null), // TODO: add params
 			superClass: scV,
 			statics: acf,
-			platforms: null,
+			platforms: [],
 			path: Type.getClassName(c),
-			params: null,
+			params: [], 
 			module: null,
 			meta: tma,
 			isPrivate: false,
@@ -91,8 +92,10 @@ class Rtti {
 		if (c == null)
 			return false;
 		var meta = HxDynamic.getField(c, "__meta__");
-		if (meta == null)
-			return false;
-		return HxDynamic.getField(meta, "rtti") == true;
+		if (meta != null)
+			if (HxDynamic.getField(meta, "rtti") == true)
+				return true;
+		var sc = HxDynamic.getField(c, "superClass");
+		return hasRtti(sc);
 	}
 }

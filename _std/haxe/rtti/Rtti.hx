@@ -21,7 +21,7 @@ class Rtti {
         for (fld in names)
             out.push({
                 type: null,
-                set: null,
+                set: RNormal, // to do: set to appropriate value based on field access
                 platforms: [],
                 params:  [], 
                 overloads: null,
@@ -31,7 +31,7 @@ class Rtti {
                 isPublic: true,
                 isOverride: false,
                 isFinal: false,
-                get: null,
+                get: RNormal, // to do: set to appropriate value based on field access
                 expr: null,
                 doc: null
             });

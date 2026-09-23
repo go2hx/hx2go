@@ -94,23 +94,8 @@ class CastClass extends CompilerPass {
                         case _: null;
                     }
 
-//                    if (cls.flags & HxbClassFlag.CInterface != 0) {
-//                        expr.expr = ExprHelper.createUntyped('&{0}.$name', [e]).expr;
-//                    } else if (srcPath != null && isBaseOf(context.resolvedInstanceName(cls.path), srcPath)) {
-//                        expr.expr = ExprHelper.createUntyped('&{0}.$name', [e]).expr;
-//                    } else {
-//                        expr.expr = ExprHelper.createUntyped('{0}.(*$name)', [e]).expr;
-//                    }
-
                     if (cls.flags & HxbClassFlag.CInterface != 0) {
-                        var cst = ExprHelper.createUntyped('&$name{ VTable: {0}.VTable.(${StringConversions.typePathClassVTableName(cls.path)}) }', [e]);
-                        var tmp = new HxbVar(-1, 'hx_icast_${castId++}', VUser(TVOLocalVariable), 0, [], e.pos, expr.t);
-
-                        expr.expr = new HxbTypedExpr(TBlock([
-                            new HxbTypedExpr(TVar(tmp, cst), expr.t, expr.pos),
-                            new HxbTypedExpr(TLocal(tmp), expr.t, e.pos)
-                        ]), expr.t, expr.pos).expr;
-
+                        expr.expr = ExprHelper.createUntyped('HxCastInterface[*$name]({0}, "$name")', [e]).expr;
                     } else if (srcPath != null && ExprHelper.isBaseOf(context, context.resolvedInstanceName(cls.path), srcPath)) {
                         expr.expr = ExprHelper.createUntyped(
                             '(func() *$name { _hx_up := {0}; if _hx_up != nil { return &_hx_up.$name }; return nil })()',

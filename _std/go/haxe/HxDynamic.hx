@@ -185,8 +185,8 @@ class HxDynamic {
 
     public static function equals(a:Dynamic, b:Dynamic):Bool {
         // null == special case
-        var aV = ensureConcreteValue(a);
-        var bV = ensureConcreteValue(b);
+        var aV = unwrapNullable(ensureConcreteValue(a));
+        var bV = unwrapNullable(ensureConcreteValue(b));
         var aN = isNilValue(aV);
         var bN = isNilValue(bV);
 
@@ -403,10 +403,13 @@ class HxDynamic {
     //
 
     public static function toString(d:Dynamic):String {
-        // var dV = ensureConcreteValue(d);
-        // if (dV.kind() == Reflect.string) {
-        // 	return dV.string(); // gives a string showing the type of the value, not a representation of the value
-        // }
+        if (Syntax.code("{0} == nil", d)) {
+            return Syntax.code("HxStringNull");
+        }
+        var dV = ensureConcreteValue(d);
+        if (dV.isValid() && dV.kind() == Reflect.string) {
+            return dV.string();
+        }
         return Std.string(d);
     }
 
@@ -493,6 +496,15 @@ class HxDynamic {
             }
         }
 
+
+        if (k == Reflect.func && cv.kind() == Reflect.func) {
+            var srcT = cv.type();
+            if (!srcT.assignableTo(t)) {
+                return createNewClosure(cv, t);
+            }
+            return cv;
+        }
+
         var coerced: Dynamic = Syntax.code("HxCoerceArray({0}, {1})", cv._interface(), t);
         if (!isNull(coerced)) {
             return Reflect.valueOf(coerced);
@@ -501,6 +513,27 @@ class HxDynamic {
         // TODO: null<T> types?
 
         return cv;
+    }
+
+    static function creatNewClosure(fn: Value, t: Type): Value {
+        var srcT = fn.type();
+        return Reflect.makeFunc(t, function(args: Slice<Value>): Slice<Value> {
+            var numIn = srcT.numIn();
+            var callArgs: Array<Value> = [];
+            for (i in 0...numIn) {
+                var pt = srcT._in(i);
+                callArgs.push(convertToType(args[i], pt));
+            }
+
+            var results = fn.call(callArgs);
+
+            var out: Slice<Value> = new Slice();
+            var numOut = t.numOut();
+            for (i in 0...numOut) {
+                out = out.append(convertToType(results[i], t.out(i)));
+            }
+            return out;
+        });
     }
 
     public static function call(fn: Dynamic, args: Array<Dynamic>): Dynamic {
@@ -855,32 +888,33 @@ class HxDynamic {
         }
 
         var arr = tryDynamicArray(dyn);
-        if (arr != null) { // TODO: smarter approach
-            if (fieldName == "length") {
-                return arr.len();
+        if (arr != null) {
+            switch (fieldName) {
+                case "length": return arr.len();
+                case "iterator": return HxArray.iterator.bind(dyn);
+                case "keyValueIterator": return HxArray.keyValueIterator.bind(dyn);
+                case "push": return HxArray.push.bind(dyn);
+                case "pop": return HxArray.pop.bind(dyn);
+                case "shift": return HxArray.shift.bind(dyn);
+                case "unshift": return HxArray.unshift.bind(dyn);
+                case "insert": return HxArray.insert.bind(dyn);
+                case "remove": return HxArray.remove.bind(dyn);
+                case "contains": return HxArray.contains.bind(dyn);
+                case "indexOf": return HxArray.indexOf.bind(dyn);
+                case "lastIndexOf": return HxArray.lastIndexOf.bind(dyn);
+                case "concat": return HxArray.concat.bind(dyn);
+                case "copy": return HxArray.copy.bind(dyn);
+                case "slice": return HxArray.slice.bind(dyn);
+                case "splice": return HxArray.splice.bind(dyn);
+                case "reverse": return HxArray.reverse.bind(dyn);
+                case "sort": return HxArray.sort.bind(dyn);
+                case "map": return HxArray.map.bind(dyn);
+                case "filter": return HxArray.filter.bind(dyn);
+                case "resize": return HxArray.resize.bind(dyn);
+                case "join": return HxArray.join.bind(dyn);
+                case "toString": return HxArray.toString.bind(dyn);
+                default: throw "runtime.HxDynamic.field array field access not found: " + fieldName;
             }
-
-            if (fieldName == "iterator") {
-                return () -> toAnySlice(dyn).toArray().iterator();
-            }
-
-            if (fieldName == "keyValueIterator") {
-                return () -> toAnySlice(dyn).toArray().keyValueIterator();
-            }
-
-            if (fieldName == "push") {
-                return HxArray.push.bind(dyn);
-            }
-
-            if (fieldName == "join") {
-                return HxArray.join.bind(dyn);
-            }
-
-            if (fieldName == "copy") {
-                return HxArray.copy.bind(dyn);
-            }
-
-            throw "runtime.HxDynamic.field array field access not found: " + fieldName;
         }
 
         var value = ensureValue(dyn);

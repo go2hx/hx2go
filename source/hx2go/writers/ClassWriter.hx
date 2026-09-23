@@ -373,9 +373,14 @@ class ClassWriter extends WriterImpl {
             buf.add('return ${StringConversions.typePathClassInstanceName(cls.path)}_CreateEmptyInstance()', 2);
             buf.add('},', 1);
             buf.add('${classMeta(cls)},', 1);
+            // defered init for getStaticFieldPtr
+            buf.add('nil,', 1);
+            buf.addInline(')\n');
+            buf.add('func init() {');
+            buf.addInline('\t${StringConversions.typePathClassInstanceName(cls.path)}_RTTI.Hx_Field_getStaticFieldPtr = ');
             buf.addBuffer(writeStaticFieldPtrClosure(cls), 1, false);
-            buf.addInline(',\n');
-            buf.add(')');
+            buf.addInline('\n');
+            buf.add('}');
 
             buf.add('');
             buf.add('func (this *${StringConversions.typePathClassInstanceName(cls.path)}) Hx_Field__RTTI() *Hx_Obj_go_haxe_hxclass {');

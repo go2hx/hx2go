@@ -48,6 +48,8 @@ class MetaWriter {
 		statics: Array<{ name: String, meta: Array<HxbMetaEntry> }>
 	): Null<HxbTypedExpr> {
 		var buckets = [];
+		if (obj != null && obj.filter(m -> m.name == ":rtti").length > 0)
+			buckets.push(field("rtti", node(TConst(TBool(true)), TBool)));
 		var objGo = metaFieldObj(obj);
 		if (objGo != null) buckets.push(field("obj", objGo));
 		var fieldsGo = fieldMetaObj(fields);

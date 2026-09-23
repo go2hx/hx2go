@@ -7,14 +7,6 @@ func HxDefault[T any]() T {
 	return v
 }
 
-func HxCastInterface[T any](v any, name string) T {
-	r := Hx_Field_go_haxe_hxdynamic_castClass(v, name)
-	if r == nil {
-		return HxDefault[T]()
-	}
-	return r.(T)
-}
-
 func HxConvert[T any](from any) T {
 	if r, ok := from.(T); ok {
 		return r

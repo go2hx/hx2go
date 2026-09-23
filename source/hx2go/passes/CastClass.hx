@@ -95,7 +95,12 @@ class CastClass extends CompilerPass {
                     }
 
                     if (cls.flags & HxbClassFlag.CInterface != 0) {
-                        expr.expr = ExprHelper.createUntyped('HxCastInterface[*$name]({0}, "$name")', [e]).expr;
+                        var vtableName = StringConversions.typePathClassVTableName(cls.path);
+                        var castHelper = StringConversions.typePathStaticFieldName("castClass", { name: "HxDynamic", moduleName: "HxDynamic", pack: ["go", "haxe"] });
+                        var src = '_hx_icast_${castId++}';
+                        expr.expr = ExprHelper.createUntyped(
+                            '(func() *$name { $src := {0}; if $src == nil { return nil }; $castHelper($src, "$name"); return &$name{ VTable: $src.VTable.($vtableName) } })()',
+                            [e]).expr;
                     } else if (srcPath != null && ExprHelper.isBaseOf(context, context.resolvedInstanceName(cls.path), srcPath)) {
                         expr.expr = ExprHelper.createUntyped(
                             '(func() *$name { _hx_up := {0}; if _hx_up != nil { return &_hx_up.$name }; return nil })()',

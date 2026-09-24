@@ -28,6 +28,23 @@ import hxb.Typed.HxbTCase;
 import hx2go.normaliser.Semantics;
 
 class ExprWriter extends WriterImpl {
+    var lineIndexCache = new Map<String, Null<Array<Int>>>();
+
+    function lineIndexFor(file: String): Null<Array<Int>> {
+        if (lineIndexCache.exists(file)) {
+            return lineIndexCache.get(file);
+        }
+        var offsets: Null<Array<Int>> = null;
+        if (sys.FileSystem.exists(file)) {
+            var bytes = File.getBytes(file);
+            offsets = [];
+            for (i in 0...bytes.length) {
+                if (bytes.get(i) == "\n".code) offsets.push(i);
+            }
+        }
+        lineIndexCache.set(file, offsets);
+        return offsets;
+    }
 
     public function writeExpr(expr: HxbTypedExpr, topLevel: Bool = false): OutputBuffer {
         if (expr == null) {
@@ -71,29 +88,22 @@ class ExprWriter extends WriterImpl {
     public function toLocation(p):haxe.display.Position.Location {
 
         var infos = haxe.macro.PositionTools.getInfos(p);
-        if (!sys.FileSystem.exists(infos.file)) {
+        var offsets = lineIndexFor(infos.file);
+        if (offsets == null) {
             return null;
         }
-        var bytes = File.getBytes(infos.file);
 
-        var line = 1;
-        var lineStart = 0;
-
-        for (i in 0...infos.min) {
-            if (bytes.get(i) == "\n".code) {
-                line++;
-                lineStart = i + 1;
-            }
+        var min = infos.min;
+        var lo = 0;
+        var hi = offsets.length; // first index with offset >= min
+        while (lo < hi) {
+            var mid = (lo + hi) >> 1;
+            if (offsets[mid] < min) lo = mid + 1;
+            else hi = mid;
         }
-        var start = { line: line, character: infos.min - lineStart };
-
-        // for (i in infos.min...infos.max) {
-        //     if (bytes.get(i) == "\n".code) {
-        //         line++;
-        //         lineStart = i + 1;
-        //     }
-        // }
-        // var end = { line: line, character: infos.max - lineStart };
+        var line = lo + 1;
+        var lineStart = lo > 0 ? offsets[lo - 1] + 1 : 0;
+        var start = { line: line, character: min - lineStart };
 
         return {
             file: null,

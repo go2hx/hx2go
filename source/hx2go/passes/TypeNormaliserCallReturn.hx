@@ -3,6 +3,7 @@ package hx2go.passes;
 import hxb.Typed.HxbTypedExpr;
 import hx2go.util.TypeHelper;
 import hx2go.util.ExprHelper;
+import hx2go.passes.FieldAccessExtern.ExternKind;
 
 class TypeNormaliserCallReturn extends CompilerPass {
 
@@ -17,6 +18,7 @@ class TypeNormaliserCallReturn extends CompilerPass {
         switch expr.expr {
             case TCall({ t: TFun(params, ret), expr: f }, args): {
                 var ext = FieldAccessExtern.getExternInfo(context, new HxbTypedExpr(f, TFun(params, ret), expr.pos));
+                var wanted = expr.t;
                 if (!TypeHelper.compare(expr.t, ret)) {
                     if (ext.field?.type != null) {
                         var v = switch ext.field.type {
@@ -25,6 +27,15 @@ class TypeNormaliserCallReturn extends CompilerPass {
                         }
 
                         if (TypeHelper.compare(ret, v)) {
+                            if (isNonExternField(ext) && TypeHelper.goEraseType(v).match(TDynamicAny | TDynamic(_))) {
+                                var castExpr = TypeHelper.reconcile(wanted, expr, v);
+                                if (castExpr != null) {
+                                    expr.expr = castExpr.expr;
+                                    context.submitNode(expr, true, 1);
+                                    return;
+                                }
+                            }
+
                             // the return type reported is wrong
                             expr.t = ret;
                             return;
@@ -38,7 +49,7 @@ class TypeNormaliserCallReturn extends CompilerPass {
                     return;
                 }
 
-                var castExpr = TypeHelper.reconcile(expr.t, expr, declaredReturn(f));
+                var castExpr = TypeHelper.reconcile(expr.t, expr, declaredReturn(f, ext));
                 if (castExpr != null) {
                     expr.expr = castExpr.expr;
                     context.submitNode(expr, true, 1);
@@ -49,10 +60,23 @@ class TypeNormaliserCallReturn extends CompilerPass {
         }
     }
 
-    function declaredReturn(callee: hxb.Typed.HxbTypedExprDef): Null<hxb.HxbType> {
+    function isNonExternField(ext: { kind: ExternKind, ?field: hxb.HxbClassField }): Bool {
+        return ext != null && ext.field != null && ext.kind.match(ExNone)
+            && (ext.field.flags & hxb.flags.HxbClassFieldFlag.CfExtern) == 0;
+    }
+
+    function declaredReturn(callee: hxb.Typed.HxbTypedExprDef, ext: { kind: ExternKind, ?field: hxb.HxbClassField }): Null<hxb.HxbType> {
         return switch callee {
             case TLocal({ type: TFun(_, ret) }): ret;
-            case _: null;
+            case _:
+                if (isNonExternField(ext)) {
+                    switch ext.field.type {
+                        case TFun(_, ret): ret;
+                        case _: null;
+                    }
+                } else {
+                    null;
+                }
         }
     }
 

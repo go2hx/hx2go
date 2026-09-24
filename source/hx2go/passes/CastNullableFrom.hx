@@ -30,7 +30,7 @@ class CastNullableFrom extends CompilerPass {
 
     public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
         switch expr.expr {
-            case TCast(e, _) if (!expr.t.match(TAbstract({ pack: [], name: "Null" }, _)) && Semantics.isNullableExpr(context, e)): {
+            case TCast(e, _) if (!expr.t.match(TVoid) && !expr.t.match(TAbstract({ pack: [], name: "Null" }, _)) && Semantics.isNullableExpr(context, e)): {
                 if (e.t == null) {
                     return;
                 }

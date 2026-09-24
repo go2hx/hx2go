@@ -46,5 +46,6 @@ extern class HxArray {
     @:native("Hx_Array_Copy") static function copy<T>(arr: DynamicArray): Array<T>;
     @:native("Hx_Array_Shift") static function shift<T>(arr: DynamicArray): T;
     @:native("Hx_Array_Pop") static function pop<T>(arr: DynamicArray): T;
+    @:native("Hx_Array_ToString") static function toString(arr: DynamicArray): String;
 
 }

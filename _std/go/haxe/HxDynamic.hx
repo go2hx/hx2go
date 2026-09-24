@@ -515,7 +515,7 @@ class HxDynamic {
         return cv;
     }
 
-    static function creatNewClosure(fn: Value, t: Type): Value {
+    static function createNewClosure(fn: Value, t: Type): Value {
         var srcT = fn.type();
         return Reflect.makeFunc(t, function(args: Slice<Value>): Slice<Value> {
             var numIn = srcT.numIn();

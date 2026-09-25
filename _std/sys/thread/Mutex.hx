@@ -13,8 +13,21 @@ class Mutex {
 		holder.store(-1);
     }
 
-	public function tryAcquire():Bool {
-		return mutex.tryLock(); // TODO: fix
+	public function tryAcquire(): Bool {
+        var id = @:privateAccess ThreadImpl.getGoroutineId();
+        if (holder.load() == id) {
+            count++;
+            return true;
+        }
+
+        if (!mutex.tryLock()) {
+            return false;
+        }
+
+        holder.store(id);
+        count = 1;
+
+        return true;
 	}
 
 	public function acquire():Void {

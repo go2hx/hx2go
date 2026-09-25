@@ -171,8 +171,8 @@ class Context {
             new hx2go.passes.OptimiseEnumParameter(this),
             new hx2go.passes.FieldAccessArrayClosure(this),
             new hx2go.passes.FieldAccessArray(this),
-//            new hx2go.passes.ResolveVarDecl(this),
-//            new hx2go.passes.ResolveCast(this),
+            new hx2go.passes.ResolveVarDecl(this),
+            new hx2go.passes.ResolveCast(this),
         ];
     }
 
@@ -714,7 +714,7 @@ class Context {
                 expr.t = e.t;
 
             case TBinop(OpAssign, _, _):
-            // skip
+                // skip
 
             case TBinop(op, left, right) if (left.t != null && right.t != null && (left.t.match(TDynamic(_) | TDynamicAny) || right.t.match(TDynamic(_) | TDynamicAny))):
                 expr.t = RewriteDynamicBinop.returnsBool(op) ? TBool : TDynamicAny;

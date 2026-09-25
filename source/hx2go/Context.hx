@@ -235,6 +235,9 @@ class Context {
         var profileType: TypePath = { name: "HxProfile", moduleName: "HxProfile", pack: ["go", "haxe"] };
         resolve(profileType);
 
+        var loopType: TypePath = { name: "EventLoop", moduleName: "EventLoop", pack: ["haxe"] };
+        var hasLoop = resolve(loopType) != null;
+
         var buf = new OutputBuffer();
         var importList:Array<String> = [];
 
@@ -305,6 +308,9 @@ class Context {
         buf.add('func main() {');
         buf.add('$profileStart()', 1);
         buf.add('${StringConversions.typePathStaticFieldName("main", StringConversions.pathToLossyTypePath(mainClass))}()', 1);
+        if (hasLoop) {
+            buf.add('Hx_Field_haxe_eventloop_get_main().Hx_Field_loop()', 1); // prolly want to use EntryPoint, but it doesn't get included... sooo?
+        }
         buf.add('$profileStop()', 1);
         buf.add('}');
 

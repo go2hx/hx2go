@@ -99,8 +99,9 @@ jobs:
       
       - name: Go stdlib include test
         run: haxe scripts/include_gen.hxml
-          
-      - name: Run haxe unit tests
+      - name: Run threads Haxe tests
+        run: haxe scripts/haxeunit.hxml -D threads
+      - name: Run unit + std Haxe tests
         run: haxe scripts/haxeunit.hxml -D teststd
 
   # Separate job for ubuntu-only graphing and deployment

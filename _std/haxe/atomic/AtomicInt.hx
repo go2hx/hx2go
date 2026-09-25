@@ -23,7 +23,7 @@ abstract AtomicInt(AtomicIntData) {
 	}
 
 	public function sub(b:Int):Int {
-		return this.value.add(-b) - b;
+		return this.value.add(-b) + b;
 	}
 
 	public function and(b:Int):Int {

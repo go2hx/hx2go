@@ -235,6 +235,9 @@ class Context {
         var profileType: TypePath = { name: "HxProfile", moduleName: "HxProfile", pack: ["go", "haxe"] };
         resolve(profileType);
 
+        var loopType: TypePath = { name: "EventLoop", moduleName: "EventLoop", pack: ["haxe"] };
+        var hasLoop = resolve(loopType) != null;
+
         var buf = new OutputBuffer();
         var importList:Array<String> = [];
 
@@ -304,8 +307,21 @@ class Context {
         var profileStop = StringConversions.typePathStaticFieldName("stop", profileType);
         buf.add('func main() {');
         buf.add('$profileStart()', 1);
+        buf.add('Hx_Boot()', 1);
         buf.add('${StringConversions.typePathStaticFieldName("main", StringConversions.pathToLossyTypePath(mainClass))}()', 1);
+        buf.add('Hx_Loop()', 1);
         buf.add('$profileStop()', 1);
+        buf.add('}');
+
+        buf.add('func Hx_Boot() {');
+        for (vt in writer.classes.inits) buf.add('Hx_ClassInit_$vt()', 1);
+        for (vt in writer.classes.inits) buf.add('Hx_StaticInit_$vt()', 1);
+        buf.add('}');
+
+        buf.add('func Hx_Loop() {');
+        if (hasLoop) {
+            buf.add('Hx_Field_haxe_eventloop_get_main().Hx_Field_loop()', 1); // prolly want to use EntryPoint, but it doesn't get included... sooo?
+        }
         buf.add('}');
 
         var prefix = new OutputBuffer();
@@ -714,7 +730,7 @@ class Context {
                 expr.t = e.t;
 
             case TBinop(OpAssign, _, _):
-            // skip
+                // skip
 
             case TBinop(op, left, right) if (left.t != null && right.t != null && (left.t.match(TDynamic(_) | TDynamicAny) || right.t.match(TDynamic(_) | TDynamicAny))):
                 expr.t = RewriteDynamicBinop.returnsBool(op) ? TBool : TDynamicAny;

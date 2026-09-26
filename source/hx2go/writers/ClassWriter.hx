@@ -19,6 +19,8 @@ import hx2go.util.ExprHelper;
 
 class ClassWriter extends WriterImpl {
 
+    public var inits: Array<String> = [];
+
     public function classMeta(cls: HxbClass): String {
         var fields: Array<{ name: String, meta: Array<hxb.Ast.HxbMetaEntry> }> =
             cls.fields.map(f -> { name: f.name, meta: f.meta });
@@ -142,16 +144,27 @@ class ClassWriter extends WriterImpl {
             vtables.push('obj.${StringConversions.typePathClassInstanceName(current.path)}.VTable = obj');
         }
 
+        var vt = StringConversions.typePathClassVTableName(cls.path);
+
         buf.add('');
-        buf.add('var Hx_InitV_${StringConversions.typePathClassVTableName(cls.path)} = Hx_InitF_${StringConversions.typePathClassVTableName(cls.path)}()');
-        buf.add('func Hx_InitF_${StringConversions.typePathClassVTableName(cls.path)}() int {');
+        buf.add('func Hx_ClassInit_$vt() {');
         if (cls.init != null) {
             var initExpr = ensureBody(cls.init.expr.expr);
             Normaliser.run(initExpr, {}, writer.context);
             buf.addBuffer(writer.exprs.writeExpr(initExpr, true), 1);
         }
-        buf.add('return 0', 1);
         buf.add('}');
+
+        buf.add('');
+        buf.add('func Hx_StaticInit_$vt() {');
+        for (f in cls.statics) {
+            if (f.expr?.expr == null || !isEmittedStaticVar(f, cls)) continue;
+            var sfName = StringConversions.typePathStaticFieldName(f.name, cls.path);
+            buf.add('$sfName = Hx_Init_$sfName()', 1);
+        }
+        buf.add('}');
+
+        inits.push(vt);
 
         if (!canOmitVTable) {
             buf.add('');
@@ -576,31 +589,35 @@ class ClassWriter extends WriterImpl {
             case _: true;
         }
     }
+
+    public function isEmittedStaticVar(f: HxbClassField, cls: HxbClass): Bool {
+        return f.kind.match(KVar(_, _))
+        && f.flags & HxbClassFieldFlag.CfExtern == 0
+        && f.flags & HxbClassFieldFlag.CfGeneric == 0
+        && cls.flags & HxbClassFlag.CExtern == 0
+        && shouldGenVar(f);
+    }
+
     public function writeStaticClassVar(field: HxbClassField, read: HxbVarAccess, write: HxbVarAccess, cls: HxbClass): OutputBuffer {
         var buf = new OutputBuffer();
-        if (field.flags & HxbClassFieldFlag.CfExtern != 0 || cls.flags & HxbClassFlag.CExtern != 0 || !shouldGenVar(field)) {
+        if (!isEmittedStaticVar(field, cls)) {
             return buf;
         }
 
+        var sfName = StringConversions.typePathStaticFieldName(field.name, cls.path);
+        var t = writer.types.writeHxbType(field.type);
+
         buf.add("");
-        buf.addInline('var ${StringConversions.typePathStaticFieldName(field.name, cls.path)} ${writer.types.writeHxbType(field.type)}');
+        buf.addInline('var $sfName $t');
 
         if (field.expr?.expr != null) {
-            var initName = 'Hx_Init_${StringConversions.typePathStaticFieldName(field.name, cls.path)}';
             var initExpr = ensureBody(new HxbTypedExpr(TReturn(field.expr.expr), null, null));
-            Normaliser.run(initExpr, {}, writer.context); // TODO: bit hacky, will do for now.
+            Normaliser.run(initExpr, {}, writer.context);
 
-            switch initExpr.expr {
-                case TBlock(x): x.unshift(ExprHelper.createUntyped(
-                    '_ = Hx_InitV_${StringConversions.typePathClassVTableName(cls.path)}', []
-                ));
-                case _: null;
-            }
-
-            buf.add(' = ${initName}()');
-            buf.addInline('func ${initName}() ${writer.types.writeHxbType(field.type)} ');
+            buf.add('');
+            buf.addInline('func Hx_Init_$sfName() $t ');
             buf.addBufferInline(writer.exprs.writeExpr(initExpr, true));
-        } else buf.addInline("");
+        }
 
         return buf;
     }

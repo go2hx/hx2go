@@ -3,7 +3,7 @@ package go.haxe;
 @:keep
 class HxEnum {
 
-    private static var _registry: go.Map<String, HxEnum> = new go.Map();
+    private static var _registry: go.Map<String, HxEnum>;
 
     public var name: String;
     public var constructorNames: Array<String>;
@@ -17,6 +17,11 @@ class HxEnum {
         this.constructorArgCounts = constructorArgCounts;
         this.createByIndex = createByIndex;
         this.__meta__ = __meta__;
+
+        if (_registry == null) {
+            _registry = new go.Map<String, HxEnum>();
+        }
+
         _registry.set(name, this);
     }
 

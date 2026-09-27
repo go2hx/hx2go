@@ -39,7 +39,7 @@ class Semaphore {
             if (tryTake()) return true;
         }
 
-        return false; // never reached, but needed for IntelliJ
+        throw "unreadable";
     }
 
     public function release(): Void {
@@ -57,7 +57,7 @@ class Semaphore {
             }
         }
 
-        return false; // never reached, but needed for IntelliJ
+        throw "unreadable";
     }
 
     private function notify(): Void {

@@ -74,7 +74,7 @@ abstract ThreadImpl(NativeThread) {
 	}
 
 	private static function getGoroutineId(): Int {
-		var buf = new Slice<Byte>(64); // TODO: can goroutine IDs be re-used? If so, TLS must be cleared
+		var buf = new Slice<Byte>(64);
 		var n = Runtime.stack(buf, false);
 		var stk = Strings.trimPrefix(Go.string(buf.sliceEnd(n)), "goroutine");
 		var field = Strings.fields(stk)[0];

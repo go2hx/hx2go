@@ -75,6 +75,7 @@ class Context {
     private var codegenVersion:String;
     private var disableIncrementalCache:Bool = false;
     private var cache:Cache;
+    private var classInits: Array<String> = [];
 
     public function new(archive: HxbArchive, outputDirectory: String, sourcelineComments:Bool, times:hx2go.util.Times, codegenVersion:String, disableIncrementalCache:Bool, lineDirectives:Bool = true) {
         this.sourcelineComments = sourcelineComments;
@@ -205,6 +206,13 @@ class Context {
             case _: return;
         }
 
+        switch t {
+            case MClass(def) if (def.flags & HxbClassFlag.CExtern == 0):
+                classInits.push(StringConversions.typePathClassVTableName(def.path));
+
+            case _: null;
+        }
+
         var modulePath = ref.dotPath();
         var typePath = infos.path.dotPath() == ref.dotPath() ? ref.dotPath() : ref.dotPath() + '.' + infos.path.name;
 
@@ -314,8 +322,8 @@ class Context {
         buf.add('}');
 
         buf.add('func Hx_Boot() {');
-        for (vt in writer.classes.inits) buf.add('Hx_ClassInit_$vt()', 1);
-        for (vt in writer.classes.inits) buf.add('Hx_StaticInit_$vt()', 1);
+        for (vt in classInits) buf.add('Hx_ClassInit_$vt()', 1);
+        for (vt in classInits) buf.add('Hx_StaticInit_$vt()', 1);
         buf.add('}');
 
         buf.add('func Hx_Loop() {');

@@ -19,8 +19,6 @@ import hx2go.util.ExprHelper;
 
 class ClassWriter extends WriterImpl {
 
-    public var inits: Array<String> = [];
-
     public function classMeta(cls: HxbClass): String {
         var fields: Array<{ name: String, meta: Array<hxb.Ast.HxbMetaEntry> }> =
             cls.fields.map(f -> { name: f.name, meta: f.meta });
@@ -163,8 +161,6 @@ class ClassWriter extends WriterImpl {
             buf.add('$sfName = Hx_Init_$sfName()', 1);
         }
         buf.add('}');
-
-        inits.push(vt);
 
         if (!canOmitVTable) {
             buf.add('');

@@ -26,13 +26,8 @@ import go.Syntax;
 import go.Runtime;
 import go.Strconv;
 import go.Strings;
-import go.Strings.Strings.fields;
-import go.Strconv.Strconv.atoi;
-import go.Strings.Strings.trimPrefix;
 import go.Byte;
-import go.Runtime.Runtime.stack;
 import go.Slice;
-import go.Go.Go.string;
 import go.Go;
 
 private class NativeThread {

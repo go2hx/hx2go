@@ -1,12 +1,12 @@
 package sys.thread;
 
-import go.sync.atomic.Int32;
+import go.sync.atomic.Int32 as AtomicInt32;
 
 @:coreApi
 class Mutex {
 
 	private var mutex: go.sync.Mutex;
-    private var holder: Int32;
+    private var holder: AtomicInt32;
     private var count: Int = 0;
 
 	public function new() {

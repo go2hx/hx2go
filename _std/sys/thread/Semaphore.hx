@@ -2,7 +2,7 @@ package sys.thread;
 
 import go.Chan;
 import go.Syntax;
-import go.sync.atomic.Int32;
+import go.sync.atomic.Int32 as AtomicInt32;
 import go.Time;
 import go.Go;
 import go.ReceiveChan;
@@ -10,7 +10,7 @@ import go.ReceiveChan;
 @:coreApi
 class Semaphore {
 
-    private var count: Int32;
+    private var count: AtomicInt32;
     private var chan: Chan<Bool>;
 
     public function new(value: Int): Void {

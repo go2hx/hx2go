@@ -510,7 +510,12 @@ class HxDynamic {
             return Reflect.valueOf(coerced);
         }
 
-        // TODO: null<T> types?
+        if (isNullableType(t) && cv.type() != t) {
+            var out = Reflect._new(t).elem();
+            out.field(0).set(convertToType(cv, t.field(0).type));
+            out.field(1).setBool(true);
+            return out;
+        }
 
         return cv;
     }

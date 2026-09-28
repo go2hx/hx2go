@@ -6,7 +6,7 @@ import go.sync.Mutex;
 class Tls<T> {
 
     private var _mutex: Mutex;
-    private var _values: Map<Int, T>;
+    private var _values: Map<Int, Null<T>>;
 
     public var value(get, set): Null<T>;
 

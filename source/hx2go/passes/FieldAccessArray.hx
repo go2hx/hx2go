@@ -72,8 +72,26 @@ class FieldAccessArray extends CompilerPass {
                     e = ExprHelper.createUntyped("HxAnyToArray({0})", [e]);
                     e.t = TInst({ name: "Array", moduleName: "Array", pack: [] }, [TDynamicAny]);
                 }
+                
+                var isString = Semantics.isStringType(context, e.t);
+                var className = if (isString) {
+                    // add import of HxString TODO probably a better way
+                    ExprHelper.createCallStatic(
+                        context,
+                        {
+                            name: 'HxString',
+                            moduleName: 'HxString',
+                            pack: ['go', 'haxe']
+                        },
+                        cf.name,
+                        []
+                    );
+                    "Hx_Field_go_haxe_hxstring_";
+                }else{
+                    "Hx_Array_";
+                }
 
-                var name = 'Hx_Array_${StringConversions.toPascalCase(cf.name)}';
+                var name = '$className${isString ? cf.name : StringConversions.toPascalCase(cf.name)}';
                 var staticArgs = [e].concat(args);
                 var neededParams = params.map(p -> context.getWriter().types.writeHxbType(p));
                 

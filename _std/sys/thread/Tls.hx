@@ -15,16 +15,20 @@ class Tls<T> {
     }
 
     function get_value() {
+        var id = @:privateAccess ThreadImpl.getGoroutineId();
+
         _mutex.lock();
-        var v = _values[@:privateAccess ThreadImpl.getGoroutineId()];
+        var v = _values[id];
         _mutex.unlock();
 
         return v;
     }
 
     function set_value(v:Null<T>) {
+        var id = @:privateAccess ThreadImpl.getGoroutineId();
+
         _mutex.lock();
-        var _v = _values[@:privateAccess ThreadImpl.getGoroutineId()] = v;
+        var _v = _values[id] = v;
         _mutex.unlock();
 
         return _v;

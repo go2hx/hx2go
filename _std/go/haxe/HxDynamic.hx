@@ -980,9 +980,20 @@ class HxDynamic {
         }
 
         if (kind == Reflect.string) {
-            if (fieldName == "length") {
-                value = ensureValue(toString(dyn).length);
-                found = true;
+            var s = toString(dyn);
+            switch fieldName {
+                case "length": return s.length;
+                case "toUpperCase": return HxString.toUpperCase.bind(s);
+                case "toLowerCase": return HxString.toLowerCase.bind(s);
+                case "charAt": return HxString.charAt.bind(s);
+                case "charCodeAt": return HxString.charCodeAt.bind(s);
+                case "indexOf": return HxString.indexOf.bind(s);
+                case "lastIndexOf": return HxString.lastIndexOf.bind(s);
+                case "split": return HxString.split.bind(s);
+                case "substr": return HxString.substr.bind(s);
+                case "substring": return HxString.substring.bind(s);
+                case "toString": return HxString.toString.bind(s);
+                default:
             }
         }
 

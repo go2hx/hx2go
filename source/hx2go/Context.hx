@@ -106,6 +106,7 @@ class Context {
             new hx2go.passes.TypeNormaliserCallReturn(this),
             new hx2go.passes.RewriteSyntaxCode(this),
             new hx2go.passes.RewriteArrayLength(this),
+            new hx2go.passes.RewriteStringFromCharCode(this),
             new hx2go.passes.RewriteGoUIntNegativeConst(this),
             new hx2go.passes.TypeNormaliserCall(this), // TODO: c2
             new hx2go.passes.TypeNormaliserNew(this),

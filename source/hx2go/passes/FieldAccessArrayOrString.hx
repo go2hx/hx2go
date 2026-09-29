@@ -75,17 +75,11 @@ class FieldAccessArrayOrString extends CompilerPass {
                 
                 var isString = Semantics.isStringType(context, e.t);
                 var className = if (isString) {
-                    // add import of HxString TODO probably a better way
-                    ExprHelper.createCallStatic(
-                        context,
-                        {
-                            name: 'HxString',
-                            moduleName: 'HxString',
-                            pack: ['go', 'haxe']
-                        },
-                        cf.name,
-                        []
-                    );
+                    context.resolve({
+                        name: 'HxString',
+                        moduleName: 'HxString',
+                        pack: ['go', 'haxe']
+                    });
                     "Hx_Field_go_haxe_hxstring_";
                 }else{
                     "Hx_Array_";

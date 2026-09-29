@@ -26,6 +26,11 @@ class RewriteStringFromCharCode extends CompilerPass {
     public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
         switch expr.expr {
             case TField(_, FStatic(_, cf)) if (cf.toString() == "String#fromCharCode"):
+                context.resolve({
+                    name: 'HxString',
+                    moduleName: 'HxString',
+                    pack: ['go', 'haxe']
+                });
                 expr.expr = ExprHelper.createUntyped('Hx_Field_go_haxe_hxstring_fromCharCode', []).expr;
             case _: 
         }

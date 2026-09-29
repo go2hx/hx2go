@@ -11,7 +11,7 @@ import hx2go.normaliser.Semantics;
 import hxb.HxbType;
 import hx2go.normaliser.ExprCopy;
 
-class FieldAccessArray extends CompilerPass {
+class FieldAccessArrayOrString extends CompilerPass {
 
     public function match(expr: HxbTypedExpr): Bool {
         return switch expr.expr {
@@ -72,8 +72,20 @@ class FieldAccessArray extends CompilerPass {
                     e = ExprHelper.createUntyped("HxAnyToArray({0})", [e]);
                     e.t = TInst({ name: "Array", moduleName: "Array", pack: [] }, [TDynamicAny]);
                 }
+                
+                var isString = Semantics.isStringType(context, e.t);
+                var className = if (isString) {
+                    context.resolve({
+                        name: 'HxString',
+                        moduleName: 'HxString',
+                        pack: ['go', 'haxe']
+                    });
+                    "Hx_Field_go_haxe_hxstring_";
+                }else{
+                    "Hx_Array_";
+                }
 
-                var name = 'Hx_Array_${StringConversions.toPascalCase(cf.name)}';
+                var name = '$className${isString ? cf.name : StringConversions.toPascalCase(cf.name)}';
                 var staticArgs = [e].concat(args);
                 var neededParams = params.map(p -> context.getWriter().types.writeHxbType(p));
                 

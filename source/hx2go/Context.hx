@@ -107,6 +107,7 @@ class Context {
             new hx2go.passes.TypeNormaliserCallReturn(this),
             new hx2go.passes.RewriteSyntaxCode(this),
             new hx2go.passes.RewriteArrayLength(this),
+            new hx2go.passes.RewriteStringFromCharCode(this),
             new hx2go.passes.RewriteGoUIntNegativeConst(this),
             new hx2go.passes.TypeNormaliserCall(this), // TODO: c2
             new hx2go.passes.TypeNormaliserNew(this),
@@ -171,7 +172,7 @@ class Context {
             new hx2go.passes.CoerceDynamicInt(this),
             new hx2go.passes.OptimiseEnumParameter(this),
             new hx2go.passes.FieldAccessArrayClosure(this),
-            new hx2go.passes.FieldAccessArray(this),
+            new hx2go.passes.FieldAccessArrayOrString(this),
 //            new hx2go.passes.ResolveVarDecl(this),
 //            new hx2go.passes.ResolveCast(this),
         ];

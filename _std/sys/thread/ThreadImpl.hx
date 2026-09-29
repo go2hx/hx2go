@@ -22,6 +22,14 @@
 
 package sys.thread;
 
+import go.Syntax;
+import go.Runtime;
+import go.Strconv;
+import go.Strings;
+import go.Byte;
+import go.Slice;
+import go.Go;
+
 private class NativeThread {
 
 	public static function current(): NativeThread {
@@ -29,7 +37,7 @@ private class NativeThread {
 	}
 
 	public function new(job: () -> Void) {
-		return;
+		if (job != null) Syntax.go(job);
 	}
 
 	public function getName(): String {
@@ -58,6 +66,15 @@ abstract ThreadImpl(NativeThread) {
 
 	public static function getName(t: ThreadImpl ) {
 		return (cast t : NativeThread).getName();
+	}
+
+	private static function getGoroutineId(): Int {
+		var buf = new Slice<Byte>(64);
+		var n = Runtime.stack(buf, false);
+		var stk = Strings.trimPrefix(Go.string(buf.sliceEnd(n)), "goroutine");
+		var field = Strings.fields(stk)[0];
+
+		return Strconv.atoi(field).sure();
 	}
 
 }

@@ -3,7 +3,7 @@ package go.haxe;
 @:keep
 class HxClass {
 
-    private static var _registry: go.Map<String, HxClass> = new go.Map();
+    private static var _registry: go.Map<String, HxClass>;
 
     public var name: String;
     public var staticFields: Array<String>;
@@ -25,6 +25,11 @@ class HxClass {
         this.createEmptyInstance = createEmptyInstance;
         this.__meta__ = __meta__;
         this.getStaticFieldPtr = getStaticFieldPtr;
+
+        if (_registry == null) {
+            _registry = new go.Map<String, HxClass>();
+        }
+
         _registry.set(name, this);
     }
 

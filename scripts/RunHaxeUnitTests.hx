@@ -8,11 +8,15 @@ function main() {
     Sys.command("git pull");
     Sys.setCwd("tests/unit");
     // runTestSuite("macro");
-    runTestSuite("go");
+    #if threads
+    Sys.setCwd("../threads");
+    runTestSuite(["build.hxml", "-lib", "hx2go", "--custom-target", "go=bin/go", "-D", "go-no-sourcemaps", "-D", "go-no-line-directives"]);
+    #else
+    runTestSuite(["compile-go.hxml"]);
+    #end
 }
 
-function runTestSuite(target:String) {
-    var args = ['compile-$target.hxml'];
+function runTestSuite(args:Array<String>) {
     var defines:Map<String,String> = getDefines();
     for (key => value in defines) {
         if (key.indexOf("target") != -1)

@@ -69,24 +69,37 @@ class RewriteDynamicBinop extends CompilerPass {
         }
     }
 
+    public static function takesBool(op: HxbBinop): Bool {
+        return switch (op) {
+            case OpBoolOr, OpBoolAnd:
+                true;
+            case _:
+                false;
+        }
+    }
+
+    public function inlineCast(e: HxbTypedExpr, t: HxbType): Void {
+        var o = ExprHelper.createCast(e, t);
+        e.expr = o.expr;
+        e.t = o.t;
+        context.submitNode(e, true);
+    }
+
     public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
         switch expr.expr {
             case TBinop(op, left, right): {
                 // if assignOp keep lhs
                 var assignTarget = op.match(OpAssignOp(_)) ? hx2go.normaliser.ExprCopy.copy(left) : null;
+                var isBooleanOp = takesBool(op);
 
-                if (!left.t.match(TDynamic(_) | TDynamicAny)) {
-                    var o = ExprHelper.createCast(left, TDynamicAny);
-                    left.expr = o.expr;
-                    left.t = o.t;
-                    context.submitNode(left, true);
-                }
+                if (isBooleanOp && !left.t.match(TBool)) inlineCast(left, TBool);
+                else if (!isBooleanOp && !left.t.match(TDynamic(_) | TDynamicAny)) inlineCast(left, TDynamicAny);
 
-                if (!right.t.match(TDynamic(_) | TDynamicAny)) {
-                    var o = ExprHelper.createCast(right, TDynamicAny);
-                    right.expr = o.expr;
-                    right.t = o.t;
-                    context.submitNode(right, true);
+                if (isBooleanOp && !right.t.match(TBool)) inlineCast(right, TBool);
+                else if (!isBooleanOp && !right.t.match(TDynamic(_) | TDynamicAny)) inlineCast(right, TDynamicAny);
+
+                if (isBooleanOp) {
+                    return;
                 }
 
                 var opName = toOperationFunction(op);

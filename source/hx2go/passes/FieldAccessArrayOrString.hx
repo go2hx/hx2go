@@ -11,7 +11,7 @@ import hx2go.normaliser.Semantics;
 import hxb.HxbType;
 import hx2go.normaliser.ExprCopy;
 
-class FieldAccessArray extends CompilerPass {
+class FieldAccessArrayOrString extends CompilerPass {
 
     public function match(expr: HxbTypedExpr): Bool {
         return switch expr.expr {

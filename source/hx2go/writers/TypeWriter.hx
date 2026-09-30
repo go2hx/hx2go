@@ -159,7 +159,7 @@ class TypeWriter extends WriterImpl {
             case { name: "Int64", pack: ['go'] }: "int64";
             case { name: "UInt8", pack: ['go'] }: "uint8";
             case { name: "UInt16", pack: ['go'] }: "uint16";
-            case { name: "UInt", pack: [] } | { name: "UInt32", pack: ['go'] }: "uint32";
+            case { name: "UInt32", pack: ['go'] }: "uint32";
             case { name: "UInt64", pack: ['go'] }: "uint64";
             case { name: "Float", pack: [] } | { name: "Float64", pack: ['go'] }: "float64";
             case { name: "Bool", pack: [] }: "bool";

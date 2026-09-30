@@ -93,6 +93,7 @@ class Thread {
         this.id = idCounter++;
         this.impl = impl;
         if( impl != null ) this.name = ThreadImpl.getName(impl);
+        messages = new Deque();
         callbacks = new ThreadCallbackManager();
     }
 
@@ -211,8 +212,6 @@ class Thread {
         }
         ThreadCallbackManager.invokeCallbacks(t.callbacks.onCreateCallback, globalCallbacks?.onCreateCallback);
         t.impl = ThreadImpl.create(function() {
-            t.impl = ThreadImpl.current();
-            if( name != null ) t.name = name;
             currentTLS.value = t;
             var exception = null;
             try {

@@ -120,9 +120,9 @@ class TypeNormaliserBinop extends CompilerPass {
             context.submitNode(right, true);
         }
         if (op == OpDiv && !Semantics.isInt64Type(context, expr.t)) {
-            var o = ExprHelper.createCast(expr, TFloat);
-            expr.expr = o.expr;
-            expr.t = o.t;
+            var inner = new HxbTypedExpr(expr.expr, expr.t, expr.pos);
+            expr.expr = TCast(inner, null);
+            expr.t = TFloat;
             context.submitNode(expr, true, 1);
         }
     }

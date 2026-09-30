@@ -310,11 +310,13 @@ class Context {
         }
         if (!singleFile) {
             buf.add('package ${topLevelPackage}');
+            buf.add('import "os"');
         }
         buf.add('');
         var profileStart = StringConversions.typePathStaticFieldName("start", profileType);
         var profileStop = StringConversions.typePathStaticFieldName("stop", profileType);
         buf.add('func main() {');
+        buf.add('defer func () { os.Exit()}', 1);
         buf.add('$profileStart()', 1);
         buf.add('Hx_Boot()', 1);
         buf.add('${StringConversions.typePathStaticFieldName("main", StringConversions.pathToLossyTypePath(mainClass))}()', 1);
@@ -335,6 +337,9 @@ class Context {
 
         var prefix = new OutputBuffer();
         if (singleFile) {
+            if (!importList.contains("os"))
+                importList.push("os");
+            
             prefix.add('package ${topLevelPackage}');
             prefix.add('');
             prefix.add('import (');

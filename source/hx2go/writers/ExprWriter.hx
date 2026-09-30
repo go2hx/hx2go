@@ -448,9 +448,8 @@ class ExprWriter extends WriterImpl {
                 buf.addInline(addJumpComment(e));
             }
             var stmt = writeExpr(e);
-            var directive = writer.context.lineDirectives ? lineDirective(e) : '';
-            if (directive != '') {
-                buf.add(stampLines(stmt.toString(), directive), 1);
+            if (writer.context.sourcemaps) {
+                buf.add(stampLines(stmt.toString(), sourcemap(e)), 1);
             } else {
                 buf.addBuffer(stmt, 1);
             }
@@ -478,7 +477,7 @@ class ExprWriter extends WriterImpl {
         return '';
     }
 
-    function stampLines(text:String, directive:String):String {
+    function stampLines(text:String, sourcemap:String):String {
         var lines = text.split("\n");
         var out = new StringBuf();
         for (i in 0...lines.length) {
@@ -487,13 +486,13 @@ class ExprWriter extends WriterImpl {
             if (StringTools.ltrim(line).substr(0, 6) == "/*line") {
                 out.add(line);
             } else {
-                out.add(directive + line);
+                out.add(sourcemap + line);
             }
         }
         return out.toString();
     }
 
-    function lineDirective(e:HxbTypedExpr):String {
+    function sourcemap(e:HxbTypedExpr):String {
         if (e.pos != null) {
             var lineNumber = toLocation(e.pos)?.range.start.line;
             if (lineNumber == null)

@@ -2,7 +2,10 @@ package unit;
 
 // tests below modeled on https://github.com/HaxeFoundation/haxe/blob/development/tests/unit/src/unit/teststd/haxe/rtti/TestRtti.hx
 function main() {
-	var allowFailures = go.Syntax.code("len(HxRttiMap)>0"); // to control whether the failures should be allowed to run - depends on whether the HxRttiMap has entries.
+	var allowFailures = false; // default value for --interp
+	#if !eval
+	allowFailures = go.Syntax.code("len(HxRttiMap)>0"); // to control whether the failures should be allowed to run - depends on whether the HxRttiMap has entries.
+	#end
 
 	assert(!haxe.rtti.Rtti.hasRtti(NonRttiClass));
 	assert(haxe.rtti.Rtti.hasRtti(RttiClass1));

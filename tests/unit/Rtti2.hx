@@ -2,7 +2,7 @@ package unit;
 
 // tests below modeled on https://github.com/HaxeFoundation/haxe/blob/development/tests/unit/src/unit/teststd/haxe/rtti/TestRtti.hx
 function main() {
-	var allowFailures = false; // to control whether the failures should be allowed to run. TODO: REMOVE BEFORE PRODUCTION
+	var allowFailures = go.Syntax.code("len(HxRttiMap)>0"); // to control whether the failures should be allowed to run - depends on whether the HxRttiMap has entries.
 
 	assert(!haxe.rtti.Rtti.hasRtti(NonRttiClass));
 	assert(haxe.rtti.Rtti.hasRtti(RttiClass1));
@@ -23,8 +23,8 @@ function main() {
 	assert(cf.name == "v");
 
 	if (allowFailures) {
-		/* fail */ assert(false); // should be: 	assert(haxe.rtti.CType.CTypeTools.toString(cf.type) == "String");
-		/* fail */ assert(!cf.isPublic);
+		assert(haxe.rtti.CType.CTypeTools.toString(cf.type) == "String");
+		assert(!cf.isPublic);
 	}
 	assert(!cf.isOverride);
 	assert(cf.doc == null);
@@ -39,14 +39,14 @@ function main() {
 	var cf = cl.fields[0]; // should be: var cf = cl.fields.shift(); // hx2go issue #209
 	assert(cf.name == "f");
 	if (allowFailures) {
-		/* fail */ assert(false); // should be: 	assert(haxe.rtti.CType.CTypeTools.toString(cf.type) == "Void -> Float");
+		assert(haxe.rtti.CType.CTypeTools.toString(cf.type) == "Void -> Float");
 	}
 	assert(cf.isPublic);
 	assert(!cf.isOverride);
 	assert(cf.doc == null);
 	assert(cf.get == RNormal);
 	if (allowFailures) {
-		/* fail */ assert(cf.set == RMethod);
+		assert(cf.set == RMethod);
 	}
 	assert(cf.params.length == 0);
 	assert(cf.platforms.length == 0);
@@ -59,13 +59,13 @@ function main() {
 	assert(!cl.isInterface);
 	assert(cl.params.length == 0);
 	if (allowFailures) {
-		/* fail */ assert(cl.fields.length == 0); // the field from the superclass is included, which causes this to fail
+		assert(cl.fields.length == 0); // the field from the superclass is included, which causes this to fail
 	}
 	assert(cl.superClass.path == "unit._Rtti2.RttiClass1"); // in the original tests:  "unit.teststd.haxe.rtti._TestRtti.RttiClass1"
 	assert(cl.superClass.params.length == 0);
 	assert(cl.interfaces.length == 0);
 	if (allowFailures) {
-		/* fail */ assert(cl.fields.length == 0); // superclass issue, as above
+		assert(cl.fields.length == 0); // superclass issue, as above
 	}
 	assert(cl.statics.length == 0);
 	assert(cl.tdynamic == null);
@@ -85,16 +85,16 @@ function main() {
 	var cf = cl.fields[0]; // should be: var cf = cl.fields.shift(); // hx2go issue #209
 	assert(cf.name == "f");
 	if (allowFailures) {
-		/* fail */ assert(false); // should be: assert(haxe.rtti.CType.CTypeTools.toString(cf.type) == "Void -> Int");
+		assert(haxe.rtti.CType.CTypeTools.toString(cf.type) == "Void -> Int");
 	}
 	assert(cf.isPublic);
 	if (allowFailures) {
-		/* fail */ assert(cf.isOverride);
+		assert(cf.isOverride);
 	}
 	assert(cf.doc == null);
 	assert(cf.get == RNormal);
 	if (allowFailures) {
-		/* fail */ assert(cf.set == RMethod);
+		assert(cf.set == RMethod);
 	}
 	assert(cf.params.length == 0);
 	assert(cf.platforms.length == 0);

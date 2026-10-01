@@ -1,4 +1,5 @@
 Tests-each.hxml
 -L hx2go
+--xml output/tests/target.xml
 --custom-target go=output/tests
 --cmd go -C output/tests/main run .

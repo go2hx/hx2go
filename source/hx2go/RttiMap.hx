@@ -33,7 +33,7 @@ class RttiMap {
 	static function process(filePath:String):String {
 		var fTup = go.Os.open(filePath);
 		if (fTup.tuple().error != null) {
-			trace('Unable to open XML file: $filePath');
+			Sys.println('Using fallback Rtti.getRtti() implementation, as unable to open: $filePath');
 			return "";
 		}
 		var f = fTup.tuple().result;

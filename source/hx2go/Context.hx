@@ -476,7 +476,39 @@ class Context {
         ensureDirectory(Path.directory(fullPath));
 
         writtenFiles.set(Path.normalize(fullPath), true);
-        File.saveContent(fullPath, content);
+        File.saveContent(fullPath, sourcemaps ? resetLineDirectives(fullPath, content) : content);
+    }
+
+    private function resetLineDirectives(fullPath: String, content: String): String {
+        if (content.indexOf('/*line ') < 0) {
+            return content;
+        }
+
+        var goPath = Path.normalize(FileSystem.absolutePath(fullPath));
+        var out: Array<String> = [];
+        var mapped = false;
+        var inRaw = false;
+
+        for (line in content.split('\n')) {
+            if (mapped && !inRaw && isTopLevelDecl(line)) {
+                out.push('//line $goPath:${out.length + 2}');
+                mapped = false;
+            }
+
+            out.push(line);
+
+            if (line.indexOf('/*line ') >= 0) mapped = true;
+            if (line.split('`').length % 2 == 0) inRaw = !inRaw;
+        }
+
+        return out.join('\n');
+    }
+
+    private static function isTopLevelDecl(line: String): Bool {
+        return StringTools.startsWith(line, 'func ')
+        || StringTools.startsWith(line, 'type ')
+        || StringTools.startsWith(line, 'var ')
+        || StringTools.startsWith(line, 'const ');
     }
 
     private function removeStaleFiles(): Void {

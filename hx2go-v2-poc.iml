@@ -23,5 +23,27 @@
     </content>
     <orderEntry type="jdk" jdkName="Haxe 5.0.0" jdkType="Haxe toolkit" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module-library">
+      <library name="haxelib: hx2go 1.0.0">
+        <CLASSES>
+          <root url="file://$MODULE_DIR$/source/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="file://$MODULE_DIR$/source/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="haxelib: utest 2.0.0-alpha [git]">
+        <CLASSES>
+          <root url="file://$USER_HOME$/haxelib/utest/git/src/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="file://$USER_HOME$/haxelib/utest/git/src/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
   </component>
 </module>

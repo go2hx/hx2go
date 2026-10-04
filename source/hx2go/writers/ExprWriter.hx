@@ -28,6 +28,8 @@ import hxb.Typed.HxbTCase;
 import hx2go.normaliser.Semantics;
 
 class ExprWriter extends WriterImpl {
+
+    var absolutePathCache: Map<String, String> = new Map();
     var lineIndexCache = new Map<String, Null<Array<Int>>>();
 
     function lineIndexFor(file: String): Null<Array<Int>> {
@@ -440,16 +442,25 @@ class ExprWriter extends WriterImpl {
     public function writeBlock(expr: HxbTypedExpr, exprs: Array<HxbTypedExpr>, topLevel:Bool=false): OutputBuffer {
         var buf = new OutputBuffer();
         buf.add("{");
-        for (e in exprs) {
+        var lastMap = '';
+        for (i in 0...exprs.length) {
+            var e = exprs[i];
             if (buf.endedWithBlock()) {
                 buf.add(''); // makes code more readable when you deal with nesting
             }
+
             if (writer.context.sourcelineComments && topLevel) {
                 buf.addInline(addJumpComment(e));
             }
+
             var stmt = writeExpr(e);
             if (writer.context.sourcemaps) {
-                buf.add(stampLines(stmt.toString(), sourcemap(e)), 1);
+                var map = sourcemap(e);
+                if (map == '') map = nextSourcemap(exprs, i + 1);
+                if (map == '') map = lastMap;
+                lastMap = map;
+
+                buf.add(stampLines(stmt.toString(), map), 1);
             } else {
                 buf.addBuffer(stmt, 1);
             }
@@ -492,14 +503,32 @@ class ExprWriter extends WriterImpl {
         return out.toString();
     }
 
-    function sourcemap(e:HxbTypedExpr):String {
+    function sourcemap(e: HxbTypedExpr): String {
         if (e.pos != null) {
             var lineNumber = toLocation(e.pos)?.range.start.line;
             if (lineNumber == null)
                 return '';
-            var path = haxe.io.Path.normalize(e.pos.file);
-            return '/*line ' + path + ':' + lineNumber + '*/ ';
+            return '/*line ' + absoluteSourcePath(e.pos.file) + ':' + lineNumber + '*/ ';
         }
+        return '';
+    }
+
+    function absoluteSourcePath(file: String): String {
+        var cached = absolutePathCache.get(file);
+        if (cached != null) return cached;
+
+        var path = haxe.io.Path.normalize(sys.FileSystem.absolutePath(haxe.io.Path.normalize(file)));
+
+        absolutePathCache.set(file, path);
+        return path;
+    }
+
+    function nextSourcemap(exprs: Array<HxbTypedExpr>, from: Int): String {
+        for (i in from...exprs.length) {
+            var map = sourcemap(exprs[i]);
+            if (map != '') return map;
+        }
+
         return '';
     }
 

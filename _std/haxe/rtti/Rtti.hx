@@ -10,7 +10,7 @@ class Rtti {
 	static function metaToArray(m:haxe.DynamicAccess<Dynamic>):Array<{name:String, params:Array<String>}> {
 		var out = new Array<{name:String, params:Array<String>}>();
 		for (key => value in m)
-			out.push({name: key, params: value});
+			out.push({name: key, params: (value:Array<String>)});
 		return out;
 	}
 
@@ -56,7 +56,7 @@ class Rtti {
 				for (i in 0...c.fields.length)
 					c.fields[i].platforms = [];
 		return c;
-			case var t:
+			case _:
 		}
 		return null;
 	}
@@ -84,10 +84,10 @@ class Rtti {
 
 		// interfaces
 		var interfaces:Array<go.haxe.HxClass> = HxDynamic.getField(c, "interfaces");
-		var ifPP = new Array<PathParams>();
+		var interfacePathParams = new Array<PathParams>();
 		if (interfaces != null)
 			for (iv in interfaces)
-				ifPP.push({path: go.Syntax.code("{0}.Hx_Field_name", iv), params: []});
+				interfacePathParams.push({path: go.Syntax.code("{0}.Hx_Field_name", iv), params: []});
 
 		// bring it all together
 		var r:Classdef = {
@@ -103,7 +103,7 @@ class Rtti {
 			isInterface: false,
 			isFinal: false,
 			isExtern: false,
-			interfaces: ifPP,
+			interfaces: interfacePathParams,
 			file: null,
 			fields: getInstanceFields(c),
 			doc: null
@@ -118,7 +118,7 @@ class Rtti {
 		if (meta != null)
 			if (HxDynamic.getField(meta, "rtti") == true)
 				return true;
-		var sc = HxDynamic.getField(c, "superClass");
+		var sc:Class<Dynamic> = HxDynamic.getField(c, "superClass");
 		return hasRtti(sc);
 	}
 }

@@ -49,7 +49,7 @@ class RttiMap {
 		}
 		var f = fTup.tuple().result;
 
-		var linesChan = new go.Chan<String>(100); // probably maximun size in lines of a class
+		var linesChan = new go.Chan<String>(100); // probably maximum size in lines of a class
 
         // go routine to read lines from the file and put them down the lines channel
 		go.Syntax.go(() -> {
@@ -136,7 +136,7 @@ class RttiMap {
 					}
 				}
 				return c.superClass != null ? c : null;
-			case var t:
+			case _:
 		}
 		return null;
 	}

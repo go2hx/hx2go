@@ -2,11 +2,13 @@ package hx2go;
 
 class RttiMap {
 	static var finished = new sys.thread.Semaphore(0); // released by startBuild when done
+	static var fallbackOutputDir:String = "";
+	static var fallbackGopackage:String = "";
 
-	static public function awaitFinish(outputDir:String, gopackage:String) {
+	static public function awaitFinish() {
 		if ( ! finished.tryAcquire(1) ) // try to acquire the semaphore with a timeout in seconds
 		{ // timeout occurred, fallback to default Rtti.getRtti()
-			writeGoFile(outputDir, gopackage, "");
+			writeGoFile(fallbackOutputDir, fallbackGopackage, "");
 			Sys.println("Timeout waiting for RttiMap build from XML to finish, fallback to default Rtti.getRtti()");
 		}
 	}
@@ -22,6 +24,8 @@ class RttiMap {
 	}
 
 	static public function startBuild(gopackage:String, inputHxb:String, outputDir:String) {
+		fallbackOutputDir = outputDir;
+		fallbackGopackage = gopackage;
 		sys.thread.Thread.create("RttiMapBuilder", function() {
 			//var start = Sys.time();
 			var mapEntries = "";

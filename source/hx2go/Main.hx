@@ -63,7 +63,7 @@ class Main {
 
         generate(arc, output, mainClass, singleFile, sourcelineComments, res, times, codegenVersion, disableIncrementalCache, sourcemaps);
 
-        RttiMap.awaitFinish(output, "main"); // wait for the RTTI map building to finish, write a fallback Go file if necessary
+        RttiMap.awaitFinish(); // wait for the RTTI map building to finish, write a fallback Go file if necessary
 
         final end = Sys.time();
         Sys.println('hx2go took ${Std.string(Math.round((end - start) * 100000) / 100)}ms');

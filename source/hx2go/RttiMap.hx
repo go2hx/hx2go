@@ -30,7 +30,7 @@ class RttiMap {
 			//var start = Sys.time();
 			var mapEntries = "";
 
-			#if !eval
+			#if go
 			var input:String = StringTools.replace(inputHxb, ".hxb", ".xml");
 			mapEntries = process(input);
 			#end
@@ -44,7 +44,7 @@ class RttiMap {
 		});
 	}
 
-	#if !eval
+	#if go
 	static function process(filePath:String):String {
 		var fTup = go.Os.open(filePath);
 		if (fTup.tuple().error != null) {
@@ -141,7 +141,7 @@ class RttiMap {
 				}
 				return c.superClass != null ? c : null;
 			case _:
+				return null;
 		}
-		return null;
 	}
 }

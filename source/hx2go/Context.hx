@@ -76,6 +76,9 @@ class Context {
     private var disableIncrementalCache:Bool = false;
     private var cache:Cache;
     private var classInits: Array<String> = [];
+    private var normalizingTypedefs: Map<String, Bool> = [];
+    private var normalizingAbstracts: Array<String> = [];
+    private var recursiveAbstracts: Map<String, Bool> = [];
 
     public function new(archive: HxbArchive, outputDirectory: String, sourcelineComments:Bool, times:hx2go.util.Times, codegenVersion:String, disableIncrementalCache:Bool, sourcemaps:Bool = true) {
         this.sourcelineComments = sourcelineComments;
@@ -666,8 +669,14 @@ class Context {
                 }) )) ]);
 
             case TType(path, params):
+                var key = path.dotPath();
+                if (normalizingTypedefs.exists(key)) {
+                    return t;
+                }
+                normalizingTypedefs.set(key, true);
                 var fwd = TypeHelper.followToDef(this, t, true);
                 var fwdNorm = normalize(fwd);
+                normalizingTypedefs.remove(key);
 
                 if (fwdNorm.match(TDynamic(_) | TDynamicAny)) {
                     TDynamicAny;
@@ -687,7 +696,22 @@ class Context {
                     case MAbstract({ meta: meta }) if (meta.filter(m -> m.name == ':coreApi' || m.name == ':coreType' || m.name == ":go.AbstractNoGenericErasure").length != 0): t;
                     case MAbstract({ isExtern: true }): t;
                     case MAbstract({ underlyingThis: TAbstract(uPath, _) }) if (TypeHelper.comparePath(path, uPath)): TAbstract(path, params.map(normalize));
-                    case MAbstract(a): normalize(a.underlyingThis);
+                    case MAbstract(a):
+                        var key = path.dotPath();
+                        if (recursiveAbstracts.exists(key)) {
+                            return TDynamicAny;
+                        }
+                        var cycleStart = normalizingAbstracts.indexOf(key);
+                        if (cycleStart != -1) {
+                            for (i in cycleStart...normalizingAbstracts.length) {
+                                recursiveAbstracts.set(normalizingAbstracts[i], true);
+                            }
+                            return TDynamicAny;
+                        }
+                        normalizingAbstracts.push(key);
+                        var underlying = normalize(a.underlyingThis);
+                        normalizingAbstracts.pop();
+                        recursiveAbstracts.exists(key) ? TDynamicAny : underlying;
                     case _: TAbstract(path, params.map(normalize));
                 }
 

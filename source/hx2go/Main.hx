@@ -53,7 +53,7 @@ class Main {
             Sys.exit(1);
         }
 
-        RttiMap.startBuild("main", input, output); // start building the RTTI map in a separate thread
+        RttiMap.startThreadedBuild("main", input, output); // start building the RTTI map in a separate thread
 
         var times = new hx2go.util.Times(timesBool);
 
@@ -63,7 +63,7 @@ class Main {
 
         generate(arc, output, mainClass, singleFile, sourcelineComments, res, times, codegenVersion, disableIncrementalCache, sourcemaps);
 
-        RttiMap.awaitFinish(); // wait for the RTTI map building to finish, write a fallback Go file if necessary
+        RttiMap.awaitBuild(); // wait for the RTTI map building to finish, write a fallback Go file if time-out occurs
 
         final end = Sys.time();
         Sys.println('hx2go took ${Std.string(Math.round((end - start) * 100000) / 100)}ms');

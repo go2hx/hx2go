@@ -55,10 +55,10 @@ class Rtti {
 					c.statics[i].platforms = [];
 				for (i in 0...c.fields.length)
 					c.fields[i].platforms = [];
-		return c;
+				return c;
 			case _:
+				return null;
 		}
-		return null;
 	}
 
 	static public function getRtti<T>(c:Class<T>):Classdef {

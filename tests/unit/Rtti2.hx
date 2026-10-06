@@ -2,7 +2,7 @@ package unit;
 
 // tests below modeled on https://github.com/HaxeFoundation/haxe/blob/development/tests/unit/src/unit/teststd/haxe/rtti/TestRtti.hx
 function main() {
-	var allowGoOnlyXmlFileRequiredTests = false; // default value for --interp
+	var allowGoOnlyXmlFileRequiredTests = true; // default value for eval
 	#if go
 	allowGoOnlyXmlFileRequiredTests = go.Syntax.code("len(HxRttiMap)>0"); // to control whether the failures which require the XML file should be allowed to run - depends on whether the HxRttiMap has entries.
 	#end

@@ -1,6 +1,6 @@
 package hx2go.writers;
 
-import hxb.Typed.HxbVar;
+import hx2go.util.TypeHelper;
 import hx2go.util.OutputBuffer;
 import hxb.HxbModuleType.HxbClass;
 import hxb.HxbClassField;
@@ -136,7 +136,7 @@ class ClassWriter extends WriterImpl {
                     queue = queue.concat(ifacem.interfaces);
                 }
 
-                vtables.push('obj.${writer.context.resolvedInstanceName(iface.t)}.VTable = obj');
+                vtables.push('obj.${StringConversions.typePathClassInstanceName(current.path)}.${writer.context.resolvedInstanceName(iface.t)}.VTable = obj');
             }
 
             vtables.push('obj.${StringConversions.typePathClassInstanceName(current.path)}.VTable = obj');
@@ -337,17 +337,20 @@ class ClassWriter extends WriterImpl {
             buf.add('}');
 
             buf.add('');
+            var instanceName = "obj";
+            var argNames = ctor.args.map(a -> a.name);
+            while (argNames.contains(instanceName)) instanceName = "_" + instanceName;
             buf.add('func ${StringConversions.typePathClassInstanceName(cls.path)}_CreateInstance(${ctor.buf.toString()}) *${StringConversions.typePathClassInstanceName(cls.path)} {');
-            buf.add('obj := ${StringConversions.typePathClassInstanceName(cls.path)}_CreateEmptyInstance()', 1);
+            buf.add('$instanceName := ${StringConversions.typePathClassInstanceName(cls.path)}_CreateEmptyInstance()', 1);
 
             var fieldInits = cls.fields.filter(f -> f.kind.match(KVar(_)) && shouldGenVar(f) && f.expr?.expr != null);
             var needsHxNew = cls.constructor?.expr != null || fieldInits.length > 0;
 
             if (needsHxNew) {
-                buf.add('obj.Hx_New(${ctor.args.map(a -> a.name).join(", ")})', 1);
+                buf.add('$instanceName.Hx_New(${argNames.join(", ")})', 1);
             }
 
-            buf.add('return obj', 1);
+            buf.add('return $instanceName', 1);
             buf.add('}');
 
             if (needsHxNew) {

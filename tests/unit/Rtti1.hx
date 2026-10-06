@@ -1,5 +1,6 @@
 package unit;
 @:rtti
+@:keep 
 class Rtti1 {
   var x:String;
   public static function main() {

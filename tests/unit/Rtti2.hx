@@ -2,7 +2,10 @@ package unit;
 
 // tests below modeled on https://github.com/HaxeFoundation/haxe/blob/development/tests/unit/src/unit/teststd/haxe/rtti/TestRtti.hx
 function main() {
-	var allowFailures = false; // to control whether the failures should be allowed to run. TODO: REMOVE BEFORE PRODUCTION
+	var allowGoOnlyXmlFileRequiredTests = false; // default value for --interp
+	#if go
+	allowGoOnlyXmlFileRequiredTests = go.Syntax.code("len(HxRttiMap)>0"); // to control whether the failures which require the XML file should be allowed to run - depends on whether the HxRttiMap has entries.
+	#end
 
 	assert(!haxe.rtti.Rtti.hasRtti(NonRttiClass));
 	assert(haxe.rtti.Rtti.hasRtti(RttiClass1));
@@ -22,9 +25,9 @@ function main() {
 	var cf = cl.statics[0]; // should be:    var cf = cl.statics.shift(); // hx2go issue #209
 	assert(cf.name == "v");
 
-	if (allowFailures) {
-		/* fail */ assert(false); // should be: 	assert(haxe.rtti.CType.CTypeTools.toString(cf.type) == "String");
-		/* fail */ assert(!cf.isPublic);
+	if (allowGoOnlyXmlFileRequiredTests) {
+		assert(haxe.rtti.CType.CTypeTools.toString(cf.type) == "String");
+		assert(!cf.isPublic);
 	}
 	assert(!cf.isOverride);
 	assert(cf.doc == null);
@@ -38,15 +41,15 @@ function main() {
 
 	var cf = cl.fields[0]; // should be: var cf = cl.fields.shift(); // hx2go issue #209
 	assert(cf.name == "f");
-	if (allowFailures) {
-		/* fail */ assert(false); // should be: 	assert(haxe.rtti.CType.CTypeTools.toString(cf.type) == "Void -> Float");
+	if (allowGoOnlyXmlFileRequiredTests) {
+		assert(haxe.rtti.CType.CTypeTools.toString(cf.type) == "Void -> Float");
 	}
 	assert(cf.isPublic);
 	assert(!cf.isOverride);
 	assert(cf.doc == null);
 	assert(cf.get == RNormal);
-	if (allowFailures) {
-		/* fail */ assert(cf.set == RMethod);
+	if (allowGoOnlyXmlFileRequiredTests) {
+		assert(cf.set == RMethod);
 	}
 	assert(cf.params.length == 0);
 	assert(cf.platforms.length == 0);
@@ -58,14 +61,14 @@ function main() {
 	assert(!cl.isExtern);
 	assert(!cl.isInterface);
 	assert(cl.params.length == 0);
-	if (allowFailures) {
-		/* fail */ assert(cl.fields.length == 0); // the field from the superclass is included, which causes this to fail
+	if (allowGoOnlyXmlFileRequiredTests) {
+		assert(cl.fields.length == 0); // the field from the superclass is included, which causes this to fail
 	}
 	assert(cl.superClass.path == "unit._Rtti2.RttiClass1"); // in the original tests:  "unit.teststd.haxe.rtti._TestRtti.RttiClass1"
 	assert(cl.superClass.params.length == 0);
 	assert(cl.interfaces.length == 0);
-	if (allowFailures) {
-		/* fail */ assert(cl.fields.length == 0); // superclass issue, as above
+	if (allowGoOnlyXmlFileRequiredTests) {
+		assert(cl.fields.length == 0); // superclass issue, as above
 	}
 	assert(cl.statics.length == 0);
 	assert(cl.tdynamic == null);
@@ -84,17 +87,17 @@ function main() {
 
 	var cf = cl.fields[0]; // should be: var cf = cl.fields.shift(); // hx2go issue #209
 	assert(cf.name == "f");
-	if (allowFailures) {
-		/* fail */ assert(false); // should be: assert(haxe.rtti.CType.CTypeTools.toString(cf.type) == "Void -> Int");
+	if (allowGoOnlyXmlFileRequiredTests) {
+		assert(haxe.rtti.CType.CTypeTools.toString(cf.type) == "Void -> Int");
 	}
 	assert(cf.isPublic);
-	if (allowFailures) {
-		/* fail */ assert(cf.isOverride);
+	if (allowGoOnlyXmlFileRequiredTests) {
+		assert(cf.isOverride);
 	}
 	assert(cf.doc == null);
 	assert(cf.get == RNormal);
-	if (allowFailures) {
-		/* fail */ assert(cf.set == RMethod);
+	if (allowGoOnlyXmlFileRequiredTests) {
+		assert(cf.set == RMethod);
 	}
 	assert(cf.params.length == 0);
 	assert(cf.platforms.length == 0);

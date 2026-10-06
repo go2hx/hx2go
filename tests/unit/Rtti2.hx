@@ -2,7 +2,7 @@ package unit;
 
 // tests below modeled on https://github.com/HaxeFoundation/haxe/blob/development/tests/unit/src/unit/teststd/haxe/rtti/TestRtti.hx
 function main() {
-	var allowGoOnlyXmlFileRequiredTests = false; // default value for --interp
+	var allowGoOnlyXmlFileRequiredTests = true; // default value for eval
 	#if go
 	allowGoOnlyXmlFileRequiredTests = go.Syntax.code("len(HxRttiMap)>0"); // to control whether the failures which require the XML file should be allowed to run - depends on whether the HxRttiMap has entries.
 	#end
@@ -22,7 +22,7 @@ function main() {
 	assert(cl.statics.length == 1);
 	assert(cl.tdynamic == null);
 
-	var cf = cl.statics[0]; // should be:    var cf = cl.statics.shift(); // hx2go issue #209
+	var cf = cl.statics.shift();
 	assert(cf.name == "v");
 
 	if (allowGoOnlyXmlFileRequiredTests) {
@@ -39,7 +39,11 @@ function main() {
 	assert(cf.line == null);
 	assert(cf.overloads == null);
 
-	var cf = cl.fields[0]; // should be: var cf = cl.fields.shift(); // hx2go issue #209
+	// lines below added to check that shift() works as expected when the array is empty - see hx2go issue #216
+	assert(cl.statics.length == 0); // ensure no more statics left after shifting
+	assert(cl.statics.shift() == null); // check that a further shift() returns null
+
+	var cf = cl.fields.shift(); 
 	assert(cf.name == "f");
 	if (allowGoOnlyXmlFileRequiredTests) {
 		assert(haxe.rtti.CType.CTypeTools.toString(cf.type) == "Void -> Float");
@@ -85,7 +89,7 @@ function main() {
 	assert(cl.statics.length == 0);
 	assert(cl.tdynamic == null);
 
-	var cf = cl.fields[0]; // should be: var cf = cl.fields.shift(); // hx2go issue #209
+	var cf = cl.fields.shift(); 
 	assert(cf.name == "f");
 	if (allowGoOnlyXmlFileRequiredTests) {
 		assert(haxe.rtti.CType.CTypeTools.toString(cf.type) == "Void -> Int");

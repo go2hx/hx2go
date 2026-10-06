@@ -386,7 +386,7 @@ class ExprWriter extends WriterImpl {
         for (i in 0...fields.length) {
             var field = fields[i];
 
-            buf.addInline('"${field.name}": ');
+            buf.addInline('${StringConversions.quoteString(field.name)}: ');
             buf.addBufferInline(writeExpr(field.expr));
 
             if (i < fields.length - 1) {

@@ -594,7 +594,7 @@ class HxDynamic {
         var res0:Dynamic = ensureInterface(results[0]);
 
         // Handle nullable values
-        var isNullable: Bool=false;
+        var isNullable: Bool = false;
         go.Syntax.code("_ , {0} = {1}.(struct { Value interface {}; Valid bool })", isNullable, res0);
         if (isNullable) {
             if (go.Syntax.code("{0}.(struct { Value interface {}; Valid bool }).Valid", res0)) {

@@ -67,7 +67,8 @@ class StringConversions {
     }
 
     public static function stringPathGetFileName(sp: String): String {
-        return 'Hx_${sp.replace(".", "_")}'; // if starting with _ it's ignored
+        var name = 'Hx_${sp.replace(".", "_")}'; // if starting with _ it's ignored
+        return name.length > 120 ? name.substr(0, 80) + "_" + haxe.crypto.Md5.encode(sp) : name;
     }
 
     public static function quoteString(str: String): String {

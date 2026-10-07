@@ -50,6 +50,8 @@ class EnumWriter extends WriterImpl {
             case TFloat: makeDynamicCall(ti.inner, e, 'toFloat');
             case TBool: makeDynamicCall(ti.inner, e, 'toBool');
             case TString: makeDynamicCall(ti.inner, e, 'toString');
+            case TInst({ name: 'Array', pack: [] }, elemTypes): 
+                ExprHelper.createUntyped('HxAnyToTypedArray[${writer.types.writeHxbType(elemTypes[0])}]({0})', [e]);
             case _: ExprHelper.createUntyped('{0}.(${writer.types.writeHxbType(t)})', [e]);
         }
 

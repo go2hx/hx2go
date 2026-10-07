@@ -322,6 +322,10 @@ class Normaliser {
 
                 expr.expr = ExprHelper.createUntyped('break ${label}', []).expr;
 
+            case TReturn(e) if (e != null && Semantics.allPathsReturn(e).allPathsReturn):
+                expr.expr = e.expr;
+                return processExpr(expr, scope, ancestor);
+
             case TReturn(e) if (scope.activeTry != null):
                 expr.expr = e == null
                 ? ExprHelper.createUntyped('hx_try_state = 1; return', []).expr

@@ -1,6 +1,7 @@
 package hx2go.writers;
 
 import hxb.Typed.HxbVar;
+import hx2go.util.TypeHelper;
 import hx2go.util.OutputBuffer;
 import hxb.HxbModuleType.HxbClass;
 import hxb.HxbClassField;
@@ -40,6 +41,8 @@ class ClassWriter extends WriterImpl {
     }
 
     public function writeClass(cls: HxbClass): OutputBuffer {
+        // if (TypeHelper.isConstGenericTemplate(cls) || writer.context.excludedGenericTypes.exists(StringConversions.typePathClassVTableName(cls.path))) return new OutputBuffer();
+
         writer.context.resolve({ pack: ['go', 'haxe'], name: "HxClass", moduleName: "HxClass" });
 
         var buf = new OutputBuffer();
@@ -136,7 +139,7 @@ class ClassWriter extends WriterImpl {
                     queue = queue.concat(ifacem.interfaces);
                 }
 
-                vtables.push('obj.${writer.context.resolvedInstanceName(iface.t)}.VTable = obj');
+                vtables.push('obj.${StringConversions.typePathClassInstanceName(current.path)}.${writer.context.resolvedInstanceName(iface.t)}.VTable = obj');
             }
 
             vtables.push('obj.${StringConversions.typePathClassInstanceName(current.path)}.VTable = obj');
@@ -167,20 +170,27 @@ class ClassWriter extends WriterImpl {
             buf.add('type ${StringConversions.typePathClassVTableName(cls.path)} interface {');
 
             if (isInterface) {
-                for (iface in cls.interfaces.filter(i -> !hasInterfaces.exists(i.t.dotPath()))) {
+                var queue = cls.interfaces.copy();
+                var visited: Map<String, Bool> = [];
+                while (queue.length > 0) {
+                    var iface = queue.shift();
+                    var key = iface.t.dotPath();
+                    if (visited.exists(key)) continue;
+                    visited.set(key, true);
                     var mod = writer.context.resolve(iface.t);
                     switch mod {
                         case MClass(x):
                             for (f in x.fields) {
-                                fields.set(f.name, f);
+                                if (f.kind.match(KMethod(_)) && !fields.exists(f.name)) fields.set(f.name, f);
                             }
+                            queue = queue.concat(x.interfaces);
                         case _:
                     }
                 }
             }
 
             for (f in fields) {
-                if (f.flags & HxbClassFieldFlag.CfExtern != 0) {
+                if (f.flags & (HxbClassFieldFlag.CfExtern | HxbClassFieldFlag.CfGeneric) != 0) {
                     continue;
                 }
 
@@ -214,6 +224,7 @@ class ClassWriter extends WriterImpl {
         var queue =  cls.interfaces.filter(i -> !hasInterfaces.exists(i.t.dotPath()));
         while (queue.length != 0) {
             var iface = queue.shift();
+            if (hasInterfaces.exists(iface.t.dotPath())) continue;
             var ifName = writer.context.resolvedInstanceName(iface.t);
             hasInterfaces.set(iface.t.dotPath(), true);
 
@@ -309,24 +320,14 @@ class ClassWriter extends WriterImpl {
             }
 
             for (f in dynMethods) {
-                var local = hx2go.normaliser.ExprCopy.copy(f.field.expr.expr);
-                if (local == null) {
+                if (f.field.expr?.expr == null) {
                     trace('warning, null field: ' + f);
                     continue;
                 }
 
-                local.t = appendThis(local.t, f.inst);
-
-                switch local.expr {
-                    case TFunction(tfunc):
-                        tfunc.args.unshift({
-                            value: null,
-                            v: new HxbVar(-1, "this", VUser(TVOLocalVariable), 0, [], local.pos, TInst(f.inst.path, [])), 
-                        });
-                    default:
-                }
-
-                buf.add('obj.${StringConversions.nameToFieldName(f.field.name)}_Dyn = ${writer.exprs.writeExpr(local)}', 1);
+                var signature = writeFunctionArgs(appendThis(f.field.type, f.inst));
+                var ret = signature.returnType == TVoid ? "" : writer.types.writeHxbType(signature.returnType).toString();
+                buf.add('obj.${StringConversions.nameToFieldName(f.field.name)}_Dyn = func(${signature.buf}) $ret ${writer.exprs.writeExpr(f.field.expr.expr, true)}', 1);
             }
 
             for (v in vtables) {
@@ -337,17 +338,20 @@ class ClassWriter extends WriterImpl {
             buf.add('}');
 
             buf.add('');
+            var instanceName = "obj";
+            var argNames = ctor.args.map(a -> a.name);
+            while (argNames.contains(instanceName)) instanceName = "_" + instanceName;
             buf.add('func ${StringConversions.typePathClassInstanceName(cls.path)}_CreateInstance(${ctor.buf.toString()}) *${StringConversions.typePathClassInstanceName(cls.path)} {');
-            buf.add('obj := ${StringConversions.typePathClassInstanceName(cls.path)}_CreateEmptyInstance()', 1);
+            buf.add('$instanceName := ${StringConversions.typePathClassInstanceName(cls.path)}_CreateEmptyInstance()', 1);
 
             var fieldInits = cls.fields.filter(f -> f.kind.match(KVar(_)) && shouldGenVar(f) && f.expr?.expr != null);
             var needsHxNew = cls.constructor?.expr != null || fieldInits.length > 0;
 
             if (needsHxNew) {
-                buf.add('obj.Hx_New(${ctor.args.map(a -> a.name).join(", ")})', 1);
+                buf.add('$instanceName.Hx_New(${argNames.join(", ")})', 1);
             }
 
-            buf.add('return obj', 1);
+            buf.add('return $instanceName', 1);
             buf.add('}');
 
             if (needsHxNew) {

@@ -392,6 +392,19 @@ class Normaliser {
                 result;
             }
 
+            case TTry(body, catches): {
+                var result = scope.temp(expr, null, this, scope, ancestor, expr.t);
+                var makeAssign = (e: HxbTypedExpr) -> {
+                    if (!Semantics.allPathsReturn(e).allPathsReturn) {
+                        e.expr = TBinop(OpAssign, result, ensureBlock(ExprCopy.copy(e)));
+                    }
+                };
+                makeAssign(body);
+                for (c in catches) makeAssign(c.expr);
+                scope.insert(expr, ExprCopy.copy(expr), this, scope, ancestor);
+                result;
+            }
+
             case TSwitch(_, cases, edef): {
                 var result = scope.temp(expr, null, this, scope, ancestor, expr.t);
                 var makeAssign = (e: HxbTypedExpr) -> {

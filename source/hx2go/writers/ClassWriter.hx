@@ -41,7 +41,6 @@ class ClassWriter extends WriterImpl {
     }
 
     public function writeClass(cls: HxbClass): OutputBuffer {
-        // if (TypeHelper.isConstGenericTemplate(cls) || writer.context.excludedGenericTypes.exists(StringConversions.typePathClassVTableName(cls.path))) return new OutputBuffer();
 
         writer.context.resolve({ pack: ['go', 'haxe'], name: "HxClass", moduleName: "HxClass" });
 

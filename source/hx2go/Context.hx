@@ -176,6 +176,7 @@ class Context {
             new hx2go.passes.OptimiseEnumParameter(this),
             new hx2go.passes.FieldAccessArrayClosure(this),
             new hx2go.passes.FieldAccessArrayOrString(this),
+            new hx2go.passes.RewriteStringAdd(this),
 //            new hx2go.passes.ResolveVarDecl(this),
 //            new hx2go.passes.ResolveCast(this),
         ];

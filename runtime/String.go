@@ -22,3 +22,13 @@ func HxStringCompare(a string, b string) bool {
 		return false
 	}
 }
+
+func HxStringConcat(a string, b string) string {
+	if isStringNull(a) {
+		a = "null"
+	}
+	if isStringNull(b) {
+		b = "null"
+	}
+	return a + b
+}

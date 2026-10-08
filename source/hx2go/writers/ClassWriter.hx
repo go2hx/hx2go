@@ -362,6 +362,12 @@ class ClassWriter extends WriterImpl {
 
                     buf.addBuffer(writer.exprs.writeExpr(einit), 1);
                 }
+
+                // Initialize fields with default values if necessary
+                for (f in cls.fields.filter(f -> f.kind.match(KVar(_)) && shouldGenVar(f) && f.expr?.expr == null )) {
+                    buf.add('this.${StringConversions.nameToFieldName(f.name)} = HxDefault[${writer.types.writeHxbType(f.type)}]()', 1);
+                }
+
                 if (cls.constructor?.expr != null) {
                     buf.addBuffer(writer.exprs.writeExpr(cls.constructor.expr.expr, true), 1);
                     buf.add('');

@@ -4,6 +4,10 @@ import "reflect"
 
 func HxDefault[T any]() T {
 	var v T
+	switch any(v).(type) {
+	case string:
+		return any(HxStringNull).(T)
+	}
 	return v
 }
 

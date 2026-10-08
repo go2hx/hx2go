@@ -31,7 +31,7 @@ class CastString extends CompilerPass {
                 context.submitNode(expr);
 
             case TCast(e, _):
-                var o = ExprHelper.createCallStatic(context, { pack: [], name: 'Std', moduleName: 'Std' }, 'string', [e]);
+                var o = ExprHelper.createCallStatic(context, { pack: ["go","haxe"], name: 'HxDynamic', moduleName: 'HxDynamic' }, 'toString', [e]); //
                 expr.expr = o.expr;
                 expr.t = o.t;
 

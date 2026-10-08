@@ -285,9 +285,18 @@ class HxDynamic {
         else if (k == Reflect.float64)
             return (valueToFloat(aV) + valueToFloat(bV) : Dynamic);
         else if (k == Reflect.string)
-            return (toString(a) + toString(b):Dynamic);
+        {
+            var aS = toString(a);
+            var bS = toString(b);
+            return (aS + bS:Dynamic); // this should compile to a call to stringConcat() below
+        }
         else
             throw "runtime.HxDynamic.add invalid operands: " + aV.string() + " and " + bV.string();
+    }
+
+    // RewriteStringAdd pass of hx2go replaces all string + string operations with calls to HxStringConcat
+    public static inline function stringConcat(a:String, b:String):String {
+        return go.Syntax.code("HxStringConcat({0},{1})", a, b);
     }
 
     public static function subtract(a:Dynamic, b:Dynamic):Dynamic {
@@ -402,16 +411,20 @@ class HxDynamic {
     // conversion functions, following Haxe Dynamic conventions
     //
 
-    public static function toString(d:Dynamic):String {
-        if (Syntax.code("{0} == nil", d)) {
-            return Syntax.code("HxStringNull");
-        }
-        var dV = ensureConcreteValue(d);
-        if (dV.isValid() && dV.kind() == Reflect.string) {
-            return dV.string();
-        }
-        return Std.string(d);
-    }
+	public static function toString(d:Dynamic):String {
+		if (Syntax.code("{0} == nil", d)) {
+			return Syntax.code("HxStringNull");
+		}
+		var dV = ensureConcreteValue(d);
+		if (dV.isValid() && dV.kind() == Reflect.string) {
+			return dV.string();
+		}
+		var r = Std.string(d); // reuturns "null" for null values
+		if (r == "null") {
+			r = null;
+		}
+		return r;
+	}
 
     public static function toBool(d:Dynamic):Bool {
         var dV = ensureConcreteValue(d);

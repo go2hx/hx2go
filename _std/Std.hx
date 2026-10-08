@@ -90,18 +90,30 @@ class Std {
     }
 
     public static function string(s: Dynamic): String {
+        return stringIter(s, 0);
+    }
+
+    static function stringIter(s: Dynamic, depth: Int): String {
         if (s == null) {
             return "null";
         }
+        if (depth >= 5) return "<...>";
 
         var value = HxDynamic.ensureConcreteValue(s);
         if (!value.isValid()) {
             return "null";
         }
 
+        var array = HxDynamic.tryDynamicArray(value._interface());
+        if (array != null) {
+            var values = [];
+            for (i in 0...array.len()) values.push(stringIter(array.get(i), depth + 1));
+            return '[' + values.join(',') + ']';
+        }
+
         var kind = value.kind();
         if (kind == Reflect.ptr) {
-            return string(value.elem());
+            return stringIter(value.elem(), depth + 1);
         }
 
         if (kind == Reflect.map) {
@@ -121,7 +133,7 @@ class Std {
             }
 
             buf.add('[');
-            buf.add(keys.toArray().map(k -> '${k} => ${string(value.mapIndex(k))}').join(', '));
+            buf.add(keys.toArray().map(k -> '${stringIter(k, depth + 1)} => ${stringIter(value.mapIndex(k), depth + 1)}').join(', '));
             buf.add(']');
 
             return buf.toString();
@@ -139,7 +151,7 @@ class Std {
                 var values: Array<String> = [];
 
                 for (i in 0...value.numField()) {
-                    values.push(string(value.field(i)));
+                    values.push(stringIter(value.field(i), depth + 1));
                 }
 
                 return enumCtorCount == 0 ? enumCtorName : '${enumCtorName}(${values.join(",")})';
@@ -150,14 +162,14 @@ class Std {
             var valid = value.fieldByName("Valid");
             if (valid.isValid()) {
                 var val = value.fieldByName("Value");
-                return valid._interface() == false || !val.isValid() ? "null" : string(val._interface());
+                return valid._interface() == false || !val.isValid() ? "null" : stringIter(val._interface(), depth + 1);
             }
 
             var vt = value.fieldByName("VTable");
             if (vt.isValid()) {
                 var toStr = vt.methodByName("Hx_Field_toString");
                 if (toStr.isValid()) {
-                    return string(toStr.call([])[0]);
+                    return stringIter(toStr.call([])[0], depth + 1);
                 }
             }
 

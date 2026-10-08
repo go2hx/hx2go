@@ -322,6 +322,10 @@ class Normaliser {
 
                 expr.expr = ExprHelper.createUntyped('break ${label}', []).expr;
 
+            case TReturn(e) if (e != null && Semantics.allPathsReturn(e).allPathsReturn):
+                expr.expr = e.expr;
+                return processExpr(expr, scope, ancestor);
+
             case TReturn(e) if (scope.activeTry != null):
                 expr.expr = e == null
                 ? ExprHelper.createUntyped('hx_try_state = 1; return', []).expr
@@ -389,6 +393,19 @@ class Normaliser {
 
                 scope.insert(expr, ExprCopy.copy(expr), this, scope, ancestor);
 
+                result;
+            }
+
+            case TTry(body, catches): {
+                var result = scope.temp(expr, null, this, scope, ancestor, expr.t);
+                var makeAssign = (e: HxbTypedExpr) -> {
+                    if (!Semantics.allPathsReturn(e).allPathsReturn) {
+                        e.expr = TBinop(OpAssign, result, ensureBlock(ExprCopy.copy(e)));
+                    }
+                };
+                makeAssign(body);
+                for (c in catches) makeAssign(c.expr);
+                scope.insert(expr, ExprCopy.copy(expr), this, scope, ancestor);
                 result;
             }
 

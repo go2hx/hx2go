@@ -91,12 +91,12 @@ class Std {
 
     public static function string(s: Dynamic): String {
         if (s == null) {
-            return "null";
+            return go.Syntax.code("HxStringNull");
         }
 
         var value = HxDynamic.ensureConcreteValue(s);
         if (!value.isValid()) {
-            return "null";
+            return go.Syntax.code("HxStringNull");
         }
 
         var kind = value.kind();
@@ -150,7 +150,7 @@ class Std {
             var valid = value.fieldByName("Valid");
             if (valid.isValid()) {
                 var val = value.fieldByName("Value");
-                return valid._interface() == false || !val.isValid() ? "null" : string(val._interface());
+                return valid._interface() == false || !val.isValid() ? go.Syntax.code("HxStringNull") : string(val._interface());
             }
 
             var vt = value.fieldByName("VTable");
@@ -165,7 +165,7 @@ class Std {
         }
 
         if (kind == Reflect._interface && value.isNil()) {
-            return "null";
+            return go.Syntax.code("HxStringNull");
         }
 
         return Fmt.sprintf("%v", value._interface());

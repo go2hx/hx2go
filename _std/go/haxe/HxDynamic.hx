@@ -285,7 +285,14 @@ class HxDynamic {
         else if (k == Reflect.float64)
             return (valueToFloat(aV) + valueToFloat(bV) : Dynamic);
         else if (k == Reflect.string)
-            return (toString(a) + toString(b):Dynamic);
+        {
+            // convert HxStringNull to  "null" if either operand is null and we are performing string concatenation
+            var aS = toString(a);
+            if (aS == null) aS = "null"; 
+            var bS = toString(b);
+            if (bS == null) bS = "null";
+            return (aS + bS:Dynamic);
+        }
         else
             throw "runtime.HxDynamic.add invalid operands: " + aV.string() + " and " + bV.string();
     }

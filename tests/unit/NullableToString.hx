@@ -5,7 +5,7 @@ function main() {
     assert(Std.string(n) == "5");
 
     var z: Null<Int> = null;
-    assert(Std.string(z) == "null");
+    assert(Std.string(z) == null);
 
     var s: Null<String> = "hi";
     assert(Std.string(s) == "hi");

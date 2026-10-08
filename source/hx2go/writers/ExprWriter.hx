@@ -613,6 +613,8 @@ class ExprWriter extends WriterImpl {
                         buf.addBufferInline(writeExpr(e));
                         buf.addInline(')');
                     }
+                } else if (isIdentityLocalCast(expr, e)) {
+                    buf.addBufferInline(writeExpr(e));
                 } else {
                     buf.addInline('(');
                     buf.addInline('(');
@@ -627,6 +629,15 @@ class ExprWriter extends WriterImpl {
         }
 
         return buf;
+    }
+
+    function isIdentityLocalCast(expr: HxbTypedExpr, e: HxbTypedExpr): Bool { // if type is same
+        return switch e.expr {
+            case TLocal(v) if (v.type != null && expr.t != null):
+                writer.types.writeHxbType(v.type).toString() == writer.types.writeHxbType(expr.t).toString(); // done like this since we need go type equality, not haxe
+
+            case _: false;
+        }
     }
 
     public function writeTry(e: HxbTypedExpr, catches:Array<hxb.Typed.HxbTCatch>):OutputBuffer {

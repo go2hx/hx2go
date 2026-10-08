@@ -409,16 +409,24 @@ class HxDynamic {
     // conversion functions, following Haxe Dynamic conventions
     //
 
-    public static function toString(d:Dynamic):String {
-        if (Syntax.code("{0} == nil", d)) {
-            return Syntax.code("HxStringNull");
-        }
-        var dV = ensureConcreteValue(d);
-        if (dV.isValid() && dV.kind() == Reflect.string) {
-            return dV.string();
-        }
-        return Std.string(d);
-    }
+	public static function toString(d:Dynamic):String {
+		if (Syntax.code("{0} == nil", d)) {
+			return Syntax.code("HxStringNull");
+		}
+		var dV = ensureConcreteValue(d);
+		if (dV.isValid() && dV.kind() == Reflect.string) {
+			var r = dV.string();
+			if (r == "null") {
+				r = null;
+			}
+			return r;
+		}
+		var r = Std.string(d);
+		if (r == "null") {
+			r = null;
+		}
+		return r;
+	}
 
     public static function toBool(d:Dynamic):Bool {
         var dV = ensureConcreteValue(d);

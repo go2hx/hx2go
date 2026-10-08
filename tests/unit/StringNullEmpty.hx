@@ -21,7 +21,7 @@ function main() {
 
     // null prints "null", "" prints ""
     assert(Std.string(empty) == "");
-    assert(Std.string(nul) == null);
+    assert(Std.string(nul) == "null");
 
     // Reflect.isObject: "" is a real string (object), null is not
     assert(Reflect.isObject(empty) == true);
@@ -40,7 +40,7 @@ function main() {
     assert((dEmpty == null) == false);
     assert((dNul == null) == true);
     assert(Std.string(dEmpty) == "");
-    assert(Std.string(dNul) == null);
+    assert(Std.string(dNul) == "null");
     assert(Reflect.compare(dNul, dEmpty) == -1);
     assert(Reflect.compare(dEmpty, dEmpty) == 0);
 }

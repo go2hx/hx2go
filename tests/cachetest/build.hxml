@@ -1,0 +1,5 @@
+-cp tests/cachetest
+-cp source
+-cp hxb-parser
+-m CacheTest
+--interp

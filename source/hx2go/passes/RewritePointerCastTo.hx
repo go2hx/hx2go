@@ -26,7 +26,6 @@ class RewritePointerCastTo extends CompilerPass {
             case TCast(e, _): {
                 var o = ExprHelper.createUntyped("(&{0})", [e]);
                 expr.expr = o.expr;
-                expr.t = o.t;
             }
 
             case _: null;

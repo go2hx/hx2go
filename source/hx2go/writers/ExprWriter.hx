@@ -631,10 +631,31 @@ class ExprWriter extends WriterImpl {
         return buf;
     }
 
+    function storedVarField(tp: TypePath, name: String): Null<hxb.HxbClassField> {
+        return switch writer.context.resolve(tp) {
+            case MClass(cls) if ((cls.flags & HxbClassFlag.CExtern) == 0):
+                var cf = cls.fields.concat(cls.statics).filter(f -> f.name == name || StringConversions.nameToFieldName(f.name) == name)[0];
+                if (cf == null || cf.type == null) null
+                else switch cf.kind {
+                    case KVar(AccNormal | AccNo | AccCtor, _): cf;
+                    case _: null;
+                }
+
+            case _: null;
+        }
+    }
+
     function isIdentityLocalCast(expr: HxbTypedExpr, e: HxbTypedExpr): Bool { // if type is same
         return switch e.expr {
             case TLocal(v) if (v.type != null && expr.t != null):
                 writer.types.writeHxbType(v.type).toString() == writer.types.writeHxbType(expr.t).toString(); // done like this since we need go type equality, not haxe
+
+            case TField(_, FInstance(tp, _, ref) | FStatic(tp, ref)) if (expr.t != null):
+                var cf = storedVarField(tp, ref.name);
+                cf != null && writer.types.writeHxbType(cf.type).toString() == writer.types.writeHxbType(expr.t).toString();
+
+            case TMeta(_, inner) | TParenthesis(inner):
+                isIdentityLocalCast(expr, inner);
 
             case _: false;
         }

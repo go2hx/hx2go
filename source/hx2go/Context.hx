@@ -926,7 +926,7 @@ class Context {
                                 var barg = b_args[idx];
                                 var name = '_hx_param_' + farg.name;
 
-                                if(farg.opt && !farg.t.match(TAbstract({name: "Null", pack: []}, _))) {
+                                if(farg.opt &&  !(Semantics.canBypassNull(this,farg.t) || farg.t.match(TAbstract({name: "Null", pack: []}, _)))) {
                                     name = StringConversions.makeDefaultArgName(farg.name);
                                 }
 

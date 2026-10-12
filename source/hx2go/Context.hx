@@ -926,15 +926,21 @@ class Context {
                                 var barg = b_args[idx];
                                 var name = '_hx_param_' + farg.name;
 
+                                if(farg.opt && !farg.t.match(TAbstract({name: "Null", pack: []}, _))) {
+                                    name = StringConversions.makeDefaultArgName(farg.name);
+                                }
+
                                 var toType = farg.t;
                                 var fromType = b_args[idx].t;
                                 var localVar = new HxbVar(-1, name, VUser(TVOLocalVariable), 0, [], f.pos, fromType);
                                 var local = new HxbTypedExpr(TLocal(localVar), fromType, f.pos);
                                 var sanName = Context.sanitiseString(farg.name);
 
-                                assign.push(
-                                    ExprHelper.createUntyped('${sanName} := {0}; _ = ${sanName}', [ExprHelper.createCast(local, toType)])
-                                );
+                                if(!b_args[idx].opt) {
+                                    assign.push(
+                                        ExprHelper.createUntyped('${sanName} := {0}; _ = ${sanName}', [ExprHelper.createCast(local, toType)])
+                                    );
+                                }
 
                                 args.push({
                                     name: name,

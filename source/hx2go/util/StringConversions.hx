@@ -98,4 +98,7 @@ class StringConversions {
         return buf.toString();
     }
 
+    public static function makeDefaultArgName(argName: String): String {
+        return '${argName}__hasDefault';
+    }
 }

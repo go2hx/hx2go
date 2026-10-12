@@ -717,11 +717,27 @@ class Context {
                 }
 
             case TFun(args, ret):
-                TFun(args.map(a -> new HxbFunArg(
-                sanitiseString(a.name),
-                a.opt,
-                normalize(a.t)
-                )), normalize(ret));
+				TFun(args.map(a -> new HxbFunArg({
+					var saniName = sanitiseString(a.name);
+					if (!(Semantics.canBypassNull(this,a.t) || a.t.match(TAbstract({name: "Null", pack: []}, _)) )) {
+						if (a.opt) {
+							if (!StringTools.endsWith(saniName, StringConversions.makeDefaultArgName("")))
+								saniName = StringConversions.makeDefaultArgName(saniName);
+						} else { // not optional so should not have default arg name
+							if (!a.opt && StringTools.endsWith(saniName, StringConversions.makeDefaultArgName(""))) {
+								trace("found unexpected __hasDefault", a.name, a.t, a.opt);
+								saniName = StringTools.replace(saniName, StringConversions.makeDefaultArgName(""), "");
+							}
+						}
+                    }
+					saniName;
+				}, a.opt, {
+					var normalizedType = normalize(a.t);
+					if ((a.opt && !(Semantics.canBypassNull(this,a.t) || a.t.match(TAbstract({name: "Null", pack: []}, _))))) {
+                        normalizedType = TDynamic(normalizedType);
+					}
+					normalizedType;
+				})), normalize(ret));
 
             case _:
                 t;

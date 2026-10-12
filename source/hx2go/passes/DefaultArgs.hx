@@ -35,7 +35,7 @@ class DefaultArgs extends CompilerPass {
 
                     var notNullable = !v.type.match(TAbstract({name: "Null", pack: []}, _)) ;
 
-                    if (notNullable) 
+                    if (notNullable) {
                         switch (expr.t) {
                             case TFun(fargs, _): 
                                 if(fargs[i].name != hx2go.util.StringConversions.makeDefaultArgName(v.name)){
@@ -45,7 +45,7 @@ class DefaultArgs extends CompilerPass {
                                 }
                             case _: 
                         }
-                        
+                    }
                     var testVarExp = new HxbTypedExpr(TLocal(v), v.type, v.pos);
                     var testVarOp = OpEq;
                     if (notNullable) {

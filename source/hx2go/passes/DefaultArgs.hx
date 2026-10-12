@@ -41,7 +41,6 @@ class DefaultArgs extends CompilerPass {
                                 if(fargs[i].name != hx2go.util.StringConversions.makeDefaultArgName(v.name)){
                                     //trace('Default argument name mismatch: ' + fargs[i].name, v.name);
                                     notNullable = false;  // must match the default argument name
-                                    continue;
                                 }
                             case _: 
                         }

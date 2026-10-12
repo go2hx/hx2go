@@ -719,7 +719,7 @@ class Context {
             case TFun(args, ret):
 				TFun(args.map(a -> new HxbFunArg({
 					var saniName = sanitiseString(a.name);
-					if (!(Semantics.canBypassNull(this,a.t) || a.t.match(TAbstract({name: "Null", pack: []}, _)) )) {
+					if ( !(Semantics.canBypassNull(this,a.t) || a.t.match(TAbstract({name: "Null", pack: []}, _)) ) ) {
 						if (a.opt) {
 							if (!StringTools.endsWith(saniName, StringConversions.makeDefaultArgName("")))
 								saniName = StringConversions.makeDefaultArgName(saniName);

@@ -243,6 +243,8 @@ class Semantics {
         return switch t {
             case TAbstract({ pack: [], name: "Int" | "Dynamic" }, _) | TAbstract({ pack: ["go"], name: "GoInt" | "Int8" | "Int16" | "Int32" | "Int64" }, _) | TInt | TDynamicAny | TDynamic(_): true;
             case TAbstract({ pack: [], name: "UInt" }, _) | TAbstract({ pack: ["go"], name: "GoUInt" | "UInt8" | "UInt16" | "UInt32" | "UInt64" | "Rune" | "Byte"  }, _): false;
+            case TAbstract({ pack: ["haxe"], name:  "Int64"  }, _): true;
+            case TAbstract({ pack: ["haxe"], name:  "UInt64" }, _): false;
             case _: true; // abstract should not cause this code path anyway.
         }
     }
@@ -254,6 +256,7 @@ class Semantics {
             case TAbstract({ pack: ["go"], name: "Int16" | "UInt16" }, _): 16;
             case TAbstract({ pack: [], name: "Int" | "Dynamic" | "UInt" }, _) | TAbstract({ pack: ["go"], name: "Int32" | "UInt32" }, _): 32;
             case TAbstract({ pack: ["go"], name: "Int64" | "UInt64" }, _): 64;
+            case TAbstract({ pack: ["haxe"], name:  "Int64" | "UInt64" }, _): 64;
             case _: 64; // abstract should not cause this code path anyway.
         }
     }
@@ -279,6 +282,7 @@ class Semantics {
     public static function isInt64Type(context:Context, t: HxbType): Bool {
         return switch TypeHelper.follow(context, t) {
             case TAbstract({ pack: ["go"], name: "Int64" | "UInt64" }, _): true;
+            case TAbstract({ pack: ["haxe"], name:  "Int64" | "UInt64" }, _): true;
             case _: false;
         }
     }

@@ -45,10 +45,13 @@ Add the target flags to your `.hxml`:
 
 ```hxml
 -L hx2go
+--xml output/target.xml # required for RTTI
 --custom-target go=output
 # Build and run the generated module
 --cmd go -C output/main run .
 ```
+
+*information about [RTTI](https://haxe.org/manual/cr-rtti.html)*
 
 Given a `Main.hx`:
 

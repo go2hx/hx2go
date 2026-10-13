@@ -717,11 +717,27 @@ class Context {
                 }
 
             case TFun(args, ret):
-                TFun(args.map(a -> new HxbFunArg(
-                sanitiseString(a.name),
-                a.opt,
-                normalize(a.t)
-                )), normalize(ret));
+				TFun(args.map(a -> new HxbFunArg({
+					var saniName = sanitiseString(a.name);
+					if ( !(Semantics.canBypassNull(this,a.t) || a.t.match(TAbstract({name: "Null", pack: []}, _)) ) ) {
+						if (a.opt) {
+							if (!StringTools.endsWith(saniName, StringConversions.makeDefaultArgName("")))
+								saniName = StringConversions.makeDefaultArgName(saniName);
+						} else { // not optional so should not have default arg name
+							if (!a.opt && StringTools.endsWith(saniName, StringConversions.makeDefaultArgName(""))) {
+								trace("found unexpected __hasDefault", a.name, a.t, a.opt);
+								saniName = StringTools.replace(saniName, StringConversions.makeDefaultArgName(""), "");
+							}
+						}
+                    }
+					saniName;
+				}, a.opt, {
+					var normalizedType = normalize(a.t);
+					if ((a.opt && !(Semantics.canBypassNull(this,a.t) || a.t.match(TAbstract({name: "Null", pack: []}, _))))) {
+                        normalizedType = TDynamic(normalizedType);
+					}
+					normalizedType;
+				})), normalize(ret));
 
             case _:
                 t;
@@ -910,15 +926,21 @@ class Context {
                                 var barg = b_args[idx];
                                 var name = '_hx_param_' + farg.name;
 
+                                if(farg.opt &&  !(Semantics.canBypassNull(this,farg.t) || farg.t.match(TAbstract({name: "Null", pack: []}, _)))) {
+                                    name = StringConversions.makeDefaultArgName(farg.name);
+                                }
+
                                 var toType = farg.t;
                                 var fromType = b_args[idx].t;
                                 var localVar = new HxbVar(-1, name, VUser(TVOLocalVariable), 0, [], f.pos, fromType);
                                 var local = new HxbTypedExpr(TLocal(localVar), fromType, f.pos);
                                 var sanName = Context.sanitiseString(farg.name);
 
-                                assign.push(
-                                    ExprHelper.createUntyped('${sanName} := {0}; _ = ${sanName}', [ExprHelper.createCast(local, toType)])
-                                );
+                                if(!b_args[idx].opt) {
+                                    assign.push(
+                                        ExprHelper.createUntyped('${sanName} := {0}; _ = ${sanName}', [ExprHelper.createCast(local, toType)])
+                                    );
+                                }
 
                                 args.push({
                                     name: name,

@@ -1,5 +1,6 @@
 package hx2go.passes;
 
+import haxe.macro.Type.TConstant;
 import hxb.Typed.HxbTFunc;
 import hxb.tools.TypedExprTools;
 import hx2go.normaliser.Semantics;
@@ -58,7 +59,8 @@ class TypeNormaliserCall extends CompilerPass {
             && callee != null && callee.expr != null) {
                 switch callee.expr.expr.expr {
                     case TFunction(func) if (idx < func.args.length):
-                        var defaultValue: HxbTypedExpr = func.args[idx].value;
+                        // set default value for a default but not optional (?) parameter to always be null
+                        var defaultValue: HxbTypedExpr = null; //was: func.args[idx].value;
                         if (defaultValue != null) {
                             var c = ExprHelper.createCast(defaultValue, toType);
                             arg.expr = c.expr;

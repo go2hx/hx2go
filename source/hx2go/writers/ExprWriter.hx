@@ -414,6 +414,12 @@ class ExprWriter extends WriterImpl {
                             ? func.args[i].v.name
                             : '_hx_unused_$i';
 
+                        if (StringTools.endsWith(params[i].name, StringConversions.makeDefaultArgName(""))) {
+                            // This parameter has a default argument suffix, handle accordingly
+                            name = params[i].name;
+                            // goT is already using the parameter type, no need to change it
+                        }
+
                         paramStrs.push('$name $goT');
                     }
 

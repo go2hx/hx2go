@@ -54,6 +54,11 @@ class Cache {
     public function new(enabled:Bool, outputDirectory:String, res:Map<String, Bytes>) {
         this.enabled = enabled;
         this.outputDirectory = outputDirectory;
+        // uncached builds delete the the previous manifest if it exists
+        // this is to make sure that the Go code generated is always in sync with the Haxe code cached
+        if (!enabled && FileSystem.exists(manifestPath())) {
+            FileSystem.deleteFile(manifestPath());
+        }
         this.cacheKeys = load();
         this.srcKeyByBytes = loadSrcMemo();
         this.resourceSalt = computeResourceSalt(res);

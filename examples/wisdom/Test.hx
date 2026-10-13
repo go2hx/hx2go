@@ -30,7 +30,7 @@ using StringTools;
 class StaticWisdomBackend extends wisdom.Backend {
 	public function new() {}
 
-	public function createElement(tagName: String, ?options: CreateElementOptions #if wisdom_debug, ?pos: haxe.PosInfos #end): Element {
+	public function createElement(tagName: String, ?options: CreateElementOptions): Element {
 		var element = Xml.createElement(tagName);
 		if (untyped options.is != null) {
 			element.set("is", untyped options.is);
@@ -38,8 +38,7 @@ class StaticWisdomBackend extends wisdom.Backend {
 		return cast element;
 	}
 
-	public function createElementNS(namespaceUri: String, qualifiedName: String, ?options: CreateElementOptions
-			#if wisdom_debug, ?pos: haxe.PosInfos #end): Element {
+	public function createElementNS(namespaceUri: String, qualifiedName: String, ?options: CreateElementOptions): Element {
 		final parts = qualifiedName.split(":");
 		var element = Xml.createElement(qualifiedName);
 
@@ -55,15 +54,15 @@ class StaticWisdomBackend extends wisdom.Backend {
 		return cast element;
 	}
 
-	public function createTextNode(text: String #if wisdom_debug, ?pos: haxe.PosInfos #end): Text {
+	public function createTextNode(text: String): Text {
 		return cast Xml.createPCData(text);
 	}
 
-	public function createComment(text: String #if wisdom_debug, ?pos: haxe.PosInfos #end): Comment {
+	public function createComment(text: String): Comment {
 		return cast Xml.createComment(text);
 	}
 
-	public function insertBefore(parentNode: Node, newNode: Node, referenceNode: Null<Node> #if wisdom_debug, ?pos: haxe.PosInfos #end): Void {
+	public function insertBefore(parentNode: Node, newNode: Node, referenceNode: Null<Node>): Void {
 		final parentNodeXml: Xml = cast parentNode;
 		final newNodeXml: Xml = cast newNode;
 		if (referenceNode == null) {
@@ -96,12 +95,12 @@ class StaticWisdomBackend extends wisdom.Backend {
 		}
 	}
 
-	public function removeChild(node: Node, child: Node #if wisdom_debug, ?pos: haxe.PosInfos #end): Void {
+	public function removeChild(node: Node, child: Node): Void {
 		final nodeXml: Xml = cast node;
 		nodeXml.removeChild(cast child);
 	}
 
-	public function appendChild(node: Node, child: Node #if wisdom_debug, ?pos: haxe.PosInfos #end): Void {
+	public function appendChild(node: Node, child: Node): Void {
 		final nodeXml: Xml = cast node;
 		nodeXml.addChild(cast child);
 	}
@@ -123,7 +122,7 @@ class StaticWisdomBackend extends wisdom.Backend {
 		return nodeXml.nodeName;
 	}
 
-	public function setTextContent(node: Node, text: Null<String> #if wisdom_debug, ?pos: haxe.PosInfos #end): Void {
+	public function setTextContent(node: Node, text: Null<String>): Void {
 		final nodeXml: Xml = cast node;
 		final children = [for (x in nodeXml.parent.iterator()) x];
 		for (child in children) {
@@ -144,21 +143,21 @@ class StaticWisdomBackend extends wisdom.Backend {
 		return null;
 	}
 
-	public function addClass(elm: Element, name: String #if wisdom_debug, ?pos: haxe.PosInfos #end): Void {
+	public function addClass(elm: Element, name: String): Void {
 		final elmXml: Xml = cast elm;
 		elmXml.set("class", ((elmXml.get("class") ?? "") + ' $name').trim());
 	}
 
-	public function removeClass(elm: Element, name: String #if wisdom_debug, ?pos: haxe.PosInfos #end): Void {
+	public function removeClass(elm: Element, name: String): Void {
 		final elmXml: Xml = cast elm;
 		var list = elmXml.get("class").split(" ");
 		list.remove(name);
 		elmXml.set("class", list.join(" "));
 	}
 
-	public function setStyle(elm: Element, name: String, value: Any #if wisdom_debug, ?pos: haxe.PosInfos #end): Void {}
+	public function setStyle(elm: Element, name: String, value: Any): Void {}
 
-	public function removeStyle(elm: Element, name: String #if wisdom_debug, ?pos: haxe.PosInfos #end): Void {}
+	public function removeStyle(elm: Element, name: String): Void {}
 
 	public function isElement(node: Any): Bool {
 		if (!Std.isOfType(node, Xml)) return false;
@@ -188,19 +187,19 @@ class StaticWisdomBackend extends wisdom.Backend {
 		return elmXml.get(attr);
 	}
 
-	public function setAttribute(elm: Element, attr: String, value: String #if wisdom_debug, ?pos: haxe.PosInfos #end): Void {
+	public function setAttribute(elm: Element, attr: String, value: String): Void {
 		final elmXml: Xml = cast elm;
 		elmXml.set(attr, value);
 	}
 
-	public function removeAttribute(elm: Element, attr: String #if wisdom_debug, ?pos: haxe.PosInfos #end): Void {
+	public function removeAttribute(elm: Element, attr: String): Void {
 		final elmXml: Xml = cast elm;
 		elmXml.remove(attr);
 	}
 
-	public function setProp(elm: Element, name: String, value: Any #if wisdom_debug, ?pos: haxe.PosInfos #end): Void {}
+	public function setProp(elm: Element, name: String, value: Any): Void {}
 
-	public function resetProp(elm: Element, name: String #if wisdom_debug, ?pos: haxe.PosInfos #end): Void {};
+	public function resetProp(elm: Element, name: String): Void {};
 
 	public function elementToNode(elm: Element): Node {
 		return cast elm;
@@ -224,15 +223,15 @@ class StaticWisdomBackend extends wisdom.Backend {
 		return HtmlAttributes.isValidAttribute(sel, name) || SvgAttributes.isValidAttribute(sel, name);
 	}
 
-	public function addEventListener(elm: Element, event: String, listener: Function #if wisdom_debug, ?pos: haxe.PosInfos #end): Void {}
+	public function addEventListener(elm: Element, event: String, listener: Function): Void {}
 
-	public function removeEventListener(elm: Element, event: String, listener: Function #if wisdom_debug, ?pos: haxe.PosInfos #end): Void {}
+	public function removeEventListener(elm: Element, event: String, listener: Function): Void {}
 
-	public function fallbackComponentVNode(xid: Xid, #if wisdom_debug, ?pos: haxe.PosInfos #end): VNode {
+	public function fallbackComponentVNode(xid: Xid,): VNode {
 		return VNode.vnode(xid, 'div', {}, [], null, null);
 	}
 
-	public function didAppendChildren(elm: Element #if wisdom_debug, ?pos: haxe.PosInfos #end): Void {}
+	public function didAppendChildren(elm: Element): Void {}
 }
 //
 

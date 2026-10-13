@@ -45,29 +45,18 @@ class HxString {
     }
 
     public static function indexOf(s: String, str:String, ?startIndex:Int):Int {
-        if (startIndex == null ) {
-            return Strings.index(s, str);
+        var s:Slice<Rune> = cast s;
+        var str:Slice<Rune> = cast str;
+        var pos = 0;
+        for (i in startIndex ?? 0...s.length) {
+            if (s[i] != str[0]) {
+                continue;
+            }
+            if (Slices.equal(s.slice(i, i + pos), str.slice(0, pos))) {
+                return i;
+            }
         }
-        if (startIndex < 0) {
-            startIndex = 0;
-        }
-        if (startIndex > s.length) {
-            startIndex = s.length;
-        }
-
-        var index = 0;
-        var diff = 0;
-        var s:Slice<Byte> = s;
-
-        while (startIndex > index) {
-            var obj = Utf8.decodeRune(s.slice(diff));
-            diff += obj.size;
-            index++;
-        }
-        var sliced:String = Go.string(s.slice(diff));
-        var found:Int = Strings.index(sliced, str);
-
-        return found < 0 ? -1 : found + startIndex;
+        return -1;
     }
     public static function lastIndexOf(s: String, str:String, ?startIndex:Int):Int {
         if (startIndex != null ) {

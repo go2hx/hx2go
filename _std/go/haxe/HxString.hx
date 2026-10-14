@@ -47,12 +47,15 @@ class HxString {
     public static function indexOf(s: String, str:String, ?startIndex:Int):Int {
         var s:Slice<Rune> = cast s;
         var str:Slice<Rune> = cast str;
-        var pos = 0;
-        for (i in startIndex ?? 0...s.length) {
+        var len = s.length - str.length;
+        if (len <= 0) {
+            return -1;
+        }
+        for (i in startIndex ?? 0...len) {
             if (s[i] != str[0]) {
                 continue;
             }
-            if (Slices.equal(s.slice(i, i + pos), str.slice(0, pos))) {
+            if (Slices.equal(s.slice(i, i + str.length), str)) {
                 return i;
             }
         }

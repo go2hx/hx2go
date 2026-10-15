@@ -13,6 +13,7 @@ import hxb.Ast.HxbExpr;
 import hx2go.passes.FieldAccessExtern.ExternKind;
 import hxb.flags.HxbClassFlag;
 import hx2go.normaliser.ExprCopy;
+import hx2go.writers.ClassWriter;
 
 class TypeNormaliserCall extends CompilerPass {
 
@@ -58,15 +59,16 @@ class TypeNormaliserCall extends CompilerPass {
             && callee != null && callee.expr != null) {
                 switch callee.expr.expr.expr {
                     case TFunction(func) if (idx < func.args.length):
-                        var defaultValue: HxbTypedExpr = func.args[idx].value;
+                        var defaultValue:HxbTypedExpr = ExprHelper.createUntyped("nil", []); // was: func.args[idx].value;
                         if (defaultValue != null) {
-                            var c = ExprHelper.createCast(defaultValue, toType);
-                            arg.expr = c.expr;
-                            arg.t = c.t;
+                           // var c = ExprHelper.createCast(defaultValue, toType);
+                            arg.expr = defaultValue.expr;  //was c.expr;
+                            arg.t = TDynamicAny; //was c.t;
+                            toType = TDynamicAny; // NEW
                             changed = true;
-                            if (!Semantics.isConstant(defaultValue)) {
-                                defaultValueTempVars(idx, defaultValue, func, args);
-                            }
+                            // if (!Semantics.isConstant(defaultValue)) {
+                            //     defaultValueTempVars(idx, defaultValue, func, args);
+                            // }
                         }
                     case _:
                 }

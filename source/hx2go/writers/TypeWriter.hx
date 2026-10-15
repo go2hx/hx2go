@@ -255,7 +255,12 @@ class TypeWriter extends WriterImpl {
             case TAbstract({ pack: ['go'], name: 'ReceiveChan' }, params): '<-chan ${writeHxbType(params[0])}';
             case TAnon(anon): 'any'; // TODO: anon.stauts, aka openness?
             case TAbstract(tp, params) | TInst(tp, params) | TType(tp, params) | TEnum(tp, params): writeModuleType(tp, params);
-            case TFun(params, ret): 'func(${params.map(p -> writeHxbType(p.t)).join(', ')})${ret == TVoid ? '' : ' ${writeHxbType(ret)}'}';
+            case TFun(params, ret): {
+                var funcArgInfo = new ClassWriter(writer).writeFunctionArgs(type, null);
+                params = funcArgInfo.args;
+                var displayArgs = params.map(arg -> '${arg.name} ${writer.types.writeHxbType(arg.t).toString()}').join(', ');
+                'func(${displayArgs})${ret == TVoid ? '' : ' ${writeHxbType(ret)}'}';
+            }
             case TEnumStatic(_): "*Hx_Obj_go_haxe_hxenum";
             case TClassStatic(_): "*Hx_Obj_go_haxe_hxclass";
             case TExprType({ expr: EConst(CInt(v, _)) }): v;

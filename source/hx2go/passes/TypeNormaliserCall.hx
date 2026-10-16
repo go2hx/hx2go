@@ -79,6 +79,10 @@ class TypeNormaliserCall extends CompilerPass {
                 changed = true;
             } else if (needsCast(arg, toType)) {
                 var c = ExprHelper.createCast(arg, toType);
+                if (param.opt && !Semantics.isNullableType(context, param.t)) {
+                    c.t = TDynamicAny;
+                }
+
                 arg.expr = c.expr;
                 arg.t = c.t;
                 changed = true;

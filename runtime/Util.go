@@ -4,11 +4,8 @@ import "reflect"
 
 func HxDefault[T any]() T {
 	var v T
-	tt := reflect.TypeOf(v)
-	if tt == nil {
-		return v
-	}
-	if tt.Kind() == reflect.String {
+	switch any(v).(type) {
+	case string:
 		return any(HxStringNull).(T)
 	}
 	return v

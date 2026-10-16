@@ -55,7 +55,7 @@ class TypeNormaliserCall extends CompilerPass {
 
             var callee: HxbClassField = ext.field;
             if (param.opt && arg.expr.match(TConst(TNull))
-            && !toType.match(TAbstract({ name: "Null", pack: [] }, _))
+            //&& !toType.match(TAbstract({ name: "Null", pack: [] }, _))
             && callee != null && callee.expr != null) {
                 switch callee.expr.expr.expr {
                     case TFunction(func) if (idx < func.args.length):
@@ -79,6 +79,9 @@ class TypeNormaliserCall extends CompilerPass {
                 changed = true;
             } else if (needsCast(arg, toType)) {
                 var c = ExprHelper.createCast(arg, toType);
+                if (param.opt && !Semantics.isNullableType(context, param.t)) { // from PxShadow
+                    c.t = TDynamicAny;
+                }
                 arg.expr = c.expr;
                 arg.t = c.t;
                 changed = true;
@@ -103,28 +106,28 @@ class TypeNormaliserCall extends CompilerPass {
         }
     }
 
-    function defaultValueTempVars(index:Int, defaultValue:HxbTypedExpr, func:HxbTFunc, args:Array<HxbTypedExpr>) {
-        function iter(e:HxbTypedExpr) {
-            switch e.expr {
-                case TLocal(v):
-                    for (i in 0...func.args.length) {
-                        if (index == i || v.id != func.args[i].v.id) {
-                            continue;
-                        }
-                        if (args[i].expr.match(TVar(_, _))) {
-                            continue;
-                        }
-                        args[i].expr = TBlock([
-                            {expr: TVar(func.args[i].v, hx2go.normaliser.ExprCopy.copy(args[i])), t: args[i].t, pos: args[i].pos},
-                            {expr: TLocal(func.args[i].v), t: func.args[i].v.type, pos: func.args[i].v.pos},
-                        ]);
-                    }
-                default:
-                    TypedExprTools.iter(e, iter);
-            }
-        }
-        iter(defaultValue);
-    }
+    // function defaultValueTempVars(index:Int, defaultValue:HxbTypedExpr, func:HxbTFunc, args:Array<HxbTypedExpr>) {
+    //     function iter(e:HxbTypedExpr) {
+    //         switch e.expr {
+    //             case TLocal(v):
+    //                 for (i in 0...func.args.length) {
+    //                     if (index == i || v.id != func.args[i].v.id) {
+    //                         continue;
+    //                     }
+    //                     if (args[i].expr.match(TVar(_, _))) {
+    //                         continue;
+    //                     }
+    //                     args[i].expr = TBlock([
+    //                         {expr: TVar(func.args[i].v, hx2go.normaliser.ExprCopy.copy(args[i])), t: args[i].t, pos: args[i].pos},
+    //                         {expr: TLocal(func.args[i].v), t: func.args[i].v.type, pos: func.args[i].v.pos},
+    //                     ]);
+    //                 }
+    //             default:
+    //                 TypedExprTools.iter(e, iter);
+    //         }
+    //     }
+    //     iter(defaultValue);
+    // }
 
     public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
         switch expr.expr {

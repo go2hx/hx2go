@@ -555,8 +555,8 @@ class ClassWriter extends WriterImpl {
 					if (arg.opt) {
 						haveDefaultArgs = true;
 						switch arg.t {
-							case TAbstract({name: "Null", pack: [], moduleName: mName}, [inner]):
-								// no change needed for Null<T> types
+							// case TAbstract({name: "Null", pack: [], moduleName: mName}, [inner]):
+							// 	// no change needed for Null<T> types
 							case _:
 								wrapperArg.name = wrapperArg.name + defaultArgSuffix;
 								wrapperArg.t = TDynamic(wrapperArg.t);
@@ -586,8 +586,8 @@ class ClassWriter extends WriterImpl {
 									var oarg = fArgs[idx];
 									if (oarg.opt) {
 										switch fArgs[idx].t {
-											case TAbstract({name: "Null", pack: [], moduleName: mName}, [inner]):
-												// no change needed for Null<T> types
+											// case TAbstract({name: "Null", pack: [], moduleName: mName}, [inner]):
+											// 	// no change needed for Null<T> types
 											case _:
 												wrapperStart.addInline('${oarg.name} := HxDefault[${writer.types.writeHxbType(oarg.t)}]()\n_ = ${oarg.name}\n');
 												wrapperStart.addInline('\nif (${warg.name} != nil) {\n ');
@@ -618,14 +618,20 @@ class ClassWriter extends WriterImpl {
 	}
 
 	function handleDefaultAssignment(oargName:String, value:String, oargType:HxbType):String {
-		if (StringTools.startsWith(value, "{")) {
-			// Kludge, assume it is an int64 declaration
-			if (hx2go.normaliser.Semantics.isInt64Type(writer.context, oargType)) {
-				return StringTools.replace(value, "}", oargName + " = (h<<32) | (l&0xFFFFFFFF);\n}");
-			}
+		switch (oargType) {
+			case TAbstract({name: "Null", pack: [], moduleName: mName}, [inner]):
+				// Null<T> types are handled by pass DefaultArgs.hx
+                return  ""; // If required, might be: '${oargName} = HxConvert[${writer.types.writeHxbType(oargType)}](${value})';
+			case _:
+				if (StringTools.startsWith(value, "{")) {
+					// Kludge, assume it is an int64 declaration
+					if (hx2go.normaliser.Semantics.isInt64Type(writer.context, oargType)) {
+						return StringTools.replace(value, "}", oargName + " = (h<<32) | (l&0xFFFFFFFF);\n}");
+					}
+				}
+				return '${oargName} = ${value}';
 		}
-		return '${oargName} = ${value}'; 
-    }
+	}
 
     public function writeStaticClassFunction(field: HxbClassField, kind: HxbMethodKind, cls: HxbClass): OutputBuffer {
         var buf = new OutputBuffer();

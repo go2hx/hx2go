@@ -79,8 +79,12 @@ class TypeNormaliserCall extends CompilerPass {
                 changed = true;
             } else if (needsCast(arg, toType)) {
                 var c = ExprHelper.createCast(arg, toType);
-                if (param.opt && !Semantics.isNullableType(context, param.t)) { // from PxShadow
-                    c.t = TDynamicAny;
+                if (param.opt && !Semantics.isNullableType(context, param.t)) {
+                    c.t = if (param.t.match(TFun(_))) {
+                        TypeHelper.goEraseType(param.t);
+                    }else{
+                        TDynamicAny;
+                    }
                 }
                 arg.expr = c.expr;
                 arg.t = c.t;

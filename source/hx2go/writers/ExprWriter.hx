@@ -405,24 +405,35 @@ class ExprWriter extends WriterImpl {
         } else {
             var buf = new OutputBuffer();
 
-            switch expr.t {
-                case TFun(params, ret):
-                    var paramStrs = [];
-                    for (i in 0...params.length) {
-                        var goT = writer.types.writeHxbType(params[i].t).toString();
-                        var name = (i < func.args.length && func.args[i].v.name != null && func.args[i].v.name != "")
-                            ? func.args[i].v.name
-                            : '_hx_unused_$i';
+            var field = new hxb.HxbClassField("temp", null, null);
+            field.expr = new hxb.HxbClassField.HxbFieldExpr(expr,null);
+            var funcArgInfo = new ClassWriter(writer).writeFunctionArgs(expr.t, field);
 
-                        paramStrs.push('$name $goT');
+            switch expr.t {
+                 case TFun(_, ret):
+            //         var paramStrs = [];
+            //         for (i in 0...params.length) {
+            //             var goT = writer.types.writeHxbType(params[i].t).toString();
+            //             var name = (i < func.args.length && func.args[i].v.name != null && func.args[i].v.name != "")
+            //                 ? func.args[i].v.name
+            //                 : '_hx_unused_$i';
+
+            //             paramStrs.push('$name $goT');
+            //         }
+                    var paramStrs = [];
+                    for (i in 0...funcArgInfo.args.length) {
+                        var arg = funcArgInfo.args[i];
+                        paramStrs.push('${arg.name} ${writer.types.writeHxbType(arg.t).toString()}');
                     }
 
                     buf.addInline('func(${paramStrs.join(", ")}) ${ret == TVoid ? "" : writer.types.writeHxbType(ret).toString()}');
 
-                case _: null;
-            }
+                 case _: null;
+             }
 
+            buf.addBufferInline(funcArgInfo.wrapperStart);
             buf.addBufferInline(writeExpr(func.expr));
+            buf.addBufferInline(funcArgInfo.wrapperEnd);
 
             return buf;
         }

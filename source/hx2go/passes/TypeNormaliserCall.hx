@@ -80,7 +80,8 @@ class TypeNormaliserCall extends CompilerPass {
             } else if (needsCast(arg, toType)) {
                 var c = ExprHelper.createCast(arg, toType);
                 if (param.opt && !Semantics.isNullableType(context, param.t)) {
-                    c.t = TDynamicAny;
+                    var erased = TypeHelper.goEraseType(param.t);
+                    c.t = erased.match(TFun(_)) ? erased : TDynamicAny;
                 }
 
                 arg.expr = c.expr;

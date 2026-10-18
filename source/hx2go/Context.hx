@@ -357,13 +357,12 @@ class Context {
         copyRuntime();
 
         var closeFmt = times.start("gofmt");
-        var proc = new sys.io.Process('gofmt -w $outputDirectory');
+        Sys.command('gofmt -w $outputDirectory');
 
         var closeDeps = times.start("go get");
         installGoDeps(imports);
         closeDeps();
-
-        proc.exitCode(true);
+        
         closeFmt();
     }
 

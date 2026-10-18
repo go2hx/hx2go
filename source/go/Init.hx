@@ -78,12 +78,12 @@ class Init {
 
 	static function rebuildBool(path:String, change:Bool):Bool {
 		var rebuild = false;
-		#if (rebuild || go_rebuild)
-		rebuild = true;
-		#elseif (!no_rebuild && !go_no_rebuild)
-		if (!FileSystem.exists(getBin(path)) || Version.stale(path, change))
-			rebuild = true;
-		#end
+		if (Context.defined("rebuild") || Context.defined("go-rebuild")) {
+		    rebuild = true;
+		} else if (!Context.defined("no-rebuild") && !Context.defined("go-no-rebuild")) {
+			if (!FileSystem.exists(getBin(path)) || Version.stale(path, change))
+				rebuild = true;
+		}
 		return rebuild;
 	}
 

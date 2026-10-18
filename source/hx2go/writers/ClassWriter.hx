@@ -554,13 +554,8 @@ class ClassWriter extends WriterImpl {
 
 					if (arg.opt) {
 						haveDefaultArgs = true;
-						switch arg.t {
-							// case TAbstract({name: "Null", pack: [], moduleName: mName}, [inner]):
-							// 	// no change needed for Null<T> types
-							case _:
-								wrapperArg.name = wrapperArg.name + defaultArgSuffix;
-								wrapperArg.t = TDynamic(wrapperArg.t);
-						}
+						wrapperArg.name = wrapperArg.name + defaultArgSuffix;
+						wrapperArg.t = TDynamic(wrapperArg.t);
 					}
 					wrapperArgs.push(wrapperArg);
 

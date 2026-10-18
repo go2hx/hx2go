@@ -411,15 +411,6 @@ class ExprWriter extends WriterImpl {
 
             switch expr.t {
                  case TFun(_, ret):
-            //         var paramStrs = [];
-            //         for (i in 0...params.length) {
-            //             var goT = writer.types.writeHxbType(params[i].t).toString();
-            //             var name = (i < func.args.length && func.args[i].v.name != null && func.args[i].v.name != "")
-            //                 ? func.args[i].v.name
-            //                 : '_hx_unused_$i';
-
-            //             paramStrs.push('$name $goT');
-            //         }
                     var paramStrs = [];
                     for (i in 0...funcArgInfo.args.length) {
                         var arg = funcArgInfo.args[i];

@@ -194,7 +194,7 @@ class ClassWriter extends WriterImpl {
                 }
 
                 var vBuf = new OutputBuffer();
-                var fTypes = writeFunctionArgs(f.type);
+                var fTypes = writeFunctionArgs(f.type,f);
 
                 vBuf.addInline('${StringConversions.nameToFieldName(f.name)}(');
                 vBuf.addBufferInline(fTypes.buf);
@@ -304,10 +304,12 @@ class ClassWriter extends WriterImpl {
         buf.add('}');
 
         if (!isInterface) {
-            var ctor = cls.constructor != null ? writeFunctionArgs(cls.constructor.type) : {
+            var ctor = cls.constructor != null ? writeFunctionArgs(cls.constructor.type, cls.constructor) : {
                 buf: new OutputBuffer(),
                 returnType: TVoid,
-                args: []
+                args: [],
+                wrapperStart: new OutputBuffer(),
+                wrapperEnd: new OutputBuffer()
             };
 
             buf.add('');
@@ -324,7 +326,7 @@ class ClassWriter extends WriterImpl {
                     continue;
                 }
 
-                var signature = writeFunctionArgs(appendThis(f.field.type, f.inst));
+                var signature = writeFunctionArgs(appendThis(f.field.type, f.inst), f.field);
                 var ret = signature.returnType == TVoid ? "" : writer.types.writeHxbType(signature.returnType).toString();
                 buf.add('obj.${StringConversions.nameToFieldName(f.field.name)}_Dyn = func(${signature.buf}) $ret ${writer.exprs.writeExpr(f.field.expr.expr, true)}', 1);
             }
@@ -356,6 +358,7 @@ class ClassWriter extends WriterImpl {
             if (needsHxNew) {
                 buf.add('');
                 buf.add('func (this *${StringConversions.typePathClassInstanceName(cls.path)}) Hx_New(${ctor.buf.toString()}) {');
+                buf.addBufferInline(ctor.wrapperStart);
                 for (f in fieldInits) {
                     var einit = ensureBody(new HxbTypedExpr(TBinop(OpAssign, new HxbTypedExpr(TField(new HxbTypedExpr(TConst(TThis), null, null), FInstance(cls.path, [], { owner: cls.path, kind: null, name: StringConversions.nameToFieldName(f.name), depth: 0 })), null, null), hx2go.normaliser.ExprCopy.copy(f.expr.expr)), null, null));
                     Normaliser.run(einit, {}, writer.context);
@@ -372,6 +375,7 @@ class ClassWriter extends WriterImpl {
                     buf.addBuffer(writer.exprs.writeExpr(cls.constructor.expr.expr, true), 1);
                     buf.add('');
                 }
+                buf.addBufferInline(ctor.wrapperEnd);
                 buf.add('}');
             }
 
@@ -524,35 +528,109 @@ class ClassWriter extends WriterImpl {
         }
     }
 
-    public function writeFunctionArgs(type: HxbType): { buf: OutputBuffer, returnType: HxbType, args: Array<HxbFunArg> } {
-        var buf = new OutputBuffer();
-        var fArgs: Array<HxbFunArg> = [];
-        var ret: HxbType = TVoid;
+	public function writeFunctionArgs(type:HxbType, field:HxbClassField):{
+		buf:OutputBuffer,
+		returnType:HxbType,
+		args:Array<HxbFunArg>,
+		wrapperStart:OutputBuffer,
+		wrapperEnd:OutputBuffer
+	} {
+		var wrapperStart = new OutputBuffer();
+		var wrapperEnd = new OutputBuffer();
+		var haveDefaultArgs = false;
+		var wrapperArgs:Array<HxbFunArg> = [];
+		var defaultArgSuffix = "__isOptional";
 
-        switch type {
-            case TFun(args, returnType):
-                for (idx in 0...args.length) {
-                    var arg = args[idx];
-                    buf.addInline('${arg.name} ${writer.types.writeHxbType(arg.t)}'); // TODO: optional args
+		var buf = new OutputBuffer();
+		var fArgs:Array<HxbFunArg> = [];
+		var ret:HxbType = TVoid;
 
-                    if (idx < args.length - 1) {
-                        buf.addInline(', ');
-                    }
+		switch type {
+			case TFun(args, returnType):
+				for (idx in 0...args.length) {
+					var arg = args[idx];
+					var name = (arg.name != null && arg.name != "") ? arg.name : '_hx_carg$idx';
+					var wrapperArg = new HxbFunArg(name, arg.opt, arg.t);
 
-                    fArgs.push(arg);
-                }
+					if (arg.opt) {
+						haveDefaultArgs = true;
+						wrapperArg.name = wrapperArg.name + defaultArgSuffix;
+						wrapperArg.t = TDynamic(wrapperArg.t);
+					}
+					wrapperArgs.push(wrapperArg);
 
-                ret = returnType;
+					buf.addInline('${wrapperArgs[idx].name} ${writer.types.writeHxbType(wrapperArgs[idx].t)}'); // TODO: optional args
 
-            case _: null;
-        }
+					if (idx < args.length - 1) {
+						buf.addInline(', ');
+					}
 
-        return { buf: buf, returnType: ret, args: fArgs };
-    }
+					fArgs.push(arg);
+				}
+
+				ret = returnType;
+
+				if (haveDefaultArgs && field != null) {
+					wrapperStart.addInline('{\n');
+					wrapperEnd.addInline('\n}');
+					if (field?.expr?.expr?.expr != null) {
+						switch field.expr.expr.expr {
+							case TFunction(tf):
+								for (idx in 0...fArgs.length) {
+									var warg = wrapperArgs[idx];
+									var oarg = fArgs[idx];
+									if (oarg.opt) {
+										switch fArgs[idx].t {
+											// case TAbstract({name: "Null", pack: [], moduleName: mName}, [inner]):
+											// 	// no change needed for Null<T> types
+											case _:
+												wrapperStart.addInline('${oarg.name} := HxDefault[${writer.types.writeHxbType(oarg.t)}]()\n_ = ${oarg.name}\n');
+												wrapperStart.addInline('\nif (${warg.name} != nil) {\n ');
+												wrapperStart.addInline('    ${oarg.name} = HxConvert[${writer.types.writeHxbType(oarg.t)}](${warg.name})\n');
+												wrapperStart.addInline('} else {\n');
+												if (tf.args[idx].value != null) {
+													var rhs = writer.exprs.writeExpr(tf.args[idx].value, false).toString();
+													wrapperStart.addInline('${handleDefaultAssignment(oarg.name, rhs, oarg.t)}\n');
+												}
+                                                wrapperStart.addInline('}\n');
+										}
+									}
+								}
+							case _:
+						}
+					}
+				}
+			case _:
+		}
+
+		return {
+			buf: buf,
+			returnType: ret,
+			args: wrapperArgs,
+			wrapperStart: wrapperStart,
+			wrapperEnd: wrapperEnd
+		};
+	}
+
+	function handleDefaultAssignment(oargName:String, value:String, oargType:HxbType):String {
+		switch (oargType) {
+			case TAbstract({name: "Null", pack: [], moduleName: mName}, [inner]):
+				// Null<T> types are handled by pass DefaultArgs.hx
+                return  ""; // If required, might be: '${oargName} = HxConvert[${writer.types.writeHxbType(oargType)}](${value})';
+			case _:
+				if (StringTools.startsWith(value, "{")) {
+					// Kludge, assume it is an int64 declaration
+					if (hx2go.normaliser.Semantics.isInt64Type(writer.context, oargType)) {
+						return StringTools.replace(value, "}", oargName + " = (h<<32) | (l&0xFFFFFFFF);\n}");
+					}
+				}
+				return '${oargName} = ${value}';
+		}
+	}
 
     public function writeStaticClassFunction(field: HxbClassField, kind: HxbMethodKind, cls: HxbClass): OutputBuffer {
         var buf = new OutputBuffer();
-        var fTypes = writeFunctionArgs(field.type);
+        var fTypes = writeFunctionArgs(field.type,field);
 
         if (field.flags & HxbClassFieldFlag.CfExtern != 0 || (cls.flags & HxbClassFlag.CExtern != 0)) {
             return buf;
@@ -579,8 +657,12 @@ class ClassWriter extends WriterImpl {
             buf.addInline(' ');
         }
 
-        if (field.expr?.expr != null) buf.addBufferInline(writer.exprs.writeExpr(field.expr.expr, true))
-            // allow empty block to work with non void return func
+        if (field.expr?.expr != null) {
+            buf.addBufferInline(fTypes.wrapperStart);
+            buf.addBufferInline(writer.exprs.writeExpr(field.expr.expr, true));
+            buf.addBufferInline(fTypes.wrapperEnd);
+        }
+        // allow empty block to work with non void return func
         else if (fTypes.returnType != TVoid) buf.addInline('{ panic("abstract method: ${field.name}") }');
         else buf.addInline("{}");
 
@@ -629,7 +711,7 @@ class ClassWriter extends WriterImpl {
 
     public function writeMemberClassFunction(field: HxbClassField, kind: HxbMethodKind, cls: HxbClass): OutputBuffer {
         var buf = new OutputBuffer();
-        var fTypes = writeFunctionArgs(field.type);
+        var fTypes = writeFunctionArgs(field.type, field);
 
         if (field.flags & HxbClassFieldFlag.CfExtern != 0 || (cls.flags & HxbClassFlag.CExtern != 0)) {
             return buf;
@@ -651,8 +733,12 @@ class ClassWriter extends WriterImpl {
             buf.add('this.${StringConversions.nameToFieldName(field.name)}_Dyn(${["this"].concat(fTypes.args.map(a -> a.name)).join(", ")})', fTypes.returnType != TVoid ? 0 : 1);
             buf.addInline('}');
         } else {
-            if (field.expr?.expr != null) buf.addBufferInline(writer.exprs.writeExpr(field.expr.expr, true))
-                // allow empty block to work with non void return func
+            if (field.expr?.expr != null) {
+                buf.addBufferInline(fTypes.wrapperStart);
+                buf.addBufferInline(writer.exprs.writeExpr(field.expr.expr, true));
+                buf.addBufferInline(fTypes.wrapperEnd);
+            }
+            // allow empty block to work with non void return func
             else if (fTypes.returnType != TVoid) buf.addInline('{ panic("abstract method: ${field.name}") }');
             else buf.addInline("{}");
         }

@@ -31,6 +31,11 @@ can build with the standard `go` toolchain.
 - [Go](https://go.dev/dl/) 
   - `1.27` or newer
 
+## Haxe unit tests
+<img src="https://go2hx.github.io/hx2go/graph.png"/>
+
+> ℹ️ The above graph updates as new changes are committed in.
+
 ## Installation
 
 Install the library via haxelib:
@@ -329,11 +334,6 @@ function main() {
     trace(result);
 }
 ```
-
-## Haxe unit tests
-<img src="https://go2hx.github.io/hx2go/graph.png"/>
-
-> ℹ️ The above graph updates in real-time as new changes are merged upstream.
 
 ## Contributing
 

@@ -78,30 +78,26 @@ class HxString {
         }
         return -1;
     }
-    public static function lastIndexOf(s: String, str:String, ?startIndex:Int):Int {
-        if (startIndex != null ) {
-            var end:Int = startIndex + str.length;
-            if (end <= 0) {
-                return -1;
-            }
-            if (end > s.length) {
-                end = s.length;
-            }
+    public static function lastIndexOf(s:String, str:String, ?startIndex:Int):Int {
+        var r:Slice<Rune> = cast s;
+        var n:Slice<Rune> = cast str;
 
-            var diff = 0;
-            var s:Slice<Byte> = s;
-
-            while (end > 0) {
-                var obj = Utf8.decodeRune(s.slice(diff));
-                diff += obj.size;
-                end--;
-            }
-
-            var sliced:String = Go.string(s.slice(0, diff));
-            return Strings.lastIndex(sliced, str);
+        var i = r.length - n.length;
+        if (startIndex != null && startIndex < i) {
+            i = startIndex;
         }
-        return Strings.lastIndex(s, str);
+
+        while (i >= 0) {
+            if (Slices.equal(r.slice(i, i + n.length), n)) {
+                return i;
+            }
+
+            i--;
+        }
+
+        return -1;
     }
+
     public static function split(s: String, delimiter:String):Array<String> {
         var x = Strings.split(s, delimiter);
         return x;

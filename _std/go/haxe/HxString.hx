@@ -134,6 +134,10 @@ class HxString {
         if (end > s.length)
             end = s.length;
 
+        if (end <= startIndex) {
+            return ""; // i hate these unit tests man
+        }
+
         return Syntax.code("string(([]rune)({0})[{1}:{2}])", s, startIndex, (end : Int));
     }
     public static function substring(s: String, startIndex:Int, ?endIndex:Int):String {

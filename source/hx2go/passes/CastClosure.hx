@@ -18,11 +18,8 @@ class CastClosure extends CompilerPass {
             return false;
         }
 
-        return switch [expr.expr, expr.t] {
-            case [
-                TCast(e, _),
-                TFun(_)
-            ]: !isNullConst(e); // a null function stays nil, wrapping it would call nil
+        return switch expr.expr {
+            case TCast(e, _): !isNullConst(e) && TypeHelper.follow(context, expr.t).match(TFun(_));
 
             case _: false;
         }
@@ -38,15 +35,13 @@ class CastClosure extends CompilerPass {
     }
 
     public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
-        // old[(a, b) -> c] to new[(x, y) -> z]
-        /*
-        new = func ($1 x, $2 y) z {
-            return z(old(a($1), b($2)));
-        }
-         */
+        var source = switch expr.expr { case TCast(e, _): e; case _: return; };
+        var from = TypeHelper.goEraseType(TypeHelper.follow(context, source.t));
+        var to = TypeHelper.goEraseType(TypeHelper.follow(context, expr.t));
+        if (TypeHelper.compare(from, to)) return;
 
-        switch [expr.expr, expr.expr, expr.t] { // get both inner expr ref and type data
-            case [TCast({ t: TFun(e_params, e_ret) }, _), TCast(e, _), TFun(params, ret)]: {
+        switch [expr.expr, from, to] {
+            case [TCast(e, _), TFun(e_params, e_ret), TFun(params, ret)]: {
                 var args: Array<HxbTypedExpr> = [];
                 var new_params: Array<HxbVar> = [];
 
@@ -115,7 +110,7 @@ class CastClosure extends CompilerPass {
                     }),
                     expr: new HxbTypedExpr(TBlock(body), null, null),
                     t: ret,
-                }), expr.t, null);
+                }), to, null);
 
                 var decl = new HxbTypedExpr(TVar(srcVar, e), null, null);
                 var iife = new HxbTypedExpr(TFunction({
@@ -130,7 +125,7 @@ class CastClosure extends CompilerPass {
                 context.submitNode(decl, true);
             }
 
-            case [TCast({ t: TDynamic(_) | TDynamicAny }, _), TCast(e, _), TFun(params, ret)]: {
+            case [TCast(e, _), TDynamic(_) | TDynamicAny, TFun(params, ret)]: {
                 /*
                 tmp = dyn
                 new = func ($1 x, $2 y) z {
@@ -190,7 +185,7 @@ class CastClosure extends CompilerPass {
                     args: new_params.map(v -> { v: v, value: null }),
                     expr: new HxbTypedExpr(TBlock(body), null, null),
                     t: ret,
-                }), expr.t, null);
+                }), to, null);
 
                 var decl = new HxbTypedExpr(TVar(srcVar, e), null, null);
                 var iife = new HxbTypedExpr(TFunction({

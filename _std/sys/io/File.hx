@@ -46,12 +46,14 @@ class File {
         return new FileOutput(Os.create(path).sure());
     }
 
+    @:access(sys.io.FileOutput)
     public static function append(path:String, binary:Bool = true):FileOutput {
-        throw "not implemented"; // TODO: os.OpenFile with O_APPEND|O_CREATE|O_WRONLY
+        return new FileOutput(Os.openFile(path, Os.O_APPEND | Os.O_CREATE | Os.O_WRONLY,  cast 644).sure());
     }
 
+    @:access(sys.io.FileOutput)
     public static function update(path:String, binary:Bool = true):FileOutput {
-        throw "not implemented"; // TODO: os.OpenFile with O_RDWR|O_CREATE
+        return new FileOutput(Os.openFile(path, Os.O_CREATE | Os.O_WRONLY,  cast 644).sure());
     }
 
     public static function copy(srcPath:String, dstPath:String):Void {

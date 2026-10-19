@@ -163,6 +163,10 @@ class Reflect {
             }
 
             var kv = go.Reflect.valueOf(field);
+            if (!value.mapIndex(kv).isValid()) {
+                return false;
+            }
+
             value.setMapIndex(kv, go.Reflect.valueOf(null));
 
             return true;

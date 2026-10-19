@@ -24,7 +24,7 @@ class HxString {
 
     public static function charCodeAt(s: String, index: Int): Null<Int> {
         var str_len = s.length; // length in runes/code-points
-        if (index < 0 || index > str_len) {
+        if (index < 0 || index >= str_len) {
             return null;
         }
 
@@ -55,15 +55,15 @@ class HxString {
             startIndex = 0;
         }
 
+        if (str.length == 0) {
+            return startIndex > s.length ? s.length : startIndex;
+        }
+
         // If startIndex exceeds this.length, -1 is returned.
         if (startIndex >= s.length) {
             return -1;
         }
 
-        if (str.length == 0) {
-            return startIndex <= s.length ? startIndex : -1;
-        }
-        
         if (len < 0) {
             return -1; 
         }
@@ -78,30 +78,26 @@ class HxString {
         }
         return -1;
     }
-    public static function lastIndexOf(s: String, str:String, ?startIndex:Int):Int {
-        if (startIndex != null ) {
-            var end:Int = startIndex + str.length;
-            if (end <= 0) {
-                return -1;
-            }
-            if (end > s.length) {
-                end = s.length;
-            }
+    public static function lastIndexOf(s:String, str:String, ?startIndex:Int):Int {
+        var r:Slice<Rune> = cast s;
+        var n:Slice<Rune> = cast str;
 
-            var diff = 0;
-            var s:Slice<Byte> = s;
-
-            while (end > 0) {
-                var obj = Utf8.decodeRune(s.slice(diff));
-                diff += obj.size;
-                end--;
-            }
-
-            var sliced:String = Go.string(s.slice(0, diff));
-            return Strings.lastIndex(sliced, str);
+        var i = r.length - n.length;
+        if (startIndex != null && startIndex < i) {
+            i = startIndex;
         }
-        return Strings.lastIndex(s, str);
+
+        while (i >= 0) {
+            if (Slices.equal(r.slice(i, i + n.length), n)) {
+                return i;
+            }
+
+            i--;
+        }
+
+        return -1;
     }
+
     public static function split(s: String, delimiter:String):Array<String> {
         var x = Strings.split(s, delimiter);
         return x;
@@ -133,6 +129,10 @@ class HxString {
         // If the calculated position + len exceeds s.length, the characters from that position to the end of s String are returned.
         if (end > s.length)
             end = s.length;
+
+        if (end <= startIndex) {
+            return ""; // i hate these unit tests man
+        }
 
         return Syntax.code("string(([]rune)({0})[{1}:{2}])", s, startIndex, (end : Int));
     }

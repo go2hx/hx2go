@@ -24,7 +24,7 @@ class HxString {
 
     public static function charCodeAt(s: String, index: Int): Null<Int> {
         var str_len = s.length; // length in runes/code-points
-        if (index < 0 || index > str_len) {
+        if (index < 0 || index >= str_len) {
             return null;
         }
 

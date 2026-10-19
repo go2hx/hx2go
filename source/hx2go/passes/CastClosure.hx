@@ -73,8 +73,20 @@ class CastClosure extends CompilerPass {
 
                     var e = new HxbTypedExpr(TLocal(v), v.type, null);
 
-                    if (TypeHelper.compare(new_p.t, old_p.t)) args.push(e)
-                    else args.push(ExprHelper.createCast(e, old_p.t));
+                    var maybeNullArg: HxbTypedExpr = null;
+                    if (TypeHelper.compare(new_p.t, old_p.t)) maybeNullArg = e;
+                    else maybeNullArg = ExprHelper.createCast(e, old_p.t);
+                    
+                    if (old_p.opt && new_p.opt) {
+                        // handle propagation of optional argument nullability
+                        var optArgName = new_p.name + hx2go.writers.ClassWriter.defaultArgSuffix;
+                        var goTestExpr = "( " + optArgName + " == nil )";
+                        var hxbTestExpr =  ExprHelper.createUntyped(goTestExpr, []);
+                        var hxbNilExpr =  ExprHelper.createUntyped("nil", []);
+                        maybeNullArg = new HxbTypedExpr(TIf(hxbTestExpr, hxbNilExpr, maybeNullArg), TDynamicAny, expr.pos);
+                    }
+
+                    args.push(maybeNullArg);
 
                     context.submitNode(e, true);
                 }

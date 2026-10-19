@@ -528,6 +528,8 @@ class ClassWriter extends WriterImpl {
         }
     }
 
+    public static final defaultArgSuffix = "__isOptional";
+
 	public function writeFunctionArgs(type:HxbType, field:HxbClassField):{
 		buf:OutputBuffer,
 		returnType:HxbType,
@@ -539,7 +541,6 @@ class ClassWriter extends WriterImpl {
 		var wrapperEnd = new OutputBuffer();
 		var haveDefaultArgs = false;
 		var wrapperArgs:Array<HxbFunArg> = [];
-		var defaultArgSuffix = "__isOptional";
 
 		var buf = new OutputBuffer();
 		var fArgs:Array<HxbFunArg> = [];

@@ -55,15 +55,15 @@ class HxString {
             startIndex = 0;
         }
 
+        if (str.length == 0) {
+            return startIndex > s.length ? s.length : startIndex;
+        }
+
         // If startIndex exceeds this.length, -1 is returned.
         if (startIndex >= s.length) {
             return -1;
         }
 
-        if (str.length == 0) {
-            return startIndex <= s.length ? startIndex : -1;
-        }
-        
         if (len < 0) {
             return -1; 
         }

@@ -87,7 +87,6 @@ class Std {
 
     public static function parseFloat(x: String):Float {
         var nan = Math.NaN;
-
         if (x==null)
             return nan;
 
@@ -127,8 +126,12 @@ class Std {
         }
         if (y == "")
             return nan;
-        
-        return Strconv.parseFloat(y, 64).sure();
+
+        try {
+            return Strconv.parseFloat(y, 64).sure();
+        } catch (e:Dynamic) {
+            return nan; // Haxe spec says return NaN on parse failure
+        }
     }
 
     public static function string(s: Dynamic): String {

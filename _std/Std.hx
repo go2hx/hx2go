@@ -86,7 +86,49 @@ class Std {
 	}
 
     public static function parseFloat(x: String):Float {
-        return Strconv.parseFloat(x, 64).sure();
+        var nan = Math.NaN;
+
+        if (x==null)
+            return nan;
+
+        x = go.Strings.trimSpace(x);
+        var y = "";
+        var hadE = false;
+        var hadDigit = false;
+        var lastCharWasSign = false;
+
+        for (i in 0...x.length) {
+            switch(x.charCodeAt(i)) {
+                case '1'.code, '2'.code, '3'.code, '4'.code, '5'.code, '6'.code, '7'.code, '8'.code, '9'.code, '0'.code:
+                    y += x.charAt(i);
+                    hadDigit = true;
+                    lastCharWasSign = false;
+                case '.'.code:
+                    y += x.charAt(i);
+                    lastCharWasSign = false;
+                case '+'.code, '-'.code:
+                    if (lastCharWasSign)
+                        return nan; // consecutive sign characters are not allowed
+                    else {
+                        y += x.charAt(i);
+                        lastCharWasSign = true;
+                    }
+                case 'e'.code, 'E'.code:
+                    if (hadE)
+                        return nan; // multiple 'e' characters are not allowed
+                    hadE = true;
+                    lastCharWasSign = false;
+                    y += x.charAt(i);
+                default:
+                    if (!hadDigit)
+                        return nan;
+                    break;
+            }
+        }
+        if (y == "")
+            return nan;
+        
+        return Strconv.parseFloat(y, 64).sure();
     }
 
     public static function string(s: Dynamic): String {

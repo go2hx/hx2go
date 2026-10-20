@@ -167,14 +167,19 @@ class Cache {
     }
 
     function computeModuleKey(codegenVersion:String, archive:HxbArchive, mod:HxbModule):Bytes {
+        var seen = new Map<String, Bool>();
         var depKeys:Array<Bytes> = [];
-        for (imp in mod.imports) {
-            var depPath = imp.pack.length > 0 ? '${imp.pack.join(".")}.${imp.name}' : imp.name;
-            if (depPath == mod.dotPath()) continue;
+        inline function addDep(depPath:String) {
+            if (depPath == mod.dotPath() || seen.exists(depPath)) return;
+            seen.set(depPath, true);
             var ref = archive.findModule(depPath, "go");
-            if (ref == null) continue;
+            if (ref == null) return;
             depKeys.push(depSourceKey(archive, depPath, ref));
         }
+        for (imp in mod.imports) {
+            addDep(imp.pack.length > 0 ? '${imp.pack.join(".")}.${imp.name}' : imp.name);
+        }
+        for (depPath in collectDeps(archive, mod)) addDep(depPath);
         depKeys.sort((a, b) -> a.compare(b));
 
         var buf = new BytesBuffer();
@@ -190,6 +195,35 @@ class Cache {
             buf.addInt32(0);
         }
         return buf.getBytes();
+    }
+
+    function collectDeps(archive:HxbArchive, mod:HxbModule):Array<String> {
+        var list:Array<String> = [];
+        var visited = new Map<String, Bool>();
+        var relations:Array<String> = [];
+
+        inline function getRelations(m:HxbModule) {
+            for (type in m.types) {
+                switch type {
+                    case MClass(c):
+                        if (c.superClass != null) relations.push(c.superClass.t.moduleDotPath());
+                        for (i in c.interfaces) relations.push(i.t.moduleDotPath());
+                    case _:
+                }
+            }
+        }
+
+        getRelations(mod);
+        while (queue.length > 0) {
+            var depPath = queue.shift();
+            if (depPath == mod.dotPath() || visited.exists(depPath)) continue;
+            visited.set(depPath, true);
+            list.push(depPath);
+            var ref = archive.findModule(depPath, "go");
+            if (ref == null) continue;
+            getRelations(archive.decode(ref));
+        }
+        return list;
     }
 
     function ownSourceKey(archive:HxbArchive, mod:HxbModule):Bytes {

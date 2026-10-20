@@ -1,10 +1,11 @@
 package unit;
-using Main.Issue2497Class;
 
-var sayHelloTo:String->?String->String;
+using unit.NoArgNamesClosure.Issue2497Class;
 
 function main() {
-	sayHelloTo = "hello".addTail;
+	var sayHelloTo:String->?String->String = "hello".addTail;
+	assert(sayHelloTo("world") == "hello world !");
+	assert(sayHelloTo("world", "?") == "hello world ?");
 }
 
 class Issue2497Class {

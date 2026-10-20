@@ -202,8 +202,8 @@ class Cache {
         }
 
         getRelations(mod);
-        while (queue.length > 0) {
-            var depPath = queue.shift();
+        while (relations.length > 0) {
+            var depPath = relations.shift();
             if (depPath == mod.dotPath() || visited.exists(depPath)) continue;
             visited.set(depPath, true);
             list.push(depPath);

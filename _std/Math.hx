@@ -15,10 +15,16 @@ class Math {
     }
 
     public static function min(a: Float, b: Float): Float {
+        // Handle NaN cases explicitly to match Haxe behavior.
+        if (isNaN(a)) return a;
+        if (isNaN(b)) return b;
         return go.Math.min(a, b);
     }
 
     public static function max(a: Float, b: Float): Float {
+        // Handle NaN cases explicitly to match Haxe behavior.
+        if (isNaN(a)) return a;
+        if (isNaN(b)) return b;
         return go.Math.max(a, b);
     }
 
@@ -79,6 +85,8 @@ class Math {
     }
 
     public static function fround(v: Float): Float {
+        if (v<0.0) // Haxe rounds differently for negative numbers
+            v += 0.000001; // Ties are rounded up, so that 0.5 becomes 1 and -0.5 becomes 0.
         return go.Math.round(v);
     }
 

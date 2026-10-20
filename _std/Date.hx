@@ -24,16 +24,19 @@ import haxe.Int64Helper;
 import go.Time;
 
 @:coreApi final class Date {
-	private var t: go.time.Time;
+	private var t:go.time.Time;
 
 	public function new(year:Int, month:Int, day:Int, hour:Int, min:Int, sec:Int):Void {
 		// Haxe months are 0-based (Jan = 0); Go's time.Month is 1-based (Jan = 1).
-		t = Time.date(year, cast (month + 1), day, hour, min, sec, 0, Time.local);
+		t = Time.date(year, cast(month + 1), day, hour, min, sec, 0, Time.local);
 	}
 
 	public function getTime():Float {
-        // Haxe getTime is in milliseconds since the Unix epoch.
-        return t.unixMilli();
+		// Haxe getTime is in milliseconds since the Unix epoch.
+		var t1 = t;
+		if (t1.year() == 0)
+			t1 = t1.addDate(1970, 0, 0);
+		return t1.unixMilli();
 	}
 
 	public function getFullYear():Int {
@@ -65,7 +68,10 @@ import go.Time;
 	}
 
 	public function getUTCFullYear():Int {
-		return t.UTC().year();
+		var yr = t.UTC().year();
+		if (yr == 0)
+			return 1970;  // Adjust for Unix epoch starting at 1970 - Haxe expects full year
+		return yr;
 	}
 
 	public function getUTCMonth():Int {
@@ -89,6 +95,8 @@ import go.Time;
 	}
 
 	public function getUTCDay():Int {
+		if (t.UTC().year() == 0)  // Haxe expects the day of the week relative to the Unix epoch if 0
+			return cast t.addDate(1970, 0, 0).weekday();
 		return cast t.UTC().weekday();
 	}
 
@@ -123,9 +131,9 @@ import go.Time;
 	}
 
 	public static function fromString(s:String):Date {
-        // The first two formats expressed a date in local time. The third is a time relative to the UTC epoch.
+		// The first two formats expressed a date in local time. The third is a time relative to the UTC epoch.
 		var d:Date = createEmpty();
-		
+
 		var res = Time.parse(Time.dateTime, s);
 		if (res.isOk()) {
 			d.t = res.sure();

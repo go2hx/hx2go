@@ -1,5 +1,6 @@
 package hx2go;
 
+import haxe.Rest;
 import haxe.io.BytesBuffer;
 import haxe.io.Bytes;
 import hxb.HxbModule;
@@ -48,10 +49,11 @@ class Cache {
     final srcKeyByBytesNext:Map<String, Bytes> = [];
 
     final resourceSalt:Bytes;
+    final configSalt:Bytes;
 
     final printer:TypedExprPrinter = new TypedExprPrinter();
 
-    public function new(enabled:Bool, outputDirectory:String, res:Map<String, Bytes>) {
+    public function new(enabled:Bool, outputDirectory:String, res:Map<String, Bytes>, configBools:Rest<Bool>) {
         this.enabled = enabled;
         this.outputDirectory = outputDirectory;
         // uncached builds delete the the previous manifest if it exists
@@ -62,6 +64,7 @@ class Cache {
         this.cacheKeys = load();
         this.srcKeyByBytes = loadSrcMemo();
         this.resourceSalt = computeResourceSalt(res);
+        this.configSalt = computeConfigSalt(configBools);
     }
 
     function computeResourceSalt(res:Map<String, Bytes>):Bytes {
@@ -73,6 +76,14 @@ class Cache {
             buf.addInt32(0);
             buf.add(hashBytes(res.get(name)));
             buf.addInt32(0);
+        }
+        return hashBytes(buf.getBytes());
+    }
+
+    function computeConfigSalt(configBool:Array<Bool>):Bytes {
+        var buf = new BytesBuffer();
+        for (b in configBool) {
+            buf.addByte(b ? 1 : 0);
         }
         return hashBytes(buf.getBytes());
     }
@@ -170,6 +181,7 @@ class Cache {
         buf.addString(codegenVersion);
         buf.addInt32(0);
         buf.add(resourceSalt);
+        buf.add(configSalt);
         buf.addInt32(0);
         buf.add(ownSourceKey(archive, mod));
         buf.addInt32(0);

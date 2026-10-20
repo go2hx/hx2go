@@ -6,7 +6,7 @@ class RttiMap {
 	static var fallbackGopackage:String = "";
 
 	static public function awaitBuild() {
-		if ( ! finished.tryAcquire(1) ) // try to acquire the semaphore with a timeout in seconds
+		if ( ! finished.tryAcquire(10) ) // try to acquire the semaphore with a timeout in seconds
 		{ // timeout occurred, fallback to default Rtti.getRtti()
 			writeGoFile(fallbackOutputDir, fallbackGopackage, "");
 			Sys.println("Timeout waiting for RttiMap build from XML to finish, fallback to default Rtti.getRtti()");

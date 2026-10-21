@@ -1,137 +1,239 @@
 package haxe.runtime;
 
-import go.Reflect;
-import go.reflect.Value;
-import go.Syntax;
-import go.Map;
-import go.haxe.HxDynamic.HxDynamicArray;
+import haxe.ds.StringMap;
+import haxe.ds.IntMap;
+import haxe.ds.ObjectMap;
+import haxe.ds.List;
+import haxe.io.Bytes;
+
+// Python struggles with arrays as ObjectMap keys
+// Neko and js add __id__ which isn't great
+#if (python || js || neko || go)
+private class ObjectCache<K:{}> {
+	var from:Array<K>;
+	var to:Array<K>;
+
+	public function new() {
+		from = [];
+		to = [];
+	}
+
+	public function get(k:K) {
+		for (i => v in from) {
+			if (v == k) {
+				return to[i];
+			}
+		}
+		return null;
+	}
+
+	public function set(k:K, v:K) {
+		var index = from.length;
+		from[index] = k;
+		to[index] = v;
+	}
+}
+#else
+private class ObjectCache<K:{}> {
+    var cache:ObjectMap<K, K>;
+
+    public function new() {
+        cache = new ObjectMap();
+    }
+
+    public inline function get(k:K) {
+        return cache.get(k);
+    }
+
+    public inline function set(k:K, v:K) {
+        cache.set(k, v);
+    }
+}
+#end
 
 class Copy {
+    var cache:ObjectCache<{}>;
+    var workList:Array<() -> Void>;
 
-    public static function copy<T>(v: T): T {
-        var val: Value = Reflect.valueOf(v);
-
-        if (!val.isValid()) {
-            return v;
-        }
-
-        if ((val.kind() == Reflect.ptr || val.kind() == Reflect._interface) && val.isNil()) {
-            return null;
-        }
-
-        var seen: Map<Int, Dynamic> = new Map();
-        var result = deepCopy(val, seen);
-
-        if (!result.isValid()) {
-            return null;
-        }
-
-        return cast result._interface();
+    function new() {
+        cache = new ObjectCache();
+        workList = [];
     }
 
-    static function isNilValue(v: Value): Bool {
-        var k = v.kind();
-        if (k == Reflect.ptr || k == Reflect._interface || k == Reflect.slice || k == Reflect.map || k == Reflect.chan || k == Reflect.func) {
-            return v.isNil();
-        }
-        return false;
+    function defer(f:() -> Void) {
+        workList.push(f);
     }
 
-    static function deepCopy(v: Value, seen: Map<Int, Dynamic>): Value {
-        var k = v.kind();
-
-        if ((k == Reflect.ptr || k == Reflect.struct || k == Reflect._interface) && !isNilValue(v) && v.canInterface()) {
-            var dyn: Dynamic = v._interface();
-            var isArray: Bool = false;
-            var dynArray: HxDynamicArray = null;
-            Syntax.code("{0}, {1} = {2}.(HxArrayDyn)", dynArray, isArray, dyn);
-
-            if (isArray) {
-                var cloned: Array<Dynamic> = [];
-                for (idx in 0...dynArray.len()) {
-                    cloned.push(deepCopy(dynArray.get(idx), seen));
+    function copyValue<T, O:{}
+    & T>(v:T):T {
+        return switch (Type.typeof(v)) {
+            case TNull, TInt, TFloat, TBool, TClass(String | Date), TInt64:
+                v;
+            case TClass(c):
+                var v:O = cast v;
+                var vCopy = getRef(v);
+                if (vCopy != null) {
+                    return vCopy;
                 }
-
-                return Reflect.valueOf(cloned);
-            }
+                switch (c) {
+                    case Array:
+                        var a = [];
+                        cache.set(v, a);
+                        var v:Array<Dynamic> = cast v;
+                        defer(() -> {
+                            for (x in v) {
+                                if (x == null) {
+                                    a.push(null);
+                                } else {
+                                    a.push(copyValue(x));
+                                }
+                            }
+                        });
+                        cast a;
+                    case haxe.ds.List:
+                        var l = new List();
+                        cache.set(v, l);
+                        var v:List<Dynamic> = cast v;
+                        defer(() -> {
+                            for (x in v) {
+                                l.add(copyValue(x));
+                            }
+                        });
+                        cast l;
+                    case haxe.ds.StringMap:
+                        var map = new StringMap();
+                        cache.set(v, map);
+                        var v:StringMap<Dynamic> = cast v;
+                        defer(() -> {
+                            for (k => v in v) {
+                                map.set(k, copyValue(v));
+                            }
+                        });
+                        cast map;
+                    case haxe.ds.IntMap:
+                        var map = new IntMap();
+                        cache.set(v, map);
+                        var v:IntMap<Dynamic> = cast v;
+                        defer(() -> {
+                            for (k => v in v) {
+                                map.set(k, copyValue(v));
+                            }
+                        });
+                        cast map;
+                    case haxe.ds.ObjectMap:
+                        var map = new ObjectMap();
+                        cache.set(v, map);
+                        var v:ObjectMap<{}, Dynamic> = cast v;
+                        defer(() -> {
+                            for (k => v in v) {
+                                map.set(copyValue(k), copyValue(v));
+                            }
+                        });
+                        cast map;
+                    case haxe.io.Bytes:
+                        var v:Bytes = cast v;
+                        var nv = v.sub(0, v.length);
+                        cache.set(v, nv);
+                        cast nv;
+                    case _:
+                        vCopy = Type.createEmptyInstance(c);
+                        cache.set(v, vCopy);
+                        #if flash
+						defer(copyClassFields.bind(v, vCopy, c));
+						#else
+                        defer(copyFields.bind(v, vCopy));
+                        #end
+                        vCopy;
+                }
+            case TObject:
+                if (v is Class || v is Enum) {
+                    return v;
+                }
+                var v:O = cast v;
+                var vCopy = getRef(v);
+                if (vCopy != null) {
+                    return vCopy;
+                }
+                var o:O = cast {};
+                cache.set(v, o);
+                defer(copyFields.bind(v, o));
+                o;
+            case TEnum(en):
+                var v:O = cast v;
+                var vEnumValue:EnumValue = cast v;
+                var vCopy = getRef(v);
+                if (vCopy != null) {
+                    return vCopy;
+                }
+                var args = vEnumValue.getParameters();
+                if (args.length == 0) {
+                    cache.set(v, v);
+                    return v;
+                }
+                var newArgs = [];
+                for (arg in args) {
+                    newArgs.push(copyValue(arg));
+                }
+                var nv:O = cast Type.createEnumIndex(en, vEnumValue.getIndex(), newArgs);
+                cache.set(v, nv);
+                nv;
+            case TUnknown | TFunction:
+                v;
         }
-
-        if (k == Reflect.ptr) {
-            if (v.isNil()) {
-                return v;
-            }
-
-            var addr: Int = cast v.pointer();
-            if (seen.exists(addr)) {
-                return Reflect.valueOf(seen.get(addr));
-            }
-
-            var nv = Reflect._new(v.type().elem());
-            seen.set(addr, nv._interface());
-
-            // copy the pointer elem by kind
-            var pointerElem = v.elem();
-            if (pointerElem.kind() == Reflect.struct) {
-                copyStruct(pointerElem, nv.elem(), seen);
-            } else {
-                nv.elem().set(deepCopy(pointerElem, seen));
-            }
-            return nv;
-        }
-
-        if (k == Reflect._interface) {
-            if (v.isNil()) {
-                return v;
-            }
-            return deepCopy(v.elem(), seen);
-        }
-
-        if (k == Reflect.slice) {
-            if (v.isNil()) {
-                return v;
-            }
-
-            var len = v.len();
-            var nv = Reflect.makeSlice(v.type(), len, len);
-            for (i in 0...len) {
-                nv.index(i).set(deepCopy(v.index(i), seen));
-            }
-            return nv;
-        }
-
-        if (k == Reflect.map) {
-            if (v.isNil()) {
-                return v;
-            }
-
-            var nv = Reflect.makeMap(v.type());
-            var keys = v.mapKeys();
-            for (i in 0...keys.length) {
-                var key = keys[i];
-                nv.setMapIndex(key, deepCopy(v.mapIndex(key), seen));
-            }
-            return nv;
-        }
-
-        if (k == Reflect.struct) {
-            var nv = Reflect._new(v.type()).elem();
-            copyStruct(v, nv, seen);
-            return nv;
-        }
-
-        // pass by value
-        return v;
     }
 
-    static function copyStruct(src: Value, dst: Value, seen: Map<Int, Dynamic>): Void {
-        var n = src.numField();
-        for (i in 0...n) {
-            var df = dst.field(i);
-            if (!df.canSet()) {
-                continue;
-            }
+    inline function getRef<T:{}>(v:T):T {
+        return cast cache.get(v);
+    }
 
-            df.set(deepCopy(src.field(i), seen));
+    function copyFields(v:Dynamic, nv:Dynamic) {
+        for (f in Reflect.fields(v)) {
+            var e = copyValue(Reflect.field(v, f));
+            Reflect.setField(nv, f, e);
         }
+    }
+
+    function finalize() {
+        while (workList.length > 0) {
+            workList.pop()();
+        }
+    }
+
+    #if flash
+	function copyClassFields(v:Dynamic, nv:Dynamic, c:Dynamic) {
+		var xml:flash.xml.XML = untyped __global__["flash.utils.describeType"](c);
+		var vars = xml.factory[0].child("variable");
+		for (i in 0...vars.length()) {
+			var f = vars[i].attribute("name").toString();
+			if (!v.hasOwnProperty(f))
+				continue;
+			var e = copyValue(Reflect.field(v, f));
+			Reflect.setField(nv, f, e);
+		}
+	}
+	#end
+
+    /**
+		Creates a deep copy of `v`.
+
+		The following values remain unchanged:
+
+		* null
+		* numeric values
+		* boolean values
+		* strings
+		* functions
+		* type and enum references (e.g. `haxe.runtime.Copy`, `haxe.ds.Option`)
+		* instances of Date
+		* enum values without arguments
+
+		Any other value `v` is recursively copied, ensuring
+		that `v != copy(v)` holds.
+	**/
+    public static function copy<T>(v:T):T {
+        var copy = new Copy();
+        var v = copy.copyValue(v);
+        copy.finalize();
+        return v;
     }
 }

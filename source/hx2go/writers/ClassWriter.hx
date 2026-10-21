@@ -316,6 +316,10 @@ class ClassWriter extends WriterImpl {
             buf.add('func ${StringConversions.typePathClassInstanceName(cls.path)}_CreateEmptyInstance() *${StringConversions.typePathClassInstanceName(cls.path)} {');
             buf.add('obj := &${StringConversions.typePathClassInstanceName(cls.path)}{}', 1);
 
+            if (cls.superClass != null) {
+                buf.add('obj.${writer.context.resolvedInstanceName(cls.superClass.t)} = *${writer.context.resolvedInstanceName(cls.superClass.t)}_CreateEmptyInstance()', 1);
+            }
+
             if (!canOmitVTable) {
                 buf.add('obj.VTable = obj', 1);
             }
@@ -334,6 +338,12 @@ class ClassWriter extends WriterImpl {
             for (v in vtables) {
                 buf.add(v, 1);
             }
+
+			// Initialize fields to correct initial values in order to _CreateEmptyInstance()
+            // This ensures that string fields are initialized to HxStringNull
+			for (f in cls.fields.filter(f -> f.kind.match(KVar(_)) && shouldGenVar(f) )) {
+				buf.add('obj.${StringConversions.nameToFieldName(f.name)} = HxDefault[${writer.types.writeHxbType(f.type)}]()', 1);
+			}
 
             buf.add('return obj', 1);
             buf.add('}');
@@ -366,10 +376,7 @@ class ClassWriter extends WriterImpl {
                     buf.addBuffer(writer.exprs.writeExpr(einit), 1);
                 }
 
-                // Initialize fields with default values if necessary
-                for (f in cls.fields.filter(f -> f.kind.match(KVar(_)) && shouldGenVar(f) && f.expr?.expr == null )) {
-                    buf.add('this.${StringConversions.nameToFieldName(f.name)} = HxDefault[${writer.types.writeHxbType(f.type)}]()', 1);
-                }
+                // _CreateEmptyInstance() above initializes all fields to correct initial values
 
                 if (cls.constructor?.expr != null) {
                     buf.addBuffer(writer.exprs.writeExpr(cls.constructor.expr.expr, true), 1);

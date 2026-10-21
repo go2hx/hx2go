@@ -85,6 +85,12 @@ class Type {
 	}
 
 	public static function createInstance<T>(cl:Class<T>, args:Array<Dynamic>):T {
+		if(getClassName(cl) == "String") {
+			if (args.length == 0) 
+				return untyped (null : String);
+			else 
+				return untyped Std.string(args[0]);
+		}
 		return untyped cl.createInstance(args);
 	}
 

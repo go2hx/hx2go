@@ -4,6 +4,7 @@ import go.Reflect;
 import go.reflect.Value;
 import go.Syntax;
 import go.Map;
+import go.haxe.HxDynamic.HxDynamicArray;
 
 class Copy {
 
@@ -42,21 +43,15 @@ class Copy {
         if ((k == Reflect.ptr || k == Reflect.struct || k == Reflect._interface) && !isNilValue(v) && v.canInterface()) {
             var dyn: Dynamic = v._interface();
             var isArray: Bool = false;
-            Syntax.code("_, {0} = {1}.(HxArrayDyn)", isArray, dyn);
+            var dynArray: HxDynamicArray = null;
+            Syntax.code("{0}, {1} = {2}.(HxArrayDyn)", dynArray, isArray, dyn);
+
             if (isArray) {
-                if (k == Reflect.ptr) {
-                    var addr: Int = cast v.pointer();
-                    if (seen.exists(addr)) {
-                        return Reflect.valueOf(seen.get(addr));
-                    }
-                    var cloned: Dynamic = null;
-                    Syntax.code("{0} = {1}.(HxArrayCloner).Clone_Dyn()", cloned, dyn);
-                    seen.set(addr, cloned);
-                    return Reflect.valueOf(cloned);
+                var cloned: Array<Dynamic> = [];
+                for (idx in 0...dynArray.len()) {
+                    cloned.push(deepCopy(dynArray.get(idx), seen));
                 }
 
-                var cloned: Dynamic = null;
-                Syntax.code("{0} = {1}.(HxArrayCloner).Clone_Dyn()", cloned, dyn);
                 return Reflect.valueOf(cloned);
             }
         }

@@ -28,7 +28,7 @@ private extern class Unsafe {
 }
 
 @:go.Type({ name: "HxArrayDyn" })
-private extern class HxDynamicArray {
+extern class HxDynamicArray {
     @:native("Set_Dyn") function set(i: Int, v: Dynamic): Void;
     @:native("Get_Dyn") function get(i: Int): Dynamic;
     @:native("Underlying_Dyn") function underlying(): Slice<Dynamic>;

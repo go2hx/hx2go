@@ -52,10 +52,6 @@ type HxArrayDyn interface {
 	String() string
 }
 
-type HxArrayCloner interface {
-	Clone_Dyn() HxArrayDyn
-}
-
 type HxArray[T any] interface {
 	HxArrayDyn
 	Set(idx int32, val T)
@@ -78,21 +74,6 @@ type HxArrayImpl[T any] struct {
 func HxMakeArray[T any](items ...T) HxArray[T] {
 	local := make([]T, len(items))
 	copy(local, items)
-	return &HxArrayImpl[T]{local}
-}
-
-func (this *HxArrayImpl[T]) Clone_Dyn() HxArrayDyn {
-	local := make([]T, len(this.data))
-	copy(local, this.data)
-	return &HxArrayImpl[T]{local}
-}
-
-func (this HxArrayView[T]) Clone_Dyn() HxArrayDyn {
-	n := this.source.Len()
-	local := make([]T, n)
-	for i := int32(0); i < n; i++ {
-		local[i] = this.Get(i)
-	}
 	return &HxArrayImpl[T]{local}
 }
 

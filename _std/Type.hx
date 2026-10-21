@@ -85,6 +85,12 @@ class Type {
 	}
 
 	public static function createInstance<T>(cl:Class<T>, args:Array<Dynamic>):T {
+		if(getClassName(cl) == "String")
+			if (args.length == 0) 
+				return untyped (null:String);
+			else 
+				return untyped Std.string(args[0]);
+		
 		return untyped cl.createInstance(args);
 	}
 
@@ -153,6 +159,12 @@ class Type {
 		} else if (kind == Reflect.int64) {
 			return ValueType.TInt64;
 		} else if (kind == Reflect.float64) {
+			/*
+				JS and HashLink return TInt for integer-like floats
+				Neko and Eval return TFloat for all floats
+				Go will return TFloat for all floats, as variables cannot change type once declared
+				Haxe unit.teststd.TestType.hx has been altered to allow this
+			*/
 			return ValueType.TFloat;
 		} else if (kind == Reflect.bool) {
 			return ValueType.TBool;

@@ -6,52 +6,33 @@ import haxe.ds.ObjectMap;
 import haxe.ds.List;
 import haxe.io.Bytes;
 
-// Python struggles with arrays as ObjectMap keys
-// Neko and js add __id__ which isn't great
-#if (python || js || neko || go)
 private class ObjectCache<K:{}> {
-	var from:Array<K>;
-	var to:Array<K>;
-
-	public function new() {
-		from = [];
-		to = [];
-	}
-
-	public function get(k:K) {
-		for (i => v in from) {
-			if (v == k) {
-				return to[i];
-			}
-		}
-		return null;
-	}
-
-	public function set(k:K, v:K) {
-		var index = from.length;
-		from[index] = k;
-		to[index] = v;
-	}
-}
-#else
-private class ObjectCache<K:{}> {
-    var cache:ObjectMap<K, K>;
+    var from:Array<K>;
+    var to:Array<K>;
 
     public function new() {
-        cache = new ObjectMap();
+        from = [];
+        to = [];
     }
 
-    public inline function get(k:K) {
-        return cache.get(k);
+    public function get(k:K) {
+        for (i => v in from) {
+            if (v == k) {
+                return to[i];
+            }
+        }
+        return null;
     }
 
-    public inline function set(k:K, v:K) {
-        cache.set(k, v);
+    public function set(k:K, v:K) {
+        var index = from.length;
+        from[index] = k;
+        to[index] = v;
     }
 }
-#end
 
 class Copy {
+
     var cache:ObjectCache<{}>;
     var workList:Array<() -> Void>;
 
@@ -64,8 +45,7 @@ class Copy {
         workList.push(f);
     }
 
-    function copyValue<T, O:{}
-    & T>(v:T):T {
+    function copyValue<T, O:{} & T>(v:T):T {
         return switch (Type.typeof(v)) {
             case TNull, TInt, TFloat, TBool, TClass(String | Date), TInt64:
                 v;
@@ -138,11 +118,7 @@ class Copy {
                     case _:
                         vCopy = Type.createEmptyInstance(c);
                         cache.set(v, vCopy);
-                        #if flash
-						defer(copyClassFields.bind(v, vCopy, c));
-						#else
                         defer(copyFields.bind(v, vCopy));
-                        #end
                         vCopy;
                 }
             case TObject:
@@ -199,41 +175,11 @@ class Copy {
         }
     }
 
-    #if flash
-	function copyClassFields(v:Dynamic, nv:Dynamic, c:Dynamic) {
-		var xml:flash.xml.XML = untyped __global__["flash.utils.describeType"](c);
-		var vars = xml.factory[0].child("variable");
-		for (i in 0...vars.length()) {
-			var f = vars[i].attribute("name").toString();
-			if (!v.hasOwnProperty(f))
-				continue;
-			var e = copyValue(Reflect.field(v, f));
-			Reflect.setField(nv, f, e);
-		}
-	}
-	#end
-
-    /**
-		Creates a deep copy of `v`.
-
-		The following values remain unchanged:
-
-		* null
-		* numeric values
-		* boolean values
-		* strings
-		* functions
-		* type and enum references (e.g. `haxe.runtime.Copy`, `haxe.ds.Option`)
-		* instances of Date
-		* enum values without arguments
-
-		Any other value `v` is recursively copied, ensuring
-		that `v != copy(v)` holds.
-	**/
     public static function copy<T>(v:T):T {
         var copy = new Copy();
         var v = copy.copyValue(v);
         copy.finalize();
         return v;
     }
+
 }

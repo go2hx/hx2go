@@ -15,13 +15,9 @@ function main() {
     Sys.setCwd("../sys");
     runTestSuite(["compile-go.hxml"], false);
     var fail = false;
-    if (!runCommand("go run -C ./bin/go/sys/main -gcflags=all=-e ."))
-        fail = true;
-    if (!runCommand("go run -C ./bin/go/testArguments/main -gcflags=all=-e ."))
-        fail = true;
-    if (!runCommand("go run -C ./bin/go/exitCode/main -gcflags=all=-e ."))
-        fail = true;
-    if (!runCommand("go run -C ./bin/go/utilityProcess/main -gcflags=all=-e ."))
+
+    Sys.putEnv("EXISTS", "1");
+    if (Sys.command(FileSystem.absolutePath("bin/go/sys/main/" + exe("main")), []) != 0)
         fail = true;
     if (fail)
         Sys.exit(1);
@@ -33,6 +29,10 @@ function main() {
 function runCommand(command:String):Bool {
     Sys.println(command);
     return Sys.command(command) == 0;
+}
+
+function exe(name:String):String {
+    return name + (Sys.systemName() == "Windows" ? ".exe" : "");
 }
 
 function runTestSuite(args:Array<String>, run:Bool=true) {

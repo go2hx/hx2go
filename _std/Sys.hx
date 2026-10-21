@@ -105,7 +105,7 @@ class Sys {
             Sys.println(Go.string(output)); // TODO: pipe output rather than printing at the end
         }
 
-        return 0;
+        return exitCode;
     }
 
     public static function exit(code: Int): Void {

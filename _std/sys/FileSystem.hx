@@ -42,6 +42,12 @@ class FileSystem {
     }
 
     public static function absolutePath(relPath:String):String {
+        if (relPath == null) {
+            relPath = "";
+        }
+        if (relPath.length > 1 && relPath.charAt(1) == ':') { // Windows absolute path with drive letter
+            return relPath;
+        }
         return Filepath.abs(relPath).sure();
     }
 

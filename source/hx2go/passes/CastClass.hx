@@ -19,7 +19,7 @@ class CastClass extends CompilerPass {
     private static var castId: Int = 0;
 
     function classType(type:HxbType):HxbType {
-        return context.normalize(TypeHelper.goEraseType(TypeHelper.follow(context, type, false)));
+        return context.normalize(TypeHelper.follow(context, type, false));
     }
 
     public function match(expr: HxbTypedExpr): Bool {

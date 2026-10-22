@@ -18,17 +18,23 @@ class CastClass extends CompilerPass {
 
     private static var castId: Int = 0;
 
+    function classType(type:HxbType):HxbType {
+        return context.normalize(TypeHelper.follow(context, type, false));
+    }
+
     public function match(expr: HxbTypedExpr): Bool {
-        return switch expr {
-            case { expr: TCast({ t: TInst(_) | TDynamic(_) | TDynamicAny }, _), t: TInst(_) }: true;
+        return switch expr.expr {
+            case TCast(e, _) if (e.t != null && expr.t != null):
+                classType(e.t).match(TInst(_) | TDynamic(_) | TDynamicAny) && classType(expr.t).match(TInst(_));
             case _: false;
         }
     }
 
     public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
-        switch expr {
-            case { expr: TCast(e, tm), t: TInst(tp, _) }:
-                switch e.t {
+        switch [expr.expr, classType(expr.t)] {
+            case [TCast(e, tm), TInst(tp, _)]:
+                var sourceType = classType(e.t);
+                switch sourceType {
                     case TInst({ name: "Array", pack: [] }, _): {
                         return;
                     }
@@ -65,7 +71,7 @@ class CastClass extends CompilerPass {
                     e = new HxbTypedExpr(TLocal(tmp), e.t, e.pos);
                 }
 
-                var isDyn = e.t.match(TDynamic(_) | TDynamicAny | TAbstract({ name: "Any", pack: [] }, _));
+                var isDyn = sourceType.match(TDynamic(_) | TDynamicAny | TAbstract({ name: "Any", pack: [] }, _));
                 if (isDyn) {
                     var callExpr = ExprHelper.createCallStatic(context, {
                         name: "HxDynamic",
@@ -97,7 +103,7 @@ class CastClass extends CompilerPass {
                     context.submitNode(expr, true, 1);
                 } else {
                     var name = StringConversions.typePathClassInstanceName(cls.path);
-                    var srcPath = switch e.t {
+                    var srcPath = switch sourceType {
                         case TInst(stp, _): stp;
                         case _: null;
                     }

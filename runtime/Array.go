@@ -349,8 +349,12 @@ func Hx_Array_Push[T any](this HxArray[T], val T) int32 {
 
 func Hx_Array_Concat[T any](this HxArray[T], arr HxArray[T]) HxArray[T] {
 	data := make([]T, 0)
-	data = append(data, this.Underlying()...)
-	data = append(data, arr.Underlying()...)
+	if this != nil {
+		data = append(data, this.Underlying()...)
+	}
+	if arr != nil {
+		data = append(data, arr.Underlying()...)
+	}
 
 	return HxMakeArray[T](data...)
 }

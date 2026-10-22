@@ -33,7 +33,11 @@ class Sys {
     }
 
     public static function getEnv(s: String): String {
-        return Os.getenv(s);
+        var tup = Os.lookupEnv(s);
+        if (!tup.p1) { // does not exist
+            return null;
+        }
+        return tup.p0; 
     }
 
     public static function putEnv(s: String, v: Null<String>): Void {

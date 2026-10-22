@@ -3,7 +3,6 @@ package hx2go;
 import haxe.io.BytesBuffer;
 import haxe.io.Bytes;
 import hxb.HxbModule;
-import hxb.HxbModuleType;
 import hxb.HxbClassField;
 import hxb.HxbArchive;
 import hxb.ModuleRef;
@@ -50,6 +49,8 @@ class Cache {
     final resourceSalt:Bytes;
 
     final printer:TypedExprPrinter = new TypedExprPrinter();
+
+    var moduleCache = new Map<String, ModuleRef>();
 
     public function new(enabled:Bool, outputDirectory:String, res:Map<String, Bytes>) {
         this.enabled = enabled;
@@ -207,8 +208,13 @@ class Cache {
             if (depPath == mod.dotPath() || visited.exists(depPath)) continue;
             visited.set(depPath, true);
             list.push(depPath);
-            var ref = archive.findModule(depPath, "go");
+            var ref = if (moduleCache.exists(depPath)) {
+                moduleCache[depPath];
+            }else{
+                archive.findModule(depPath, "go");
+            }
             if (ref == null) continue;
+            moduleCache[depPath] = ref;
             getRelations(archive.decode(ref));
         }
         return list;

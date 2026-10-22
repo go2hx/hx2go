@@ -56,6 +56,20 @@ class FileSystem {
     }
 
     public static function stat(path:String):sys.FileStat {
-        throw "not implemented"; // TODO: map go os.FileInfo -> sys.FileStat
+        var info = Os.stat(path).sure();
+        var mtime = Date.fromTime(info.modTime().unixMilli().toFloat());
+        return {
+            gid: 0,
+            uid: 0,
+            atime: mtime,
+            mtime: mtime,
+            ctime: mtime,
+            size: Go.int(info.size()),
+            dev: 0,
+            ino: 0,
+            nlink: 0,
+            rdev: 0,
+            mode: Go.int(info.mode())
+        };
     }
 }

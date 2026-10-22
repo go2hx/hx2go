@@ -61,7 +61,14 @@ class Sys {
     }
 
     public static function getCwd(): String {
-        return Os.getwd().sure();
+		var ret = Os.getwd().sure();
+		// Haxe requires a trailing slash for directories
+        var sep = go.Os.pathSeparator;
+		var trailingSlash : String =  go.Syntax.code("string({0})", sep) ;
+		if (go.Strings.hasSuffix(ret, trailingSlash)) { // possibly always untrue
+			return ret;
+		}
+		return ret + trailingSlash;
     }
 
     public static function setCwd(s: String): Void {

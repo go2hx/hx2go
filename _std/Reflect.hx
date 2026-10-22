@@ -8,6 +8,9 @@ class Reflect {
     }
 
     public static function field(o: Dynamic, field: String): Dynamic {
+        if (o == null || field == null) {
+            return null;
+        }
         return HxDynamic.getField(o, field);
     }
 
@@ -16,6 +19,9 @@ class Reflect {
     }
 
     public static function getProperty(o: Dynamic, field: String): Dynamic {
+        if (o == null || field == null) {
+            return null;
+        }
         var fn = HxDynamic.getField(o, 'get_${field}');
         if (fn == null) {
             return HxDynamic.getField(o, field);
@@ -95,7 +101,6 @@ class Reflect {
         if (f1 == null || f2 == null) {
             return false;
         }
-
         return f1 == f2;
     }
 

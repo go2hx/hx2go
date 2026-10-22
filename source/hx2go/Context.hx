@@ -234,7 +234,7 @@ class Context {
         typesByModule = new Map();
         typeQueue = [];
         this.res = res;
-        this.cache = new Cache(!singleFile && codegenVersion != "" && !disableIncrementalCache, outputDirectory, res);
+        this.cache = new Cache(!singleFile && codegenVersion != "" && !disableIncrementalCache, outputDirectory, res, sourcemaps, sourcelineComments);
 
         var mod = resolveModule(StringConversions.pathToLossyTypePath(mainClass));
         var cls = mod.classes();

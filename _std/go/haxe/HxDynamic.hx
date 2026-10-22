@@ -28,7 +28,7 @@ private extern class Unsafe {
 }
 
 @:go.Type({ name: "HxArrayDyn" })
-private extern class HxDynamicArray {
+extern class HxDynamicArray {
     @:native("Set_Dyn") function set(i: Int, v: Dynamic): Void;
     @:native("Get_Dyn") function get(i: Int): Dynamic;
     @:native("Underlying_Dyn") function underlying(): Slice<Dynamic>;
@@ -232,7 +232,12 @@ class HxDynamic {
                 if (aVt.isValid() && bVt.isValid())
                     return aVt.pointer() == bVt.pointer();
             }
-            return Syntax.code("reflect.DeepEqual({0}, {1})", aV._interface(), bV._interface());
+
+            if (aK == Reflect.ptr || aK == Reflect.map || aK == Reflect.chan || aK == Reflect.unsafePointer || aK == Reflect.slice) {
+                return aV.type() == bV.type() && aV.pointer() == bV.pointer();
+            }
+
+            return Reflect.deepEqual(aV._interface(), bV._interface());
         }
     }
 

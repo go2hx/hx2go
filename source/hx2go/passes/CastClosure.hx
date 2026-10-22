@@ -36,8 +36,8 @@ class CastClosure extends CompilerPass {
 
     public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
         var source = switch expr.expr { case TCast(e, _): e; case _: return; };
-        var from = TypeHelper.goEraseType(TypeHelper.follow(context, source.t));
-        var to = TypeHelper.goEraseType(TypeHelper.follow(context, expr.t));
+        var from = TypeHelper.follow(context, source.t);
+        var to = TypeHelper.follow(context, expr.t);
         if (TypeHelper.compare(from, to)) return;
 
         switch [expr.expr, from, to] {

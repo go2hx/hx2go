@@ -81,6 +81,7 @@ func (this *HxArrayImpl[T]) Grow(elements int32) {
 	oldLen := int32(len(this.data))
 	oldCap := int32(cap(this.data))
 	newLen := oldLen + elements
+	initT := HxDefault[T]()
 
 	if newLen > oldCap {
 		newCap := oldCap
@@ -93,10 +94,18 @@ func (this *HxArrayImpl[T]) Grow(elements int32) {
 		}
 
 		data := make([]T, newLen, newCap)
+		for i := oldLen; i < newLen; i++ {
+			data[i] = initT
+		}
 		copy(data, this.data)
 		this.data = data
 	} else {
 		this.data = this.data[:newLen]
+		if newLen > oldLen {
+			for i := oldLen; i < newLen; i++ {
+				this.data[i] = initT
+			}
+		}
 	}
 }
 
@@ -434,7 +443,7 @@ func (this HxArrayView[T]) Unshift_Dyn(val any) {
 
 func (this *HxArrayImpl[T]) Remove(val T) bool {
 	for i := int32(0); i < this.Len(); i++ {
-		if reflect.DeepEqual(this.data[i], val) {
+		if Hx_Field_go_haxe_hxdynamic_equals(this.data[i], val) {
 			this.data = append(this.data[:i], this.data[i+1:]...)
 			return true
 		}
@@ -513,7 +522,7 @@ func Hx_Array_ToString[T any](this HxArray[T]) string {
 
 func Hx_Array_Contains[T any](this HxArray[T], value T) bool {
 	for i := int32(0); i < this.Len(); i++ {
-		if reflect.DeepEqual(this.Get(i), value) {
+		if Hx_Field_go_haxe_hxdynamic_equals(this.Get(i), value) {
 			return true
 		}
 	}
@@ -688,7 +697,7 @@ func Hx_Array_IndexOf[T any](this HxArray[T], x T, fromIndex HxNullable[int32]) 
 
 	if arr, ok := this.(*HxArrayImpl[T]); ok {
 		for i := start; i < length; i++ {
-			if reflect.DeepEqual(arr.data[i], x) {
+			if Hx_Field_go_haxe_hxdynamic_equals(arr.data[i], x) {
 				return i
 			}
 		}
@@ -696,7 +705,7 @@ func Hx_Array_IndexOf[T any](this HxArray[T], x T, fromIndex HxNullable[int32]) 
 	}
 
 	for i := start; i < length; i++ {
-		if reflect.DeepEqual(this.Get(i), x) {
+		if Hx_Field_go_haxe_hxdynamic_equals(this.Get(i), x) {
 			return i
 		}
 	}
@@ -722,7 +731,7 @@ func Hx_Array_LastIndexOf[T any](this HxArray[T], x T, fromIndex HxNullable[int3
 
 	if arr, ok := this.(*HxArrayImpl[T]); ok {
 		for i := start; i >= 0; i-- {
-			if reflect.DeepEqual(arr.data[i], x) {
+			if Hx_Field_go_haxe_hxdynamic_equals(arr.data[i], x) {
 				return i
 			}
 		}
@@ -730,7 +739,7 @@ func Hx_Array_LastIndexOf[T any](this HxArray[T], x T, fromIndex HxNullable[int3
 	}
 
 	for i := start; i >= 0; i-- {
-		if reflect.DeepEqual(this.Get(i), x) {
+		if Hx_Field_go_haxe_hxdynamic_equals(this.Get(i), x) {
 			return i
 		}
 	}

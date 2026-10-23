@@ -25,6 +25,8 @@ class FileSystem {
     }
 
     public static function readDirectory(path:String):Array<String> {
+        var trailingSlash = go.Syntax.code("string(os.PathSeparator)",[]);
+        path = go.Strings.trimSuffix(path, trailingSlash);
         var list:Slice<DirEntry> = Os.readDir(path).sure();
         return list.toArray().map(res -> res.name());
     }

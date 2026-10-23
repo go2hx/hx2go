@@ -13,7 +13,7 @@ class FileSystem {
         if (path == null) {
             path = "";
         }
-        var trailingSlash = go.Syntax.code("string(os.PathSeparator)",[]);
+        var trailingSlash = go.Go.string(Os.pathSeparator);
         path = go.Strings.trimSuffix(path, trailingSlash);
         return path;
     } 

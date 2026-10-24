@@ -14,6 +14,9 @@ class FileSystem {
             path = "";
         }
         var trailingSlash = go.Go.string(Os.pathSeparator);
+        if (path == trailingSlash) {
+            return path;  // if the path is just the trailing slash, we are refering to the root directory - tested by the Haxe Sys filesystem tests
+        }
         path = go.Strings.trimSuffix(path, trailingSlash);
         return path;
     } 

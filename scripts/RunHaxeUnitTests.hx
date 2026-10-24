@@ -14,7 +14,6 @@ function main() {
     #elseif testsys
     Sys.setCwd("../sys");
     runTestSuite(["compile-go.hxml"], false);
-    var fail = false;
 
     Sys.putEnv("EXISTS", "1");
     Sys.exit(Sys.command(FileSystem.absolutePath("bin/go/sys/main/" + exe("main")), []));

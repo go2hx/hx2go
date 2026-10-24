@@ -330,7 +330,7 @@ class ClassWriter extends WriterImpl {
                     continue;
                 }
 
-                var signature = writeFunctionArgs(appendThis(f.field.type, f.inst), f.field);
+                var signature = writeFunctionArgs(appendThis(f.field.type, f.inst), f.field, 1);
                 var ret = signature.returnType == TVoid ? "" : writer.types.writeHxbType(signature.returnType).toString();
                 buf.add('obj.${StringConversions.nameToFieldName(f.field.name)}_Dyn = func(${signature.buf}) $ret ${writer.exprs.writeExpr(f.field.expr.expr, true)}', 1);
             }
@@ -537,7 +537,7 @@ class ClassWriter extends WriterImpl {
 
     public static final defaultArgSuffix = "__isOptional";
 
-	public function writeFunctionArgs(type:HxbType, field:HxbClassField):{
+	public function writeFunctionArgs(type:HxbType, field:HxbClassField, prependedArgs:Int = 0):{
 		buf:OutputBuffer,
 		returnType:HxbType,
 		args:Array<HxbFunArg>,
@@ -555,9 +555,23 @@ class ClassWriter extends WriterImpl {
 
 		switch type {
 			case TFun(args, returnType):
+				var tfunc:Null<hxb.Typed.HxbTFunc> = null;
+				if (field?.expr?.expr?.expr != null) {
+                    // pull the real function out so we get the proper args
+					switch field.expr.expr.expr {
+						case TFunction(tf) if (tf.args.length == args.length - prependedArgs): tfunc = tf;
+						case _:
+					}
+				}
+				function bodyArg(idx:Int)
+					return (tfunc != null && idx >= prependedArgs) ? tfunc.args[idx - prependedArgs] : null;
+
 				for (idx in 0...args.length) {
 					var arg = args[idx];
-					var name = (arg.name != null && arg.name != "") ? arg.name : '_hx_carg$idx';
+					var bArg = bodyArg(idx);
+					var name = (arg.name != null && arg.name != "") ? arg.name
+						: (bArg != null && bArg.v.name != "") ? bArg.v.name
+						: '_hx_carg$idx';
 					var wrapperArg = new HxbFunArg(name, arg.opt, arg.t);
 
 					if (arg.opt) {
@@ -581,31 +595,21 @@ class ClassWriter extends WriterImpl {
 				if (haveDefaultArgs && field != null) {
 					wrapperStart.addInline('{\n');
 					wrapperEnd.addInline('\n}');
-					if (field?.expr?.expr?.expr != null) {
-						switch field.expr.expr.expr {
-							case TFunction(tf):
-								for (idx in 0...fArgs.length) {
-									var warg = wrapperArgs[idx];
-									var oarg = fArgs[idx];
-									if (oarg.opt) {
-										switch fArgs[idx].t {
-											// case TAbstract({name: "Null", pack: [], moduleName: mName}, [inner]):
-											// 	// no change needed for Null<T> types
-											case _:
-												wrapperStart.addInline('${oarg.name} := HxDefault[${writer.types.writeHxbType(oarg.t)}]()\n_ = ${oarg.name}\n');
-												wrapperStart.addInline('\nif (${warg.name} != nil) {\n ');
-												wrapperStart.addInline('    ${oarg.name} = HxConvert[${writer.types.writeHxbType(oarg.t)}](${warg.name})\n');
-												wrapperStart.addInline('} else {\n');
-												if (tf.args[idx].value != null) {
-													var rhs = writer.exprs.writeExpr(tf.args[idx].value, false).toString();
-													wrapperStart.addInline('${handleDefaultAssignment(oarg.name, rhs, oarg.t)}\n');
-												}
-                                                wrapperStart.addInline('}\n');
-										}
-									}
-								}
-							case _:
+					for (idx in 0...fArgs.length) {
+						var bArg = bodyArg(idx);
+						if (!fArgs[idx].opt || bArg == null) continue;
+						var oname = bArg.v.name;
+						var otype = bArg.v.type != null ? bArg.v.type : fArgs[idx].t;
+						var warg = wrapperArgs[idx];
+						wrapperStart.addInline('${oname} := HxDefault[${writer.types.writeHxbType(otype)}]()\n_ = ${oname}\n');
+						wrapperStart.addInline('\nif (${warg.name} != nil) {\n ');
+						wrapperStart.addInline('    ${oname} = HxConvert[${writer.types.writeHxbType(otype)}](${warg.name})\n');
+						wrapperStart.addInline('} else {\n');
+						if (bArg.value != null) {
+							var rhs = writer.exprs.writeExpr(bArg.value, false).toString();
+							wrapperStart.addInline('${handleDefaultAssignment(oname, rhs, otype)}\n');
 						}
+						wrapperStart.addInline('}\n');
 					}
 				}
 			case _:

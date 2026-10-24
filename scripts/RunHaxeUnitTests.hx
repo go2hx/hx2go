@@ -17,10 +17,7 @@ function main() {
     var fail = false;
 
     Sys.putEnv("EXISTS", "1");
-    if (Sys.command(FileSystem.absolutePath("bin/go/sys/main/" + exe("main")), []) != 0)
-        fail = true;
-    if (fail)
-        Sys.exit(1);
+    Sys.exit(Sys.command(FileSystem.absolutePath("bin/go/sys/main/" + exe("main")), []));
     #else
     runTestSuite(["compile-go.hxml"]);
     #end

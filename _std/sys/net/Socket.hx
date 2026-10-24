@@ -146,9 +146,10 @@ class Socket {
         } else {
             if (reader.buffered() > 0) return true;
             conn.setReadDeadline(Time.now().add(Go.int64(Time.millisecond) * PROBE_MS));
-            var res = reader.peek(1).sure();
+            var res = reader.peek(1);
             conn.setReadDeadline(zeroTime());
-            return res.length > 0;
+            if (!res.isOk()) return false;
+            return res.sure().length > 0;
         }
     }
 

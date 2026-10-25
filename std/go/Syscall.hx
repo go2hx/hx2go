@@ -26,2160 +26,1179 @@ package go;
 @:go.Type({ name: "syscall", instanceName: "syscall.syscall", imports: ["syscall"] })
 extern class Syscall {
 
-    @:native("AF_APPLETALK") static var AF_APPLETALK: go.GoInt;
-    @:native("AF_CCITT") static var AF_CCITT: go.GoInt;
-    @:native("AF_CHAOS") static var AF_CHAOS: go.GoInt;
-    @:native("AF_CNT") static var AF_CNT: go.GoInt;
-    @:native("AF_COIP") static var AF_COIP: go.GoInt;
-    @:native("AF_DATAKIT") static var AF_DATAKIT: go.GoInt;
-    @:native("AF_DECnet") static var aF_DECnet: go.GoInt;
-    @:native("AF_DLI") static var AF_DLI: go.GoInt;
-    @:native("AF_E164") static var AF_E164: go.GoInt;
-    @:native("AF_ECMA") static var AF_ECMA: go.GoInt;
-    @:native("AF_HYLINK") static var AF_HYLINK: go.GoInt;
-    @:native("AF_IEEE80211") static var AF_IEEE80211: go.GoInt;
-    @:native("AF_IMPLINK") static var AF_IMPLINK: go.GoInt;
     @:native("AF_INET") static var AF_INET: go.GoInt;
     @:native("AF_INET6") static var AF_INET6: go.GoInt;
-    @:native("AF_IPX") static var AF_IPX: go.GoInt;
-    @:native("AF_ISDN") static var AF_ISDN: go.GoInt;
-    @:native("AF_ISO") static var AF_ISO: go.GoInt;
-    @:native("AF_LAT") static var AF_LAT: go.GoInt;
-    @:native("AF_LINK") static var AF_LINK: go.GoInt;
-    @:native("AF_LOCAL") static var AF_LOCAL: go.GoInt;
-    @:native("AF_MAX") static var AF_MAX: go.GoInt;
-    @:native("AF_NATM") static var AF_NATM: go.GoInt;
-    @:native("AF_NDRV") static var AF_NDRV: go.GoInt;
     @:native("AF_NETBIOS") static var AF_NETBIOS: go.GoInt;
-    @:native("AF_NS") static var AF_NS: go.GoInt;
-    @:native("AF_OSI") static var AF_OSI: go.GoInt;
-    @:native("AF_PPP") static var AF_PPP: go.GoInt;
-    @:native("AF_PUP") static var AF_PUP: go.GoInt;
-    @:native("AF_RESERVED_36") static var AF_RESERVED_36: go.GoInt;
-    @:native("AF_ROUTE") static var AF_ROUTE: go.GoInt;
-    @:native("AF_SIP") static var AF_SIP: go.GoInt;
-    @:native("AF_SNA") static var AF_SNA: go.GoInt;
-    @:native("AF_SYSTEM") static var AF_SYSTEM: go.GoInt;
     @:native("AF_UNIX") static var AF_UNIX: go.GoInt;
     @:native("AF_UNSPEC") static var AF_UNSPEC: go.GoInt;
-    @:native("B0") static var B0: go.GoInt;
-    @:native("B110") static var B110: go.GoInt;
-    @:native("B115200") static var B115200: go.GoInt;
-    @:native("B1200") static var B1200: go.GoInt;
-    @:native("B134") static var B134: go.GoInt;
-    @:native("B14400") static var B14400: go.GoInt;
-    @:native("B150") static var B150: go.GoInt;
-    @:native("B1800") static var B1800: go.GoInt;
-    @:native("B19200") static var B19200: go.GoInt;
-    @:native("B200") static var B200: go.GoInt;
-    @:native("B230400") static var B230400: go.GoInt;
-    @:native("B2400") static var B2400: go.GoInt;
-    @:native("B28800") static var B28800: go.GoInt;
-    @:native("B300") static var B300: go.GoInt;
-    @:native("B38400") static var B38400: go.GoInt;
-    @:native("B4800") static var B4800: go.GoInt;
-    @:native("B50") static var B50: go.GoInt;
-    @:native("B57600") static var B57600: go.GoInt;
-    @:native("B600") static var B600: go.GoInt;
-    @:native("B7200") static var B7200: go.GoInt;
-    @:native("B75") static var B75: go.GoInt;
-    @:native("B76800") static var B76800: go.GoInt;
-    @:native("B9600") static var B9600: go.GoInt;
-    @:native("BIOCFLUSH") static var BIOCFLUSH: go.GoInt;
-    @:native("BIOCGBLEN") static var BIOCGBLEN: go.GoInt;
-    @:native("BIOCGDLT") static var BIOCGDLT: go.GoInt;
-    @:native("BIOCGDLTLIST") static var BIOCGDLTLIST: go.GoInt;
-    @:native("BIOCGETIF") static var BIOCGETIF: go.GoInt;
-    @:native("BIOCGHDRCMPLT") static var BIOCGHDRCMPLT: go.GoInt;
-    @:native("BIOCGRSIG") static var BIOCGRSIG: go.GoInt;
-    @:native("BIOCGRTIMEOUT") static var BIOCGRTIMEOUT: go.GoInt;
-    @:native("BIOCGSEESENT") static var BIOCGSEESENT: go.GoInt;
-    @:native("BIOCGSTATS") static var BIOCGSTATS: go.GoInt;
-    @:native("BIOCIMMEDIATE") static var BIOCIMMEDIATE: go.GoInt;
-    @:native("BIOCPROMISC") static var BIOCPROMISC: go.GoInt;
-    @:native("BIOCSBLEN") static var BIOCSBLEN: go.GoInt;
-    @:native("BIOCSDLT") static var BIOCSDLT: go.GoInt;
-    @:native("BIOCSETF") static var BIOCSETF: go.GoInt;
-    @:native("BIOCSETIF") static var BIOCSETIF: go.GoInt;
-    @:native("BIOCSHDRCMPLT") static var BIOCSHDRCMPLT: go.GoInt;
-    @:native("BIOCSRSIG") static var BIOCSRSIG: go.GoInt;
-    @:native("BIOCSRTIMEOUT") static var BIOCSRTIMEOUT: go.GoInt;
-    @:native("BIOCSSEESENT") static var BIOCSSEESENT: go.GoInt;
-    @:native("BIOCVERSION") static var BIOCVERSION: go.GoInt;
-    @:native("BPF_A") static var BPF_A: go.GoInt;
-    @:native("BPF_ABS") static var BPF_ABS: go.GoInt;
-    @:native("BPF_ADD") static var BPF_ADD: go.GoInt;
-    @:native("BPF_ALIGNMENT") static var BPF_ALIGNMENT: go.GoInt;
-    @:native("BPF_ALU") static var BPF_ALU: go.GoInt;
-    @:native("BPF_AND") static var BPF_AND: go.GoInt;
-    @:native("BPF_B") static var BPF_B: go.GoInt;
-    @:native("BPF_DIV") static var BPF_DIV: go.GoInt;
-    @:native("BPF_H") static var BPF_H: go.GoInt;
-    @:native("BPF_IMM") static var BPF_IMM: go.GoInt;
-    @:native("BPF_IND") static var BPF_IND: go.GoInt;
-    @:native("BPF_JA") static var BPF_JA: go.GoInt;
-    @:native("BPF_JEQ") static var BPF_JEQ: go.GoInt;
-    @:native("BPF_JGE") static var BPF_JGE: go.GoInt;
-    @:native("BPF_JGT") static var BPF_JGT: go.GoInt;
-    @:native("BPF_JMP") static var BPF_JMP: go.GoInt;
-    @:native("BPF_JSET") static var BPF_JSET: go.GoInt;
-    @:native("BPF_K") static var BPF_K: go.GoInt;
-    @:native("BPF_LD") static var BPF_LD: go.GoInt;
-    @:native("BPF_LDX") static var BPF_LDX: go.GoInt;
-    @:native("BPF_LEN") static var BPF_LEN: go.GoInt;
-    @:native("BPF_LSH") static var BPF_LSH: go.GoInt;
-    @:native("BPF_MAJOR_VERSION") static var BPF_MAJOR_VERSION: go.GoInt;
-    @:native("BPF_MAXBUFSIZE") static var BPF_MAXBUFSIZE: go.GoInt;
-    @:native("BPF_MAXINSNS") static var BPF_MAXINSNS: go.GoInt;
-    @:native("BPF_MEM") static var BPF_MEM: go.GoInt;
-    @:native("BPF_MEMWORDS") static var BPF_MEMWORDS: go.GoInt;
-    @:native("BPF_MINBUFSIZE") static var BPF_MINBUFSIZE: go.GoInt;
-    @:native("BPF_MINOR_VERSION") static var BPF_MINOR_VERSION: go.GoInt;
-    @:native("BPF_MISC") static var BPF_MISC: go.GoInt;
-    @:native("BPF_MSH") static var BPF_MSH: go.GoInt;
-    @:native("BPF_MUL") static var BPF_MUL: go.GoInt;
-    @:native("BPF_NEG") static var BPF_NEG: go.GoInt;
-    @:native("BPF_OR") static var BPF_OR: go.GoInt;
-    @:native("BPF_RELEASE") static var BPF_RELEASE: go.GoInt;
-    @:native("BPF_RET") static var BPF_RET: go.GoInt;
-    @:native("BPF_RSH") static var BPF_RSH: go.GoInt;
-    @:native("BPF_ST") static var BPF_ST: go.GoInt;
-    @:native("BPF_STX") static var BPF_STX: go.GoInt;
-    @:native("BPF_SUB") static var BPF_SUB: go.GoInt;
-    @:native("BPF_TAX") static var BPF_TAX: go.GoInt;
-    @:native("BPF_TXA") static var BPF_TXA: go.GoInt;
-    @:native("BPF_W") static var BPF_W: go.GoInt;
-    @:native("BPF_X") static var BPF_X: go.GoInt;
-    @:native("BRKINT") static var BRKINT: go.GoInt;
-    @:native("CFLUSH") static var CFLUSH: go.GoInt;
-    @:native("CLOCAL") static var CLOCAL: go.GoInt;
-    @:native("CREAD") static var CREAD: go.GoInt;
-    @:native("CS5") static var CS5: go.GoInt;
-    @:native("CS6") static var CS6: go.GoInt;
-    @:native("CS7") static var CS7: go.GoInt;
-    @:native("CS8") static var CS8: go.GoInt;
-    @:native("CSIZE") static var CSIZE: go.GoInt;
-    @:native("CSTART") static var CSTART: go.GoInt;
-    @:native("CSTATUS") static var CSTATUS: go.GoInt;
-    @:native("CSTOP") static var CSTOP: go.GoInt;
-    @:native("CSTOPB") static var CSTOPB: go.GoInt;
-    @:native("CSUSP") static var CSUSP: go.GoInt;
-    @:native("CTL_MAXNAME") static var CTL_MAXNAME: go.GoInt;
-    @:native("CTL_NET") static var CTL_NET: go.GoInt;
-    @:native("DLT_APPLE_IP_OVER_IEEE1394") static var DLT_APPLE_IP_OVER_IEEE1394: go.GoInt;
-    @:native("DLT_ARCNET") static var DLT_ARCNET: go.GoInt;
-    @:native("DLT_ATM_CLIP") static var DLT_ATM_CLIP: go.GoInt;
-    @:native("DLT_ATM_RFC1483") static var DLT_ATM_RFC1483: go.GoInt;
-    @:native("DLT_AX25") static var DLT_AX25: go.GoInt;
-    @:native("DLT_CHAOS") static var DLT_CHAOS: go.GoInt;
-    @:native("DLT_CHDLC") static var DLT_CHDLC: go.GoInt;
-    @:native("DLT_C_HDLC") static var DLT_C_HDLC: go.GoInt;
-    @:native("DLT_EN10MB") static var DLT_EN10MB: go.GoInt;
-    @:native("DLT_EN3MB") static var DLT_EN3MB: go.GoInt;
-    @:native("DLT_FDDI") static var DLT_FDDI: go.GoInt;
-    @:native("DLT_IEEE802") static var DLT_IEEE802: go.GoInt;
-    @:native("DLT_IEEE802_11") static var DLT_IEEE802_11: go.GoInt;
-    @:native("DLT_IEEE802_11_RADIO") static var DLT_IEEE802_11_RADIO: go.GoInt;
-    @:native("DLT_IEEE802_11_RADIO_AVS") static var DLT_IEEE802_11_RADIO_AVS: go.GoInt;
-    @:native("DLT_LINUX_SLL") static var DLT_LINUX_SLL: go.GoInt;
-    @:native("DLT_LOOP") static var DLT_LOOP: go.GoInt;
-    @:native("DLT_NULL") static var DLT_NULL: go.GoInt;
-    @:native("DLT_PFLOG") static var DLT_PFLOG: go.GoInt;
-    @:native("DLT_PFSYNC") static var DLT_PFSYNC: go.GoInt;
-    @:native("DLT_PPP") static var DLT_PPP: go.GoInt;
-    @:native("DLT_PPP_BSDOS") static var DLT_PPP_BSDOS: go.GoInt;
-    @:native("DLT_PPP_SERIAL") static var DLT_PPP_SERIAL: go.GoInt;
-    @:native("DLT_PRONET") static var DLT_PRONET: go.GoInt;
-    @:native("DLT_RAW") static var DLT_RAW: go.GoInt;
-    @:native("DLT_SLIP") static var DLT_SLIP: go.GoInt;
-    @:native("DLT_SLIP_BSDOS") static var DLT_SLIP_BSDOS: go.GoInt;
-    @:native("DT_BLK") static var DT_BLK: go.GoInt;
-    @:native("DT_CHR") static var DT_CHR: go.GoInt;
-    @:native("DT_DIR") static var DT_DIR: go.GoInt;
-    @:native("DT_FIFO") static var DT_FIFO: go.GoInt;
-    @:native("DT_LNK") static var DT_LNK: go.GoInt;
-    @:native("DT_REG") static var DT_REG: go.GoInt;
-    @:native("DT_SOCK") static var DT_SOCK: go.GoInt;
-    @:native("DT_UNKNOWN") static var DT_UNKNOWN: go.GoInt;
-    @:native("DT_WHT") static var DT_WHT: go.GoInt;
+    @:native("AI_CANONNAME") static var AI_CANONNAME: go.GoInt;
+    @:native("AI_NUMERICHOST") static var AI_NUMERICHOST: go.GoInt;
+    @:native("AI_PASSIVE") static var AI_PASSIVE: go.GoInt;
     /**
-        Errors
+        Windows reserves errors >= 1<<29 for application use.
+    **/
+    @:native("APPLICATION_ERROR") static var APPLICATION_ERROR: go.GoInt;
+    @:native("AUTHTYPE_CLIENT") static var AUTHTYPE_CLIENT: go.GoInt;
+    @:native("AUTHTYPE_SERVER") static var AUTHTYPE_SERVER: go.GoInt;
+    @:native("BASE_PROTOCOL") static var BASE_PROTOCOL: go.GoInt;
+    @:native("CERT_CHAIN_POLICY_AUTHENTICODE") static var CERT_CHAIN_POLICY_AUTHENTICODE: go.GoInt;
+    @:native("CERT_CHAIN_POLICY_AUTHENTICODE_TS") static var CERT_CHAIN_POLICY_AUTHENTICODE_TS: go.GoInt;
+    @:native("CERT_CHAIN_POLICY_BASE") static var CERT_CHAIN_POLICY_BASE: go.GoInt;
+    @:native("CERT_CHAIN_POLICY_BASIC_CONSTRAINTS") static var CERT_CHAIN_POLICY_BASIC_CONSTRAINTS: go.GoInt;
+    @:native("CERT_CHAIN_POLICY_EV") static var CERT_CHAIN_POLICY_EV: go.GoInt;
+    @:native("CERT_CHAIN_POLICY_MICROSOFT_ROOT") static var CERT_CHAIN_POLICY_MICROSOFT_ROOT: go.GoInt;
+    @:native("CERT_CHAIN_POLICY_NT_AUTH") static var CERT_CHAIN_POLICY_NT_AUTH: go.GoInt;
+    @:native("CERT_CHAIN_POLICY_SSL") static var CERT_CHAIN_POLICY_SSL: go.GoInt;
+    @:native("CERT_E_CN_NO_MATCH") static var CERT_E_CN_NO_MATCH: go.GoInt;
+    @:native("CERT_E_EXPIRED") static var CERT_E_EXPIRED: go.GoInt;
+    @:native("CERT_E_PURPOSE") static var CERT_E_PURPOSE: go.GoInt;
+    @:native("CERT_E_ROLE") static var CERT_E_ROLE: go.GoInt;
+    @:native("CERT_E_UNTRUSTEDROOT") static var CERT_E_UNTRUSTEDROOT: go.GoInt;
+    @:native("CERT_STORE_ADD_ALWAYS") static var CERT_STORE_ADD_ALWAYS: go.GoInt;
+    @:native("CERT_STORE_DEFER_CLOSE_UNTIL_LAST_FREE_FLAG") static var CERT_STORE_DEFER_CLOSE_UNTIL_LAST_FREE_FLAG: go.GoInt;
+    @:native("CERT_STORE_PROV_MEMORY") static var CERT_STORE_PROV_MEMORY: go.GoInt;
+    @:native("CERT_TRUST_HAS_EXCLUDED_NAME_CONSTRAINT") static var CERT_TRUST_HAS_EXCLUDED_NAME_CONSTRAINT: go.GoInt;
+    @:native("CERT_TRUST_HAS_NOT_DEFINED_NAME_CONSTRAINT") static var CERT_TRUST_HAS_NOT_DEFINED_NAME_CONSTRAINT: go.GoInt;
+    @:native("CERT_TRUST_HAS_NOT_PERMITTED_NAME_CONSTRAINT") static var CERT_TRUST_HAS_NOT_PERMITTED_NAME_CONSTRAINT: go.GoInt;
+    @:native("CERT_TRUST_HAS_NOT_SUPPORTED_CRITICAL_EXT") static var CERT_TRUST_HAS_NOT_SUPPORTED_CRITICAL_EXT: go.GoInt;
+    @:native("CERT_TRUST_HAS_NOT_SUPPORTED_NAME_CONSTRAINT") static var CERT_TRUST_HAS_NOT_SUPPORTED_NAME_CONSTRAINT: go.GoInt;
+    @:native("CERT_TRUST_INVALID_BASIC_CONSTRAINTS") static var CERT_TRUST_INVALID_BASIC_CONSTRAINTS: go.GoInt;
+    @:native("CERT_TRUST_INVALID_EXTENSION") static var CERT_TRUST_INVALID_EXTENSION: go.GoInt;
+    @:native("CERT_TRUST_INVALID_NAME_CONSTRAINTS") static var CERT_TRUST_INVALID_NAME_CONSTRAINTS: go.GoInt;
+    @:native("CERT_TRUST_INVALID_POLICY_CONSTRAINTS") static var CERT_TRUST_INVALID_POLICY_CONSTRAINTS: go.GoInt;
+    @:native("CERT_TRUST_IS_CYCLIC") static var CERT_TRUST_IS_CYCLIC: go.GoInt;
+    @:native("CERT_TRUST_IS_EXPLICIT_DISTRUST") static var CERT_TRUST_IS_EXPLICIT_DISTRUST: go.GoInt;
+    @:native("CERT_TRUST_IS_NOT_SIGNATURE_VALID") static var CERT_TRUST_IS_NOT_SIGNATURE_VALID: go.GoInt;
+    @:native("CERT_TRUST_IS_NOT_TIME_VALID") static var CERT_TRUST_IS_NOT_TIME_VALID: go.GoInt;
+    @:native("CERT_TRUST_IS_NOT_VALID_FOR_USAGE") static var CERT_TRUST_IS_NOT_VALID_FOR_USAGE: go.GoInt;
+    @:native("CERT_TRUST_IS_OFFLINE_REVOCATION") static var CERT_TRUST_IS_OFFLINE_REVOCATION: go.GoInt;
+    @:native("CERT_TRUST_IS_REVOKED") static var CERT_TRUST_IS_REVOKED: go.GoInt;
+    @:native("CERT_TRUST_IS_UNTRUSTED_ROOT") static var CERT_TRUST_IS_UNTRUSTED_ROOT: go.GoInt;
+    @:native("CERT_TRUST_NO_ERROR") static var CERT_TRUST_NO_ERROR: go.GoInt;
+    @:native("CERT_TRUST_NO_ISSUANCE_CHAIN_POLICY") static var CERT_TRUST_NO_ISSUANCE_CHAIN_POLICY: go.GoInt;
+    @:native("CERT_TRUST_REVOCATION_STATUS_UNKNOWN") static var CERT_TRUST_REVOCATION_STATUS_UNKNOWN: go.GoInt;
+    @:native("CREATE_ALWAYS") static var CREATE_ALWAYS: go.GoInt;
+    @:native("CREATE_NEW") static var CREATE_NEW: go.GoInt;
+    @:native("CREATE_NEW_PROCESS_GROUP") static var CREATE_NEW_PROCESS_GROUP: go.GoInt;
+    @:native("CREATE_UNICODE_ENVIRONMENT") static var CREATE_UNICODE_ENVIRONMENT: go.GoInt;
+    @:native("CRYPT_DEFAULT_CONTAINER_OPTIONAL") static var CRYPT_DEFAULT_CONTAINER_OPTIONAL: go.GoInt;
+    @:native("CRYPT_DELETEKEYSET") static var CRYPT_DELETEKEYSET: go.GoInt;
+    @:native("CRYPT_MACHINE_KEYSET") static var CRYPT_MACHINE_KEYSET: go.GoInt;
+    @:native("CRYPT_NEWKEYSET") static var CRYPT_NEWKEYSET: go.GoInt;
+    @:native("CRYPT_SILENT") static var CRYPT_SILENT: go.GoInt;
+    @:native("CRYPT_VERIFYCONTEXT") static var CRYPT_VERIFYCONTEXT: go.GoInt;
+    @:native("CTRL_BREAK_EVENT") static var CTRL_BREAK_EVENT: go.GoInt;
+    @:native("CTRL_CLOSE_EVENT") static var CTRL_CLOSE_EVENT: go.GoInt;
+    @:native("CTRL_C_EVENT") static var CTRL_C_EVENT: go.GoInt;
+    @:native("CTRL_LOGOFF_EVENT") static var CTRL_LOGOFF_EVENT: go.GoInt;
+    @:native("CTRL_SHUTDOWN_EVENT") static var CTRL_SHUTDOWN_EVENT: go.GoInt;
+    @:native("DNS_INFO_NO_RECORDS") static var DNS_INFO_NO_RECORDS: go.GoInt;
+    @:native("DNS_TYPE_A") static var DNS_TYPE_A: go.GoInt;
+    @:native("DNS_TYPE_A6") static var DNS_TYPE_A6: go.GoInt;
+    @:native("DNS_TYPE_AAAA") static var DNS_TYPE_AAAA: go.GoInt;
+    @:native("DNS_TYPE_ADDRS") static var DNS_TYPE_ADDRS: go.GoInt;
+    @:native("DNS_TYPE_AFSDB") static var DNS_TYPE_AFSDB: go.GoInt;
+    @:native("DNS_TYPE_ALL") static var DNS_TYPE_ALL: go.GoInt;
+    @:native("DNS_TYPE_ANY") static var DNS_TYPE_ANY: go.GoInt;
+    @:native("DNS_TYPE_ATMA") static var DNS_TYPE_ATMA: go.GoInt;
+    @:native("DNS_TYPE_AXFR") static var DNS_TYPE_AXFR: go.GoInt;
+    @:native("DNS_TYPE_CERT") static var DNS_TYPE_CERT: go.GoInt;
+    @:native("DNS_TYPE_CNAME") static var DNS_TYPE_CNAME: go.GoInt;
+    @:native("DNS_TYPE_DHCID") static var DNS_TYPE_DHCID: go.GoInt;
+    @:native("DNS_TYPE_DNAME") static var DNS_TYPE_DNAME: go.GoInt;
+    @:native("DNS_TYPE_DNSKEY") static var DNS_TYPE_DNSKEY: go.GoInt;
+    @:native("DNS_TYPE_DS") static var DNS_TYPE_DS: go.GoInt;
+    @:native("DNS_TYPE_EID") static var DNS_TYPE_EID: go.GoInt;
+    @:native("DNS_TYPE_GID") static var DNS_TYPE_GID: go.GoInt;
+    @:native("DNS_TYPE_GPOS") static var DNS_TYPE_GPOS: go.GoInt;
+    @:native("DNS_TYPE_HINFO") static var DNS_TYPE_HINFO: go.GoInt;
+    @:native("DNS_TYPE_ISDN") static var DNS_TYPE_ISDN: go.GoInt;
+    @:native("DNS_TYPE_IXFR") static var DNS_TYPE_IXFR: go.GoInt;
+    @:native("DNS_TYPE_KEY") static var DNS_TYPE_KEY: go.GoInt;
+    @:native("DNS_TYPE_KX") static var DNS_TYPE_KX: go.GoInt;
+    @:native("DNS_TYPE_LOC") static var DNS_TYPE_LOC: go.GoInt;
+    @:native("DNS_TYPE_MAILA") static var DNS_TYPE_MAILA: go.GoInt;
+    @:native("DNS_TYPE_MAILB") static var DNS_TYPE_MAILB: go.GoInt;
+    @:native("DNS_TYPE_MB") static var DNS_TYPE_MB: go.GoInt;
+    @:native("DNS_TYPE_MD") static var DNS_TYPE_MD: go.GoInt;
+    @:native("DNS_TYPE_MF") static var DNS_TYPE_MF: go.GoInt;
+    @:native("DNS_TYPE_MG") static var DNS_TYPE_MG: go.GoInt;
+    @:native("DNS_TYPE_MINFO") static var DNS_TYPE_MINFO: go.GoInt;
+    @:native("DNS_TYPE_MR") static var DNS_TYPE_MR: go.GoInt;
+    @:native("DNS_TYPE_MX") static var DNS_TYPE_MX: go.GoInt;
+    @:native("DNS_TYPE_NAPTR") static var DNS_TYPE_NAPTR: go.GoInt;
+    @:native("DNS_TYPE_NBSTAT") static var DNS_TYPE_NBSTAT: go.GoInt;
+    @:native("DNS_TYPE_NIMLOC") static var DNS_TYPE_NIMLOC: go.GoInt;
+    @:native("DNS_TYPE_NS") static var DNS_TYPE_NS: go.GoInt;
+    @:native("DNS_TYPE_NSAP") static var DNS_TYPE_NSAP: go.GoInt;
+    @:native("DNS_TYPE_NSAPPTR") static var DNS_TYPE_NSAPPTR: go.GoInt;
+    @:native("DNS_TYPE_NSEC") static var DNS_TYPE_NSEC: go.GoInt;
+    @:native("DNS_TYPE_NULL") static var DNS_TYPE_NULL: go.GoInt;
+    @:native("DNS_TYPE_NXT") static var DNS_TYPE_NXT: go.GoInt;
+    @:native("DNS_TYPE_OPT") static var DNS_TYPE_OPT: go.GoInt;
+    @:native("DNS_TYPE_PTR") static var DNS_TYPE_PTR: go.GoInt;
+    @:native("DNS_TYPE_PX") static var DNS_TYPE_PX: go.GoInt;
+    @:native("DNS_TYPE_RP") static var DNS_TYPE_RP: go.GoInt;
+    @:native("DNS_TYPE_RRSIG") static var DNS_TYPE_RRSIG: go.GoInt;
+    @:native("DNS_TYPE_RT") static var DNS_TYPE_RT: go.GoInt;
+    @:native("DNS_TYPE_SIG") static var DNS_TYPE_SIG: go.GoInt;
+    @:native("DNS_TYPE_SINK") static var DNS_TYPE_SINK: go.GoInt;
+    @:native("DNS_TYPE_SOA") static var DNS_TYPE_SOA: go.GoInt;
+    @:native("DNS_TYPE_SRV") static var DNS_TYPE_SRV: go.GoInt;
+    @:native("DNS_TYPE_TEXT") static var DNS_TYPE_TEXT: go.GoInt;
+    @:native("DNS_TYPE_TKEY") static var DNS_TYPE_TKEY: go.GoInt;
+    @:native("DNS_TYPE_TSIG") static var DNS_TYPE_TSIG: go.GoInt;
+    @:native("DNS_TYPE_UID") static var DNS_TYPE_UID: go.GoInt;
+    @:native("DNS_TYPE_UINFO") static var DNS_TYPE_UINFO: go.GoInt;
+    @:native("DNS_TYPE_UNSPEC") static var DNS_TYPE_UNSPEC: go.GoInt;
+    @:native("DNS_TYPE_WINS") static var DNS_TYPE_WINS: go.GoInt;
+    @:native("DNS_TYPE_WINSR") static var DNS_TYPE_WINSR: go.GoInt;
+    @:native("DNS_TYPE_WKS") static var DNS_TYPE_WKS: go.GoInt;
+    @:native("DNS_TYPE_X25") static var DNS_TYPE_X25: go.GoInt;
+    @:native("DUPLICATE_CLOSE_SOURCE") static var DUPLICATE_CLOSE_SOURCE: go.GoInt;
+    @:native("DUPLICATE_SAME_ACCESS") static var DUPLICATE_SAME_ACCESS: go.GoInt;
+    @:native("DnsSectionAdditional") static var dnsSectionAdditional: go.GoInt;
+    @:native("DnsSectionAnswer") static var dnsSectionAnswer: go.GoInt;
+    @:native("DnsSectionAuthority") static var dnsSectionAuthority: go.GoInt;
+    @:native("DnsSectionQuestion") static var dnsSectionQuestion: go.GoInt;
+    /**
+        Invented values to support what package os and others expects.
     **/
     @:native("E2BIG") static var E2BIG: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
     @:native("EACCES") static var EACCES: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
     @:native("EADDRINUSE") static var EADDRINUSE: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
     @:native("EADDRNOTAVAIL") static var EADDRNOTAVAIL: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
+    **/
+    @:native("EADV") static var EADV: go.syscall.Errno;
+    /**
+        Invented values to support what package os and others expects.
     **/
     @:native("EAFNOSUPPORT") static var EAFNOSUPPORT: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
     @:native("EAGAIN") static var EAGAIN: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
     @:native("EALREADY") static var EALREADY: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
-    @:native("EAUTH") static var EAUTH: go.syscall.Errno;
+    @:native("EBADE") static var EBADE: go.syscall.Errno;
     /**
-        Errors
-    **/
-    @:native("EBADARCH") static var EBADARCH: go.syscall.Errno;
-    /**
-        Errors
-    **/
-    @:native("EBADEXEC") static var EBADEXEC: go.syscall.Errno;
-    /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
     @:native("EBADF") static var EBADF: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
-    @:native("EBADMACHO") static var EBADMACHO: go.syscall.Errno;
+    @:native("EBADFD") static var EBADFD: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
     @:native("EBADMSG") static var EBADMSG: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
-    @:native("EBADRPC") static var EBADRPC: go.syscall.Errno;
+    @:native("EBADR") static var EBADR: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
+    **/
+    @:native("EBADRQC") static var EBADRQC: go.syscall.Errno;
+    /**
+        Invented values to support what package os and others expects.
+    **/
+    @:native("EBADSLT") static var EBADSLT: go.syscall.Errno;
+    /**
+        Invented values to support what package os and others expects.
+    **/
+    @:native("EBFONT") static var EBFONT: go.syscall.Errno;
+    /**
+        Invented values to support what package os and others expects.
     **/
     @:native("EBUSY") static var EBUSY: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
     @:native("ECANCELED") static var ECANCELED: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
     @:native("ECHILD") static var ECHILD: go.syscall.Errno;
-    @:native("ECHO") static var ECHO: go.GoInt;
-    @:native("ECHOCTL") static var ECHOCTL: go.GoInt;
-    @:native("ECHOE") static var ECHOE: go.GoInt;
-    @:native("ECHOK") static var ECHOK: go.GoInt;
-    @:native("ECHOKE") static var ECHOKE: go.GoInt;
-    @:native("ECHONL") static var ECHONL: go.GoInt;
-    @:native("ECHOPRT") static var ECHOPRT: go.GoInt;
     /**
-        Errors
+        Invented values to support what package os and others expects.
+    **/
+    @:native("ECHRNG") static var ECHRNG: go.syscall.Errno;
+    /**
+        Invented values to support what package os and others expects.
+    **/
+    @:native("ECOMM") static var ECOMM: go.syscall.Errno;
+    /**
+        Invented values to support what package os and others expects.
     **/
     @:native("ECONNABORTED") static var ECONNABORTED: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
     @:native("ECONNREFUSED") static var ECONNREFUSED: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
     @:native("ECONNRESET") static var ECONNRESET: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
     @:native("EDEADLK") static var EDEADLK: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
+    **/
+    @:native("EDEADLOCK") static var EDEADLOCK: go.syscall.Errno;
+    /**
+        Invented values to support what package os and others expects.
     **/
     @:native("EDESTADDRREQ") static var EDESTADDRREQ: go.syscall.Errno;
     /**
-        Errors
-    **/
-    @:native("EDEVERR") static var EDEVERR: go.syscall.Errno;
-    /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
     @:native("EDOM") static var EDOM: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
+    **/
+    @:native("EDOTDOT") static var EDOTDOT: go.syscall.Errno;
+    /**
+        Invented values to support what package os and others expects.
     **/
     @:native("EDQUOT") static var EDQUOT: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
     @:native("EEXIST") static var EEXIST: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
     @:native("EFAULT") static var EFAULT: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
     @:native("EFBIG") static var EFBIG: go.syscall.Errno;
     /**
-        Errors
-    **/
-    @:native("EFTYPE") static var EFTYPE: go.syscall.Errno;
-    /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
     @:native("EHOSTDOWN") static var EHOSTDOWN: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
     @:native("EHOSTUNREACH") static var EHOSTUNREACH: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
     @:native("EIDRM") static var EIDRM: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
     @:native("EILSEQ") static var EILSEQ: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
     @:native("EINPROGRESS") static var EINPROGRESS: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
     @:native("EINTR") static var EINTR: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
     @:native("EINVAL") static var EINVAL: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
     @:native("EIO") static var EIO: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
     @:native("EISCONN") static var EISCONN: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
     @:native("EISDIR") static var EISDIR: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
-    @:native("ELAST") static var ELAST: go.syscall.Errno;
+    @:native("EISNAM") static var EISNAM: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
+    **/
+    @:native("EKEYEXPIRED") static var EKEYEXPIRED: go.syscall.Errno;
+    /**
+        Invented values to support what package os and others expects.
+    **/
+    @:native("EKEYREJECTED") static var EKEYREJECTED: go.syscall.Errno;
+    /**
+        Invented values to support what package os and others expects.
+    **/
+    @:native("EKEYREVOKED") static var EKEYREVOKED: go.syscall.Errno;
+    /**
+        Invented values to support what package os and others expects.
+    **/
+    @:native("EL2HLT") static var EL2HLT: go.syscall.Errno;
+    /**
+        Invented values to support what package os and others expects.
+    **/
+    @:native("EL2NSYNC") static var EL2NSYNC: go.syscall.Errno;
+    /**
+        Invented values to support what package os and others expects.
+    **/
+    @:native("EL3HLT") static var EL3HLT: go.syscall.Errno;
+    /**
+        Invented values to support what package os and others expects.
+    **/
+    @:native("EL3RST") static var EL3RST: go.syscall.Errno;
+    /**
+        Invented values to support what package os and others expects.
+    **/
+    @:native("ELIBACC") static var ELIBACC: go.syscall.Errno;
+    /**
+        Invented values to support what package os and others expects.
+    **/
+    @:native("ELIBBAD") static var ELIBBAD: go.syscall.Errno;
+    /**
+        Invented values to support what package os and others expects.
+    **/
+    @:native("ELIBEXEC") static var ELIBEXEC: go.syscall.Errno;
+    /**
+        Invented values to support what package os and others expects.
+    **/
+    @:native("ELIBMAX") static var ELIBMAX: go.syscall.Errno;
+    /**
+        Invented values to support what package os and others expects.
+    **/
+    @:native("ELIBSCN") static var ELIBSCN: go.syscall.Errno;
+    /**
+        Invented values to support what package os and others expects.
+    **/
+    @:native("ELNRNG") static var ELNRNG: go.syscall.Errno;
+    /**
+        Invented values to support what package os and others expects.
     **/
     @:native("ELOOP") static var ELOOP: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
+    **/
+    @:native("EMEDIUMTYPE") static var EMEDIUMTYPE: go.syscall.Errno;
+    /**
+        Invented values to support what package os and others expects.
     **/
     @:native("EMFILE") static var EMFILE: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
     @:native("EMLINK") static var EMLINK: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
     @:native("EMSGSIZE") static var EMSGSIZE: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
     @:native("EMULTIHOP") static var EMULTIHOP: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
     @:native("ENAMETOOLONG") static var ENAMETOOLONG: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
-    @:native("ENEEDAUTH") static var ENEEDAUTH: go.syscall.Errno;
+    @:native("ENAVAIL") static var ENAVAIL: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
     @:native("ENETDOWN") static var ENETDOWN: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
     @:native("ENETRESET") static var ENETRESET: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
     @:native("ENETUNREACH") static var ENETUNREACH: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
     @:native("ENFILE") static var ENFILE: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
-    @:native("ENOATTR") static var ENOATTR: go.syscall.Errno;
+    @:native("ENOANO") static var ENOANO: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
     @:native("ENOBUFS") static var ENOBUFS: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
+    **/
+    @:native("ENOCSI") static var ENOCSI: go.syscall.Errno;
+    /**
+        Invented values to support what package os and others expects.
     **/
     @:native("ENODATA") static var ENODATA: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
     @:native("ENODEV") static var ENODEV: go.syscall.Errno;
     /**
-        Errors
+        Go names for Windows errors.
     **/
     @:native("ENOENT") static var ENOENT: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
     @:native("ENOEXEC") static var ENOEXEC: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
+    **/
+    @:native("ENOKEY") static var ENOKEY: go.syscall.Errno;
+    /**
+        Invented values to support what package os and others expects.
     **/
     @:native("ENOLCK") static var ENOLCK: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
     @:native("ENOLINK") static var ENOLINK: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
+    **/
+    @:native("ENOMEDIUM") static var ENOMEDIUM: go.syscall.Errno;
+    /**
+        Invented values to support what package os and others expects.
     **/
     @:native("ENOMEM") static var ENOMEM: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
     @:native("ENOMSG") static var ENOMSG: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
-    @:native("ENOPOLICY") static var ENOPOLICY: go.syscall.Errno;
+    @:native("ENONET") static var ENONET: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
+    **/
+    @:native("ENOPKG") static var ENOPKG: go.syscall.Errno;
+    /**
+        Invented values to support what package os and others expects.
     **/
     @:native("ENOPROTOOPT") static var ENOPROTOOPT: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
     @:native("ENOSPC") static var ENOSPC: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
     @:native("ENOSR") static var ENOSR: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
     @:native("ENOSTR") static var ENOSTR: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
     @:native("ENOSYS") static var ENOSYS: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
     @:native("ENOTBLK") static var ENOTBLK: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
     @:native("ENOTCONN") static var ENOTCONN: go.syscall.Errno;
     /**
-        Errors
+        Go names for Windows errors.
     **/
     @:native("ENOTDIR") static var ENOTDIR: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
     @:native("ENOTEMPTY") static var ENOTEMPTY: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
+    **/
+    @:native("ENOTNAM") static var ENOTNAM: go.syscall.Errno;
+    /**
+        Invented values to support what package os and others expects.
     **/
     @:native("ENOTRECOVERABLE") static var ENOTRECOVERABLE: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
     @:native("ENOTSOCK") static var ENOTSOCK: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
     @:native("ENOTSUP") static var ENOTSUP: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
     @:native("ENOTTY") static var ENOTTY: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
+    **/
+    @:native("ENOTUNIQ") static var ENOTUNIQ: go.syscall.Errno;
+    /**
+        Invented values to support what package os and others expects.
     **/
     @:native("ENXIO") static var ENXIO: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
     @:native("EOPNOTSUPP") static var EOPNOTSUPP: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
     @:native("EOVERFLOW") static var EOVERFLOW: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
     @:native("EOWNERDEAD") static var EOWNERDEAD: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
     @:native("EPERM") static var EPERM: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
     @:native("EPFNOSUPPORT") static var EPFNOSUPPORT: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
     @:native("EPIPE") static var EPIPE: go.syscall.Errno;
     /**
-        Errors
-    **/
-    @:native("EPROCLIM") static var EPROCLIM: go.syscall.Errno;
-    /**
-        Errors
-    **/
-    @:native("EPROCUNAVAIL") static var EPROCUNAVAIL: go.syscall.Errno;
-    /**
-        Errors
-    **/
-    @:native("EPROGMISMATCH") static var EPROGMISMATCH: go.syscall.Errno;
-    /**
-        Errors
-    **/
-    @:native("EPROGUNAVAIL") static var EPROGUNAVAIL: go.syscall.Errno;
-    /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
     @:native("EPROTO") static var EPROTO: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
     @:native("EPROTONOSUPPORT") static var EPROTONOSUPPORT: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
     @:native("EPROTOTYPE") static var EPROTOTYPE: go.syscall.Errno;
     /**
-        Errors
-    **/
-    @:native("EPWROFF") static var EPWROFF: go.syscall.Errno;
-    /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
     @:native("ERANGE") static var ERANGE: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
+    **/
+    @:native("EREMCHG") static var EREMCHG: go.syscall.Errno;
+    /**
+        Invented values to support what package os and others expects.
     **/
     @:native("EREMOTE") static var EREMOTE: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
+    **/
+    @:native("EREMOTEIO") static var EREMOTEIO: go.syscall.Errno;
+    /**
+        Invented values to support what package os and others expects.
+    **/
+    @:native("ERESTART") static var ERESTART: go.syscall.Errno;
+    /**
+        Invented values to support what package os and others expects.
     **/
     @:native("EROFS") static var EROFS: go.syscall.Errno;
+    @:native("ERROR_ACCESS_DENIED") static var ERROR_ACCESS_DENIED: go.syscall.Errno;
+    @:native("ERROR_ALREADY_EXISTS") static var ERROR_ALREADY_EXISTS: go.syscall.Errno;
+    @:native("ERROR_BROKEN_PIPE") static var ERROR_BROKEN_PIPE: go.syscall.Errno;
+    @:native("ERROR_BUFFER_OVERFLOW") static var ERROR_BUFFER_OVERFLOW: go.syscall.Errno;
+    @:native("ERROR_DIR_NOT_EMPTY") static var ERROR_DIR_NOT_EMPTY: go.syscall.Errno;
+    @:native("ERROR_ENVVAR_NOT_FOUND") static var ERROR_ENVVAR_NOT_FOUND: go.syscall.Errno;
+    @:native("ERROR_FILE_EXISTS") static var ERROR_FILE_EXISTS: go.syscall.Errno;
+    @:native("ERROR_FILE_NOT_FOUND") static var ERROR_FILE_NOT_FOUND: go.syscall.Errno;
+    @:native("ERROR_HANDLE_EOF") static var ERROR_HANDLE_EOF: go.syscall.Errno;
+    @:native("ERROR_INSUFFICIENT_BUFFER") static var ERROR_INSUFFICIENT_BUFFER: go.syscall.Errno;
+    @:native("ERROR_IO_PENDING") static var ERROR_IO_PENDING: go.syscall.Errno;
+    @:native("ERROR_MOD_NOT_FOUND") static var ERROR_MOD_NOT_FOUND: go.syscall.Errno;
+    @:native("ERROR_MORE_DATA") static var ERROR_MORE_DATA: go.syscall.Errno;
+    @:native("ERROR_NETNAME_DELETED") static var ERROR_NETNAME_DELETED: go.syscall.Errno;
+    @:native("ERROR_NOT_FOUND") static var ERROR_NOT_FOUND: go.syscall.Errno;
+    @:native("ERROR_NO_MORE_FILES") static var ERROR_NO_MORE_FILES: go.syscall.Errno;
+    @:native("ERROR_OPERATION_ABORTED") static var ERROR_OPERATION_ABORTED: go.syscall.Errno;
+    @:native("ERROR_PATH_NOT_FOUND") static var ERROR_PATH_NOT_FOUND: go.syscall.Errno;
+    @:native("ERROR_PRIVILEGE_NOT_HELD") static var ERROR_PRIVILEGE_NOT_HELD: go.syscall.Errno;
+    @:native("ERROR_PROC_NOT_FOUND") static var ERROR_PROC_NOT_FOUND: go.syscall.Errno;
     /**
-        Errors
-    **/
-    @:native("ERPCMISMATCH") static var ERPCMISMATCH: go.syscall.Errno;
-    /**
-        Errors
-    **/
-    @:native("ESHLIBVERS") static var ESHLIBVERS: go.syscall.Errno;
-    /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
     @:native("ESHUTDOWN") static var ESHUTDOWN: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
     @:native("ESOCKTNOSUPPORT") static var ESOCKTNOSUPPORT: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
     @:native("ESPIPE") static var ESPIPE: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
     @:native("ESRCH") static var ESRCH: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
+    **/
+    @:native("ESRMNT") static var ESRMNT: go.syscall.Errno;
+    /**
+        Invented values to support what package os and others expects.
     **/
     @:native("ESTALE") static var ESTALE: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
+    **/
+    @:native("ESTRPIPE") static var ESTRPIPE: go.syscall.Errno;
+    /**
+        Invented values to support what package os and others expects.
     **/
     @:native("ETIME") static var ETIME: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
     @:native("ETIMEDOUT") static var ETIMEDOUT: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
     @:native("ETOOMANYREFS") static var ETOOMANYREFS: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
     @:native("ETXTBSY") static var ETXTBSY: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
+    **/
+    @:native("EUCLEAN") static var EUCLEAN: go.syscall.Errno;
+    /**
+        Invented values to support what package os and others expects.
+    **/
+    @:native("EUNATCH") static var EUNATCH: go.syscall.Errno;
+    /**
+        Invented values to support what package os and others expects.
     **/
     @:native("EUSERS") static var EUSERS: go.syscall.Errno;
-    @:native("EVFILT_AIO") static var EVFILT_AIO: go.GoInt;
-    @:native("EVFILT_FS") static var EVFILT_FS: go.GoInt;
-    @:native("EVFILT_MACHPORT") static var EVFILT_MACHPORT: go.GoInt;
-    @:native("EVFILT_PROC") static var EVFILT_PROC: go.GoInt;
-    @:native("EVFILT_READ") static var EVFILT_READ: go.GoInt;
-    @:native("EVFILT_SIGNAL") static var EVFILT_SIGNAL: go.GoInt;
-    @:native("EVFILT_SYSCOUNT") static var EVFILT_SYSCOUNT: go.GoInt;
-    @:native("EVFILT_THREADMARKER") static var EVFILT_THREADMARKER: go.GoInt;
-    @:native("EVFILT_TIMER") static var EVFILT_TIMER: go.GoInt;
-    @:native("EVFILT_USER") static var EVFILT_USER: go.GoInt;
-    @:native("EVFILT_VM") static var EVFILT_VM: go.GoInt;
-    @:native("EVFILT_VNODE") static var EVFILT_VNODE: go.GoInt;
-    @:native("EVFILT_WRITE") static var EVFILT_WRITE: go.GoInt;
-    @:native("EV_ADD") static var EV_ADD: go.GoInt;
-    @:native("EV_CLEAR") static var EV_CLEAR: go.GoInt;
-    @:native("EV_DELETE") static var EV_DELETE: go.GoInt;
-    @:native("EV_DISABLE") static var EV_DISABLE: go.GoInt;
-    @:native("EV_DISPATCH") static var EV_DISPATCH: go.GoInt;
-    @:native("EV_ENABLE") static var EV_ENABLE: go.GoInt;
-    @:native("EV_EOF") static var EV_EOF: go.GoInt;
-    @:native("EV_ERROR") static var EV_ERROR: go.GoInt;
-    @:native("EV_FLAG0") static var EV_FLAG0: go.GoInt;
-    @:native("EV_FLAG1") static var EV_FLAG1: go.GoInt;
-    @:native("EV_ONESHOT") static var EV_ONESHOT: go.GoInt;
-    @:native("EV_OOBAND") static var EV_OOBAND: go.GoInt;
-    @:native("EV_POLL") static var EV_POLL: go.GoInt;
-    @:native("EV_RECEIPT") static var EV_RECEIPT: go.GoInt;
-    @:native("EV_SYSFLAGS") static var EV_SYSFLAGS: go.GoInt;
     /**
-        Errors
+        Invented values to support what package os and others expects.
+    **/
+    @:native("EWINDOWS") static var EWINDOWS: go.syscall.Errno;
+    /**
+        Invented values to support what package os and others expects.
     **/
     @:native("EWOULDBLOCK") static var EWOULDBLOCK: go.syscall.Errno;
     /**
-        Errors
+        Invented values to support what package os and others expects.
     **/
     @:native("EXDEV") static var EXDEV: go.syscall.Errno;
-    @:native("EXTA") static var EXTA: go.GoInt;
-    @:native("EXTB") static var EXTB: go.GoInt;
-    @:native("EXTPROC") static var EXTPROC: go.GoInt;
-    @:native("FD_CLOEXEC") static var FD_CLOEXEC: go.GoInt;
-    @:native("FD_SETSIZE") static var FD_SETSIZE: go.GoInt;
-    @:native("FLUSHO") static var FLUSHO: go.GoInt;
-    @:native("F_ADDFILESIGS") static var F_ADDFILESIGS: go.GoInt;
-    @:native("F_ADDSIGS") static var F_ADDSIGS: go.GoInt;
-    @:native("F_ALLOCATEALL") static var F_ALLOCATEALL: go.GoInt;
-    @:native("F_ALLOCATECONTIG") static var F_ALLOCATECONTIG: go.GoInt;
-    @:native("F_CHKCLEAN") static var F_CHKCLEAN: go.GoInt;
-    @:native("F_DUPFD") static var F_DUPFD: go.GoInt;
-    @:native("F_DUPFD_CLOEXEC") static var F_DUPFD_CLOEXEC: go.GoInt;
-    @:native("F_FLUSH_DATA") static var F_FLUSH_DATA: go.GoInt;
-    @:native("F_FREEZE_FS") static var F_FREEZE_FS: go.GoInt;
-    @:native("F_FULLFSYNC") static var F_FULLFSYNC: go.GoInt;
-    @:native("F_GETFD") static var F_GETFD: go.GoInt;
-    @:native("F_GETFL") static var F_GETFL: go.GoInt;
-    @:native("F_GETLK") static var F_GETLK: go.GoInt;
-    @:native("F_GETLKPID") static var F_GETLKPID: go.GoInt;
-    @:native("F_GETNOSIGPIPE") static var F_GETNOSIGPIPE: go.GoInt;
-    @:native("F_GETOWN") static var F_GETOWN: go.GoInt;
-    @:native("F_GETPATH") static var F_GETPATH: go.GoInt;
-    @:native("F_GETPATH_MTMINFO") static var F_GETPATH_MTMINFO: go.GoInt;
-    @:native("F_GETPROTECTIONCLASS") static var F_GETPROTECTIONCLASS: go.GoInt;
-    @:native("F_GLOBAL_NOCACHE") static var F_GLOBAL_NOCACHE: go.GoInt;
-    @:native("F_LOG2PHYS") static var F_LOG2PHYS: go.GoInt;
-    @:native("F_LOG2PHYS_EXT") static var F_LOG2PHYS_EXT: go.GoInt;
-    @:native("F_MARKDEPENDENCY") static var F_MARKDEPENDENCY: go.GoInt;
-    @:native("F_NOCACHE") static var F_NOCACHE: go.GoInt;
-    @:native("F_NODIRECT") static var F_NODIRECT: go.GoInt;
-    @:native("F_OK") static var F_OK: go.GoInt;
-    @:native("F_PATHPKG_CHECK") static var F_PATHPKG_CHECK: go.GoInt;
-    @:native("F_PEOFPOSMODE") static var F_PEOFPOSMODE: go.GoInt;
-    @:native("F_PREALLOCATE") static var F_PREALLOCATE: go.GoInt;
-    @:native("F_RDADVISE") static var F_RDADVISE: go.GoInt;
-    @:native("F_RDAHEAD") static var F_RDAHEAD: go.GoInt;
-    @:native("F_RDLCK") static var F_RDLCK: go.GoInt;
-    @:native("F_READBOOTSTRAP") static var F_READBOOTSTRAP: go.GoInt;
-    @:native("F_SETBACKINGSTORE") static var F_SETBACKINGSTORE: go.GoInt;
-    @:native("F_SETFD") static var F_SETFD: go.GoInt;
-    @:native("F_SETFL") static var F_SETFL: go.GoInt;
-    @:native("F_SETLK") static var F_SETLK: go.GoInt;
-    @:native("F_SETLKW") static var F_SETLKW: go.GoInt;
-    @:native("F_SETNOSIGPIPE") static var F_SETNOSIGPIPE: go.GoInt;
-    @:native("F_SETOWN") static var F_SETOWN: go.GoInt;
-    @:native("F_SETPROTECTIONCLASS") static var F_SETPROTECTIONCLASS: go.GoInt;
-    @:native("F_SETSIZE") static var F_SETSIZE: go.GoInt;
-    @:native("F_THAW_FS") static var F_THAW_FS: go.GoInt;
-    @:native("F_UNLCK") static var F_UNLCK: go.GoInt;
-    @:native("F_VOLPOSMODE") static var F_VOLPOSMODE: go.GoInt;
-    @:native("F_WRITEBOOTSTRAP") static var F_WRITEBOOTSTRAP: go.GoInt;
-    @:native("F_WRLCK") static var F_WRLCK: go.GoInt;
-    @:native("HUPCL") static var HUPCL: go.GoInt;
-    @:native("ICANON") static var ICANON: go.GoInt;
-    @:native("ICMP6_FILTER") static var ICMP6_FILTER: go.GoInt;
-    @:native("ICRNL") static var ICRNL: go.GoInt;
-    @:native("IEXTEN") static var IEXTEN: go.GoInt;
-    @:native("IFF_ALLMULTI") static var IFF_ALLMULTI: go.GoInt;
-    @:native("IFF_ALTPHYS") static var IFF_ALTPHYS: go.GoInt;
+    /**
+        Invented values to support what package os and others expects.
+    **/
+    @:native("EXFULL") static var EXFULL: go.syscall.Errno;
+    @:native("FILE_ACTION_ADDED") static var FILE_ACTION_ADDED: go.GoInt;
+    @:native("FILE_ACTION_MODIFIED") static var FILE_ACTION_MODIFIED: go.GoInt;
+    @:native("FILE_ACTION_REMOVED") static var FILE_ACTION_REMOVED: go.GoInt;
+    @:native("FILE_ACTION_RENAMED_NEW_NAME") static var FILE_ACTION_RENAMED_NEW_NAME: go.GoInt;
+    @:native("FILE_ACTION_RENAMED_OLD_NAME") static var FILE_ACTION_RENAMED_OLD_NAME: go.GoInt;
+    @:native("FILE_APPEND_DATA") static var FILE_APPEND_DATA: go.GoInt;
+    @:native("FILE_ATTRIBUTE_ARCHIVE") static var FILE_ATTRIBUTE_ARCHIVE: go.GoInt;
+    @:native("FILE_ATTRIBUTE_DIRECTORY") static var FILE_ATTRIBUTE_DIRECTORY: go.GoInt;
+    @:native("FILE_ATTRIBUTE_HIDDEN") static var FILE_ATTRIBUTE_HIDDEN: go.GoInt;
+    @:native("FILE_ATTRIBUTE_NORMAL") static var FILE_ATTRIBUTE_NORMAL: go.GoInt;
+    @:native("FILE_ATTRIBUTE_READONLY") static var FILE_ATTRIBUTE_READONLY: go.GoInt;
+    @:native("FILE_ATTRIBUTE_REPARSE_POINT") static var FILE_ATTRIBUTE_REPARSE_POINT: go.GoInt;
+    @:native("FILE_ATTRIBUTE_SYSTEM") static var FILE_ATTRIBUTE_SYSTEM: go.GoInt;
+    @:native("FILE_BEGIN") static var FILE_BEGIN: go.GoInt;
+    @:native("FILE_CURRENT") static var FILE_CURRENT: go.GoInt;
+    @:native("FILE_END") static var FILE_END: go.GoInt;
+    @:native("FILE_FLAG_BACKUP_SEMANTICS") static var FILE_FLAG_BACKUP_SEMANTICS: go.GoInt;
+    @:native("FILE_FLAG_OPEN_REPARSE_POINT") static var FILE_FLAG_OPEN_REPARSE_POINT: go.GoInt;
+    @:native("FILE_FLAG_OVERLAPPED") static var FILE_FLAG_OVERLAPPED: go.GoInt;
+    @:native("FILE_LIST_DIRECTORY") static var FILE_LIST_DIRECTORY: go.GoInt;
+    @:native("FILE_MAP_COPY") static var FILE_MAP_COPY: go.GoInt;
+    @:native("FILE_MAP_EXECUTE") static var FILE_MAP_EXECUTE: go.GoInt;
+    @:native("FILE_MAP_READ") static var FILE_MAP_READ: go.GoInt;
+    @:native("FILE_MAP_WRITE") static var FILE_MAP_WRITE: go.GoInt;
+    @:native("FILE_NOTIFY_CHANGE_ATTRIBUTES") static var FILE_NOTIFY_CHANGE_ATTRIBUTES: go.GoInt;
+    @:native("FILE_NOTIFY_CHANGE_CREATION") static var FILE_NOTIFY_CHANGE_CREATION: go.GoInt;
+    @:native("FILE_NOTIFY_CHANGE_DIR_NAME") static var FILE_NOTIFY_CHANGE_DIR_NAME: go.GoInt;
+    @:native("FILE_NOTIFY_CHANGE_FILE_NAME") static var FILE_NOTIFY_CHANGE_FILE_NAME: go.GoInt;
+    @:native("FILE_NOTIFY_CHANGE_LAST_ACCESS") static var FILE_NOTIFY_CHANGE_LAST_ACCESS: go.GoInt;
+    @:native("FILE_NOTIFY_CHANGE_LAST_WRITE") static var FILE_NOTIFY_CHANGE_LAST_WRITE: go.GoInt;
+    @:native("FILE_NOTIFY_CHANGE_SIZE") static var FILE_NOTIFY_CHANGE_SIZE: go.GoInt;
+    @:native("FILE_SHARE_DELETE") static var FILE_SHARE_DELETE: go.GoInt;
+    @:native("FILE_SHARE_READ") static var FILE_SHARE_READ: go.GoInt;
+    @:native("FILE_SHARE_WRITE") static var FILE_SHARE_WRITE: go.GoInt;
+    @:native("FILE_SKIP_COMPLETION_PORT_ON_SUCCESS") static var FILE_SKIP_COMPLETION_PORT_ON_SUCCESS: go.GoInt;
+    @:native("FILE_SKIP_SET_EVENT_ON_HANDLE") static var FILE_SKIP_SET_EVENT_ON_HANDLE: go.GoInt;
+    @:native("FILE_TYPE_CHAR") static var FILE_TYPE_CHAR: go.GoInt;
+    @:native("FILE_TYPE_DISK") static var FILE_TYPE_DISK: go.GoInt;
+    @:native("FILE_TYPE_PIPE") static var FILE_TYPE_PIPE: go.GoInt;
+    @:native("FILE_TYPE_REMOTE") static var FILE_TYPE_REMOTE: go.GoInt;
+    @:native("FILE_TYPE_UNKNOWN") static var FILE_TYPE_UNKNOWN: go.GoInt;
+    @:native("FILE_WRITE_ATTRIBUTES") static var FILE_WRITE_ATTRIBUTES: go.GoInt;
+    @:native("FORMAT_MESSAGE_ALLOCATE_BUFFER") static var FORMAT_MESSAGE_ALLOCATE_BUFFER: go.GoInt;
+    @:native("FORMAT_MESSAGE_ARGUMENT_ARRAY") static var FORMAT_MESSAGE_ARGUMENT_ARRAY: go.GoInt;
+    @:native("FORMAT_MESSAGE_FROM_HMODULE") static var FORMAT_MESSAGE_FROM_HMODULE: go.GoInt;
+    @:native("FORMAT_MESSAGE_FROM_STRING") static var FORMAT_MESSAGE_FROM_STRING: go.GoInt;
+    @:native("FORMAT_MESSAGE_FROM_SYSTEM") static var FORMAT_MESSAGE_FROM_SYSTEM: go.GoInt;
+    @:native("FORMAT_MESSAGE_IGNORE_INSERTS") static var FORMAT_MESSAGE_IGNORE_INSERTS: go.GoInt;
+    @:native("FORMAT_MESSAGE_MAX_WIDTH_MASK") static var FORMAT_MESSAGE_MAX_WIDTH_MASK: go.GoInt;
+    @:native("FSCTL_GET_REPARSE_POINT") static var FSCTL_GET_REPARSE_POINT: go.GoInt;
+    @:native("GENERIC_ALL") static var GENERIC_ALL: go.GoInt;
+    @:native("GENERIC_EXECUTE") static var GENERIC_EXECUTE: go.GoInt;
+    @:native("GENERIC_READ") static var GENERIC_READ: go.GoInt;
+    @:native("GENERIC_WRITE") static var GENERIC_WRITE: go.GoInt;
+    @:native("GetFileExInfoStandard") static var getFileExInfoStandard: go.GoInt;
+    @:native("GetFileExMaxInfoLevel") static var getFileExMaxInfoLevel: go.GoInt;
+    @:native("HANDLE_FLAG_INHERIT") static var HANDLE_FLAG_INHERIT: go.GoInt;
+    @:native("HKEY_CLASSES_ROOT") static var HKEY_CLASSES_ROOT: go.GoInt;
+    @:native("HKEY_CURRENT_CONFIG") static var HKEY_CURRENT_CONFIG: go.GoInt;
+    @:native("HKEY_CURRENT_USER") static var HKEY_CURRENT_USER: go.GoInt;
+    @:native("HKEY_DYN_DATA") static var HKEY_DYN_DATA: go.GoInt;
+    @:native("HKEY_LOCAL_MACHINE") static var HKEY_LOCAL_MACHINE: go.GoInt;
+    @:native("HKEY_PERFORMANCE_DATA") static var HKEY_PERFORMANCE_DATA: go.GoInt;
+    @:native("HKEY_USERS") static var HKEY_USERS: go.GoInt;
     @:native("IFF_BROADCAST") static var IFF_BROADCAST: go.GoInt;
-    @:native("IFF_DEBUG") static var IFF_DEBUG: go.GoInt;
-    @:native("IFF_LINK0") static var IFF_LINK0: go.GoInt;
-    @:native("IFF_LINK1") static var IFF_LINK1: go.GoInt;
-    @:native("IFF_LINK2") static var IFF_LINK2: go.GoInt;
     @:native("IFF_LOOPBACK") static var IFF_LOOPBACK: go.GoInt;
     @:native("IFF_MULTICAST") static var IFF_MULTICAST: go.GoInt;
-    @:native("IFF_NOARP") static var IFF_NOARP: go.GoInt;
-    @:native("IFF_NOTRAILERS") static var IFF_NOTRAILERS: go.GoInt;
-    @:native("IFF_OACTIVE") static var IFF_OACTIVE: go.GoInt;
-    @:native("IFF_POINTOPOINT") static var IFF_POINTOPOINT: go.GoInt;
-    @:native("IFF_PROMISC") static var IFF_PROMISC: go.GoInt;
-    @:native("IFF_RUNNING") static var IFF_RUNNING: go.GoInt;
-    @:native("IFF_SIMPLEX") static var IFF_SIMPLEX: go.GoInt;
+    @:native("IFF_POINTTOPOINT") static var IFF_POINTTOPOINT: go.GoInt;
     @:native("IFF_UP") static var IFF_UP: go.GoInt;
-    @:native("IFNAMSIZ") static var IFNAMSIZ: go.GoInt;
-    @:native("IFT_1822") static var IFT_1822: go.GoInt;
-    @:native("IFT_AAL5") static var IFT_AAL5: go.GoInt;
-    @:native("IFT_ARCNET") static var IFT_ARCNET: go.GoInt;
-    @:native("IFT_ARCNETPLUS") static var IFT_ARCNETPLUS: go.GoInt;
-    @:native("IFT_ATM") static var IFT_ATM: go.GoInt;
-    @:native("IFT_BRIDGE") static var IFT_BRIDGE: go.GoInt;
-    @:native("IFT_CARP") static var IFT_CARP: go.GoInt;
-    @:native("IFT_CELLULAR") static var IFT_CELLULAR: go.GoInt;
-    @:native("IFT_CEPT") static var IFT_CEPT: go.GoInt;
-    @:native("IFT_DS3") static var IFT_DS3: go.GoInt;
-    @:native("IFT_ENC") static var IFT_ENC: go.GoInt;
-    @:native("IFT_EON") static var IFT_EON: go.GoInt;
-    @:native("IFT_ETHER") static var IFT_ETHER: go.GoInt;
-    @:native("IFT_FAITH") static var IFT_FAITH: go.GoInt;
-    @:native("IFT_FDDI") static var IFT_FDDI: go.GoInt;
-    @:native("IFT_FRELAY") static var IFT_FRELAY: go.GoInt;
-    @:native("IFT_FRELAYDCE") static var IFT_FRELAYDCE: go.GoInt;
-    @:native("IFT_GIF") static var IFT_GIF: go.GoInt;
-    @:native("IFT_HDH1822") static var IFT_HDH1822: go.GoInt;
-    @:native("IFT_HIPPI") static var IFT_HIPPI: go.GoInt;
-    @:native("IFT_HSSI") static var IFT_HSSI: go.GoInt;
-    @:native("IFT_HY") static var IFT_HY: go.GoInt;
-    @:native("IFT_IEEE1394") static var IFT_IEEE1394: go.GoInt;
-    @:native("IFT_IEEE8023ADLAG") static var IFT_IEEE8023ADLAG: go.GoInt;
-    @:native("IFT_ISDNBASIC") static var IFT_ISDNBASIC: go.GoInt;
-    @:native("IFT_ISDNPRIMARY") static var IFT_ISDNPRIMARY: go.GoInt;
-    @:native("IFT_ISO88022LLC") static var IFT_ISO88022LLC: go.GoInt;
-    @:native("IFT_ISO88023") static var IFT_ISO88023: go.GoInt;
-    @:native("IFT_ISO88024") static var IFT_ISO88024: go.GoInt;
-    @:native("IFT_ISO88025") static var IFT_ISO88025: go.GoInt;
-    @:native("IFT_ISO88026") static var IFT_ISO88026: go.GoInt;
-    @:native("IFT_L2VLAN") static var IFT_L2VLAN: go.GoInt;
-    @:native("IFT_LAPB") static var IFT_LAPB: go.GoInt;
-    @:native("IFT_LOCALTALK") static var IFT_LOCALTALK: go.GoInt;
-    @:native("IFT_LOOP") static var IFT_LOOP: go.GoInt;
-    @:native("IFT_MIOX25") static var IFT_MIOX25: go.GoInt;
-    @:native("IFT_MODEM") static var IFT_MODEM: go.GoInt;
-    @:native("IFT_NSIP") static var IFT_NSIP: go.GoInt;
-    @:native("IFT_OTHER") static var IFT_OTHER: go.GoInt;
-    @:native("IFT_P10") static var IFT_P10: go.GoInt;
-    @:native("IFT_P80") static var IFT_P80: go.GoInt;
-    @:native("IFT_PARA") static var IFT_PARA: go.GoInt;
-    @:native("IFT_PDP") static var IFT_PDP: go.GoInt;
-    @:native("IFT_PFLOG") static var IFT_PFLOG: go.GoInt;
-    @:native("IFT_PFSYNC") static var IFT_PFSYNC: go.GoInt;
-    @:native("IFT_PPP") static var IFT_PPP: go.GoInt;
-    @:native("IFT_PROPMUX") static var IFT_PROPMUX: go.GoInt;
-    @:native("IFT_PROPVIRTUAL") static var IFT_PROPVIRTUAL: go.GoInt;
-    @:native("IFT_PTPSERIAL") static var IFT_PTPSERIAL: go.GoInt;
-    @:native("IFT_RS232") static var IFT_RS232: go.GoInt;
-    @:native("IFT_SDLC") static var IFT_SDLC: go.GoInt;
-    @:native("IFT_SIP") static var IFT_SIP: go.GoInt;
-    @:native("IFT_SLIP") static var IFT_SLIP: go.GoInt;
-    @:native("IFT_SMDSDXI") static var IFT_SMDSDXI: go.GoInt;
-    @:native("IFT_SMDSICIP") static var IFT_SMDSICIP: go.GoInt;
-    @:native("IFT_SONET") static var IFT_SONET: go.GoInt;
-    @:native("IFT_SONETPATH") static var IFT_SONETPATH: go.GoInt;
-    @:native("IFT_SONETVT") static var IFT_SONETVT: go.GoInt;
-    @:native("IFT_STARLAN") static var IFT_STARLAN: go.GoInt;
-    @:native("IFT_STF") static var IFT_STF: go.GoInt;
-    @:native("IFT_T1") static var IFT_T1: go.GoInt;
-    @:native("IFT_ULTRA") static var IFT_ULTRA: go.GoInt;
-    @:native("IFT_V35") static var IFT_V35: go.GoInt;
-    @:native("IFT_X25") static var IFT_X25: go.GoInt;
-    @:native("IFT_X25DDN") static var IFT_X25DDN: go.GoInt;
-    @:native("IFT_X25PLE") static var IFT_X25PLE: go.GoInt;
-    @:native("IFT_XETHER") static var IFT_XETHER: go.GoInt;
-    @:native("IGNBRK") static var IGNBRK: go.GoInt;
-    @:native("IGNCR") static var IGNCR: go.GoInt;
-    @:native("IGNPAR") static var IGNPAR: go.GoInt;
-    @:native("IMAXBEL") static var IMAXBEL: go.GoInt;
-    @:native("INLCR") static var INLCR: go.GoInt;
-    @:native("INPCK") static var INPCK: go.GoInt;
-    @:native("IN_CLASSA_HOST") static var IN_CLASSA_HOST: go.GoInt;
-    @:native("IN_CLASSA_MAX") static var IN_CLASSA_MAX: go.GoInt;
-    @:native("IN_CLASSA_NET") static var IN_CLASSA_NET: go.GoInt;
-    @:native("IN_CLASSA_NSHIFT") static var IN_CLASSA_NSHIFT: go.GoInt;
-    @:native("IN_CLASSB_HOST") static var IN_CLASSB_HOST: go.GoInt;
-    @:native("IN_CLASSB_MAX") static var IN_CLASSB_MAX: go.GoInt;
-    @:native("IN_CLASSB_NET") static var IN_CLASSB_NET: go.GoInt;
-    @:native("IN_CLASSB_NSHIFT") static var IN_CLASSB_NSHIFT: go.GoInt;
-    @:native("IN_CLASSC_HOST") static var IN_CLASSC_HOST: go.GoInt;
-    @:native("IN_CLASSC_NET") static var IN_CLASSC_NET: go.GoInt;
-    @:native("IN_CLASSC_NSHIFT") static var IN_CLASSC_NSHIFT: go.GoInt;
-    @:native("IN_CLASSD_HOST") static var IN_CLASSD_HOST: go.GoInt;
-    @:native("IN_CLASSD_NET") static var IN_CLASSD_NET: go.GoInt;
-    @:native("IN_CLASSD_NSHIFT") static var IN_CLASSD_NSHIFT: go.GoInt;
-    @:native("IN_LINKLOCALNETNUM") static var IN_LINKLOCALNETNUM: go.GoInt;
-    @:native("IN_LOOPBACKNET") static var IN_LOOPBACKNET: go.GoInt;
-    @:native("IPPROTO_3PC") static var IPPROTO_3PC: go.GoInt;
-    @:native("IPPROTO_ADFS") static var IPPROTO_ADFS: go.GoInt;
-    @:native("IPPROTO_AH") static var IPPROTO_AH: go.GoInt;
-    @:native("IPPROTO_AHIP") static var IPPROTO_AHIP: go.GoInt;
-    @:native("IPPROTO_APES") static var IPPROTO_APES: go.GoInt;
-    @:native("IPPROTO_ARGUS") static var IPPROTO_ARGUS: go.GoInt;
-    @:native("IPPROTO_AX25") static var IPPROTO_AX25: go.GoInt;
-    @:native("IPPROTO_BHA") static var IPPROTO_BHA: go.GoInt;
-    @:native("IPPROTO_BLT") static var IPPROTO_BLT: go.GoInt;
-    @:native("IPPROTO_BRSATMON") static var IPPROTO_BRSATMON: go.GoInt;
-    @:native("IPPROTO_CFTP") static var IPPROTO_CFTP: go.GoInt;
-    @:native("IPPROTO_CHAOS") static var IPPROTO_CHAOS: go.GoInt;
-    @:native("IPPROTO_CMTP") static var IPPROTO_CMTP: go.GoInt;
-    @:native("IPPROTO_CPHB") static var IPPROTO_CPHB: go.GoInt;
-    @:native("IPPROTO_CPNX") static var IPPROTO_CPNX: go.GoInt;
-    @:native("IPPROTO_DDP") static var IPPROTO_DDP: go.GoInt;
-    @:native("IPPROTO_DGP") static var IPPROTO_DGP: go.GoInt;
-    @:native("IPPROTO_DIVERT") static var IPPROTO_DIVERT: go.GoInt;
-    @:native("IPPROTO_DONE") static var IPPROTO_DONE: go.GoInt;
-    @:native("IPPROTO_DSTOPTS") static var IPPROTO_DSTOPTS: go.GoInt;
-    @:native("IPPROTO_EGP") static var IPPROTO_EGP: go.GoInt;
-    @:native("IPPROTO_EMCON") static var IPPROTO_EMCON: go.GoInt;
-    @:native("IPPROTO_ENCAP") static var IPPROTO_ENCAP: go.GoInt;
-    @:native("IPPROTO_EON") static var IPPROTO_EON: go.GoInt;
-    @:native("IPPROTO_ESP") static var IPPROTO_ESP: go.GoInt;
-    @:native("IPPROTO_ETHERIP") static var IPPROTO_ETHERIP: go.GoInt;
-    @:native("IPPROTO_FRAGMENT") static var IPPROTO_FRAGMENT: go.GoInt;
-    @:native("IPPROTO_GGP") static var IPPROTO_GGP: go.GoInt;
-    @:native("IPPROTO_GMTP") static var IPPROTO_GMTP: go.GoInt;
-    @:native("IPPROTO_GRE") static var IPPROTO_GRE: go.GoInt;
-    @:native("IPPROTO_HELLO") static var IPPROTO_HELLO: go.GoInt;
-    @:native("IPPROTO_HMP") static var IPPROTO_HMP: go.GoInt;
-    @:native("IPPROTO_HOPOPTS") static var IPPROTO_HOPOPTS: go.GoInt;
-    @:native("IPPROTO_ICMP") static var IPPROTO_ICMP: go.GoInt;
-    @:native("IPPROTO_ICMPV6") static var IPPROTO_ICMPV6: go.GoInt;
-    @:native("IPPROTO_IDP") static var IPPROTO_IDP: go.GoInt;
-    @:native("IPPROTO_IDPR") static var IPPROTO_IDPR: go.GoInt;
-    @:native("IPPROTO_IDRP") static var IPPROTO_IDRP: go.GoInt;
-    @:native("IPPROTO_IGMP") static var IPPROTO_IGMP: go.GoInt;
-    @:native("IPPROTO_IGP") static var IPPROTO_IGP: go.GoInt;
-    @:native("IPPROTO_IGRP") static var IPPROTO_IGRP: go.GoInt;
-    @:native("IPPROTO_IL") static var IPPROTO_IL: go.GoInt;
-    @:native("IPPROTO_INLSP") static var IPPROTO_INLSP: go.GoInt;
-    @:native("IPPROTO_INP") static var IPPROTO_INP: go.GoInt;
+    @:native("IGNORE") static var IGNORE: go.GoInt;
+    @:native("INFINITE") static var INFINITE: go.GoInt;
+    @:native("INVALID_FILE_ATTRIBUTES") static var INVALID_FILE_ATTRIBUTES: go.GoInt;
+    @:native("IOC_IN") static var IOC_IN: go.GoInt;
+    @:native("IOC_INOUT") static var IOC_INOUT: go.GoInt;
+    @:native("IOC_OUT") static var IOC_OUT: go.GoInt;
+    @:native("IOC_VENDOR") static var IOC_VENDOR: go.GoInt;
+    @:native("IOC_WS2") static var IOC_WS2: go.GoInt;
+    @:native("IO_REPARSE_TAG_SYMLINK") static var IO_REPARSE_TAG_SYMLINK: go.GoInt;
     @:native("IPPROTO_IP") static var IPPROTO_IP: go.GoInt;
-    @:native("IPPROTO_IPCOMP") static var IPPROTO_IPCOMP: go.GoInt;
-    @:native("IPPROTO_IPCV") static var IPPROTO_IPCV: go.GoInt;
-    @:native("IPPROTO_IPEIP") static var IPPROTO_IPEIP: go.GoInt;
-    @:native("IPPROTO_IPIP") static var IPPROTO_IPIP: go.GoInt;
-    @:native("IPPROTO_IPPC") static var IPPROTO_IPPC: go.GoInt;
-    @:native("IPPROTO_IPV4") static var IPPROTO_IPV4: go.GoInt;
     @:native("IPPROTO_IPV6") static var IPPROTO_IPV6: go.GoInt;
-    @:native("IPPROTO_IRTP") static var IPPROTO_IRTP: go.GoInt;
-    @:native("IPPROTO_KRYPTOLAN") static var IPPROTO_KRYPTOLAN: go.GoInt;
-    @:native("IPPROTO_LARP") static var IPPROTO_LARP: go.GoInt;
-    @:native("IPPROTO_LEAF1") static var IPPROTO_LEAF1: go.GoInt;
-    @:native("IPPROTO_LEAF2") static var IPPROTO_LEAF2: go.GoInt;
-    @:native("IPPROTO_MAX") static var IPPROTO_MAX: go.GoInt;
-    @:native("IPPROTO_MAXID") static var IPPROTO_MAXID: go.GoInt;
-    @:native("IPPROTO_MEAS") static var IPPROTO_MEAS: go.GoInt;
-    @:native("IPPROTO_MHRP") static var IPPROTO_MHRP: go.GoInt;
-    @:native("IPPROTO_MICP") static var IPPROTO_MICP: go.GoInt;
-    @:native("IPPROTO_MTP") static var IPPROTO_MTP: go.GoInt;
-    @:native("IPPROTO_MUX") static var IPPROTO_MUX: go.GoInt;
-    @:native("IPPROTO_ND") static var IPPROTO_ND: go.GoInt;
-    @:native("IPPROTO_NHRP") static var IPPROTO_NHRP: go.GoInt;
-    @:native("IPPROTO_NONE") static var IPPROTO_NONE: go.GoInt;
-    @:native("IPPROTO_NSP") static var IPPROTO_NSP: go.GoInt;
-    @:native("IPPROTO_NVPII") static var IPPROTO_NVPII: go.GoInt;
-    @:native("IPPROTO_OSPFIGP") static var IPPROTO_OSPFIGP: go.GoInt;
-    @:native("IPPROTO_PGM") static var IPPROTO_PGM: go.GoInt;
-    @:native("IPPROTO_PIGP") static var IPPROTO_PIGP: go.GoInt;
-    @:native("IPPROTO_PIM") static var IPPROTO_PIM: go.GoInt;
-    @:native("IPPROTO_PRM") static var IPPROTO_PRM: go.GoInt;
-    @:native("IPPROTO_PUP") static var IPPROTO_PUP: go.GoInt;
-    @:native("IPPROTO_PVP") static var IPPROTO_PVP: go.GoInt;
-    @:native("IPPROTO_RAW") static var IPPROTO_RAW: go.GoInt;
-    @:native("IPPROTO_RCCMON") static var IPPROTO_RCCMON: go.GoInt;
-    @:native("IPPROTO_RDP") static var IPPROTO_RDP: go.GoInt;
-    @:native("IPPROTO_ROUTING") static var IPPROTO_ROUTING: go.GoInt;
-    @:native("IPPROTO_RSVP") static var IPPROTO_RSVP: go.GoInt;
-    @:native("IPPROTO_RVD") static var IPPROTO_RVD: go.GoInt;
-    @:native("IPPROTO_SATEXPAK") static var IPPROTO_SATEXPAK: go.GoInt;
-    @:native("IPPROTO_SATMON") static var IPPROTO_SATMON: go.GoInt;
-    @:native("IPPROTO_SCCSP") static var IPPROTO_SCCSP: go.GoInt;
-    @:native("IPPROTO_SCTP") static var IPPROTO_SCTP: go.GoInt;
-    @:native("IPPROTO_SDRP") static var IPPROTO_SDRP: go.GoInt;
-    @:native("IPPROTO_SEP") static var IPPROTO_SEP: go.GoInt;
-    @:native("IPPROTO_SRPC") static var IPPROTO_SRPC: go.GoInt;
-    @:native("IPPROTO_ST") static var IPPROTO_ST: go.GoInt;
-    @:native("IPPROTO_SVMTP") static var IPPROTO_SVMTP: go.GoInt;
-    @:native("IPPROTO_SWIPE") static var IPPROTO_SWIPE: go.GoInt;
-    @:native("IPPROTO_TCF") static var IPPROTO_TCF: go.GoInt;
     @:native("IPPROTO_TCP") static var IPPROTO_TCP: go.GoInt;
-    @:native("IPPROTO_TP") static var IPPROTO_TP: go.GoInt;
-    @:native("IPPROTO_TPXX") static var IPPROTO_TPXX: go.GoInt;
-    @:native("IPPROTO_TRUNK1") static var IPPROTO_TRUNK1: go.GoInt;
-    @:native("IPPROTO_TRUNK2") static var IPPROTO_TRUNK2: go.GoInt;
-    @:native("IPPROTO_TTP") static var IPPROTO_TTP: go.GoInt;
     @:native("IPPROTO_UDP") static var IPPROTO_UDP: go.GoInt;
-    @:native("IPPROTO_VINES") static var IPPROTO_VINES: go.GoInt;
-    @:native("IPPROTO_VISA") static var IPPROTO_VISA: go.GoInt;
-    @:native("IPPROTO_VMTP") static var IPPROTO_VMTP: go.GoInt;
-    @:native("IPPROTO_WBEXPAK") static var IPPROTO_WBEXPAK: go.GoInt;
-    @:native("IPPROTO_WBMON") static var IPPROTO_WBMON: go.GoInt;
-    @:native("IPPROTO_WSN") static var IPPROTO_WSN: go.GoInt;
-    @:native("IPPROTO_XNET") static var IPPROTO_XNET: go.GoInt;
-    @:native("IPPROTO_XTP") static var IPPROTO_XTP: go.GoInt;
-    @:native("IPV6_2292DSTOPTS") static var IPV6_2292DSTOPTS: go.GoInt;
-    @:native("IPV6_2292HOPLIMIT") static var IPV6_2292HOPLIMIT: go.GoInt;
-    @:native("IPV6_2292HOPOPTS") static var IPV6_2292HOPOPTS: go.GoInt;
-    @:native("IPV6_2292NEXTHOP") static var IPV6_2292NEXTHOP: go.GoInt;
-    @:native("IPV6_2292PKTINFO") static var IPV6_2292PKTINFO: go.GoInt;
-    @:native("IPV6_2292PKTOPTIONS") static var IPV6_2292PKTOPTIONS: go.GoInt;
-    @:native("IPV6_2292RTHDR") static var IPV6_2292RTHDR: go.GoInt;
-    @:native("IPV6_BINDV6ONLY") static var IPV6_BINDV6ONLY: go.GoInt;
-    @:native("IPV6_BOUND_IF") static var IPV6_BOUND_IF: go.GoInt;
-    @:native("IPV6_CHECKSUM") static var IPV6_CHECKSUM: go.GoInt;
-    @:native("IPV6_DEFAULT_MULTICAST_HOPS") static var IPV6_DEFAULT_MULTICAST_HOPS: go.GoInt;
-    @:native("IPV6_DEFAULT_MULTICAST_LOOP") static var IPV6_DEFAULT_MULTICAST_LOOP: go.GoInt;
-    @:native("IPV6_DEFHLIM") static var IPV6_DEFHLIM: go.GoInt;
-    @:native("IPV6_FAITH") static var IPV6_FAITH: go.GoInt;
-    @:native("IPV6_FLOWINFO_MASK") static var IPV6_FLOWINFO_MASK: go.GoInt;
-    @:native("IPV6_FLOWLABEL_MASK") static var IPV6_FLOWLABEL_MASK: go.GoInt;
-    @:native("IPV6_FRAGTTL") static var IPV6_FRAGTTL: go.GoInt;
-    @:native("IPV6_FW_ADD") static var IPV6_FW_ADD: go.GoInt;
-    @:native("IPV6_FW_DEL") static var IPV6_FW_DEL: go.GoInt;
-    @:native("IPV6_FW_FLUSH") static var IPV6_FW_FLUSH: go.GoInt;
-    @:native("IPV6_FW_GET") static var IPV6_FW_GET: go.GoInt;
-    @:native("IPV6_FW_ZERO") static var IPV6_FW_ZERO: go.GoInt;
-    @:native("IPV6_HLIMDEC") static var IPV6_HLIMDEC: go.GoInt;
-    @:native("IPV6_IPSEC_POLICY") static var IPV6_IPSEC_POLICY: go.GoInt;
     @:native("IPV6_JOIN_GROUP") static var IPV6_JOIN_GROUP: go.GoInt;
     @:native("IPV6_LEAVE_GROUP") static var IPV6_LEAVE_GROUP: go.GoInt;
-    @:native("IPV6_MAXHLIM") static var IPV6_MAXHLIM: go.GoInt;
-    @:native("IPV6_MAXOPTHDR") static var IPV6_MAXOPTHDR: go.GoInt;
-    @:native("IPV6_MAXPACKET") static var IPV6_MAXPACKET: go.GoInt;
-    @:native("IPV6_MAX_GROUP_SRC_FILTER") static var IPV6_MAX_GROUP_SRC_FILTER: go.GoInt;
-    @:native("IPV6_MAX_MEMBERSHIPS") static var IPV6_MAX_MEMBERSHIPS: go.GoInt;
-    @:native("IPV6_MAX_SOCK_SRC_FILTER") static var IPV6_MAX_SOCK_SRC_FILTER: go.GoInt;
-    @:native("IPV6_MIN_MEMBERSHIPS") static var IPV6_MIN_MEMBERSHIPS: go.GoInt;
-    @:native("IPV6_MMTU") static var IPV6_MMTU: go.GoInt;
     @:native("IPV6_MULTICAST_HOPS") static var IPV6_MULTICAST_HOPS: go.GoInt;
     @:native("IPV6_MULTICAST_IF") static var IPV6_MULTICAST_IF: go.GoInt;
     @:native("IPV6_MULTICAST_LOOP") static var IPV6_MULTICAST_LOOP: go.GoInt;
-    @:native("IPV6_PORTRANGE") static var IPV6_PORTRANGE: go.GoInt;
-    @:native("IPV6_PORTRANGE_DEFAULT") static var IPV6_PORTRANGE_DEFAULT: go.GoInt;
-    @:native("IPV6_PORTRANGE_HIGH") static var IPV6_PORTRANGE_HIGH: go.GoInt;
-    @:native("IPV6_PORTRANGE_LOW") static var IPV6_PORTRANGE_LOW: go.GoInt;
-    @:native("IPV6_RECVTCLASS") static var IPV6_RECVTCLASS: go.GoInt;
-    @:native("IPV6_RTHDR_LOOSE") static var IPV6_RTHDR_LOOSE: go.GoInt;
-    @:native("IPV6_RTHDR_STRICT") static var IPV6_RTHDR_STRICT: go.GoInt;
-    @:native("IPV6_RTHDR_TYPE_0") static var IPV6_RTHDR_TYPE_0: go.GoInt;
-    @:native("IPV6_SOCKOPT_RESERVED1") static var IPV6_SOCKOPT_RESERVED1: go.GoInt;
-    @:native("IPV6_TCLASS") static var IPV6_TCLASS: go.GoInt;
     @:native("IPV6_UNICAST_HOPS") static var IPV6_UNICAST_HOPS: go.GoInt;
     @:native("IPV6_V6ONLY") static var IPV6_V6ONLY: go.GoInt;
-    @:native("IPV6_VERSION") static var IPV6_VERSION: go.GoInt;
-    @:native("IPV6_VERSION_MASK") static var IPV6_VERSION_MASK: go.GoInt;
     @:native("IP_ADD_MEMBERSHIP") static var IP_ADD_MEMBERSHIP: go.GoInt;
-    @:native("IP_ADD_SOURCE_MEMBERSHIP") static var IP_ADD_SOURCE_MEMBERSHIP: go.GoInt;
-    @:native("IP_BLOCK_SOURCE") static var IP_BLOCK_SOURCE: go.GoInt;
-    @:native("IP_BOUND_IF") static var IP_BOUND_IF: go.GoInt;
-    @:native("IP_DEFAULT_MULTICAST_LOOP") static var IP_DEFAULT_MULTICAST_LOOP: go.GoInt;
-    @:native("IP_DEFAULT_MULTICAST_TTL") static var IP_DEFAULT_MULTICAST_TTL: go.GoInt;
-    @:native("IP_DF") static var IP_DF: go.GoInt;
     @:native("IP_DROP_MEMBERSHIP") static var IP_DROP_MEMBERSHIP: go.GoInt;
-    @:native("IP_DROP_SOURCE_MEMBERSHIP") static var IP_DROP_SOURCE_MEMBERSHIP: go.GoInt;
-    @:native("IP_DUMMYNET_CONFIGURE") static var IP_DUMMYNET_CONFIGURE: go.GoInt;
-    @:native("IP_DUMMYNET_DEL") static var IP_DUMMYNET_DEL: go.GoInt;
-    @:native("IP_DUMMYNET_FLUSH") static var IP_DUMMYNET_FLUSH: go.GoInt;
-    @:native("IP_DUMMYNET_GET") static var IP_DUMMYNET_GET: go.GoInt;
-    @:native("IP_FAITH") static var IP_FAITH: go.GoInt;
-    @:native("IP_FW_ADD") static var IP_FW_ADD: go.GoInt;
-    @:native("IP_FW_DEL") static var IP_FW_DEL: go.GoInt;
-    @:native("IP_FW_FLUSH") static var IP_FW_FLUSH: go.GoInt;
-    @:native("IP_FW_GET") static var IP_FW_GET: go.GoInt;
-    @:native("IP_FW_RESETLOG") static var IP_FW_RESETLOG: go.GoInt;
-    @:native("IP_FW_ZERO") static var IP_FW_ZERO: go.GoInt;
-    @:native("IP_HDRINCL") static var IP_HDRINCL: go.GoInt;
-    @:native("IP_IPSEC_POLICY") static var IP_IPSEC_POLICY: go.GoInt;
-    @:native("IP_MAXPACKET") static var IP_MAXPACKET: go.GoInt;
-    @:native("IP_MAX_GROUP_SRC_FILTER") static var IP_MAX_GROUP_SRC_FILTER: go.GoInt;
-    @:native("IP_MAX_MEMBERSHIPS") static var IP_MAX_MEMBERSHIPS: go.GoInt;
-    @:native("IP_MAX_SOCK_MUTE_FILTER") static var IP_MAX_SOCK_MUTE_FILTER: go.GoInt;
-    @:native("IP_MAX_SOCK_SRC_FILTER") static var IP_MAX_SOCK_SRC_FILTER: go.GoInt;
-    @:native("IP_MF") static var IP_MF: go.GoInt;
-    @:native("IP_MIN_MEMBERSHIPS") static var IP_MIN_MEMBERSHIPS: go.GoInt;
-    @:native("IP_MSFILTER") static var IP_MSFILTER: go.GoInt;
-    @:native("IP_MSS") static var IP_MSS: go.GoInt;
     @:native("IP_MULTICAST_IF") static var IP_MULTICAST_IF: go.GoInt;
-    @:native("IP_MULTICAST_IFINDEX") static var IP_MULTICAST_IFINDEX: go.GoInt;
     @:native("IP_MULTICAST_LOOP") static var IP_MULTICAST_LOOP: go.GoInt;
     @:native("IP_MULTICAST_TTL") static var IP_MULTICAST_TTL: go.GoInt;
-    @:native("IP_MULTICAST_VIF") static var IP_MULTICAST_VIF: go.GoInt;
-    @:native("IP_NAT__XXX") static var IP_NAT__XXX: go.GoInt;
-    @:native("IP_OFFMASK") static var IP_OFFMASK: go.GoInt;
-    @:native("IP_OLD_FW_ADD") static var IP_OLD_FW_ADD: go.GoInt;
-    @:native("IP_OLD_FW_DEL") static var IP_OLD_FW_DEL: go.GoInt;
-    @:native("IP_OLD_FW_FLUSH") static var IP_OLD_FW_FLUSH: go.GoInt;
-    @:native("IP_OLD_FW_GET") static var IP_OLD_FW_GET: go.GoInt;
-    @:native("IP_OLD_FW_RESETLOG") static var IP_OLD_FW_RESETLOG: go.GoInt;
-    @:native("IP_OLD_FW_ZERO") static var IP_OLD_FW_ZERO: go.GoInt;
-    @:native("IP_OPTIONS") static var IP_OPTIONS: go.GoInt;
-    @:native("IP_PKTINFO") static var IP_PKTINFO: go.GoInt;
-    @:native("IP_PORTRANGE") static var IP_PORTRANGE: go.GoInt;
-    @:native("IP_PORTRANGE_DEFAULT") static var IP_PORTRANGE_DEFAULT: go.GoInt;
-    @:native("IP_PORTRANGE_HIGH") static var IP_PORTRANGE_HIGH: go.GoInt;
-    @:native("IP_PORTRANGE_LOW") static var IP_PORTRANGE_LOW: go.GoInt;
-    @:native("IP_RECVDSTADDR") static var IP_RECVDSTADDR: go.GoInt;
-    @:native("IP_RECVIF") static var IP_RECVIF: go.GoInt;
-    @:native("IP_RECVOPTS") static var IP_RECVOPTS: go.GoInt;
-    @:native("IP_RECVPKTINFO") static var IP_RECVPKTINFO: go.GoInt;
-    @:native("IP_RECVRETOPTS") static var IP_RECVRETOPTS: go.GoInt;
-    @:native("IP_RECVTTL") static var IP_RECVTTL: go.GoInt;
-    @:native("IP_RETOPTS") static var IP_RETOPTS: go.GoInt;
-    @:native("IP_RF") static var IP_RF: go.GoInt;
-    @:native("IP_RSVP_OFF") static var IP_RSVP_OFF: go.GoInt;
-    @:native("IP_RSVP_ON") static var IP_RSVP_ON: go.GoInt;
-    @:native("IP_RSVP_VIF_OFF") static var IP_RSVP_VIF_OFF: go.GoInt;
-    @:native("IP_RSVP_VIF_ON") static var IP_RSVP_VIF_ON: go.GoInt;
-    @:native("IP_STRIPHDR") static var IP_STRIPHDR: go.GoInt;
     @:native("IP_TOS") static var IP_TOS: go.GoInt;
-    @:native("IP_TRAFFIC_MGT_BACKGROUND") static var IP_TRAFFIC_MGT_BACKGROUND: go.GoInt;
     @:native("IP_TTL") static var IP_TTL: go.GoInt;
-    @:native("IP_UNBLOCK_SOURCE") static var IP_UNBLOCK_SOURCE: go.GoInt;
-    @:native("ISIG") static var ISIG: go.GoInt;
-    @:native("ISTRIP") static var ISTRIP: go.GoInt;
-    @:native("IUTF8") static var IUTF8: go.GoInt;
-    @:native("IXANY") static var IXANY: go.GoInt;
-    @:native("IXOFF") static var IXOFF: go.GoInt;
-    @:native("IXON") static var IXON: go.GoInt;
     @:native("ImplementsGetwd") static var implementsGetwd: Bool;
-    @:native("LOCK_EX") static var LOCK_EX: go.GoInt;
-    @:native("LOCK_NB") static var LOCK_NB: go.GoInt;
-    @:native("LOCK_SH") static var LOCK_SH: go.GoInt;
-    @:native("LOCK_UN") static var LOCK_UN: go.GoInt;
-    @:native("MADV_CAN_REUSE") static var MADV_CAN_REUSE: go.GoInt;
-    @:native("MADV_DONTNEED") static var MADV_DONTNEED: go.GoInt;
-    @:native("MADV_FREE") static var MADV_FREE: go.GoInt;
-    @:native("MADV_FREE_REUSABLE") static var MADV_FREE_REUSABLE: go.GoInt;
-    @:native("MADV_FREE_REUSE") static var MADV_FREE_REUSE: go.GoInt;
-    @:native("MADV_NORMAL") static var MADV_NORMAL: go.GoInt;
-    @:native("MADV_RANDOM") static var MADV_RANDOM: go.GoInt;
-    @:native("MADV_SEQUENTIAL") static var MADV_SEQUENTIAL: go.GoInt;
-    @:native("MADV_WILLNEED") static var MADV_WILLNEED: go.GoInt;
-    @:native("MADV_ZERO_WIRED_PAGES") static var MADV_ZERO_WIRED_PAGES: go.GoInt;
-    @:native("MAP_ANON") static var MAP_ANON: go.GoInt;
-    @:native("MAP_COPY") static var MAP_COPY: go.GoInt;
-    @:native("MAP_FILE") static var MAP_FILE: go.GoInt;
-    @:native("MAP_FIXED") static var MAP_FIXED: go.GoInt;
-    @:native("MAP_HASSEMAPHORE") static var MAP_HASSEMAPHORE: go.GoInt;
-    @:native("MAP_JIT") static var MAP_JIT: go.GoInt;
-    @:native("MAP_NOCACHE") static var MAP_NOCACHE: go.GoInt;
-    @:native("MAP_NOEXTEND") static var MAP_NOEXTEND: go.GoInt;
-    @:native("MAP_NORESERVE") static var MAP_NORESERVE: go.GoInt;
-    @:native("MAP_PRIVATE") static var MAP_PRIVATE: go.GoInt;
-    @:native("MAP_RENAME") static var MAP_RENAME: go.GoInt;
-    @:native("MAP_RESERVED0080") static var MAP_RESERVED0080: go.GoInt;
-    @:native("MAP_SHARED") static var MAP_SHARED: go.GoInt;
-    @:native("MCL_CURRENT") static var MCL_CURRENT: go.GoInt;
-    @:native("MCL_FUTURE") static var MCL_FUTURE: go.GoInt;
-    @:native("MSG_CTRUNC") static var MSG_CTRUNC: go.GoInt;
-    @:native("MSG_DONTROUTE") static var MSG_DONTROUTE: go.GoInt;
-    @:native("MSG_DONTWAIT") static var MSG_DONTWAIT: go.GoInt;
-    @:native("MSG_EOF") static var MSG_EOF: go.GoInt;
-    @:native("MSG_EOR") static var MSG_EOR: go.GoInt;
-    @:native("MSG_FLUSH") static var MSG_FLUSH: go.GoInt;
-    @:native("MSG_HAVEMORE") static var MSG_HAVEMORE: go.GoInt;
-    @:native("MSG_HOLD") static var MSG_HOLD: go.GoInt;
-    @:native("MSG_NEEDSA") static var MSG_NEEDSA: go.GoInt;
-    @:native("MSG_OOB") static var MSG_OOB: go.GoInt;
-    @:native("MSG_PEEK") static var MSG_PEEK: go.GoInt;
-    @:native("MSG_RCVMORE") static var MSG_RCVMORE: go.GoInt;
-    @:native("MSG_SEND") static var MSG_SEND: go.GoInt;
-    @:native("MSG_TRUNC") static var MSG_TRUNC: go.GoInt;
-    @:native("MSG_WAITALL") static var MSG_WAITALL: go.GoInt;
-    @:native("MSG_WAITSTREAM") static var MSG_WAITSTREAM: go.GoInt;
-    @:native("MS_ASYNC") static var MS_ASYNC: go.GoInt;
-    @:native("MS_DEACTIVATE") static var MS_DEACTIVATE: go.GoInt;
-    @:native("MS_INVALIDATE") static var MS_INVALIDATE: go.GoInt;
-    @:native("MS_KILLPAGES") static var MS_KILLPAGES: go.GoInt;
-    @:native("MS_SYNC") static var MS_SYNC: go.GoInt;
-    @:native("NAME_MAX") static var NAME_MAX: go.GoInt;
-    @:native("NET_RT_DUMP") static var NET_RT_DUMP: go.GoInt;
-    @:native("NET_RT_DUMP2") static var NET_RT_DUMP2: go.GoInt;
-    @:native("NET_RT_FLAGS") static var NET_RT_FLAGS: go.GoInt;
-    @:native("NET_RT_IFLIST") static var NET_RT_IFLIST: go.GoInt;
-    @:native("NET_RT_IFLIST2") static var NET_RT_IFLIST2: go.GoInt;
-    @:native("NET_RT_MAXID") static var NET_RT_MAXID: go.GoInt;
-    @:native("NET_RT_STAT") static var NET_RT_STAT: go.GoInt;
-    @:native("NET_RT_TRASH") static var NET_RT_TRASH: go.GoInt;
-    @:native("NOFLSH") static var NOFLSH: go.GoInt;
-    @:native("NOTE_ABSOLUTE") static var NOTE_ABSOLUTE: go.GoInt;
-    @:native("NOTE_ATTRIB") static var NOTE_ATTRIB: go.GoInt;
-    @:native("NOTE_CHILD") static var NOTE_CHILD: go.GoInt;
-    @:native("NOTE_DELETE") static var NOTE_DELETE: go.GoInt;
-    @:native("NOTE_EXEC") static var NOTE_EXEC: go.GoInt;
-    @:native("NOTE_EXIT") static var NOTE_EXIT: go.GoInt;
-    @:native("NOTE_EXITSTATUS") static var NOTE_EXITSTATUS: go.GoInt;
-    @:native("NOTE_EXTEND") static var NOTE_EXTEND: go.GoInt;
-    @:native("NOTE_FFAND") static var NOTE_FFAND: go.GoInt;
-    @:native("NOTE_FFCOPY") static var NOTE_FFCOPY: go.GoInt;
-    @:native("NOTE_FFCTRLMASK") static var NOTE_FFCTRLMASK: go.GoInt;
-    @:native("NOTE_FFLAGSMASK") static var NOTE_FFLAGSMASK: go.GoInt;
-    @:native("NOTE_FFNOP") static var NOTE_FFNOP: go.GoInt;
-    @:native("NOTE_FFOR") static var NOTE_FFOR: go.GoInt;
-    @:native("NOTE_FORK") static var NOTE_FORK: go.GoInt;
-    @:native("NOTE_LINK") static var NOTE_LINK: go.GoInt;
-    @:native("NOTE_LOWAT") static var NOTE_LOWAT: go.GoInt;
-    @:native("NOTE_NONE") static var NOTE_NONE: go.GoInt;
-    @:native("NOTE_NSECONDS") static var NOTE_NSECONDS: go.GoInt;
-    @:native("NOTE_PCTRLMASK") static var NOTE_PCTRLMASK: go.GoInt;
-    @:native("NOTE_PDATAMASK") static var NOTE_PDATAMASK: go.GoInt;
-    @:native("NOTE_REAP") static var NOTE_REAP: go.GoInt;
-    @:native("NOTE_RENAME") static var NOTE_RENAME: go.GoInt;
-    @:native("NOTE_RESOURCEEND") static var NOTE_RESOURCEEND: go.GoInt;
-    @:native("NOTE_REVOKE") static var NOTE_REVOKE: go.GoInt;
-    @:native("NOTE_SECONDS") static var NOTE_SECONDS: go.GoInt;
-    @:native("NOTE_SIGNAL") static var NOTE_SIGNAL: go.GoInt;
-    @:native("NOTE_TRACK") static var NOTE_TRACK: go.GoInt;
-    @:native("NOTE_TRACKERR") static var NOTE_TRACKERR: go.GoInt;
-    @:native("NOTE_TRIGGER") static var NOTE_TRIGGER: go.GoInt;
-    @:native("NOTE_USECONDS") static var NOTE_USECONDS: go.GoInt;
-    @:native("NOTE_VM_ERROR") static var NOTE_VM_ERROR: go.GoInt;
-    @:native("NOTE_VM_PRESSURE") static var NOTE_VM_PRESSURE: go.GoInt;
-    @:native("NOTE_VM_PRESSURE_SUDDEN_TERMINATE") static var NOTE_VM_PRESSURE_SUDDEN_TERMINATE: go.GoInt;
-    @:native("NOTE_VM_PRESSURE_TERMINATE") static var NOTE_VM_PRESSURE_TERMINATE: go.GoInt;
-    @:native("NOTE_WRITE") static var NOTE_WRITE: go.GoInt;
-    @:native("OCRNL") static var OCRNL: go.GoInt;
-    @:native("OFDEL") static var OFDEL: go.GoInt;
-    @:native("OFILL") static var OFILL: go.GoInt;
-    @:native("ONLCR") static var ONLCR: go.GoInt;
-    @:native("ONLRET") static var ONLRET: go.GoInt;
-    @:native("ONOCR") static var ONOCR: go.GoInt;
-    @:native("ONOEOT") static var ONOEOT: go.GoInt;
-    @:native("OPOST") static var OPOST: go.GoInt;
-    @:native("O_ACCMODE") static var O_ACCMODE: go.GoInt;
-    @:native("O_ALERT") static var O_ALERT: go.GoInt;
+    @:native("InvalidHandle") static var invalidHandle: go.syscall.Handle;
+    @:native("KEY_ALL_ACCESS") static var KEY_ALL_ACCESS: go.GoInt;
+    @:native("KEY_CREATE_LINK") static var KEY_CREATE_LINK: go.GoInt;
+    @:native("KEY_CREATE_SUB_KEY") static var KEY_CREATE_SUB_KEY: go.GoInt;
+    @:native("KEY_ENUMERATE_SUB_KEYS") static var KEY_ENUMERATE_SUB_KEYS: go.GoInt;
+    @:native("KEY_EXECUTE") static var KEY_EXECUTE: go.GoInt;
+    @:native("KEY_NOTIFY") static var KEY_NOTIFY: go.GoInt;
+    @:native("KEY_QUERY_VALUE") static var KEY_QUERY_VALUE: go.GoInt;
+    @:native("KEY_READ") static var KEY_READ: go.GoInt;
+    @:native("KEY_SET_VALUE") static var KEY_SET_VALUE: go.GoInt;
+    @:native("KEY_WOW64_32KEY") static var KEY_WOW64_32KEY: go.GoInt;
+    @:native("KEY_WOW64_64KEY") static var KEY_WOW64_64KEY: go.GoInt;
+    @:native("KEY_WRITE") static var KEY_WRITE: go.GoInt;
+    @:native("LANG_ENGLISH") static var LANG_ENGLISH: go.GoInt;
+    @:native("LAYERED_PROTOCOL") static var LAYERED_PROTOCOL: go.GoInt;
+    @:native("MAXIMUM_REPARSE_DATA_BUFFER_SIZE") static var MAXIMUM_REPARSE_DATA_BUFFER_SIZE: go.GoInt;
+    @:native("MAXLEN_IFDESCR") static var MAXLEN_IFDESCR: go.GoInt;
+    @:native("MAXLEN_PHYSADDR") static var MAXLEN_PHYSADDR: go.GoInt;
+    @:native("MAX_ADAPTER_ADDRESS_LENGTH") static var MAX_ADAPTER_ADDRESS_LENGTH: go.GoInt;
+    @:native("MAX_ADAPTER_DESCRIPTION_LENGTH") static var MAX_ADAPTER_DESCRIPTION_LENGTH: go.GoInt;
+    @:native("MAX_ADAPTER_NAME_LENGTH") static var MAX_ADAPTER_NAME_LENGTH: go.GoInt;
+    @:native("MAX_COMPUTERNAME_LENGTH") static var MAX_COMPUTERNAME_LENGTH: go.GoInt;
+    @:native("MAX_INTERFACE_NAME_LEN") static var MAX_INTERFACE_NAME_LEN: go.GoInt;
+    @:native("MAX_LONG_PATH") static var MAX_LONG_PATH: go.GoInt;
+    @:native("MAX_PATH") static var MAX_PATH: go.GoInt;
+    @:native("MAX_PROTOCOL_CHAIN") static var MAX_PROTOCOL_CHAIN: go.GoInt;
+    @:native("MaxTokenInfoClass") static var maxTokenInfoClass: go.GoInt;
+    @:native("NameCanonical") static var nameCanonical: go.GoInt;
+    @:native("NameCanonicalEx") static var nameCanonicalEx: go.GoInt;
+    @:native("NameDisplay") static var nameDisplay: go.GoInt;
+    @:native("NameDnsDomain") static var nameDnsDomain: go.GoInt;
+    @:native("NameFullyQualifiedDN") static var nameFullyQualifiedDN: go.GoInt;
+    @:native("NameSamCompatible") static var nameSamCompatible: go.GoInt;
+    @:native("NameServicePrincipal") static var nameServicePrincipal: go.GoInt;
+    @:native("NameUniqueId") static var nameUniqueId: go.GoInt;
+    @:native("NameUnknown") static var nameUnknown: go.GoInt;
+    @:native("NameUserPrincipal") static var nameUserPrincipal: go.GoInt;
+    @:native("NetSetupDomainName") static var netSetupDomainName: go.GoInt;
+    @:native("NetSetupUnjoined") static var netSetupUnjoined: go.GoInt;
+    @:native("NetSetupUnknownStatus") static var netSetupUnknownStatus: go.GoInt;
+    @:native("NetSetupWorkgroupName") static var netSetupWorkgroupName: go.GoInt;
+    @:native("OPEN_ALWAYS") static var OPEN_ALWAYS: go.GoInt;
+    @:native("OPEN_EXISTING") static var OPEN_EXISTING: go.GoInt;
     @:native("O_APPEND") static var O_APPEND: go.GoInt;
     @:native("O_ASYNC") static var O_ASYNC: go.GoInt;
     @:native("O_CLOEXEC") static var O_CLOEXEC: go.GoInt;
     @:native("O_CREAT") static var O_CREAT: go.GoInt;
-    @:native("O_DIRECTORY") static var O_DIRECTORY: go.GoInt;
-    @:native("O_DSYNC") static var O_DSYNC: go.GoInt;
-    @:native("O_EVTONLY") static var O_EVTONLY: go.GoInt;
     @:native("O_EXCL") static var O_EXCL: go.GoInt;
-    @:native("O_EXLOCK") static var O_EXLOCK: go.GoInt;
-    @:native("O_FSYNC") static var O_FSYNC: go.GoInt;
-    @:native("O_NDELAY") static var O_NDELAY: go.GoInt;
     @:native("O_NOCTTY") static var O_NOCTTY: go.GoInt;
-    @:native("O_NOFOLLOW") static var O_NOFOLLOW: go.GoInt;
     @:native("O_NONBLOCK") static var O_NONBLOCK: go.GoInt;
-    @:native("O_POPUP") static var O_POPUP: go.GoInt;
     @:native("O_RDONLY") static var O_RDONLY: go.GoInt;
     @:native("O_RDWR") static var O_RDWR: go.GoInt;
-    @:native("O_SHLOCK") static var O_SHLOCK: go.GoInt;
-    @:native("O_SYMLINK") static var O_SYMLINK: go.GoInt;
     @:native("O_SYNC") static var O_SYNC: go.GoInt;
     @:native("O_TRUNC") static var O_TRUNC: go.GoInt;
     @:native("O_WRONLY") static var O_WRONLY: go.GoInt;
-    @:native("PARENB") static var PARENB: go.GoInt;
-    @:native("PARMRK") static var PARMRK: go.GoInt;
-    @:native("PARODD") static var PARODD: go.GoInt;
-    @:native("PENDIN") static var PENDIN: go.GoInt;
-    @:native("PRIO_PGRP") static var PRIO_PGRP: go.GoInt;
-    @:native("PRIO_PROCESS") static var PRIO_PROCESS: go.GoInt;
-    @:native("PRIO_USER") static var PRIO_USER: go.GoInt;
-    @:native("PROT_EXEC") static var PROT_EXEC: go.GoInt;
-    @:native("PROT_NONE") static var PROT_NONE: go.GoInt;
-    @:native("PROT_READ") static var PROT_READ: go.GoInt;
-    @:native("PROT_WRITE") static var PROT_WRITE: go.GoInt;
-    @:native("PTRACE_CONT") static var PTRACE_CONT: go.GoInt;
-    @:native("PTRACE_KILL") static var PTRACE_KILL: go.GoInt;
-    @:native("PTRACE_TRACEME") static var PTRACE_TRACEME: go.GoInt;
-    @:native("PT_ATTACH") static var PT_ATTACH: go.GoInt;
-    @:native("PT_ATTACHEXC") static var PT_ATTACHEXC: go.GoInt;
-    @:native("PT_CONTINUE") static var PT_CONTINUE: go.GoInt;
-    @:native("PT_DENY_ATTACH") static var PT_DENY_ATTACH: go.GoInt;
-    @:native("PT_DETACH") static var PT_DETACH: go.GoInt;
-    @:native("PT_FIRSTMACH") static var PT_FIRSTMACH: go.GoInt;
-    @:native("PT_FORCEQUOTA") static var PT_FORCEQUOTA: go.GoInt;
-    @:native("PT_KILL") static var PT_KILL: go.GoInt;
-    @:native("PT_READ_D") static var PT_READ_D: go.GoInt;
-    @:native("PT_READ_I") static var PT_READ_I: go.GoInt;
-    @:native("PT_READ_U") static var PT_READ_U: go.GoInt;
-    @:native("PT_SIGEXC") static var PT_SIGEXC: go.GoInt;
-    @:native("PT_STEP") static var PT_STEP: go.GoInt;
-    @:native("PT_THUPDATE") static var PT_THUPDATE: go.GoInt;
-    @:native("PT_TRACE_ME") static var PT_TRACE_ME: go.GoInt;
-    @:native("PT_WRITE_D") static var PT_WRITE_D: go.GoInt;
-    @:native("PT_WRITE_I") static var PT_WRITE_I: go.GoInt;
-    @:native("PT_WRITE_U") static var PT_WRITE_U: go.GoInt;
-    @:native("RLIMIT_AS") static var RLIMIT_AS: go.GoInt;
-    @:native("RLIMIT_CORE") static var RLIMIT_CORE: go.GoInt;
-    @:native("RLIMIT_CPU") static var RLIMIT_CPU: go.GoInt;
-    @:native("RLIMIT_DATA") static var RLIMIT_DATA: go.GoInt;
-    @:native("RLIMIT_FSIZE") static var RLIMIT_FSIZE: go.GoInt;
-    @:native("RLIMIT_NOFILE") static var RLIMIT_NOFILE: go.GoInt;
-    @:native("RLIMIT_STACK") static var RLIMIT_STACK: go.GoInt;
-    @:native("RLIM_INFINITY") static var RLIM_INFINITY: go.GoInt;
-    @:native("RTAX_AUTHOR") static var RTAX_AUTHOR: go.GoInt;
-    @:native("RTAX_BRD") static var RTAX_BRD: go.GoInt;
-    @:native("RTAX_DST") static var RTAX_DST: go.GoInt;
-    @:native("RTAX_GATEWAY") static var RTAX_GATEWAY: go.GoInt;
-    @:native("RTAX_GENMASK") static var RTAX_GENMASK: go.GoInt;
-    @:native("RTAX_IFA") static var RTAX_IFA: go.GoInt;
-    @:native("RTAX_IFP") static var RTAX_IFP: go.GoInt;
-    @:native("RTAX_MAX") static var RTAX_MAX: go.GoInt;
-    @:native("RTAX_NETMASK") static var RTAX_NETMASK: go.GoInt;
-    @:native("RTA_AUTHOR") static var RTA_AUTHOR: go.GoInt;
-    @:native("RTA_BRD") static var RTA_BRD: go.GoInt;
-    @:native("RTA_DST") static var RTA_DST: go.GoInt;
-    @:native("RTA_GATEWAY") static var RTA_GATEWAY: go.GoInt;
-    @:native("RTA_GENMASK") static var RTA_GENMASK: go.GoInt;
-    @:native("RTA_IFA") static var RTA_IFA: go.GoInt;
-    @:native("RTA_IFP") static var RTA_IFP: go.GoInt;
-    @:native("RTA_NETMASK") static var RTA_NETMASK: go.GoInt;
-    @:native("RTF_BLACKHOLE") static var RTF_BLACKHOLE: go.GoInt;
-    @:native("RTF_BROADCAST") static var RTF_BROADCAST: go.GoInt;
-    @:native("RTF_CLONING") static var RTF_CLONING: go.GoInt;
-    @:native("RTF_CONDEMNED") static var RTF_CONDEMNED: go.GoInt;
-    @:native("RTF_DELCLONE") static var RTF_DELCLONE: go.GoInt;
-    @:native("RTF_DONE") static var RTF_DONE: go.GoInt;
-    @:native("RTF_DYNAMIC") static var RTF_DYNAMIC: go.GoInt;
-    @:native("RTF_GATEWAY") static var RTF_GATEWAY: go.GoInt;
-    @:native("RTF_HOST") static var RTF_HOST: go.GoInt;
-    @:native("RTF_IFREF") static var RTF_IFREF: go.GoInt;
-    @:native("RTF_IFSCOPE") static var RTF_IFSCOPE: go.GoInt;
-    @:native("RTF_LLINFO") static var RTF_LLINFO: go.GoInt;
-    @:native("RTF_LOCAL") static var RTF_LOCAL: go.GoInt;
-    @:native("RTF_MODIFIED") static var RTF_MODIFIED: go.GoInt;
-    @:native("RTF_MULTICAST") static var RTF_MULTICAST: go.GoInt;
-    @:native("RTF_PINNED") static var RTF_PINNED: go.GoInt;
-    @:native("RTF_PRCLONING") static var RTF_PRCLONING: go.GoInt;
-    @:native("RTF_PROTO1") static var RTF_PROTO1: go.GoInt;
-    @:native("RTF_PROTO2") static var RTF_PROTO2: go.GoInt;
-    @:native("RTF_PROTO3") static var RTF_PROTO3: go.GoInt;
-    @:native("RTF_REJECT") static var RTF_REJECT: go.GoInt;
-    @:native("RTF_STATIC") static var RTF_STATIC: go.GoInt;
-    @:native("RTF_UP") static var RTF_UP: go.GoInt;
-    @:native("RTF_WASCLONED") static var RTF_WASCLONED: go.GoInt;
-    @:native("RTF_XRESOLVE") static var RTF_XRESOLVE: go.GoInt;
-    @:native("RTM_ADD") static var RTM_ADD: go.GoInt;
-    @:native("RTM_CHANGE") static var RTM_CHANGE: go.GoInt;
-    @:native("RTM_DELADDR") static var RTM_DELADDR: go.GoInt;
-    @:native("RTM_DELETE") static var RTM_DELETE: go.GoInt;
-    @:native("RTM_DELMADDR") static var RTM_DELMADDR: go.GoInt;
-    @:native("RTM_GET") static var RTM_GET: go.GoInt;
-    @:native("RTM_GET2") static var RTM_GET2: go.GoInt;
-    @:native("RTM_IFINFO") static var RTM_IFINFO: go.GoInt;
-    @:native("RTM_IFINFO2") static var RTM_IFINFO2: go.GoInt;
-    @:native("RTM_LOCK") static var RTM_LOCK: go.GoInt;
-    @:native("RTM_LOSING") static var RTM_LOSING: go.GoInt;
-    @:native("RTM_MISS") static var RTM_MISS: go.GoInt;
-    @:native("RTM_NEWADDR") static var RTM_NEWADDR: go.GoInt;
-    @:native("RTM_NEWMADDR") static var RTM_NEWMADDR: go.GoInt;
-    @:native("RTM_NEWMADDR2") static var RTM_NEWMADDR2: go.GoInt;
-    @:native("RTM_OLDADD") static var RTM_OLDADD: go.GoInt;
-    @:native("RTM_OLDDEL") static var RTM_OLDDEL: go.GoInt;
-    @:native("RTM_REDIRECT") static var RTM_REDIRECT: go.GoInt;
-    @:native("RTM_RESOLVE") static var RTM_RESOLVE: go.GoInt;
-    @:native("RTM_RTTUNIT") static var RTM_RTTUNIT: go.GoInt;
-    @:native("RTM_VERSION") static var RTM_VERSION: go.GoInt;
-    @:native("RTV_EXPIRE") static var RTV_EXPIRE: go.GoInt;
-    @:native("RTV_HOPCOUNT") static var RTV_HOPCOUNT: go.GoInt;
-    @:native("RTV_MTU") static var RTV_MTU: go.GoInt;
-    @:native("RTV_RPIPE") static var RTV_RPIPE: go.GoInt;
-    @:native("RTV_RTT") static var RTV_RTT: go.GoInt;
-    @:native("RTV_RTTVAR") static var RTV_RTTVAR: go.GoInt;
-    @:native("RTV_SPIPE") static var RTV_SPIPE: go.GoInt;
-    @:native("RTV_SSTHRESH") static var RTV_SSTHRESH: go.GoInt;
-    @:native("RUSAGE_CHILDREN") static var RUSAGE_CHILDREN: go.GoInt;
-    @:native("RUSAGE_SELF") static var RUSAGE_SELF: go.GoInt;
-    @:native("SCM_CREDS") static var SCM_CREDS: go.GoInt;
-    @:native("SCM_RIGHTS") static var SCM_RIGHTS: go.GoInt;
-    @:native("SCM_TIMESTAMP") static var SCM_TIMESTAMP: go.GoInt;
-    @:native("SCM_TIMESTAMP_MONOTONIC") static var SCM_TIMESTAMP_MONOTONIC: go.GoInt;
+    @:native("PAGE_EXECUTE_READ") static var PAGE_EXECUTE_READ: go.GoInt;
+    @:native("PAGE_EXECUTE_READWRITE") static var PAGE_EXECUTE_READWRITE: go.GoInt;
+    @:native("PAGE_EXECUTE_WRITECOPY") static var PAGE_EXECUTE_WRITECOPY: go.GoInt;
+    @:native("PAGE_READONLY") static var PAGE_READONLY: go.GoInt;
+    @:native("PAGE_READWRITE") static var PAGE_READWRITE: go.GoInt;
+    @:native("PAGE_WRITECOPY") static var PAGE_WRITECOPY: go.GoInt;
+    @:native("PFL_HIDDEN") static var PFL_HIDDEN: go.GoInt;
+    @:native("PFL_MATCHES_PROTOCOL_ZERO") static var PFL_MATCHES_PROTOCOL_ZERO: go.GoInt;
+    @:native("PFL_MULTIPLE_PROTO_ENTRIES") static var PFL_MULTIPLE_PROTO_ENTRIES: go.GoInt;
+    @:native("PFL_NETWORKDIRECT_PROVIDER") static var PFL_NETWORKDIRECT_PROVIDER: go.GoInt;
+    @:native("PFL_RECOMMENDED_PROTO_ENTRY") static var PFL_RECOMMENDED_PROTO_ENTRY: go.GoInt;
+    @:native("PKCS_7_ASN_ENCODING") static var PKCS_7_ASN_ENCODING: go.GoInt;
+    @:native("PROCESS_QUERY_INFORMATION") static var PROCESS_QUERY_INFORMATION: go.GoInt;
+    @:native("PROCESS_TERMINATE") static var PROCESS_TERMINATE: go.GoInt;
+    @:native("PROV_DH_SCHANNEL") static var PROV_DH_SCHANNEL: go.GoInt;
+    @:native("PROV_DSS") static var PROV_DSS: go.GoInt;
+    @:native("PROV_DSS_DH") static var PROV_DSS_DH: go.GoInt;
+    @:native("PROV_EC_ECDSA_FULL") static var PROV_EC_ECDSA_FULL: go.GoInt;
+    @:native("PROV_EC_ECDSA_SIG") static var PROV_EC_ECDSA_SIG: go.GoInt;
+    @:native("PROV_EC_ECNRA_FULL") static var PROV_EC_ECNRA_FULL: go.GoInt;
+    @:native("PROV_EC_ECNRA_SIG") static var PROV_EC_ECNRA_SIG: go.GoInt;
+    @:native("PROV_FORTEZZA") static var PROV_FORTEZZA: go.GoInt;
+    @:native("PROV_INTEL_SEC") static var PROV_INTEL_SEC: go.GoInt;
+    @:native("PROV_MS_EXCHANGE") static var PROV_MS_EXCHANGE: go.GoInt;
+    @:native("PROV_REPLACE_OWF") static var PROV_REPLACE_OWF: go.GoInt;
+    @:native("PROV_RNG") static var PROV_RNG: go.GoInt;
+    @:native("PROV_RSA_AES") static var PROV_RSA_AES: go.GoInt;
+    @:native("PROV_RSA_FULL") static var PROV_RSA_FULL: go.GoInt;
+    @:native("PROV_RSA_SCHANNEL") static var PROV_RSA_SCHANNEL: go.GoInt;
+    @:native("PROV_RSA_SIG") static var PROV_RSA_SIG: go.GoInt;
+    @:native("PROV_SPYRUS_LYNKS") static var PROV_SPYRUS_LYNKS: go.GoInt;
+    @:native("PROV_SSL") static var PROV_SSL: go.GoInt;
+    @:native("REG_BINARY") static var REG_BINARY: go.GoInt;
+    @:native("REG_DWORD") static var REG_DWORD: go.GoInt;
+    @:native("REG_DWORD_BIG_ENDIAN") static var REG_DWORD_BIG_ENDIAN: go.GoInt;
+    @:native("REG_DWORD_LITTLE_ENDIAN") static var REG_DWORD_LITTLE_ENDIAN: go.GoInt;
+    @:native("REG_EXPAND_SZ") static var REG_EXPAND_SZ: go.GoInt;
+    @:native("REG_FULL_RESOURCE_DESCRIPTOR") static var REG_FULL_RESOURCE_DESCRIPTOR: go.GoInt;
+    @:native("REG_LINK") static var REG_LINK: go.GoInt;
+    @:native("REG_MULTI_SZ") static var REG_MULTI_SZ: go.GoInt;
+    @:native("REG_NONE") static var REG_NONE: go.GoInt;
+    @:native("REG_QWORD") static var REG_QWORD: go.GoInt;
+    @:native("REG_QWORD_LITTLE_ENDIAN") static var REG_QWORD_LITTLE_ENDIAN: go.GoInt;
+    @:native("REG_RESOURCE_LIST") static var REG_RESOURCE_LIST: go.GoInt;
+    @:native("REG_RESOURCE_REQUIREMENTS_LIST") static var REG_RESOURCE_REQUIREMENTS_LIST: go.GoInt;
+    @:native("REG_SZ") static var REG_SZ: go.GoInt;
     @:native("SHUT_RD") static var SHUT_RD: go.GoInt;
     @:native("SHUT_RDWR") static var SHUT_RDWR: go.GoInt;
     @:native("SHUT_WR") static var SHUT_WR: go.GoInt;
-    /**
-        Signals
-    **/
     @:native("SIGABRT") static var SIGABRT: go.syscall.Signal;
-    /**
-        Signals
-    **/
     @:native("SIGALRM") static var SIGALRM: go.syscall.Signal;
-    /**
-        Signals
-    **/
     @:native("SIGBUS") static var SIGBUS: go.syscall.Signal;
-    /**
-        Signals
-    **/
-    @:native("SIGCHLD") static var SIGCHLD: go.syscall.Signal;
-    /**
-        Signals
-    **/
-    @:native("SIGCONT") static var SIGCONT: go.syscall.Signal;
-    /**
-        Signals
-    **/
-    @:native("SIGEMT") static var SIGEMT: go.syscall.Signal;
-    /**
-        Signals
-    **/
     @:native("SIGFPE") static var SIGFPE: go.syscall.Signal;
-    /**
-        Signals
-    **/
     @:native("SIGHUP") static var SIGHUP: go.syscall.Signal;
-    /**
-        Signals
-    **/
     @:native("SIGILL") static var SIGILL: go.syscall.Signal;
-    /**
-        Signals
-    **/
-    @:native("SIGINFO") static var SIGINFO: go.syscall.Signal;
-    /**
-        Signals
-    **/
     @:native("SIGINT") static var SIGINT: go.syscall.Signal;
-    /**
-        Signals
-    **/
-    @:native("SIGIO") static var SIGIO: go.syscall.Signal;
-    /**
-        Signals
-    **/
-    @:native("SIGIOT") static var SIGIOT: go.syscall.Signal;
-    /**
-        Signals
-    **/
     @:native("SIGKILL") static var SIGKILL: go.syscall.Signal;
-    /**
-        Signals
-    **/
     @:native("SIGPIPE") static var SIGPIPE: go.syscall.Signal;
-    /**
-        Signals
-    **/
-    @:native("SIGPROF") static var SIGPROF: go.syscall.Signal;
-    /**
-        Signals
-    **/
     @:native("SIGQUIT") static var SIGQUIT: go.syscall.Signal;
-    /**
-        Signals
-    **/
     @:native("SIGSEGV") static var SIGSEGV: go.syscall.Signal;
-    /**
-        Signals
-    **/
-    @:native("SIGSTOP") static var SIGSTOP: go.syscall.Signal;
-    /**
-        Signals
-    **/
-    @:native("SIGSYS") static var SIGSYS: go.syscall.Signal;
-    /**
-        Signals
-    **/
     @:native("SIGTERM") static var SIGTERM: go.syscall.Signal;
-    /**
-        Signals
-    **/
     @:native("SIGTRAP") static var SIGTRAP: go.syscall.Signal;
-    /**
-        Signals
-    **/
-    @:native("SIGTSTP") static var SIGTSTP: go.syscall.Signal;
-    /**
-        Signals
-    **/
-    @:native("SIGTTIN") static var SIGTTIN: go.syscall.Signal;
-    /**
-        Signals
-    **/
-    @:native("SIGTTOU") static var SIGTTOU: go.syscall.Signal;
-    /**
-        Signals
-    **/
-    @:native("SIGURG") static var SIGURG: go.syscall.Signal;
-    /**
-        Signals
-    **/
-    @:native("SIGUSR1") static var SIGUSR1: go.syscall.Signal;
-    /**
-        Signals
-    **/
-    @:native("SIGUSR2") static var SIGUSR2: go.syscall.Signal;
-    /**
-        Signals
-    **/
-    @:native("SIGVTALRM") static var SIGVTALRM: go.syscall.Signal;
-    /**
-        Signals
-    **/
-    @:native("SIGWINCH") static var SIGWINCH: go.syscall.Signal;
-    /**
-        Signals
-    **/
-    @:native("SIGXCPU") static var SIGXCPU: go.syscall.Signal;
-    /**
-        Signals
-    **/
-    @:native("SIGXFSZ") static var SIGXFSZ: go.syscall.Signal;
-    @:native("SIOCADDMULTI") static var SIOCADDMULTI: go.GoInt;
-    @:native("SIOCAIFADDR") static var SIOCAIFADDR: go.GoInt;
-    @:native("SIOCALIFADDR") static var SIOCALIFADDR: go.GoInt;
-    @:native("SIOCARPIPLL") static var SIOCARPIPLL: go.GoInt;
-    @:native("SIOCATMARK") static var SIOCATMARK: go.GoInt;
-    @:native("SIOCAUTOADDR") static var SIOCAUTOADDR: go.GoInt;
-    @:native("SIOCAUTONETMASK") static var SIOCAUTONETMASK: go.GoInt;
-    @:native("SIOCDELMULTI") static var SIOCDELMULTI: go.GoInt;
-    @:native("SIOCDIFADDR") static var SIOCDIFADDR: go.GoInt;
-    @:native("SIOCDIFPHYADDR") static var SIOCDIFPHYADDR: go.GoInt;
-    @:native("SIOCDLIFADDR") static var SIOCDLIFADDR: go.GoInt;
-    @:native("SIOCGDRVSPEC") static var SIOCGDRVSPEC: go.GoInt;
-    @:native("SIOCGETSGCNT") static var SIOCGETSGCNT: go.GoInt;
-    @:native("SIOCGETVIFCNT") static var SIOCGETVIFCNT: go.GoInt;
-    @:native("SIOCGETVLAN") static var SIOCGETVLAN: go.GoInt;
-    @:native("SIOCGHIWAT") static var SIOCGHIWAT: go.GoInt;
-    @:native("SIOCGIFADDR") static var SIOCGIFADDR: go.GoInt;
-    @:native("SIOCGIFALTMTU") static var SIOCGIFALTMTU: go.GoInt;
-    @:native("SIOCGIFASYNCMAP") static var SIOCGIFASYNCMAP: go.GoInt;
-    @:native("SIOCGIFBOND") static var SIOCGIFBOND: go.GoInt;
-    @:native("SIOCGIFBRDADDR") static var SIOCGIFBRDADDR: go.GoInt;
-    @:native("SIOCGIFCAP") static var SIOCGIFCAP: go.GoInt;
-    @:native("SIOCGIFCONF") static var SIOCGIFCONF: go.GoInt;
-    @:native("SIOCGIFDEVMTU") static var SIOCGIFDEVMTU: go.GoInt;
-    @:native("SIOCGIFDSTADDR") static var SIOCGIFDSTADDR: go.GoInt;
-    @:native("SIOCGIFFLAGS") static var SIOCGIFFLAGS: go.GoInt;
-    @:native("SIOCGIFGENERIC") static var SIOCGIFGENERIC: go.GoInt;
-    @:native("SIOCGIFKPI") static var SIOCGIFKPI: go.GoInt;
-    @:native("SIOCGIFMAC") static var SIOCGIFMAC: go.GoInt;
-    @:native("SIOCGIFMEDIA") static var SIOCGIFMEDIA: go.GoInt;
-    @:native("SIOCGIFMETRIC") static var SIOCGIFMETRIC: go.GoInt;
-    @:native("SIOCGIFMTU") static var SIOCGIFMTU: go.GoInt;
-    @:native("SIOCGIFNETMASK") static var SIOCGIFNETMASK: go.GoInt;
-    @:native("SIOCGIFPDSTADDR") static var SIOCGIFPDSTADDR: go.GoInt;
-    @:native("SIOCGIFPHYS") static var SIOCGIFPHYS: go.GoInt;
-    @:native("SIOCGIFPSRCADDR") static var SIOCGIFPSRCADDR: go.GoInt;
-    @:native("SIOCGIFSTATUS") static var SIOCGIFSTATUS: go.GoInt;
-    @:native("SIOCGIFVLAN") static var SIOCGIFVLAN: go.GoInt;
-    @:native("SIOCGIFWAKEFLAGS") static var SIOCGIFWAKEFLAGS: go.GoInt;
-    @:native("SIOCGLIFADDR") static var SIOCGLIFADDR: go.GoInt;
-    @:native("SIOCGLIFPHYADDR") static var SIOCGLIFPHYADDR: go.GoInt;
-    @:native("SIOCGLOWAT") static var SIOCGLOWAT: go.GoInt;
-    @:native("SIOCGPGRP") static var SIOCGPGRP: go.GoInt;
-    @:native("SIOCIFCREATE") static var SIOCIFCREATE: go.GoInt;
-    @:native("SIOCIFCREATE2") static var SIOCIFCREATE2: go.GoInt;
-    @:native("SIOCIFDESTROY") static var SIOCIFDESTROY: go.GoInt;
-    @:native("SIOCRSLVMULTI") static var SIOCRSLVMULTI: go.GoInt;
-    @:native("SIOCSDRVSPEC") static var SIOCSDRVSPEC: go.GoInt;
-    @:native("SIOCSETVLAN") static var SIOCSETVLAN: go.GoInt;
-    @:native("SIOCSHIWAT") static var SIOCSHIWAT: go.GoInt;
-    @:native("SIOCSIFADDR") static var SIOCSIFADDR: go.GoInt;
-    @:native("SIOCSIFALTMTU") static var SIOCSIFALTMTU: go.GoInt;
-    @:native("SIOCSIFASYNCMAP") static var SIOCSIFASYNCMAP: go.GoInt;
-    @:native("SIOCSIFBOND") static var SIOCSIFBOND: go.GoInt;
-    @:native("SIOCSIFBRDADDR") static var SIOCSIFBRDADDR: go.GoInt;
-    @:native("SIOCSIFCAP") static var SIOCSIFCAP: go.GoInt;
-    @:native("SIOCSIFDSTADDR") static var SIOCSIFDSTADDR: go.GoInt;
-    @:native("SIOCSIFFLAGS") static var SIOCSIFFLAGS: go.GoInt;
-    @:native("SIOCSIFGENERIC") static var SIOCSIFGENERIC: go.GoInt;
-    @:native("SIOCSIFKPI") static var SIOCSIFKPI: go.GoInt;
-    @:native("SIOCSIFLLADDR") static var SIOCSIFLLADDR: go.GoInt;
-    @:native("SIOCSIFMAC") static var SIOCSIFMAC: go.GoInt;
-    @:native("SIOCSIFMEDIA") static var SIOCSIFMEDIA: go.GoInt;
-    @:native("SIOCSIFMETRIC") static var SIOCSIFMETRIC: go.GoInt;
-    @:native("SIOCSIFMTU") static var SIOCSIFMTU: go.GoInt;
-    @:native("SIOCSIFNETMASK") static var SIOCSIFNETMASK: go.GoInt;
-    @:native("SIOCSIFPHYADDR") static var SIOCSIFPHYADDR: go.GoInt;
-    @:native("SIOCSIFPHYS") static var SIOCSIFPHYS: go.GoInt;
-    @:native("SIOCSIFVLAN") static var SIOCSIFVLAN: go.GoInt;
-    @:native("SIOCSLIFPHYADDR") static var SIOCSLIFPHYADDR: go.GoInt;
-    @:native("SIOCSLOWAT") static var SIOCSLOWAT: go.GoInt;
-    @:native("SIOCSPGRP") static var SIOCSPGRP: go.GoInt;
+    @:native("SIO_GET_EXTENSION_FUNCTION_POINTER") static var SIO_GET_EXTENSION_FUNCTION_POINTER: go.GoInt;
+    @:native("SIO_GET_INTERFACE_LIST") static var SIO_GET_INTERFACE_LIST: go.GoInt;
+    @:native("SIO_KEEPALIVE_VALS") static var SIO_KEEPALIVE_VALS: go.GoInt;
+    @:native("SIO_UDP_CONNRESET") static var SIO_UDP_CONNRESET: go.GoInt;
     @:native("SOCK_DGRAM") static var SOCK_DGRAM: go.GoInt;
-    @:native("SOCK_MAXADDRLEN") static var SOCK_MAXADDRLEN: go.GoInt;
     @:native("SOCK_RAW") static var SOCK_RAW: go.GoInt;
-    @:native("SOCK_RDM") static var SOCK_RDM: go.GoInt;
     @:native("SOCK_SEQPACKET") static var SOCK_SEQPACKET: go.GoInt;
     @:native("SOCK_STREAM") static var SOCK_STREAM: go.GoInt;
     @:native("SOL_SOCKET") static var SOL_SOCKET: go.GoInt;
     @:native("SOMAXCONN") static var SOMAXCONN: go.GoInt;
-    @:native("SO_ACCEPTCONN") static var SO_ACCEPTCONN: go.GoInt;
     @:native("SO_BROADCAST") static var SO_BROADCAST: go.GoInt;
-    @:native("SO_DEBUG") static var SO_DEBUG: go.GoInt;
     @:native("SO_DONTROUTE") static var SO_DONTROUTE: go.GoInt;
-    @:native("SO_DONTTRUNC") static var SO_DONTTRUNC: go.GoInt;
-    @:native("SO_ERROR") static var SO_ERROR: go.GoInt;
     @:native("SO_KEEPALIVE") static var SO_KEEPALIVE: go.GoInt;
-    @:native("SO_LABEL") static var SO_LABEL: go.GoInt;
     @:native("SO_LINGER") static var SO_LINGER: go.GoInt;
-    @:native("SO_LINGER_SEC") static var SO_LINGER_SEC: go.GoInt;
-    @:native("SO_NKE") static var SO_NKE: go.GoInt;
-    @:native("SO_NOADDRERR") static var SO_NOADDRERR: go.GoInt;
-    @:native("SO_NOSIGPIPE") static var SO_NOSIGPIPE: go.GoInt;
-    @:native("SO_NOTIFYCONFLICT") static var SO_NOTIFYCONFLICT: go.GoInt;
-    @:native("SO_NP_EXTENSIONS") static var SO_NP_EXTENSIONS: go.GoInt;
-    @:native("SO_NREAD") static var SO_NREAD: go.GoInt;
-    @:native("SO_NWRITE") static var SO_NWRITE: go.GoInt;
-    @:native("SO_OOBINLINE") static var SO_OOBINLINE: go.GoInt;
-    @:native("SO_PEERLABEL") static var SO_PEERLABEL: go.GoInt;
-    @:native("SO_RANDOMPORT") static var SO_RANDOMPORT: go.GoInt;
     @:native("SO_RCVBUF") static var SO_RCVBUF: go.GoInt;
-    @:native("SO_RCVLOWAT") static var SO_RCVLOWAT: go.GoInt;
-    @:native("SO_RCVTIMEO") static var SO_RCVTIMEO: go.GoInt;
-    @:native("SO_RESTRICTIONS") static var SO_RESTRICTIONS: go.GoInt;
-    @:native("SO_RESTRICT_DENYIN") static var SO_RESTRICT_DENYIN: go.GoInt;
-    @:native("SO_RESTRICT_DENYOUT") static var SO_RESTRICT_DENYOUT: go.GoInt;
-    @:native("SO_RESTRICT_DENYSET") static var SO_RESTRICT_DENYSET: go.GoInt;
     @:native("SO_REUSEADDR") static var SO_REUSEADDR: go.GoInt;
-    @:native("SO_REUSEPORT") static var SO_REUSEPORT: go.GoInt;
-    @:native("SO_REUSESHAREUID") static var SO_REUSESHAREUID: go.GoInt;
     @:native("SO_SNDBUF") static var SO_SNDBUF: go.GoInt;
-    @:native("SO_SNDLOWAT") static var SO_SNDLOWAT: go.GoInt;
-    @:native("SO_SNDTIMEO") static var SO_SNDTIMEO: go.GoInt;
-    @:native("SO_TIMESTAMP") static var SO_TIMESTAMP: go.GoInt;
-    @:native("SO_TIMESTAMP_MONOTONIC") static var SO_TIMESTAMP_MONOTONIC: go.GoInt;
-    @:native("SO_TYPE") static var SO_TYPE: go.GoInt;
-    @:native("SO_UPCALLCLOSEWAIT") static var SO_UPCALLCLOSEWAIT: go.GoInt;
-    @:native("SO_USELOOPBACK") static var SO_USELOOPBACK: go.GoInt;
-    @:native("SO_WANTMORE") static var SO_WANTMORE: go.GoInt;
-    @:native("SO_WANTOOBFLAG") static var SO_WANTOOBFLAG: go.GoInt;
-    @:native("SYS_ACCEPT") static var SYS_ACCEPT: go.GoInt;
-    @:native("SYS_ACCEPT_NOCANCEL") static var SYS_ACCEPT_NOCANCEL: go.GoInt;
-    @:native("SYS_ACCESS") static var SYS_ACCESS: go.GoInt;
-    @:native("SYS_ACCESS_EXTENDED") static var SYS_ACCESS_EXTENDED: go.GoInt;
-    @:native("SYS_ACCT") static var SYS_ACCT: go.GoInt;
-    @:native("SYS_ADD_PROFIL") static var SYS_ADD_PROFIL: go.GoInt;
-    @:native("SYS_ADJTIME") static var SYS_ADJTIME: go.GoInt;
-    @:native("SYS_AIO_CANCEL") static var SYS_AIO_CANCEL: go.GoInt;
-    @:native("SYS_AIO_ERROR") static var SYS_AIO_ERROR: go.GoInt;
-    @:native("SYS_AIO_FSYNC") static var SYS_AIO_FSYNC: go.GoInt;
-    @:native("SYS_AIO_READ") static var SYS_AIO_READ: go.GoInt;
-    @:native("SYS_AIO_RETURN") static var SYS_AIO_RETURN: go.GoInt;
-    @:native("SYS_AIO_SUSPEND") static var SYS_AIO_SUSPEND: go.GoInt;
-    @:native("SYS_AIO_SUSPEND_NOCANCEL") static var SYS_AIO_SUSPEND_NOCANCEL: go.GoInt;
-    @:native("SYS_AIO_WRITE") static var SYS_AIO_WRITE: go.GoInt;
-    @:native("SYS_ATGETMSG") static var SYS_ATGETMSG: go.GoInt;
-    @:native("SYS_ATPGETREQ") static var SYS_ATPGETREQ: go.GoInt;
-    @:native("SYS_ATPGETRSP") static var SYS_ATPGETRSP: go.GoInt;
-    @:native("SYS_ATPSNDREQ") static var SYS_ATPSNDREQ: go.GoInt;
-    @:native("SYS_ATPSNDRSP") static var SYS_ATPSNDRSP: go.GoInt;
-    @:native("SYS_ATPUTMSG") static var SYS_ATPUTMSG: go.GoInt;
-    @:native("SYS_ATSOCKET") static var SYS_ATSOCKET: go.GoInt;
-    @:native("SYS_AUDIT") static var SYS_AUDIT: go.GoInt;
-    @:native("SYS_AUDITCTL") static var SYS_AUDITCTL: go.GoInt;
-    @:native("SYS_AUDITON") static var SYS_AUDITON: go.GoInt;
-    @:native("SYS_AUDIT_SESSION_JOIN") static var SYS_AUDIT_SESSION_JOIN: go.GoInt;
-    @:native("SYS_AUDIT_SESSION_PORT") static var SYS_AUDIT_SESSION_PORT: go.GoInt;
-    @:native("SYS_AUDIT_SESSION_SELF") static var SYS_AUDIT_SESSION_SELF: go.GoInt;
-    @:native("SYS_BIND") static var SYS_BIND: go.GoInt;
-    @:native("SYS_BSDTHREAD_CREATE") static var SYS_BSDTHREAD_CREATE: go.GoInt;
-    @:native("SYS_BSDTHREAD_REGISTER") static var SYS_BSDTHREAD_REGISTER: go.GoInt;
-    @:native("SYS_BSDTHREAD_TERMINATE") static var SYS_BSDTHREAD_TERMINATE: go.GoInt;
-    @:native("SYS_CHDIR") static var SYS_CHDIR: go.GoInt;
-    @:native("SYS_CHFLAGS") static var SYS_CHFLAGS: go.GoInt;
-    @:native("SYS_CHMOD") static var SYS_CHMOD: go.GoInt;
-    @:native("SYS_CHMOD_EXTENDED") static var SYS_CHMOD_EXTENDED: go.GoInt;
-    @:native("SYS_CHOWN") static var SYS_CHOWN: go.GoInt;
-    @:native("SYS_CHROOT") static var SYS_CHROOT: go.GoInt;
-    @:native("SYS_CHUD") static var SYS_CHUD: go.GoInt;
-    @:native("SYS_CLOSE") static var SYS_CLOSE: go.GoInt;
-    @:native("SYS_CLOSE_NOCANCEL") static var SYS_CLOSE_NOCANCEL: go.GoInt;
-    @:native("SYS_CONNECT") static var SYS_CONNECT: go.GoInt;
-    @:native("SYS_CONNECT_NOCANCEL") static var SYS_CONNECT_NOCANCEL: go.GoInt;
-    @:native("SYS_COPYFILE") static var SYS_COPYFILE: go.GoInt;
-    @:native("SYS_CSOPS") static var SYS_CSOPS: go.GoInt;
-    @:native("SYS_DELETE") static var SYS_DELETE: go.GoInt;
-    @:native("SYS_DUP") static var SYS_DUP: go.GoInt;
-    @:native("SYS_DUP2") static var SYS_DUP2: go.GoInt;
-    @:native("SYS_EXCHANGEDATA") static var SYS_EXCHANGEDATA: go.GoInt;
-    @:native("SYS_EXECVE") static var SYS_EXECVE: go.GoInt;
-    @:native("SYS_EXIT") static var SYS_EXIT: go.GoInt;
-    @:native("SYS_FCHDIR") static var SYS_FCHDIR: go.GoInt;
-    @:native("SYS_FCHFLAGS") static var SYS_FCHFLAGS: go.GoInt;
-    @:native("SYS_FCHMOD") static var SYS_FCHMOD: go.GoInt;
-    @:native("SYS_FCHMOD_EXTENDED") static var SYS_FCHMOD_EXTENDED: go.GoInt;
-    @:native("SYS_FCHOWN") static var SYS_FCHOWN: go.GoInt;
-    @:native("SYS_FCNTL") static var SYS_FCNTL: go.GoInt;
-    @:native("SYS_FCNTL_NOCANCEL") static var SYS_FCNTL_NOCANCEL: go.GoInt;
-    @:native("SYS_FDATASYNC") static var SYS_FDATASYNC: go.GoInt;
-    @:native("SYS_FFSCTL") static var SYS_FFSCTL: go.GoInt;
-    @:native("SYS_FGETATTRLIST") static var SYS_FGETATTRLIST: go.GoInt;
-    @:native("SYS_FGETXATTR") static var SYS_FGETXATTR: go.GoInt;
-    @:native("SYS_FHOPEN") static var SYS_FHOPEN: go.GoInt;
-    @:native("SYS_FILEPORT_MAKEFD") static var SYS_FILEPORT_MAKEFD: go.GoInt;
-    @:native("SYS_FILEPORT_MAKEPORT") static var SYS_FILEPORT_MAKEPORT: go.GoInt;
-    @:native("SYS_FLISTXATTR") static var SYS_FLISTXATTR: go.GoInt;
-    @:native("SYS_FLOCK") static var SYS_FLOCK: go.GoInt;
-    @:native("SYS_FORK") static var SYS_FORK: go.GoInt;
-    @:native("SYS_FPATHCONF") static var SYS_FPATHCONF: go.GoInt;
-    @:native("SYS_FREMOVEXATTR") static var SYS_FREMOVEXATTR: go.GoInt;
-    @:native("SYS_FSCTL") static var SYS_FSCTL: go.GoInt;
-    @:native("SYS_FSETATTRLIST") static var SYS_FSETATTRLIST: go.GoInt;
-    @:native("SYS_FSETXATTR") static var SYS_FSETXATTR: go.GoInt;
-    @:native("SYS_FSGETPATH") static var SYS_FSGETPATH: go.GoInt;
-    @:native("SYS_FSTAT") static var SYS_FSTAT: go.GoInt;
-    @:native("SYS_FSTAT64") static var SYS_FSTAT64: go.GoInt;
-    @:native("SYS_FSTAT64_EXTENDED") static var SYS_FSTAT64_EXTENDED: go.GoInt;
-    @:native("SYS_FSTATFS") static var SYS_FSTATFS: go.GoInt;
-    @:native("SYS_FSTATFS64") static var SYS_FSTATFS64: go.GoInt;
-    @:native("SYS_FSTATV") static var SYS_FSTATV: go.GoInt;
-    @:native("SYS_FSTAT_EXTENDED") static var SYS_FSTAT_EXTENDED: go.GoInt;
-    @:native("SYS_FSYNC") static var SYS_FSYNC: go.GoInt;
-    @:native("SYS_FSYNC_NOCANCEL") static var SYS_FSYNC_NOCANCEL: go.GoInt;
-    @:native("SYS_FTRUNCATE") static var SYS_FTRUNCATE: go.GoInt;
-    @:native("SYS_FUTIMES") static var SYS_FUTIMES: go.GoInt;
-    @:native("SYS_GETATTRLIST") static var SYS_GETATTRLIST: go.GoInt;
-    @:native("SYS_GETAUDIT") static var SYS_GETAUDIT: go.GoInt;
-    @:native("SYS_GETAUDIT_ADDR") static var SYS_GETAUDIT_ADDR: go.GoInt;
-    @:native("SYS_GETAUID") static var SYS_GETAUID: go.GoInt;
-    @:native("SYS_GETDIRENTRIES") static var SYS_GETDIRENTRIES: go.GoInt;
-    @:native("SYS_GETDIRENTRIES64") static var SYS_GETDIRENTRIES64: go.GoInt;
-    @:native("SYS_GETDIRENTRIESATTR") static var SYS_GETDIRENTRIESATTR: go.GoInt;
-    @:native("SYS_GETDTABLESIZE") static var SYS_GETDTABLESIZE: go.GoInt;
-    @:native("SYS_GETEGID") static var SYS_GETEGID: go.GoInt;
-    @:native("SYS_GETEUID") static var SYS_GETEUID: go.GoInt;
-    @:native("SYS_GETFH") static var SYS_GETFH: go.GoInt;
-    @:native("SYS_GETFSSTAT") static var SYS_GETFSSTAT: go.GoInt;
-    @:native("SYS_GETFSSTAT64") static var SYS_GETFSSTAT64: go.GoInt;
-    @:native("SYS_GETGID") static var SYS_GETGID: go.GoInt;
-    @:native("SYS_GETGROUPS") static var SYS_GETGROUPS: go.GoInt;
-    @:native("SYS_GETHOSTUUID") static var SYS_GETHOSTUUID: go.GoInt;
-    @:native("SYS_GETITIMER") static var SYS_GETITIMER: go.GoInt;
-    @:native("SYS_GETLCID") static var SYS_GETLCID: go.GoInt;
-    @:native("SYS_GETLOGIN") static var SYS_GETLOGIN: go.GoInt;
-    @:native("SYS_GETPEERNAME") static var SYS_GETPEERNAME: go.GoInt;
-    @:native("SYS_GETPGID") static var SYS_GETPGID: go.GoInt;
-    @:native("SYS_GETPGRP") static var SYS_GETPGRP: go.GoInt;
-    @:native("SYS_GETPID") static var SYS_GETPID: go.GoInt;
-    @:native("SYS_GETPPID") static var SYS_GETPPID: go.GoInt;
-    @:native("SYS_GETPRIORITY") static var SYS_GETPRIORITY: go.GoInt;
-    @:native("SYS_GETRLIMIT") static var SYS_GETRLIMIT: go.GoInt;
-    @:native("SYS_GETRUSAGE") static var SYS_GETRUSAGE: go.GoInt;
-    @:native("SYS_GETSGROUPS") static var SYS_GETSGROUPS: go.GoInt;
-    @:native("SYS_GETSID") static var SYS_GETSID: go.GoInt;
-    @:native("SYS_GETSOCKNAME") static var SYS_GETSOCKNAME: go.GoInt;
-    @:native("SYS_GETSOCKOPT") static var SYS_GETSOCKOPT: go.GoInt;
-    @:native("SYS_GETTID") static var SYS_GETTID: go.GoInt;
-    @:native("SYS_GETTIMEOFDAY") static var SYS_GETTIMEOFDAY: go.GoInt;
-    @:native("SYS_GETUID") static var SYS_GETUID: go.GoInt;
-    @:native("SYS_GETWGROUPS") static var SYS_GETWGROUPS: go.GoInt;
-    @:native("SYS_GETXATTR") static var SYS_GETXATTR: go.GoInt;
-    @:native("SYS_IDENTITYSVC") static var SYS_IDENTITYSVC: go.GoInt;
-    @:native("SYS_INITGROUPS") static var SYS_INITGROUPS: go.GoInt;
-    @:native("SYS_IOCTL") static var SYS_IOCTL: go.GoInt;
-    @:native("SYS_IOPOLICYSYS") static var SYS_IOPOLICYSYS: go.GoInt;
-    @:native("SYS_ISSETUGID") static var SYS_ISSETUGID: go.GoInt;
-    @:native("SYS_KDEBUG_TRACE") static var SYS_KDEBUG_TRACE: go.GoInt;
-    @:native("SYS_KEVENT") static var SYS_KEVENT: go.GoInt;
-    @:native("SYS_KEVENT64") static var SYS_KEVENT64: go.GoInt;
-    @:native("SYS_KILL") static var SYS_KILL: go.GoInt;
-    @:native("SYS_KQUEUE") static var SYS_KQUEUE: go.GoInt;
-    @:native("SYS_LCHOWN") static var SYS_LCHOWN: go.GoInt;
-    @:native("SYS_LINK") static var SYS_LINK: go.GoInt;
-    @:native("SYS_LIO_LISTIO") static var SYS_LIO_LISTIO: go.GoInt;
-    @:native("SYS_LISTEN") static var SYS_LISTEN: go.GoInt;
-    @:native("SYS_LISTXATTR") static var SYS_LISTXATTR: go.GoInt;
-    @:native("SYS_LSEEK") static var SYS_LSEEK: go.GoInt;
-    @:native("SYS_LSTAT") static var SYS_LSTAT: go.GoInt;
-    @:native("SYS_LSTAT64") static var SYS_LSTAT64: go.GoInt;
-    @:native("SYS_LSTAT64_EXTENDED") static var SYS_LSTAT64_EXTENDED: go.GoInt;
-    @:native("SYS_LSTATV") static var SYS_LSTATV: go.GoInt;
-    @:native("SYS_LSTAT_EXTENDED") static var SYS_LSTAT_EXTENDED: go.GoInt;
-    @:native("SYS_MADVISE") static var SYS_MADVISE: go.GoInt;
-    @:native("SYS_MAXSYSCALL") static var SYS_MAXSYSCALL: go.GoInt;
-    @:native("SYS_MINCORE") static var SYS_MINCORE: go.GoInt;
-    @:native("SYS_MINHERIT") static var SYS_MINHERIT: go.GoInt;
-    @:native("SYS_MKCOMPLEX") static var SYS_MKCOMPLEX: go.GoInt;
-    @:native("SYS_MKDIR") static var SYS_MKDIR: go.GoInt;
-    @:native("SYS_MKDIR_EXTENDED") static var SYS_MKDIR_EXTENDED: go.GoInt;
-    @:native("SYS_MKFIFO") static var SYS_MKFIFO: go.GoInt;
-    @:native("SYS_MKFIFO_EXTENDED") static var SYS_MKFIFO_EXTENDED: go.GoInt;
-    @:native("SYS_MKNOD") static var SYS_MKNOD: go.GoInt;
-    @:native("SYS_MLOCK") static var SYS_MLOCK: go.GoInt;
-    @:native("SYS_MLOCKALL") static var SYS_MLOCKALL: go.GoInt;
-    @:native("SYS_MMAP") static var SYS_MMAP: go.GoInt;
-    @:native("SYS_MODWATCH") static var SYS_MODWATCH: go.GoInt;
-    @:native("SYS_MOUNT") static var SYS_MOUNT: go.GoInt;
-    @:native("SYS_MPROTECT") static var SYS_MPROTECT: go.GoInt;
-    @:native("SYS_MSGCTL") static var SYS_MSGCTL: go.GoInt;
-    @:native("SYS_MSGGET") static var SYS_MSGGET: go.GoInt;
-    @:native("SYS_MSGRCV") static var SYS_MSGRCV: go.GoInt;
-    @:native("SYS_MSGRCV_NOCANCEL") static var SYS_MSGRCV_NOCANCEL: go.GoInt;
-    @:native("SYS_MSGSND") static var SYS_MSGSND: go.GoInt;
-    @:native("SYS_MSGSND_NOCANCEL") static var SYS_MSGSND_NOCANCEL: go.GoInt;
-    @:native("SYS_MSGSYS") static var SYS_MSGSYS: go.GoInt;
-    @:native("SYS_MSYNC") static var SYS_MSYNC: go.GoInt;
-    @:native("SYS_MSYNC_NOCANCEL") static var SYS_MSYNC_NOCANCEL: go.GoInt;
-    @:native("SYS_MUNLOCK") static var SYS_MUNLOCK: go.GoInt;
-    @:native("SYS_MUNLOCKALL") static var SYS_MUNLOCKALL: go.GoInt;
-    @:native("SYS_MUNMAP") static var SYS_MUNMAP: go.GoInt;
-    @:native("SYS_NFSCLNT") static var SYS_NFSCLNT: go.GoInt;
-    @:native("SYS_NFSSVC") static var SYS_NFSSVC: go.GoInt;
-    @:native("SYS_OPEN") static var SYS_OPEN: go.GoInt;
-    @:native("SYS_OPEN_EXTENDED") static var SYS_OPEN_EXTENDED: go.GoInt;
-    @:native("SYS_OPEN_NOCANCEL") static var SYS_OPEN_NOCANCEL: go.GoInt;
-    @:native("SYS_PATHCONF") static var SYS_PATHCONF: go.GoInt;
-    @:native("SYS_PID_HIBERNATE") static var SYS_PID_HIBERNATE: go.GoInt;
-    @:native("SYS_PID_RESUME") static var SYS_PID_RESUME: go.GoInt;
-    @:native("SYS_PID_SHUTDOWN_SOCKETS") static var SYS_PID_SHUTDOWN_SOCKETS: go.GoInt;
-    @:native("SYS_PID_SUSPEND") static var SYS_PID_SUSPEND: go.GoInt;
-    @:native("SYS_PIPE") static var SYS_PIPE: go.GoInt;
-    @:native("SYS_POLL") static var SYS_POLL: go.GoInt;
-    @:native("SYS_POLL_NOCANCEL") static var SYS_POLL_NOCANCEL: go.GoInt;
-    @:native("SYS_POSIX_SPAWN") static var SYS_POSIX_SPAWN: go.GoInt;
-    @:native("SYS_PREAD") static var SYS_PREAD: go.GoInt;
-    @:native("SYS_PREAD_NOCANCEL") static var SYS_PREAD_NOCANCEL: go.GoInt;
-    @:native("SYS_PROCESS_POLICY") static var SYS_PROCESS_POLICY: go.GoInt;
-    @:native("SYS_PROC_INFO") static var SYS_PROC_INFO: go.GoInt;
-    @:native("SYS_PROFIL") static var SYS_PROFIL: go.GoInt;
-    @:native("SYS_PSYNCH_CVBROAD") static var SYS_PSYNCH_CVBROAD: go.GoInt;
-    @:native("SYS_PSYNCH_CVCLRPREPOST") static var SYS_PSYNCH_CVCLRPREPOST: go.GoInt;
-    @:native("SYS_PSYNCH_CVSIGNAL") static var SYS_PSYNCH_CVSIGNAL: go.GoInt;
-    @:native("SYS_PSYNCH_CVWAIT") static var SYS_PSYNCH_CVWAIT: go.GoInt;
-    @:native("SYS_PSYNCH_MUTEXDROP") static var SYS_PSYNCH_MUTEXDROP: go.GoInt;
-    @:native("SYS_PSYNCH_MUTEXWAIT") static var SYS_PSYNCH_MUTEXWAIT: go.GoInt;
-    @:native("SYS_PSYNCH_RW_DOWNGRADE") static var SYS_PSYNCH_RW_DOWNGRADE: go.GoInt;
-    @:native("SYS_PSYNCH_RW_LONGRDLOCK") static var SYS_PSYNCH_RW_LONGRDLOCK: go.GoInt;
-    @:native("SYS_PSYNCH_RW_RDLOCK") static var SYS_PSYNCH_RW_RDLOCK: go.GoInt;
-    @:native("SYS_PSYNCH_RW_UNLOCK") static var SYS_PSYNCH_RW_UNLOCK: go.GoInt;
-    @:native("SYS_PSYNCH_RW_UNLOCK2") static var SYS_PSYNCH_RW_UNLOCK2: go.GoInt;
-    @:native("SYS_PSYNCH_RW_UPGRADE") static var SYS_PSYNCH_RW_UPGRADE: go.GoInt;
-    @:native("SYS_PSYNCH_RW_WRLOCK") static var SYS_PSYNCH_RW_WRLOCK: go.GoInt;
-    @:native("SYS_PSYNCH_RW_YIELDWRLOCK") static var SYS_PSYNCH_RW_YIELDWRLOCK: go.GoInt;
-    @:native("SYS_PTRACE") static var SYS_PTRACE: go.GoInt;
-    @:native("SYS_PWRITE") static var SYS_PWRITE: go.GoInt;
-    @:native("SYS_PWRITE_NOCANCEL") static var SYS_PWRITE_NOCANCEL: go.GoInt;
-    @:native("SYS_QUOTACTL") static var SYS_QUOTACTL: go.GoInt;
-    @:native("SYS_READ") static var SYS_READ: go.GoInt;
-    @:native("SYS_READLINK") static var SYS_READLINK: go.GoInt;
-    @:native("SYS_READV") static var SYS_READV: go.GoInt;
-    @:native("SYS_READV_NOCANCEL") static var SYS_READV_NOCANCEL: go.GoInt;
-    @:native("SYS_READ_NOCANCEL") static var SYS_READ_NOCANCEL: go.GoInt;
-    @:native("SYS_REBOOT") static var SYS_REBOOT: go.GoInt;
-    @:native("SYS_RECVFROM") static var SYS_RECVFROM: go.GoInt;
-    @:native("SYS_RECVFROM_NOCANCEL") static var SYS_RECVFROM_NOCANCEL: go.GoInt;
-    @:native("SYS_RECVMSG") static var SYS_RECVMSG: go.GoInt;
-    @:native("SYS_RECVMSG_NOCANCEL") static var SYS_RECVMSG_NOCANCEL: go.GoInt;
-    @:native("SYS_REMOVEXATTR") static var SYS_REMOVEXATTR: go.GoInt;
-    @:native("SYS_RENAME") static var SYS_RENAME: go.GoInt;
-    @:native("SYS_REVOKE") static var SYS_REVOKE: go.GoInt;
-    @:native("SYS_RMDIR") static var SYS_RMDIR: go.GoInt;
-    @:native("SYS_SEARCHFS") static var SYS_SEARCHFS: go.GoInt;
-    @:native("SYS_SELECT") static var SYS_SELECT: go.GoInt;
-    @:native("SYS_SELECT_NOCANCEL") static var SYS_SELECT_NOCANCEL: go.GoInt;
-    @:native("SYS_SEMCTL") static var SYS_SEMCTL: go.GoInt;
-    @:native("SYS_SEMGET") static var SYS_SEMGET: go.GoInt;
-    @:native("SYS_SEMOP") static var SYS_SEMOP: go.GoInt;
-    @:native("SYS_SEMSYS") static var SYS_SEMSYS: go.GoInt;
-    @:native("SYS_SEM_CLOSE") static var SYS_SEM_CLOSE: go.GoInt;
-    @:native("SYS_SEM_DESTROY") static var SYS_SEM_DESTROY: go.GoInt;
-    @:native("SYS_SEM_GETVALUE") static var SYS_SEM_GETVALUE: go.GoInt;
-    @:native("SYS_SEM_INIT") static var SYS_SEM_INIT: go.GoInt;
-    @:native("SYS_SEM_OPEN") static var SYS_SEM_OPEN: go.GoInt;
-    @:native("SYS_SEM_POST") static var SYS_SEM_POST: go.GoInt;
-    @:native("SYS_SEM_TRYWAIT") static var SYS_SEM_TRYWAIT: go.GoInt;
-    @:native("SYS_SEM_UNLINK") static var SYS_SEM_UNLINK: go.GoInt;
-    @:native("SYS_SEM_WAIT") static var SYS_SEM_WAIT: go.GoInt;
-    @:native("SYS_SEM_WAIT_NOCANCEL") static var SYS_SEM_WAIT_NOCANCEL: go.GoInt;
-    @:native("SYS_SENDFILE") static var SYS_SENDFILE: go.GoInt;
-    @:native("SYS_SENDMSG") static var SYS_SENDMSG: go.GoInt;
-    @:native("SYS_SENDMSG_NOCANCEL") static var SYS_SENDMSG_NOCANCEL: go.GoInt;
-    @:native("SYS_SENDTO") static var SYS_SENDTO: go.GoInt;
-    @:native("SYS_SENDTO_NOCANCEL") static var SYS_SENDTO_NOCANCEL: go.GoInt;
-    @:native("SYS_SETATTRLIST") static var SYS_SETATTRLIST: go.GoInt;
-    @:native("SYS_SETAUDIT") static var SYS_SETAUDIT: go.GoInt;
-    @:native("SYS_SETAUDIT_ADDR") static var SYS_SETAUDIT_ADDR: go.GoInt;
-    @:native("SYS_SETAUID") static var SYS_SETAUID: go.GoInt;
-    @:native("SYS_SETEGID") static var SYS_SETEGID: go.GoInt;
-    @:native("SYS_SETEUID") static var SYS_SETEUID: go.GoInt;
-    @:native("SYS_SETGID") static var SYS_SETGID: go.GoInt;
-    @:native("SYS_SETGROUPS") static var SYS_SETGROUPS: go.GoInt;
-    @:native("SYS_SETITIMER") static var SYS_SETITIMER: go.GoInt;
-    @:native("SYS_SETLCID") static var SYS_SETLCID: go.GoInt;
-    @:native("SYS_SETLOGIN") static var SYS_SETLOGIN: go.GoInt;
-    @:native("SYS_SETPGID") static var SYS_SETPGID: go.GoInt;
-    @:native("SYS_SETPRIORITY") static var SYS_SETPRIORITY: go.GoInt;
-    @:native("SYS_SETPRIVEXEC") static var SYS_SETPRIVEXEC: go.GoInt;
-    @:native("SYS_SETREGID") static var SYS_SETREGID: go.GoInt;
-    @:native("SYS_SETREUID") static var SYS_SETREUID: go.GoInt;
-    @:native("SYS_SETRLIMIT") static var SYS_SETRLIMIT: go.GoInt;
-    @:native("SYS_SETSGROUPS") static var SYS_SETSGROUPS: go.GoInt;
-    @:native("SYS_SETSID") static var SYS_SETSID: go.GoInt;
-    @:native("SYS_SETSOCKOPT") static var SYS_SETSOCKOPT: go.GoInt;
-    @:native("SYS_SETTID") static var SYS_SETTID: go.GoInt;
-    @:native("SYS_SETTID_WITH_PID") static var SYS_SETTID_WITH_PID: go.GoInt;
-    @:native("SYS_SETTIMEOFDAY") static var SYS_SETTIMEOFDAY: go.GoInt;
-    @:native("SYS_SETUID") static var SYS_SETUID: go.GoInt;
-    @:native("SYS_SETWGROUPS") static var SYS_SETWGROUPS: go.GoInt;
-    @:native("SYS_SETXATTR") static var SYS_SETXATTR: go.GoInt;
-    @:native("SYS_SHARED_REGION_CHECK_NP") static var SYS_SHARED_REGION_CHECK_NP: go.GoInt;
-    @:native("SYS_SHARED_REGION_MAP_AND_SLIDE_NP") static var SYS_SHARED_REGION_MAP_AND_SLIDE_NP: go.GoInt;
-    @:native("SYS_SHMAT") static var SYS_SHMAT: go.GoInt;
-    @:native("SYS_SHMCTL") static var SYS_SHMCTL: go.GoInt;
-    @:native("SYS_SHMDT") static var SYS_SHMDT: go.GoInt;
-    @:native("SYS_SHMGET") static var SYS_SHMGET: go.GoInt;
-    @:native("SYS_SHMSYS") static var SYS_SHMSYS: go.GoInt;
-    @:native("SYS_SHM_OPEN") static var SYS_SHM_OPEN: go.GoInt;
-    @:native("SYS_SHM_UNLINK") static var SYS_SHM_UNLINK: go.GoInt;
-    @:native("SYS_SHUTDOWN") static var SYS_SHUTDOWN: go.GoInt;
-    @:native("SYS_SIGACTION") static var SYS_SIGACTION: go.GoInt;
-    @:native("SYS_SIGALTSTACK") static var SYS_SIGALTSTACK: go.GoInt;
-    @:native("SYS_SIGPENDING") static var SYS_SIGPENDING: go.GoInt;
-    @:native("SYS_SIGPROCMASK") static var SYS_SIGPROCMASK: go.GoInt;
-    @:native("SYS_SIGRETURN") static var SYS_SIGRETURN: go.GoInt;
-    @:native("SYS_SIGSUSPEND") static var SYS_SIGSUSPEND: go.GoInt;
-    @:native("SYS_SIGSUSPEND_NOCANCEL") static var SYS_SIGSUSPEND_NOCANCEL: go.GoInt;
-    @:native("SYS_SOCKET") static var SYS_SOCKET: go.GoInt;
-    @:native("SYS_SOCKETPAIR") static var SYS_SOCKETPAIR: go.GoInt;
-    @:native("SYS_STACK_SNAPSHOT") static var SYS_STACK_SNAPSHOT: go.GoInt;
-    @:native("SYS_STAT") static var SYS_STAT: go.GoInt;
-    @:native("SYS_STAT64") static var SYS_STAT64: go.GoInt;
-    @:native("SYS_STAT64_EXTENDED") static var SYS_STAT64_EXTENDED: go.GoInt;
-    @:native("SYS_STATFS") static var SYS_STATFS: go.GoInt;
-    @:native("SYS_STATFS64") static var SYS_STATFS64: go.GoInt;
-    @:native("SYS_STATV") static var SYS_STATV: go.GoInt;
-    @:native("SYS_STAT_EXTENDED") static var SYS_STAT_EXTENDED: go.GoInt;
-    @:native("SYS_SWAPON") static var SYS_SWAPON: go.GoInt;
-    @:native("SYS_SYMLINK") static var SYS_SYMLINK: go.GoInt;
-    @:native("SYS_SYNC") static var SYS_SYNC: go.GoInt;
-    @:native("SYS_SYSCALL") static var SYS_SYSCALL: go.GoInt;
-    @:native("SYS_THREAD_SELFID") static var SYS_THREAD_SELFID: go.GoInt;
-    @:native("SYS_TRUNCATE") static var SYS_TRUNCATE: go.GoInt;
-    @:native("SYS_UMASK") static var SYS_UMASK: go.GoInt;
-    @:native("SYS_UMASK_EXTENDED") static var SYS_UMASK_EXTENDED: go.GoInt;
-    @:native("SYS_UNDELETE") static var SYS_UNDELETE: go.GoInt;
-    @:native("SYS_UNLINK") static var SYS_UNLINK: go.GoInt;
-    @:native("SYS_UNMOUNT") static var SYS_UNMOUNT: go.GoInt;
-    @:native("SYS_UTIMES") static var SYS_UTIMES: go.GoInt;
-    @:native("SYS_VFORK") static var SYS_VFORK: go.GoInt;
-    @:native("SYS_VM_PRESSURE_MONITOR") static var SYS_VM_PRESSURE_MONITOR: go.GoInt;
-    @:native("SYS_WAIT4") static var SYS_WAIT4: go.GoInt;
-    @:native("SYS_WAIT4_NOCANCEL") static var SYS_WAIT4_NOCANCEL: go.GoInt;
-    @:native("SYS_WAITEVENT") static var SYS_WAITEVENT: go.GoInt;
-    @:native("SYS_WAITID") static var SYS_WAITID: go.GoInt;
-    @:native("SYS_WAITID_NOCANCEL") static var SYS_WAITID_NOCANCEL: go.GoInt;
-    @:native("SYS_WATCHEVENT") static var SYS_WATCHEVENT: go.GoInt;
-    @:native("SYS_WORKQ_KERNRETURN") static var SYS_WORKQ_KERNRETURN: go.GoInt;
-    @:native("SYS_WORKQ_OPEN") static var SYS_WORKQ_OPEN: go.GoInt;
-    @:native("SYS_WRITE") static var SYS_WRITE: go.GoInt;
-    @:native("SYS_WRITEV") static var SYS_WRITEV: go.GoInt;
-    @:native("SYS_WRITEV_NOCANCEL") static var SYS_WRITEV_NOCANCEL: go.GoInt;
-    @:native("SYS_WRITE_NOCANCEL") static var SYS_WRITE_NOCANCEL: go.GoInt;
-    @:native("SYS___DISABLE_THREADSIGNAL") static var SYS___DISABLE_THREADSIGNAL: go.GoInt;
-    @:native("SYS___MAC_EXECVE") static var SYS___MAC_EXECVE: go.GoInt;
-    @:native("SYS___MAC_GETFSSTAT") static var SYS___MAC_GETFSSTAT: go.GoInt;
-    @:native("SYS___MAC_GET_FD") static var SYS___MAC_GET_FD: go.GoInt;
-    @:native("SYS___MAC_GET_FILE") static var SYS___MAC_GET_FILE: go.GoInt;
-    @:native("SYS___MAC_GET_LCID") static var SYS___MAC_GET_LCID: go.GoInt;
-    @:native("SYS___MAC_GET_LCTX") static var SYS___MAC_GET_LCTX: go.GoInt;
-    @:native("SYS___MAC_GET_LINK") static var SYS___MAC_GET_LINK: go.GoInt;
-    @:native("SYS___MAC_GET_MOUNT") static var SYS___MAC_GET_MOUNT: go.GoInt;
-    @:native("SYS___MAC_GET_PID") static var SYS___MAC_GET_PID: go.GoInt;
-    @:native("SYS___MAC_GET_PROC") static var SYS___MAC_GET_PROC: go.GoInt;
-    @:native("SYS___MAC_MOUNT") static var SYS___MAC_MOUNT: go.GoInt;
-    @:native("SYS___MAC_SET_FD") static var SYS___MAC_SET_FD: go.GoInt;
-    @:native("SYS___MAC_SET_FILE") static var SYS___MAC_SET_FILE: go.GoInt;
-    @:native("SYS___MAC_SET_LCTX") static var SYS___MAC_SET_LCTX: go.GoInt;
-    @:native("SYS___MAC_SET_LINK") static var SYS___MAC_SET_LINK: go.GoInt;
-    @:native("SYS___MAC_SET_PROC") static var SYS___MAC_SET_PROC: go.GoInt;
-    @:native("SYS___MAC_SYSCALL") static var SYS___MAC_SYSCALL: go.GoInt;
-    @:native("SYS___OLD_SEMWAIT_SIGNAL") static var SYS___OLD_SEMWAIT_SIGNAL: go.GoInt;
-    @:native("SYS___OLD_SEMWAIT_SIGNAL_NOCANCEL") static var SYS___OLD_SEMWAIT_SIGNAL_NOCANCEL: go.GoInt;
-    @:native("SYS___PTHREAD_CANCELED") static var SYS___PTHREAD_CANCELED: go.GoInt;
-    @:native("SYS___PTHREAD_CHDIR") static var SYS___PTHREAD_CHDIR: go.GoInt;
-    @:native("SYS___PTHREAD_FCHDIR") static var SYS___PTHREAD_FCHDIR: go.GoInt;
-    @:native("SYS___PTHREAD_KILL") static var SYS___PTHREAD_KILL: go.GoInt;
-    @:native("SYS___PTHREAD_MARKCANCEL") static var SYS___PTHREAD_MARKCANCEL: go.GoInt;
-    @:native("SYS___PTHREAD_SIGMASK") static var SYS___PTHREAD_SIGMASK: go.GoInt;
-    @:native("SYS___SEMWAIT_SIGNAL") static var SYS___SEMWAIT_SIGNAL: go.GoInt;
-    @:native("SYS___SEMWAIT_SIGNAL_NOCANCEL") static var SYS___SEMWAIT_SIGNAL_NOCANCEL: go.GoInt;
-    @:native("SYS___SIGWAIT") static var SYS___SIGWAIT: go.GoInt;
-    @:native("SYS___SIGWAIT_NOCANCEL") static var SYS___SIGWAIT_NOCANCEL: go.GoInt;
-    @:native("SYS___SYSCTL") static var SYS___SYSCTL: go.GoInt;
-    @:native("S_IEXEC") static var S_IEXEC: go.GoInt;
+    @:native("SO_UPDATE_ACCEPT_CONTEXT") static var SO_UPDATE_ACCEPT_CONTEXT: go.GoInt;
+    @:native("SO_UPDATE_CONNECT_CONTEXT") static var SO_UPDATE_CONNECT_CONTEXT: go.GoInt;
+    @:native("STANDARD_RIGHTS_ALL") static var STANDARD_RIGHTS_ALL: go.GoInt;
+    @:native("STANDARD_RIGHTS_EXECUTE") static var STANDARD_RIGHTS_EXECUTE: go.GoInt;
+    @:native("STANDARD_RIGHTS_READ") static var STANDARD_RIGHTS_READ: go.GoInt;
+    @:native("STANDARD_RIGHTS_REQUIRED") static var STANDARD_RIGHTS_REQUIRED: go.GoInt;
+    @:native("STANDARD_RIGHTS_WRITE") static var STANDARD_RIGHTS_WRITE: go.GoInt;
+    @:native("STARTF_USESHOWWINDOW") static var STARTF_USESHOWWINDOW: go.GoInt;
+    @:native("STARTF_USESTDHANDLES") static var STARTF_USESTDHANDLES: go.GoInt;
+    @:native("STD_ERROR_HANDLE") static var STD_ERROR_HANDLE: go.GoInt;
+    @:native("STD_INPUT_HANDLE") static var STD_INPUT_HANDLE: go.GoInt;
+    @:native("STD_OUTPUT_HANDLE") static var STD_OUTPUT_HANDLE: go.GoInt;
+    @:native("SUBLANG_ENGLISH_US") static var SUBLANG_ENGLISH_US: go.GoInt;
+    /**
+        ShowWindow constants
+    **/
+    @:native("SW_FORCEMINIMIZE") static var SW_FORCEMINIMIZE: go.GoInt;
+    /**
+        ShowWindow constants
+    **/
+    @:native("SW_HIDE") static var SW_HIDE: go.GoInt;
+    /**
+        ShowWindow constants
+    **/
+    @:native("SW_MAXIMIZE") static var SW_MAXIMIZE: go.GoInt;
+    /**
+        ShowWindow constants
+    **/
+    @:native("SW_MINIMIZE") static var SW_MINIMIZE: go.GoInt;
+    /**
+        ShowWindow constants
+    **/
+    @:native("SW_NORMAL") static var SW_NORMAL: go.GoInt;
+    /**
+        ShowWindow constants
+    **/
+    @:native("SW_RESTORE") static var SW_RESTORE: go.GoInt;
+    /**
+        ShowWindow constants
+    **/
+    @:native("SW_SHOW") static var SW_SHOW: go.GoInt;
+    /**
+        ShowWindow constants
+    **/
+    @:native("SW_SHOWDEFAULT") static var SW_SHOWDEFAULT: go.GoInt;
+    /**
+        ShowWindow constants
+    **/
+    @:native("SW_SHOWMAXIMIZED") static var SW_SHOWMAXIMIZED: go.GoInt;
+    /**
+        ShowWindow constants
+    **/
+    @:native("SW_SHOWMINIMIZED") static var SW_SHOWMINIMIZED: go.GoInt;
+    /**
+        ShowWindow constants
+    **/
+    @:native("SW_SHOWMINNOACTIVE") static var SW_SHOWMINNOACTIVE: go.GoInt;
+    /**
+        ShowWindow constants
+    **/
+    @:native("SW_SHOWNA") static var SW_SHOWNA: go.GoInt;
+    /**
+        ShowWindow constants
+    **/
+    @:native("SW_SHOWNOACTIVATE") static var SW_SHOWNOACTIVATE: go.GoInt;
+    /**
+        ShowWindow constants
+    **/
+    @:native("SW_SHOWNORMAL") static var SW_SHOWNORMAL: go.GoInt;
+    @:native("SYMBOLIC_LINK_FLAG_DIRECTORY") static var SYMBOLIC_LINK_FLAG_DIRECTORY: go.GoInt;
+    @:native("SYNCHRONIZE") static var SYNCHRONIZE: go.GoInt;
+    /**
+        Invented values to support what package os expects.
+    **/
     @:native("S_IFBLK") static var S_IFBLK: go.GoInt;
+    /**
+        Invented values to support what package os expects.
+    **/
     @:native("S_IFCHR") static var S_IFCHR: go.GoInt;
+    /**
+        Invented values to support what package os expects.
+    **/
     @:native("S_IFDIR") static var S_IFDIR: go.GoInt;
+    /**
+        Invented values to support what package os expects.
+    **/
     @:native("S_IFIFO") static var S_IFIFO: go.GoInt;
+    /**
+        Invented values to support what package os expects.
+    **/
     @:native("S_IFLNK") static var S_IFLNK: go.GoInt;
+    /**
+        Invented values to support what package os expects.
+    **/
     @:native("S_IFMT") static var S_IFMT: go.GoInt;
+    /**
+        Invented values to support what package os expects.
+    **/
     @:native("S_IFREG") static var S_IFREG: go.GoInt;
+    /**
+        Invented values to support what package os expects.
+    **/
     @:native("S_IFSOCK") static var S_IFSOCK: go.GoInt;
-    @:native("S_IFWHT") static var S_IFWHT: go.GoInt;
-    @:native("S_IREAD") static var S_IREAD: go.GoInt;
-    @:native("S_IRGRP") static var S_IRGRP: go.GoInt;
-    @:native("S_IROTH") static var S_IROTH: go.GoInt;
+    /**
+        Invented values to support what package os expects.
+    **/
     @:native("S_IRUSR") static var S_IRUSR: go.GoInt;
-    @:native("S_IRWXG") static var S_IRWXG: go.GoInt;
-    @:native("S_IRWXO") static var S_IRWXO: go.GoInt;
-    @:native("S_IRWXU") static var S_IRWXU: go.GoInt;
+    /**
+        Invented values to support what package os expects.
+    **/
     @:native("S_ISGID") static var S_ISGID: go.GoInt;
-    @:native("S_ISTXT") static var S_ISTXT: go.GoInt;
+    /**
+        Invented values to support what package os expects.
+    **/
     @:native("S_ISUID") static var S_ISUID: go.GoInt;
+    /**
+        Invented values to support what package os expects.
+    **/
     @:native("S_ISVTX") static var S_ISVTX: go.GoInt;
-    @:native("S_IWGRP") static var S_IWGRP: go.GoInt;
-    @:native("S_IWOTH") static var S_IWOTH: go.GoInt;
+    /**
+        Invented values to support what package os expects.
+    **/
     @:native("S_IWRITE") static var S_IWRITE: go.GoInt;
+    /**
+        Invented values to support what package os expects.
+    **/
     @:native("S_IWUSR") static var S_IWUSR: go.GoInt;
-    @:native("S_IXGRP") static var S_IXGRP: go.GoInt;
-    @:native("S_IXOTH") static var S_IXOTH: go.GoInt;
+    /**
+        Invented values to support what package os expects.
+    **/
     @:native("S_IXUSR") static var S_IXUSR: go.GoInt;
-    @:native("SizeofBpfHdr") static var sizeofBpfHdr: go.GoInt;
-    @:native("SizeofBpfInsn") static var sizeofBpfInsn: go.GoInt;
-    @:native("SizeofBpfProgram") static var sizeofBpfProgram: go.GoInt;
-    @:native("SizeofBpfStat") static var sizeofBpfStat: go.GoInt;
-    @:native("SizeofBpfVersion") static var sizeofBpfVersion: go.GoInt;
-    @:native("SizeofCmsghdr") static var sizeofCmsghdr: go.GoInt;
-    @:native("SizeofICMPv6Filter") static var sizeofICMPv6Filter: go.GoInt;
-    @:native("SizeofIPMreq") static var sizeofIPMreq: go.GoInt;
-    @:native("SizeofIPv6MTUInfo") static var sizeofIPv6MTUInfo: go.GoInt;
-    @:native("SizeofIPv6Mreq") static var sizeofIPv6Mreq: go.GoInt;
-    @:native("SizeofIfData") static var sizeofIfData: go.GoInt;
-    @:native("SizeofIfMsghdr") static var sizeofIfMsghdr: go.GoInt;
-    @:native("SizeofIfaMsghdr") static var sizeofIfaMsghdr: go.GoInt;
-    @:native("SizeofIfmaMsghdr") static var sizeofIfmaMsghdr: go.GoInt;
-    @:native("SizeofIfmaMsghdr2") static var sizeofIfmaMsghdr2: go.GoInt;
-    @:native("SizeofInet4Pktinfo") static var sizeofInet4Pktinfo: go.GoInt;
-    @:native("SizeofInet6Pktinfo") static var sizeofInet6Pktinfo: go.GoInt;
-    @:native("SizeofLinger") static var sizeofLinger: go.GoInt;
-    @:native("SizeofMsghdr") static var sizeofMsghdr: go.GoInt;
-    @:native("SizeofRtMetrics") static var sizeofRtMetrics: go.GoInt;
-    @:native("SizeofRtMsghdr") static var sizeofRtMsghdr: go.GoInt;
-    @:native("SizeofSockaddrAny") static var sizeofSockaddrAny: go.GoInt;
-    @:native("SizeofSockaddrDatalink") static var sizeofSockaddrDatalink: go.GoInt;
-    @:native("SizeofSockaddrInet4") static var sizeofSockaddrInet4: go.GoInt;
-    @:native("SizeofSockaddrInet6") static var sizeofSockaddrInet6: go.GoInt;
-    @:native("SizeofSockaddrUnix") static var sizeofSockaddrUnix: go.GoInt;
-    @:native("TCIFLUSH") static var TCIFLUSH: go.GoInt;
-    @:native("TCIOFLUSH") static var TCIOFLUSH: go.GoInt;
-    @:native("TCOFLUSH") static var TCOFLUSH: go.GoInt;
-    @:native("TCP_CONNECTIONTIMEOUT") static var TCP_CONNECTIONTIMEOUT: go.GoInt;
-    @:native("TCP_KEEPALIVE") static var TCP_KEEPALIVE: go.GoInt;
-    @:native("TCP_MAXHLEN") static var TCP_MAXHLEN: go.GoInt;
-    @:native("TCP_MAXOLEN") static var TCP_MAXOLEN: go.GoInt;
-    @:native("TCP_MAXSEG") static var TCP_MAXSEG: go.GoInt;
-    @:native("TCP_MAXWIN") static var TCP_MAXWIN: go.GoInt;
-    @:native("TCP_MAX_SACK") static var TCP_MAX_SACK: go.GoInt;
-    @:native("TCP_MAX_WINSHIFT") static var TCP_MAX_WINSHIFT: go.GoInt;
-    @:native("TCP_MINMSS") static var TCP_MINMSS: go.GoInt;
-    @:native("TCP_MINMSSOVERLOAD") static var TCP_MINMSSOVERLOAD: go.GoInt;
-    @:native("TCP_MSS") static var TCP_MSS: go.GoInt;
+    @:native("SidTypeAlias") static var sidTypeAlias: go.GoInt;
+    @:native("SidTypeComputer") static var sidTypeComputer: go.GoInt;
+    @:native("SidTypeDeletedAccount") static var sidTypeDeletedAccount: go.GoInt;
+    @:native("SidTypeDomain") static var sidTypeDomain: go.GoInt;
+    @:native("SidTypeGroup") static var sidTypeGroup: go.GoInt;
+    @:native("SidTypeInvalid") static var sidTypeInvalid: go.GoInt;
+    @:native("SidTypeLabel") static var sidTypeLabel: go.GoInt;
+    @:native("SidTypeUnknown") static var sidTypeUnknown: go.GoInt;
+    @:native("SidTypeUser") static var sidTypeUser: go.GoInt;
+    @:native("SidTypeWellKnownGroup") static var sidTypeWellKnownGroup: go.GoInt;
     @:native("TCP_NODELAY") static var TCP_NODELAY: go.GoInt;
-    @:native("TCP_NOOPT") static var TCP_NOOPT: go.GoInt;
-    @:native("TCP_NOPUSH") static var TCP_NOPUSH: go.GoInt;
-    @:native("TCP_RXT_CONNDROPTIME") static var TCP_RXT_CONNDROPTIME: go.GoInt;
-    @:native("TCP_RXT_FINDROP") static var TCP_RXT_FINDROP: go.GoInt;
-    @:native("TCSAFLUSH") static var TCSAFLUSH: go.GoInt;
-    @:native("TIOCCBRK") static var TIOCCBRK: go.GoInt;
-    @:native("TIOCCDTR") static var TIOCCDTR: go.GoInt;
-    @:native("TIOCCONS") static var TIOCCONS: go.GoInt;
-    @:native("TIOCDCDTIMESTAMP") static var TIOCDCDTIMESTAMP: go.GoInt;
-    @:native("TIOCDRAIN") static var TIOCDRAIN: go.GoInt;
-    @:native("TIOCDSIMICROCODE") static var TIOCDSIMICROCODE: go.GoInt;
-    @:native("TIOCEXCL") static var TIOCEXCL: go.GoInt;
-    @:native("TIOCEXT") static var TIOCEXT: go.GoInt;
-    @:native("TIOCFLUSH") static var TIOCFLUSH: go.GoInt;
-    @:native("TIOCGDRAINWAIT") static var TIOCGDRAINWAIT: go.GoInt;
-    @:native("TIOCGETA") static var TIOCGETA: go.GoInt;
-    @:native("TIOCGETD") static var TIOCGETD: go.GoInt;
-    @:native("TIOCGPGRP") static var TIOCGPGRP: go.GoInt;
-    @:native("TIOCGWINSZ") static var TIOCGWINSZ: go.GoInt;
-    @:native("TIOCIXOFF") static var TIOCIXOFF: go.GoInt;
-    @:native("TIOCIXON") static var TIOCIXON: go.GoInt;
-    @:native("TIOCMBIC") static var TIOCMBIC: go.GoInt;
-    @:native("TIOCMBIS") static var TIOCMBIS: go.GoInt;
-    @:native("TIOCMGDTRWAIT") static var TIOCMGDTRWAIT: go.GoInt;
-    @:native("TIOCMGET") static var TIOCMGET: go.GoInt;
-    @:native("TIOCMODG") static var TIOCMODG: go.GoInt;
-    @:native("TIOCMODS") static var TIOCMODS: go.GoInt;
-    @:native("TIOCMSDTRWAIT") static var TIOCMSDTRWAIT: go.GoInt;
-    @:native("TIOCMSET") static var TIOCMSET: go.GoInt;
-    @:native("TIOCM_CAR") static var TIOCM_CAR: go.GoInt;
-    @:native("TIOCM_CD") static var TIOCM_CD: go.GoInt;
-    @:native("TIOCM_CTS") static var TIOCM_CTS: go.GoInt;
-    @:native("TIOCM_DSR") static var TIOCM_DSR: go.GoInt;
-    @:native("TIOCM_DTR") static var TIOCM_DTR: go.GoInt;
-    @:native("TIOCM_LE") static var TIOCM_LE: go.GoInt;
-    @:native("TIOCM_RI") static var TIOCM_RI: go.GoInt;
-    @:native("TIOCM_RNG") static var TIOCM_RNG: go.GoInt;
-    @:native("TIOCM_RTS") static var TIOCM_RTS: go.GoInt;
-    @:native("TIOCM_SR") static var TIOCM_SR: go.GoInt;
-    @:native("TIOCM_ST") static var TIOCM_ST: go.GoInt;
-    @:native("TIOCNOTTY") static var TIOCNOTTY: go.GoInt;
-    @:native("TIOCNXCL") static var TIOCNXCL: go.GoInt;
-    @:native("TIOCOUTQ") static var TIOCOUTQ: go.GoInt;
-    @:native("TIOCPKT") static var TIOCPKT: go.GoInt;
-    @:native("TIOCPKT_DATA") static var TIOCPKT_DATA: go.GoInt;
-    @:native("TIOCPKT_DOSTOP") static var TIOCPKT_DOSTOP: go.GoInt;
-    @:native("TIOCPKT_FLUSHREAD") static var TIOCPKT_FLUSHREAD: go.GoInt;
-    @:native("TIOCPKT_FLUSHWRITE") static var TIOCPKT_FLUSHWRITE: go.GoInt;
-    @:native("TIOCPKT_IOCTL") static var TIOCPKT_IOCTL: go.GoInt;
-    @:native("TIOCPKT_NOSTOP") static var TIOCPKT_NOSTOP: go.GoInt;
-    @:native("TIOCPKT_START") static var TIOCPKT_START: go.GoInt;
-    @:native("TIOCPKT_STOP") static var TIOCPKT_STOP: go.GoInt;
-    @:native("TIOCPTYGNAME") static var TIOCPTYGNAME: go.GoInt;
-    @:native("TIOCPTYGRANT") static var TIOCPTYGRANT: go.GoInt;
-    @:native("TIOCPTYUNLK") static var TIOCPTYUNLK: go.GoInt;
-    @:native("TIOCREMOTE") static var TIOCREMOTE: go.GoInt;
-    @:native("TIOCSBRK") static var TIOCSBRK: go.GoInt;
-    @:native("TIOCSCONS") static var TIOCSCONS: go.GoInt;
-    @:native("TIOCSCTTY") static var TIOCSCTTY: go.GoInt;
-    @:native("TIOCSDRAINWAIT") static var TIOCSDRAINWAIT: go.GoInt;
-    @:native("TIOCSDTR") static var TIOCSDTR: go.GoInt;
-    @:native("TIOCSETA") static var TIOCSETA: go.GoInt;
-    @:native("TIOCSETAF") static var TIOCSETAF: go.GoInt;
-    @:native("TIOCSETAW") static var TIOCSETAW: go.GoInt;
-    @:native("TIOCSETD") static var TIOCSETD: go.GoInt;
-    @:native("TIOCSIG") static var TIOCSIG: go.GoInt;
-    @:native("TIOCSPGRP") static var TIOCSPGRP: go.GoInt;
-    @:native("TIOCSTART") static var TIOCSTART: go.GoInt;
-    @:native("TIOCSTAT") static var TIOCSTAT: go.GoInt;
-    @:native("TIOCSTI") static var TIOCSTI: go.GoInt;
-    @:native("TIOCSTOP") static var TIOCSTOP: go.GoInt;
-    @:native("TIOCSWINSZ") static var TIOCSWINSZ: go.GoInt;
-    @:native("TIOCTIMESTAMP") static var TIOCTIMESTAMP: go.GoInt;
-    @:native("TIOCUCNTL") static var TIOCUCNTL: go.GoInt;
-    @:native("TOSTOP") static var TOSTOP: go.GoInt;
-    @:native("VDISCARD") static var VDISCARD: go.GoInt;
-    @:native("VDSUSP") static var VDSUSP: go.GoInt;
-    @:native("VEOF") static var VEOF: go.GoInt;
-    @:native("VEOL") static var VEOL: go.GoInt;
-    @:native("VEOL2") static var VEOL2: go.GoInt;
-    @:native("VERASE") static var VERASE: go.GoInt;
-    @:native("VINTR") static var VINTR: go.GoInt;
-    @:native("VKILL") static var VKILL: go.GoInt;
-    @:native("VLNEXT") static var VLNEXT: go.GoInt;
-    @:native("VMIN") static var VMIN: go.GoInt;
-    @:native("VQUIT") static var VQUIT: go.GoInt;
-    @:native("VREPRINT") static var VREPRINT: go.GoInt;
-    @:native("VSTART") static var VSTART: go.GoInt;
-    @:native("VSTATUS") static var VSTATUS: go.GoInt;
-    @:native("VSTOP") static var VSTOP: go.GoInt;
-    @:native("VSUSP") static var VSUSP: go.GoInt;
-    @:native("VT0") static var VT0: go.GoInt;
-    @:native("VT1") static var VT1: go.GoInt;
-    @:native("VTDLY") static var VTDLY: go.GoInt;
-    @:native("VTIME") static var VTIME: go.GoInt;
-    @:native("VWERASE") static var VWERASE: go.GoInt;
-    @:native("WCONTINUED") static var WCONTINUED: go.GoInt;
-    @:native("WCOREFLAG") static var WCOREFLAG: go.GoInt;
-    @:native("WEXITED") static var WEXITED: go.GoInt;
-    @:native("WNOHANG") static var WNOHANG: go.GoInt;
-    @:native("WNOWAIT") static var WNOWAIT: go.GoInt;
-    @:native("WORDSIZE") static var WORDSIZE: go.GoInt;
-    @:native("WSTOPPED") static var WSTOPPED: go.GoInt;
-    @:native("WUNTRACED") static var WUNTRACED: go.GoInt;
+    @:native("TF_DISCONNECT") static var TF_DISCONNECT: go.GoInt;
+    @:native("TF_REUSE_SOCKET") static var TF_REUSE_SOCKET: go.GoInt;
+    @:native("TF_USE_DEFAULT_WORKER") static var TF_USE_DEFAULT_WORKER: go.GoInt;
+    @:native("TF_USE_KERNEL_APC") static var TF_USE_KERNEL_APC: go.GoInt;
+    @:native("TF_USE_SYSTEM_THREAD") static var TF_USE_SYSTEM_THREAD: go.GoInt;
+    @:native("TF_WRITE_BEHIND") static var TF_WRITE_BEHIND: go.GoInt;
+    @:native("TH32CS_INHERIT") static var TH32CS_INHERIT: go.GoInt;
+    @:native("TH32CS_SNAPALL") static var TH32CS_SNAPALL: go.GoInt;
+    @:native("TH32CS_SNAPHEAPLIST") static var TH32CS_SNAPHEAPLIST: go.GoInt;
+    @:native("TH32CS_SNAPMODULE") static var TH32CS_SNAPMODULE: go.GoInt;
+    @:native("TH32CS_SNAPMODULE32") static var TH32CS_SNAPMODULE32: go.GoInt;
+    @:native("TH32CS_SNAPPROCESS") static var TH32CS_SNAPPROCESS: go.GoInt;
+    @:native("TH32CS_SNAPTHREAD") static var TH32CS_SNAPTHREAD: go.GoInt;
+    @:native("TIME_ZONE_ID_DAYLIGHT") static var TIME_ZONE_ID_DAYLIGHT: go.GoInt;
+    @:native("TIME_ZONE_ID_STANDARD") static var TIME_ZONE_ID_STANDARD: go.GoInt;
+    @:native("TIME_ZONE_ID_UNKNOWN") static var TIME_ZONE_ID_UNKNOWN: go.GoInt;
+    @:native("TOKEN_ADJUST_DEFAULT") static var TOKEN_ADJUST_DEFAULT: go.GoInt;
+    @:native("TOKEN_ADJUST_GROUPS") static var TOKEN_ADJUST_GROUPS: go.GoInt;
+    @:native("TOKEN_ADJUST_PRIVILEGES") static var TOKEN_ADJUST_PRIVILEGES: go.GoInt;
+    @:native("TOKEN_ADJUST_SESSIONID") static var TOKEN_ADJUST_SESSIONID: go.GoInt;
+    @:native("TOKEN_ALL_ACCESS") static var TOKEN_ALL_ACCESS: go.GoInt;
+    @:native("TOKEN_ASSIGN_PRIMARY") static var TOKEN_ASSIGN_PRIMARY: go.GoInt;
+    @:native("TOKEN_DUPLICATE") static var TOKEN_DUPLICATE: go.GoInt;
+    @:native("TOKEN_EXECUTE") static var TOKEN_EXECUTE: go.GoInt;
+    @:native("TOKEN_IMPERSONATE") static var TOKEN_IMPERSONATE: go.GoInt;
+    @:native("TOKEN_QUERY") static var TOKEN_QUERY: go.GoInt;
+    @:native("TOKEN_QUERY_SOURCE") static var TOKEN_QUERY_SOURCE: go.GoInt;
+    @:native("TOKEN_READ") static var TOKEN_READ: go.GoInt;
+    @:native("TOKEN_WRITE") static var TOKEN_WRITE: go.GoInt;
+    @:native("TRUNCATE_EXISTING") static var TRUNCATE_EXISTING: go.GoInt;
+    @:native("TokenAccessInformation") static var tokenAccessInformation: go.GoInt;
+    @:native("TokenAuditPolicy") static var tokenAuditPolicy: go.GoInt;
+    @:native("TokenDefaultDacl") static var tokenDefaultDacl: go.GoInt;
+    @:native("TokenElevation") static var tokenElevation: go.GoInt;
+    @:native("TokenElevationType") static var tokenElevationType: go.GoInt;
+    @:native("TokenGroups") static var tokenGroups: go.GoInt;
+    @:native("TokenGroupsAndPrivileges") static var tokenGroupsAndPrivileges: go.GoInt;
+    @:native("TokenHasRestrictions") static var tokenHasRestrictions: go.GoInt;
+    @:native("TokenImpersonationLevel") static var tokenImpersonationLevel: go.GoInt;
+    @:native("TokenIntegrityLevel") static var tokenIntegrityLevel: go.GoInt;
+    @:native("TokenLinkedToken") static var tokenLinkedToken: go.GoInt;
+    @:native("TokenLogonSid") static var tokenLogonSid: go.GoInt;
+    @:native("TokenMandatoryPolicy") static var tokenMandatoryPolicy: go.GoInt;
+    @:native("TokenOrigin") static var tokenOrigin: go.GoInt;
+    @:native("TokenOwner") static var tokenOwner: go.GoInt;
+    @:native("TokenPrimaryGroup") static var tokenPrimaryGroup: go.GoInt;
+    @:native("TokenPrivileges") static var tokenPrivileges: go.GoInt;
+    @:native("TokenRestrictedSids") static var tokenRestrictedSids: go.GoInt;
+    @:native("TokenSandBoxInert") static var tokenSandBoxInert: go.GoInt;
+    @:native("TokenSessionId") static var tokenSessionId: go.GoInt;
+    @:native("TokenSessionReference") static var tokenSessionReference: go.GoInt;
+    @:native("TokenSource") static var tokenSource: go.GoInt;
+    @:native("TokenStatistics") static var tokenStatistics: go.GoInt;
+    @:native("TokenType") static var tokenType: go.GoInt;
+    @:native("TokenUIAccess") static var tokenUIAccess: go.GoInt;
+    @:native("TokenUser") static var tokenUser: go.GoInt;
+    @:native("TokenVirtualizationAllowed") static var tokenVirtualizationAllowed: go.GoInt;
+    @:native("TokenVirtualizationEnabled") static var tokenVirtualizationEnabled: go.GoInt;
+    @:native("UNIX_PATH_MAX") static var UNIX_PATH_MAX: go.GoInt;
+    @:native("USAGE_MATCH_TYPE_AND") static var USAGE_MATCH_TYPE_AND: go.GoInt;
+    @:native("USAGE_MATCH_TYPE_OR") static var USAGE_MATCH_TYPE_OR: go.GoInt;
+    @:native("WAIT_ABANDONED") static var WAIT_ABANDONED: go.GoInt;
+    @:native("WAIT_FAILED") static var WAIT_FAILED: go.GoInt;
+    @:native("WAIT_OBJECT_0") static var WAIT_OBJECT_0: go.GoInt;
+    @:native("WAIT_TIMEOUT") static var WAIT_TIMEOUT: go.GoInt;
+    @:native("WSADESCRIPTION_LEN") static var WSADESCRIPTION_LEN: go.GoInt;
+    @:native("WSAEACCES") static var WSAEACCES: go.syscall.Errno;
+    @:native("WSAECONNABORTED") static var WSAECONNABORTED: go.syscall.Errno;
+    @:native("WSAECONNRESET") static var WSAECONNRESET: go.syscall.Errno;
+    @:native("WSAENOPROTOOPT") static var WSAENOPROTOOPT: go.syscall.Errno;
+    @:native("WSAPROTOCOL_LEN") static var WSAPROTOCOL_LEN: go.GoInt;
+    @:native("WSASYS_STATUS_LEN") static var WSASYS_STATUS_LEN: go.GoInt;
+    @:native("X509_ASN_ENCODING") static var X509_ASN_ENCODING: go.GoInt;
+    @:native("XP1_CONNECTIONLESS") static var XP1_CONNECTIONLESS: go.GoInt;
+    @:native("XP1_CONNECT_DATA") static var XP1_CONNECT_DATA: go.GoInt;
+    @:native("XP1_DISCONNECT_DATA") static var XP1_DISCONNECT_DATA: go.GoInt;
+    @:native("XP1_EXPEDITED_DATA") static var XP1_EXPEDITED_DATA: go.GoInt;
+    @:native("XP1_GRACEFUL_CLOSE") static var XP1_GRACEFUL_CLOSE: go.GoInt;
+    @:native("XP1_GUARANTEED_DELIVERY") static var XP1_GUARANTEED_DELIVERY: go.GoInt;
+    @:native("XP1_GUARANTEED_ORDER") static var XP1_GUARANTEED_ORDER: go.GoInt;
+    @:native("XP1_IFS_HANDLES") static var XP1_IFS_HANDLES: go.GoInt;
+    @:native("XP1_MESSAGE_ORIENTED") static var XP1_MESSAGE_ORIENTED: go.GoInt;
+    @:native("XP1_MULTIPOINT_CONTROL_PLANE") static var XP1_MULTIPOINT_CONTROL_PLANE: go.GoInt;
+    @:native("XP1_MULTIPOINT_DATA_PLANE") static var XP1_MULTIPOINT_DATA_PLANE: go.GoInt;
+    @:native("XP1_PARTIAL_MESSAGE") static var XP1_PARTIAL_MESSAGE: go.GoInt;
+    @:native("XP1_PSEUDO_STREAM") static var XP1_PSEUDO_STREAM: go.GoInt;
+    @:native("XP1_QOS_SUPPORTED") static var XP1_QOS_SUPPORTED: go.GoInt;
+    @:native("XP1_SAN_SUPPORT_SDP") static var XP1_SAN_SUPPORT_SDP: go.GoInt;
+    @:native("XP1_SUPPORT_BROADCAST") static var XP1_SUPPORT_BROADCAST: go.GoInt;
+    @:native("XP1_SUPPORT_MULTIPOINT") static var XP1_SUPPORT_MULTIPOINT: go.GoInt;
+    @:native("XP1_UNI_RECV") static var XP1_UNI_RECV: go.GoInt;
+    @:native("XP1_UNI_SEND") static var XP1_UNI_SEND: go.GoInt;
 
     /**
-        ForkLock is used to synchronize creation of new file descriptors
-        with fork.
-        
-        We want the child in a fork/exec sequence to inherit only the
-        file descriptors we intend. To do that, we mark all file
-        descriptors close-on-exec and then, in the child, explicitly
-        unmark the ones we want the exec'ed program to keep.
-        Unix doesn't make this easy: there is, in general, no way to
-        allocate a new file descriptor close-on-exec. Instead you
-        have to allocate the descriptor and then mark it close-on-exec.
-        If a fork happens between those two events, the child's exec
-        will inherit an unwanted file descriptor.
-        
-        This lock solves that race: the create new fd/mark close-on-exec
-        operation is done holding ForkLock for reading, and the fork itself
-        is done holding ForkLock for writing. At least, that's the idea.
-        There are some complications.
-        
-        Some system calls that create new file descriptors can block
-        for arbitrarily long times: open on a hung NFS server or named
-        pipe, accept on a socket, and so on. We can't reasonably grab
-        the lock across those operations.
-        
-        It is worse to inherit some file descriptors than others.
-        If a non-malicious child accidentally inherits an open ordinary file,
-        that's not a big deal. On the other hand, if a long-lived child
-        accidentally inherits the write end of a pipe, then the reader
-        of that pipe will not see EOF until that child exits, potentially
-        causing the parent program to hang. This is a common problem
-        in threaded C programs that use popen.
-        
-        Luckily, the file descriptors that are most important not to
-        inherit are not the ones that can take an arbitrarily long time
-        to create: pipe returns instantly, and the net package uses
-        non-blocking I/O to accept on a listening socket.
-        The rules for which file descriptor-creating operations use the
-        ForkLock are as follows:
-        
-          - [Pipe]. Use pipe2 if available. Otherwise, does not block,
-            so use ForkLock.
-          - [Socket]. Use SOCK_CLOEXEC if available. Otherwise, does not
-            block, so use ForkLock.
-          - [Open]. Use [O_CLOEXEC] if available. Otherwise, may block,
-            so live with the race.
-          - [Dup]. Use [F_DUPFD_CLOEXEC] or dup3 if available. Otherwise,
-            does not block, so use ForkLock.
+        ForkLock is not used on Windows.
     **/
     @:native("ForkLock") static var forkLock: go.sync.RWMutex;
+    @:native("OID_PKIX_KP_SERVER_AUTH") static var OID_PKIX_KP_SERVER_AUTH: go.Slice<go.Byte>;
+    @:native("OID_SERVER_GATED_CRYPTO") static var OID_SERVER_GATED_CRYPTO: go.Slice<go.Byte>;
+    @:native("OID_SGC_NETSCAPE") static var OID_SGC_NETSCAPE: go.Slice<go.Byte>;
     /**
         For testing: clients can set this flag to force
         creation of IPv6 sockets to return [EAFNOSUPPORT].
     **/
     @:native("SocketDisableIPv6") static var socketDisableIPv6: Bool;
-    @:native("Stderr") static var stderr: go.GoInt;
-    @:native("Stdin") static var stdin: go.GoInt;
-    @:native("Stdout") static var stdout: go.GoInt;
+    @:native("Stderr") static var stderr: go.syscall.Handle;
+    @:native("Stdin") static var stdin: go.syscall.Handle;
+    @:native("Stdout") static var stdout: go.syscall.Handle;
+    @:native("WSAID_CONNECTEX") static var WSAID_CONNECTEX: go.syscall.GUID;
 
-    @:go.Tuple("nfd", "sa", "err") @:native("Accept") static function accept(fd: go.GoInt): (go.Tuple<{ nfd: go.GoInt, sa: go.syscall.Sockaddr, err: go.Error }>);
-    @:native("Access") static function access(path: String, mode: go.UInt32): (go.Error);
-    @:native("Adjtime") static function adjtime(delta: go.Pointer<go.syscall.Timeval>, olddelta: go.Pointer<go.syscall.Timeval>): (go.Error);
-    @:native("Bind") static function bind(fd: go.GoInt, sa: go.syscall.Sockaddr): (go.Error);
-    /**
-        Deprecated: Use golang.org/x/net/bpf instead.
-    **/
-    @:native("BpfBuflen") static function bpfBuflen(fd: go.GoInt): (go.Result<go.GoInt>);
-    /**
-        Deprecated: Use golang.org/x/net/bpf instead.
-    **/
-    @:native("BpfDatalink") static function bpfDatalink(fd: go.GoInt): (go.Result<go.GoInt>);
-    /**
-        Deprecated: Use golang.org/x/net/bpf instead.
-    **/
-    @:native("BpfHeadercmpl") static function bpfHeadercmpl(fd: go.GoInt): (go.Result<go.GoInt>);
-    /**
-        Deprecated: Use golang.org/x/net/bpf instead.
-    **/
-    @:native("BpfInterface") static function bpfInterface(fd: go.GoInt, name: String): (go.Result<String>);
-    /**
-        Deprecated: Use golang.org/x/net/bpf instead.
-    **/
-    @:native("BpfJump") static function bpfJump(code: go.GoInt, k: go.GoInt, jt: go.GoInt, jf: go.GoInt): (go.Pointer<go.syscall.BpfInsn>);
-    /**
-        Deprecated: Use golang.org/x/net/bpf instead.
-    **/
-    @:native("BpfStats") static function bpfStats(fd: go.GoInt): (go.Result<go.Pointer<go.syscall.BpfStat>>);
-    /**
-        Deprecated: Use golang.org/x/net/bpf instead.
-    **/
-    @:native("BpfStmt") static function bpfStmt(code: go.GoInt, k: go.GoInt): (go.Pointer<go.syscall.BpfInsn>);
-    /**
-        Deprecated: Use golang.org/x/net/bpf instead.
-    **/
-    @:native("BpfTimeout") static function bpfTimeout(fd: go.GoInt): (go.Result<go.Pointer<go.syscall.Timeval>>);
+    @:go.Tuple("nfd", "sa", "err") @:native("Accept") static function accept(fd: go.syscall.Handle): (go.Tuple<{ nfd: go.syscall.Handle, sa: go.syscall.Sockaddr, err: go.Error }>);
+    @:native("AcceptEx") static function acceptEx(ls: go.syscall.Handle, as: go.syscall.Handle, buf: go.Pointer<go.Byte>, rxdatalen: go.UInt32, laddrlen: go.UInt32, raddrlen: go.UInt32, recvd: go.Pointer<go.UInt32>, overlapped: go.Pointer<go.syscall.Overlapped>): (go.Error);
+    @:native("Bind") static function bind(fd: go.syscall.Handle, sa: go.syscall.Sockaddr): (go.Error);
     /**
         BytePtrFromString returns a pointer to a NUL-terminated array of
         bytes containing the text of s. If s contains a NUL byte at any
@@ -2192,251 +1211,297 @@ extern class Syscall {
         location, it returns (nil, [EINVAL]).
     **/
     @:native("ByteSliceFromString") static function byteSliceFromString(s: String): (go.Result<go.Slice<go.Byte>>);
+    @:native("CancelIo") static function cancelIo(s: go.syscall.Handle): (go.Error);
+    @:native("CancelIoEx") static function cancelIoEx(s: go.syscall.Handle, o: go.Pointer<go.syscall.Overlapped>): (go.Error);
+    @:native("CertAddCertificateContextToStore") static function certAddCertificateContextToStore(store: go.syscall.Handle, certContext: go.Pointer<go.syscall.CertContext>, addDisposition: go.UInt32, storeContext: go.Pointer<go.Pointer<go.syscall.CertContext>>): (go.Error);
+    @:native("CertCloseStore") static function certCloseStore(store: go.syscall.Handle, flags: go.UInt32): (go.Error);
+    @:native("CertCreateCertificateContext") static function certCreateCertificateContext(certEncodingType: go.UInt32, certEncoded: go.Pointer<go.Byte>, encodedLen: go.UInt32): (go.Result<go.Pointer<go.syscall.CertContext>>);
+    @:native("CertEnumCertificatesInStore") static function certEnumCertificatesInStore(store: go.syscall.Handle, prevContext: go.Pointer<go.syscall.CertContext>): (go.Result<go.Pointer<go.syscall.CertContext>>);
+    @:native("CertFreeCertificateChain") static function certFreeCertificateChain(ctx: go.Pointer<go.syscall.CertChainContext>): Void;
+    @:native("CertFreeCertificateContext") static function certFreeCertificateContext(ctx: go.Pointer<go.syscall.CertContext>): (go.Error);
+    @:native("CertGetCertificateChain") static function certGetCertificateChain(engine: go.syscall.Handle, leaf: go.Pointer<go.syscall.CertContext>, time: go.Pointer<go.syscall.Filetime>, additionalStore: go.syscall.Handle, para: go.Pointer<go.syscall.CertChainPara>, flags: go.UInt32, reserved: go.UIntPtr, chainCtx: go.Pointer<go.Pointer<go.syscall.CertChainContext>>): (go.Error);
+    @:native("CertOpenStore") static function certOpenStore(storeProvider: go.UIntPtr, msgAndCertEncodingType: go.UInt32, cryptProv: go.UIntPtr, flags: go.UInt32, para: go.UIntPtr): (go.Result<go.syscall.Handle>);
+    @:native("CertOpenSystemStore") static function certOpenSystemStore(hprov: go.syscall.Handle, name: go.Pointer<go.UInt16>): (go.Result<go.syscall.Handle>);
+    @:native("CertVerifyCertificateChainPolicy") static function certVerifyCertificateChainPolicy(policyOID: go.UIntPtr, chain: go.Pointer<go.syscall.CertChainContext>, para: go.Pointer<go.syscall.CertChainPolicyPara>, status: go.Pointer<go.syscall.CertChainPolicyStatus>): (go.Error);
     @:native("Chdir") static function chdir(path: String): (go.Error);
-    /**
-        Deprecated: Use golang.org/x/net/bpf instead.
-    **/
-    @:native("CheckBpfVersion") static function checkBpfVersion(fd: go.GoInt): (go.Error);
-    @:native("Chflags") static function chflags(path: String, flags: go.GoInt): (go.Error);
     @:native("Chmod") static function chmod(path: String, mode: go.UInt32): (go.Error);
     @:native("Chown") static function chown(path: String, uid: go.GoInt, gid: go.GoInt): (go.Error);
-    @:native("Chroot") static function chroot(path: String): (go.Error);
     @:native("Clearenv") static function clearenv(): Void;
-    @:native("Close") static function close(fd: go.GoInt): (go.Error);
-    @:native("CloseOnExec") static function closeOnExec(fd: go.GoInt): Void;
+    @:native("Close") static function close(fd: go.syscall.Handle): (go.Error);
+    @:native("CloseHandle") static function closeHandle(handle: go.syscall.Handle): (go.Error);
+    @:native("CloseOnExec") static function closeOnExec(fd: go.syscall.Handle): Void;
+    @:native("Closesocket") static function closesocket(s: go.syscall.Handle): (go.Error);
+    @:native("CommandLineToArgv") static function commandLineToArgv(cmd: go.Pointer<go.UInt16>, argc: go.Pointer<go.Int32>): (go.Result<go.Pointer<go.GoArray<go.Pointer<go.GoArray<go.UInt16, 8192>>, 8192>>>);
+    @:native("ComputerName") static function computerName(): (go.Result<String>);
+    @:native("Connect") static function connect(fd: go.syscall.Handle, sa: go.syscall.Sockaddr): (go.Error);
+    @:native("ConnectEx") static function connectEx(fd: go.syscall.Handle, sa: go.syscall.Sockaddr, sendBuf: go.Pointer<go.Byte>, sendDataLen: go.UInt32, bytesSent: go.Pointer<go.UInt32>, overlapped: go.Pointer<go.syscall.Overlapped>): (go.Error);
+    @:native("ConvertSidToStringSid") static function convertSidToStringSid(sid: go.Pointer<go.syscall.SID>, stringSid: go.Pointer<go.Pointer<go.UInt16>>): (go.Error);
+    @:native("ConvertStringSidToSid") static function convertStringSidToSid(stringSid: go.Pointer<go.UInt16>, sid: go.Pointer<go.Pointer<go.syscall.SID>>): (go.Error);
+    @:native("CopySid") static function copySid(destSidLen: go.UInt32, destSid: go.Pointer<go.syscall.SID>, srcSid: go.Pointer<go.syscall.SID>): (go.Error);
+    @:native("CreateDirectory") static function createDirectory(path: go.Pointer<go.UInt16>, sa: go.Pointer<go.syscall.SecurityAttributes>): (go.Error);
+    @:native("CreateFile") static function createFile(name: go.Pointer<go.UInt16>, access: go.UInt32, mode: go.UInt32, sa: go.Pointer<go.syscall.SecurityAttributes>, createmode: go.UInt32, attrs: go.UInt32, templatefile: go.Int32): (go.Result<go.syscall.Handle>);
+    @:native("CreateFileMapping") static function createFileMapping(fhandle: go.syscall.Handle, sa: go.Pointer<go.syscall.SecurityAttributes>, prot: go.UInt32, maxSizeHigh: go.UInt32, maxSizeLow: go.UInt32, name: go.Pointer<go.UInt16>): (go.Result<go.syscall.Handle>);
+    @:native("CreateHardLink") static function createHardLink(filename: go.Pointer<go.UInt16>, existingfilename: go.Pointer<go.UInt16>, reserved: go.UIntPtr): (go.Error);
     /**
-        CmsgLen returns the value to store in the Len field of the [Cmsghdr]
-        structure, taking into account any necessary alignment.
+        Deprecated: CreateIoCompletionPort has the wrong function signature. Use x/sys/windows.CreateIoCompletionPort.
     **/
-    @:native("CmsgLen") static function cmsgLen(datalen: go.GoInt): (go.GoInt);
-    /**
-        CmsgSpace returns the number of bytes an ancillary element with
-        payload of the passed data length occupies.
-    **/
-    @:native("CmsgSpace") static function cmsgSpace(datalen: go.GoInt): (go.GoInt);
-    @:native("Connect") static function connect(fd: go.GoInt, sa: go.syscall.Sockaddr): (go.Error);
-    @:native("Dup") static function dup(fd: go.GoInt): (go.Result<go.GoInt>);
-    @:native("Dup2") static function dup2(_from: go.GoInt, _to: go.GoInt): (go.Error);
+    @:native("CreateIoCompletionPort") static function createIoCompletionPort(filehandle: go.syscall.Handle, cphandle: go.syscall.Handle, key: go.UInt32, threadcnt: go.UInt32): (go.Result<go.syscall.Handle>);
+    @:native("CreatePipe") static function createPipe(readhandle: go.Pointer<go.syscall.Handle>, writehandle: go.Pointer<go.syscall.Handle>, sa: go.Pointer<go.syscall.SecurityAttributes>, size: go.UInt32): (go.Error);
+    @:native("CreateProcess") static function createProcess(appName: go.Pointer<go.UInt16>, commandLine: go.Pointer<go.UInt16>, procSecurity: go.Pointer<go.syscall.SecurityAttributes>, threadSecurity: go.Pointer<go.syscall.SecurityAttributes>, inheritHandles: Bool, creationFlags: go.UInt32, env: go.Pointer<go.UInt16>, currentDir: go.Pointer<go.UInt16>, startupInfo: go.Pointer<go.syscall.StartupInfo>, outProcInfo: go.Pointer<go.syscall.ProcessInformation>): (go.Error);
+    @:native("CreateProcessAsUser") static function createProcessAsUser(token: go.syscall.Token, appName: go.Pointer<go.UInt16>, commandLine: go.Pointer<go.UInt16>, procSecurity: go.Pointer<go.syscall.SecurityAttributes>, threadSecurity: go.Pointer<go.syscall.SecurityAttributes>, inheritHandles: Bool, creationFlags: go.UInt32, env: go.Pointer<go.UInt16>, currentDir: go.Pointer<go.UInt16>, startupInfo: go.Pointer<go.syscall.StartupInfo>, outProcInfo: go.Pointer<go.syscall.ProcessInformation>): (go.Error);
+    @:native("CreateSymbolicLink") static function createSymbolicLink(symlinkfilename: go.Pointer<go.UInt16>, targetfilename: go.Pointer<go.UInt16>, flags: go.UInt32): (go.Error);
+    @:native("CreateToolhelp32Snapshot") static function createToolhelp32Snapshot(flags: go.UInt32, processId: go.UInt32): (go.Result<go.syscall.Handle>);
+    @:native("CryptAcquireContext") static function cryptAcquireContext(provhandle: go.Pointer<go.syscall.Handle>, container: go.Pointer<go.UInt16>, provider: go.Pointer<go.UInt16>, provtype: go.UInt32, flags: go.UInt32): (go.Error);
+    @:native("CryptGenRandom") static function cryptGenRandom(provhandle: go.syscall.Handle, buflen: go.UInt32, buf: go.Pointer<go.Byte>): (go.Error);
+    @:native("CryptReleaseContext") static function cryptReleaseContext(provhandle: go.syscall.Handle, flags: go.UInt32): (go.Error);
+    @:native("DeleteFile") static function deleteFile(path: go.Pointer<go.UInt16>): (go.Error);
+    @:native("DeviceIoControl") static function deviceIoControl(handle: go.syscall.Handle, ioControlCode: go.UInt32, inBuffer: go.Pointer<go.Byte>, inBufferSize: go.UInt32, outBuffer: go.Pointer<go.Byte>, outBufferSize: go.UInt32, bytesReturned: go.Pointer<go.UInt32>, overlapped: go.Pointer<go.syscall.Overlapped>): (go.Error);
+    @:native("DnsNameCompare") static function dnsNameCompare(name1: go.Pointer<go.UInt16>, name2: go.Pointer<go.UInt16>): (Bool);
+    @:native("DnsQuery") static function dnsQuery(name: String, qtype: go.UInt16, options: go.UInt32, extra: go.Pointer<go.Byte>, qrs: go.Pointer<go.Pointer<go.syscall.DNSRecord>>, pr: go.Pointer<go.Byte>): (go.Error);
+    @:native("DnsRecordListFree") static function dnsRecordListFree(rl: go.Pointer<go.syscall.DNSRecord>, freetype: go.UInt32): Void;
+    @:native("DuplicateHandle") static function duplicateHandle(hSourceProcessHandle: go.syscall.Handle, hSourceHandle: go.syscall.Handle, hTargetProcessHandle: go.syscall.Handle, lpTargetHandle: go.Pointer<go.syscall.Handle>, dwDesiredAccess: go.UInt32, bInheritHandle: Bool, dwOptions: go.UInt32): (go.Error);
     @:native("Environ") static function environ(): (go.Slice<String>);
-    @:native("Exchangedata") static function exchangedata(path1: String, path2: String, options: go.GoInt): (go.Error);
     /**
-        Exec invokes the execve(2) system call.
+        EscapeArg rewrites command line argument s as prescribed
+        in https://msdn.microsoft.com/en-us/library/ms880421.
+        This function returns "" (2 double quotes) if s is empty.
+        Alternatively, these transformations are done:
+          - every back slash (\) is doubled, but only if immediately
+            followed by double quote (");
+          - every double quote (") is escaped by back slash (\);
+          - finally, s is wrapped with double quotes (arg -> "arg"),
+            but only if there is space or tab inside s.
     **/
+    @:native("EscapeArg") static function escapeArg(s: String): (String);
     @:native("Exec") static function exec(argv0: String, argv: go.Slice<String>, envv: go.Slice<String>): (go.Error);
     @:native("Exit") static function exit(code: go.GoInt): Void;
-    @:native("Fchdir") static function fchdir(fd: go.GoInt): (go.Error);
-    @:native("Fchflags") static function fchflags(fd: go.GoInt, flags: go.GoInt): (go.Error);
-    @:native("Fchmod") static function fchmod(fd: go.GoInt, mode: go.UInt32): (go.Error);
-    @:native("Fchown") static function fchown(fd: go.GoInt, uid: go.GoInt, gid: go.GoInt): (go.Error);
+    @:native("ExitProcess") static function exitProcess(exitcode: go.UInt32): Void;
+    @:native("Fchdir") static function fchdir(fd: go.syscall.Handle): (go.Error);
+    @:native("Fchmod") static function fchmod(fd: go.syscall.Handle, mode: go.UInt32): (go.Error);
+    @:native("Fchown") static function fchown(fd: go.syscall.Handle, uid: go.GoInt, gid: go.GoInt): (go.Error);
+    @:native("FindClose") static function findClose(handle: go.syscall.Handle): (go.Error);
+    @:native("FindFirstFile") static function findFirstFile(name: go.Pointer<go.UInt16>, data: go.Pointer<go.syscall.Win32finddata>): (go.Result<go.syscall.Handle>);
+    @:native("FindNextFile") static function findNextFile(handle: go.syscall.Handle, data: go.Pointer<go.syscall.Win32finddata>): (go.Error);
+    @:native("FlushFileBuffers") static function flushFileBuffers(handle: go.syscall.Handle): (go.Error);
+    @:native("FlushViewOfFile") static function flushViewOfFile(addr: go.UIntPtr, length: go.UIntPtr): (go.Error);
     /**
-        FcntlFlock performs a fcntl syscall for the [F_GETLK], [F_SETLK] or [F_SETLKW] command.
+        FormatMessage is deprecated (msgsrc should be uintptr, not uint32, but can
+        not be changed due to the Go 1 compatibility guarantee).
+        
+        Deprecated: Use FormatMessage from golang.org/x/sys/windows instead.
     **/
-    @:native("FcntlFlock") static function fcntlFlock(fd: go.UIntPtr, cmd: go.GoInt, lk: go.Pointer<go.syscall.Flock_t>): (go.Error);
-    @:native("Flock") static function flock(fd: go.GoInt, how: go.GoInt): (go.Error);
+    @:native("FormatMessage") static function formatMessage(flags: go.UInt32, msgsrc: go.UInt32, msgid: go.UInt32, langid: go.UInt32, buf: go.Slice<go.UInt16>, args: go.Pointer<go.Byte>): (go.Result<go.UInt32>);
+    @:native("FreeAddrInfoW") static function freeAddrInfoW(addrinfo: go.Pointer<go.syscall.AddrinfoW>): Void;
+    @:native("FreeEnvironmentStrings") static function freeEnvironmentStrings(envs: go.Pointer<go.UInt16>): (go.Error);
+    @:native("FreeLibrary") static function freeLibrary(handle: go.syscall.Handle): (go.Error);
+    @:native("Fsync") static function fsync(fd: go.syscall.Handle): (go.Error);
+    @:native("Ftruncate") static function ftruncate(fd: go.syscall.Handle, length: go.Int64): (go.Error);
     /**
-        Deprecated: Use golang.org/x/net/bpf instead.
+        FullPath retrieves the full path of the specified file.
     **/
-    @:native("FlushBpf") static function flushBpf(fd: go.GoInt): (go.Error);
+    @:native("FullPath") static function fullPath(name: String): (go.Result<String>);
+    @:native("GetAcceptExSockaddrs") static function getAcceptExSockaddrs(buf: go.Pointer<go.Byte>, rxdatalen: go.UInt32, laddrlen: go.UInt32, raddrlen: go.UInt32, lrsa: go.Pointer<go.Pointer<go.syscall.RawSockaddrAny>>, lrsalen: go.Pointer<go.Int32>, rrsa: go.Pointer<go.Pointer<go.syscall.RawSockaddrAny>>, rrsalen: go.Pointer<go.Int32>): Void;
+    @:native("GetAdaptersInfo") static function getAdaptersInfo(ai: go.Pointer<go.syscall.IpAdapterInfo>, ol: go.Pointer<go.UInt32>): (go.Error);
+    @:native("GetAddrInfoW") static function getAddrInfoW(nodename: go.Pointer<go.UInt16>, servicename: go.Pointer<go.UInt16>, hints: go.Pointer<go.syscall.AddrinfoW>, result: go.Pointer<go.Pointer<go.syscall.AddrinfoW>>): (go.Error);
+    @:native("GetCommandLine") static function getCommandLine(): (go.Pointer<go.UInt16>);
+    @:native("GetComputerName") static function getComputerName(buf: go.Pointer<go.UInt16>, n: go.Pointer<go.UInt32>): (go.Error);
+    @:native("GetConsoleMode") static function getConsoleMode(console: go.syscall.Handle, mode: go.Pointer<go.UInt32>): (go.Error);
+    @:native("GetCurrentDirectory") static function getCurrentDirectory(buflen: go.UInt32, buf: go.Pointer<go.UInt16>): (go.Result<go.UInt32>);
+    @:native("GetCurrentProcess") static function getCurrentProcess(): (go.Result<go.syscall.Handle>);
+    @:native("GetEnvironmentStrings") static function getEnvironmentStrings(): (go.Result<go.Pointer<go.UInt16>>);
+    @:native("GetEnvironmentVariable") static function getEnvironmentVariable(name: go.Pointer<go.UInt16>, buffer: go.Pointer<go.UInt16>, size: go.UInt32): (go.Result<go.UInt32>);
+    @:native("GetExitCodeProcess") static function getExitCodeProcess(handle: go.syscall.Handle, exitcode: go.Pointer<go.UInt32>): (go.Error);
+    @:native("GetFileAttributes") static function getFileAttributes(name: go.Pointer<go.UInt16>): (go.Result<go.UInt32>);
+    @:native("GetFileAttributesEx") static function getFileAttributesEx(name: go.Pointer<go.UInt16>, level: go.UInt32, info: go.Pointer<go.Byte>): (go.Error);
+    @:native("GetFileInformationByHandle") static function getFileInformationByHandle(handle: go.syscall.Handle, data: go.Pointer<go.syscall.ByHandleFileInformation>): (go.Error);
+    @:native("GetFileType") static function getFileType(filehandle: go.syscall.Handle): (go.Result<go.UInt32>);
+    @:native("GetFullPathName") static function getFullPathName(path: go.Pointer<go.UInt16>, buflen: go.UInt32, buf: go.Pointer<go.UInt16>, fname: go.Pointer<go.Pointer<go.UInt16>>): (go.Result<go.UInt32>);
+    @:native("GetHostByName") static function getHostByName(name: String): (go.Result<go.Pointer<go.syscall.Hostent>>);
+    @:native("GetIfEntry") static function getIfEntry(pIfRow: go.Pointer<go.syscall.MibIfRow>): (go.Error);
+    @:native("GetLastError") static function getLastError(): (go.Error);
+    @:native("GetLengthSid") static function getLengthSid(sid: go.Pointer<go.syscall.SID>): (go.UInt32);
+    @:native("GetLongPathName") static function getLongPathName(path: go.Pointer<go.UInt16>, buf: go.Pointer<go.UInt16>, buflen: go.UInt32): (go.Result<go.UInt32>);
+    @:native("GetProcAddress") static function getProcAddress(module: go.syscall.Handle, procname: String): (go.Result<go.UIntPtr>);
+    @:native("GetProcessTimes") static function getProcessTimes(handle: go.syscall.Handle, creationTime: go.Pointer<go.syscall.Filetime>, exitTime: go.Pointer<go.syscall.Filetime>, kernelTime: go.Pointer<go.syscall.Filetime>, userTime: go.Pointer<go.syscall.Filetime>): (go.Error);
+    @:native("GetProtoByName") static function getProtoByName(name: String): (go.Result<go.Pointer<go.syscall.Protoent>>);
     /**
-        Combination of fork and exec, careful to be thread safe.
+        Deprecated: GetQueuedCompletionStatus has the wrong function signature. Use x/sys/windows.GetQueuedCompletionStatus.
     **/
-    @:native("ForkExec") static function forkExec(argv0: String, argv: go.Slice<String>, attr: go.Pointer<go.syscall.ProcAttr>): (go.Result<go.GoInt>);
-    @:native("Fpathconf") static function fpathconf(fd: go.GoInt, name: go.GoInt): (go.Result<go.GoInt>);
-    @:native("Fstat") static function fstat(fd: go.GoInt, stat: go.Pointer<go.syscall.Stat_t>): (go.Error);
-    @:native("Fstatfs") static function fstatfs(fd: go.GoInt, stat: go.Pointer<go.syscall.Statfs_t>): (go.Error);
-    @:native("Fsync") static function fsync(fd: go.GoInt): (go.Error);
-    @:native("Ftruncate") static function ftruncate(fd: go.GoInt, length: go.Int64): (go.Error);
-    @:native("Futimes") static function futimes(fd: go.GoInt, tv: go.Slice<go.syscall.Timeval>): (go.Error);
-    @:native("Getdirentries") static function getdirentries(fd: go.GoInt, buf: go.Slice<go.Byte>, basep: go.Pointer<go.UIntPtr>): (go.Result<go.GoInt>);
-    @:native("Getdtablesize") static function getdtablesize(): (go.GoInt);
+    @:native("GetQueuedCompletionStatus") static function getQueuedCompletionStatus(cphandle: go.syscall.Handle, qty: go.Pointer<go.UInt32>, key: go.Pointer<go.UInt32>, overlapped: go.Pointer<go.Pointer<go.syscall.Overlapped>>, timeout: go.UInt32): (go.Error);
+    @:native("GetServByName") static function getServByName(name: String, proto: String): (go.Result<go.Pointer<go.syscall.Servent>>);
+    @:native("GetShortPathName") static function getShortPathName(longpath: go.Pointer<go.UInt16>, shortpath: go.Pointer<go.UInt16>, buflen: go.UInt32): (go.Result<go.UInt32>);
+    @:native("GetStartupInfo") static function getStartupInfo(startupInfo: go.Pointer<go.syscall.StartupInfo>): (go.Error);
+    @:native("GetStdHandle") static function getStdHandle(stdhandle: go.GoInt): (go.Result<go.syscall.Handle>);
+    @:native("GetSystemTimeAsFileTime") static function getSystemTimeAsFileTime(time: go.Pointer<go.syscall.Filetime>): Void;
+    @:native("GetTempPath") static function getTempPath(buflen: go.UInt32, buf: go.Pointer<go.UInt16>): (go.Result<go.UInt32>);
+    @:native("GetTimeZoneInformation") static function getTimeZoneInformation(tzi: go.Pointer<go.syscall.Timezoneinformation>): (go.Result<go.UInt32>);
+    @:native("GetTokenInformation") static function getTokenInformation(t: go.syscall.Token, infoClass: go.UInt32, info: go.Pointer<go.Byte>, infoLen: go.UInt32, returnedLen: go.Pointer<go.UInt32>): (go.Error);
+    @:native("GetUserNameEx") static function getUserNameEx(nameFormat: go.UInt32, nameBuffre: go.Pointer<go.UInt16>, nSize: go.Pointer<go.UInt32>): (go.Error);
+    @:native("GetUserProfileDirectory") static function getUserProfileDirectory(t: go.syscall.Token, dir: go.Pointer<go.UInt16>, dirLen: go.Pointer<go.UInt32>): (go.Error);
+    @:native("GetVersion") static function getVersion(): (go.Result<go.UInt32>);
     @:native("Getegid") static function getegid(): (go.GoInt);
     @:go.Tuple("value", "found") @:native("Getenv") static function getenv(key: String): (go.Tuple<{ value: String, found: Bool }>);
     @:native("Geteuid") static function geteuid(): (go.GoInt);
-    @:native("Getfsstat") static function getfsstat(buf: go.Slice<go.syscall.Statfs_t>, flags: go.GoInt): (go.Result<go.GoInt>);
     @:native("Getgid") static function getgid(): (go.GoInt);
     @:native("Getgroups") static function getgroups(): (go.Result<go.Slice<go.GoInt>>);
     @:native("Getpagesize") static function getpagesize(): (go.GoInt);
-    @:native("Getpeername") static function getpeername(fd: go.GoInt): (go.Result<go.syscall.Sockaddr>);
-    @:native("Getpgid") static function getpgid(pid: go.GoInt): (go.Result<go.GoInt>);
-    @:native("Getpgrp") static function getpgrp(): (go.GoInt);
+    @:native("Getpeername") static function getpeername(fd: go.syscall.Handle): (go.Result<go.syscall.Sockaddr>);
     @:native("Getpid") static function getpid(): (go.GoInt);
     @:native("Getppid") static function getppid(): (go.GoInt);
-    @:native("Getpriority") static function getpriority(which: go.GoInt, who: go.GoInt): (go.Result<go.GoInt>);
-    @:native("Getrlimit") static function getrlimit(which: go.GoInt, lim: go.Pointer<go.syscall.Rlimit>): (go.Error);
-    @:native("Getrusage") static function getrusage(who: go.GoInt, rusage: go.Pointer<go.syscall.Rusage>): (go.Error);
-    @:native("Getsid") static function getsid(pid: go.GoInt): (go.Result<go.GoInt>);
-    @:native("Getsockname") static function getsockname(fd: go.GoInt): (go.Result<go.syscall.Sockaddr>);
-    @:native("GetsockoptByte") static function getsockoptByte(fd: go.GoInt, level: go.GoInt, opt: go.GoInt): (go.Result<go.Byte>);
-    @:native("GetsockoptICMPv6Filter") static function getsockoptICMPv6Filter(fd: go.GoInt, level: go.GoInt, opt: go.GoInt): (go.Result<go.Pointer<go.syscall.ICMPv6Filter>>);
-    @:native("GetsockoptIPMreq") static function getsockoptIPMreq(fd: go.GoInt, level: go.GoInt, opt: go.GoInt): (go.Result<go.Pointer<go.syscall.IPMreq>>);
-    @:native("GetsockoptIPv6MTUInfo") static function getsockoptIPv6MTUInfo(fd: go.GoInt, level: go.GoInt, opt: go.GoInt): (go.Result<go.Pointer<go.syscall.IPv6MTUInfo>>);
-    @:native("GetsockoptIPv6Mreq") static function getsockoptIPv6Mreq(fd: go.GoInt, level: go.GoInt, opt: go.GoInt): (go.Result<go.Pointer<go.syscall.IPv6Mreq>>);
-    @:native("GetsockoptInet4Addr") static function getsockoptInet4Addr(fd: go.GoInt, level: go.GoInt, opt: go.GoInt): (go.Result<go.GoArray<go.Byte, 4>>);
-    @:native("GetsockoptInt") static function getsockoptInt(fd: go.GoInt, level: go.GoInt, opt: go.GoInt): (go.Result<go.GoInt>);
-    @:native("Gettimeofday") static function gettimeofday(tp: go.Pointer<go.syscall.Timeval>): (go.Error);
+    @:native("Getsockname") static function getsockname(fd: go.syscall.Handle): (go.Result<go.syscall.Sockaddr>);
+    @:native("Getsockopt") static function getsockopt(s: go.syscall.Handle, level: go.Int32, optname: go.Int32, optval: go.Pointer<go.Byte>, optlen: go.Pointer<go.Int32>): (go.Error);
+    @:native("GetsockoptInt") static function getsockoptInt(fd: go.syscall.Handle, level: go.GoInt, opt: go.GoInt): (go.Result<go.GoInt>);
+    @:native("Gettimeofday") static function gettimeofday(tv: go.Pointer<go.syscall.Timeval>): (go.Error);
     @:native("Getuid") static function getuid(): (go.GoInt);
     @:native("Getwd") static function getwd(): (go.Result<String>);
-    @:native("Issetugid") static function issetugid(): (Bool);
-    @:native("Kevent") static function kevent(kq: go.GoInt, changes: go.Slice<go.syscall.Kevent_t>, events: go.Slice<go.syscall.Kevent_t>, timeout: go.Pointer<go.syscall.Timespec>): (go.Result<go.GoInt>);
-    @:native("Kill") static function kill(pid: go.GoInt, signum: go.syscall.Signal): (go.Error);
-    @:native("Kqueue") static function kqueue(): (go.Result<go.GoInt>);
     @:native("Lchown") static function lchown(path: String, uid: go.GoInt, gid: go.GoInt): (go.Error);
-    @:native("Link") static function link(path: String, link: String): (go.Error);
-    @:native("Listen") static function listen(s: go.GoInt, backlog: go.GoInt): (go.Error);
-    @:native("Lstat") static function lstat(path: String, stat: go.Pointer<go.syscall.Stat_t>): (go.Error);
+    /**
+        TODO(brainman): fix all needed for os
+    **/
+    @:native("Link") static function link(oldpath: String, newpath: String): (go.Error);
+    @:native("Listen") static function listen(s: go.syscall.Handle, n: go.GoInt): (go.Error);
+    @:native("LoadCancelIoEx") static function loadCancelIoEx(): (go.Error);
+    @:native("LoadConnectEx") static function loadConnectEx(): (go.Error);
+    @:native("LoadCreateSymbolicLink") static function loadCreateSymbolicLink(): (go.Error);
+    /**
+        LoadDLL loads the named DLL file into memory.
+        
+        If name is not an absolute path and is not a known system DLL used by
+        Go, Windows will search for the named DLL in many locations, causing
+        potential DLL preloading attacks.
+        
+        Use [LazyDLL] in golang.org/x/sys/windows for a secure way to
+        load system DLLs.
+    **/
+    @:native("LoadDLL") static function loadDLL(name: String): (go.Result<go.Pointer<go.syscall.DLL>>);
+    @:native("LoadGetAddrInfo") static function loadGetAddrInfo(): (go.Error);
+    @:native("LoadLibrary") static function loadLibrary(libname: String): (go.Result<go.syscall.Handle>);
+    @:native("LoadSetFileCompletionNotificationModes") static function loadSetFileCompletionNotificationModes(): (go.Error);
+    @:native("LocalFree") static function localFree(hmem: go.syscall.Handle): (go.Result<go.syscall.Handle>);
+    @:native("LookupAccountName") static function lookupAccountName(systemName: go.Pointer<go.UInt16>, accountName: go.Pointer<go.UInt16>, sid: go.Pointer<go.syscall.SID>, sidLen: go.Pointer<go.UInt32>, refdDomainName: go.Pointer<go.UInt16>, refdDomainNameLen: go.Pointer<go.UInt32>, use: go.Pointer<go.UInt32>): (go.Error);
+    @:native("LookupAccountSid") static function lookupAccountSid(systemName: go.Pointer<go.UInt16>, sid: go.Pointer<go.syscall.SID>, name: go.Pointer<go.UInt16>, nameLen: go.Pointer<go.UInt32>, refdDomainName: go.Pointer<go.UInt16>, refdDomainNameLen: go.Pointer<go.UInt32>, use: go.Pointer<go.UInt32>): (go.Error);
+    /**
+        LookupSID retrieves a security identifier sid for the account
+        and the name of the domain on which the account was found.
+        System specify target computer to search.
+    **/
+    @:go.Tuple("sid", "domain", "accType", "err") @:native("LookupSID") static function lookupSID(system: String, account: String): (go.Tuple<{ sid: go.Pointer<go.syscall.SID>, domain: String, accType: go.UInt32, err: go.Error }>);
+    @:native("MapViewOfFile") static function mapViewOfFile(handle: go.syscall.Handle, access: go.UInt32, offsetHigh: go.UInt32, offsetLow: go.UInt32, length: go.UIntPtr): (go.Result<go.UIntPtr>);
     @:native("Mkdir") static function mkdir(path: String, mode: go.UInt32): (go.Error);
-    @:native("Mkfifo") static function mkfifo(path: String, mode: go.UInt32): (go.Error);
-    @:native("Mknod") static function mknod(path: String, mode: go.UInt32, dev: go.GoInt): (go.Error);
-    @:native("Mlock") static function mlock(b: go.Slice<go.Byte>): (go.Error);
-    @:native("Mlockall") static function mlockall(flags: go.GoInt): (go.Error);
-    @:native("Mmap") static function mmap(fd: go.GoInt, offset: go.Int64, length: go.GoInt, prot: go.GoInt, flags: go.GoInt): (go.Result<go.Slice<go.Byte>>);
-    @:native("Mprotect") static function mprotect(b: go.Slice<go.Byte>, prot: go.GoInt): (go.Error);
-    @:native("Munlock") static function munlock(b: go.Slice<go.Byte>): (go.Error);
-    @:native("Munlockall") static function munlockall(): (go.Error);
-    @:native("Munmap") static function munmap(b: go.Slice<go.Byte>): (go.Error);
+    @:native("MoveFile") static function moveFile(_from: go.Pointer<go.UInt16>, _to: go.Pointer<go.UInt16>): (go.Error);
     /**
-        NsecToTimespec converts a number of nanoseconds into a [Timespec].
+        MustLoadDLL is like [LoadDLL] but panics if load operation fails.
     **/
+    @:native("MustLoadDLL") static function mustLoadDLL(name: String): (go.Pointer<go.syscall.DLL>);
+    @:native("NetApiBufferFree") static function netApiBufferFree(buf: go.Pointer<go.Byte>): (go.Error);
+    @:native("NetGetJoinInformation") static function netGetJoinInformation(server: go.Pointer<go.UInt16>, name: go.Pointer<go.Pointer<go.UInt16>>, bufType: go.Pointer<go.UInt32>): (go.Error);
+    @:native("NetUserGetInfo") static function netUserGetInfo(serverName: go.Pointer<go.UInt16>, userName: go.Pointer<go.UInt16>, level: go.UInt32, buf: go.Pointer<go.Pointer<go.Byte>>): (go.Error);
+    /**
+        NewCallback converts a Go function to a function pointer conforming to the stdcall calling convention.
+        This is useful when interoperating with Windows code requiring callbacks.
+        The argument is expected to be a function with one uintptr-sized result. The function must not have arguments with size larger than the size of uintptr.
+        Only a limited number of callbacks may be created in a single Go process, and any memory allocated
+        for these callbacks is never released.
+        Between NewCallback and NewCallbackCDecl, at least 1024 callbacks can always be created.
+    **/
+    @:native("NewCallback") static function newCallback(fn: Dynamic): (go.UIntPtr);
+    /**
+        NewCallbackCDecl converts a Go function to a function pointer conforming to the cdecl calling convention.
+        This is useful when interoperating with Windows code requiring callbacks.
+        The argument is expected to be a function with one uintptr-sized result. The function must not have arguments with size larger than the size of uintptr.
+        Only a limited number of callbacks may be created in a single Go process, and any memory allocated
+        for these callbacks is never released.
+        Between NewCallback and NewCallbackCDecl, at least 1024 callbacks can always be created.
+    **/
+    @:native("NewCallbackCDecl") static function newCallbackCDecl(fn: Dynamic): (go.UIntPtr);
+    /**
+        NewLazyDLL creates new [LazyDLL] associated with [DLL] file.
+    **/
+    @:native("NewLazyDLL") static function newLazyDLL(name: String): (go.Pointer<go.syscall.LazyDLL>);
+    @:native("NsecToFiletime") static function nsecToFiletime(nsec: go.Int64): (go.syscall.Filetime);
     @:native("NsecToTimespec") static function nsecToTimespec(nsec: go.Int64): (go.syscall.Timespec);
-    /**
-        NsecToTimeval converts a number of nanoseconds into a [Timeval].
-    **/
     @:native("NsecToTimeval") static function nsecToTimeval(nsec: go.Int64): (go.syscall.Timeval);
-    @:native("Open") static function open(path: String, mode: go.GoInt, perm: go.UInt32): (go.Result<go.GoInt>);
+    @:native("Ntohs") static function ntohs(netshort: go.UInt16): (go.UInt16);
+    @:native("Open") static function open(name: String, flag: go.GoInt, perm: go.UInt32): (go.Result<go.syscall.Handle>);
     /**
-        ParseDirent parses up to max directory entries in buf,
-        appending the names to names. It returns the number of
-        bytes consumed from buf, the number of entries added
-        to names, and the new names slice.
+        OpenCurrentProcessToken opens the access token
+        associated with current process.
     **/
-    @:go.Tuple("consumed", "count", "newnames") @:native("ParseDirent") static function parseDirent(buf: go.Slice<go.Byte>, max: go.GoInt, names: go.Slice<String>): (go.Tuple<{ consumed: go.GoInt, count: go.GoInt, newnames: go.Slice<String> }>);
+    @:native("OpenCurrentProcessToken") static function openCurrentProcessToken(): (go.Result<go.syscall.Token>);
+    @:native("OpenProcess") static function openProcess(da: go.UInt32, inheritHandle: Bool, pid: go.UInt32): (go.Result<go.syscall.Handle>);
+    @:native("OpenProcessToken") static function openProcessToken(h: go.syscall.Handle, access: go.UInt32, token: go.Pointer<go.syscall.Token>): (go.Error);
+    @:native("Pipe") static function pipe(p: go.Slice<go.syscall.Handle>): (go.Error);
     /**
-        ParseRoutingMessage parses b as routing messages and returns the
-        slice containing the [RoutingMessage] interfaces.
-        
-        Deprecated: Use golang.org/x/net/route instead.
+        Deprecated: PostQueuedCompletionStatus has the wrong function signature. Use x/sys/windows.PostQueuedCompletionStatus.
     **/
-    @:native("ParseRoutingMessage") static function parseRoutingMessage(b: go.Slice<go.Byte>): (go.Result<go.Slice<go.syscall.RoutingMessage>>);
+    @:native("PostQueuedCompletionStatus") static function postQueuedCompletionStatus(cphandle: go.syscall.Handle, qty: go.UInt32, key: go.UInt32, overlapped: go.Pointer<go.syscall.Overlapped>): (go.Error);
+    @:native("Process32First") static function process32First(snapshot: go.syscall.Handle, procEntry: go.Pointer<go.syscall.ProcessEntry32>): (go.Error);
+    @:native("Process32Next") static function process32Next(snapshot: go.syscall.Handle, procEntry: go.Pointer<go.syscall.ProcessEntry32>): (go.Error);
+    @:native("Read") static function read(fd: go.syscall.Handle, p: go.Slice<go.Byte>): (go.Result<go.GoInt>);
+    @:native("ReadConsole") static function readConsole(console: go.syscall.Handle, buf: go.Pointer<go.UInt16>, toread: go.UInt32, read: go.Pointer<go.UInt32>, inputControl: go.Pointer<go.Byte>): (go.Error);
+    @:native("ReadDirectoryChanges") static function readDirectoryChanges(handle: go.syscall.Handle, buf: go.Pointer<go.Byte>, buflen: go.UInt32, watchSubTree: Bool, mask: go.UInt32, retlen: go.Pointer<go.UInt32>, overlapped: go.Pointer<go.syscall.Overlapped>, completionRoutine: go.UIntPtr): (go.Error);
+    @:native("ReadFile") static function readFile(fd: go.syscall.Handle, p: go.Slice<go.Byte>, done: go.Pointer<go.UInt32>, overlapped: go.Pointer<go.syscall.Overlapped>): (go.Error);
     /**
-        ParseRoutingSockaddr parses msg's payload as raw sockaddrs and
-        returns the slice containing the [Sockaddr] interfaces.
-        
-        Deprecated: Use golang.org/x/net/route instead.
+        Readlink returns the destination of the named symbolic link.
     **/
-    @:native("ParseRoutingSockaddr") static function parseRoutingSockaddr(msg: go.syscall.RoutingMessage): (go.Result<go.Slice<go.syscall.Sockaddr>>);
-    /**
-        ParseSocketControlMessage parses b as an array of socket control
-        messages.
-    **/
-    @:native("ParseSocketControlMessage") static function parseSocketControlMessage(b: go.Slice<go.Byte>): (go.Result<go.Slice<go.syscall.SocketControlMessage>>);
-    /**
-        ParseUnixRights decodes a socket control message that contains an
-        integer array of open file descriptors from another process.
-    **/
-    @:native("ParseUnixRights") static function parseUnixRights(m: go.Pointer<go.syscall.SocketControlMessage>): (go.Result<go.Slice<go.GoInt>>);
-    @:native("Pathconf") static function pathconf(path: String, name: go.GoInt): (go.Result<go.GoInt>);
-    @:native("Pipe") static function pipe(p: go.Slice<go.GoInt>): (go.Error);
-    @:native("Pread") static function pread(fd: go.GoInt, p: go.Slice<go.Byte>, offset: go.Int64): (go.Result<go.GoInt>);
-    @:native("PtraceAttach") static function ptraceAttach(pid: go.GoInt): (go.Error);
-    @:native("PtraceDetach") static function ptraceDetach(pid: go.GoInt): (go.Error);
-    @:native("Pwrite") static function pwrite(fd: go.GoInt, p: go.Slice<go.Byte>, offset: go.Int64): (go.Result<go.GoInt>);
-    @:go.Tuple("r1", "r2", "err") @:native("RawSyscall") static function rawSyscall(trap: go.UIntPtr, a1: go.UIntPtr, a2: go.UIntPtr, a3: go.UIntPtr): (go.Tuple<{ r1: go.UIntPtr, r2: go.UIntPtr, err: go.syscall.Errno }>);
-    @:go.Tuple("r1", "r2", "err") @:native("RawSyscall6") static function rawSyscall6(trap: go.UIntPtr, a1: go.UIntPtr, a2: go.UIntPtr, a3: go.UIntPtr, a4: go.UIntPtr, a5: go.UIntPtr, a6: go.UIntPtr): (go.Tuple<{ r1: go.UIntPtr, r2: go.UIntPtr, err: go.syscall.Errno }>);
-    @:native("Read") static function read(fd: go.GoInt, p: go.Slice<go.Byte>): (go.Result<go.GoInt>);
-    @:native("ReadDirent") static function readDirent(fd: go.GoInt, buf: go.Slice<go.Byte>): (go.Result<go.GoInt>);
     @:native("Readlink") static function readlink(path: String, buf: go.Slice<go.Byte>): (go.Result<go.GoInt>);
-    @:go.Tuple("n", "_from", "err") @:native("Recvfrom") static function recvfrom(fd: go.GoInt, p: go.Slice<go.Byte>, flags: go.GoInt): (go.Tuple<{ n: go.GoInt, _from: go.syscall.Sockaddr, err: go.Error }>);
-    @:go.Tuple("n", "oobn", "recvflags", "_from", "err") @:native("Recvmsg") static function recvmsg(fd: go.GoInt, p: go.Slice<go.Byte>, oob: go.Slice<go.Byte>, flags: go.GoInt): (go.Tuple<{ n: go.GoInt, oobn: go.GoInt, recvflags: go.GoInt, _from: go.syscall.Sockaddr, err: go.Error }>);
-    @:native("Rename") static function rename(_from: String, _to: String): (go.Error);
-    @:native("Revoke") static function revoke(path: String): (go.Error);
-    @:native("Rmdir") static function rmdir(path: String): (go.Error);
+    @:go.Tuple("n", "_from", "err") @:native("Recvfrom") static function recvfrom(fd: go.syscall.Handle, p: go.Slice<go.Byte>, flags: go.GoInt): (go.Tuple<{ n: go.GoInt, _from: go.syscall.Sockaddr, err: go.Error }>);
+    @:native("RegCloseKey") static function regCloseKey(key: go.syscall.Handle): (go.Error);
     /**
-        RouteRIB returns routing information base, as known as RIB,
-        which consists of network facility information, states and
-        parameters.
+        RegEnumKeyEx enumerates the subkeys of an open registry key.
+        Each call retrieves information about one subkey. name is
+        a buffer that should be large enough to hold the name of the
+        subkey plus a null terminating character. nameLen is its
+        length. On return, nameLen will contain the actual length of the
+        subkey.
         
-        Deprecated: Use golang.org/x/net/route instead.
+        Should name not be large enough to hold the subkey, this function
+        will return ERROR_MORE_DATA, and must be called again with an
+        appropriately sized buffer.
+        
+        reserved must be nil. class and classLen behave like name and nameLen
+        but for the class of the subkey, except that they are optional.
+        lastWriteTime, if not nil, will be populated with the time the subkey
+        was last written.
+        
+        The caller must enumerate all subkeys in order. That is
+        RegEnumKeyEx must be called with index starting at 0, incrementing
+        the index until the function returns ERROR_NO_MORE_ITEMS, or with
+        the index of the last subkey (obtainable from RegQueryInfoKey),
+        decrementing until index 0 is enumerated.
+        
+        Successive calls to this API must happen on the same OS thread,
+        so call [runtime.LockOSThread] before calling this function.
     **/
-    @:native("RouteRIB") static function routeRIB(facility: go.GoInt, param: go.GoInt): (go.Result<go.Slice<go.Byte>>);
-    @:native("Seek") static function seek(fd: go.GoInt, offset: go.Int64, whence: go.GoInt): (go.Result<go.Int64>);
-    @:native("Select") static function select(n: go.GoInt, r: go.Pointer<go.syscall.FdSet>, w: go.Pointer<go.syscall.FdSet>, e: go.Pointer<go.syscall.FdSet>, timeout: go.Pointer<go.syscall.Timeval>): (go.Error);
-    @:native("Sendfile") static function sendfile(outfd: go.GoInt, infd: go.GoInt, offset: go.Pointer<go.Int64>, count: go.GoInt): (go.Result<go.GoInt>);
-    @:native("Sendmsg") static function sendmsg(fd: go.GoInt, p: go.Slice<go.Byte>, oob: go.Slice<go.Byte>, _to: go.syscall.Sockaddr, flags: go.GoInt): (go.Error);
-    @:native("SendmsgN") static function sendmsgN(fd: go.GoInt, p: go.Slice<go.Byte>, oob: go.Slice<go.Byte>, _to: go.syscall.Sockaddr, flags: go.GoInt): (go.Result<go.GoInt>);
-    @:native("Sendto") static function sendto(fd: go.GoInt, p: go.Slice<go.Byte>, flags: go.GoInt, _to: go.syscall.Sockaddr): (go.Error);
-    /**
-        Deprecated: Use golang.org/x/net/bpf instead.
-    **/
-    @:native("SetBpf") static function setBpf(fd: go.GoInt, i: go.Slice<go.syscall.BpfInsn>): (go.Error);
-    /**
-        Deprecated: Use golang.org/x/net/bpf instead.
-    **/
-    @:native("SetBpfBuflen") static function setBpfBuflen(fd: go.GoInt, l: go.GoInt): (go.Result<go.GoInt>);
-    /**
-        Deprecated: Use golang.org/x/net/bpf instead.
-    **/
-    @:native("SetBpfDatalink") static function setBpfDatalink(fd: go.GoInt, t: go.GoInt): (go.Result<go.GoInt>);
-    /**
-        Deprecated: Use golang.org/x/net/bpf instead.
-    **/
-    @:native("SetBpfHeadercmpl") static function setBpfHeadercmpl(fd: go.GoInt, f: go.GoInt): (go.Error);
-    /**
-        Deprecated: Use golang.org/x/net/bpf instead.
-    **/
-    @:native("SetBpfImmediate") static function setBpfImmediate(fd: go.GoInt, m: go.GoInt): (go.Error);
-    /**
-        Deprecated: Use golang.org/x/net/bpf instead.
-    **/
-    @:native("SetBpfInterface") static function setBpfInterface(fd: go.GoInt, name: String): (go.Error);
-    /**
-        Deprecated: Use golang.org/x/net/bpf instead.
-    **/
-    @:native("SetBpfPromisc") static function setBpfPromisc(fd: go.GoInt, m: go.GoInt): (go.Error);
-    /**
-        Deprecated: Use golang.org/x/net/bpf instead.
-    **/
-    @:native("SetBpfTimeout") static function setBpfTimeout(fd: go.GoInt, tv: go.Pointer<go.syscall.Timeval>): (go.Error);
-    @:native("SetKevent") static function setKevent(k: go.Pointer<go.syscall.Kevent_t>, fd: go.GoInt, mode: go.GoInt, flags: go.GoInt): Void;
-    @:native("SetNonblock") static function setNonblock(fd: go.GoInt, nonblocking: Bool): (go.Error);
-    @:native("Setegid") static function setegid(egid: go.GoInt): (go.Error);
+    @:native("RegEnumKeyEx") static function regEnumKeyEx(key: go.syscall.Handle, index: go.UInt32, name: go.Pointer<go.UInt16>, nameLen: go.Pointer<go.UInt32>, reserved: go.Pointer<go.UInt32>, _class: go.Pointer<go.UInt16>, classLen: go.Pointer<go.UInt32>, lastWriteTime: go.Pointer<go.syscall.Filetime>): (go.Error);
+    @:native("RegOpenKeyEx") static function regOpenKeyEx(key: go.syscall.Handle, subkey: go.Pointer<go.UInt16>, options: go.UInt32, desiredAccess: go.UInt32, result: go.Pointer<go.syscall.Handle>): (go.Error);
+    @:native("RegQueryInfoKey") static function regQueryInfoKey(key: go.syscall.Handle, _class: go.Pointer<go.UInt16>, classLen: go.Pointer<go.UInt32>, reserved: go.Pointer<go.UInt32>, subkeysLen: go.Pointer<go.UInt32>, maxSubkeyLen: go.Pointer<go.UInt32>, maxClassLen: go.Pointer<go.UInt32>, valuesLen: go.Pointer<go.UInt32>, maxValueNameLen: go.Pointer<go.UInt32>, maxValueLen: go.Pointer<go.UInt32>, saLen: go.Pointer<go.UInt32>, lastWriteTime: go.Pointer<go.syscall.Filetime>): (go.Error);
+    @:native("RegQueryValueEx") static function regQueryValueEx(key: go.syscall.Handle, name: go.Pointer<go.UInt16>, reserved: go.Pointer<go.UInt32>, valtype: go.Pointer<go.UInt32>, buf: go.Pointer<go.Byte>, buflen: go.Pointer<go.UInt32>): (go.Error);
+    @:native("RemoveDirectory") static function removeDirectory(path: go.Pointer<go.UInt16>): (go.Error);
+    @:native("Rename") static function rename(oldpath: String, newpath: String): (go.Error);
+    @:native("Rmdir") static function rmdir(path: String): (go.Error);
+    @:native("Seek") static function seek(fd: go.syscall.Handle, offset: go.Int64, whence: go.GoInt): (go.Result<go.Int64>);
+    @:native("Sendto") static function sendto(fd: go.syscall.Handle, p: go.Slice<go.Byte>, flags: go.GoInt, _to: go.syscall.Sockaddr): (go.Error);
+    @:native("SetCurrentDirectory") static function setCurrentDirectory(path: go.Pointer<go.UInt16>): (go.Error);
+    @:native("SetEndOfFile") static function setEndOfFile(handle: go.syscall.Handle): (go.Error);
+    @:native("SetEnvironmentVariable") static function setEnvironmentVariable(name: go.Pointer<go.UInt16>, value: go.Pointer<go.UInt16>): (go.Error);
+    @:native("SetFileAttributes") static function setFileAttributes(name: go.Pointer<go.UInt16>, attrs: go.UInt32): (go.Error);
+    @:native("SetFileCompletionNotificationModes") static function setFileCompletionNotificationModes(handle: go.syscall.Handle, flags: go.UInt8): (go.Error);
+    @:native("SetFilePointer") static function setFilePointer(handle: go.syscall.Handle, lowoffset: go.Int32, highoffsetptr: go.Pointer<go.Int32>, whence: go.UInt32): (go.Result<go.UInt32>);
+    @:native("SetFileTime") static function setFileTime(handle: go.syscall.Handle, ctime: go.Pointer<go.syscall.Filetime>, atime: go.Pointer<go.syscall.Filetime>, wtime: go.Pointer<go.syscall.Filetime>): (go.Error);
+    @:native("SetHandleInformation") static function setHandleInformation(handle: go.syscall.Handle, mask: go.UInt32, flags: go.UInt32): (go.Error);
+    @:native("SetNonblock") static function setNonblock(fd: go.syscall.Handle, nonblocking: Bool): (go.Error);
     @:native("Setenv") static function setenv(key: String, value: String): (go.Error);
-    @:native("Seteuid") static function seteuid(euid: go.GoInt): (go.Error);
-    @:native("Setgid") static function setgid(gid: go.GoInt): (go.Error);
-    @:native("Setgroups") static function setgroups(gids: go.Slice<go.GoInt>): (go.Error);
-    @:native("Setlogin") static function setlogin(name: String): (go.Error);
-    @:native("Setpgid") static function setpgid(pid: go.GoInt, pgid: go.GoInt): (go.Error);
-    @:native("Setpriority") static function setpriority(which: go.GoInt, who: go.GoInt, prio: go.GoInt): (go.Error);
-    @:native("Setprivexec") static function setprivexec(flag: go.GoInt): (go.Error);
-    @:native("Setregid") static function setregid(rgid: go.GoInt, egid: go.GoInt): (go.Error);
-    @:native("Setreuid") static function setreuid(ruid: go.GoInt, euid: go.GoInt): (go.Error);
-    @:native("Setrlimit") static function setrlimit(resource: go.GoInt, rlim: go.Pointer<go.syscall.Rlimit>): (go.Error);
-    @:native("Setsid") static function setsid(): (go.Result<go.GoInt>);
-    @:native("SetsockoptByte") static function setsockoptByte(fd: go.GoInt, level: go.GoInt, opt: go.GoInt, value: go.Byte): (go.Error);
-    @:native("SetsockoptICMPv6Filter") static function setsockoptICMPv6Filter(fd: go.GoInt, level: go.GoInt, opt: go.GoInt, filter: go.Pointer<go.syscall.ICMPv6Filter>): (go.Error);
-    @:native("SetsockoptIPMreq") static function setsockoptIPMreq(fd: go.GoInt, level: go.GoInt, opt: go.GoInt, mreq: go.Pointer<go.syscall.IPMreq>): (go.Error);
-    @:native("SetsockoptIPv6Mreq") static function setsockoptIPv6Mreq(fd: go.GoInt, level: go.GoInt, opt: go.GoInt, mreq: go.Pointer<go.syscall.IPv6Mreq>): (go.Error);
-    @:native("SetsockoptInet4Addr") static function setsockoptInet4Addr(fd: go.GoInt, level: go.GoInt, opt: go.GoInt, value: go.GoArray<go.Byte, 4>): (go.Error);
-    @:native("SetsockoptInt") static function setsockoptInt(fd: go.GoInt, level: go.GoInt, opt: go.GoInt, value: go.GoInt): (go.Error);
-    @:native("SetsockoptLinger") static function setsockoptLinger(fd: go.GoInt, level: go.GoInt, opt: go.GoInt, l: go.Pointer<go.syscall.Linger>): (go.Error);
-    @:native("SetsockoptString") static function setsockoptString(fd: go.GoInt, level: go.GoInt, opt: go.GoInt, s: String): (go.Error);
-    @:native("SetsockoptTimeval") static function setsockoptTimeval(fd: go.GoInt, level: go.GoInt, opt: go.GoInt, tv: go.Pointer<go.syscall.Timeval>): (go.Error);
-    @:native("Settimeofday") static function settimeofday(tp: go.Pointer<go.syscall.Timeval>): (go.Error);
-    @:native("Setuid") static function setuid(uid: go.GoInt): (go.Error);
-    @:native("Shutdown") static function shutdown(s: go.GoInt, how: go.GoInt): (go.Error);
-    /**
-        SlicePtrFromStrings converts a slice of strings to a slice of
-        pointers to NUL-terminated byte arrays. If any string contains
-        a NUL byte, it returns (nil, [EINVAL]).
-    **/
-    @:native("SlicePtrFromStrings") static function slicePtrFromStrings(ss: go.Slice<String>): (go.Result<go.Slice<go.Pointer<go.Byte>>>);
-    @:native("Socket") static function socket(domain: go.GoInt, typ: go.GoInt, proto: go.GoInt): (go.Result<go.GoInt>);
-    @:native("Socketpair") static function socketpair(domain: go.GoInt, typ: go.GoInt, proto: go.GoInt): (go.Result<go.GoArray<go.GoInt, 2>>);
-    /**
-        StartProcess wraps [ForkExec] for package os.
-    **/
+    @:native("Setsockopt") static function setsockopt(s: go.syscall.Handle, level: go.Int32, optname: go.Int32, optval: go.Pointer<go.Byte>, optlen: go.Int32): (go.Error);
+    @:native("SetsockoptIPMreq") static function setsockoptIPMreq(fd: go.syscall.Handle, level: go.GoInt, opt: go.GoInt, mreq: go.Pointer<go.syscall.IPMreq>): (go.Error);
+    @:native("SetsockoptIPv6Mreq") static function setsockoptIPv6Mreq(fd: go.syscall.Handle, level: go.GoInt, opt: go.GoInt, mreq: go.Pointer<go.syscall.IPv6Mreq>): (go.Error);
+    @:native("SetsockoptInet4Addr") static function setsockoptInet4Addr(fd: go.syscall.Handle, level: go.GoInt, opt: go.GoInt, value: go.GoArray<go.Byte, 4>): (go.Error);
+    @:native("SetsockoptInt") static function setsockoptInt(fd: go.syscall.Handle, level: go.GoInt, opt: go.GoInt, value: go.GoInt): (go.Error);
+    @:native("SetsockoptLinger") static function setsockoptLinger(fd: go.syscall.Handle, level: go.GoInt, opt: go.GoInt, l: go.Pointer<go.syscall.Linger>): (go.Error);
+    @:native("SetsockoptTimeval") static function setsockoptTimeval(fd: go.syscall.Handle, level: go.GoInt, opt: go.GoInt, tv: go.Pointer<go.syscall.Timeval>): (go.Error);
+    @:native("Shutdown") static function shutdown(fd: go.syscall.Handle, how: go.GoInt): (go.Error);
+    @:native("Socket") static function socket(domain: go.GoInt, typ: go.GoInt, proto: go.GoInt): (go.Result<go.syscall.Handle>);
     @:go.Tuple("pid", "handle", "err") @:native("StartProcess") static function startProcess(argv0: String, argv: go.Slice<String>, attr: go.Pointer<go.syscall.ProcAttr>): (go.Tuple<{ pid: go.GoInt, handle: go.UIntPtr, err: go.Error }>);
-    @:native("Stat") static function stat(path: String, stat: go.Pointer<go.syscall.Stat_t>): (go.Error);
-    @:native("Statfs") static function statfs(path: String, stat: go.Pointer<go.syscall.Statfs_t>): (go.Error);
     /**
         StringBytePtr returns a pointer to a NUL-terminated array of bytes.
         If s contains a NUL byte this function panics instead of returning
@@ -2454,42 +1519,106 @@ extern class Syscall {
     **/
     @:native("StringByteSlice") static function stringByteSlice(s: String): (go.Slice<go.Byte>);
     /**
-        StringSlicePtr converts a slice of strings to a slice of pointers
-        to NUL-terminated byte arrays. If any string contains a NUL byte
-        this function panics instead of returning an error.
-        
-        Deprecated: Use [SlicePtrFromStrings] instead.
+        StringToSid converts a string-format security identifier
+        sid into a valid, functional sid.
     **/
-    @:native("StringSlicePtr") static function stringSlicePtr(ss: go.Slice<String>): (go.Slice<go.Pointer<go.Byte>>);
-    @:native("Symlink") static function symlink(path: String, link: String): (go.Error);
-    @:native("Sync") static function sync(): (go.Error);
-    @:go.Tuple("r1", "r2", "err") @:native("Syscall") static function syscall(trap: go.UIntPtr, a1: go.UIntPtr, a2: go.UIntPtr, a3: go.UIntPtr): (go.Tuple<{ r1: go.UIntPtr, r2: go.UIntPtr, err: go.syscall.Errno }>);
-    @:go.Tuple("r1", "r2", "err") @:native("Syscall6") static function syscall6(trap: go.UIntPtr, a1: go.UIntPtr, a2: go.UIntPtr, a3: go.UIntPtr, a4: go.UIntPtr, a5: go.UIntPtr, a6: go.UIntPtr): (go.Tuple<{ r1: go.UIntPtr, r2: go.UIntPtr, err: go.syscall.Errno }>);
-    @:go.Tuple("r1", "r2", "err") @:native("Syscall9") static function syscall9(trap: go.UIntPtr, a1: go.UIntPtr, a2: go.UIntPtr, a3: go.UIntPtr, a4: go.UIntPtr, a5: go.UIntPtr, a6: go.UIntPtr, a7: go.UIntPtr, a8: go.UIntPtr, a9: go.UIntPtr): (go.Tuple<{ r1: go.UIntPtr, r2: go.UIntPtr, err: go.syscall.Errno }>);
-    @:native("Sysctl") static function sysctl(name: String): (go.Result<String>);
-    @:native("SysctlUint32") static function sysctlUint32(name: String): (go.Result<go.UInt32>);
+    @:native("StringToSid") static function stringToSid(s: String): (go.Result<go.Pointer<go.syscall.SID>>);
     /**
-        TimespecToNsec returns the time stored in ts as nanoseconds.
+        StringToUTF16 returns the UTF-16 encoding of the UTF-8 string s,
+        with a terminating NUL added. If s contains a NUL byte this
+        function panics instead of returning an error.
+        
+        Deprecated: Use [UTF16FromString] instead.
     **/
+    @:native("StringToUTF16") static function stringToUTF16(s: String): (go.Slice<go.UInt16>);
+    /**
+        StringToUTF16Ptr returns pointer to the UTF-16 encoding of
+        the UTF-8 string s, with a terminating NUL added. If s
+        contains a NUL byte this function panics instead of
+        returning an error.
+        
+        Deprecated: Use [UTF16PtrFromString] instead.
+    **/
+    @:native("StringToUTF16Ptr") static function stringToUTF16Ptr(s: String): (go.Pointer<go.UInt16>);
+    @:native("Symlink") static function symlink(path: String, link: String): (go.Error);
+    /**
+        Deprecated: Use [SyscallN] instead.
+    **/
+    @:go.Tuple("r1", "r2", "err") @:native("Syscall") static function syscall(trap: go.UIntPtr, nargs: go.UIntPtr, a1: go.UIntPtr, a2: go.UIntPtr, a3: go.UIntPtr): (go.Tuple<{ r1: go.UIntPtr, r2: go.UIntPtr, err: go.syscall.Errno }>);
+    /**
+        Deprecated: Use [SyscallN] instead.
+    **/
+    @:go.Tuple("r1", "r2", "err") @:native("Syscall12") static function syscall12(trap: go.UIntPtr, nargs: go.UIntPtr, a1: go.UIntPtr, a2: go.UIntPtr, a3: go.UIntPtr, a4: go.UIntPtr, a5: go.UIntPtr, a6: go.UIntPtr, a7: go.UIntPtr, a8: go.UIntPtr, a9: go.UIntPtr, a10: go.UIntPtr, a11: go.UIntPtr, a12: go.UIntPtr): (go.Tuple<{ r1: go.UIntPtr, r2: go.UIntPtr, err: go.syscall.Errno }>);
+    /**
+        Deprecated: Use [SyscallN] instead.
+    **/
+    @:go.Tuple("r1", "r2", "err") @:native("Syscall15") static function syscall15(trap: go.UIntPtr, nargs: go.UIntPtr, a1: go.UIntPtr, a2: go.UIntPtr, a3: go.UIntPtr, a4: go.UIntPtr, a5: go.UIntPtr, a6: go.UIntPtr, a7: go.UIntPtr, a8: go.UIntPtr, a9: go.UIntPtr, a10: go.UIntPtr, a11: go.UIntPtr, a12: go.UIntPtr, a13: go.UIntPtr, a14: go.UIntPtr, a15: go.UIntPtr): (go.Tuple<{ r1: go.UIntPtr, r2: go.UIntPtr, err: go.syscall.Errno }>);
+    /**
+        Deprecated: Use [SyscallN] instead.
+    **/
+    @:go.Tuple("r1", "r2", "err") @:native("Syscall18") static function syscall18(trap: go.UIntPtr, nargs: go.UIntPtr, a1: go.UIntPtr, a2: go.UIntPtr, a3: go.UIntPtr, a4: go.UIntPtr, a5: go.UIntPtr, a6: go.UIntPtr, a7: go.UIntPtr, a8: go.UIntPtr, a9: go.UIntPtr, a10: go.UIntPtr, a11: go.UIntPtr, a12: go.UIntPtr, a13: go.UIntPtr, a14: go.UIntPtr, a15: go.UIntPtr, a16: go.UIntPtr, a17: go.UIntPtr, a18: go.UIntPtr): (go.Tuple<{ r1: go.UIntPtr, r2: go.UIntPtr, err: go.syscall.Errno }>);
+    /**
+        Deprecated: Use [SyscallN] instead.
+    **/
+    @:go.Tuple("r1", "r2", "err") @:native("Syscall6") static function syscall6(trap: go.UIntPtr, nargs: go.UIntPtr, a1: go.UIntPtr, a2: go.UIntPtr, a3: go.UIntPtr, a4: go.UIntPtr, a5: go.UIntPtr, a6: go.UIntPtr): (go.Tuple<{ r1: go.UIntPtr, r2: go.UIntPtr, err: go.syscall.Errno }>);
+    /**
+        Deprecated: Use [SyscallN] instead.
+    **/
+    @:go.Tuple("r1", "r2", "err") @:native("Syscall9") static function syscall9(trap: go.UIntPtr, nargs: go.UIntPtr, a1: go.UIntPtr, a2: go.UIntPtr, a3: go.UIntPtr, a4: go.UIntPtr, a5: go.UIntPtr, a6: go.UIntPtr, a7: go.UIntPtr, a8: go.UIntPtr, a9: go.UIntPtr): (go.Tuple<{ r1: go.UIntPtr, r2: go.UIntPtr, err: go.syscall.Errno }>);
+    /**
+        SyscallN executes procedure p with arguments args.
+        
+        See [Proc.Call] for more information.
+    **/
+    @:go.Tuple("r1", "r2", "err") @:native("SyscallN") static function syscallN(p: go.UIntPtr, args: haxe.Rest<go.UIntPtr>): (go.Tuple<{ r1: go.UIntPtr, r2: go.UIntPtr, err: go.syscall.Errno }>);
+    @:native("TerminateProcess") static function terminateProcess(handle: go.syscall.Handle, exitcode: go.UInt32): (go.Error);
     @:native("TimespecToNsec") static function timespecToNsec(ts: go.syscall.Timespec): (go.Int64);
     /**
-        TimevalToNsec returns the time stored in tv as nanoseconds.
+        TranslateAccountName converts a directory service
+        object name from one format to another.
     **/
-    @:native("TimevalToNsec") static function timevalToNsec(tv: go.syscall.Timeval): (go.Int64);
-    @:native("Truncate") static function truncate(path: String, length: go.Int64): (go.Error);
-    @:native("Umask") static function umask(newmask: go.GoInt): (go.GoInt);
-    @:native("Undelete") static function undelete(path: String): (go.Error);
+    @:native("TranslateAccountName") static function translateAccountName(username: String, _from: go.UInt32, _to: go.UInt32, initSize: go.GoInt): (go.Result<String>);
+    @:native("TranslateName") static function translateName(accName: go.Pointer<go.UInt16>, accNameFormat: go.UInt32, desiredNameFormat: go.UInt32, translatedName: go.Pointer<go.UInt16>, nSize: go.Pointer<go.UInt32>): (go.Error);
+    @:native("TransmitFile") static function transmitFile(s: go.syscall.Handle, handle: go.syscall.Handle, bytesToWrite: go.UInt32, bytsPerSend: go.UInt32, overlapped: go.Pointer<go.syscall.Overlapped>, transmitFileBuf: go.Pointer<go.syscall.TransmitFileBuffers>, flags: go.UInt32): (go.Error);
     /**
-        UnixRights encodes a set of open file descriptors into a socket
-        control message for sending to another process.
+        UTF16FromString returns the UTF-16 encoding of the UTF-8 string
+        s, with a terminating NUL added. If s contains a NUL byte at any
+        location, it returns (nil, [EINVAL]). Unpaired surrogates
+        are encoded using WTF-8.
     **/
-    @:native("UnixRights") static function unixRights(fds: haxe.Rest<go.GoInt>): (go.Slice<go.Byte>);
+    @:native("UTF16FromString") static function uTF16FromString(s: String): (go.Result<go.Slice<go.UInt16>>);
+    /**
+        UTF16PtrFromString returns pointer to the UTF-16 encoding of
+        the UTF-8 string s, with a terminating NUL added. If s
+        contains a NUL byte at any location, it returns (nil, EINVAL).
+        Unpaired surrogates are encoded using WTF-8.
+    **/
+    @:native("UTF16PtrFromString") static function uTF16PtrFromString(s: String): (go.Result<go.Pointer<go.UInt16>>);
+    /**
+        UTF16ToString returns the UTF-8 encoding of the UTF-16 sequence s,
+        with a terminating NUL removed. Unpaired surrogates are decoded
+        using WTF-8 instead of UTF-8 encoding.
+    **/
+    @:native("UTF16ToString") static function uTF16ToString(s: go.Slice<go.UInt16>): (String);
     @:native("Unlink") static function unlink(path: String): (go.Error);
-    @:native("Unmount") static function unmount(path: String, flags: go.GoInt): (go.Error);
+    @:native("UnmapViewOfFile") static function unmapViewOfFile(addr: go.UIntPtr): (go.Error);
     @:native("Unsetenv") static function unsetenv(key: String): (go.Error);
     @:native("Utimes") static function utimes(path: String, tv: go.Slice<go.syscall.Timeval>): (go.Error);
     @:native("UtimesNano") static function utimesNano(path: String, ts: go.Slice<go.syscall.Timespec>): (go.Error);
-    @:native("Wait4") static function wait4(pid: go.GoInt, wstatus: go.Pointer<go.syscall.WaitStatus>, options: go.GoInt, rusage: go.Pointer<go.syscall.Rusage>): (go.Result<go.GoInt>);
-    @:native("Write") static function write(fd: go.GoInt, p: go.Slice<go.Byte>): (go.Result<go.GoInt>);
+    @:native("VirtualLock") static function virtualLock(addr: go.UIntPtr, length: go.UIntPtr): (go.Error);
+    @:native("VirtualUnlock") static function virtualUnlock(addr: go.UIntPtr, length: go.UIntPtr): (go.Error);
+    @:native("WSACleanup") static function wSACleanup(): (go.Error);
+    @:native("WSAEnumProtocols") static function wSAEnumProtocols(protocols: go.Pointer<go.Int32>, protocolBuffer: go.Pointer<go.syscall.WSAProtocolInfo>, bufferLength: go.Pointer<go.UInt32>): (go.Result<go.Int32>);
+    @:native("WSAIoctl") static function wSAIoctl(s: go.syscall.Handle, iocc: go.UInt32, inbuf: go.Pointer<go.Byte>, cbif: go.UInt32, outbuf: go.Pointer<go.Byte>, cbob: go.UInt32, cbbr: go.Pointer<go.UInt32>, overlapped: go.Pointer<go.syscall.Overlapped>, completionRoutine: go.UIntPtr): (go.Error);
+    @:native("WSARecv") static function wSARecv(s: go.syscall.Handle, bufs: go.Pointer<go.syscall.WSABuf>, bufcnt: go.UInt32, recvd: go.Pointer<go.UInt32>, flags: go.Pointer<go.UInt32>, overlapped: go.Pointer<go.syscall.Overlapped>, croutine: go.Pointer<go.Byte>): (go.Error);
+    @:native("WSARecvFrom") static function wSARecvFrom(s: go.syscall.Handle, bufs: go.Pointer<go.syscall.WSABuf>, bufcnt: go.UInt32, recvd: go.Pointer<go.UInt32>, flags: go.Pointer<go.UInt32>, _from: go.Pointer<go.syscall.RawSockaddrAny>, fromlen: go.Pointer<go.Int32>, overlapped: go.Pointer<go.syscall.Overlapped>, croutine: go.Pointer<go.Byte>): (go.Error);
+    @:native("WSASend") static function wSASend(s: go.syscall.Handle, bufs: go.Pointer<go.syscall.WSABuf>, bufcnt: go.UInt32, sent: go.Pointer<go.UInt32>, flags: go.UInt32, overlapped: go.Pointer<go.syscall.Overlapped>, croutine: go.Pointer<go.Byte>): (go.Error);
+    @:native("WSASendTo") static function wSASendTo(s: go.syscall.Handle, bufs: go.Pointer<go.syscall.WSABuf>, bufcnt: go.UInt32, sent: go.Pointer<go.UInt32>, flags: go.UInt32, _to: go.Pointer<go.syscall.RawSockaddrAny>, tolen: go.Int32, overlapped: go.Pointer<go.syscall.Overlapped>, croutine: go.Pointer<go.Byte>): (go.Error);
+    @:native("WSASendto") static function wSASendto(s: go.syscall.Handle, bufs: go.Pointer<go.syscall.WSABuf>, bufcnt: go.UInt32, sent: go.Pointer<go.UInt32>, flags: go.UInt32, _to: go.syscall.Sockaddr, overlapped: go.Pointer<go.syscall.Overlapped>, croutine: go.Pointer<go.Byte>): (go.Error);
+    @:native("WSAStartup") static function wSAStartup(verreq: go.UInt32, data: go.Pointer<go.syscall.WSAData>): (go.Error);
+    @:native("WaitForSingleObject") static function waitForSingleObject(handle: go.syscall.Handle, waitMilliseconds: go.UInt32): (go.Result<go.UInt32>);
+    @:native("Write") static function write(fd: go.syscall.Handle, p: go.Slice<go.Byte>): (go.Result<go.GoInt>);
+    @:native("WriteConsole") static function writeConsole(console: go.syscall.Handle, buf: go.Pointer<go.UInt16>, towrite: go.UInt32, written: go.Pointer<go.UInt32>, reserved: go.Pointer<go.Byte>): (go.Error);
+    @:native("WriteFile") static function writeFile(fd: go.syscall.Handle, p: go.Slice<go.Byte>, done: go.Pointer<go.UInt32>, overlapped: go.Pointer<go.syscall.Overlapped>): (go.Error);
 
 }

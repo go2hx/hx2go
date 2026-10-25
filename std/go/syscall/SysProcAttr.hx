@@ -4,17 +4,16 @@ package go.syscall;
 @:go.Type({ name: "SysProcAttr", instanceName: "syscall.SysProcAttr", imports: ["syscall"] })
 extern class SysProcAttr {
 
-    @:native("Chroot") var chroot: String;
-    @:native("Credential") var credential: go.Pointer<go.syscall.Credential>;
-    @:native("Ptrace") var ptrace: Bool;
-    @:native("Setsid") var setsid: Bool;
-    @:native("Setpgid") var setpgid: Bool;
-    @:native("Setctty") var setctty: Bool;
-    @:native("Noctty") var noctty: Bool;
-    @:native("Ctty") var ctty: go.GoInt;
-    @:native("Foreground") var foreground: Bool;
-    @:native("Pgid") var pgid: go.GoInt;
+    @:native("HideWindow") var hideWindow: Bool;
+    @:native("CmdLine") var cmdLine: String;
+    @:native("CreationFlags") var creationFlags: go.UInt32;
+    @:native("Token") var token: go.syscall.Token;
+    @:native("ProcessAttributes") var processAttributes: go.Pointer<go.syscall.SecurityAttributes>;
+    @:native("ThreadAttributes") var threadAttributes: go.Pointer<go.syscall.SecurityAttributes>;
+    @:native("NoInheritHandles") var noInheritHandles: Bool;
+    @:native("AdditionalInheritedHandles") var additionalInheritedHandles: go.Slice<go.syscall.Handle>;
+    @:native("ParentProcess") var parentProcess: go.syscall.Handle;
 
-    function new(chroot: String="", credential: go.Pointer<go.syscall.Credential>=null, ptrace: Bool=false, setsid: Bool=false, setpgid: Bool=false, setctty: Bool=false, noctty: Bool=false, ctty: go.GoInt=0, foreground: Bool=false, pgid: go.GoInt=0);
+    function new(hideWindow: Bool=false, cmdLine: String="", creationFlags: go.UInt32=0, token: go.syscall.Token=cast 0, processAttributes: go.Pointer<go.syscall.SecurityAttributes>=null, threadAttributes: go.Pointer<go.syscall.SecurityAttributes>=null, noInheritHandles: Bool=false, additionalInheritedHandles: go.Slice<go.syscall.Handle>=null, parentProcess: go.syscall.Handle=cast 0);
 
 }

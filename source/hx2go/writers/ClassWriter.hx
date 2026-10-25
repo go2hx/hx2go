@@ -703,9 +703,13 @@ class ClassWriter extends WriterImpl {
         var t = writer.types.writeHxbType(field.type);
 
         buf.add("");
+        buf.addInline('var $sfName $t');
 
         if (field.expr?.expr != null) {
-            buf.addInline('var $sfName $t = Hx_Init_$sfName()');
+            buf.add('');
+            buf.addInline('func init() {');
+            buf.addInline('\t$sfName = Hx_Init_$sfName()');
+            buf.addInline('}');
 
             var initExpr = ensureBody(new HxbTypedExpr(TReturn(field.expr.expr), null, null));
             Normaliser.run(initExpr, {}, writer.context);
@@ -713,9 +717,7 @@ class ClassWriter extends WriterImpl {
             buf.add('');
             buf.addInline('func Hx_Init_$sfName() $t ');
             buf.addBufferInline(writer.exprs.writeExpr(initExpr, true));
-        } else {
-            buf.addInline('var $sfName $t');
-        }
+        } 
 
         return buf;
     }

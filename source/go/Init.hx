@@ -68,7 +68,7 @@ class Init {
 				if (code != 0)
 					Sys.exit(code);
 			}
-			var code = Sys.command(bin, libraries.concat([librariesOutput, Sys.getCwd()]));
+			var code = Sys.command(bin, libraries.concat(["-genfile", Path.join([pathstd, "gen"]), librariesOutput, Sys.getCwd()]));
 			if (code != 0)
 				Sys.exit(code);
 			File.saveContent(libCachePath, libCache);

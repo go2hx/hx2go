@@ -22,10 +22,13 @@ function main() {
         Sys.command("haxe", ["Compile.hxml"]);
         Sys.setCwd(oldCwd);
     }
+    
     getImports(imps, Path.join([externDir, "output/main"]));
     var goVersion = StringTools.trim(runCommand("go", ["env", "GOVERSION"]));
     File.saveContent("std/gen", [goVersion].concat(imps).join("\n"));
-    Sys.command(bin, ["-stdgen"].concat(imps).concat(["./std", root]));
+    var args = ["-stdgen", "-genfile", "std/gen"].concat(["./std", root]);
+    trace(bin + " " + args.join(" "));
+    Sys.command(bin, args);
 }
 
 function runCommand(cmd:String, args:Array<String>):String {
@@ -42,9 +45,10 @@ function runCommand(cmd:String, args:Array<String>):String {
 
 
 function getImports(imps:Array<String>, path:String) {
-    if (FileSystem.exists(path)) {
-        Sys.setCwd(path);
+    if (!FileSystem.exists(path)) {
+        return;
     }
+    Sys.setCwd(path);
     getGoImports(imps, ".");
     Sys.setCwd(root);
 }

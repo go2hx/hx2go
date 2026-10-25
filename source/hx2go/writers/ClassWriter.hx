@@ -160,7 +160,7 @@ class ClassWriter extends WriterImpl {
         for (f in cls.statics) {
             if (f.expr?.expr == null || !isEmittedStaticVar(f, cls)) continue;
             var sfName = StringConversions.typePathStaticFieldName(f.name, cls.path);
-            buf.add('$sfName = Hx_Init_$sfName()', 1);
+            //buf.add('$sfName = Hx_Init_$sfName()', 1);
         }
         buf.add('}');
 
@@ -703,15 +703,18 @@ class ClassWriter extends WriterImpl {
         var t = writer.types.writeHxbType(field.type);
 
         buf.add("");
-        buf.addInline('var $sfName $t');
 
         if (field.expr?.expr != null) {
+            buf.addInline('var $sfName $t = Hx_Init_$sfName()');
+
             var initExpr = ensureBody(new HxbTypedExpr(TReturn(field.expr.expr), null, null));
             Normaliser.run(initExpr, {}, writer.context);
 
             buf.add('');
             buf.addInline('func Hx_Init_$sfName() $t ');
             buf.addBufferInline(writer.exprs.writeExpr(initExpr, true));
+        } else {
+            buf.addInline('var $sfName $t');
         }
 
         return buf;

@@ -1,7 +1,9 @@
 package go.net.http;
 
 /**
-    Package cookiejar implements an in-memory RFC 6265-compliant http.CookieJar.
+    Package cookiejar implements an in-memory [RFC 6265]-compliant [http.CookieJar].
+    
+    [RFC 6265]: https://www.rfc-editor.org/info/rfc6265
 **/
 @:go.Type({ name: "cookiejar", instanceName: "cookiejar.cookiejar", imports: ["net/http/cookiejar"] })
 extern class Cookiejar_ {

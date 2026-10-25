@@ -47,6 +47,10 @@ extern class URL {
 
     @:native("AppendBinary") function appendBinary(b: go.Slice<go.Byte>): (go.Result<go.Slice<go.Byte>>);
     /**
+        Clone creates a deep copy of the fields of the subject [URL].
+    **/
+    @:native("Clone") function clone(): (go.Pointer<go.net.url.URL>);
+    /**
         EscapedFragment returns the escaped form of u.Fragment.
         In general there are multiple possible escaped forms of any fragment.
         EscapedFragment returns u.RawFragment when it is a valid escaping of u.Fragment.

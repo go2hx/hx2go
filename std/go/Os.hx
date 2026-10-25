@@ -681,6 +681,7 @@ extern class Os {
         A successful call returns err == nil, not err == EOF.
         Because ReadFile reads the whole file, it does not treat an EOF from Read
         as an error to be reported.
+        If there is an error, it will be of type [*PathError].
     **/
     @:native("ReadFile") static function readFile(name: String): (go.Result<go.Slice<go.Byte>>);
     /**

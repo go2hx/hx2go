@@ -3,7 +3,7 @@ package go.bufio;
 /**
     Reader implements buffering for an io.Reader object.
     A new Reader is created by calling [NewReader] or [NewReaderSize];
-    alternatively the zero value of a Reader may be used after calling [Reset]
+    alternatively the zero value of a Reader may be used after calling [Reader.Reset]
     on it.
 **/
 @:structInit

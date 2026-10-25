@@ -16,7 +16,7 @@ extern class Debug_ {
     @:native("FreeOSMemory") static function freeOSMemory(): Void;
     /**
         ParseBuildInfo parses the string returned by [*BuildInfo.String],
-        restoring the original BuildInfo,
+        restoring the original [BuildInfo],
         except that the GoVersion field is not set.
         Programs should normally not call this function,
         but instead call [ReadBuildInfo], [debug/buildinfo.ReadFile],
@@ -24,7 +24,7 @@ extern class Debug_ {
     **/
     @:native("ParseBuildInfo") static function parseBuildInfo(data: String): (go.Result<go.Pointer<go.runtime.debug.BuildInfo>>);
     /**
-        PrintStack prints to standard error the stack trace returned by runtime.Stack.
+        PrintStack prints to standard error the stack trace returned by [runtime.Stack].
     **/
     @:native("PrintStack") static function printStack(): Void;
     /**
@@ -67,7 +67,7 @@ extern class Debug_ {
         limit.
         A negative percentage effectively disables garbage collection, unless
         the memory limit is reached.
-        See SetMemoryLimit for more details.
+        See [SetMemoryLimit] for more details.
     **/
     @:native("SetGCPercent") static function setGCPercent(percent: go.GoInt): (go.GoInt);
     /**
@@ -95,7 +95,7 @@ extern class Debug_ {
         The limit controls the number of operating system threads, not the number
         of goroutines. A Go program creates a new thread only when a goroutine
         is ready to run but all the existing threads are blocked in system calls, cgo calls,
-        or are locked to other goroutines due to use of runtime.LockOSThread.
+        or are locked to other goroutines due to use of [runtime.LockOSThread].
         
         SetMaxThreads is useful mainly for limiting the damage done by
         programs that create an unbounded number of threads. The idea is
@@ -109,7 +109,7 @@ extern class Debug_ {
         memory limit, including adjustments to the frequency of garbage
         collections and returning memory to the underlying system more
         aggressively. This limit will be respected even if GOGC=off (or,
-        if SetGCPercent(-1) is executed).
+        if [SetGCPercent](-1) is executed).
         
         The input limit is provided as bytes, and includes all memory
         mapped, managed, and not released by the Go runtime. Notably, it
@@ -126,7 +126,7 @@ extern class Debug_ {
         
         	runtime.MemStats.Sys - runtime.MemStats.HeapReleased
         
-        or in terms of the runtime/metrics package:
+        or in terms of the [runtime/metrics] package:
         
         	/memory/classes/total:bytes - /memory/classes/heap/released:bytes
         
@@ -145,7 +145,7 @@ extern class Debug_ {
         the soft memory limit in more detail, as well as a variety of common
         use-cases and scenarios.
         
-        The initial setting is math.MaxInt64 unless the GOMEMLIMIT
+        The initial setting is [math.MaxInt64] unless the GOMEMLIMIT
         environment variable is set, in which case it provides the initial
         setting. GOMEMLIMIT is a numeric value in bytes with an optional
         unit suffix. The supported suffixes include B, KiB, MiB, GiB, and
@@ -166,7 +166,7 @@ extern class Debug_ {
         manipulation of memory may cause faults at non-nil addresses in less
         dramatic situations; SetPanicOnFault allows such programs to request
         that the runtime trigger only a panic, not a crash.
-        The runtime.Error that the runtime panics with may have an additional method:
+        The [runtime.Error] that the runtime panics with may have an additional method:
         
         	Addr() uintptr
         

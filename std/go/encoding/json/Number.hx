@@ -14,8 +14,16 @@ extern typedef Number = haxe.extern.EitherType<String, {
     **/
     @:native("Int64") function int64(): (go.Result<go.Int64>);
     /**
+        MarshalJSONTo implements [jsonv2.MarshalerTo].
+    **/
+    @:native("MarshalJSONTo") function marshalJSONTo(enc: go.Pointer<go.encoding.json.jsontext.Encoder>): (go.Error);
+    /**
         String returns the literal text of the number.
     **/
     @:native("String") function string(): (String);
+    /**
+        UnmarshalJSONFrom implements [jsonv2.UnmarshalerFrom].
+    **/
+    @:native("UnmarshalJSONFrom") function unmarshalJSONFrom(dec: go.Pointer<go.encoding.json.jsontext.Decoder>): (go.Error);
 
 }>

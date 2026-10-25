@@ -22,8 +22,9 @@ extern class ConnectionState {
     @:native("TLSUnique") var tLSUnique: go.Slice<go.Byte>;
     @:native("ECHAccepted") var eCHAccepted: Bool;
     @:native("HelloRetryRequest") var helloRetryRequest: Bool;
+    @:native("LocalCertificate") var localCertificate: go.Slice<go.Slice<go.Byte>>;
 
-    function new(version: go.UInt16=0, handshakeComplete: Bool=false, didResume: Bool=false, cipherSuite: go.UInt16=0, curveID: go.crypto.tls.CurveID=cast 0, negotiatedProtocol: String="", negotiatedProtocolIsMutual: Bool=false, serverName: String="", peerCertificates: go.Slice<go.Pointer<go.crypto.x509.Certificate>>=null, verifiedChains: go.Slice<go.Slice<go.Pointer<go.crypto.x509.Certificate>>>=null, signedCertificateTimestamps: go.Slice<go.Slice<go.Byte>>=null, oCSPResponse: go.Slice<go.Byte>=null, tLSUnique: go.Slice<go.Byte>=null, eCHAccepted: Bool=false, helloRetryRequest: Bool=false);
+    function new(version: go.UInt16=0, handshakeComplete: Bool=false, didResume: Bool=false, cipherSuite: go.UInt16=0, curveID: go.crypto.tls.CurveID=cast 0, negotiatedProtocol: String="", negotiatedProtocolIsMutual: Bool=false, serverName: String="", peerCertificates: go.Slice<go.Pointer<go.crypto.x509.Certificate>>=null, verifiedChains: go.Slice<go.Slice<go.Pointer<go.crypto.x509.Certificate>>>=null, signedCertificateTimestamps: go.Slice<go.Slice<go.Byte>>=null, oCSPResponse: go.Slice<go.Byte>=null, tLSUnique: go.Slice<go.Byte>=null, eCHAccepted: Bool=false, helloRetryRequest: Bool=false, localCertificate: go.Slice<go.Slice<go.Byte>>=null);
 
     /**
         ExportKeyingMaterial returns length bytes of exported key material in a new
@@ -31,11 +32,6 @@ extern class ConnectionState {
         the seed. If the connection was set to allow renegotiation via
         Config.Renegotiation, or if the connections supports neither TLS 1.3 nor
         Extended Master Secret, this function will return an error.
-        
-        Exporting key material without Extended Master Secret or TLS 1.3 was disabled
-        in Go 1.22 due to security issues (see the Security Considerations sections
-        of RFC 5705 and RFC 7627), but can be re-enabled with the GODEBUG setting
-        tlsunsafeekm=1.
     **/
     @:native("ExportKeyingMaterial") function exportKeyingMaterial(label: String, context: go.Slice<go.Byte>, length: go.GoInt): (go.Result<go.Slice<go.Byte>>);
 

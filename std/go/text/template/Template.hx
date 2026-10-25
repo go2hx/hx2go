@@ -74,11 +74,13 @@ extern class Template {
     @:native("ExecuteTemplate") function executeTemplate(wr: go.io.Writer, name: String, data: Dynamic): (go.Error);
     /**
         Funcs adds the elements of the argument map to the template's function map.
-        It must be called before the template is parsed.
+        Any function used in the template must be added before the template is
+        parsed. Funcs may be called more than once, including after parsing (for
+        example, after [Template.Clone]), to replace a function of the same name;
+        the replacement is used when the template is executed.
         It panics if a value in the map is not a function with appropriate return
         type or if the name cannot be used syntactically as a function in a template.
-        It is legal to overwrite elements of the map. The return value is the template,
-        so calls can be chained.
+        The return value is the template, so calls can be chained.
     **/
     @:native("Funcs") function funcs(funcMap: go.text.template.FuncMap): (go.Pointer<go.text.template.Template>);
     /**

@@ -7,11 +7,11 @@ package go.net;
 @:go.Type({ name: "ListenConfig", instanceName: "net.ListenConfig", imports: ["net"] })
 extern class ListenConfig {
 
-    @:native("Control") var control: (network: String, address: String, c: go.syscall.RawConn) -> (go.Error);
+    @:native("Control") var control: (network: String, address: String, c: Dynamic) -> (go.Error);
     @:native("KeepAlive") var keepAlive: go.time.Duration;
     @:native("KeepAliveConfig") var keepAliveConfig: go.net.KeepAliveConfig;
 
-    function new(control: (network: String, address: String, c: go.syscall.RawConn) -> (go.Error)=null, keepAlive: go.time.Duration=cast 0, keepAliveConfig: go.net.KeepAliveConfig);
+    function new(control: (network: String, address: String, c: Dynamic) -> (go.Error)=null, keepAlive: go.time.Duration=cast 0, keepAliveConfig: go.net.KeepAliveConfig);
 
     /**
         Listen announces on the local network address.

@@ -74,6 +74,19 @@ extern class Sql {
     @:native("LevelWriteCommitted") static var levelWriteCommitted: go.database.sql.IsolationLevel;
 
     /**
+        ConvertAssign copies the value in src to the value pointed at by dest.
+        See the documentation on [Rows.Scan] for details on conversions.
+        dest must be a pointer or must implement [Scanner].
+        
+        Implementations of [driver.RowsColumnScanner] should pass through
+        their [driver.ScanContext] parameter.
+        In other cases, pass driver.ScanContext{} as the context.
+        
+        ConvertAssign is intended for use by driver implementations.
+        Most users should not need to use it directly.
+    **/
+    @:native("ConvertAssign") static function convertAssign(scanCtx: go.database.sql.driver.ScanContext, dest: Dynamic, src: go.database.sql.driver.Value): (go.Error);
+    /**
         Drivers returns a sorted list of the names of the registered drivers.
     **/
     @:native("Drivers") static function drivers(): (go.Slice<String>);

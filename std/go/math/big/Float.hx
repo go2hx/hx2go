@@ -435,6 +435,10 @@ extern class Float {
         the smallest number of decimal digits necessary to identify the value x uniquely
         using x.Prec() mantissa bits.
         The prec value is ignored for the 'b' and 'p' formats.
+        
+        Note that Text may return a different result than strconv.FormatFloat for
+        corresponding arguments if the matching float32 or float64 number provided
+        to strconv.FormatFloat is a denormalized number.
     **/
     @:native("Text") function text(format: go.Byte, prec: go.GoInt): (String);
     /**

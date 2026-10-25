@@ -40,6 +40,7 @@ extern class Strings {
     @:native("ContainsAny") static function containsAny(s: String, chars: String): (Bool);
     /**
         ContainsFunc reports whether any Unicode code points r within s satisfy f(r).
+        It stops as soon as a call to f returns true.
     **/
     @:native("ContainsFunc") static function containsFunc(s: String, f: (p0: go.Rune) -> (Bool)): (Bool);
     /**
@@ -58,6 +59,13 @@ extern class Strings {
         If sep does not appear in s, cut returns s, "", false.
     **/
     @:go.Tuple("before", "after", "found") @:native("Cut") static function cut(s: String, sep: String): (go.Tuple<{ before: String, after: String, found: Bool }>);
+    /**
+        CutLast slices s around the last instance of sep,
+        returning the text before and after sep.
+        The found result reports whether sep appears in s.
+        If sep does not appear in s, CutLast returns s, "", false.
+    **/
+    @:go.Tuple("before", "after", "found") @:native("CutLast") static function cutLast(s: String, sep: String): (go.Tuple<{ before: String, after: String, found: Bool }>);
     /**
         CutPrefix returns s without the provided leading prefix string
         and reports whether it found the prefix.

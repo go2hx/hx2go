@@ -14,8 +14,8 @@ extern class SysDialer {
     @:native("KeepAliveConfig") var keepAliveConfig: go.net.KeepAliveConfig;
     @:native("Resolver") var resolver: go.Pointer<go.net.Resolver>;
     @:native("Cancel") var cancel: go.Chan<Dynamic>;
-    @:native("Control") var control: (network: String, address: String, c: go.syscall.RawConn) -> (go.Error);
-    @:native("ControlContext") var controlContext: (ctx: go.context.Context, network: String, address: String, c: go.syscall.RawConn) -> (go.Error);
+    @:native("Control") var control: (network: String, address: String, c: Dynamic) -> (go.Error);
+    @:native("ControlContext") var controlContext: (ctx: go.context.Context, network: String, address: String, c: Dynamic) -> (go.Error);
 
     function new(dialer: go.net.Dialer);
 

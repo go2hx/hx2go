@@ -26,7 +26,7 @@ extern class TcpConnWithoutReadFrom {
     @:native("SetReadDeadline") function setReadDeadline(t: go.time.Time): (go.Error);
     @:native("SetWriteBuffer") function setWriteBuffer(bytes: go.GoInt): (go.Error);
     @:native("SetWriteDeadline") function setWriteDeadline(t: go.time.Time): (go.Error);
-    @:native("SyscallConn") function syscallConn(): (go.Result<go.syscall.RawConn>);
+    @:native("SyscallConn") function syscallConn(): (go.Result<Dynamic>);
     @:native("Write") function write(b: go.Slice<go.Byte>): (go.Result<go.GoInt>);
     @:native("WriteTo") function writeTo(w: go.io.Writer): (go.Result<go.Int64>);
 

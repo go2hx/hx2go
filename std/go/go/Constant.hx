@@ -167,6 +167,12 @@ extern class Constant {
     **/
     @:native("Sign") static function sign(x: go.go.constant.Value): (go.GoInt);
     /**
+        StringLen returns the length of x if x is a [String].
+        If x is [Unknown], the result is 0.
+        In all other cases, the function panics.
+    **/
+    @:native("StringLen") static function stringLen(x: go.go.constant.Value): (go.Int64);
+    /**
         StringVal returns the Go string value of x, which must be a [String] or an [Unknown].
         If x is [Unknown], the result is "".
     **/

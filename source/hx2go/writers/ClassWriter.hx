@@ -703,21 +703,32 @@ class ClassWriter extends WriterImpl {
         var t = writer.types.writeHxbType(field.type);
 
         buf.add("");
-        buf.addInline('var $sfName $t');
 
         if (field.expr?.expr != null) {
-            buf.add('');
-            buf.addInline('func init() {');
-            buf.addInline('\t$sfName = Hx_Init_$sfName()');
-            buf.addInline('}');
-
+    
             var initExpr = ensureBody(new HxbTypedExpr(TReturn(field.expr.expr), null, null));
             Normaliser.run(initExpr, {}, writer.context);
+            var funcBody = writer.exprs.writeExpr(initExpr, true);
 
             buf.add('');
             buf.addInline('func Hx_Init_$sfName() $t ');
-            buf.addBufferInline(writer.exprs.writeExpr(initExpr, true));
-        } 
+            buf.addBufferInline(funcBody);
+            buf.add('');
+    
+            // is the intialization of the static field self-referential?
+            if ( StringTools.contains(funcBody.toString(),sfName) ) { // TODO this should really be a Go AST walk to detect usage of the static field
+                buf.addInline('var $sfName $t');        
+                buf.add('');
+                buf.addInline('func init() {\n');
+                buf.addInline('\t$sfName = Hx_Init_$sfName()');
+                buf.addInline('\n}');
+            }else{
+                buf.addInline('var $sfName $t = Hx_Init_$sfName()');
+            }
+
+        } else {
+            buf.addInline('var $sfName $t');
+        }
 
         return buf;
     }

@@ -75,10 +75,11 @@ class Context {
     private var codegenVersion:String;
     private var disableIncrementalCache:Bool = false;
     private var cache:Cache;
-    private var classInits: Array<String> = [];
+    private var classInits: Array<{ name: String, path: TypePath, index: Int }> = [];
     private var normalizingTypedefs: Map<String, Bool> = [];
     private var normalizingAbstracts: Array<String> = [];
     private var recursiveAbstracts: Map<String, Bool> = [];
+    private var initOrder: Map<String, Int> = [];
 
     public function new(archive: HxbArchive, outputDirectory: String, sourcelineComments:Bool, times:hx2go.util.Times, codegenVersion:String, disableIncrementalCache:Bool, sourcemaps:Bool = true) {
         this.sourcelineComments = sourcelineComments;
@@ -213,7 +214,11 @@ class Context {
 
         switch t {
             case MClass(def) if (def.flags & HxbClassFlag.CExtern == 0):
-                classInits.push(StringConversions.typePathClassVTableName(def.path));
+                classInits.push({
+                    name: StringConversions.typePathClassVTableName(def.path),
+                    path: def.path,
+                    index: classInits.length
+                });
 
             case _: null;
         }
@@ -234,6 +239,16 @@ class Context {
         typesByModule = new Map();
         typeQueue = [];
         this.res = res;
+
+        initOrder = [];
+        final orderBytes: Null<Bytes> = res['__hx2go_init_order__'];
+        if (orderBytes != null) {
+            final lines: Array<String> = orderBytes.toString().split('\n');
+            for (i in 0...lines.length) initOrder.set(lines[i], i);
+            res.remove('__hx2go_init_order__');
+        }
+
+
         this.cache = new Cache(!singleFile && codegenVersion != "" && !disableIncrementalCache, outputDirectory, res, sourcemaps, sourcelineComments);
 
         var mod = resolveModule(StringConversions.pathToLossyTypePath(mainClass));
@@ -326,9 +341,15 @@ class Context {
         buf.add('$profileStop()', 1);
         buf.add('}');
 
+        classInits.sort((a, b) -> {
+            final oa: Int = initOrder[a.path.dotPath()] ?? 9999999;
+            final ob: Int = initOrder[b.path.dotPath()] ?? 9999999;
+            return oa != ob ? (oa < ob ? -1 : 1) : a.index - b.index;
+        });
+
         buf.add('func Hx_Boot() {');
-        for (vt in classInits) buf.add('Hx_ClassInit_$vt()', 1);
-        for (vt in classInits) buf.add('Hx_StaticInit_$vt()', 1);
+        for (ci in classInits) buf.add('Hx_ClassInit_${ci.name}()', 1);
+        for (ci in classInits) buf.add('Hx_StaticInit_${ci.name}()', 1);
         buf.add('}');
 
         buf.add('func Hx_Loop() {');

@@ -156,6 +156,9 @@ extern class Request {
         that matched the request.
         It returns the empty string if the request was not matched against a pattern
         or there is no such wildcard in the pattern.
+        
+        The value is unescaped. For example, if the pattern "/b/{bucket}" matches
+        the path "/b/a%2fb", PathValue("bucket") returns "a/b".
     **/
     @:native("PathValue") function pathValue(name: String): (String);
     /**
@@ -199,6 +202,7 @@ extern class Request {
     /**
         SetPathValue sets name to value, so that subsequent calls to r.PathValue(name)
         return value.
+        It does not unescape value.
     **/
     @:native("SetPathValue") function setPathValue(name: String, value: String): Void;
     /**
@@ -232,6 +236,11 @@ extern class Request {
         If Body is present, Content-Length is <= 0 and [Request.TransferEncoding]
         hasn't been set to "identity", Write adds "Transfer-Encoding:
         chunked" to the header. Body is closed after it is sent.
+        
+        Header values for Host, Content-Length, Transfer-Encoding,
+        and Trailer are not used; these are derived from other Request fields.
+        If the Header does not contain a User-Agent value, Write uses
+        "Go-http-client/1.1".
     **/
     @:native("Write") function write(w: go.io.Writer): (go.Error);
     /**

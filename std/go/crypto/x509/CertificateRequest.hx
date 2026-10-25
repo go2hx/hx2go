@@ -11,6 +11,7 @@ extern class CertificateRequest {
     @:native("RawTBSCertificateRequest") var rawTBSCertificateRequest: go.Slice<go.Byte>;
     @:native("RawSubjectPublicKeyInfo") var rawSubjectPublicKeyInfo: go.Slice<go.Byte>;
     @:native("RawSubject") var rawSubject: go.Slice<go.Byte>;
+    @:native("RawSignatureAlgorithm") var rawSignatureAlgorithm: go.Slice<go.Byte>;
     @:native("Version") var version: go.GoInt;
     @:native("Signature") var signature: go.Slice<go.Byte>;
     @:native("SignatureAlgorithm") var signatureAlgorithm: go.crypto.x509.SignatureAlgorithm;
@@ -25,7 +26,7 @@ extern class CertificateRequest {
     @:native("IPAddresses") var iPAddresses: go.Slice<go.net.IP>;
     @:native("URIs") var uRIs: go.Slice<go.Pointer<go.net.url.URL>>;
 
-    function new(raw: go.Slice<go.Byte>=null, rawTBSCertificateRequest: go.Slice<go.Byte>=null, rawSubjectPublicKeyInfo: go.Slice<go.Byte>=null, rawSubject: go.Slice<go.Byte>=null, version: go.GoInt=0, signature: go.Slice<go.Byte>=null, signatureAlgorithm: go.crypto.x509.SignatureAlgorithm=cast 0, publicKeyAlgorithm: go.crypto.x509.PublicKeyAlgorithm=cast 0, publicKey: Dynamic=null, subject: go.crypto.x509.pkix.Name, attributes: go.Slice<go.crypto.x509.pkix.AttributeTypeAndValueSET>=null, extensions: go.Slice<go.crypto.x509.pkix.Extension>=null, extraExtensions: go.Slice<go.crypto.x509.pkix.Extension>=null, dNSNames: go.Slice<String>=null, emailAddresses: go.Slice<String>=null, iPAddresses: go.Slice<go.net.IP>=null, uRIs: go.Slice<go.Pointer<go.net.url.URL>>=null);
+    function new(raw: go.Slice<go.Byte>=null, rawTBSCertificateRequest: go.Slice<go.Byte>=null, rawSubjectPublicKeyInfo: go.Slice<go.Byte>=null, rawSubject: go.Slice<go.Byte>=null, rawSignatureAlgorithm: go.Slice<go.Byte>=null, version: go.GoInt=0, signature: go.Slice<go.Byte>=null, signatureAlgorithm: go.crypto.x509.SignatureAlgorithm=cast 0, publicKeyAlgorithm: go.crypto.x509.PublicKeyAlgorithm=cast 0, publicKey: Dynamic=null, subject: go.crypto.x509.pkix.Name, attributes: go.Slice<go.crypto.x509.pkix.AttributeTypeAndValueSET>=null, extensions: go.Slice<go.crypto.x509.pkix.Extension>=null, extraExtensions: go.Slice<go.crypto.x509.pkix.Extension>=null, dNSNames: go.Slice<String>=null, emailAddresses: go.Slice<String>=null, iPAddresses: go.Slice<go.net.IP>=null, uRIs: go.Slice<go.Pointer<go.net.url.URL>>=null);
 
     /**
         CheckSignature reports whether the signature on c is valid.

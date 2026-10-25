@@ -1,8 +1,12 @@
 package go.net.http;
 
 @:structInit
-@:go.Type({ name: "http2responseWriter", instanceName: "http.http2responseWriter", imports: ["net/http"] })
-extern class Http2responseWriter {
+@:go.Type({ name: "http2ResponseWriter", instanceName: "http.http2ResponseWriter", imports: ["net/http"] })
+extern class Http2ResponseWriter {
+
+    @:native("ResponseWriter") var responseWriter: go.Pointer<go.net.http.internal.http2.ResponseWriter>;
+
+    function new(responseWriter: go.Pointer<go.net.http.internal.http2.ResponseWriter>=null);
 
     @:native("CloseNotify") function closeNotify(): (go.Chan<Bool>);
     @:native("EnableFullDuplex") function enableFullDuplex(): (go.Error);

@@ -18,14 +18,14 @@ extern class Cmd {
     @:native("Stdout") var stdout: go.io.Writer;
     @:native("Stderr") var stderr: go.io.Writer;
     @:native("ExtraFiles") var extraFiles: go.Slice<go.Pointer<go.os.File>>;
-    @:native("SysProcAttr") var sysProcAttr: go.Pointer<go.syscall.SysProcAttr>;
+    @:native("SysProcAttr") var sysProcAttr: go.Pointer<Dynamic>;
     @:native("Process") var process: go.Pointer<go.os.Process>;
     @:native("ProcessState") var processState: go.Pointer<go.os.ProcessState>;
     @:native("Err") var err: go.Error;
     @:native("Cancel") var cancel: () -> (go.Error);
     @:native("WaitDelay") var waitDelay: go.time.Duration;
 
-    function new(path: String="", args: go.Slice<String>=null, env: go.Slice<String>=null, dir: String="", stdin: go.io.Reader=null, stdout: go.io.Writer=null, stderr: go.io.Writer=null, extraFiles: go.Slice<go.Pointer<go.os.File>>=null, sysProcAttr: go.Pointer<go.syscall.SysProcAttr>=null, process: go.Pointer<go.os.Process>=null, processState: go.Pointer<go.os.ProcessState>=null, err: go.Error=null, cancel: () -> (go.Error)=null, waitDelay: go.time.Duration=cast 0);
+    function new(path: String="", args: go.Slice<String>=null, env: go.Slice<String>=null, dir: String="", stdin: go.io.Reader=null, stdout: go.io.Writer=null, stderr: go.io.Writer=null, extraFiles: go.Slice<go.Pointer<go.os.File>>=null, sysProcAttr: go.Pointer<Dynamic>=null, process: go.Pointer<go.os.Process>=null, processState: go.Pointer<go.os.ProcessState>=null, err: go.Error=null, cancel: () -> (go.Error)=null, waitDelay: go.time.Duration=cast 0);
 
     /**
         CombinedOutput runs the command and returns its combined standard
@@ -124,6 +124,9 @@ extern class Cmd {
         
         If any of c.Stdin, c.Stdout or c.Stderr are not an [*os.File], Wait also waits
         for the respective I/O loop copying to or from the process to complete.
+        
+        Wait must not be called concurrently from multiple goroutines.
+        A custom Cmd.Cancel function should not call Wait.
         
         Wait releases any resources associated with the [Cmd].
     **/

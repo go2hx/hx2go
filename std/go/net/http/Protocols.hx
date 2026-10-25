@@ -9,7 +9,7 @@ package go.net.http;
       - HTTP1 is the HTTP/1.0 and HTTP/1.1 protocols.
         HTTP1 is supported on both unsecured TCP and secured TLS connections.
     
-      - HTTP2 is the HTTP/2 protcol over a TLS connection.
+      - HTTP2 is the HTTP/2 protocol over a TLS connection.
     
       - UnencryptedHTTP2 is the HTTP/2 protocol over an unsecured TCP connection.
 **/

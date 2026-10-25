@@ -59,6 +59,10 @@ extern class X509 {
     @:native("KeyUsageKeyEncipherment") static var keyUsageKeyEncipherment: go.crypto.x509.KeyUsage;
     @:native("MD2WithRSA") static var mD2WithRSA: go.crypto.x509.SignatureAlgorithm;
     @:native("MD5WithRSA") static var mD5WithRSA: go.crypto.x509.SignatureAlgorithm;
+    @:native("MLDSA") static var MLDSA: go.crypto.x509.PublicKeyAlgorithm;
+    @:native("MLDSA44") static var MLDSA44: go.crypto.x509.SignatureAlgorithm;
+    @:native("MLDSA65") static var MLDSA65: go.crypto.x509.SignatureAlgorithm;
+    @:native("MLDSA87") static var MLDSA87: go.crypto.x509.SignatureAlgorithm;
     @:native("NameConstraintsWithoutSANs") static var nameConstraintsWithoutSANs: go.crypto.x509.InvalidReason;
     @:native("NameMismatch") static var nameMismatch: go.crypto.x509.InvalidReason;
     @:native("NoValidChains") static var noValidChains: go.crypto.x509.InvalidReason;
@@ -142,9 +146,10 @@ extern class X509 {
         
         The returned slice is the certificate in DER encoding.
         
-        The currently supported key types are *rsa.PublicKey, *ecdsa.PublicKey and
-        ed25519.PublicKey. pub must be a supported key type, and priv must be a
-        crypto.Signer or crypto.MessageSigner with a supported public key.
+        The currently supported key types are *rsa.PublicKey, *ecdsa.PublicKey,
+        ed25519.PublicKey, and *mldsa.PublicKey. pub must be a supported key type,
+        and priv must be a crypto.Signer or crypto.MessageSigner with a supported
+        public key.
         
         The AuthorityKeyId will be taken from the SubjectKeyId of parent, if any,
         unless the resulting certificate is self-signed. Otherwise the value from
@@ -162,6 +167,9 @@ extern class X509 {
         be marshaled instead of the Policies field. This changed in Go 1.24. The Policies field can
         be used to marshal policy OIDs which have components that are larger than 31
         bits.
+        
+        IP addresses in IPAddresses which are in their IPv4-mapped IPv6 form will always be encoded
+        in their IPv4 form.
     **/
     @:native("CreateCertificate") static function createCertificate(rand: go.io.Reader, template: go.Pointer<go.crypto.x509.Certificate>, parent: go.Pointer<go.crypto.x509.Certificate>, pub: Dynamic, priv: Dynamic): (go.Result<go.Slice<go.Byte>>);
     /**
@@ -180,8 +188,9 @@ extern class X509 {
         priv is the private key to sign the CSR with, and the corresponding public
         key will be included in the CSR. It must implement crypto.Signer or
         crypto.MessageSigner and its Public() method must return a *rsa.PublicKey or
-        a *ecdsa.PublicKey or a ed25519.PublicKey. (A *rsa.PrivateKey,
-        *ecdsa.PrivateKey or ed25519.PrivateKey satisfies this.)
+        a *ecdsa.PublicKey or a ed25519.PublicKey or a *mldsa.PublicKey.
+        (A *rsa.PrivateKey, *ecdsa.PrivateKey or ed25519.PrivateKey or
+        *mldsa.PrivateKey satisfies this.)
         
         The returned slice is the certificate request in DER encoding.
     **/
@@ -266,8 +275,8 @@ extern class X509 {
         MarshalPKCS8PrivateKey converts a private key to PKCS #8, ASN.1 DER form.
         
         The following key types are currently supported: *[rsa.PrivateKey],
-        *[ecdsa.PrivateKey], [ed25519.PrivateKey] (not a pointer), and *[ecdh.PrivateKey].
-        Unsupported key types result in an error.
+        *[ecdsa.PrivateKey], [ed25519.PrivateKey] (not a pointer), *[mldsa.PrivateKey],
+        and *[ecdh.PrivateKey]. Unsupported key types result in an error.
         
         This kind of key is commonly encoded in PEM blocks of type "PRIVATE KEY".
         
@@ -280,8 +289,8 @@ extern class X509 {
         (see RFC 5280, Section 4.1).
         
         The following key types are currently supported: *[rsa.PublicKey],
-        *[ecdsa.PublicKey], [ed25519.PublicKey] (not a pointer), and *[ecdh.PublicKey].
-        Unsupported key types result in an error.
+        *[ecdsa.PublicKey], [ed25519.PublicKey] (not a pointer), *[mldsa.PublicKey],
+        and *[ecdh.PublicKey]. Unsupported key types result in an error.
         
         This kind of key is commonly encoded in PEM blocks of type "PUBLIC KEY".
     **/
@@ -360,8 +369,8 @@ extern class X509 {
         ParsePKCS8PrivateKey parses an unencrypted private key in PKCS #8, ASN.1 DER form.
         
         It returns a *[rsa.PrivateKey], an *[ecdsa.PrivateKey], an [ed25519.PrivateKey] (not
-        a pointer), or an *[ecdh.PrivateKey] (for X25519). More types might be supported
-        in the future.
+        a pointer), a *[mldsa.PrivateKey], or an *[ecdh.PrivateKey] (for X25519).
+        More types might be supported in the future.
         
         This kind of key is commonly encoded in PEM blocks of type "PRIVATE KEY".
         
@@ -374,8 +383,8 @@ extern class X509 {
         public key is a SubjectPublicKeyInfo structure (see RFC 5280, Section 4.1).
         
         It returns a *[rsa.PublicKey], *[dsa.PublicKey], *[ecdsa.PublicKey],
-        [ed25519.PublicKey] (not a pointer), or *[ecdh.PublicKey] (for X25519).
-        More types might be supported in the future.
+        [ed25519.PublicKey] (not a pointer), *[mldsa.PublicKey], or *[ecdh.PublicKey]
+        (for X25519). More types might be supported in the future.
         
         This kind of key is commonly encoded in PEM blocks of type "PUBLIC KEY".
     **/
@@ -404,10 +413,14 @@ extern class X509 {
     /**
         SystemCertPool returns a copy of the system cert pool.
         
-        On Unix systems other than macOS the environment variables SSL_CERT_FILE and
-        SSL_CERT_DIR can be used to override the system default locations for the SSL
-        certificate file and SSL certificate files directory, respectively. The
-        latter can be a colon-separated list.
+        The environment variables SSL_CERT_FILE and SSL_CERT_DIR can be used to
+        override the system default locations for the SSL certificate file and SSL
+        certificate files directory, respectively. The latter can be a
+        colon-separated list, or a semicolon-separated list on Windows. On platforms
+        which have system APIs for certificate verification (macOS and Windows),
+        setting SSL_CERT_FILE or SSL_CERT_DIR will prevent those APIs from being
+        used, unless the x509sslcertoverrideplatform=0 GODEBUG setting is used. (This
+        changed in Go 1.27.)
         
         Any mutations to the returned pool are not written to disk and do not affect
         any other pool returned by SystemCertPool.

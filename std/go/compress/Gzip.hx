@@ -52,6 +52,10 @@ extern class Gzip {
         
         Callers that wish to set the fields in Writer.[Header] must do so before
         the first call to Write, Flush, or Close.
+        
+        Note that the exact bytes written to w are not covered by the Go 1
+        compatibility promise. Callers, including tests, should not depend on the
+        exact written bytes.
     **/
     @:native("NewWriter") static function newWriter(w: go.io.Writer): (go.Pointer<go.compress.gzip.Writer>);
     /**
@@ -61,6 +65,10 @@ extern class Gzip {
         The compression level can be [DefaultCompression], [NoCompression], [HuffmanOnly]
         or any integer value between [BestSpeed] and [BestCompression] inclusive.
         The error returned will be nil if the level is valid.
+        
+        Note that the exact bytes written to w are not covered by the Go 1
+        compatibility promise. Callers, including tests, should not depend on the
+        exact written bytes.
     **/
     @:native("NewWriterLevel") static function newWriterLevel(w: go.io.Writer, level: go.GoInt): (go.Result<go.Pointer<go.compress.gzip.Writer>>);
 

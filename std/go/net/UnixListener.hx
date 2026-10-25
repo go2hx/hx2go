@@ -66,6 +66,6 @@ extern class UnixListener {
         The returned [syscall.RawConn] only supports calling Control. Read and
         Write return an error.
     **/
-    @:native("SyscallConn") function syscallConn(): (go.Result<go.syscall.RawConn>);
+    @:native("SyscallConn") function syscallConn(): (go.Result<Dynamic>);
 
 }

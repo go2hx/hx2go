@@ -134,7 +134,7 @@ extern class TCPConn {
         SyscallConn returns a raw network connection.
         This implements the [syscall.Conn] interface.
     **/
-    @:native("SyscallConn") function syscallConn(): (go.Result<go.syscall.RawConn>);
+    @:native("SyscallConn") function syscallConn(): (go.Result<Dynamic>);
     /**
         Write implements the Conn Write method.
     **/

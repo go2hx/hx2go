@@ -14,6 +14,8 @@ extern class Logger {
 
     /**
         Debug logs at [LevelDebug].
+        It uses [context.Background] internally; to specify the context, use
+        [Logger.DebugContext].
     **/
     @:native("Debug") function debug(msg: std.String, args: haxe.Rest<Dynamic>): Void;
     /**
@@ -26,6 +28,8 @@ extern class Logger {
     @:native("Enabled") function enabled(ctx: go.context.Context, level: go.log.slog.Level): (Bool);
     /**
         Error logs at [LevelError].
+        It uses [context.Background] internally; to specify the context, use
+        [Logger.ErrorContext].
     **/
     @:native("Error") function error(msg: std.String, args: haxe.Rest<Dynamic>): Void;
     /**
@@ -38,6 +42,8 @@ extern class Logger {
     @:native("Handler") function handler(): (go.log.slog.Handler);
     /**
         Info logs at [LevelInfo].
+        It uses [context.Background] internally; to specify the context, use
+        [Logger.InfoContext].
     **/
     @:native("Info") function info(msg: std.String, args: haxe.Rest<Dynamic>): Void;
     /**
@@ -63,6 +69,8 @@ extern class Logger {
     @:native("LogAttrs") function logAttrs(ctx: go.context.Context, level: go.log.slog.Level, msg: std.String, attrs: haxe.Rest<go.log.slog.Attr>): Void;
     /**
         Warn logs at [LevelWarn].
+        It uses [context.Background] internally; to specify the context, use
+        [Logger.WarnContext].
     **/
     @:native("Warn") function warn(msg: std.String, args: haxe.Rest<Dynamic>): Void;
     /**

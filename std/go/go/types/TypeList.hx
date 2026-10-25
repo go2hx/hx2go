@@ -16,6 +16,7 @@ extern class TypeList {
         It is safe to call on a nil receiver.
     **/
     @:native("Len") function len(): (go.GoInt);
+    @:native("String") function string(): (std.String);
     /**
         Types returns a go1.23 iterator over the elements of a list of types.
         

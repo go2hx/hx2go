@@ -27,6 +27,10 @@ extern class Tls {
     @:native("ECDSAWithP521AndSHA512") static var eCDSAWithP521AndSHA512: go.crypto.tls.SignatureScheme;
     @:native("ECDSAWithSHA1") static var eCDSAWithSHA1: go.crypto.tls.SignatureScheme;
     @:native("Ed25519") static var ed25519: go.crypto.tls.SignatureScheme;
+    @:native("MLDSA44") static var MLDSA44: go.crypto.tls.SignatureScheme;
+    @:native("MLDSA65") static var MLDSA65: go.crypto.tls.SignatureScheme;
+    @:native("MLDSA87") static var MLDSA87: go.crypto.tls.SignatureScheme;
+    @:native("MLKEM1024") static var MLKEM1024: go.crypto.tls.CurveID;
     @:native("NoClientCert") static var noClientCert: go.crypto.tls.ClientAuthType;
     @:native("PKCS1WithSHA1") static var pKCS1WithSHA1: go.crypto.tls.SignatureScheme;
     @:native("PKCS1WithSHA256") static var pKCS1WithSHA256: go.crypto.tls.SignatureScheme;
@@ -328,10 +332,6 @@ extern class Tls {
         files. The files must contain PEM encoded data. The certificate file may
         contain intermediate certificates following the leaf certificate to form a
         certificate chain. On successful return, Certificate.Leaf will be populated.
-        
-        Before Go 1.23 Certificate.Leaf was left nil, and the parsed certificate was
-        discarded. This behavior can be re-enabled by setting "x509keypairleaf=0"
-        in the GODEBUG environment variable.
     **/
     @:native("LoadX509KeyPair") static function loadX509KeyPair(certFile: String, keyFile: String): (go.Result<go.crypto.tls.Certificate>);
     /**
@@ -362,15 +362,11 @@ extern class Tls {
     /**
         QUICClient returns a new TLS client side connection using QUICTransport as the
         underlying transport. The config cannot be nil.
-        
-        The config's MinVersion must be at least TLS 1.3.
     **/
     @:native("QUICClient") static function qUICClient(config: go.Pointer<go.crypto.tls.QUICConfig>): (go.Pointer<go.crypto.tls.QUICConn>);
     /**
         QUICServer returns a new TLS server side connection using QUICTransport as the
         underlying transport. The config cannot be nil.
-        
-        The config's MinVersion must be at least TLS 1.3.
     **/
     @:native("QUICServer") static function qUICServer(config: go.Pointer<go.crypto.tls.QUICConfig>): (go.Pointer<go.crypto.tls.QUICConn>);
     /**
@@ -389,10 +385,6 @@ extern class Tls {
     /**
         X509KeyPair parses a public/private key pair from a pair of
         PEM encoded data. On successful return, Certificate.Leaf will be populated.
-        
-        Before Go 1.23 Certificate.Leaf was left nil, and the parsed certificate was
-        discarded. This behavior can be re-enabled by setting "x509keypairleaf=0"
-        in the GODEBUG environment variable.
     **/
     @:native("X509KeyPair") static function x509KeyPair(certPEMBlock: go.Slice<go.Byte>, keyPEMBlock: go.Slice<go.Byte>): (go.Result<go.crypto.tls.Certificate>);
 

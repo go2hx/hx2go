@@ -280,6 +280,17 @@ extern class Reflect {
         TypeAssert is semantically equivalent to:
         
         	v2, ok := v.Interface().(T)
+        
+        Note that this function, just as the type assertion above, might return:
+        
+          - ok == false when v.Type() == reflect.TypeFor[T]()
+            For example, when both T and v are interface types and v.IsNil() == true.
+            In that case v.Interface() returns a nil interface value, and the
+            assertion .(T) fails with ok == false.
+        
+          - ok == true when v.Type() != reflect.TypeFor[T]().
+            For example, when T is an interface type and v holds a value whose
+            concrete type implements T.
     **/
     @:go.Tuple("p0", "p1") @:native("TypeAssert") static function typeAssert<T: Dynamic>(v: go.reflect.Value): (go.Tuple<{ p0: T, p1: Bool }>);
     /**

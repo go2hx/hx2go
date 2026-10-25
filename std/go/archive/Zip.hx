@@ -54,6 +54,10 @@ extern class Zip {
     @:native("NewReader") static function newReader(r: go.io.ReaderAt, size: go.Int64): (go.Result<go.Pointer<go.archive.zip.Reader>>);
     /**
         NewWriter returns a new [Writer] writing a zip file to w.
+        
+        Note that the exact bytes written to w are not covered by the Go 1
+        compatibility promise. Callers, including tests, should not depend on the
+        exact written bytes.
     **/
     @:native("NewWriter") static function newWriter(w: go.io.Writer): (go.Pointer<go.archive.zip.Writer>);
     /**

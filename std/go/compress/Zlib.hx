@@ -72,6 +72,10 @@ extern class Zlib {
         
         It is the caller's responsibility to call Close on the Writer when done.
         Writes may be buffered and not flushed until Close.
+        
+        Note that the exact bytes written to w are not covered by the Go 1
+        compatibility promise. Callers, including tests, should not depend on the
+        exact written bytes.
     **/
     @:native("NewWriter") static function newWriter(w: go.io.Writer): (go.Pointer<go.compress.zlib.Writer>);
     /**
@@ -81,6 +85,10 @@ extern class Zlib {
         The compression level can be [DefaultCompression], [NoCompression], [HuffmanOnly]
         or any integer value between [BestSpeed] and [BestCompression] inclusive.
         The error returned will be nil if the level is valid.
+        
+        Note that the exact bytes written to w are not covered by the Go 1
+        compatibility promise. Callers, including tests, should not depend on the
+        exact written bytes.
     **/
     @:native("NewWriterLevel") static function newWriterLevel(w: go.io.Writer, level: go.GoInt): (go.Result<go.Pointer<go.compress.zlib.Writer>>);
     /**
@@ -89,6 +97,10 @@ extern class Zlib {
         
         The dictionary may be nil. If not, its contents should not be modified until
         the Writer is closed.
+        
+        Note that the exact bytes written to w are not covered by the Go 1
+        compatibility promise. Callers, including tests, should not depend on the
+        exact written bytes.
     **/
     @:native("NewWriterLevelDict") static function newWriterLevelDict(w: go.io.Writer, level: go.GoInt, dict: go.Slice<go.Byte>): (go.Result<go.Pointer<go.compress.zlib.Writer>>);
 

@@ -25,7 +25,7 @@ extern class FileWithoutReadFrom {
     @:native("SetWriteDeadline") function setWriteDeadline(t: go.time.Time): (go.Error);
     @:native("Stat") function stat(): (go.Result<go.os.FileInfo>);
     @:native("Sync") function sync(): (go.Error);
-    @:native("SyscallConn") function syscallConn(): (go.Result<go.syscall.RawConn>);
+    @:native("SyscallConn") function syscallConn(): (go.Result<Dynamic>);
     @:native("Truncate") function truncate(size: go.Int64): (go.Error);
     @:native("Write") function write(b: go.Slice<go.Byte>): (go.Result<go.GoInt>);
     @:native("WriteAt") function writeAt(b: go.Slice<go.Byte>, off: go.Int64): (go.Result<go.GoInt>);

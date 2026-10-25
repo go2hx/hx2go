@@ -5,15 +5,15 @@ package go.os;
 extern class FileStat {
 
     @:native("FileAttributes") var fileAttributes: go.UInt32;
-    @:native("CreationTime") var creationTime: go.syscall.Filetime;
-    @:native("LastAccessTime") var lastAccessTime: go.syscall.Filetime;
-    @:native("LastWriteTime") var lastWriteTime: go.syscall.Filetime;
+    @:native("CreationTime") var creationTime: Dynamic;
+    @:native("LastAccessTime") var lastAccessTime: Dynamic;
+    @:native("LastWriteTime") var lastWriteTime: Dynamic;
     @:native("FileSizeHigh") var fileSizeHigh: go.UInt32;
     @:native("FileSizeLow") var fileSizeLow: go.UInt32;
     @:native("ReparseTag") var reparseTag: go.UInt32;
     @:native("Mutex") var mutex: go.sync.Mutex;
 
-    function new(fileAttributes: go.UInt32=0, creationTime: go.syscall.Filetime, lastAccessTime: go.syscall.Filetime, lastWriteTime: go.syscall.Filetime, fileSizeHigh: go.UInt32=0, fileSizeLow: go.UInt32=0, reparseTag: go.UInt32=0, mutex: go.sync.Mutex);
+    function new(fileAttributes: go.UInt32=0, creationTime: Dynamic, lastAccessTime: Dynamic, lastWriteTime: Dynamic, fileSizeHigh: go.UInt32=0, fileSizeLow: go.UInt32=0, reparseTag: go.UInt32=0, mutex: go.sync.Mutex);
 
     @:native("IsDir") function isDir(): (Bool);
     @:native("Lock") function lock(): Void;

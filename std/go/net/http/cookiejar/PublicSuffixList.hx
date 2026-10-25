@@ -14,7 +14,7 @@ package go.net.http.cookiejar;
     set a cookie for bar.com.
     
     A public suffix list implementation is in the package
-    golang.org/x/net/publicsuffix.
+    [golang.org/x/net/publicsuffix].
 **/
 @:go.Type({ name: "PublicSuffixList", instanceName: "cookiejar.PublicSuffixList", imports: ["net/http/cookiejar"] })
 extern typedef PublicSuffixList = {

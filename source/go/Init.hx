@@ -182,7 +182,16 @@ class Init {
 		};
 		
 		Compiler.setHxbWriterConfiguration(hxbConf);
-		
+
+		var initOrder: Array<String> = [];
+		Context.onGenerate(types -> {
+			for (t in types) switch t {
+				case TInst(c, _):
+					final cl = c.get();
+					initOrder.push(cl.pack.concat([cl.name]).join('.'));
+				case _:
+			}
+		}, false);
 
 		Context.onAfterGenerate(() -> {
 			if (!FileSystem.exists(archiveOutput)) {
@@ -224,7 +233,10 @@ class Init {
 				resourceMap[name] = p;
 				i++;
 			}
-			
+
+			var orderPath = Path.join([ resOutput, 'init_order.bin' ]);
+			File.saveContent(orderPath, initOrder.join('\n'));
+			resourceMap['__hx2go_init_order__'] = orderPath;
 
 			var res = haxe.Serializer.run(resourceMap);
 

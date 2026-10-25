@@ -1,26 +1,17 @@
 package go.syscall;
 
+/**
+    Invented structures to support what package os expects.
+**/
 @:structInit
 @:go.Type({ name: "Rusage", instanceName: "syscall.Rusage", imports: ["syscall"] })
 extern class Rusage {
 
-    @:native("Utime") var utime: go.syscall.Timeval;
-    @:native("Stime") var stime: go.syscall.Timeval;
-    @:native("Maxrss") var maxrss: go.Int64;
-    @:native("Ixrss") var ixrss: go.Int64;
-    @:native("Idrss") var idrss: go.Int64;
-    @:native("Isrss") var isrss: go.Int64;
-    @:native("Minflt") var minflt: go.Int64;
-    @:native("Majflt") var majflt: go.Int64;
-    @:native("Nswap") var nswap: go.Int64;
-    @:native("Inblock") var inblock: go.Int64;
-    @:native("Oublock") var oublock: go.Int64;
-    @:native("Msgsnd") var msgsnd: go.Int64;
-    @:native("Msgrcv") var msgrcv: go.Int64;
-    @:native("Nsignals") var nsignals: go.Int64;
-    @:native("Nvcsw") var nvcsw: go.Int64;
-    @:native("Nivcsw") var nivcsw: go.Int64;
+    @:native("CreationTime") var creationTime: go.syscall.Filetime;
+    @:native("ExitTime") var exitTime: go.syscall.Filetime;
+    @:native("KernelTime") var kernelTime: go.syscall.Filetime;
+    @:native("UserTime") var userTime: go.syscall.Filetime;
 
-    function new(utime: go.syscall.Timeval, stime: go.syscall.Timeval, maxrss: go.Int64=0, ixrss: go.Int64=0, idrss: go.Int64=0, isrss: go.Int64=0, minflt: go.Int64=0, majflt: go.Int64=0, nswap: go.Int64=0, inblock: go.Int64=0, oublock: go.Int64=0, msgsnd: go.Int64=0, msgrcv: go.Int64=0, nsignals: go.Int64=0, nvcsw: go.Int64=0, nivcsw: go.Int64=0);
+    function new(creationTime: go.syscall.Filetime, exitTime: go.syscall.Filetime, kernelTime: go.syscall.Filetime, userTime: go.syscall.Filetime);
 
 }

@@ -1,5 +1,9 @@
 package go.syscall;
 
+/**
+    Timespec is an invented structure on Windows, but here for
+    consistency with the syscall package for other operating systems.
+**/
 @:structInit
 @:go.Type({ name: "Timespec", instanceName: "syscall.Timespec", imports: ["syscall"] })
 extern class Timespec {

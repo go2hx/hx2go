@@ -14,7 +14,7 @@ function main() {
 
     var externDir = Path.join([root, "hx2go-extern"]);
     var bin = Path.join([externDir, "output", "main", "main"]);
-    if (Sys.systemName().toLowerCase() == "windows") bin += ".exe";
+    if (Sys.systemName() == "Windows") bin += ".exe";
     if (!FileSystem.exists(bin)) {
         Sys.println("Building hx2go-extern...");
         var oldCwd = Sys.getCwd();
@@ -23,6 +23,8 @@ function main() {
         Sys.setCwd(oldCwd);
     }
     getImports(imps, Path.join([externDir, "output/main"]));
+    var goVersion = StringTools.trim(runCommand("go", ["env", "GOVERSION"]));
+    File.saveContent("std/gen", [goVersion].concat(imps).join("\n"));
     Sys.command(bin, ["-stdgen"].concat(imps).concat(["./std", root]));
 }
 

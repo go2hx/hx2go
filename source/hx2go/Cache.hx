@@ -54,7 +54,7 @@ class Cache {
 
     var moduleCache = new Map<String, ModuleRef>();
 
-    public function new(enabled:Bool, outputDirectory:String, res:Map<String, Bytes>) {
+    public function new(enabled:Bool, outputDirectory:String, res:Map<String, Bytes>, configBools:Rest<Bool>) {
         this.enabled = enabled;
         this.outputDirectory = outputDirectory;
         // uncached builds delete the the previous manifest if it exists

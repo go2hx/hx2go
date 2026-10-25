@@ -195,7 +195,7 @@ extern class File {
         SyscallConn returns a raw file.
         This implements the syscall.Conn interface.
     **/
-    @:native("SyscallConn") function syscallConn(): (go.Result<go.syscall.RawConn>);
+    @:native("SyscallConn") function syscallConn(): (go.Result<Dynamic>);
     /**
         Truncate changes the size of the file.
         It does not change the I/O offset.

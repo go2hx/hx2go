@@ -22,10 +22,10 @@ extern class Dialer {
     @:native("KeepAliveConfig") var keepAliveConfig: go.net.KeepAliveConfig;
     @:native("Resolver") var resolver: go.Pointer<go.net.Resolver>;
     @:native("Cancel") var cancel: go.Chan<Dynamic>;
-    @:native("Control") var control: (network: String, address: String, c: go.syscall.RawConn) -> (go.Error);
-    @:native("ControlContext") var controlContext: (ctx: go.context.Context, network: String, address: String, c: go.syscall.RawConn) -> (go.Error);
+    @:native("Control") var control: (network: String, address: String, c: Dynamic) -> (go.Error);
+    @:native("ControlContext") var controlContext: (ctx: go.context.Context, network: String, address: String, c: Dynamic) -> (go.Error);
 
-    function new(timeout: go.time.Duration=cast 0, deadline: go.time.Time, localAddr: go.net.Addr=null, dualStack: Bool=false, fallbackDelay: go.time.Duration=cast 0, keepAlive: go.time.Duration=cast 0, keepAliveConfig: go.net.KeepAliveConfig, resolver: go.Pointer<go.net.Resolver>=null, cancel: go.Chan<Dynamic>=null, control: (network: String, address: String, c: go.syscall.RawConn) -> (go.Error)=null, controlContext: (ctx: go.context.Context, network: String, address: String, c: go.syscall.RawConn) -> (go.Error)=null);
+    function new(timeout: go.time.Duration=cast 0, deadline: go.time.Time, localAddr: go.net.Addr=null, dualStack: Bool=false, fallbackDelay: go.time.Duration=cast 0, keepAlive: go.time.Duration=cast 0, keepAliveConfig: go.net.KeepAliveConfig, resolver: go.Pointer<go.net.Resolver>=null, cancel: go.Chan<Dynamic>=null, control: (network: String, address: String, c: Dynamic) -> (go.Error)=null, controlContext: (ctx: go.context.Context, network: String, address: String, c: Dynamic) -> (go.Error)=null);
 
     /**
         Dial connects to the address on the named network.

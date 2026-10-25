@@ -15,4 +15,6 @@ extern class Instance {
 
     function new(typeArgs: go.Pointer<go.go.types.TypeList>=null, type: go.go.types.Type=null);
 
+    @:native("String") function string(): (std.String);
+
 }

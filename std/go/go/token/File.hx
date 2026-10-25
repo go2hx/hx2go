@@ -130,5 +130,9 @@ extern class File {
         Size returns the size of file f as registered with AddFile.
     **/
     @:native("Size") function size(): (go.GoInt);
+    /**
+        String returns a brief description of the File.
+    **/
+    @:native("String") function string(): (std.String);
 
 }

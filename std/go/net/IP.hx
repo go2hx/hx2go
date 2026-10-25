@@ -69,6 +69,10 @@ extern class IP {
     /**
         IsPrivate reports whether ip is a private address, according to
         RFC 1918 (IPv4 addresses) and RFC 4193 (IPv6 addresses).
+        That is, it reports whether ip is in 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16, or fc00::/7.
+        
+        IsPrivate does not describe a security property of addresses,
+        and should not be used for access control.
     **/
     @:native("IsPrivate") function isPrivate(): (Bool);
     /**

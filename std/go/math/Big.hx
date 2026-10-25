@@ -109,9 +109,19 @@ extern class Big {
     **/
     @:native("Below") static var below: go.math.big.Accuracy;
     /**
+        Rounding modes that determine how the integer quotient is adjusted in an integer division.
+        See Daan Leijen, “Division and Modulus for Computer Scientists”, for details.
+    **/
+    @:native("Ceil") static var ceil: go.math.big.RoundingMode;
+    /**
         Constants describing the [Accuracy] of a [Float].
     **/
     @:native("Exact") static var exact: go.math.big.Accuracy;
+    /**
+        Rounding modes that determine how the integer quotient is adjusted in an integer division.
+        See Daan Leijen, “Division and Modulus for Computer Scientists”, for details.
+    **/
+    @:native("Floor") static var floor: go.math.big.RoundingMode;
     /**
         MaxBase is the largest number base accepted for string conversions.
     **/
@@ -128,6 +138,11 @@ extern class Big {
         Exponent and precision limits.
     **/
     @:native("MinExp") static var minExp: go.GoInt;
+    /**
+        Rounding modes that determine how the integer quotient is adjusted in an integer division.
+        See Daan Leijen, “Division and Modulus for Computer Scientists”, for details.
+    **/
+    @:native("Round") static var round: go.math.big.RoundingMode;
     /**
         These constants define supported rounding modes.
     **/
@@ -148,6 +163,11 @@ extern class Big {
         These constants define supported rounding modes.
     **/
     @:native("ToZero") static var toZero: go.math.big.RoundingMode;
+    /**
+        Rounding modes that determine how the integer quotient is adjusted in an integer division.
+        See Daan Leijen, “Division and Modulus for Computer Scientists”, for details.
+    **/
+    @:native("Trunc") static var trunc: go.math.big.RoundingMode;
 
     /**
         Jacobi returns the Jacobi symbol (x/y), either +1, -1, or 0.

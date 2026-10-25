@@ -64,9 +64,11 @@ extern class Rows {
         	*uint, *uint8, *uint16, *uint32, *uint64
         	*bool
         	*float32, *float64
-        	*interface{}
+        	*any
         	*RawBytes
         	*Rows (cursor value)
+        	*time.Time
+        	*uuid.UUID
         	any type implementing Scanner (see Scanner docs)
         
         In the most simple case, if the type of the value from the source
@@ -89,7 +91,7 @@ extern class Rows {
         using an argument of type [*RawBytes] instead; see the documentation
         for [RawBytes] for restrictions on its use.
         
-        If an argument has type *interface{}, Scan copies the value
+        If an argument has type *any, Scan copies the value
         provided by the underlying driver without conversion. When scanning
         from a source value of type []byte to *interface{}, a copy of the
         slice is made and the caller owns the result.
@@ -97,6 +99,10 @@ extern class Rows {
         Source values of type [time.Time] may be scanned into values of type
         *time.Time, *interface{}, *string, or *[]byte. When converting to
         the latter two, [time.RFC3339Nano] is used.
+        
+        Source values of type string and byte may be scanned into
+        values of type [*uuid.UUID]. The source may contain the string
+        representation of a UUID, or a 16-byte []byte.
         
         Source values of type bool may be scanned into types *bool,
         *interface{}, *string, *[]byte, or [*RawBytes].

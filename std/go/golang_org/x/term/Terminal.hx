@@ -15,7 +15,11 @@ extern class Terminal {
     function new(autoCompleteCallback: (line: String, pos: go.GoInt, key: go.Rune) -> (go.Tuple<{ newLine: String, newPos: go.GoInt, ok: Bool }>)=null, escape: go.Pointer<go.golang_org.x.term.EscapeCodes>=null, history: go.golang_org.x.term.History=null);
 
     /**
-        ReadLine returns a line of input from the terminal.
+        ReadLine returns a line of input from the terminal, excluding the
+        trailing newline. It may return partial data along with an error.
+        An [io.EOF] error indicates the end of the stream. For other errors,
+        such as [ErrPasteIndicator] in bracketed paste mode, a subsequent
+        call may return more data.
     **/
     @:native("ReadLine") function readLine(): (go.Result<String>);
     /**

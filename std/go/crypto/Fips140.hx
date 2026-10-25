@@ -1,5 +1,13 @@
 package go.crypto;
 
+/**
+    Package fips140 provides information about the FIPS 140-3 Go Cryptographic
+    Module and FIPS 140-3 mode.
+    
+    For more details, see the [FIPS 140-3 documentation].
+    
+    [FIPS 140-3 documentation]: https://go.dev/doc/security/fips140
+**/
 @:go.Type({ name: "fips140", instanceName: "fips140.fips140", imports: ["crypto/fips140"] })
 extern class Fips140 {
 

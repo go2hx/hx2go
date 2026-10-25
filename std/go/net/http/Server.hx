@@ -17,6 +17,7 @@ extern class Server {
     @:native("WriteTimeout") var writeTimeout: go.time.Duration;
     @:native("IdleTimeout") var idleTimeout: go.time.Duration;
     @:native("MaxHeaderBytes") var maxHeaderBytes: go.GoInt;
+    @:native("MaxHeaderValueCount") var maxHeaderValueCount: go.GoInt;
     @:native("TLSNextProto") var tLSNextProto: go.Map<String, (p0: go.Pointer<go.net.http.Server>, p1: go.Pointer<go.crypto.tls.Conn>, p2: go.net.http.Handler) -> Void>;
     @:native("ConnState") var connState: (p0: go.net.Conn, p1: go.net.http.ConnState) -> Void;
     @:native("ErrorLog") var errorLog: go.Pointer<go.log.Logger>;
@@ -24,8 +25,9 @@ extern class Server {
     @:native("ConnContext") var connContext: (ctx: go.context.Context, c: go.net.Conn) -> (go.context.Context);
     @:native("HTTP2") var HTTP2: go.Pointer<go.net.http.HTTP2Config>;
     @:native("Protocols") var protocols: go.Pointer<go.net.http.Protocols>;
+    @:native("DisableClientPriority") var disableClientPriority: Bool;
 
-    function new(addr: String="", handler: go.net.http.Handler=null, disableGeneralOptionsHandler: Bool=false, tLSConfig: go.Pointer<go.crypto.tls.Config>=null, readTimeout: go.time.Duration=cast 0, readHeaderTimeout: go.time.Duration=cast 0, writeTimeout: go.time.Duration=cast 0, idleTimeout: go.time.Duration=cast 0, maxHeaderBytes: go.GoInt=0, tLSNextProto: go.Map<String, (p0: go.Pointer<go.net.http.Server>, p1: go.Pointer<go.crypto.tls.Conn>, p2: go.net.http.Handler) -> Void>=null, connState: (p0: go.net.Conn, p1: go.net.http.ConnState) -> Void=null, errorLog: go.Pointer<go.log.Logger>=null, baseContext: (p0: go.net.Listener) -> (go.context.Context)=null, connContext: (ctx: go.context.Context, c: go.net.Conn) -> (go.context.Context)=null, HTTP2: go.Pointer<go.net.http.HTTP2Config>=null, protocols: go.Pointer<go.net.http.Protocols>=null);
+    function new(addr: String="", handler: go.net.http.Handler=null, disableGeneralOptionsHandler: Bool=false, tLSConfig: go.Pointer<go.crypto.tls.Config>=null, readTimeout: go.time.Duration=cast 0, readHeaderTimeout: go.time.Duration=cast 0, writeTimeout: go.time.Duration=cast 0, idleTimeout: go.time.Duration=cast 0, maxHeaderBytes: go.GoInt=0, maxHeaderValueCount: go.GoInt=0, tLSNextProto: go.Map<String, (p0: go.Pointer<go.net.http.Server>, p1: go.Pointer<go.crypto.tls.Conn>, p2: go.net.http.Handler) -> Void>=null, connState: (p0: go.net.Conn, p1: go.net.http.ConnState) -> Void=null, errorLog: go.Pointer<go.log.Logger>=null, baseContext: (p0: go.net.Listener) -> (go.context.Context)=null, connContext: (ctx: go.context.Context, c: go.net.Conn) -> (go.context.Context)=null, HTTP2: go.Pointer<go.net.http.HTTP2Config>=null, protocols: go.Pointer<go.net.http.Protocols>=null, disableClientPriority: Bool=false);
 
     /**
         Close immediately closes all active net.Listeners and any

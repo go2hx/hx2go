@@ -45,7 +45,7 @@ extern class Builder {
     @:native("WriteByte") function writeByte(c: go.Byte): (go.Error);
     /**
         WriteRune appends the UTF-8 encoding of Unicode code point r to b's buffer.
-        It returns the length of r and a nil error.
+        It returns the number of bytes written and a nil error.
     **/
     @:native("WriteRune") function writeRune(r: go.Rune): (go.Result<go.GoInt>);
     /**

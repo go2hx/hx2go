@@ -5,7 +5,7 @@ package go.net;
 extern class SysListener {
 
     @:native("ListenConfig") var listenConfig: go.net.ListenConfig;
-    @:native("Control") var control: (network: String, address: String, c: go.syscall.RawConn) -> (go.Error);
+    @:native("Control") var control: (network: String, address: String, c: Dynamic) -> (go.Error);
     @:native("KeepAlive") var keepAlive: go.time.Duration;
     @:native("KeepAliveConfig") var keepAliveConfig: go.net.KeepAliveConfig;
 

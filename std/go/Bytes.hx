@@ -37,6 +37,7 @@ extern class Bytes {
     @:native("ContainsAny") static function containsAny(b: go.Slice<go.Byte>, chars: String): (Bool);
     /**
         ContainsFunc reports whether any of the UTF-8-encoded code points r within b satisfy f(r).
+        It stops as soon as a call to f returns true.
     **/
     @:native("ContainsFunc") static function containsFunc(b: go.Slice<go.Byte>, f: (p0: go.Rune) -> (Bool)): (Bool);
     /**
@@ -57,6 +58,15 @@ extern class Bytes {
         Cut returns slices of the original slice s, not copies.
     **/
     @:go.Tuple("before", "after", "found") @:native("Cut") static function cut(s: go.Slice<go.Byte>, sep: go.Slice<go.Byte>): (go.Tuple<{ before: go.Slice<go.Byte>, after: go.Slice<go.Byte>, found: Bool }>);
+    /**
+        CutLast slices s around the last instance of sep,
+        returning the text before and after sep.
+        The found result reports whether sep appears in s.
+        If sep does not appear in s, CutLast returns s, nil, false.
+        
+        CutLast returns slices of the original slice s, not copies.
+    **/
+    @:go.Tuple("before", "after", "found") @:native("CutLast") static function cutLast(s: go.Slice<go.Byte>, sep: go.Slice<go.Byte>): (go.Tuple<{ before: go.Slice<go.Byte>, after: go.Slice<go.Byte>, found: Bool }>);
     /**
         CutPrefix returns s without the provided leading prefix byte slice
         and reports whether it found the prefix.

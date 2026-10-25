@@ -22,7 +22,9 @@ extern class Common {
     @:native("Align") function align(): (go.GoInt);
     @:native("ArrayType") function arrayType(): (go.Pointer<Dynamic>);
     @:native("ChanDir") function chanDir(): (Dynamic);
+    @:native("ChanType") function chanType(): (go.Pointer<Dynamic>);
     @:native("Common") function common(): (go.Pointer<Dynamic>);
+    @:native("DescriptorSize") function descriptorSize(): (go.GoInt);
     @:native("Elem") function elem(): (go.Pointer<Dynamic>);
     @:native("ExportedMethods") function exportedMethods(): (go.Slice<Dynamic>);
     @:native("FieldAlign") function fieldAlign(): (go.GoInt);
@@ -36,8 +38,10 @@ extern class Common {
     @:native("Len") function len(): (go.GoInt);
     @:native("MapType") function mapType(): (go.Pointer<Dynamic>);
     @:native("NumMethod") function numMethod(): (go.GoInt);
+    @:native("PointerType") function pointerType(): (go.Pointer<Dynamic>);
     @:native("Pointers") function pointers(): (Bool);
     @:native("Size") function size(): (go.UIntPtr);
+    @:native("SliceType") function sliceType(): (go.Pointer<Dynamic>);
     @:native("StructType") function structType(): (go.Pointer<Dynamic>);
     @:native("Uncommon") function uncommon(): (go.Pointer<Dynamic>);
 

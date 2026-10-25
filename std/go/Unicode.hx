@@ -90,6 +90,10 @@ extern class Unicode {
     /**
         These variables have type *RangeTable.
     **/
+    @:native("Beria_Erfe") static var beria_Erfe: go.Pointer<go.unicode.RangeTable>;
+    /**
+        These variables have type *RangeTable.
+    **/
     @:native("Bhaiksuki") static var bhaiksuki: go.Pointer<go.unicode.RangeTable>;
     /**
         These variables have type *RangeTable.
@@ -277,6 +281,10 @@ extern class Unicode {
     /**
         These variables have type *RangeTable.
     **/
+    @:native("Garay") static var garay: go.Pointer<go.unicode.RangeTable>;
+    /**
+        These variables have type *RangeTable.
+    **/
     @:native("Georgian") static var georgian: go.Pointer<go.unicode.RangeTable>;
     /**
         These variables have type *RangeTable.
@@ -310,6 +318,10 @@ extern class Unicode {
         These variables have type *RangeTable.
     **/
     @:native("Gurmukhi") static var gurmukhi: go.Pointer<go.unicode.RangeTable>;
+    /**
+        These variables have type *RangeTable.
+    **/
+    @:native("Gurung_Khema") static var gurung_Khema: go.Pointer<go.unicode.RangeTable>;
     /**
         These variables have type *RangeTable.
     **/
@@ -354,6 +366,18 @@ extern class Unicode {
         These variables have type *RangeTable.
     **/
     @:native("IDS_Trinary_Operator") static var iDS_Trinary_Operator: go.Pointer<go.unicode.RangeTable>;
+    /**
+        These variables have type *RangeTable.
+    **/
+    @:native("IDS_Unary_Operator") static var iDS_Unary_Operator: go.Pointer<go.unicode.RangeTable>;
+    /**
+        These variables have type *RangeTable.
+    **/
+    @:native("ID_Compat_Math_Continue") static var iD_Compat_Math_Continue: go.Pointer<go.unicode.RangeTable>;
+    /**
+        These variables have type *RangeTable.
+    **/
+    @:native("ID_Compat_Math_Start") static var iD_Compat_Math_Start: go.Pointer<go.unicode.RangeTable>;
     /**
         These variables have type *RangeTable.
     **/
@@ -422,6 +446,10 @@ extern class Unicode {
         These variables have type *RangeTable.
     **/
     @:native("Khudawadi") static var khudawadi: go.Pointer<go.unicode.RangeTable>;
+    /**
+        These variables have type *RangeTable.
+    **/
+    @:native("Kirat_Rai") static var kirat_Rai: go.Pointer<go.unicode.RangeTable>;
     /**
         These variables have type *RangeTable.
     **/
@@ -577,6 +605,10 @@ extern class Unicode {
     /**
         These variables have type *RangeTable.
     **/
+    @:native("Modifier_Combining_Mark") static var modifier_Combining_Mark: go.Pointer<go.unicode.RangeTable>;
+    /**
+        These variables have type *RangeTable.
+    **/
     @:native("Mongolian") static var mongolian: go.Pointer<go.unicode.RangeTable>;
     /**
         These variables have type *RangeTable.
@@ -654,6 +686,10 @@ extern class Unicode {
         These variables have type *RangeTable.
     **/
     @:native("Ol_Chiki") static var ol_Chiki: go.Pointer<go.unicode.RangeTable>;
+    /**
+        These variables have type *RangeTable.
+    **/
+    @:native("Ol_Onal") static var ol_Onal: go.Pointer<go.unicode.RangeTable>;
     /**
         These variables have type *RangeTable.
     **/
@@ -882,6 +918,10 @@ extern class Unicode {
     /**
         These variables have type *RangeTable.
     **/
+    @:native("Sidetic") static var sidetic: go.Pointer<go.unicode.RangeTable>;
+    /**
+        These variables have type *RangeTable.
+    **/
     @:native("SignWriting") static var signWriting: go.Pointer<go.unicode.RangeTable>;
     /**
         These variables have type *RangeTable.
@@ -926,6 +966,10 @@ extern class Unicode {
     /**
         These variables have type *RangeTable.
     **/
+    @:native("Sunuwar") static var sunuwar: go.Pointer<go.unicode.RangeTable>;
+    /**
+        These variables have type *RangeTable.
+    **/
     @:native("Syloti_Nagri") static var syloti_Nagri: go.Pointer<go.unicode.RangeTable>;
     /**
         These variables have type *RangeTable.
@@ -955,6 +999,10 @@ extern class Unicode {
         These variables have type *RangeTable.
     **/
     @:native("Tai_Viet") static var tai_Viet: go.Pointer<go.unicode.RangeTable>;
+    /**
+        These variables have type *RangeTable.
+    **/
+    @:native("Tai_Yo") static var tai_Yo: go.Pointer<go.unicode.RangeTable>;
     /**
         These variables have type *RangeTable.
     **/
@@ -1006,7 +1054,19 @@ extern class Unicode {
     /**
         These variables have type *RangeTable.
     **/
+    @:native("Todhri") static var todhri: go.Pointer<go.unicode.RangeTable>;
+    /**
+        These variables have type *RangeTable.
+    **/
+    @:native("Tolong_Siki") static var tolong_Siki: go.Pointer<go.unicode.RangeTable>;
+    /**
+        These variables have type *RangeTable.
+    **/
     @:native("Toto") static var toto: go.Pointer<go.unicode.RangeTable>;
+    /**
+        These variables have type *RangeTable.
+    **/
+    @:native("Tulu_Tigalari") static var tulu_Tigalari: go.Pointer<go.unicode.RangeTable>;
     @:native("TurkishCase") static var turkishCase: go.unicode.SpecialCase;
     /**
         These variables have type *RangeTable.

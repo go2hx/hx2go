@@ -267,6 +267,24 @@ package go.testing;
 extern class Synctest {
 
     /**
+        Sleep blocks until the current bubble's clock has advanced
+        by the duration of d and every goroutine within the current bubble,
+        other than the current goroutine, is durably blocked.
+        
+        This is exactly equivalent to
+        
+        	time.Sleep(d)
+        	synctest.Wait()
+        
+        In tests, this is often preferable to calling only [time.Sleep].
+        If the test itself and another goroutine running the system under test
+        sleeps for the exact same amount of time, it's unpredictable which
+        of the two goroutines will run first. The test itself usually wants
+        to wait for the system under test to "settle" after sleeping.
+        This is what Sleep accomplishes.
+    **/
+    @:native("Sleep") static function sleep(d: go.time.Duration): Void;
+    /**
         Test executes f in a new bubble.
         
         Test waits for all goroutines in the bubble to exit before returning.

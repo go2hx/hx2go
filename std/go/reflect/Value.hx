@@ -389,8 +389,10 @@ extern class Value {
         
         If v's Kind is [Func], the returned pointer is an underlying
         code pointer, but not necessarily enough to identify a
-        single function uniquely. The only guarantee is that the
-        result is zero if and only if v is a nil func Value.
+        single function uniquely. In particular, functions with equal
+        code pointers may not have identical behaviors when called.
+        The only guarantee is that the result is zero if and only if
+        v is a nil func Value.
         
         If v's Kind is [Slice], the returned pointer is to the first
         element of the slice. If the slice is nil the returned value
@@ -418,20 +420,20 @@ extern class Value {
     @:native("Send") function send(x: go.reflect.Value): Void;
     /**
         Seq returns an iter.Seq[Value] that loops over the elements of v.
-        If v's kind is Func, it must be a function that has no results and
+        If v's kind is [Func], it must be a function that has no results and
         that takes a single argument of type func(T) bool for some type T.
-        If v's kind is Pointer, the pointer element type must have kind Array.
-        Otherwise v's kind must be Int, Int8, Int16, Int32, Int64,
-        Uint, Uint8, Uint16, Uint32, Uint64, Uintptr,
-        Array, Chan, Map, Slice, or String.
+        If v's kind is [Pointer], the pointer element type must have kind [Array].
+        Otherwise v's kind must be [Int], [Int8], [Int16], [Int32], [Int64],
+        [Uint], [Uint8], [Uint16], [Uint32], [Uint64], [Uintptr],
+        [Array], [Chan], [Map], [Slice], or [String].
     **/
     @:native("Seq") function seq(): (go.iter.Seq<go.reflect.Value>);
     /**
         Seq2 returns an iter.Seq2[Value, Value] that loops over the elements of v.
-        If v's kind is Func, it must be a function that has no results and
+        If v's kind is [Func], it must be a function that has no results and
         that takes a single argument of type func(K, V) bool for some type K, V.
-        If v's kind is Pointer, the pointer element type must have kind Array.
-        Otherwise v's kind must be Array, Map, Slice, or String.
+        If v's kind is [Pointer], the pointer element type must have kind [Array].
+        Otherwise v's kind must be [Array], [Map], [Slice], or [String].
     **/
     @:native("Seq2") function seq2(): (go.iter.Seq2<go.reflect.Value, go.reflect.Value>);
     /**

@@ -11,7 +11,6 @@ import go.os.exec.ExitError;
 import go.os.Exec;
 import sys.io.FileOutput;
 import sys.io.FileInput;
-import go.Syscall;
 import go.golang_org.x.Term;
 import go.GoInt;
 

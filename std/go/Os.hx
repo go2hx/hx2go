@@ -664,7 +664,8 @@ extern class Os {
     @:native("OpenRoot") static function openRoot(name: String): (go.Result<go.Pointer<go.os.Root>>);
     /**
         Pipe returns a connected pair of Files; reads from r return bytes written to w.
-        It returns the files and an error, if any.
+        It returns the files and an error, if any. The Windows handles underlying
+        the returned files are marked as inheritable by child processes.
     **/
     @:go.Tuple("r", "w", "err") @:native("Pipe") static function pipe(): (go.Tuple<{ r: go.Pointer<go.os.File>, w: go.Pointer<go.os.File>, err: go.Error }>);
     /**
@@ -680,6 +681,7 @@ extern class Os {
         A successful call returns err == nil, not err == EOF.
         Because ReadFile reads the whole file, it does not treat an EOF from Read
         as an error to be reported.
+        If there is an error, it will be of type [*PathError].
     **/
     @:native("ReadFile") static function readFile(name: String): (go.Result<go.Slice<go.Byte>>);
     /**
@@ -691,7 +693,7 @@ extern class Os {
     **/
     @:native("Readlink") static function readlink(name: String): (go.Result<String>);
     /**
-        Remove removes the named file or (empty) directory.
+        Remove removes the named file or directory.
         If there is an error, it will be of type [*PathError].
     **/
     @:native("Remove") static function remove(name: String): (go.Error);
@@ -769,7 +771,6 @@ extern class Os {
     /**
         Truncate changes the size of the named file.
         If the file is a symbolic link, it changes the size of the link's target.
-        If there is an error, it will be of type [*PathError].
     **/
     @:native("Truncate") static function truncate(name: String, size: go.Int64): (go.Error);
     /**

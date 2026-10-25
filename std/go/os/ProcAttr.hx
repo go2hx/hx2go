@@ -11,8 +11,8 @@ extern class ProcAttr {
     @:native("Dir") var dir: String;
     @:native("Env") var env: go.Slice<String>;
     @:native("Files") var files: go.Slice<go.Pointer<go.os.File>>;
-    @:native("Sys") var sys: go.Pointer<go.syscall.SysProcAttr>;
+    @:native("Sys") var sys: go.Pointer<Dynamic>;
 
-    function new(dir: String="", env: go.Slice<String>=null, files: go.Slice<go.Pointer<go.os.File>>=null, sys: go.Pointer<go.syscall.SysProcAttr>=null);
+    function new(dir: String="", env: go.Slice<String>=null, files: go.Slice<go.Pointer<go.os.File>>=null, sys: go.Pointer<Dynamic>=null);
 
 }

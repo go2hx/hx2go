@@ -20,6 +20,12 @@ extern class Conn {
     @:native("CloseWrite") function closeWrite(): (go.Error);
     /**
         ConnectionState returns basic TLS details about the connection.
+        
+        The returned [ConnectionState] is only meaningful after the handshake has
+        completed, as reported by [ConnectionState.HandshakeComplete]; before then
+        its fields are not populated. The handshake is run automatically by the
+        first [Conn.Read] or [Conn.Write], or it can be triggered explicitly with
+        [Conn.Handshake].
     **/
     @:native("ConnectionState") function connectionState(): (go.crypto.tls.ConnectionState);
     /**

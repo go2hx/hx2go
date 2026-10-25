@@ -70,7 +70,9 @@ class FileSystem {
 
     public static function fullPath(relPath:String):String {
         relPath = sanitizePath(relPath);
-        return Filepath.abs(relPath).sure();
+        var ret = Filepath.abs(relPath).sure();
+        ret = Filepath.evalSymlinks(ret).sure();
+        return ret;
     }
 
     public static function stat(path:String):sys.FileStat {

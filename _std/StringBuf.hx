@@ -21,11 +21,12 @@ class StringBuf {
 		This may involve initialization of the internal buffer.
 	**/
 	public function new() {
-		b = go.Syntax.code("HxDefault[strings.Builder]()",[]); // Haxe needs explicit default initialization for go.strings.Builder
+		b = go.Syntax.code("HxDefault[strings.Builder]()",[]); // Haxe needs explicit default initialisation for go.strings.Builder
 	}
 
 	function get_length():Int {
-		return b.len();
+		// length in runes, not bytes
+        return go.unicode.Utf8.runeCountInString(b.string());
 	}
 
 	/**
@@ -38,7 +39,14 @@ class StringBuf {
 		If `x` is null, the String "null" is appended.
 	**/
 	public function add<T>(x:T):Void {
-		b.writeString(Std.string(x)).sure();
+        var s = "";
+        var ok = false;
+        go.Syntax.code('{0} , {1} = {2}.(string)',  s , ok , x );
+        if (ok) {
+            b.writeString(s).sure(); // fast path if conversion to string not needed
+        }else{
+		    b.writeString(Std.string(x)).sure();
+        }
 	}
 
 	/**

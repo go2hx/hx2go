@@ -20,11 +20,11 @@ class StringBuf {
 
 		This may involve initialization of the internal buffer.
 	**/
-	public inline function new() {
+	public function new() {
 		b = go.Syntax.code("HxDefault[strings.Builder]()",[]); // Haxe needs explicit default initialization for go.strings.Builder
 	}
 
-	inline function get_length():Int {
+	function get_length():Int {
 		return b.len();
 	}
 
@@ -37,7 +37,7 @@ class StringBuf {
 
 		If `x` is null, the String "null" is appended.
 	**/
-	public inline function add<T>(x:T):Void {
+	public function add<T>(x:T):Void {
 		b.write(Std.string(x));
 	}
 
@@ -47,7 +47,7 @@ class StringBuf {
 		If `c` is negative or has another invalid value, the result is
 		unspecified.
 	**/
-	public inline function addChar(c:Int):Void {
+	public function addChar(c:Int):Void {
 		b.write(String.fromCharCode(c));
 	}
 
@@ -63,14 +63,14 @@ class StringBuf {
 		If `len` is omitted or null, the substring ranges from `pos` to the end
 		of `s`.
 	**/
-	public inline function addSub(s:String, pos:Int, ?len:Int):Void {
+	public function addSub(s:String, pos:Int, ?len:Int):Void {
 		b.write(len == null ? s.substr(pos) : s.substr(pos, len));
 	}
 
 	/**
 		Removes all characters from `this` StringBuf, making it possible to reuse it.
 	**/
-	public inline function clear():Void {
+	public function clear():Void {
 		b.reset();
 	}
 
@@ -79,7 +79,7 @@ class StringBuf {
 
 		The buffer is not emptied by this operation.
 	**/
-	public inline function toString():String {
+	public function toString():String {
 		return b.string();
 	}
 }

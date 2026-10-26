@@ -334,8 +334,8 @@ class Context {
         var profileStart = StringConversions.typePathStaticFieldName("start", profileType);
         var profileStop = StringConversions.typePathStaticFieldName("stop", profileType);
         buf.add('func main() {');
-        buf.add('$profileStart()', 1);
         buf.add('Hx_Boot()', 1);
+        buf.add('$profileStart()', 1);
         buf.add('${StringConversions.typePathStaticFieldName("main", StringConversions.pathToLossyTypePath(mainClass))}()', 1);
         buf.add('Hx_Loop()', 1);
         buf.add('$profileStop()', 1);

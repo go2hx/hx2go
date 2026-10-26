@@ -130,6 +130,29 @@ function main() {
 }
 ```
 
+
+## Debugging
+Supports mixed language debugging, you can add breakpoints watch for variables and step through while debugging, across both Haxe and Go code.
+
+### Vscode
+- Install the [Go vscode extension](https://marketplace.visualstudio.com/items?itemName=golang.go)
+- F1 -> Type: Add Configuration -> Go -> Launch Package
+- Change: ``"program": "${fileDirname}"`` to ``"program": "${workspaceFolder}/main"`` ([reference implementation](.vscode/launch.json))
+- Run the debugger with F5 or via the Run and Debug sidebar.
+
+### Other IDE
+- Install delve: ``go install github.com/go-delve/delve/cmd/dlv@latest`` ([guide](https://github.com/go-delve/delve/tree/master/Documentation/installation))
+- Change your current directory to the output of the Go code, for example: ``./output/main``
+- Run the command: ``dlv debug .``
+
+## Profiling
+- Add ``-D go-profile`` to your hxml
+- After running it should output a mem.pprof and a cpu.pprof
+- Add either mem or cpu file path to ``PATH`` with this command to launch an interactive profiler: ``go tool pprof -http=:8080 PATH_TO_PPROF``
+
+[Go team's blog post about using pprof](https://go.dev/blog/pprof)
+
+
 ## Being compatible with Go interfaces
 In some libraries like ebiten or bubbletea a class must be compatible with a given interface.
 This is not the case by default, as such, you must use ``@:go.Export``. 

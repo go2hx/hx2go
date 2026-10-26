@@ -38,7 +38,7 @@ class StringBuf {
 
 		If `x` is null, the String "null" is appended.
 	**/
-	public function add<T>(x:T):Void {
+	 @:analyzer(no_const_propagation) public function add<T>(x:T):Void {
         var s = "";
         var ok = false;
         go.Syntax.code('{0} , {1} = {2}.(string)',  s , ok , x );

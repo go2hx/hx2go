@@ -371,11 +371,21 @@ class Context {
 
         writeFile("", "Main", prefix + buf.toString());
 
+        var closeFinalize = times.start("finalize");
+        var closePrune = times.start("finalize.cache.prune");
         cache.prune([for (m in moduleCache.keys()) m]);
+        closePrune();
+        var closeStale = times.start("finalize.removeStaleFiles");
         removeStaleFiles();
+        closeStale();
+        var closeSave = times.start("finalize.cache.save");
         cache.save();
+        closeSave();
 
+        var closeRuntime = times.start("finalize.copyRuntime");
         copyRuntime();
+        closeRuntime();
+        closeFinalize();
 
         var closeFmt = times.start("gofmt");
         Sys.command('gofmt -w $outputDirectory');
@@ -466,9 +476,12 @@ class Context {
         resolveModuleRefs(mod);
         closeRefs();
 
-        var closeHit = times.start("cache.isHit");
-        var hit = cache.isHit(codegenVersion, archive, mod);
-        closeHit();
+        var hit = false;
+        if (!disableIncrementalCache) {
+            var closeHit = times.start("cache.isHit");
+            hit = cache.isHit(codegenVersion, archive, mod);
+            closeHit();
+        }
         if (hit) {
             for (type in mod.types) normalizeSignatures(type, key);
             typesByModule.set(key, []);
@@ -496,11 +509,13 @@ class Context {
     }
 
     private function writeFile(directory: String, fileName: String, content: String): Void {
+        var closeWrite = times.start("writeFile");
         var fullPath = Path.join([ outputDirectory, directory, '$fileName.go' ]);
         ensureDirectory(Path.directory(fullPath));
 
         writtenFiles.set(Path.normalize(fullPath), true);
         File.saveContent(fullPath, sourcemaps ? resetLineDirectives(fullPath, content) : content);
+        closeWrite();
     }
 
     private function resetLineDirectives(fullPath: String, content: String): String {

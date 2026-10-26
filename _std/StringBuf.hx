@@ -38,7 +38,7 @@ class StringBuf {
 		If `x` is null, the String "null" is appended.
 	**/
 	public function add<T>(x:T):Void {
-		b.write(Std.string(x));
+		b.writeString(Std.string(x)).sure();
 	}
 
 	/**
@@ -48,7 +48,7 @@ class StringBuf {
 		unspecified.
 	**/
 	public function addChar(c:Int):Void {
-		b.write(String.fromCharCode(c));
+		b.writeString(String.fromCharCode(c)).sure(); // writeByte might not handle non-ASCII characters correctly
 	}
 
 	/**
@@ -64,7 +64,7 @@ class StringBuf {
 		of `s`.
 	**/
 	public function addSub(s:String, pos:Int, ?len:Int):Void {
-		b.write(len == null ? s.substr(pos) : s.substr(pos, len));
+		b.writeString(len == null ? s.substr(pos) : s.substr(pos, len)).sure();
 	}
 
 	/**

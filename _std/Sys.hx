@@ -125,6 +125,7 @@ class Sys {
     }
 
     public static function exit(code: Int): Void {
+        go.haxe.HxProfile.stop();
         Os.exit(code);
     }
 

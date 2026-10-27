@@ -134,15 +134,7 @@ class Reflect {
     }
 
     public static function isEnumValue(v: Dynamic): Bool {
-        var value = HxDynamic.ensureConcreteValue(v);
-        if (!value.isValid()) {
-            return false;
-        }
-
-        var enumIndexMethod = value.methodByName("Hx_Field_enumIndex");
-        var enumTypeMethod = value.methodByName("Hx_Field_enumType");
-
-        return enumIndexMethod.isValid() && enumTypeMethod.isValid();
+        return HxDynamic.isHxEnumValue(v);
     }
 
     public static function deleteField(o: Dynamic, field: String): Bool {

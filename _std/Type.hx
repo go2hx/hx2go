@@ -206,36 +206,7 @@ class Type {
 	}
 
 	public static function enumEq<T:EnumValue>(a:T, b:T):Bool {
-		if (a == null || b == null) {
-			return b == null && a == null;
-		}
-
-		if (a == b) {
-			return true;
-		}
-
-		var aidx = Type.enumIndex(a);
-		var bidx = Type.enumIndex(b);
-		if (aidx != bidx) {
-			return false;
-		}
-
-		var aprm = Type.enumParameters(a);
-		var bprm = Type.enumParameters(b);
-		if (aprm.length != bprm.length) {
-			return false;
-		}
-
-		for (idx in 0...aprm.length) {
-			var ap = aprm[idx];
-			var bp = bprm[idx];
-
-			if (ap != bp) {
-				return false; // TODO: review, some stuff may not be comparable, perhaps we need to use https://go.dev/src/reflect/deepequal.go
-			}
-		}
-
-		return true;
+		return HxDynamic.equals(a, b);
 	}
 
 	public static function enumConstructor(e:EnumValue):String {

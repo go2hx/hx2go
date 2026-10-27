@@ -218,6 +218,10 @@ class HxDynamic {
             return funcReceiver(a) == funcReceiver(b);
         }
 
+        if (isHxEnumValue(a) && isHxEnumValue(b)) {
+            return enumEquals(cast a, cast b);
+        }
+
         var k = jointKind(aV, bV);
         if (k == Reflect.int32 || k == Reflect.int)
             return valueToInt(aV) == valueToInt(bV);
@@ -239,6 +243,26 @@ class HxDynamic {
 
             return Reflect.deepEqual(aV._interface(), bV._interface());
         }
+    }
+
+    static function enumEquals(a: Dynamic, b: Dynamic): Bool {
+        if (untyped a.enumType() != untyped b.enumType()) {
+            return false;
+        }
+
+        if (untyped a.enumIndex() != untyped b.enumIndex()) {
+            return false;
+        }
+
+        var ap = untyped a.enumParams();
+        var bp = untyped b.enumParams();
+        for (i in 0...ap.length) {
+            if (!equals(ap[i], bp[i])) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public static function nequals(a:Dynamic, b:Dynamic):Bool {
@@ -841,6 +865,14 @@ class HxDynamic {
         var en: Dynamic = null;
         var ok: Bool = false;
         Syntax.code("{0}, {1} = {2}.(*Hx_Obj_go_haxe_hxenum)", en, ok, dyn);
+        return ok;
+    }
+
+    public static function isHxEnumValue(dyn: Dynamic): Bool {
+        if (isNull(dyn)) return false;
+        var en: Dynamic = null;
+        var ok: Bool = false;
+        Syntax.code("{0}, {1} = {2}.(Hx_Obj_VTable_go_haxe__hxenumvalue__hxenumvalue)", en, ok, dyn);
         return ok;
     }
 

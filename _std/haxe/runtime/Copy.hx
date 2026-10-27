@@ -31,12 +31,7 @@ private class ObjectCache<K:{}> {
     }
 }
 
-// Python struggles with arrays as ObjectMap keys
-// Neko and js add __id__ which isn't great
-#if (python || js || neko || go)
-private class ObjectCache<K:{}> {
-	var from:Array<K>;
-	var to:Array<K>;
+class Copy {
 
     var cache:ObjectCache<{}>;
     var workList:Array<() -> Void>;

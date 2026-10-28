@@ -6,6 +6,7 @@ import go.path.Filepath;
 import go.Path;
 import go.Os;
 import go.Go;
+import go.Runtime;
 
 class FileSystem {
 
@@ -62,8 +63,14 @@ class FileSystem {
 
     public static function absolutePath(relPath:String):String {
         relPath = sanitizePath(relPath);
-        if (relPath.length > 1 && relPath.charAt(1) == ':') { // Windows absolute path with drive letter
-            return relPath;
+        if (Runtime.GOOS == "windows") {
+            if (relPath.length > 1 && relPath.charAt(1) == ':') {
+                return relPath;
+            }
+            // leading slash is already absolute on Windows
+            if (relPath.length > 0 && (relPath.charAt(0) == "/" || relPath.charAt(0) == "\\")) {
+                return relPath;
+            }
         }
         return Filepath.abs(relPath).sure();
     }

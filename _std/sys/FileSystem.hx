@@ -63,14 +63,14 @@ class FileSystem {
 
     public static function absolutePath(relPath:String):String {
         relPath = sanitizePath(relPath);
-        if (Runtime.GOOS == "windows") {
-            if (relPath.length > 1 && relPath.charAt(1) == ':') {
-                return relPath;
-            }
-            // leading slash is already absolute on Windows
-            if (relPath.length > 0 && (relPath.charAt(0) == "/" || relPath.charAt(0) == "\\")) {
-                return relPath;
-            }
+        if (relPath.length > 1 && relPath.charAt(1) == ':') {
+            return relPath;
+        }
+
+        if (Sys.systemName() == "Windows")
+            && relPath.length > 0
+            && (relPath.charAt(0) == "/" || relPath.charAt(0) == "\\") {
+            return relPath;
         }
         return Filepath.abs(relPath).sure();
     }

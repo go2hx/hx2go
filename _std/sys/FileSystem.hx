@@ -67,9 +67,7 @@ class FileSystem {
             return relPath;
         }
 
-        if (Sys.systemName() == "Windows")
-            && relPath.length > 0
-            && (relPath.charAt(0) == "/" || relPath.charAt(0) == "\\") {
+        if (Sys.systemName() == "Windows" && relPath.length > 0 && (relPath.charAt(0) == "/" || relPath.charAt(0) == "\\")) {
             return relPath;
         }
         return Filepath.abs(relPath).sure();

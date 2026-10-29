@@ -62,7 +62,7 @@ class RttiMap {
 		return goOutput.string();
 	}
 
-	static var tokenStrings:Array<go.Slice<go.Byte>> = [
+	static var tokenStrings:go.Slice<go.Slice<go.Byte>> = [
 		go.Syntax.code('[]byte{9}'),
 		go.Syntax.code('[]byte{10}'),
 		go.Syntax.code('[]byte(\"<class path=\\\x22\")'), // \x22 == "
@@ -86,8 +86,8 @@ class RttiMap {
 		return -1;
 	}
 
-	static function splitFn2(data:go.Slice<go.Byte>, atEOF:Bool):RttiMap_splitFn2_tuple {
-		var ret:RttiMap_splitFn2_tuple;
+	static function splitFn2(data:go.Slice<go.Byte>, atEOF:Bool):RttiMap_splitFn2_Tuple {
+		var ret:RttiMap_splitFn2_Tuple;
 
 		for (i in 0...data.length) {
 			// look for individual tokens
@@ -96,11 +96,11 @@ class RttiMap {
 					// found a token at this position
 					if (i == 0) {
 						// token found at the start of the data
-						ret = new RttiMap_splitFn2_tuple(tokenStrings[iToken].length, tokenStrings[iToken], null);
+						ret = new RttiMap_splitFn2_Tuple(tokenStrings[iToken].length, tokenStrings[iToken], null);
 						return ret;
 					} else {
 						// return a token up to but not including the current byte
-						ret = new RttiMap_splitFn2_tuple(i, data.slice(0, i), null);
+						ret = new RttiMap_splitFn2_Tuple(i, data.slice(0, i), null);
 						return ret;
 					}
 				}
@@ -109,12 +109,12 @@ class RttiMap {
 
 		if (atEOF) {
 			// reached end of file without finding a token, means we should return what we have with an error
-			ret = new RttiMap_splitFn2_tuple(data.length, data, go.Fmt.errorf("scanner at EOF"));
+			ret = new RttiMap_splitFn2_Tuple(data.length, data, go.Fmt.errorf("scanner at EOF"));
 			return ret;
 		}
 
 		// if we reach here, no individual tokens were found, so ask for more
-		ret = new RttiMap_splitFn2_tuple(0, null, null);
+		ret = new RttiMap_splitFn2_Tuple(0, null, null);
 		return ret;
 	};
 
@@ -123,6 +123,7 @@ class RttiMap {
 		var scanner = go.Bufio.newScanner(go.Bufio.newReader(f));
 
 		// Set the split function for the scanning operation.
+		// TODO switch the code out below for a pure Haxe implementation once we get interopable tuples.
 		var splitFn:go.bufio.SplitFunc = go.Syntax.code("func(data []byte, atEOF bool) (advance int, token []byte, err error) { 
 			str := {0}(data, atEOF)
 			return str.Hx_Field_advance, str.Hx_Field_token, str.Hx_Field_err
@@ -202,7 +203,7 @@ class RttiMap {
 
 #if go
 @:go.Static
-class RttiMap_splitFn2_tuple {
+class RttiMap_splitFn2_Tuple { // TODO replace with an actual tuple type when available
 	var advance:go.GoInt;
 	var token:go.Slice<go.Byte>;
 	var err:go.Error;

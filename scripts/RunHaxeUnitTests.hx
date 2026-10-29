@@ -11,12 +11,27 @@ function main() {
     #if threads
     Sys.setCwd("../threads");
     runTestSuite(["build.hxml", "-lib", "hx2go", "--custom-target", "go=bin/go", "-D", "go-no-sourcemaps", "-D", "go-no-line-directives"]);
+    #elseif testsys
+    Sys.setCwd("../sys");
+    runTestSuite(["compile-go.hxml"], false);
+
+    Sys.putEnv("EXISTS", "1");
+    Sys.exit(Sys.command(FileSystem.absolutePath("bin/go/sys/main/" + exe("main")), []));
     #else
     runTestSuite(["compile-go.hxml"]);
     #end
 }
 
-function runTestSuite(args:Array<String>) {
+function runCommand(command:String):Bool {
+    Sys.println(command);
+    return Sys.command(command) == 0;
+}
+
+function exe(name:String):String {
+    return name + (Sys.systemName() == "Windows" ? ".exe" : "");
+}
+
+function runTestSuite(args:Array<String>, run:Bool=true) {
     var defines:Map<String,String> = getDefines();
     for (key => value in defines) {
         if (key.indexOf("target") != -1)
@@ -34,10 +49,14 @@ function runTestSuite(args:Array<String>) {
     }
     Sys.println("haxe " + args.join(" "));
     var code = Sys.command('haxe', args);
-    if (code == 0) {
-        code = Sys.command("go run -C ./bin/go/main -gcflags=all=-e .");
+    if (run) {
+        if (code == 0) {
+            code = Sys.command("go run -C ./bin/go/main -gcflags=all=-e .");
+        }
+        Sys.exit(code);
+    }else if (code != 0) {
+        Sys.exit(code);
     }
-    Sys.exit(code);
 }
 
 #if macro

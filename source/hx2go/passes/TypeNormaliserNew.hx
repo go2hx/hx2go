@@ -86,7 +86,7 @@ class TypeNormaliserNew extends CompilerPass {
                     case TAbstract({ name: "Value", pack: ["go"] }, params):  // forwarded constructor but with type mismatch due to Value<T>
                         var oldType = expr.t;
                         expr.t = params[0];
-                        expr.expr = ExprHelper.createUntyped("(*{0})", [hx2go.normaliser.ExprCopy.copy(expr)]).expr;
+                        expr.expr = ExprHelper.createUntyped("(*{0})", [hx2go.normaliser.ExprCopy.copy(expr)]).expr; // TODO: can be optimized in the future, but go is likely to optimise this away anyway...
                         expr.t = oldType; // ugly hack
 
                         context.submitNode(expr, true);

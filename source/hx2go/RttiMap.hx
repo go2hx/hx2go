@@ -6,7 +6,7 @@ class RttiMap {
 	static var fallbackGopackage:String = "";
 
 	static public function awaitBuild() {
-		if (!finished.tryAcquire(1)) // try to acquire the semaphore with a timeout in seconds
+		if (!finished.tryAcquire(10)) // try to acquire the semaphore with a timeout in seconds
 		{ // timeout occurred, fallback to default Rtti.getRtti()
 			if (fallbackOutputDir != "" && fallbackGopackage != "") {
 				writeGoFile(fallbackOutputDir, fallbackGopackage, "");
@@ -109,7 +109,7 @@ class RttiMap {
 
 		if (atEOF) {
 			// reached end of file without finding a token, means we should return what we have with an error
-			ret = new RttiMap_splitFn2_tuple(data.length, data, null /* go.Fmt.errorf("scanner at EOF") */);
+			ret = new RttiMap_splitFn2_tuple(data.length, data, go.Fmt.errorf("scanner at EOF"));
 			return ret;
 		}
 

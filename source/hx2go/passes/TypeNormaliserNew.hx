@@ -81,6 +81,18 @@ class TypeNormaliserNew extends CompilerPass {
 
                     case _: null;
                 }
+
+                switch expr.t {
+                    case TAbstract({ name: "Value", pack: ["go"] }, params):  // forwarded constructor but with type mismatch due to Value<T>
+                        var oldType = expr.t;
+                        expr.t = params[0];
+                        expr.expr = ExprHelper.createUntyped("(*{0})", [hx2go.normaliser.ExprCopy.copy(expr)]).expr;
+                        expr.t = oldType; // ugly hack
+
+                        context.submitNode(expr, true);
+
+                    case _: null;
+                }
             }
 
             case _: null;

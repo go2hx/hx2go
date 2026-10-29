@@ -25,6 +25,7 @@ private extern class Unsafe {
     @:native("Pointer") static function pointer(p: Dynamic): UnsafePointer;
     @:native("Add") static function add(ptr: UnsafePointer, len: go.UIntPtr): UnsafePointer;
     @:native("Sizeof") static function sizeof(v: Dynamic): go.UIntPtr;
+    @:native("Slice") static function slice(ptr: UnsafePointer, len: go.UIntPtr): Array<go.UInt8>;
 }
 
 @:go.Type({ name: "HxArrayDyn" })

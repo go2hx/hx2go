@@ -7,6 +7,4 @@ package go.context;
     After the first call, subsequent calls to a CancelFunc do nothing.
 **/
 @:go.Type({ name: "CancelFunc", instanceName: "context.CancelFunc", imports: ["context"] })
-extern class CancelFunc {
-
-}
+extern typedef CancelFunc = () -> Void

@@ -13,6 +13,4 @@ package go.context;
         then Cause(parentContext) == cause1 and Cause(childContext) == cause2
 **/
 @:go.Type({ name: "CancelCauseFunc", instanceName: "context.CancelCauseFunc", imports: ["context"] })
-extern class CancelCauseFunc {
-
-}
+extern typedef CancelCauseFunc = (cause: go.Error) -> Void

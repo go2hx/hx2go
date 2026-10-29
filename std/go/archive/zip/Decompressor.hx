@@ -8,6 +8,4 @@ package go.archive.zip;
     one goroutine at a time.
 **/
 @:go.Type({ name: "Decompressor", instanceName: "zip.Decompressor", imports: ["archive/zip"] })
-extern class Decompressor {
-
-}
+extern typedef Decompressor = (r: go.io.Reader) -> (go.io.ReadCloser)

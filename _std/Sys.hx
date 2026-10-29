@@ -32,7 +32,11 @@ class Sys {
     }
 
     public static function getEnv(s: String): String {
-        return Os.getenv(s);
+        var tup = Os.lookupEnv(s);
+        if (!tup.p1) { // does not exist
+            return null;
+        }
+        return tup.p0; 
     }
 
     public static function putEnv(s: String, v: Null<String>): Void {
@@ -56,7 +60,14 @@ class Sys {
     }
 
     public static function getCwd(): String {
-        return Os.getwd().sure();
+		var ret = Os.getwd().sure();
+		// Haxe requires a trailing slash for directories
+        var sep = go.Os.pathSeparator;
+		var trailingSlash : String =  go.Syntax.code("string({0})", sep) ;
+		if (go.Strings.hasSuffix(ret, trailingSlash)) { // possibly always untrue
+			return ret;
+		}
+		return ret + trailingSlash;
     }
 
     public static function setCwd(s: String): Void {
@@ -81,9 +92,15 @@ class Sys {
     @:analyzer(no_user_var_fusion)
     @:analyzer(no_const_propagation)
     public static function command(cmd: String, args: Array<String>=null): Int {
-        if (args == null)
-            args = [];
-        var res = Exec.command(cmd, ...args).output();
+        var proc = if (args == null) {
+            if (Runtime.GOOS == "windows")
+                Exec.command("cmd", "/C", cmd);
+            else
+                Exec.command("/bin/sh", "-c", cmd);
+        } else {
+            Exec.command(cmd, ...args);
+        }
+        var res = proc.output();
         var t = res.tuple();
         var output: Slice<Byte> = t.result;
         var err: Error = t.error;
@@ -104,7 +121,7 @@ class Sys {
             Sys.println(Go.string(output)); // TODO: pipe output rather than printing at the end
         }
 
-        return 0;
+        return exitCode;
     }
 
     public static function exit(code: Int): Void {

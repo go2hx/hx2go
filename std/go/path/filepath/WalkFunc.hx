@@ -41,6 +41,4 @@ package go.path.filepath;
     Readdirnames.
 **/
 @:go.Type({ name: "WalkFunc", instanceName: "filepath.WalkFunc", imports: ["path/filepath"] })
-extern class WalkFunc {
-
-}
+extern typedef WalkFunc = (path: String, info: go.io.fs.FileInfo, err: go.Error) -> (go.Error)

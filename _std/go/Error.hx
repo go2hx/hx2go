@@ -1,7 +1,7 @@
 package go;
 
 @:go.Type({ name: "error" })
-extern class Error {
+private extern class _Error {
 
     public function error(): String;
 
@@ -11,8 +11,16 @@ extern class Error {
         }
     }
 
-    public inline extern function as<T : Error>(v: T): T {
-        return Syntax.code('{0}, {1} = {2}.(*exec.ExitError)');
+}
+
+@:forward
+abstract Error(_Error) from _Error to _Error {
+
+    @:op(a!)
+    public inline extern function sure(): Void {
+        if (this != null) {
+            throw this.error();
+        }
     }
 
 }

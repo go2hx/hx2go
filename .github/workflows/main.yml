@@ -73,7 +73,7 @@ jobs:
         run: haxelib dev hx2go .
         
       - name: Install utest
-        run: haxelib git utest https://github.com/haxe-utest/utest
+        run: haxelib git utest https://github.com/PXshadow/utest go-target
         
       - name: Run bootstrap
         run: haxe Bootstrap.hxml
@@ -104,6 +104,8 @@ jobs:
         run: haxe scripts/include_gen.hxml
       - name: Run threads Haxe tests
         run: haxe scripts/haxeunit.hxml -D threads
+      - name: Run sys Haxe tests
+        run: haxe scripts/haxeunit.hxml -D testsys
       - name: Run unit + std Haxe tests
         run: haxe scripts/haxeunit.hxml
 

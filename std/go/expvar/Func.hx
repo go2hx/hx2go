@@ -5,9 +5,8 @@ package go.expvar;
     and formatting the returned value using JSON.
 **/
 @:go.Type({ name: "Func", instanceName: "expvar.Func", imports: ["expvar"] })
-extern class Func {
-
+extern typedef Func = haxe.extern.EitherType<() -> (Dynamic), {
     @:native("String") function string(): (std.String);
     @:native("Value") function value(): (Dynamic);
 
-}
+}>

@@ -13,6 +13,4 @@ package go.go.types;
     object is qualified by the import path, e.g., "encoding/json.Marshal".
 **/
 @:go.Type({ name: "Qualifier", instanceName: "types.Qualifier", imports: ["go/types"] })
-extern class Qualifier {
-
-}
+extern typedef Qualifier = (p0: go.Pointer<go.go.types.Package>) -> (std.String)

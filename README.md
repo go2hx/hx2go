@@ -6,23 +6,11 @@
 
 <p align="center">
   <a href="https://github.com/go2hx/hx2go/actions/workflows/main.yml"><img src="https://github.com/go2hx/hx2go/actions/workflows/main.yml/badge.svg" alt="Build Status"></a>
-  <a href="#license"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License"></a>
-  <img src="https://img.shields.io/badge/status-experimental-orange.svg" alt="Status: released">
 </p>
 
 ---
 
-Write Haxe and get Go source output you
-can build with the standard `go` toolchain.
-
-- **Go interop** - [automatic extern generation](#automatic-extern-generation), and interop between Haxe and Go types.
-- **Self compiled** - the compiler runs on the Go target itself.
-- **Custom target** - integrates through Haxe's `--custom-target` define; no forked compiler required.
-- **Written in Haxe** - entire compiler is written in Haxe.
-- **Concurrency** - use goroutines, channels, and `select` (``go.Syntax.select``).
-
-> ⚠️ **Experimental.** hx2go is under active development.
-> Expect rough edges and breaking changes.
+> ⚠️ **Experimental** under active development.
 
 ## Requirements
 
@@ -38,7 +26,7 @@ can build with the standard `go` toolchain.
 
 ## Installation
 
-Install the library via haxelib:
+Install via haxelib:
 
 ```sh
 haxelib git hx2go https://github.com/go2hx/hx2go
@@ -46,17 +34,16 @@ haxelib git hx2go https://github.com/go2hx/hx2go
 
 ## Usage
 
+For detailed information check out the [**wiki**](https://github.com/go2hx/hx2go/wiki#hx2go).
+
 Add the target flags to your `.hxml`:
 
 ```hxml
 -L hx2go
---xml output/target.xml # required for RTTI
+--xml output/target.xml # needed if using haxe.rtti
 --custom-target go=output
-# Build and run the generated module
---cmd go -C output/main run .
+--cmd go -C output/main run . # builds and runs the outputted Go code
 ```
-
-*information about [RTTI](https://haxe.org/manual/cr-rtti.html)*
 
 Given a `Main.hx`:
 
@@ -66,9 +53,10 @@ function main() {
 }
 ```
 
-Compiling with the flags above generates a Go module under `output/main` and runs it.
+Compiling with the flags above generates a Go module under `output/main` and runs the resulting Go code.
 
-#### Building
+
+### Building an executable
 
 Change ``go run`` to ``go build``:
 ```sh
@@ -76,7 +64,7 @@ Change ``go run`` to ``go build``:
 ```
 It will create an executable located at ``./output/main/main`` (on Windows OS with the extension ``.exe``).
 
-## Built-in Go standard library
+### Using Go's stdlib
 
 For example, to launch an HTTP file server, alter ``Main.hx`` to:
 
@@ -94,7 +82,7 @@ function main() {
 }
 ```
 
-## Automatic extern generation
+### Using automatic externs
 
 For example, to print the ASCII graph below:
 ```
@@ -116,8 +104,6 @@ Add the go library flag to your `.hxml`:
 -D go-lib=github.com/guptarohit/asciigraph
 ```
 
-Run the Haxe compiler using the altered `.hxml` once before trying to access the externs to allow the compiler to generate them.
-
 Alter ``Main.hx`` to:
 
 ```haxe
@@ -131,237 +117,9 @@ function main() {
 ```
 
 
-## Debugging
-Supports mixed language debugging, you can add breakpoints watch for variables and step through while debugging, across both Haxe and Go code.
-
-### Vscode
-- Install the [Go vscode extension](https://marketplace.visualstudio.com/items?itemName=golang.go)
-- F1 -> Type: Add Configuration -> Go -> Launch Package
-- Change: ``"program": "${fileDirname}"`` to ``"program": "${workspaceFolder}/main"`` ([reference implementation](.vscode/launch.json))
-- Run the debugger with F5 or via the Run and Debug sidebar.
-
-### Other IDE
-- Install delve: ``go install github.com/go-delve/delve/cmd/dlv@latest`` ([guide](https://github.com/go-delve/delve/tree/master/Documentation/installation))
-- Change your current directory to the output of the Go code, for example: ``./output/main``
-- Run the command: ``dlv debug .``
-
-## Profiling
-- Add ``-D go-profile`` to your hxml
-- After running it should output a mem.pprof and a cpu.pprof
-- Add either mem or cpu file path to ``PATH`` with this command to launch an interactive profiler: ``go tool pprof -http=:8080 PATH_TO_PPROF``
-
-[Go team's blog post about using pprof](https://go.dev/blog/pprof)
-
-
-## Being compatible with Go interfaces
-In some libraries like ebiten or bubbletea a class must be compatible with a given interface.
-This is not the case by default, as such, you must use ``@:go.Export``. 
-By using this meta you create some aliases where go-compatible names are used and types like
-``go.Tuple<T>`` are brought back to actual tuples. Try the following:
-
-Add the go library flag to your `.hxml`:
-
-```hxml
--D go-lib=github.com/hajimehoshi/ebiten/v2
--D go-lib=github.com/hajimehoshi/ebiten/v2/ebitenutil
-```
-
-Run the Haxe compiler using the altered `.hxml` once before trying to access the externs to allow the compiler to generate them.
-
-Alter ``Main.hx`` to:
-
-```haxe
-import go.github_com.hajimehoshi.ebiten.v2.Ebitenutil;
-import go.github_com.hajimehoshi.ebiten.v2.Ebiten;
-import go.github_com.hajimehoshi.ebiten.v2.Image;
-import go.Pointer;
-import go.GoInt;
-import go.Error;
-import go.Tuple;
-
-class Game {
-
-    public function new() {
-        return;
-    }
-
-    @:go.Export
-    public function draw(screen: Pointer<Image>): Void {
-        Ebitenutil.debugPrint(screen, "Hello, World!");
-    }
-
-    @:go.Export
-    public function update(): Error {
-        return null;
-    }
-
-    @:go.Export
-    @:go.Tuple("screenWidth", "screenHeight")
-    public function layout(outsideWidth: GoInt, outsideHeight: GoInt): Tuple<{ screenWidth: GoInt, screenHeight: GoInt }> {
-        return { screenWidth: 640, screenHeight: 480 };
-    }
-
-}
-
-function main() {
-    Ebiten.setWindowSize(640, 480);
-    Ebiten.setWindowTitle("Hello, World!");
-    Ebiten.runGame(new Game()).sure();
-}
-```
-
-Note how ``Ebiten.runGame`` has the following signature in go:
-```go
-func RunGame(game Game) error
-```
-
-Where ``Game`` is:
-```go
-type Game interface {
-    Update() error
-    Draw(screen *Image)
-    Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int)
-}
-```
-
-Due to the usage of ``@:go.Export`` on these 3 functions, the Haxe class can be used as the implementation for this Go interface.
-
-## Usage of Go's language features
-**Goroutines / Channels**
-```haxe
-import go.Chan;
-import go.Syntax;
-
-function sum(c: Chan<Int>, values: Array<Int>): Void {
-    var sum = 0;
-    for (value in values) {
-        sum += value;
-    }
-
-    c.send(sum);
-}
-
-function main() {
-    var arr: Array<Int> = [7, 2, 8, -9, 4, 0];
-    var ch: Chan<Int> = new Chan();
-
-    Syntax.go(sum.bind(ch, arr.slice(0, 3)));
-    Syntax.go(sum.bind(ch, arr.slice(3, 6)));
-
-    var x = ch.receive();
-    var y = ch.receive();
-
-    trace(x, y, x + y);
-}
-```
-
-**Select**
-```haxe
-import go.Syntax;
-import go.Chan;
-
-function fib(c: Chan<Int>, quit: Chan<Int>) {
-    var x = 0;
-    var y = 1;
-    var f = true;
-
-    while (f) {
-        Syntax.select(
-            Select.send(c, x, () -> {
-                var v = x;
-                x = y;
-                y = v + y;
-            }),
-            Select.receive(quit, _ -> {
-                trace("quit");
-                f = false;
-            })
-        );
-    }
-}
-
-function main() {
-    var chan: Chan<Int> = new Chan();
-    var quit: Chan<Int> = new Chan();
-
-    Syntax.go(() -> {
-        for (i in 0...10) {
-            trace(chan.receive());
-        }
-
-        quit.send(0);
-    });
-
-    fib(chan, quit);
-}
-```
-
-**Defer**
-```haxe
-import go.Syntax;
-
-function main() {
-    Syntax.defer(() -> trace("Second!"));
-    trace("First!");
-}
-```
-
-**Fixed-size Arrays**
-```haxe
-import go.crypto.Sha256_;
-import go.GoArray;
-import go.Byte;
-import go.Slice;
-
-function main() {
-  var fixed: GoArray<Byte, 32> = Sha256_.sum256("Hello, World!");
-  for (value in fixed) {
-    trace(value);
-  }
-
-  trace(fixed[0]);
-  fixed[3] = 42; // works like normal
-
-  var slice: Slice<Byte> = fixed; // [N]T -> []T can be implicit
-  trace(slice);
-
-  slice[0] = 123;
-
-  trace(fixed[0], slice[0]); // not copied
-
-  var array: Array<Byte> = slice;
-
-  array[0] = 111;
-
-  trace(fixed[0], slice[0], array[0]); // Array<T>, Slice<T> and GoArray<T, N> all hold the same identity
-
-  array.push(0); // at this point Array<T> has grown, and doesn't share the identity with GoArray<T, N> and Slice<T> anymore
-  array[0] = 222;
-
-  trace(fixed[0], slice[0], array[0]);
-
-  // please be careful with casts to array as they *may* share identity, but they *may* not.
-  // consider using copy() when casting Slice<T> to Array<T>
-  // GoArray<T, N> = [N]T
-  // Slice<T> = []T
-  // Array<T> = *[]T
-}
-```
-
-**Raw syntax**
-```haxe
-import go.Syntax;
-
-function main() {
-    var result = Syntax.code("{0} + 5", 10); // beware: types are *not* checked
-    trace(result);
-}
-```
-
 ## Contributing
 
-Contributions are welcome. Please open an issue to discuss substantial changes
-before sending a pull request.
+Contributions are welcome. Please open an issue to discuss substantial changes before sending a pull request.
 
 ### Dev env
 ```sh
@@ -371,19 +129,22 @@ haxelib dev hx2go .
 ```
 
 #### Tests
-*the tests require the [utest](https://github.com/haxe-utest/utest)* library
+Install utest:
+```sh
+haxelib git utest https://github.com/haxe-utest/utest/
+```
 
-Runs the tests found at ``./tests``
+Runs the tests found in ``./tests``
 ```sh
 haxe Tests.hxml
 ```
 Runs the Haxe compiler's unit tests
 ```
 haxe scripts/haxeunit.hxml
+haxe scripts/haxeunit.hxml -D threads
+haxe scripts/haxeunit.hxml -D testsys
 ```
 
-## License
-
-hx2go is open-source software licensed under the [MIT license](https://opensource.org/license/MIT).
+### Created with craftsman ship
 
 Creators: Mikaib, Elliott Stoneham, PXshadow.

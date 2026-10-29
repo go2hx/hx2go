@@ -27,6 +27,4 @@ package go.bufio;
     as always, holds unprocessed text.
 **/
 @:go.Type({ name: "SplitFunc", instanceName: "bufio.SplitFunc", imports: ["bufio"] })
-extern class SplitFunc {
-
-}
+extern typedef SplitFunc = (data: go.Slice<go.Byte>, atEOF: Bool) -> (go.Tuple<{ advance: go.GoInt, token: go.Slice<go.Byte>, err: go.Error }>)

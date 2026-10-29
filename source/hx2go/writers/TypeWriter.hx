@@ -238,9 +238,7 @@ class TypeWriter extends WriterImpl {
             case TAbstract({ pack: ['go'], name: 'Value' }, params): writeHxbType(params[0], true).toString();
             case TAbstract({ pack: ['go'], name: 'Result'}, params) | TEnum({ pack: ['go'], name: 'ResultKind'}, params): 'struct { Error ${writeHxbType(params[1])}; Result ${writeHxbType(params[0])} }';
             case TType({ pack: ['go'], name: 'Tuple'}, [TAnon(anon)]): {
-                var fields = anon.fields.copy();
-                fields.sort((a, b) -> Reflect.compare(a.name, b.name));
-
+                var fields = TypeHelper.tupleFields(anon);
                 'struct { ${fields.map(f -> '${StringConversions.toPascalCase(f.name)} ${writeHxbType(f.type)}').join('; ')} }';
             }
             case TAbstract({ pack: [], name: 'Null' }, params): 'struct { Value ${writeHxbType(params[0])}; Valid bool }';

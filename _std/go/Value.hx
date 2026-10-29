@@ -3,6 +3,7 @@ package go;
 @:runtimeValue
 @:forward
 @:forwardStatics
+@:forward.new
 @:go.AbstractNoGenericErasure
 abstract Value<T>(T) {
 
@@ -14,11 +15,12 @@ abstract Value<T>(T) {
     @:to
     @:pure
     private extern inline function norm(): T {
-        return cast this;
+        var tmp: Value<T> = this;
+        return cast tmp;
     }
 
     public extern inline function ptr(): Pointer<T> {
-        var tmp = norm();
+        var tmp: T = norm();
         return Pointer.addressOf(tmp);
     }
 

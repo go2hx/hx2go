@@ -563,9 +563,11 @@ class ClassWriter extends WriterImpl {
 
 		switch type {
 			case TFun(args, returnType):
+				var blankParam = Context.sanitiseString("_");
 				for (idx in 0...args.length) {
 					var arg = args[idx];
-					if ((arg.name == null || arg.name == "") && tfArgs != null && tfArgs[idx] != null) {
+					if ((arg.name == null || arg.name == "" || arg.name == blankParam)
+						&& tfArgs != null && tfArgs[idx] != null) {
 						arg.name = tfArgs[idx].v.name;
 					}
 					var name = (arg.name != null && arg.name != "") ? arg.name : '_hx_carg$idx';

@@ -5,7 +5,7 @@ package go;
 @:forwardStatics
 @:forward.new
 @:go.AbstractNoGenericErasure
-abstract Value<T>(T) {
+extern abstract Value<T>(T) {
 
     @:from
     @:pure public static extern inline function of<T>(x: T): Value<T> {

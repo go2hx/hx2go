@@ -13,6 +13,7 @@ class Vector2 {
 }
 
 function main() {
+    #if go
     var a: go.Value<Vector2> = new Vector2(5, 10);
     a.x = 15;
 
@@ -34,4 +35,5 @@ function main() {
     assert(b.x == 15 && b.y == 20);
     assert(c.x == 25 && c.y == 35);
     assert(d.x == 25 && d.y == 35);
+    #end
 }

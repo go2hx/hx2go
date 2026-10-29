@@ -5,6 +5,4 @@ package go.go.importer;
     a given import path, or an error if no matching package is found.
 **/
 @:go.Type({ name: "Lookup", instanceName: "importer.Lookup", imports: ["go/importer"] })
-extern class Lookup {
-
-}
+extern typedef Lookup = (path: String) -> (go.Result<go.io.ReadCloser>)

@@ -1,8 +1,7 @@
 package go.testing;
 
 @:go.Type({ name: "matchStringOnly", instanceName: "testing.matchStringOnly", imports: ["testing"] })
-extern class MatchStringOnly {
-
+extern typedef MatchStringOnly = haxe.extern.EitherType<(pat: String, str: String) -> (go.Result<Bool>), {
     @:native("CheckCorpus") function checkCorpus(p0: go.Slice<Dynamic>, p1: go.Slice<go.reflect.Type>): (go.Error);
     @:native("CoordinateFuzzing") function coordinateFuzzing(p0: go.time.Duration, p1: go.Int64, p2: go.time.Duration, p3: go.Int64, p4: go.GoInt, p5: go.Slice<go.testing.CorpusEntry>, p6: go.Slice<go.reflect.Type>, p7: String, p8: String): (go.Error);
     @:native("ImportPath") function importPath(): (String);
@@ -20,4 +19,4 @@ extern class MatchStringOnly {
     @:native("StopTestLog") function stopTestLog(): (go.Error);
     @:native("WriteProfileTo") function writeProfileTo(p0: String, p1: go.io.Writer, p2: go.GoInt): (go.Error);
 
-}
+}>

@@ -17,6 +17,7 @@ class RewritePointerCastTo extends CompilerPass {
 
         return switch [expr.expr, expr.t] {
             case [TCast({ t: t }, _), TAbstract({ name: "Pointer", pack: ["go"] }, params)] if (TypeHelper.compare(params[0], t)): true;
+            case [TCast({ t: TAbstract({ name: "Value", pack: ["go"] }, params) }, _), t] if (TypeHelper.compare(params[0], t) && params[0].match(TInst(_))): true;
             case _: false;
         }
     }

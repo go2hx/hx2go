@@ -140,7 +140,7 @@ class TypeWriter extends WriterImpl {
         else name + '[${params.map(p -> writeHxbType(p)).join(", ")}]';
     }
 
-    public function writeModuleType(type: TypePath, params: Array<HxbType>): String {
+    public function writeModuleType(type: TypePath, params: Array<HxbType>, asValue: Bool = false): String {
         var mod = writer.context.resolve(type);
         if (mod == null) {
             return '*' + StringConversions.typePathClassInstanceName(type);
@@ -194,7 +194,7 @@ class TypeWriter extends WriterImpl {
                     }
                 }
 
-                return '*' + StringConversions.typePathClassInstanceName(tp);
+                return (asValue ? '' : '*') + StringConversions.typePathClassInstanceName(tp);
             }
 
             case MEnum({ meta: meta }): {
@@ -221,7 +221,7 @@ class TypeWriter extends WriterImpl {
         return "any";
     }
 
-    public function writeHxbType(type: HxbType): OutputBuffer {
+    public function writeHxbType(type: HxbType, asValue: Bool = false): OutputBuffer {
         if (type == null) {
             return new OutputBuffer("any");
         }
@@ -235,6 +235,7 @@ class TypeWriter extends WriterImpl {
             case TString: "string";
             case TAbstract({ pack: ['go'], name: 'Map' }, params): 'map[${writeHxbType(params[0])}]${writeHxbType(params[1])}';
             case TAbstract({ pack: ['go'], name: 'Pointer' }, params): '*${writeHxbType(params[0])}';
+            case TAbstract({ pack: ['go'], name: 'Value' }, params): writeHxbType(params[0], true).toString();
             case TAbstract({ pack: ['go'], name: 'Result'}, params) | TEnum({ pack: ['go'], name: 'ResultKind'}, params): 'struct { Error ${writeHxbType(params[1])}; Result ${writeHxbType(params[0])} }';
             case TType({ pack: ['go'], name: 'Tuple'}, [TAnon(anon)]): {
                 var fields = anon.fields.copy();
@@ -254,7 +255,7 @@ class TypeWriter extends WriterImpl {
             case TAbstract({ pack: ['go'], name: 'SendChan' }, params): 'chan<- ${writeHxbType(params[0])}';
             case TAbstract({ pack: ['go'], name: 'ReceiveChan' }, params): '<-chan ${writeHxbType(params[0])}';
             case TAnon(anon): 'any'; // TODO: anon.stauts, aka openness?
-            case TAbstract(tp, params) | TInst(tp, params) | TType(tp, params) | TEnum(tp, params): writeModuleType(tp, params);
+            case TAbstract(tp, params) | TInst(tp, params) | TType(tp, params) | TEnum(tp, params): writeModuleType(tp, params, asValue);
             case TFun(params, ret): {
                 var funcArgInfo = new ClassWriter(writer).writeFunctionArgs(type, null);
                 params = funcArgInfo.args;

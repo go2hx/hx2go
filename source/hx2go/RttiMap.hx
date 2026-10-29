@@ -6,7 +6,7 @@ class RttiMap {
 	static var fallbackGopackage:String = "";
 
 	static public function awaitBuild() {
-		if (!finished.tryAcquire(10)) // try to acquire the semaphore with a timeout in seconds
+		if (!finished.tryAcquire(1)) // try to acquire the semaphore with a timeout in seconds
 		{ // timeout occurred, fallback to default Rtti.getRtti()
 			if (fallbackOutputDir != "" && fallbackGopackage != "") {
 				writeGoFile(fallbackOutputDir, fallbackGopackage, "");
@@ -139,15 +139,15 @@ class RttiMap {
 		var inLineStart = false;
 		var getClassPath = false;
 
-		var classPath:go.Slice<go.Byte> = null; // TODO use haxe StringBuf
+		var classPath:go.Slice<go.Byte> = null; 
 
-		var classBuffer:go.bytes.Buffer = go.Syntax.code("HxDefault[bytes.Buffer]()"); // TODO use haxe StringBuf instead of go.bytes.Buffer
+		var classBuffer:StringBuf = new StringBuf();
 
 		var token:go.Slice<go.Byte> = null;
 		while (scanner.scan()) {
 			token = go.Slices.clone(scanner.bytes()); // make a copy of the token, so it won't be overwritten by the next scan
 			if (inClass) {
-				classBuffer.write(token);
+				classBuffer.add(token);
 				if (getClassPath) {
 					var tup = go.Bytes.cut(token, go.Syntax.code('[]byte{34}')); // double quote character
 					if (tup.found) {
@@ -170,15 +170,15 @@ class RttiMap {
 						inClass = true;
 						classValid = false;
 						getClassPath = true;
-						classBuffer.reset();
-						classBuffer.write(token);
+						classBuffer.clear();
+						classBuffer.add(token);
 					}
 					inLineStart = false;
 
 				case tokenEndClass:
 					if (inClass) {
 						if (classValid && classPath != null) {
-							xmlClasses.push({path: go.Go.string(classPath), xml: classBuffer.string()});
+							xmlClasses.push({path: go.Go.string(classPath), xml: classBuffer.toString()});
 						}
 						inClass = false;
 						classValid = false;

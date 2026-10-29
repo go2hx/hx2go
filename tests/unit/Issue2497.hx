@@ -1,6 +1,6 @@
 package unit;
 
-using unit.Issue2947.Issue2497Class;
+using unit.Issue2497.Issue2497Class;
 
 function main() {
 	var sayHelloTo:String->?String->String = "hello".addTail;

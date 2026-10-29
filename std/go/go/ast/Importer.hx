@@ -14,6 +14,4 @@ package go.go.ast;
     Deprecated: use the type checker [go/types] instead; see [Object].
 **/
 @:go.Type({ name: "Importer", instanceName: "ast.Importer", imports: ["go/ast"] })
-extern class Importer {
-
-}
+extern typedef Importer = (imports: go.Map<String, go.Pointer<go.go.ast.Object>>, path: String) -> (go.Result<go.Pointer<go.go.ast.Object>>)

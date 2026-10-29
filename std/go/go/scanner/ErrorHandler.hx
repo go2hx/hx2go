@@ -7,6 +7,4 @@ package go.go.scanner;
     the offending token.
 **/
 @:go.Type({ name: "ErrorHandler", instanceName: "scanner.ErrorHandler", imports: ["go/scanner"] })
-extern class ErrorHandler {
-
-}
+extern typedef ErrorHandler = (pos: go.go.token.Position, msg: String) -> Void

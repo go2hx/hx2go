@@ -50,6 +50,4 @@ package go.io.fs;
         for that directory to report the error.
 **/
 @:go.Type({ name: "WalkDirFunc", instanceName: "fs.WalkDirFunc", imports: ["io/fs"] })
-extern class WalkDirFunc {
-
-}
+extern typedef WalkDirFunc = (path: String, d: go.io.fs.DirEntry, err: go.Error) -> (go.Error)

@@ -7,11 +7,10 @@ package go.net.http;
     [Handler] that calls f.
 **/
 @:go.Type({ name: "HandlerFunc", instanceName: "http.HandlerFunc", imports: ["net/http"] })
-extern class HandlerFunc {
-
+extern typedef HandlerFunc = haxe.extern.EitherType<(p0: go.net.http.ResponseWriter, p1: go.Pointer<go.net.http.Request>) -> Void, {
     /**
         ServeHTTP calls f(w, r).
     **/
     @:native("ServeHTTP") function serveHTTP(w: go.net.http.ResponseWriter, r: go.Pointer<go.net.http.Request>): Void;
 
-}
+}>

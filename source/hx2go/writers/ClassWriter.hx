@@ -632,7 +632,7 @@ class ClassWriter extends WriterImpl {
 		};
 	}
 
-	function handleDefaultAssignment(oargName:String, value:String, oargType:HxbType):String {
+	function handleDefaultAssignment(oargName:String, value:String, oargType:HxbType, ?valueExpr:HxbTypedExpr):String {
 		switch (oargType) {
 			case TAbstract({name: "Null", pack: [], moduleName: mName}, [inner]):
 				// Null<T> types are handled by pass DefaultArgs.hx
@@ -644,7 +644,19 @@ class ClassWriter extends WriterImpl {
 						return StringTools.replace(value, "}", oargName + " = (h<<32) | (l&0xFFFFFFFF);\n}");
 					}
 				}
+				if (oargType.match(TType(_, _)) && isNumericConstExpr(valueExpr)) {
+					return '${oargName} = ${writer.types.writeHxbType(oargType)}(${value})';
+				}
 				return '${oargName} = ${value}';
+		}
+	}
+
+	static function isNumericConstExpr(e: HxbTypedExpr): Bool {
+		if (e == null) return false;
+		return switch e.expr {
+			case TConst(TInt(_) | TFloat(_)): true;
+			case TCast(inner, _) | TParenthesis(inner) | TMeta(_, inner): isNumericConstExpr(inner);
+			case _: false;
 		}
 	}
 

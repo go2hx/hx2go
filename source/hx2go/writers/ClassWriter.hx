@@ -553,10 +553,21 @@ class ClassWriter extends WriterImpl {
 		var fArgs:Array<HxbFunArg> = [];
 		var ret:HxbType = TVoid;
 
+		var tfArgs: Array<hxb.Typed.HxbTFuncArg> = null;
+		if (field?.expr?.expr?.expr != null) {
+			switch field.expr.expr.expr {
+				case TFunction(tf): tfArgs = tf.args;
+				case _:
+			}
+		}
+
 		switch type {
 			case TFun(args, returnType):
 				for (idx in 0...args.length) {
 					var arg = args[idx];
+					if ((arg.name == null || arg.name == "") && tfArgs != null && tfArgs[idx] != null) {
+						arg.name = tfArgs[idx].v.name;
+					}
 					var name = (arg.name != null && arg.name != "") ? arg.name : '_hx_carg$idx';
 					var wrapperArg = new HxbFunArg(name, arg.opt, arg.t);
 
@@ -588,20 +599,21 @@ class ClassWriter extends WriterImpl {
 									var warg = wrapperArgs[idx];
 									var oarg = fArgs[idx];
 									if (oarg.opt) {
-										switch fArgs[idx].t {
-											// case TAbstract({name: "Null", pack: [], moduleName: mName}, [inner]):
-											// 	// no change needed for Null<T> types
-											case _:
-												wrapperStart.addInline('${oarg.name} := HxDefault[${writer.types.writeHxbType(oarg.t)}]()\n_ = ${oarg.name}\n');
-												wrapperStart.addInline('\nif (${warg.name} != nil) {\n ');
-												wrapperStart.addInline('    ${oarg.name} = HxConvert[${writer.types.writeHxbType(oarg.t)}](${warg.name})\n');
-												wrapperStart.addInline('} else {\n');
-												if (tf.args[idx].value != null) {
-													var rhs = writer.exprs.writeExpr(tf.args[idx].value, false).toString();
-													wrapperStart.addInline('${handleDefaultAssignment(oarg.name, rhs, oarg.t)}\n');
-												}
-                                                wrapperStart.addInline('}\n');
-										}
+									if (tf.args[idx] != null) {
+                                        if (oarg.name == "") {
+                                            oarg.name = tf.args[idx].v.name;
+                                        }
+                                        oarg.t = tf.args[idx].v.type;
+									}
+                                        wrapperStart.addInline('${oarg.name} := HxDefault[${writer.types.writeHxbType(oarg.t)}]()\n_ = ${oarg.name}\n');
+                                        wrapperStart.addInline('\nif (${warg.name} != nil) {\n ');
+                                        wrapperStart.addInline('    ${oarg.name} = HxConvert[${writer.types.writeHxbType(oarg.t)}](${warg.name})\n');
+                                        wrapperStart.addInline('} else {\n');
+                                        if (tf.args[idx].value != null) {
+                                            var rhs = writer.exprs.writeExpr(tf.args[idx].value, false).toString();
+                                            wrapperStart.addInline('${handleDefaultAssignment(oarg.name, rhs, oarg.t, tf.args[idx].value)}\n');
+                                        }
+                                        wrapperStart.addInline('}\n');
 									}
 								}
 							case _:
@@ -620,7 +632,7 @@ class ClassWriter extends WriterImpl {
 		};
 	}
 
-	function handleDefaultAssignment(oargName:String, value:String, oargType:HxbType):String {
+	function handleDefaultAssignment(oargName:String, value:String, oargType:HxbType, ?valueExpr:HxbTypedExpr):String {
 		switch (oargType) {
 			case TAbstract({name: "Null", pack: [], moduleName: mName}, [inner]):
 				// Null<T> types are handled by pass DefaultArgs.hx
@@ -632,7 +644,19 @@ class ClassWriter extends WriterImpl {
 						return StringTools.replace(value, "}", oargName + " = (h<<32) | (l&0xFFFFFFFF);\n}");
 					}
 				}
+				if (oargType.match(TType(_, _)) && isNumericConstExpr(valueExpr)) {
+					return '${oargName} = ${writer.types.writeHxbType(oargType)}(${value})';
+				}
 				return '${oargName} = ${value}';
+		}
+	}
+
+	static function isNumericConstExpr(e: HxbTypedExpr): Bool {
+		if (e == null) return false;
+		return switch e.expr {
+			case TConst(TInt(_) | TFloat(_)): true;
+			case TCast(inner, _) | TParenthesis(inner) | TMeta(_, inner): isNumericConstExpr(inner);
+			case _: false;
 		}
 	}
 

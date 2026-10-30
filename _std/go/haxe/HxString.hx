@@ -19,18 +19,18 @@ class HxString {
             return "";
         }
 
-        return cast Go.string((v : Int));
+        return fromCharCode(v); 
     }
 
     public static function charCodeAt(s: String, index: Int): Null<Int> {
-        var str_len = s.length; // length in runes/code-points
-        if (index < 0 || index >= str_len) {
+        if (index < 0) {
             return null;
         }
 
         var i = 0; // position in bytes
         var j = 0; // position in runes/code-points
-        while (j < str_len) {
+        var iLen:Int = cast go.Syntax.code("len({0})", s);
+        while (i < iLen) {
             if (j == index) {
                 var v = Utf8.decodeRuneInString(Syntax.code("{0}[{1}:]", s, i));
                 return v.size == 0 ? null : v.r;
@@ -103,12 +103,13 @@ class HxString {
         return x;
     }
     public static function substr(s: String, pos:Int, ?len:Int):String {
-        if (pos > s.length) {
+		var sLen = s.length; // length in runes/code-points is very expensive to compute repeatedly
+        if (pos > sLen) {
             return "";
         }
         var startIndex = if (pos < 0) {
             // If pos is negative, its value is calculated from the end of s String by s.length + pos. 
-            s.length + pos;
+            sLen + pos;
         }else{
             pos;
         }
@@ -118,27 +119,29 @@ class HxString {
         var end = if (len != null) {
             startIndex + len;
         }else{
-            s.length;
+            sLen;
         }
 
         // if len is negative
         if (len != null && len < 0) {
-            end = s.length + len;
+            end = sLen + len;
         }
 
         // If the calculated position + len exceeds s.length, the characters from that position to the end of s String are returned.
-        if (end > s.length)
-            end = s.length;
+        if (end > sLen)
+            end = sLen;
 
         if (end <= startIndex) {
-            return ""; // i hate these unit tests man
+            return "";
         }
 
         return Syntax.code("string(([]rune)({0})[{1}:{2}])", s, startIndex, (end : Int));
     }
     public static function substring(s: String, startIndex:Int, ?endIndex:Int):String {
+		var sLen = s.length; // length in runes/code-points is very expensive to compute repeatedly
+
         if (endIndex == null)
-            endIndex = s.length;
+            endIndex = sLen;
 
         // If startIndex or endIndex are negative, 0 is used instead.
         if (startIndex < 0)
@@ -152,13 +155,13 @@ class HxString {
             startIndex = tmp;
         }
         // If the (possibly swapped) endIndex is omitted or exceeds s.length, s.length is used instead.
-        if (endIndex > s.length)
-            endIndex = s.length;
+        if (endIndex > sLen)
+            endIndex = sLen;
         // If the (possibly swapped) startIndex exceeds s.length, the empty String "" is returned.
-        if (startIndex > s.length)
+        if (startIndex > sLen)
             return "";
         return Syntax.code("string(([]rune)({0})[{1}:{2}])", s, startIndex, (endIndex : Int));
-    }
+    }    
     @:pure public static function toString(s:String):String {
         return s;
     }

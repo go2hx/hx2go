@@ -1,6 +1,9 @@
 package unit;
 
+private function allUnused(_, _) {
+    return 42;
+}
+
 function main() {
-    var _ = 8;
-    assert(_ == 8);
+    assert(allUnused("x", "y") == 42);
 }

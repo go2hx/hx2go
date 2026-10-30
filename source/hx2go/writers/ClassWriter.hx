@@ -563,10 +563,13 @@ class ClassWriter extends WriterImpl {
 
 		switch type {
 			case TFun(args, returnType):
+				var blankParam = Context.sanitiseString("_");
 				for (idx in 0...args.length) {
 					var arg = args[idx];
-					if ((arg.name == null || arg.name == "") && tfArgs != null && tfArgs[idx] != null) {
-						arg.name = tfArgs[idx].v.name;
+					var v = (tfArgs != null && tfArgs[idx] != null) ? tfArgs[idx].v : null;
+					if (v != null && (arg.name == null || arg.name == "" || arg.name == blankParam)) {
+						if (v.name == "_") v.name = '_hx_blank$idx';
+						arg.name = v.name;
 					}
 					var name = (arg.name != null && arg.name != "") ? arg.name : '_hx_carg$idx';
 					var wrapperArg = new HxbFunArg(name, arg.opt, arg.t);

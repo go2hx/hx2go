@@ -26,8 +26,8 @@ abstract Result<R, E = Error>(ResultKind<R, E>) from ResultKind<R, E> to ResultK
         }
     }
 
-    @:go.Tuple("result", "error")
-    public inline extern function tuple(): Tuple<{ result: R, error: E }> { // must be forced inline
+    @:go.Tuple("error", "result")
+    public inline extern function tuple(): Tuple<{ error: E, result: R }> { // must be forced inline
         return cast this;
     }
 

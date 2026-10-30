@@ -1,6 +1,5 @@
 package hx2go.passes;
 
-import hx2go.normaliser.Semantics;
 import hxb.Typed.HxbTypedExpr;
 import hxb.flags.HxbClassFlag;
 import hxb.Typed.HxbFieldAccess;
@@ -51,18 +50,13 @@ class TypeNormaliserNew extends CompilerPass {
                     case TFun(params, _):
                         if (cls.flags & HxbClassFlag.CExtern != 0 && cls.meta.filter(m -> m.name == ":structInit").length != 0) {
                             var argStr = [];
+                            var keptArgs = [];
                             for (idx in 0...el.length) {
                                 // cast each arg to the actual Go struct field type
                                 var arg = el[idx];
                                 var field = cls.fields.filter(f -> f.name == params[idx].name)[0];
 
-                                // @:structInit String type always set empty string if not set, exclude Null<String>
-                                if (field != null && TypeHelper.isNullConst(arg)
-                                    && Semantics.isStringType(context, field.type)
-                                    && !Semantics.isNullableType(context, field.type)) {
-                                    arg.expr = TConst(TString(""));
-                                    arg.t = field.type;
-                                    argStr.push('${StringConversions.toPascalCase(params[idx].name)}: {${idx}}');
+                                if (TypeHelper.isNullConst(arg)) {
                                     continue;
                                 }
 
@@ -72,10 +66,11 @@ class TypeNormaliserNew extends CompilerPass {
                                     arg.t = c.t;
                                     context.submitNode(arg, true);
                                 }
-                                argStr.push('${StringConversions.toPascalCase(params[idx].name)}: {${idx}}');
+                                argStr.push('${StringConversions.toPascalCase(params[idx].name)}: {${keptArgs.length}}');
+                                keptArgs.push(arg);
                             }
 
-                            expr.expr = ExprHelper.createUntyped('${context.getWriter().types.writeModuleType(tp, typeParams)}{ ${argStr.join(", ")} }', el).expr;
+                            expr.expr = ExprHelper.createUntyped('${context.getWriter().types.writeModuleType(tp, typeParams)}{ ${argStr.join(", ")} }', keptArgs).expr;
                             return;
                         }
 

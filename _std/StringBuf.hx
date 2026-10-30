@@ -45,7 +45,13 @@ class StringBuf {
         if (ok) {
             b.writeString(s).sure(); // fast path if conversion to string not needed
         }else{
-		    b.writeString(Std.string(x)).sure();
+			var sl:go.Slice<go.Byte> = null;
+	        go.Syntax.code('{0} , {1} = {2}.([]byte)',  sl , ok , x );
+			if (ok) {
+				b.write(sl).sure(); // fast path if conversion from []byte succeeded
+			} else {
+				b.writeString(Std.string(x)).sure();
+			}
         }
 	}
 
@@ -56,7 +62,7 @@ class StringBuf {
 		unspecified.
 	**/
 	public function addChar(c:Int):Void {
-		b.writeString(String.fromCharCode(c)).sure(); // writeByte might not handle non-ASCII characters correctly
+		b.writeRune((c : go.Rune)).sure();
 	}
 
 	/**

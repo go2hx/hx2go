@@ -46,6 +46,10 @@ class ClassWriter extends WriterImpl {
 
         var buf = new OutputBuffer();
 
+        if (hx2go.Context.isConstGenericTemplate(cls)) {
+            return buf;
+        }
+
         if (cls.flags & HxbClassFlag.CExtern != 0) {
             // write RTTI
             buf.add('');

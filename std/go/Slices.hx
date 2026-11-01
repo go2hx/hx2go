@@ -72,7 +72,7 @@ extern class Slices {
         Compact zeroes the elements between the new length and the original length.
         The result preserves the nilness of s.
     **/
-    @:native("Compact") static function compact<S, E>(s: go.Slice<E>): (go.Slice<E>);
+    @:native("Compact") static function compact<S, E: go.Comparable>(s: go.Slice<E>): (go.Slice<E>);
     /**
         CompactFunc is like [Compact] but uses an equality function to compare elements.
         For runs of elements that compare equal, CompactFunc keeps the first one.
@@ -106,7 +106,7 @@ extern class Slices {
     /**
         Contains reports whether v is present in s.
     **/
-    @:native("Contains") static function contains<S, E>(s: go.Slice<E>, v: E): (Bool);
+    @:native("Contains") static function contains<S, E: go.Comparable>(s: go.Slice<E>, v: E): (Bool);
     /**
         ContainsFunc reports whether at least one
         element e of s satisfies f(e).
@@ -138,7 +138,7 @@ extern class Slices {
         Empty and nil slices are considered equal.
         Floating point NaNs are not considered equal.
     **/
-    @:native("Equal") static function equal<S, E>(s1: go.Slice<E>, s2: go.Slice<E>): (Bool);
+    @:native("Equal") static function equal<S, E: go.Comparable>(s1: go.Slice<E>, s2: go.Slice<E>): (Bool);
     /**
         EqualFunc reports whether two slices are equal using an equality
         function on each pair of elements. If the lengths are different,
@@ -159,7 +159,7 @@ extern class Slices {
         Index returns the index of the first occurrence of v in s,
         or -1 if not present.
     **/
-    @:native("Index") static function index<S, E>(s: go.Slice<E>, v: E): (go.GoInt);
+    @:native("Index") static function index<S, E: go.Comparable>(s: go.Slice<E>, v: E): (go.GoInt);
     /**
         IndexFunc returns the first index i satisfying f(s[i]),
         or -1 if none do.

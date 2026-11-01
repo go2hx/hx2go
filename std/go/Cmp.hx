@@ -28,6 +28,6 @@ extern class Cmp {
         Or returns the first of its arguments that is not equal to the zero value.
         If no argument is non-zero, it returns the zero value.
     **/
-    @:native("Or") static function or<T>(vals: haxe.Rest<T>): (T);
+    @:native("Or") static function or<T: go.Comparable>(vals: haxe.Rest<T>): (T);
 
 }

@@ -224,7 +224,9 @@ function main() {
     }
 
     // Comparable.hx
-    File.saveContent(Path.join([path, 'Comparable.hx']), 'package go;\n\n@:coreType\nextern abstract Comparable from Float from Int from String from Bool {}');
+    var comparableFroms = ['Float', 'Int', 'String', 'Bool'];
+    for (t in types) comparableFroms.push(toModuleName(t));
+    File.saveContent(Path.join([path, 'Comparable.hx']), 'package go;\n\n@:coreType\nextern abstract Comparable ' + comparableFroms.map(f -> 'from $f').join(' ') + ' {}');
 
     var convPath = Path.join([ path, 'Go.hx' ]);
     var convContent = new StringBuf();

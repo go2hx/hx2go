@@ -224,7 +224,7 @@ function main() {
     }
 
     // Comparable.hx
-    File.saveContent(Path.join([path, 'Comparable.hx']), 'package go;\n\n@:go.Type({ name: "comparable" })\ninterface Comparable {}');
+    File.saveContent(Path.join([path, 'Comparable.hx']), 'package go;\n\n@:coreType\nextern abstract Comparable from Float from Int from String from Bool {}');
 
     var convPath = Path.join([ path, 'Go.hx' ]);
     var convContent = new StringBuf();

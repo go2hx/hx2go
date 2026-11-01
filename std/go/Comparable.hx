@@ -1,4 +1,4 @@
 package go;
 
-@:go.Type({ name: "comparable" })
-interface Comparable {}
+@:coreType
+extern abstract Comparable from Float from Int from String from Bool {}

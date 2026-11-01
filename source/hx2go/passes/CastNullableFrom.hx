@@ -35,7 +35,7 @@ class CastNullableFrom extends CompilerPass {
                     return;
                 }
 
-                var o = ExprHelper.createUntyped('{0}.Value', [e]);
+                var o = ExprHelper.createUntyped('({0}).Value', [e]);
                 var type = Semantics.getNullableType(context, e.t);
                 if (type == null) {
                     type = e.t;
@@ -71,7 +71,7 @@ class CastNullableFrom extends CompilerPass {
                                 new HxbTypedExpr(
                                     TBinop(
                                         OpEq,
-                                        ExprHelper.createUntyped('{0}.Valid', [tmp_local]),
+                                        ExprHelper.createUntyped('({0}).Valid', [tmp_local]),
                                         new HxbTypedExpr(
                                             TConst(TBool(true)),
                                             TBool,
@@ -81,7 +81,7 @@ class CastNullableFrom extends CompilerPass {
                                     TBool,
                                     expr.pos
                                 ),
-                                ExprHelper.createUntyped('{0}.Value', [tmp_local]),
+                                ExprHelper.createUntyped('({0}).Value', [tmp_local]),
                                 new HxbTypedExpr(
                                     TConst(TNull),
                                     expr.t,

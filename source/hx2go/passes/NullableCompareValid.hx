@@ -54,7 +54,7 @@ class NullableCompareValid extends CompilerPass {
         }else{
             return;
         }
-        var nullCheckExpr = ExprHelper.createUntyped("{0}.Valid", [hx2go.normaliser.ExprCopy.copy(nullValue)]);
+        var nullCheckExpr = ExprHelper.createUntyped("({0}).Valid", [hx2go.normaliser.ExprCopy.copy(nullValue)]);
         nullCheckExpr.t = TBool;
 
         var isValid = new HxbTypedExpr(

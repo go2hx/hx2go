@@ -13,7 +13,7 @@ class ExprHelper {
         switch arr.expr {
             case TLocal(v) if (v.type != null && v.type.match(TAbstract({ name: 'Null', pack: [] }, _))):
                 var local = hx2go.normaliser.ExprCopy.copy(arr);
-                arr.expr = ExprHelper.createUntyped('{0}.Value', [local]).expr;
+                arr.expr = ExprHelper.createUntyped('({0}).Value', [local]).expr;
             case _:
         }
     }

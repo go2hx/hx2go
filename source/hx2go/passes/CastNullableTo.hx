@@ -66,7 +66,7 @@ class CastNullableTo extends CompilerPass {
 
                     new HxbTypedExpr(TBlock([
                         new HxbTypedExpr(TVar(tmp, e), TVoid, e.pos),
-                        ExprHelper.createUntyped('${context.getWriter().types.writeHxbType(expr.t)}{ Value: {0}, Valid: {1}.Valid }', [o, tmp_ident])
+                        ExprHelper.createUntyped('${context.getWriter().types.writeHxbType(expr.t)}{ Value: {0}, Valid: ({1}).Valid }', [o, tmp_ident])
                     ]), expr.t, expr.pos);
                 }
 

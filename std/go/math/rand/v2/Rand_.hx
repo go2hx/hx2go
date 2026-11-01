@@ -60,7 +60,7 @@ extern class Rand_ {
         The type parameter Int can be any integer type.
         It panics if n <= 0.
     **/
-    @:native("N") static function N<Int: go.math.rand.v2.IntType>(n: Int): (Int);
+    @:native("N") static function N<Int>(n: Int): (Int);
     /**
         New returns a new Rand that uses random values from src
         to generate other random values.

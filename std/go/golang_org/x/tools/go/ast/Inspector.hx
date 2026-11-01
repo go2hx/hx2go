@@ -47,7 +47,7 @@ extern class Inspector {
         		...
         	}
     **/
-    @:native("All") static function all<N: Dynamic, S: Dynamic>(_in: go.Pointer<go.golang_org.x.tools.go.ast.inspector.Inspector>): (go.iter.Seq<N>);
+    @:native("All") static function all<N, S: Dynamic>(_in: go.Pointer<go.golang_org.x.tools.go.ast.inspector.Inspector>): (go.iter.Seq<N>);
     /**
         New returns an Inspector for the specified syntax trees.
     **/

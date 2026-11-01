@@ -169,7 +169,7 @@ extern class Jsontext {
         The dst and src may overlap.
         If an error is reported, then the entirety of src is appended to dst.
     **/
-    @:native("AppendFormat") static function appendFormat<Bytes: Dynamic>(dst: go.Slice<go.Byte>, src: Bytes, opts: haxe.Rest<go.encoding.json.jsontext.Options>): (go.Result<go.Slice<go.Byte>>);
+    @:native("AppendFormat") static function appendFormat<Bytes>(dst: go.Slice<go.Byte>, src: Bytes, opts: haxe.Rest<go.encoding.json.jsontext.Options>): (go.Result<go.Slice<go.Byte>>);
     /**
         AppendQuote appends a double-quoted JSON string literal representing src
         to dst and returns the extended buffer.
@@ -178,7 +178,7 @@ extern class Jsontext {
         and an error is returned at the end indicating the presence of invalid UTF-8.
         The dst must not overlap with the src.
     **/
-    @:native("AppendQuote") static function appendQuote<Bytes: Dynamic>(dst: go.Slice<go.Byte>, src: Bytes): (go.Result<go.Slice<go.Byte>>);
+    @:native("AppendQuote") static function appendQuote<Bytes>(dst: go.Slice<go.Byte>, src: Bytes): (go.Result<go.Slice<go.Byte>>);
     /**
         AppendUnquote appends the decoded interpretation of src as a
         double-quoted JSON string literal to dst and returns the extended buffer.
@@ -188,7 +188,7 @@ extern class Jsontext {
         Any trailing bytes after the JSON string literal results in an error.
         The dst must not overlap with the src.
     **/
-    @:native("AppendUnquote") static function appendUnquote<Bytes: Dynamic>(dst: go.Slice<go.Byte>, src: Bytes): (go.Result<go.Slice<go.Byte>>);
+    @:native("AppendUnquote") static function appendUnquote<Bytes>(dst: go.Slice<go.Byte>, src: Bytes): (go.Result<go.Slice<go.Byte>>);
     /**
         Bool constructs a Token representing a JSON boolean.
     **/

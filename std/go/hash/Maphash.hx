@@ -33,7 +33,7 @@ extern class Maphash {
         such that Comparable(s, v1) == Comparable(s, v2) if v1 == v2.
         If v != v, then the resulting hash is randomly distributed.
     **/
-    @:native("Comparable") static function comparable<T: go.Comparable>(seed: go.hash.maphash.Seed, v: T): (go.UInt64);
+    @:native("Comparable") static function comparable<T>(seed: go.hash.maphash.Seed, v: T): (go.UInt64);
     /**
         MakeSeed returns a new random seed.
     **/
@@ -52,6 +52,6 @@ extern class Maphash {
     /**
         WriteComparable adds x to the data hashed by h.
     **/
-    @:native("WriteComparable") static function writeComparable<T: go.Comparable>(h: go.Pointer<go.hash.maphash.Hash>, x: T): Void;
+    @:native("WriteComparable") static function writeComparable<T>(h: go.Pointer<go.hash.maphash.Hash>, x: T): Void;
 
 }

@@ -12,6 +12,6 @@ extern class Unique {
         are equal if and only if the values used to produce them are equal.
         Make is safe for concurrent use by multiple goroutines.
     **/
-    @:native("Make") static function make<T: go.Comparable>(value: T): (go.unique.Handle<T>);
+    @:native("Make") static function make<T>(value: T): (go.unique.Handle<T>);
 
 }

@@ -1065,6 +1065,14 @@ class Context {
         }
     }
 
+    public function importedPackageNames(): Array<String> {
+        if (!imports.exists(writer.types.importTarget)) {
+            return [];
+        }
+
+        return imports[writer.types.importTarget].map(imp -> imp.split("/").pop());
+    }
+
     public function defineImportOnModule(moduleKey: String, goImport: String): Void {
         if (!imports.exists(moduleKey)) {
             imports.set(moduleKey, []);

@@ -30,7 +30,7 @@ class NullableCall extends CompilerPass {
         switch expr.expr {
             case TCall(e, _): {
                 var local = hx2go.normaliser.ExprCopy.copy(e);
-                var o = ExprHelper.createUntyped('{0}.Value', [local]);
+                var o = ExprHelper.createUntyped('({0}).Value', [local]);
 
                 e.expr = o.expr;
                 e.t = TypeHelper.follow(context, e.t);

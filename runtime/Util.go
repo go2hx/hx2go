@@ -7,6 +7,8 @@ func HxDefault[T any]() T {
 	switch any(v).(type) {
 	case string:
 		return any(HxStringNull).(T)
+	case HxNullable[string]:
+		return any(HxNullable[string]{Value: HxStringNull, Valid: false}).(T)
 	}
 	return v
 }
@@ -69,7 +71,11 @@ func HxString[T any](val T) string {
 	return Hx_Field_std_string(val)
 }
 
-type HxNullable[T any] = struct {
+type HxNullable[T any] struct {
 	Value T
 	Valid bool
+}
+
+func (this HxNullable[T]) String() string {
+	return HxString(this)
 }

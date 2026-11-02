@@ -32,14 +32,14 @@ class NullableIndex extends CompilerPass {
                     var local = hx2go.normaliser.ExprCopy.copy(e);
                     context.submitNode(local, true);
 
-                    e.expr = ExprHelper.createUntyped('{0}.Value', [local]).expr;
+                    e.expr = ExprHelper.createUntyped('({0}).Value', [local]).expr;
                 }
 
                 if (Semantics.isNullableExpr(context, idx)) {
                     var local = hx2go.normaliser.ExprCopy.copy(idx);
                     context.submitNode(local, true);
 
-                    idx.expr = ExprHelper.createUntyped('{0}.Value', [local]).expr;
+                    idx.expr = ExprHelper.createUntyped('({0}).Value', [local]).expr;
                 }
             }
             case _: null;

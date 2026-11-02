@@ -21,7 +21,7 @@ class TypeNormaliserVar extends CompilerPass {
         switch expr.expr {
             case TVar(v, e): {
                 if (!Semantics.isNullableType(context, v.type) && isErasedNull(e)) {
-                    e.expr = ExprHelper.createUntyped('{0}.Value', [hx2go.normaliser.ExprCopy.copy(e)]).expr;
+                    e.expr = ExprHelper.createUntyped('({0}).Value', [hx2go.normaliser.ExprCopy.copy(e)]).expr;
                     return;
                 }
                 if (TypeHelper.compare(v.type, e.t)) {

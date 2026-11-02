@@ -638,10 +638,10 @@ class HxDynamic {
 
         // Handle nullable values
         var isNullable: Bool = false;
-        go.Syntax.code("_ , {0} = {1}.(struct { Value interface {}; Valid bool })", isNullable, res0);
+        go.Syntax.code("_ , {0} = ({1}).(HxNullable[ interface {} ])", isNullable, res0);
         if (isNullable) {
-            if (go.Syntax.code("{0}.(struct { Value interface {}; Valid bool }).Valid", res0)) {
-                res0 = go.Syntax.code("{0}.(struct { Value interface {}; Valid bool }).Value", res0);
+            if (go.Syntax.code("({0}).(HxNullable[ interface {} ]).Valid", res0)) {
+                res0 = go.Syntax.code("({0}).(HxNullable[ interface {}] ).Value", res0);
             } else {
                 res0 = Null;
             }
@@ -789,7 +789,8 @@ class HxDynamic {
     }
 
     static function isNullableType(t: Type): Bool {
-        if (t.kind() != Reflect.struct || t.numField() != 2 || t.name() != "") {
+
+        if (t.kind() != Reflect.struct || t.numField() != 2 || !go.Strings.hasPrefix(t.name(), "HxNullable")){
             return false;
         }
 

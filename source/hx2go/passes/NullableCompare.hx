@@ -26,11 +26,11 @@ class NullableCompare extends CompilerPass {
             case TConst(TNull):
                 var local_cmp = hx2go.normaliser.ExprCopy.copy(left);
                 left.expr = if (boxed) {
-                    ExprHelper.createUntyped("{0}.Valid", [local_cmp]).expr;
+                    ExprHelper.createUntyped("({0}).Valid", [local_cmp]).expr;
                 } else switch left.t {
                     case TInt: {
                         local_cmp = ExprHelper.createCast(local_cmp, TAbstract({ pack: [], name: 'Null', moduleName: 'Null' }, [ left.t ]));
-                        ExprHelper.createUntyped("{0}.Valid", [local_cmp]).expr;
+                        ExprHelper.createUntyped("({0}).Valid", [local_cmp]).expr;
                     }
                     case _: new HxbTypedExpr(TBinop(
                         OpNotEq,
@@ -47,7 +47,7 @@ class NullableCompare extends CompilerPass {
             case TConst(_):
                 var local_cmp = hx2go.normaliser.ExprCopy.copy(left);
                 if (boxed) {
-                    left.expr = ExprHelper.createUntyped("{0}.Value", [local_cmp]).expr;
+                    left.expr = ExprHelper.createUntyped("({0}).Value", [local_cmp]).expr;
 
                     var payload = Semantics.getNullableType(context, left.t);
                     if (payload != null) {
@@ -78,10 +78,10 @@ class NullableCompare extends CompilerPass {
             var leftBoxed = Semantics.isNullableExpr(context, left);
             var rightBoxed = Semantics.isNullableExpr(context, right);
 
-            var leftValid = leftBoxed ? "{0}.Valid" : "true";
-            var rightValid = rightBoxed ? "{1}.Valid" : "true";
-            var leftValue = leftBoxed ? "{0}.Value" : "{0}";
-            var rightValue = rightBoxed ? "{1}.Value" : "{1}";
+            var leftValid = leftBoxed ? "({0}).Valid" : "true";
+            var rightValid = rightBoxed ? "({1}).Valid" : "true";
+            var leftValue = leftBoxed ? "({0}).Value" : "{0}";
+            var rightValue = rightBoxed ? "({1}).Value" : "{1}";
 
             expr.expr = raw(
                 '($leftValid && $rightValid && ($leftValue $opStr $rightValue)'
@@ -119,7 +119,7 @@ class NullableCompare extends CompilerPass {
             && Semantics.isNullableExpr(context, left) && Semantics.isNullableExpr(context, right)) {
             var eq = op == OpEq;
             var valid = e -> {
-                var v = ExprHelper.createUntyped("{0}.Valid", [hx2go.normaliser.ExprCopy.copy(e)]);
+                var v = ExprHelper.createUntyped("({0}).Valid", [hx2go.normaliser.ExprCopy.copy(e)]);
                 v.t = TBool;
                 v;
             };

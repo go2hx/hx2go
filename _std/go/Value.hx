@@ -19,9 +19,4 @@ extern abstract Value<T>(T) {
         return cast tmp;
     }
 
-    public extern inline function ptr(): Pointer<T> {
-        var tmp: T = norm();
-        return Pointer.addressOf(tmp);
-    }
-
 }

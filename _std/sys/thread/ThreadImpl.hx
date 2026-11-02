@@ -37,7 +37,10 @@ private class NativeThread {
 	}
 
 	public function new(job: () -> Void) {
-		if (job != null) Syntax.go(job);
+		if (job != null) Syntax.go(() -> {
+			@:privateAccess Syntax.defer(Tls.cleanup.bind(ThreadImpl.getGoroutineId()));
+			job();
+		});
 	}
 
 	public function getName(): String {

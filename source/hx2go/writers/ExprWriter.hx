@@ -550,6 +550,12 @@ class ExprWriter extends WriterImpl {
             return writeExpr(e);
         }
 
+        // cast null of a basic type = zero value
+        if (TypeHelper.isNullConst(e) && !Semantics.canBypassNull(writer.context, writer.context.normalize(expr.t))) {
+            buf.addInline('HxDefault[' + writer.types.writeHxbType(expr.t) + "]()");
+            return buf;
+        }
+
         switch [e.t, expr.t] {
             case [_, TVoid]:
                 buf.addBufferInline(writeExpr(e));

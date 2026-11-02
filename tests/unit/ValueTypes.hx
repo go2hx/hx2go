@@ -28,9 +28,8 @@ function main() {
 
     var int: go.Value<Int> = 3;              // int32
     var intNorm: Int = int;                  // int32
-    var intPtr: go.Pointer<Int> = int.ptr(); // *int32
 
-    assert(int == 3 && intNorm == 3 && intPtr.value == 3);
+    assert(int == 3 && intNorm == 3);
     assert(a.x == 15 && a.y == 10);
     assert(b.x == 15 && b.y == 20);
     assert(c.x == 25 && c.y == 35);

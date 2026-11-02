@@ -13,6 +13,9 @@ class Normaliser {
 
     public static function run(expr: HxbTypedExpr, scope: Scope, context: Context): Void {
         Semantics.clearMutateCache();
+        for (pkg in context.importedPackageNames()) {
+            scope.variableIterations.set(pkg, 0);
+        }
         new Normaliser(context).processExpr(expr, scope, null);
     }
 

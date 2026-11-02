@@ -57,7 +57,7 @@ extern class Rand {
         The type parameter Int can be any integer type.
         It panics if n <= 0.
     **/
-    @:native("N") function N<Int: go.math.rand.v2.IntType>(n: Int): (Int);
+    @:native("N") function N<Int>(n: Int): (Int);
     /**
         NormFloat64 returns a normally distributed float64 in
         the range -math.MaxFloat64 through +math.MaxFloat64 inclusive,

@@ -224,7 +224,9 @@ function main() {
     }
 
     // Comparable.hx
-    File.saveContent(Path.join([path, 'Comparable.hx']), 'package go;\n\n@:go.Type({ name: "comparable" })\ninterface Comparable {}');
+    var comparableFroms = ['Float', 'Int', 'String', 'Bool'];
+    for (t in types) comparableFroms.push(toModuleName(t));
+    File.saveContent(Path.join([path, 'Comparable.hx']), 'package go;\n\nabstract Comparable(Dynamic) ' + comparableFroms.map(f -> 'from $f').join(' ') + ' {}');
 
     var convPath = Path.join([ path, 'Go.hx' ]);
     var convContent = new StringBuf();

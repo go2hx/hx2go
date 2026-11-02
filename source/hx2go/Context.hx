@@ -191,6 +191,12 @@ class Context {
         return _reserved.exists(v) ? '_hx_reserved_$v' : v;
     }
 
+    public static function isConstGenericTemplate(def: hxb.HxbModuleType.HxbClass): Bool {
+        return def.kind.match(KGeneric)
+            && def.params.length > 0
+            && Lambda.exists(def.params, p -> Lambda.exists(p.meta, m -> m.name == ":const"));
+    }
+
     public function buildType(t: HxbModuleType, ref: ModuleRef): Void {
         var infos = switch t {
             case MClass(def): {
@@ -213,7 +219,7 @@ class Context {
         }
 
         switch t {
-            case MClass(def) if (def.flags & HxbClassFlag.CExtern == 0):
+            case MClass(def) if (def.flags & HxbClassFlag.CExtern == 0 && !isConstGenericTemplate(def)):
                 classInits.push({
                     name: StringConversions.typePathClassVTableName(def.path),
                     path: def.path,

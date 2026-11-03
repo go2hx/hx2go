@@ -49,8 +49,6 @@ class NullCompareInvalid extends CompilerPass {
                     b_right = ExprHelper.createCast(b_right, TDynamicAny);
                 }else if (isNullLiteral(b_right)) {
                     b_left = ExprHelper.createCast(b_left, TDynamicAny);
-                }else {
-                    return; // should not happen, neither side is null
                 }
                 expr.expr = TBinop(b_op, b_left, b_right);
 			case _:

@@ -1,0 +1,15 @@
+diff --git a/tests/sys/src/TestArguments.hx b/tests/sys/src/TestArguments.hx
+index b151e29e5..b79d24cb0 100644
+--- a/tests/sys/src/TestArguments.hx
++++ b/tests/sys/src/TestArguments.hx
+@@ -69,7 +69,9 @@ class TestArguments extends utest.Test {
+ 	});
+ 
+ 	static public var bin:String =
+-	#if interp
++	#if go
++		"bin/go/testArguments/main/main" + (Sys.systemName() == "Windows" ? ".exe" : "");
++	#elseif interp
+ 		"bin/eval/TestArguments.hxb";
+ 	#elseif neko
+ 		"bin/neko/TestArguments.n";

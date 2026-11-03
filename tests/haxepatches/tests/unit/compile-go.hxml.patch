@@ -1,0 +1,13 @@
+diff --git a/tests/unit/compile-go.hxml b/tests/unit/compile-go.hxml
+new file mode 100644
+index 000000000..5d2612ed7
+--- /dev/null
++++ b/tests/unit/compile-go.hxml
+@@ -0,0 +1,6 @@
++compile-each.hxml
++--main unit.TestMain
++--xml bin/go/target.xml
++-D go-sourceline-comments
++-L hx2go
++--custom-target go=bin/go
+\ No newline at end of file

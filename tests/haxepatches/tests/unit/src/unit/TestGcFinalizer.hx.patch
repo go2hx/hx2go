@@ -1,0 +1,40 @@
+diff --git a/tests/unit/src/unit/TestGcFinalizer.hx b/tests/unit/src/unit/TestGcFinalizer.hx
+index d97c7c007..91c170d53 100644
+--- a/tests/unit/src/unit/TestGcFinalizer.hx
++++ b/tests/unit/src/unit/TestGcFinalizer.hx
+@@ -2,7 +2,7 @@ package unit;
+ 
+ class TestGcFinalizer extends Test {
+ 	function testConstructNoThrow() {
+-		#if (js || python || eval || lua || jvm || cpp)
++		#if (js || python || eval || lua || jvm || cpp || go)
+ 		var finalizer = new haxe.GcFinalizer(function(v:String) {});
+ 		t(finalizer != null);
+ 		#else
+@@ -11,7 +11,7 @@ class TestGcFinalizer extends Test {
+ 	}
+ 
+ 	function testRegisterNoThrow() {
+-		#if (js || python || eval || lua || jvm || cpp)
++		#if (js || python || eval || lua || jvm || cpp || go)
+ 		var finalizer = new haxe.GcFinalizer(function(v:String) {});
+ 		var target = {id: 1};
+ 		var handle = finalizer.register(target, "hello");
+@@ -22,7 +22,7 @@ class TestGcFinalizer extends Test {
+ 	}
+ 
+ 	function testCloseNoThrow() {
+-		#if (js || python || eval || lua || jvm || cpp)
++		#if (js || python || eval || lua || jvm || cpp || go)
+ 		var finalizer = new haxe.GcFinalizer(function(v:String) {});
+ 		var target = {id: 1};
+ 		var handle = finalizer.register(target, "hello");
+@@ -34,7 +34,7 @@ class TestGcFinalizer extends Test {
+ 	}
+ 
+ 	function testUnsupportedTargetThrows() {
+-		#if !(js || python || eval || lua || jvm || cpp)
++		#if !(js || python || eval || lua || jvm || cpp || go)
+ 		exc(function() new haxe.GcFinalizer(function(v:String) {}));
+ 		#else
+ 		noAssert();

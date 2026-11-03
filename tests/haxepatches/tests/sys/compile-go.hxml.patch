@@ -1,0 +1,38 @@
+diff --git a/tests/sys/compile-go.hxml b/tests/sys/compile-go.hxml
+new file mode 100644
+index 000000000..fa9e6784d
+--- /dev/null
++++ b/tests/sys/compile-go.hxml
+@@ -0,0 +1,32 @@
++-D source-header=''
++--debug
++-lib utest
++-p src
++-D go-sourceline-comments
++--each
++
++--next
++--main Main
++-L hx2go
++--custom-target go=bin/go/sys
++
++--next
++--main TestArguments
++-L hx2go
++--custom-target go=bin/go/testArguments
++
++--next
++--main ExitCode
++-L hx2go
++--custom-target go=bin/go/exitCode
++
++--next
++--main UtilityProcess
++-L hx2go
++--custom-target go=bin/go/utilityProcess
++
++--next
++--cmd go build -C bin/go/sys/main .
++--cmd go build -C bin/go/testArguments/main .
++--cmd go build -C bin/go/exitCode/main .
++--cmd go build -C bin/go/utilityProcess/main .

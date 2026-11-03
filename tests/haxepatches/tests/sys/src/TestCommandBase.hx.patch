@@ -1,0 +1,32 @@
+diff --git a/tests/sys/src/TestCommandBase.hx b/tests/sys/src/TestCommandBase.hx
+index b57fd8984..4e82b8455 100644
+--- a/tests/sys/src/TestCommandBase.hx
++++ b/tests/sys/src/TestCommandBase.hx
+@@ -13,11 +13,15 @@ class TestCommandBase extends utest.Test {
+ 		var bin = FileSystem.absolutePath(TestArguments.bin);
+ 		var args = TestArguments.expectedArgs;
+ 
++		#if !go
+ 		var exitCode = run("haxe", ["compile-each.hxml", "--run", "TestArguments"].concat(args));
+ 		Assert.equals(0, exitCode);
++		#end
+ 
+ 		var exitCode =
+-			#if (macro || interp)
++			#if go
++				run(bin, args);
++			#elseif (macro || interp)
+ 				run("haxe", ["--hxb-lib", bin, "--run", "TestArguments"].concat(args));
+ 			#elseif cpp
+ 				#if cppia
+@@ -111,7 +115,9 @@ class TestCommandBase extends utest.Test {
+ 		for (code in codes) {
+ 			var args = [Std.string(code)];
+ 			var exitCode =
+-				#if (macro || interp)
++				#if go
++					run(bin, args);
++				#elseif (macro || interp)
+ 					run("haxe", ["--hxb-lib", bin, "--run", "ExitCode"].concat(args));
+ 				#elseif cpp
+ 					#if cppia

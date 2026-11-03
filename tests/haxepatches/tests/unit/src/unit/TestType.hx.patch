@@ -1,0 +1,13 @@
+diff --git a/tests/unit/src/unit/TestType.hx b/tests/unit/src/unit/TestType.hx
+index 047ce8d32..1581db535 100644
+--- a/tests/unit/src/unit/TestType.hx
++++ b/tests/unit/src/unit/TestType.hx
+@@ -253,7 +253,7 @@ class TestType extends Test {
+  		eq("foo0", f());
+ 
+ 		var foo = function(bar = 2) { return bar; };
+-		#if flash // Cannot skip not-nullable argument
++		#if (flash || go) // Cannot skip not-nullable argument
+ 		t(typeError(foo.bind(_)));
+ 		#else
+ 		var l = foo.bind(_);

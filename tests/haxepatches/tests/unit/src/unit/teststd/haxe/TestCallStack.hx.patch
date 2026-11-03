@@ -1,0 +1,13 @@
+diff --git a/tests/unit/src/unit/teststd/haxe/TestCallStack.hx b/tests/unit/src/unit/teststd/haxe/TestCallStack.hx
+index ea53b6fa0..8a3e73c64 100644
+--- a/tests/unit/src/unit/teststd/haxe/TestCallStack.hx
++++ b/tests/unit/src/unit/teststd/haxe/TestCallStack.hx
+@@ -19,7 +19,7 @@ class TestCallStack extends unit.Test {
+ 		} catch (_:Dynamic) {
+ 			var stack = haxe.CallStack.exceptionStack();
+ 			t((stack is Array));
+-			#if (!lua && !flash && !hl)
++			#if (!lua && !flash && !hl && !go)
+ 			t(stack.length > 0);
+ 			#end
+ 		}

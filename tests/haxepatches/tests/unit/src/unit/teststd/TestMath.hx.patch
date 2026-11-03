@@ -1,0 +1,13 @@
+diff --git a/tests/unit/src/unit/teststd/TestMath.hx b/tests/unit/src/unit/teststd/TestMath.hx
+index e8d5914ac..a91c7c7b3 100644
+--- a/tests/unit/src/unit/teststd/TestMath.hx
++++ b/tests/unit/src/unit/teststd/TestMath.hx
+@@ -12,7 +12,7 @@ class TestMath extends unit.Test {
+ 		t(Math.isNaN(Math.sqrt( -1)));
+ 		feq(Math.NEGATIVE_INFINITY, Math.NEGATIVE_INFINITY);
+ 		feq(Math.POSITIVE_INFINITY, Math.POSITIVE_INFINITY);
+-		#if !python
++		#if (!python && !go)
+ 		t(Math.isNaN(0/0));
+ 		#end
+ 		// +

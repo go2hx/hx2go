@@ -1,0 +1,15 @@
+diff --git a/tests/sys/src/TestUnicode.hx b/tests/sys/src/TestUnicode.hx
+index a1485e85a..bbd269e86 100644
+--- a/tests/sys/src/TestUnicode.hx
++++ b/tests/sys/src/TestUnicode.hx
+@@ -10,7 +10,9 @@ import UtilityProcess.runUtility;
+ 
+ class TestUnicode extends utest.Test {
+ 	static var BIN_SYMLINK =
+-#if cpp
++#if go
++		"bin-go";
++#elseif cpp
+ 		#if cppia
+ 			"bin-cppia";
+ 		#elseif debug

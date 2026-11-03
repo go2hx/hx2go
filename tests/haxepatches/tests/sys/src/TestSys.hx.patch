@@ -1,0 +1,15 @@
+diff --git a/tests/sys/src/TestSys.hx b/tests/sys/src/TestSys.hx
+index 0e4a056d8..303c0a29f 100644
+--- a/tests/sys/src/TestSys.hx
++++ b/tests/sys/src/TestSys.hx
+@@ -102,7 +102,9 @@ class TestSys extends TestCommandBase {
+ 		Assert.isTrue(sys.FileSystem.exists(p));
+ 
+ 		Assert.isTrue(StringTools.endsWith(p,
+-		#if interp
++		#if go
++			"main" + (Sys.systemName() == "Windows" ? ".exe" : "")
++		#elseif interp
+ 			"Main.hx"
+ 		#elseif neko
+ 			 "sys.n"

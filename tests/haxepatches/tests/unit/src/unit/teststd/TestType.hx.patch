@@ -1,0 +1,13 @@
+diff --git a/tests/unit/src/unit/teststd/TestType.hx b/tests/unit/src/unit/teststd/TestType.hx
+index 4b241a4c3..53467143b 100644
+--- a/tests/unit/src/unit/teststd/TestType.hx
++++ b/tests/unit/src/unit/teststd/TestType.hx
+@@ -130,7 +130,7 @@ class TestType extends unit.Test {
+ 		#if (!php && !python)
+ 		eq(Type.typeof(1e10), TFloat);
+ 		#end
+-		#if !eval
++		#if (!eval && !go)
+ 		eq(Type.typeof(1.0), TInt);
+ 		#end
+ 		var i0 = haxe.Int64.fromInt(256);

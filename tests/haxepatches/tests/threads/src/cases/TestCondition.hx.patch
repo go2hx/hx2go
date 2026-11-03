@@ -1,0 +1,20 @@
+diff --git a/tests/threads/src/cases/TestCondition.hx b/tests/threads/src/cases/TestCondition.hx
+index 295f6d0bf..e1434baa0 100644
+--- a/tests/threads/src/cases/TestCondition.hx
++++ b/tests/threads/src/cases/TestCondition.hx
+@@ -43,12 +43,14 @@ class TestCondition extends ThreadTestBase {
+ 		cpp.vm.Gc.run(true);
+ 		#elseif hl
+ 		hl.Gc.major();
++		#elseif go
++		go.Runtime.GC();
+ 		#elseif interp
+ 		eval.vm.Gc.full_major();
+ 		#elseif neko
+ 		neko.vm.Gc.run(true);
+ 		#end
+-
++		
+ 		cond.signal();
+ 		cond.release();
+ 

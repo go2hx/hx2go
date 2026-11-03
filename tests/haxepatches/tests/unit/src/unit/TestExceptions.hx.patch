@@ -1,0 +1,13 @@
+diff --git a/tests/unit/src/unit/TestExceptions.hx b/tests/unit/src/unit/TestExceptions.hx
+index 3bb2d38b0..ea1a3b95c 100644
+--- a/tests/unit/src/unit/TestExceptions.hx
++++ b/tests/unit/src/unit/TestExceptions.hx
+@@ -27,7 +27,7 @@ private class CustomNativeException extends flash.errors.Error {}
+ private class CustomNativeException extends java.lang.RuntimeException {}
+ #elseif python
+ private class CustomNativeException extends python.Exceptions.Exception {}
+-#elseif (lua || eval || neko || hl || cpp)
++#elseif (lua || eval || neko || hl || cpp || go)
+ private class CustomNativeException { public function new(m:String) {} }
+ #end
+ 

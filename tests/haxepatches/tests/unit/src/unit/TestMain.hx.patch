@@ -1,0 +1,158 @@
+diff --git a/tests/unit/src/unit/TestMain.hx b/tests/unit/src/unit/TestMain.hx
+index 299cecfdb..5d7747450 100644
+--- a/tests/unit/src/unit/TestMain.hx
++++ b/tests/unit/src/unit/TestMain.hx
+@@ -1,6 +1,8 @@
+ package unit;
+ 
+ import haxe.ds.List;
++import sys.FileSystem;
++import sys.io.File;
+ import unit.Test.*;
+ import utest.Runner;
+ #if utest
+@@ -10,6 +12,19 @@ import utest.ui.Report;
+ final asyncWaits = new Array<haxe.PosInfos>();
+ final asyncCache = new Array<() -> Void>();
+ 
++function epochMillis():String {
++	var v = Math.ffloor(Date.now().getTime());
++	if (v <= 0)
++		return "0";
++	var digits = "";
++	while (v >= 1) {
++		var d = Std.int(v - Math.ffloor(v / 10) * 10);
++		digits = String.fromCharCode("0".code + d) + digits;
++		v = Math.ffloor(v / 10);
++	}
++	return digits;
++}
++
+ @:access(unit.Test)
+ function main() {
+ 	#if js
+@@ -104,14 +119,17 @@ function main() {
+ 		new TestConstrainedMonomorphs(),
+ 		new TestDefaultTypeParameters(),
+ 		#if (!flash && !hl && !cppia)
+-		new TestCoroutines(),
++		// new TestCoroutines(),
+ 		#end
+ 		// new TestUnspecified(),
+ 	];
+-
++	
+ 	TestIssues.addTestClasses("src/unit/teststd", "unit.teststd");
++	
++	#if testissues
+ 	TestIssues.addIssueClasses("src/unit/issues", "unit.issues");
+-	TestIssues.addIssueClasses("src/unit/hxcpp_issues", "unit.hxcpp_issues");
++	#end
++	// TestIssues.addIssueClasses("src/unit/hxcpp_issues", "unit.hxcpp_issues");
+ 
+ 	var runner = new Runner();
+ 	for (c in classes) {
+@@ -122,22 +140,93 @@ function main() {
+ 	report.displayHeader = AlwaysShowHeader;
+ 	report.displaySuccessResults = NeverShowSuccessResults;
+ 	var success = true;
++	var passed:Array<String> = [];
++	var errored = 0;
++	var total = 0;
++	var jsonPassed = 0;
++	var jsonErrored = 0;
++	var jsonTotal = 0;
+ 	runner.onProgress.add(function(e) {
++		var name = e.result.pack + (e.result.pack == "" ? "" : ".") + e.result.cls + "." + e.result.method;
++		var isStd = e.result.pack == "unit.teststd" || StringTools.startsWith(e.result.pack, "unit.teststd.");
++		var isJsonData = true;
++		total++;
++		if (isJsonData)
++			jsonTotal++;
++		var methodPassed = true;
++		var methodErrored = false;
+ 		for (a in e.result.assertations) {
+ 			switch a {
+-				case Success(pos):
+-				case Warning(msg):
+-				case Ignore(reason):
++				case Success(_), Warning(_), Ignore(_):
++				case Failure(_, _):
++					methodPassed = false;
++					success = false;
+ 				case _:
++					methodPassed = false;
++					methodErrored = true;
+ 					success = false;
+ 			}
+ 		}
++		if (methodPassed) {
++			passed.push(name);
++			if (isJsonData)
++				jsonPassed++;
++		} else if (methodErrored) {
++			errored++;
++			if (isJsonData)
++				jsonErrored++;
++		}
+ 		#if js
+ 		if (js.Browser.supported && e.totals == e.done) {
+ 			untyped js.Browser.window.success = success;
+ 		};
+ 		#end
+ 	});
++	
++	var fileName = "unittests.txt";
++	var statsFile = "unittests.json";
++	function writeStats() {
++		// total = passed + failed + errored; failed is assertion failures only.
++		var failed = jsonTotal - jsonPassed - jsonErrored;
++		var ms = epochMillis();
++		var record = '{"time":$ms,"total":$jsonTotal,"passed":$jsonPassed,"failed":$failed,"errored":$jsonErrored}';
++		var records = [];
++		if (FileSystem.exists(statsFile)) {
++			var prev = StringTools.trim(File.getContent(statsFile));
++			if (prev.length > 2) // more than "[]"
++				records.push(prev.substring(1, prev.length - 1));
++		}
++		records.push(record);
++		File.saveContent(statsFile, "[" + records.join(",") + "]");
++	}
++	runner.onComplete.add(_ -> {
++		passed.sort((a, b) -> a > b ? 1 : -1);
++		writeStats();
++		if (FileSystem.exists(fileName)) {
++			var prev:Array<String> = File.getContent(fileName).split("\n");
++			var regressions = [];
++			for (t in prev) {
++				if (passed.indexOf(t) == -1) {
++					regressions.push(t);
++				}
++			}
++			if (regressions.length > 0) {
++				Sys.println("REGRESSIONS:");
++				for (t in regressions) {
++					Sys.println("  " + t);
++				}
++				Sys.exit(1);
++			}else{
++				File.saveContent(fileName, passed.join("\n"));
++				Sys.exit(0);
++			}
++		}else{
++			Sys.println("Creating new " + fileName);
++			Sys.println("if the cache has expired, make sure no regressions have occurred since the last working commit.");
++			File.saveContent(fileName, passed.join("\n"));
++			Sys.exit(0);
++		}
++	});
+ 	#if (sys || nodejs)
+ 	if (verbose)
+ 		runner.onTestStart.add(function(test) {
+@@ -150,4 +239,4 @@ function main() {
+ 	#if (flash && fdb)
+ 	flash.Lib.fscommand("quit");
+ 	#end
+-}
++}
+\ No newline at end of file

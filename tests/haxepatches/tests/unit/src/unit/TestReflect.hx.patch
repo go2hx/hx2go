@@ -1,0 +1,15 @@
+diff --git a/tests/unit/src/unit/TestReflect.hx b/tests/unit/src/unit/TestReflect.hx
+index fd34b6675..2b5a1a2d6 100644
+--- a/tests/unit/src/unit/TestReflect.hx
++++ b/tests/unit/src/unit/TestReflect.hx
+@@ -227,8 +227,8 @@ class TestReflect extends Test {
+ 		eq( i.intValue, 55 );
+ 		var i = Type.createEmptyInstance(MyClass);
+ 		t( (i is MyClass) );
+-		eq( i.get(), #if (flash || cpp || jvm || hl) 0 #else null #end );
+-		eq( i.intValue, #if (flash || cpp || jvm || hl) 0 #else null #end );
++		eq( i.get(), #if (flash || cpp || jvm || hl || go) 0 #else null #end );
++		eq( i.intValue, #if (flash || cpp || jvm || hl || go) 0 #else null #end );
+ 		var e : MyEnum = Type.createEnum(MyEnum,__unprotect__("A"));
+ 		eq( e, MyEnum.A );
+ 		var e : MyEnum = Type.createEnum(MyEnum,__unprotect__("C"),[55,"hello"]);

@@ -1,0 +1,33 @@
+diff --git a/tests/sys/src/ExitCode.hx b/tests/sys/src/ExitCode.hx
+index e555eb334..dec17e6b6 100644
+--- a/tests/sys/src/ExitCode.hx
++++ b/tests/sys/src/ExitCode.hx
+@@ -7,7 +7,9 @@ import haxe.io.*;
+ */
+ class ExitCode {
+ 	static public var bin:String =
+-	#if interp
++	#if go
++		"bin/go/exitCode/main/main" + (Sys.systemName() == "Windows" ? ".exe" : "");
++	#elseif interp
+ 		"bin/eval/ExitCode.hxb";
+ 	#elseif neko
+ 		"bin/neko/ExitCode.n";
+@@ -70,6 +72,9 @@ class ExitCode {
+ 		if (!FileSystem.exists("bin"))
+ 			FileSystem.createDirectory("bin");
+ 
++		#if go
++		File.copy(bin, binPath);
++		#else
+ 		switch (Sys.systemName()) {
+ 			case "Windows":
+ 				// var gcc = Sys.command("cl", ["src/ExitCode.c", "/Fobin", "/link", "/out:bin/ExitCode.exe"]);
+@@ -81,6 +86,7 @@ class ExitCode {
+ 				if (gcc != 0)
+ 					throw "cannot compile ExitCode";
+ 		}
++		#end
+ 
+ 		return binPath;
+ 	}

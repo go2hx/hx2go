@@ -616,7 +616,7 @@ class ClassWriter extends WriterImpl {
                                         wrapperStart.addInline('\nif (${warg.name} != nil) {\n ');
                                         wrapperStart.addInline('    ${oarg.name} = HxConvert[${writer.types.writeHxbType(oarg.t)}](${warg.name})\n');
                                         wrapperStart.addInline('} else {\n');
-                                        if (tf.args[idx].value != null) {
+                                        if (tf.args[idx]?.value != null) {
                                             var rhs = writer.exprs.writeExpr(tf.args[idx].value, false).toString();
                                             wrapperStart.addInline('${handleDefaultAssignment(oarg.name, rhs, oarg.t, tf.args[idx].value)}\n');
                                         }

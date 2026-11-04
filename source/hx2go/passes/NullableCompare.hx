@@ -140,6 +140,33 @@ class NullableCompare extends CompilerPass {
             return;
         }
 
+        var leftBoxed = Semantics.isNullableExpr(context, left);
+        var rightBoxed = Semantics.isNullableExpr(context, right);
+        if (leftBoxed != rightBoxed && !TypeHelper.isNullConst(left) && !TypeHelper.isNullConst(right)) {
+            var eq = op == OpEq;
+            var valid = ExprHelper.createUntyped("({0}).Valid", [hx2go.normaliser.ExprCopy.copy(leftBoxed ? left : right)]);
+            valid.t = TBool;
+
+            var inner = hx2go.normaliser.ExprCopy.copy(expr);
+            switch inner.expr {
+                case TBinop(_, l, r):
+                    executeSide(l, r);
+                    executeSide(r, l);
+                case _:
+            }
+
+            var bin = (o: HxbBinop, l, r) -> new HxbTypedExpr(TBinop(o, l, r), TBool, expr.pos);
+            expr.expr = TParenthesis(bin(
+                eq ? OpBoolAnd : OpBoolOr,
+                bin(OpEq, valid, new HxbTypedExpr(TConst(TBool(eq)), TBool, expr.pos)),
+                inner
+            ));
+            expr.t = TBool;
+
+            context.submitNode(expr, true, 1);
+            return;
+        }
+
         executeSide(left, right);
         executeSide(right, left);
     }

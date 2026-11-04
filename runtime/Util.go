@@ -64,7 +64,31 @@ func HxConvert[T any](from any) T {
 		return fv.Convert(tt).Interface().(T)
 	}
 
+	if obj := hxVTableObject(fv); obj != nil {
+		if r, ok := obj.(T); ok {
+			return r
+		}
+		if tt.Kind() == reflect.Pointer {
+			if m := reflect.ValueOf(obj).MethodByName("Hx_As_" + tt.Elem().Name()); m.IsValid() {
+				if r, ok := m.Call(nil)[0].Interface().(T); ok {
+					return r
+				}
+			}
+		}
+	}
+
 	return HxDefault[T]()
+}
+
+func hxVTableObject(v reflect.Value) any {
+	if v.Kind() != reflect.Pointer || v.IsNil() || v.Elem().Kind() != reflect.Struct {
+		return nil
+	}
+	f := v.Elem().FieldByName("VTable")
+	if !f.IsValid() || f.Kind() != reflect.Interface || f.IsNil() {
+		return nil
+	}
+	return f.Interface()
 }
 
 func HxString[T any](val T) string {

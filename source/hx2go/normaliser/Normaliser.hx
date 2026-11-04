@@ -199,6 +199,7 @@ class Normaliser {
                 var local = scope.copy();
                 local.activeLoop = expr;
                 local.activeSwitch = null;
+                local.activeTryOwnsBreak = false;
 
                 return iterateExpr(expr, local, ancestor);
             }

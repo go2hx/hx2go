@@ -420,6 +420,12 @@ class ClassWriter extends WriterImpl {
             buf.add('return ${StringConversions.typePathClassInstanceName(cls.path)}_RTTI', 1);
             buf.add('}');
 
+            var instanceName = StringConversions.typePathClassInstanceName(cls.path);
+            buf.add('');
+            buf.add('func (this *$instanceName) Hx_As_$instanceName() *$instanceName {');
+            buf.add('return this', 1);
+            buf.add('}');
+
             for (f in cls.fields.filter(f -> f.kind.match(KMethod(_)))) {
                 var res = writeMemberClassField(f, cls);
                 if (res.isEmpty()) {

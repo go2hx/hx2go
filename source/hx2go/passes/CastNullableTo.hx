@@ -101,7 +101,7 @@ class CastNullableTo extends CompilerPass {
                                 tmp_ident,
                                 new HxbTypedExpr(TConst(TNull), expr.t, expr.pos)
                             ), TBool, expr.pos),
-                            ExprHelper.createUntyped('${context.getWriter().types.writeHxbType(expr.t)}{}', []),
+                            ExprHelper.createNullNullable(context, expr.t),
                             ExprHelper.createUntyped('${context.getWriter().types.writeHxbType(expr.t)}{ Value: {0}, Valid: true }', [o])
                         ), expr.t, expr.pos)
                     ]), expr.t, expr.pos);
@@ -122,7 +122,7 @@ class CastNullableTo extends CompilerPass {
 
                             var cond = ExprHelper.createUntyped('{1} >= 0 && {1} < {0}.Len()', [arrIdent, idxIdent]);
                             var hit = ExprHelper.createUntyped('$nullType{ Value: {0}.Get({1}), Valid: true }', [arrIdent, idxIdent]);
-                            var miss = ExprHelper.createUntyped('$nullType{}', []);
+                            var miss = ExprHelper.createNullNullable(context, expr.t);
 
                             new HxbTypedExpr(TBlock([
                                 new HxbTypedExpr(TVar(arrTmp, arr), TVoid, e.pos),

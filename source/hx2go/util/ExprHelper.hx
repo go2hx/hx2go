@@ -34,6 +34,13 @@ class ExprHelper {
         }
     }
 
+    public static function createNullNullable(context: Context, t: HxbType): HxbTypedExpr {
+        var goType = context.getWriter().types.writeHxbType(t);
+        var payload = hx2go.normaliser.Semantics.getNullableType(context, t);
+        var isString = payload != null && hx2go.normaliser.Semantics.isStringType(context, payload);
+        return createUntyped(isString ? '$goType{ Value: HxStringNull }' : '$goType{}', []);
+    }
+
     public static function createUntyped(template: String, params: Array<HxbTypedExpr>): HxbTypedExpr {
         return new HxbTypedExpr(
             TCall(

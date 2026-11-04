@@ -19,13 +19,21 @@ class NullableCompare extends CompilerPass {
         }
     }
 
+    function nullableCastInner(e: HxbTypedExpr): Null<HxbTypedExpr> {
+        return switch e.expr {
+            case TCast(inner, _) | TParenthesis(inner): Semantics.isNullableExpr(context, inner) ? inner : nullableCastInner(inner);
+            case _: null;
+        }
+    }
+
     public function executeSide(right: HxbTypedExpr, left: HxbTypedExpr): Void {
         var boxed = Semantics.isNullableExpr(context, left);
 
         switch right.expr {
             case TConst(TNull):
-                var local_cmp = hx2go.normaliser.ExprCopy.copy(left);
-                left.expr = if (boxed) {
+                var inner = boxed ? null : nullableCastInner(left);
+                var local_cmp = hx2go.normaliser.ExprCopy.copy(inner ?? left);
+                left.expr = if (boxed || inner != null) {
                     ExprHelper.createUntyped("({0}).Valid", [local_cmp]).expr;
                 } else switch left.t {
                     case t if (Semantics.isIntegerType(context, t) || Semantics.isFloatType(context, t) || Semantics.isBoolType(context, t)): {

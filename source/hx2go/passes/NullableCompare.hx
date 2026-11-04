@@ -28,7 +28,7 @@ class NullableCompare extends CompilerPass {
                 left.expr = if (boxed) {
                     ExprHelper.createUntyped("({0}).Valid", [local_cmp]).expr;
                 } else switch left.t {
-                    case TInt: {
+                    case t if (Semantics.isIntegerType(context, t) || Semantics.isFloatType(context, t) || Semantics.isBoolType(context, t)): {
                         local_cmp = ExprHelper.createCast(local_cmp, TAbstract({ pack: [], name: 'Null', moduleName: 'Null' }, [ left.t ]));
                         ExprHelper.createUntyped("({0}).Valid", [local_cmp]).expr;
                     }

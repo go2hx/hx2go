@@ -19,14 +19,16 @@ class RewriteResultSwitch extends CompilerPass {
 
     public function match(expr: HxbTypedExpr): Bool {
         return switch expr.expr {
-            case TSwitch({ expr: TParenthesis({ expr: TEnumIndex(e) }) }, _, _) if (e.t != null && e.t.match(TEnum({ pack: ['go'], name: 'ResultKind' }, _))): true;
+            case TSwitch({ expr: TParenthesis({ expr: TEnumIndex(e) }) }, _, _) if (ExprHelper.isResultType(e.t)): true;
+            case TBinop(OpEq | OpNotEq, { expr: TEnumIndex(e) }, { expr: TConst(TInt(_)) }) if (ExprHelper.isResultType(e.t)): true;
             case _: false;
         }
     }
 
     public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
         switch expr.expr {
-            case TSwitch({ expr: TParenthesis({ expr: TEnumIndex(e) }) }, cases, edef): {
+            case TSwitch({ expr: TParenthesis({ expr: TEnumIndex(subject) }) }, cases, edef): {
+                var e = ExprHelper.unwrapResult(subject);
                 var head = edef;
                 var idx = 0;
 
@@ -49,6 +51,18 @@ class RewriteResultSwitch extends CompilerPass {
                 }
 
                 expr.expr = head.expr;
+                context.submitNode(expr, true);
+            }
+
+            case TBinop(op, { expr: TEnumIndex(subject) }, { expr: TConst(TInt(index)) }): {
+                var e = ExprHelper.unwrapResult(subject);
+                var isOk = (index == 0) == (op == OpEq);
+
+                expr.expr = TBinop(
+                    isOk ? OpEq : OpNotEq,
+                    ExprHelper.createUntyped('{0}.Error', [ hx2go.normaliser.ExprCopy.copy(e) ]),
+                    new HxbTypedExpr(TConst(TNull), e.t, e.pos)
+                );
                 context.submitNode(expr, true);
             }
 

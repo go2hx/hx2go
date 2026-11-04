@@ -18,6 +18,22 @@ class ExprHelper {
         }
     }
 
+    public static function isResultType(t: HxbType): Bool {
+        return t != null && switch t {
+            case TAbstract({ pack: ['go'], name: 'Result' }, _): true;
+            case TEnum({ pack: ['go'], name: 'ResultKind' }, _): true;
+            case _: false;
+        }
+    }
+
+    public static function unwrapResult(e: HxbTypedExpr): HxbTypedExpr {
+        return switch e.expr {
+            case TCast(inner, null) if (isResultType(inner.t)): unwrapResult(inner);
+            case TParenthesis(inner) if (isResultType(inner.t)): unwrapResult(inner);
+            case _: e;
+        }
+    }
+
     public static function createUntyped(template: String, params: Array<HxbTypedExpr>): HxbTypedExpr {
         return new HxbTypedExpr(
             TCall(

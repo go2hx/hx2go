@@ -7,8 +7,28 @@ import hx2go.util.ExprHelper;
 import hx2go.normaliser.Semantics;
 import hxb.Ast.HxbBinop;
 import hxb.HxbType;
+import hxb.Typed.HxbVar;
+import hxb.Typed.HxbVarKind;
 
 class NullableCompare extends CompilerPass {
+
+    private static var cmpId: Int = 0;
+
+    function hoist(e: HxbTypedExpr, pre: Array<HxbTypedExpr>): Void {
+        if (!Semantics.hasSideEffects(e)) {
+            return;
+        }
+
+        var tmp = new HxbVar(-1, 'hx_cmp_${cmpId++}', VUser(TVOLocalVariable), 0, [], e.pos, e.t);
+        pre.push(new HxbTypedExpr(TVar(tmp, hx2go.normaliser.ExprCopy.copy(e)), TVoid, e.pos));
+        e.expr = TLocal(tmp);
+    }
+
+    function withPre(expr: HxbTypedExpr, pre: Array<HxbTypedExpr>): Void {
+        if (pre.length > 0) {
+            expr.expr = TBlock(pre.concat([new HxbTypedExpr(expr.expr, TBool, expr.pos)]));
+        }
+    }
 
     public function match(expr: HxbTypedExpr): Bool {
         return switch expr.expr {
@@ -86,6 +106,10 @@ class NullableCompare extends CompilerPass {
             var leftBoxed = Semantics.isNullableExpr(context, left);
             var rightBoxed = Semantics.isNullableExpr(context, right);
 
+            var pre = [];
+            hoist(left, pre);
+            hoist(right, pre);
+
             var leftValid = leftBoxed ? "({0}).Valid" : "true";
             var rightValid = rightBoxed ? "({1}).Valid" : "true";
             var leftValue = leftBoxed ? "({0}).Value" : "{0}";
@@ -96,6 +120,7 @@ class NullableCompare extends CompilerPass {
                     + (eq ? ' || (!$leftValid && !$rightValid)' : '') + ')',
                 [hx2go.normaliser.ExprCopy.copy(left), hx2go.normaliser.ExprCopy.copy(right)]
             );
+            withPre(expr, pre);
         }
 
         expr.t = TBool;
@@ -126,6 +151,9 @@ class NullableCompare extends CompilerPass {
         if (!left.expr.match(TConst(_)) && !right.expr.match(TConst(_))
             && Semantics.isNullableExpr(context, left) && Semantics.isNullableExpr(context, right)) {
             var eq = op == OpEq;
+            var pre = [];
+            hoist(left, pre);
+            hoist(right, pre);
             var valid = e -> {
                 var v = ExprHelper.createUntyped("({0}).Valid", [hx2go.normaliser.ExprCopy.copy(e)]);
                 v.t = TBool;
@@ -143,6 +171,7 @@ class NullableCompare extends CompilerPass {
                 )
             ));
             expr.t = TBool;
+            withPre(expr, pre);
 
             context.submitNode(expr, true, 1);
             return;
@@ -152,6 +181,8 @@ class NullableCompare extends CompilerPass {
         var rightBoxed = Semantics.isNullableExpr(context, right);
         if (leftBoxed != rightBoxed && !TypeHelper.isNullConst(left) && !TypeHelper.isNullConst(right)) {
             var eq = op == OpEq;
+            var pre = [];
+            hoist(leftBoxed ? left : right, pre);
             var valid = ExprHelper.createUntyped("({0}).Valid", [hx2go.normaliser.ExprCopy.copy(leftBoxed ? left : right)]);
             valid.t = TBool;
 
@@ -170,6 +201,7 @@ class NullableCompare extends CompilerPass {
                 inner
             ));
             expr.t = TBool;
+            withPre(expr, pre);
 
             context.submitNode(expr, true, 1);
             return;

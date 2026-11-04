@@ -983,7 +983,7 @@ class HxDynamic {
                 case "resize": return HxArray.resize.bind(dyn);
                 case "join": return HxArray.join.bind(dyn);
                 case "toString": return HxArray.toString.bind(dyn);
-                default: throw "runtime.HxDynamic.field array field access not found: " + fieldName;
+                default: return null;
             }
         }
 

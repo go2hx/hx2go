@@ -7,6 +7,7 @@ import hxb.Typed.HxbTypedExprDef;
 import hxb.HxbType;
 import hx2go.util.ExprHelper;
 import hx2go.util.TypeHelper;
+import hx2go.normaliser.Semantics;
 import hxb.Typed.HxbVar;
 import hxb.Typed.HxbVarKind;
 import haxe.runtime.Copy;
@@ -142,7 +143,11 @@ class CastNullableTo extends CompilerPass {
                         context.submitNode(o, true);
                     }
 
-                    ExprHelper.createUntyped('${context.getWriter().types.writeHxbType(expr.t)}{ Value: {0}, Valid: true }', [o]);
+                    if (Semantics.isStringType(context, ot)) {
+                        ExprHelper.createUntyped('HxNullableString({0})', [o]);
+                    } else {
+                        ExprHelper.createUntyped('${context.getWriter().types.writeHxbType(expr.t)}{ Value: {0}, Valid: true }', [o]);
+                    }
                 }
             }
 

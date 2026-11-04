@@ -41,6 +41,9 @@ func HxConvert[T any](from any) T {
 	}
 
 	if targetNullable {
+		if s, ok := from.(string); ok && isStringNull(s) {
+			return HxDefault[T]()
+		}
 		box := reflect.New(tt).Elem()
 		if from != nil {
 			ft := tt.Field(0).Type

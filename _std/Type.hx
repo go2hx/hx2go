@@ -206,7 +206,8 @@ class Type {
 	}
 
 	public static function enumEq<T:EnumValue>(a:T, b:T):Bool {
-		return HxDynamic.equals(a, b);
+		final fast:Int = go.Syntax.code("HxEnumEqFast({0}, {1})", a, b);
+		return fast >= 0 ? fast == 1 : HxDynamic.equals(a, b);
 	}
 
 	public static function enumConstructor(e:EnumValue):String {

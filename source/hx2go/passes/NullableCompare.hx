@@ -91,6 +91,20 @@ class NullableCompare extends CompilerPass {
         }
     }
     
+    static function isDynamic(t: HxbType): Bool {
+        return t != null && t.match(TDynamic(_) | TDynamicAny);
+    }
+
+    function valueOf(e: HxbTypedExpr, boxed: Bool): HxbTypedExpr {
+        if (!boxed) {
+            return hx2go.normaliser.ExprCopy.copy(e);
+        }
+
+        var value = ExprHelper.createUntyped("({0}).Value", [hx2go.normaliser.ExprCopy.copy(e)]);
+        value.t = Semantics.getNullableType(context, e.t) ?? TDynamicAny;
+        return value;
+    }
+
     // <, <=, >, >= against null are false, unless both sides are null and the op allows equality
     function executeRelational(expr: HxbTypedExpr, op: HxbBinop, left: HxbTypedExpr, right: HxbTypedExpr): Void {
         var eq = op.match(OpGte | OpLte);
@@ -112,13 +126,21 @@ class NullableCompare extends CompilerPass {
 
             var leftValid = leftBoxed ? "({0}).Valid" : "true";
             var rightValid = rightBoxed ? "({1}).Valid" : "true";
-            var leftValue = leftBoxed ? "({0}).Value" : "{0}";
-            var rightValue = rightBoxed ? "({1}).Value" : "{1}";
+            var args = [hx2go.normaliser.ExprCopy.copy(left), hx2go.normaliser.ExprCopy.copy(right)];
+
+            var comparison = if (isDynamic(left.t) || isDynamic(right.t)) {
+                args.push(new HxbTypedExpr(TBinop(op, valueOf(left, leftBoxed), valueOf(right, rightBoxed)), TBool, expr.pos));
+                "{2}";
+            } else {
+                var leftValue = leftBoxed ? "({0}).Value" : "{0}";
+                var rightValue = rightBoxed ? "({1}).Value" : "{1}";
+                '($leftValue $opStr $rightValue)';
+            }
 
             expr.expr = raw(
-                '($leftValid && $rightValid && ($leftValue $opStr $rightValue)'
+                '($leftValid && $rightValid && $comparison'
                     + (eq ? ' || (!$leftValid && !$rightValid)' : '') + ')',
-                [hx2go.normaliser.ExprCopy.copy(left), hx2go.normaliser.ExprCopy.copy(right)]
+                args
             );
             withPre(expr, pre);
         }

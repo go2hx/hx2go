@@ -27,7 +27,7 @@ class RewriteResultSwitchParam extends CompilerPass {
     public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
         switch expr.expr {
             case TEnumParameter(subject, ref, 0):
-                var e = ExprHelper.unwrapResult(subject);
+                var e = ExprHelper.unwrapResultType(subject);
                 var kind = ref.name == "Ok" ? "Result" : "Error";
                 var access = ExprHelper.createUntyped('{0}.${kind}', [ hx2go.normaliser.ExprCopy.copy(e) ]);
 

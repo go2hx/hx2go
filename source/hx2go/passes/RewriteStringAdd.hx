@@ -20,18 +20,19 @@ class RewriteStringAdd extends CompilerPass {
 		return t != null && t.match(TString | TAbstract({pack: [], name: "Null"}, [TString]));
 	}
 
+	function concat(left:HxbTypedExpr, right:HxbTypedExpr):HxbTypedExpr {
+		return ExprHelper.createCallStatic(context, {pack: ["go", "haxe"], name: 'HxString', moduleName: 'HxString'}, 'concat', [left, right]);
+	}
+
 	public function execute(expr:HxbTypedExpr, frame:ContextFrame):Void {
 		switch expr.expr {
 			case TBinop(OpAssignOp(OpAdd), left, right):
 				{
-					var o = ExprHelper.createCallStatic(context, {pack: ["go", "haxe"], name: 'HxDynamic', moduleName: 'HxDynamic'}, 'stringConcat',
-						[hx2go.normaliser.ExprCopy.copy(left), right]);
-					expr.expr = TBinop(OpAssign, left, o);
+					expr.expr = TBinop(OpAssign, left, concat(hx2go.normaliser.ExprCopy.copy(left), right));
 				}
 			case TBinop(op, left, right):
 				{
-					var o = ExprHelper.createCallStatic(context, {pack: ["go", "haxe"], name: 'HxDynamic', moduleName: 'HxDynamic'}, 'stringConcat',
-						[left, right]);
+					var o = concat(left, right);
 					expr.expr = o.expr;
 					expr.t = o.t;
 				}

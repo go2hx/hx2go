@@ -349,6 +349,10 @@ class Context {
             buf.add('Hx_Loop()', 1);
             buf.add('$profileStop()', 1);
             buf.add('}');
+        } else {
+            buf.add('func init() {');
+            buf.add('Hx_Boot()', 1);
+            buf.add('}');
         }
 
         classInits.sort((a, b) -> {

@@ -26,19 +26,19 @@ class ExprHelper {
         }
     }
 
-    public static function unwrapResult(e: HxbTypedExpr): HxbTypedExpr {
+    public static function unwrapResultType(e: HxbTypedExpr): HxbTypedExpr {
         return switch e.expr {
-            case TCast(inner, null) if (isResultType(inner.t)): unwrapResult(inner);
-            case TParenthesis(inner) if (isResultType(inner.t)): unwrapResult(inner);
+            case TCast(inner, null) if (isResultType(inner.t)): unwrapResultType(inner);
+            case TParenthesis(inner) if (isResultType(inner.t)): unwrapResultType(inner);
             case _: e;
         }
     }
 
     public static function createNullNullable(context: Context, t: HxbType): HxbTypedExpr {
-        var goType = context.getWriter().types.writeHxbType(t);
-        var payload = hx2go.normaliser.Semantics.getNullableType(context, t);
-        var isString = payload != null && hx2go.normaliser.Semantics.isStringType(context, payload);
-        return createUntyped(isString ? '$goType{ Value: HxStringNull }' : '$goType{}', []);
+        var nullableType = context.getWriter().types.writeHxbType(t);
+        var valueType = hx2go.normaliser.Semantics.getNullableType(context, t);
+        var isNullString = valueType != null && hx2go.normaliser.Semantics.isStringType(context, valueType);
+        return createUntyped(isNullString ? '$nullableType{ Value: HxStringNull }' : '$nullableType{}', []);
     }
 
     public static function createUntyped(template: String, params: Array<HxbTypedExpr>): HxbTypedExpr {

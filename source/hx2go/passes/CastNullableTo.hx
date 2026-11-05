@@ -43,6 +43,12 @@ class CastNullableTo extends CompilerPass {
             null
         );
 
+        switch expr.expr {
+            case TCast(e, _) if (e.expr.match(TConst(TInt(_) | TFloat(_) | TString(_) | TBool(_))) && Semantics.isNullableType(context, e.t)):
+                e.t = ot;
+            case _:
+        }
+
         var o = switch expr.expr {
             case TCast(e, _): switch e.t {
                 case TAbstract({ name: "Null", pack: [] }, _): {

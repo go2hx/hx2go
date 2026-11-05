@@ -2,9 +2,18 @@ package haxe;
 
 import go.Syntax;
 import go.Map;
+import go.Pointer;
 import go.Slice;
 import go.Strings;
 import go.encoding.Json as GoJson;
+import go.encoding.json.Number as JsonNumber;
+
+private enum abstract JsonValueKind(Int) {
+    var Other = 0;
+    var Object = 1;
+    var Array = 2;
+    var Number = 3;
+}
 
 class Json {
 
@@ -13,7 +22,7 @@ class Json {
         decoder.useNumber();
 
         var raw:Dynamic = null;
-        var err = decoder.decode(Syntax.code("&{0}", raw));
+        var err = decoder.decode(Pointer.addressOf(raw));
         if (err != null) {
             throw "Invalid JSON: " + err.error();
         }
@@ -35,33 +44,37 @@ class Json {
         return haxe.format.JsonPrinter.print(value, replacer, space);
     }
 
+    static function kindOf(raw:Dynamic):JsonValueKind {
+        return Syntax.code("func() int32 { switch {0}.(type) { case map[string]any: return 1; case []any: return 2; case json.Number: return 3 }; return 0 }()", raw);
+    }
+
     static function convert(raw:Dynamic):Dynamic {
-        if (Syntax.code("func() bool { _, ok := {0}.(map[string]any); return ok }()", raw)) {
-            var obj:Map<String, Dynamic> = Syntax.code("{0}.(map[string]any)", raw);
-            for (key in obj.keys()) {
-                obj[key] = convert(obj[key]);
-            }
+        switch kindOf(raw) {
+            case Object:
+                var obj:Map<String, Dynamic> = cast raw;
+                for (key in obj.keys()) {
+                    obj[key] = convert(obj[key]);
+                }
+                return raw;
 
-            return raw;
+            case Array:
+                var items:Slice<Dynamic> = cast raw;
+                return [for (item in items) convert(item)];
+
+            case Number:
+                var number:JsonNumber = cast raw;
+                var text:String = cast number;
+                var f = Std.parseFloat(text);
+                if (text.indexOf(".") >= 0) {
+                    return f;
+                }
+
+                var i = Std.int(f);
+                return i == f ? i : f;
+
+            case Other:
+                return raw;
         }
-
-        if (Syntax.code("func() bool { _, ok := {0}.([]any); return ok }()", raw)) {
-            var items:Slice<Dynamic> = Syntax.code("{0}.([]any)", raw);
-            return [for (item in items) convert(item)];
-        }
-
-        if (Syntax.code("func() bool { _, ok := {0}.(json.Number); return ok }()", raw)) {
-            var text:String = Syntax.code("string({0}.(json.Number))", raw);
-            var f = Std.parseFloat(text);
-            if (text.indexOf(".") >= 0) {
-                return f;
-            }
-
-            var i = Std.int(f);
-            return i == f ? i : f;
-        }
-
-        return raw;
     }
 
 }

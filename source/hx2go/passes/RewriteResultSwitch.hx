@@ -28,7 +28,7 @@ class RewriteResultSwitch extends CompilerPass {
     public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
         switch expr.expr {
             case TSwitch({ expr: TParenthesis({ expr: TEnumIndex(subject) }) }, cases, edef): {
-                var e = ExprHelper.unwrapResult(subject);
+                var e = ExprHelper.unwrapResultType(subject);
                 var head = edef;
                 var idx = 0;
 
@@ -55,7 +55,7 @@ class RewriteResultSwitch extends CompilerPass {
             }
 
             case TBinop(op, { expr: TEnumIndex(subject) }, { expr: TConst(TInt(index)) }): {
-                var e = ExprHelper.unwrapResult(subject);
+                var e = ExprHelper.unwrapResultType(subject);
                 var isOk = (index == 0) == (op == OpEq);
 
                 expr.expr = TBinop(

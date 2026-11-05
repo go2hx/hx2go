@@ -322,7 +322,7 @@ class Init {
 		});
 		Compiler.registerCustomDefine({
 			define: "go-no-entry",
-			doc: "do not emit func main(); call Hx_Boot() before using the generated code",
+			doc: "do not emit func main(); the package boots itself with func init()",
 			platforms: [CustomTarget("go")],
 		});
 		// register custom metadata

@@ -146,6 +146,14 @@ jobs:
           name: unittests-graph
           path: haxe/tests/unit/bin/go/main/unittests.json
           if-no-files-found: ignore
+      - name: Upload unit tests artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: unittests-list
+          path: haxe/tests/unit/bin/go/main/unittests.txt
+          if-no-files-found: ignore
+        
 
       - name: Deploy to Pages
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'

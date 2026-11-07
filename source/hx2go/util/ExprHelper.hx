@@ -18,6 +18,29 @@ class ExprHelper {
         }
     }
 
+    public static function isResultType(t: HxbType): Bool {
+        return t != null && switch t {
+            case TAbstract({ pack: ['go'], name: 'Result' }, _): true;
+            case TEnum({ pack: ['go'], name: 'ResultKind' }, _): true;
+            case _: false;
+        }
+    }
+
+    public static function unwrapResultType(e: HxbTypedExpr): HxbTypedExpr {
+        return switch e.expr {
+            case TCast(inner, null) if (isResultType(inner.t)): unwrapResultType(inner);
+            case TParenthesis(inner) if (isResultType(inner.t)): unwrapResultType(inner);
+            case _: e;
+        }
+    }
+
+    public static function createNullNullable(context: Context, t: HxbType): HxbTypedExpr {
+        var nullableType = context.getWriter().types.writeHxbType(t);
+        var valueType = hx2go.normaliser.Semantics.getNullableType(context, t);
+        var isNullString = valueType != null && hx2go.normaliser.Semantics.isStringType(context, valueType);
+        return createUntyped(isNullString ? '$nullableType{ Value: HxStringNull }' : '$nullableType{}', []);
+    }
+
     public static function createUntyped(template: String, params: Array<HxbTypedExpr>): HxbTypedExpr {
         return new HxbTypedExpr(
             TCall(

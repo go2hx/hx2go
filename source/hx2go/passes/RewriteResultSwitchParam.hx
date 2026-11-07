@@ -19,14 +19,15 @@ class RewriteResultSwitchParam extends CompilerPass {
 
     public function match(expr: HxbTypedExpr): Bool {
         return switch expr.expr {
-            case TEnumParameter(e, _) if (e.t != null && e.t.match(TEnum({ pack: ['go'], name: 'ResultKind' }, _))): true;
+            case TEnumParameter(e, _) if (ExprHelper.isResultType(e.t)): true;
             case _: false;
         }
     }
 
     public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
         switch expr.expr {
-            case TEnumParameter(e, ref, 0):
+            case TEnumParameter(subject, ref, 0):
+                var e = ExprHelper.unwrapResultType(subject);
                 var kind = ref.name == "Ok" ? "Result" : "Error";
                 var access = ExprHelper.createUntyped('{0}.${kind}', [ hx2go.normaliser.ExprCopy.copy(e) ]);
 

@@ -27,6 +27,7 @@ class TypeNormaliserCall extends CompilerPass {
     public function norm(ext: { kind: ExternKind, ?options: HxbExpr, ?left: HxbTypedExpr, ?right: String, ?field: HxbClassField }, args: Array<HxbTypedExpr>, params: Array<HxbFunArg>, expr: HxbTypedExpr, ?declared: Array<HxbFunArg>) {
         var restStart = -1;
         var restElement = TVoid;
+        var isEnumCtor = expr.expr.match(TCall({ expr: TField(_, FEnum(_, _)) }, _));
 
         for (idx in 0...args.length) {
             var arg = args[idx];
@@ -74,7 +75,7 @@ class TypeNormaliserCall extends CompilerPass {
                 changed = true;
             } else if (needsCast(arg, toType)) {
                 var c = ExprHelper.createCast(arg, toType);
-                if (param.opt && !Semantics.isNullableType(context, param.t)) {
+                if (param.opt && !isEnumCtor && !Semantics.isNullableType(context, param.t)) {
                     c.t = if (param.t.match(TFun(_))) {
                         TypeHelper.goEraseType(param.t);
                     }else{

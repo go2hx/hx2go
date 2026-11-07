@@ -318,15 +318,10 @@ class HxDynamic {
         {
             var aS = toString(a);
             var bS = toString(b);
-            return (aS + bS:Dynamic); // this should compile to a call to stringConcat() below
+            return (aS + bS:Dynamic);
         }
         else
             throw "runtime.HxDynamic.add invalid operands: " + aV.string() + " and " + bV.string();
-    }
-
-    // RewriteStringAdd pass of hx2go replaces all string + string operations with calls to HxStringConcat
-    public static inline function stringConcat(a:String, b:String):String {
-        return go.Syntax.code("HxStringConcat({0},{1})", a, b);
     }
 
     public static function subtract(a:Dynamic, b:Dynamic):Dynamic {
@@ -983,7 +978,7 @@ class HxDynamic {
                 case "resize": return HxArray.resize.bind(dyn);
                 case "join": return HxArray.join.bind(dyn);
                 case "toString": return HxArray.toString.bind(dyn);
-                default: throw "runtime.HxDynamic.field array field access not found: " + fieldName;
+                default: return null;
             }
         }
 

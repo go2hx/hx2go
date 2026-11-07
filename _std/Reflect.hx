@@ -208,9 +208,7 @@ class Reflect {
     }
 
     public static function makeVarArgs<T>(f: Array<Dynamic> -> T): Dynamic {
-        return (v: haxe.Rest<Dynamic>) -> {
-            return f(v.toArray());
-        };
+        return go.Syntax.code("func(v ...any) any { return {0}(HxMakeArray[any](v...)) }", f);
     }
 
 }

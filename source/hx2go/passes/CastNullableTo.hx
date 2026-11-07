@@ -7,6 +7,7 @@ import hxb.Typed.HxbTypedExprDef;
 import hxb.HxbType;
 import hx2go.util.ExprHelper;
 import hx2go.util.TypeHelper;
+import hx2go.normaliser.Semantics;
 import hxb.Typed.HxbVar;
 import hxb.Typed.HxbVarKind;
 import haxe.runtime.Copy;
@@ -41,6 +42,12 @@ class CastNullableTo extends CompilerPass {
             TBool,
             null
         );
+
+        switch expr.expr {
+            case TCast(e, _) if (e.expr.match(TConst(TInt(_) | TFloat(_) | TString(_) | TBool(_))) && Semantics.isNullableType(context, e.t)):
+                e.t = ot;
+            case _:
+        }
 
         var o = switch expr.expr {
             case TCast(e, _): switch e.t {
@@ -101,7 +108,7 @@ class CastNullableTo extends CompilerPass {
                                 tmp_ident,
                                 new HxbTypedExpr(TConst(TNull), expr.t, expr.pos)
                             ), TBool, expr.pos),
-                            ExprHelper.createUntyped('${context.getWriter().types.writeHxbType(expr.t)}{}', []),
+                            ExprHelper.createNullNullable(context, expr.t),
                             ExprHelper.createUntyped('${context.getWriter().types.writeHxbType(expr.t)}{ Value: {0}, Valid: true }', [o])
                         ), expr.t, expr.pos)
                     ]), expr.t, expr.pos);
@@ -122,7 +129,7 @@ class CastNullableTo extends CompilerPass {
 
                             var cond = ExprHelper.createUntyped('{1} >= 0 && {1} < {0}.Len()', [arrIdent, idxIdent]);
                             var hit = ExprHelper.createUntyped('$nullType{ Value: {0}.Get({1}), Valid: true }', [arrIdent, idxIdent]);
-                            var miss = ExprHelper.createUntyped('$nullType{}', []);
+                            var miss = ExprHelper.createNullNullable(context, expr.t);
 
                             new HxbTypedExpr(TBlock([
                                 new HxbTypedExpr(TVar(arrTmp, arr), TVoid, e.pos),
@@ -142,7 +149,11 @@ class CastNullableTo extends CompilerPass {
                         context.submitNode(o, true);
                     }
 
-                    ExprHelper.createUntyped('${context.getWriter().types.writeHxbType(expr.t)}{ Value: {0}, Valid: true }', [o]);
+                    if (Semantics.isStringType(context, ot)) {
+                        ExprHelper.createUntyped('HxNullableString({0})', [o]);
+                    } else {
+                        ExprHelper.createUntyped('${context.getWriter().types.writeHxbType(expr.t)}{ Value: {0}, Valid: true }', [o]);
+                    }
                 }
             }
 

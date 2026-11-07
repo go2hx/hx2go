@@ -75,7 +75,7 @@ class Context {
     private var codegenVersion:String;
     private var disableIncrementalCache:Bool = false;
     private var cache:Cache;
-    private var classInits: Array<{ name: String, path: TypePath, index: Int, isGeneric: Bool }> = [];
+    private var classInits: Array<{ name: String, path: TypePath, index: Int, def: hxb.HxbModuleType.HxbClass }> = [];
     private var normalizingTypedefs: Map<String, Bool> = [];
     private var normalizingAbstracts: Array<String> = [];
     private var recursiveAbstracts: Map<String, Bool> = [];
@@ -196,7 +196,11 @@ class Context {
     }
 
     public function isGenericTemplate(def: hxb.HxbModuleType.HxbClass): Bool {
-        return def.kind.match(KGeneric) && specialisedGenericBases.exists(genericBaseKey(def.path));
+        if (!def.kind.match(KGeneric)) 
+            return false;
+        if (Lambda.exists(def.params, p -> Lambda.exists(p.meta, m -> m.name == ":const"))) 
+            return true;
+        return specialisedGenericBases.exists(genericBaseKey(def.path));
     }
     
     static function genericBaseKey(tp: TypePath): String {
@@ -245,7 +249,7 @@ class Context {
                     name: StringConversions.typePathClassVTableName(def.path),
                     path: def.path,
                     index: classInits.length,
-                    isGeneric: def.kind.match(KGeneric)
+                    def: def
                 });
 
             case _: null;
@@ -377,8 +381,8 @@ class Context {
         });
 
         buf.add('func Hx_Boot() {');
-        for (ci in classInits) if (!(ci.isGeneric && specialisedGenericBases.exists(genericBaseKey(ci.path)))) buf.add('Hx_ClassInit_${ci.name}()', 1);
-        for (ci in classInits) if (!(ci.isGeneric && specialisedGenericBases.exists(genericBaseKey(ci.path)))) buf.add('Hx_StaticInit_${ci.name}()', 1);
+        for (ci in classInits) if (!isGenericTemplate(ci.def)) buf.add('Hx_ClassInit_${ci.name}()', 1);
+        for (ci in classInits) if (!isGenericTemplate(ci.def)) buf.add('Hx_StaticInit_${ci.name}()', 1);
         buf.add('}');
 
         buf.add('func Hx_Loop() {');

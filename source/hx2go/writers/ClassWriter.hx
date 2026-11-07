@@ -46,7 +46,7 @@ class ClassWriter extends WriterImpl {
 
         var buf = new OutputBuffer();
 
-        if (hx2go.Context.isConstGenericTemplate(cls)) {
+        if (writer.context.isGenericTemplate(cls)) {
             return buf;
         }
 

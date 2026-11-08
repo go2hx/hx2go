@@ -522,7 +522,12 @@ class Context {
         }
 
         var closeTransform = times.start("transform");
-        for (type in mod.types) transformType(type, key);
+
+        
+        var rootsByType = [for (type in mod.types) normalizeSignatures(type, key)];
+        for (i in 0...mod.types.length) {
+            if (rootsByType[i] != null) transformBodies(mod.types[i], key, rootsByType[i]);
+        }
         closeTransform();
 
         return mod;
@@ -874,12 +879,6 @@ class Context {
     }
 
     var enumClassIndex = MClass(null).getIndex();
-
-    private function transformType(type: HxbModuleType, moduleKey: String): Void {
-        var roots = normalizeSignatures(type, moduleKey);
-        if (roots == null) return;
-        transformBodies(type, moduleKey, roots);
-    }
 
     private function normalizeSignatures(type: HxbModuleType, moduleKey: String): Null<Array<HxbClassField>> {
         if (type.getIndex() != enumClassIndex) {

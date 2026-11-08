@@ -23,10 +23,19 @@ class FieldAccessDynamicGet extends CompilerPass {
     }
 
     public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
+        var originalType = expr.t;
         var o = switch expr.expr {
             case TField(e, FDynamic(field)): ExprHelper.createCallStatic(context, { name: 'HxDynamic', moduleName: 'HxDynamic', pack: ['go', 'haxe'] }, 'getField', [e, new HxbTypedExpr(TConst(TString(field)), TString, null)]);
             case TField(e, FClosureAnon(cf)): ExprHelper.createCallStatic(context, { name: 'HxDynamic', moduleName: 'HxDynamic', pack: ['go', 'haxe'] }, 'getField', [e, new HxbTypedExpr(TConst(TString(cf.name)), TString, null)]);
             case _: expr;
+        }
+
+        if (o != expr && originalType != null && !originalType.match(TDynamicAny | TDynamic(_))) {
+            var recast = ExprHelper.createCast(o, originalType);
+            context.submitNode(recast, true);
+            expr.expr = recast.expr;
+            expr.t = recast.t;
+            return;
         }
 
         expr.expr = o.expr;

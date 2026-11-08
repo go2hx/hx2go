@@ -904,6 +904,8 @@ class ExprWriter extends WriterImpl {
                    | TAbstract({ name: "String", pack: [] }, _):
                         var goType = writer.types.writeHxbType(expr.t).toString();
                         goType == "string" ? "HxStringNull" : '(($goType)(HxStringNull))';
+                case t if (t.match(TFun(_))):
+                        '((${writer.types.writeHxbType(t)})(nil))';
                 case _: "nil";
             }
             case TThis: "this";

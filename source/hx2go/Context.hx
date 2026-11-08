@@ -75,11 +75,15 @@ class Context {
     private var codegenVersion:String;
     private var disableIncrementalCache:Bool = false;
     private var cache:Cache;
-    private var classInits: Array<{ name: String, path: TypePath, index: Int }> = [];
+    private var classInits: Array<{ name: String, path: TypePath, index: Int, def: hxb.HxbModuleType.HxbClass }> = [];
     private var normalizingTypedefs: Map<String, Bool> = [];
     private var normalizingAbstracts: Array<String> = [];
     private var recursiveAbstracts: Map<String, Bool> = [];
     private var initOrder: Map<String, Int> = [];
+
+    // paths of @:generic base class templates (KGeneric) that have at least one
+    // KGenericInstance specialisation
+    private var specialisedGenericBases: Map<String, Bool> = [];
 
     public function new(archive: HxbArchive, outputDirectory: String, sourcelineComments:Bool, times:hx2go.util.Times, codegenVersion:String, disableIncrementalCache:Bool, sourcemaps:Bool = true) {
         this.sourcelineComments = sourcelineComments;
@@ -191,13 +195,34 @@ class Context {
         return _reserved.exists(v) ? '_hx_reserved_$v' : v;
     }
 
-    public static function isConstGenericTemplate(def: hxb.HxbModuleType.HxbClass): Bool {
-        return def.kind.match(KGeneric)
-            && def.params.length > 0
-            && Lambda.exists(def.params, p -> Lambda.exists(p.meta, m -> m.name == ":const"));
+    public function isGenericTemplate(def: hxb.HxbModuleType.HxbClass): Bool {
+        if (!def.kind.match(KGeneric)) 
+            return false;
+        if (Lambda.exists(def.params, p -> Lambda.exists(p.meta, m -> m.name == ":const"))) 
+            return true;
+        return specialisedGenericBases.exists(genericBaseKey(def.path));
+    }
+    
+    static function genericBaseKey(tp: TypePath): String {
+        var pack = tp.pack.copy();
+        if (pack.length > 0) {
+            var last = pack[pack.length - 1];
+            if (last.charAt(0) == "_") pack[pack.length - 1] = last.substr(1);
+        }
+        var m = pack.length == 0 ? tp.moduleName : pack.join(".") + "." + tp.moduleName;
+        return tp.name == tp.moduleName ? m : m + "." + tp.name;
     }
 
     public function buildType(t: HxbModuleType, ref: ModuleRef): Void {
+        switch t {
+            case MClass(def):
+                switch def.kind {
+                    case KGenericInstance(c, _):
+                        specialisedGenericBases.set(genericBaseKey(c), true);
+                    case _:
+                }
+            case _:
+        }
         var infos = switch t {
             case MClass(def): {
                 path: def.path
@@ -219,11 +244,12 @@ class Context {
         }
 
         switch t {
-            case MClass(def) if (def.flags & HxbClassFlag.CExtern == 0 && !isConstGenericTemplate(def)):
+            case MClass(def) if (def.flags & HxbClassFlag.CExtern == 0):
                 classInits.push({
                     name: StringConversions.typePathClassVTableName(def.path),
                     path: def.path,
-                    index: classInits.length
+                    index: classInits.length,
+                    def: def
                 });
 
             case _: null;
@@ -355,8 +381,8 @@ class Context {
         });
 
         buf.add('func Hx_Boot() {');
-        for (ci in classInits) buf.add('Hx_ClassInit_${ci.name}()', 1);
-        for (ci in classInits) buf.add('Hx_StaticInit_${ci.name}()', 1);
+        for (ci in classInits) if (!isGenericTemplate(ci.def)) buf.add('Hx_ClassInit_${ci.name}()', 1);
+        for (ci in classInits) if (!isGenericTemplate(ci.def)) buf.add('Hx_StaticInit_${ci.name}()', 1);
         buf.add('}');
 
         buf.add('func Hx_Loop() {');

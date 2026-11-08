@@ -1011,6 +1011,13 @@ class Context {
 
                             case _: f.expr.expr.expr;
                         }
+                        
+                        switch [base.type, f.expr.expr.expr] {
+                            case [TFun(_, baseRet), TFunction({ t: TVoid })]
+                                if (TypeHelper.goEraseType(baseRet).match(TDynamicAny | TDynamic(_))):
+                                coerceVoidReturns(f.expr.expr);
+                            case _:
+                        }
                     }
                 }
             }
@@ -1020,6 +1027,31 @@ class Context {
 
         writer.types.importTarget = old;
         return roots;
+    }
+
+
+
+    private function coerceVoidReturns(fnExpr: HxbTypedExpr): Void {
+        switch fnExpr.expr {
+            case TFunction(tf):
+                var body = TypedExprTools.map(tf.expr, fillBareReturns);
+                if (!Semantics.allPathsReturn(body).allPathsReturn) {
+                    switch body.expr {
+                        case TBlock(el): el.push(ExprHelper.createUntyped("return nil", []));
+                        case _:
+                    }
+                }
+                tf.expr = body;
+            case _:
+        }
+    }
+
+    private function fillBareReturns(e: HxbTypedExpr): HxbTypedExpr {
+        return switch e.expr {
+            case TReturn(null): ExprHelper.createUntyped("return nil", []);
+            case TFunction(_): e; // has its own return type
+            case _: TypedExprTools.map(e, fillBareReturns);
+        }
     }
 
     private function transformBodies(type: HxbModuleType, moduleKey: String, roots: Array<HxbClassField>): Void {

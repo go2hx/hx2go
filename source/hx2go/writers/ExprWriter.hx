@@ -907,7 +907,7 @@ class ExprWriter extends WriterImpl {
                 case _: "nil";
             }
             case TThis: "this";
-            case TSuper: "super";
+            case TSuper: "this";
             case TBool(v): Std.string(v);
             case TInt(v): Std.string(v);
             case TFloat(v): 'float64($v)';

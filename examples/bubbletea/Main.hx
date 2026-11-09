@@ -13,7 +13,14 @@ import go.Reflect;
 // written with ref from: https://github.com/charmbracelet/bubbletea/blob/e4d617e7e0c0dd595cc553a856236221c678470f/examples/simple/main.go
 
 function main() {
-    var p = Tea.newProgram(new Model(5));
+    var p = if (Sys.getEnv("CI") != null) {
+        // required for continuous integration only
+        Tea.newProgram(new Model(5), Tea.withInput(null), Tea.withoutRenderer());
+    } else {
+        // this version is only required for normal programs
+        Tea.newProgram(new Model(5));
+    }
+
     p.run().sure();
 }
 

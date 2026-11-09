@@ -37,16 +37,7 @@ class TypeNormaliserBinop extends CompilerPass {
         }
 
         switch [op, left.expr] {
-            case [OpAssign | OpAssignOp(_), TCast(inner, _)] if (inner.t.match(TDynamicAny | TDynamic(_) | TFun(_))):
-                // // if the inner type is a function, cast the right side to match it
-                // // TODO check if this code is really necessary
-				// if (inner.t.match(TFun(_))) {
-				// 	// cast right to the type of the inner function
-				// 	var o = ExprHelper.createCast(right, inner.t);
-				// 	right.expr = o.expr;
-				// 	right.t = o.t;
-				// 	context.submitNode(right, true);
-				// }
+			case [OpAssign | OpAssignOp(_), TCast(inner, _)] if (inner.t.match(TDynamicAny | TDynamic(_) | TFun(_))):
 				left.expr = inner.expr;
 				left.t = inner.t;
 

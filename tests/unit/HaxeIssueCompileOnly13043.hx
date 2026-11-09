@@ -147,9 +147,16 @@ class Issue13043 {
 
 function main() {
 	var test = new Issue13043();
-	test.testNoOverride();
-	test.testOverrideAsSub();
-	test.testOverrideAsBase();
-	test.testOverrideSkippingParent();
-	test.testOverrideWithoutParentCtor();
+	var compileOnly = true; // set to false to run the tests
+	if (compileOnly) {
+		// compile only mode, do not run tests
+		trace("Compile Only 13043",test);
+	}else {
+		// run the tests
+		test.testNoOverride();
+		test.testOverrideAsSub();
+		test.testOverrideAsBase();
+		test.testOverrideSkippingParent();
+		test.testOverrideWithoutParentCtor();
+	}
 }

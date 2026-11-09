@@ -136,6 +136,7 @@ class Context {
             new hx2go.passes.TypeNormaliserBinop(this),
             new hx2go.passes.DynamicInstFunctionAssign(this),
             new hx2go.passes.TypeNormaliserVar(this),
+            new hx2go.passes.RewriteSyntaxTypeSwitch(this),
             new hx2go.passes.TypeNormaliserReturn(this),
             new hx2go.passes.TypeNormaliserArray(this),
             new hx2go.passes.TypeNormaliserObject(this),

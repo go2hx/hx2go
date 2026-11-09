@@ -24,7 +24,7 @@ class RewriteSyntaxSelect extends CompilerPass {
                 }
 
                 for (param in params) {
-                    switch unwrap(param).expr {
+                    switch ExprHelper.unwrap(param).expr {
                         case TCall({ expr: TField(_, FStatic({ name: 'Select' }, cf)) }, cargs): {
                             switch cf.name {
                                 // Select.receive(chan, f) -> `case v := <-chan: f(v)`. The
@@ -63,13 +63,6 @@ class RewriteSyntaxSelect extends CompilerPass {
             }
 
             case _: null;
-        }
-    }
-
-    static function unwrap(e: HxbTypedExpr): HxbTypedExpr {
-        return switch e.expr {
-            case TParenthesis(inner) | TMeta(_, inner) | TCast(inner, _): unwrap(inner);
-            case _: e;
         }
     }
 

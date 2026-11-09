@@ -19,7 +19,7 @@ class RewriteResultSwitchParam extends CompilerPass {
 
     public function match(expr: HxbTypedExpr): Bool {
         return switch expr.expr {
-            case TEnumParameter(e, _) if (e.t != null && e.t.match(TEnum({ pack: ['go'], name: 'ResultKind' }, _))): true;
+            case TEnumParameter(e, _) if (RewriteResultSwitch.isResult(e.t)): true;
             case _: false;
         }
     }
@@ -28,7 +28,8 @@ class RewriteResultSwitchParam extends CompilerPass {
         switch expr.expr {
             case TEnumParameter(e, ref, 0):
                 var kind = ref.name == "Ok" ? "Result" : "Error";
-                var access = ExprHelper.createUntyped('{0}.${kind}', [ hx2go.normaliser.ExprCopy.copy(e) ]);
+                // unwrap the cast to the erased ResultKind enum, else Go gets an illegal struct{any,any} conversion
+                var access = ExprHelper.createUntyped('{0}.${kind}', [ ExprHelper.unwrap(hx2go.normaliser.ExprCopy.copy(e)) ]);
 
                 expr.expr = access.expr;
                 context.submitNode(expr, true);

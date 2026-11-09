@@ -38,6 +38,13 @@ class ExprHelper {
         );
     }
 
+    public static function unwrap(e: HxbTypedExpr): HxbTypedExpr {
+        return switch e.expr {
+            case TParenthesis(inner) | TMeta(_, inner) | TCast(inner, _): unwrap(inner);
+            case _: e;
+        }
+    }
+
     public static function addExprToBlock(block:HxbTypedExpr, expr:HxbTypedExpr) {
         switch block.expr {
             case TBlock(el):

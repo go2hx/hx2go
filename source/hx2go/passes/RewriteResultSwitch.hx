@@ -14,14 +14,22 @@ import hxb.Ast.HxbObjectField;
 import hx2go.util.ObjectFieldHelper;
 import hxb.flags.HxbClassFieldFlag;
 import hxb.Typed.HxbVar;
+import hxb.HxbType;
 
 class RewriteResultSwitch extends CompilerPass {
 
     public function match(expr: HxbTypedExpr): Bool {
         return switch expr.expr {
-            case TSwitch({ expr: TParenthesis({ expr: TEnumIndex(e) }) }, _, _) if (e.t != null && e.t.match(TEnum({ pack: ['go'], name: 'ResultKind' }, _))): true;
+            case TSwitch({ expr: TParenthesis({ expr: TEnumIndex(e) }) }, _, _) if (isResult(e.t)): true;
             case _: false;
         }
+    }
+
+    public static function isResult(t: HxbType): Bool {
+        return t != null && (
+            t.match(TEnum({ pack: ['go'], name: 'ResultKind' }, _)) ||
+            t.match(TAbstract({ pack: ['go'], name: 'Result' }, _))
+        );
     }
 
     public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {

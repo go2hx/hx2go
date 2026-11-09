@@ -389,7 +389,9 @@ class Normaliser {
 
                 var result = scope.temp(expr, null, this, scope, ancestor, expr.t);
                 var makeAssign = (e: HxbTypedExpr) -> {
-                    e.expr = TBinop(OpAssign, result, ensureBlock(ExprCopy.copy(e)));
+                    if (!Semantics.allPathsReturn(e).allPathsReturn) {
+                        e.expr = TBinop(OpAssign, result, ensureBlock(ExprCopy.copy(e)));
+                    }
                 };
 
                 makeAssign(eif);
@@ -416,7 +418,9 @@ class Normaliser {
             case TSwitch(_, cases, edef): {
                 var result = scope.temp(expr, null, this, scope, ancestor, expr.t);
                 var makeAssign = (e: HxbTypedExpr) -> {
-                    e.expr = TBinop(OpAssign, result, ensureBlock(ExprCopy.copy(e)));
+                    if (!Semantics.allPathsReturn(e).allPathsReturn) {
+                        e.expr = TBinop(OpAssign, result, ensureBlock(ExprCopy.copy(e)));
+                    }
                 };
 
                 for (c in cases) makeAssign(c.expr);

@@ -11,7 +11,16 @@ import hx2go.util.TypeHelper;
 
 class FieldAccessGeneric extends CompilerPass {
 
-    static function containsDynamic(t:HxbType):Bool {
+    static function isDynamic(t:HxbType):Bool {
+        return switch (t) {
+            case TDynamicAny | TDynamic(_): true;
+            case TFun(args, ret): false;
+            case TInst(_, params) | TEnum(_, params) | TType(_, params) | TAbstract(_, params): false;
+            case _: false;
+        }
+    }
+
+     static function containsDynamic(t:HxbType):Bool {
         return switch (t) {
             case TDynamicAny | TDynamic(_): true;
             case TFun(args, ret): containsDynamic(ret) || Lambda.exists(args, a -> containsDynamic(a.t));
@@ -54,6 +63,14 @@ class FieldAccessGeneric extends CompilerPass {
                             context.submitNode(expr, true, 1);
                             return;
                         }
+
+                        if (isDynamic(erased) && !isDynamic(expr.t) && TypeHelper.compare(TypeHelper.goEraseType(expr.t), expr.t)) {
+                            expr.expr = TCast(new HxbTypedExpr(expr.expr, erased, expr.pos), null);
+                            context.submitNode(expr, true, 1);
+                            return;
+                        }
+
+                        
 
                         expr.t = erased;
                     }

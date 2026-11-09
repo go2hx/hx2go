@@ -30,12 +30,8 @@ class FieldAccessDynamicGet extends CompilerPass {
             case _: expr;
         }
 
-        if (o != expr && originalType != null && !originalType.match(TDynamicAny | TDynamic(_))) {
-            var recast = ExprHelper.createCast(o, originalType);
-            context.submitNode(recast, true);
-            expr.expr = recast.expr;
-            expr.t = recast.t;
-            return;
+        if (o != expr && !originalType.match(TDynamicAny | TDynamic(_))) {
+            o = ExprHelper.createCast(o, originalType);
         }
 
         expr.expr = o.expr;

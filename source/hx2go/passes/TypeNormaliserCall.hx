@@ -100,6 +100,17 @@ class TypeNormaliserCall extends CompilerPass {
             }
         }
 
+        // set to an empty rest slice
+        if (restStart == -1 && ext.kind == ExNone && args.length < params.length) {
+            var last = params[params.length - 1];
+            switch last.t {
+                case TAbstract({ pack: ['haxe'], name: 'Rest' }, restTypeParams):
+                    restStart = args.length;
+                    restElement = restTypeParams[0];
+                case _:
+            }
+        }
+
         if (restStart != -1 && ext.kind == ExNone) {
             collapseRestArgs(expr, restStart, restElement);
         }

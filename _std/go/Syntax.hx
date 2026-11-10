@@ -32,10 +32,27 @@ extern class Syntax {
       );
       ```
 
-      Case bodies are inlined into the enclosing function, so a `return`,
-      `break` or `continue` inside a case applies to that function/loop.
+      Case bodies are added as closures, so a `return`,
+      `break` or `continue` inside a case does not apply to the outer function/loop/select.
     **/
     public extern static function select(...cases: Select): Void;
+
+
+    /**
+      Emits a `switch v := x.(type)` type switch in Go. Build its cases with
+      `TypeSwitch.typeCase`, and `TypeSwitch.defaultCase`
+
+      ```haxe
+      Syntax.typeSwitch(value,
+          TypeSwitch.typeCase((v: go.Error) -> trace(v)),
+          TypeSwitch.defaultCase((v: Dynamic) -> {})
+      );
+      ```
+
+      Case bodies are added as closures, so a `return`,
+      `break` or `continue` inside a case does not apply to the outer function/loop/switch.
+    **/
+    public extern static function typeSwitch<T>(value: T, ...cases: TypeSwitch): Void;
 
 }
 
@@ -48,6 +65,17 @@ extern class Select {
 
     /** The `default:` case, taken when no other case is ready. **/
     public extern static function defaultCase(f: Void -> Void): Select;
+
+    private function new();
+}
+
+
+extern class TypeSwitch {
+    /** A type case 'case T:` if you are using Go extern types and need `case *T:` use go.Pointer<T>. Null<T> is not supported**/
+    public extern static function typeCase<T>(f: T -> Void): TypeSwitch;
+
+    /** The `default:` case; the callback receives the value at its interface type. **/
+    public extern static function defaultCase<T>(f: T -> Void): TypeSwitch;
 
     private function new();
 }

@@ -27,16 +27,19 @@ class TypeNormaliserUnop extends CompilerPass {
 
     public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
         switch expr.expr {
-            case TUnop(_, _, e): {
-                if (!TypeHelper.compare(e.t, expr.t)) {
-                    var o = ExprHelper.createCast(e, expr.t);
-                    e.expr = o.expr;
-                    e.t = o.t;
-
-                    context.submitNode(e, true);
-                }
-
-            }
+			case TUnop(op, _, e):
+				if (!TypeHelper.compare(e.t, expr.t)) {
+					switch op {
+						case OpNeg, OpNot, OpNegBits:
+							var o = ExprHelper.createCast(e, expr.t);
+							e.expr = o.expr;
+							e.t = o.t;
+							context.submitNode(e, true);
+						case OpIncrement, OpDecrement:
+							// can't cast a value before an increment/decrement operation
+						case _:
+					}
+				}
             case _: null;
         }
     }

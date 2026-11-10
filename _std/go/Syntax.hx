@@ -39,7 +39,9 @@ extern class Syntax {
 
 
     /**
-      Emits a `switch v := x.(type)` type switch in Go. Build its cases with
+      Emits a `switch v := x.(type)` type switch in Go. `x` is required to be a Go interface, and the cases are to assert types,
+      in a similar fashion to Haxe's (x is Int).
+      Build its cases with
       `TypeSwitch.typeCase`, and `TypeSwitch.defaultCase`
 
       ```haxe

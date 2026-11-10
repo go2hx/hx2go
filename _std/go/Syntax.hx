@@ -71,7 +71,7 @@ extern class Select {
 
 
 extern class TypeSwitch {
-    /** A type case 'case T:` if you are using Go extern types and need `case *T:` use go.Pointer<T>.**/
+    /** A type case 'case T:` if you are using Go extern types and need `case *T:` use go.Pointer<T>. Null<T> is not supported**/
     public extern static function typeCase<T>(f: T -> Void): TypeSwitch;
 
     /** The `default:` case; the callback receives the value at its interface type. **/

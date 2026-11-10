@@ -103,9 +103,9 @@ class TypeNormaliserCall extends CompilerPass {
         if (ext.kind != ExNone || params.length == 0) {
             return;
         }
-        
+
         switch params[params.length - 1].t {
-            case TAbstract({ pack: ['haxe'], name: 'Rest' }, [element]):
+            case TAbstract({ pack: ['haxe'], name: 'Rest' }, [element]) if (restStart != -1 || args.length < params.length):
                 collapseRestArgs(expr, restStart == -1 ? args.length : restStart, element);
             case _:
         }

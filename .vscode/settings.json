@@ -1,0 +1,16 @@
+{
+  "debug.allowBreakpointsEverywhere": true,
+  "haxe.executable": {
+    "path": "C:\\HaxeToolkit\\haxe\\haxe.exe",
+    "env": {
+      "HAXE_STD_PATH": "C:\\HaxeToolkit\\haxe\\std"
+    }
+  },
+  "haxe.configurations": [
+    {
+      "label": "hx2go completion",
+      "args": ["completion.hxml"],
+      "files": ["**/*.hx"]
+    }
+  ]
+}

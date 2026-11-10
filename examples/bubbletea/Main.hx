@@ -10,7 +10,8 @@ import go.charm_land.bubbletea.v2.Model as TeaModel;
 import go.Fmt;
 import go.Reflect;
 
-// written with ref from: https://github.com/charmbracelet/bubbletea/blob/e4d617e7e0c0dd595cc553a856236221c678470f/examples/simple/main.go
+// written with reference from: https://github.com/charmbracelet/bubbletea/blob/e4d617e7e0c0dd595cc553a856236221c678470f/examples/simple/main.go
+// example of using it in Haxe: https://codeberg.org/inert_aesthetic/hx2go-bubbletea-helloworld/
 
 function main() {
     var p = if (Sys.getEnv("CI") != null) {

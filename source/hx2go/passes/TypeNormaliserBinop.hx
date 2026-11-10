@@ -37,7 +37,7 @@ class TypeNormaliserBinop extends CompilerPass {
         }
 
         switch [op, left.expr] {
-            case [OpAssign | OpAssignOp(_), TCast(inner, _)] if (inner.t.match(TDynamicAny | TDynamic(_))):
+            case [OpAssign | OpAssignOp(_), TCast(inner, _)] if (inner.t.match(TDynamicAny | TDynamic(_) | TFun(_))):
                 left.expr = inner.expr;
                 left.t = inner.t;
 

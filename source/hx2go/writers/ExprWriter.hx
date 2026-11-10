@@ -617,6 +617,11 @@ class ExprWriter extends WriterImpl {
                     }
                 } else if (isIdentityLocalCast(expr, e)) {
                     buf.addBufferInline(writeExpr(e));
+                } else if (writer.types.writeHxbType(e.t).toString() == "any"
+                    && writer.types.writeHxbType(expr.t).toString() != "any"
+                    && !isRawGoCodeInjection(e)) {
+                    // needs type assertion: any.(T)
+                    buf.addInline(fromAny(expr.t, writeExpr(e).toString()));
                 } else {
                     buf.addInline('(');
                     buf.addInline('(');
@@ -659,6 +664,14 @@ class ExprWriter extends WriterImpl {
             case TMeta(_, inner) | TParenthesis(inner):
                 isIdentityLocalCast(expr, inner);
 
+            case _: false;
+        }
+    }
+
+    function isRawGoCodeInjection(e: HxbTypedExpr): Bool {
+        return switch e.expr {
+            case TCall({ expr: TIdent("__go__") }, _): true;
+            case TMeta(_, inner) | TParenthesis(inner): isRawGoCodeInjection(inner);
             case _: false;
         }
     }

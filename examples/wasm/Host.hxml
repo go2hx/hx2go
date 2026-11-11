@@ -1,0 +1,5 @@
+-L hx2go
+--main Host
+--custom-target go=output/host
+-D go-lib=github.com/tetratelabs/wazero
+--cmd go -C ./output/host/main run . ../../plugin.wasm

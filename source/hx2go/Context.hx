@@ -109,6 +109,7 @@ class Context {
 
     private function createPasses(): Array<ICompilerPass> {
         return [
+            new hx2go.passes.NullCompareInvalid(this),
             new hx2go.passes.FieldAccessGeneric(this), // TODO: c1
             new hx2go.passes.DefaultArgs(this),
             new hx2go.passes.FunctionCompare(this),

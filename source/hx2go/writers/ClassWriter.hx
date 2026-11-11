@@ -686,6 +686,7 @@ class ClassWriter extends WriterImpl {
             buf.addBufferInline(fTypes.buf);
             buf.addInline(') ');
         } else {
+            shouldGoPragma(field, buf);
             buf.addInline('func ${StringConversions.typePathStaticFieldName(field.name, cls.path)}(');
             buf.addBufferInline(fTypes.buf);
             buf.addInline(') ');
@@ -706,6 +707,21 @@ class ClassWriter extends WriterImpl {
         else buf.addInline("{}");
 
         return buf;
+    }
+
+    public function shouldGoPragma(field:HxbClassField, buf:OutputBuffer) {
+        var list = field.meta.filter(m -> m.name == ":go.Pragma");
+        if (list.length == 0) {
+            return;
+        }
+        for (m in list) {
+            for (param in m.params) {
+                switch param.expr {
+                    case EConst(CString(s, _)): buf.add('//go:$s');
+                    case _: throw "@:go.Pragma parameters must be String constants";
+                }
+            }
+        }
     }
 
     public function shouldGenVar(field: HxbClassField): Bool {

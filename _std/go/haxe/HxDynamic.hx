@@ -1312,6 +1312,7 @@ class HxDynamic {
     }
 
     // peek atthe funcval's captured receiver directly.
+    @:go.Pragma("nocheckptr")
     static function funcReceiver(fn: Dynamic): go.UIntPtr {
         // &fn points at the interface header; the data pointer is the 2nd word
         var header: UnsafePointer = Unsafe.pointer(Pointer.addressOf(fn));

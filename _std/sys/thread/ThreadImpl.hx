@@ -37,7 +37,11 @@ private class NativeThread {
 	}
 
 	public function new(job: () -> Void) {
-		if (job != null) Syntax.go(() -> {
+		if (job != null) start(job);
+	}
+
+	public function start(job: () -> Void): Void {
+		Syntax.go(() -> {
 			@:privateAccess Syntax.defer(Tls.cleanup.bind(ThreadImpl.getGoroutineId()));
 			job();
 		});
@@ -61,6 +65,14 @@ abstract ThreadImpl(NativeThread) {
 
 	public static inline function create(job: Void->Void): ThreadImpl {
 		return cast new NativeThread(job);
+	}
+
+	private static inline function alloc(): ThreadImpl {
+		return cast new NativeThread(null);
+	}
+
+	private static inline function start(t: ThreadImpl, job: Void->Void): Void {
+		(cast t : NativeThread).start(job);
 	}
 
 	public static function setName(t: ThreadImpl, name: String) {

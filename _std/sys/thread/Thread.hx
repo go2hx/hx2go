@@ -210,9 +210,11 @@ class Thread {
             t.callbacks.onAbort(t.onAbort);
         }
         ThreadCallbackManager.invokeCallbacks(t.callbacks.onCreateCallback, globalCallbacks?.onCreateCallback);
-        t.impl = ThreadImpl.create(function() {
-            t.impl = ThreadImpl.current();
-            if( name != null ) t.name = name;
+
+        t.impl = @:privateAccess ThreadImpl.alloc();
+        if( name != null ) t.name = name;
+
+        @:privateAccess ThreadImpl.start(t.impl, function() {
             currentTLS.value = t;
             var exception = null;
             try {

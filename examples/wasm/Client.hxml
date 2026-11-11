@@ -1,0 +1,4 @@
+-L hx2go
+--main Client
+--custom-target go=output/client
+--cmd haxe --run BuildClient

@@ -350,6 +350,16 @@ class Init {
 			doc: "Go struct tag on VTable field",
 			platforms: [CustomTarget("go")],
 		});
+		Compiler.registerCustomMetadata({
+			metadata: "go.WasmImport",
+			doc: "Import a static extern function from the wasm host: @:go.WasmImport(\"module\", \"name\")",
+			platforms: [CustomTarget("go")],
+		});
+		Compiler.registerCustomMetadata({
+			metadata: "go.WasmExport",
+			doc: "Export a static function to the wasm host: @:go.WasmExport(\"name\")",
+			platforms: [CustomTarget("go")],
+		});
 	}
 
 	private static function executable(path: String): String {

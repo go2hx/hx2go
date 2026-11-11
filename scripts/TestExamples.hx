@@ -7,9 +7,9 @@ function main() {
 			default:
 		}
 		// run
-		var command = 'haxe examples/$dir/build.hxml --macro include(\'go\')';
-		Sys.println(command);
-		var code = Sys.command(command);
+		var args = ["haxe", 'haxe examples/$dir/build.hxml', '--macro', 'include("go")'];
+		Sys.println(args.join(" "));
+		var code = Sys.command(args.shift(), args);
 		if (code != 0)
 			Sys.exit(code);
 	}

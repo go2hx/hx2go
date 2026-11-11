@@ -1,15 +1,15 @@
 function main() {
 	for (dir in sys.FileSystem.readDirectory("examples")) {
-		// skip
+		// skip for CI
 		switch dir {
 			case "miqt", "gtk", "http_fileserver", "ebiten":
 				continue;
 			default:
 		}
 		// run
-		var command = 'haxe examples/$dir/build.hxml';
-		Sys.println(command);
-		var code = Sys.command(command);
+		var args = ["haxe", 'examples/$dir/build.hxml', '--macro', 'include("go")'];
+		Sys.println(args.join(" "));
+		var code = Sys.command(args.shift(), args);
 		if (code != 0)
 			Sys.exit(code);
 	}

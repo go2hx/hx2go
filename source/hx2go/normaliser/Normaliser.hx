@@ -133,10 +133,10 @@ class Normaliser {
 
                 expr.expr = TBinop(
                     OpAssign,
-                    ExprCopy.copy(left),
+                    removeDynamicCastCall(ExprCopy.copy(left)),
                     new HxbTypedExpr(TBinop(
                         op,
-                        left,
+                        ExprHelper.createCast(left, right.t),
                         right
                     ), expr.t, null)
                 );
@@ -365,8 +365,11 @@ class Normaliser {
                 }
 
                 var inc = new HxbTypedExpr(TBinop(
+                    // op
                     OpAssignOp(op.match(OpIncrement) ? OpAdd : OpSub),
+                    // left
                     removeCast(ExprCopy.copy(e)),
+                    // right
                     new HxbTypedExpr(TConst(TInt(1)), e.t, e.pos)
                 ), null, null);
 
@@ -441,6 +444,20 @@ class Normaliser {
         return switch expr.expr {
             case TCast(e, m):
                 removeCast(e);
+            default:
+                expr;
+        }
+    }
+
+    public function removeDynamicCastCall(expr:HxbTypedExpr):HxbTypedExpr {
+        return switch expr.expr {
+            case TCall({expr: TField(_, FStatic(_, cf)), pos: _}, [param]) if (param.t.match(TDynamic(_) | TDynamicAny)):
+                var sub = "go.haxe.HxDynamic#to";
+                if (cf.toString().substr(0, sub.length) == sub) {
+                    removeDynamicCastCall(param);
+                }else{
+                    expr;
+                }
             default:
                 expr;
         }

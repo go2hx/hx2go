@@ -225,7 +225,7 @@ class Bytes {
         }
 
         // again, go is UTF8, so both RawNative and UTF8 do the same
-        return Syntax.code("string({0})", Slice.fromArray(b).slice(pos, pos + len));
+        return Slice.fromArray(b).slice(pos, pos + len);
     }
 
     @:deprecated("readString is deprecated, use getString instead")

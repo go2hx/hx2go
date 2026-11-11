@@ -95,6 +95,11 @@ class TypeNormaliserBinop extends CompilerPass {
             expr.t = Semantics.getNullableType(context, expr.t);
         }
 
+        var nullableResult = !op.match(OpAssign | OpAssignOp(_)) && Semantics.isNullableType(context, expr.t) ? expr.t : null;
+        if (nullableResult != null) {
+            expr.t = Semantics.getNullableType(context, expr.t);
+        }
+
         var castLeft = !TypeHelper.compare(left.t, expr.t) && switch op {
             case OpAssign: false;
             case OpAssignOp(_): Semantics.isNullableType(context, left.t);
@@ -123,6 +128,13 @@ class TypeNormaliserBinop extends CompilerPass {
             var inner = new HxbTypedExpr(expr.expr, expr.t, expr.pos);
             expr.expr = TCast(inner, null);
             expr.t = TFloat;
+            context.submitNode(expr, true, 1);
+        }
+
+        if (nullableResult != null) {
+            var inner = new HxbTypedExpr(expr.expr, expr.t, expr.pos);
+            expr.expr = TCast(inner, null);
+            expr.t = nullableResult;
             context.submitNode(expr, true, 1);
         }
     }

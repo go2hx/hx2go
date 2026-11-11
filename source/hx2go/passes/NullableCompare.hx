@@ -7,8 +7,28 @@ import hx2go.util.ExprHelper;
 import hx2go.normaliser.Semantics;
 import hxb.Ast.HxbBinop;
 import hxb.HxbType;
+import hxb.Typed.HxbVar;
+import hxb.Typed.HxbVarKind;
 
 class NullableCompare extends CompilerPass {
+
+    private static var cmpId: Int = 0;
+
+    function hoist(e: HxbTypedExpr, pre: Array<HxbTypedExpr>): Void {
+        if (!Semantics.hasSideEffects(e)) {
+            return;
+        }
+
+        var tmp = new HxbVar(-1, 'hx_cmp_${cmpId++}', VUser(TVOLocalVariable), 0, [], e.pos, e.t);
+        pre.push(new HxbTypedExpr(TVar(tmp, hx2go.normaliser.ExprCopy.copy(e)), TVoid, e.pos));
+        e.expr = TLocal(tmp);
+    }
+
+    function withPre(expr: HxbTypedExpr, pre: Array<HxbTypedExpr>): Void {
+        if (pre.length > 0) {
+            expr.expr = TBlock(pre.concat([new HxbTypedExpr(expr.expr, TBool, expr.pos)]));
+        }
+    }
 
     public function match(expr: HxbTypedExpr): Bool {
         return switch expr.expr {
@@ -19,16 +39,24 @@ class NullableCompare extends CompilerPass {
         }
     }
 
+    function nullableCastInner(e: HxbTypedExpr): Null<HxbTypedExpr> {
+        return switch e.expr {
+            case TCast(inner, _) | TParenthesis(inner): Semantics.isNullableExpr(context, inner) ? inner : nullableCastInner(inner);
+            case _: null;
+        }
+    }
+
     public function executeSide(right: HxbTypedExpr, left: HxbTypedExpr): Void {
         var boxed = Semantics.isNullableExpr(context, left);
 
         switch right.expr {
             case TConst(TNull):
-                var local_cmp = hx2go.normaliser.ExprCopy.copy(left);
-                left.expr = if (boxed) {
+                var inner = boxed ? null : nullableCastInner(left);
+                var local_cmp = hx2go.normaliser.ExprCopy.copy(inner ?? left);
+                left.expr = if (boxed || inner != null) {
                     ExprHelper.createUntyped("({0}).Valid", [local_cmp]).expr;
                 } else switch left.t {
-                    case TInt: {
+                    case t if (Semantics.isIntegerType(context, t) || Semantics.isFloatType(context, t) || Semantics.isBoolType(context, t)): {
                         local_cmp = ExprHelper.createCast(local_cmp, TAbstract({ pack: [], name: 'Null', moduleName: 'Null' }, [ left.t ]));
                         ExprHelper.createUntyped("({0}).Valid", [local_cmp]).expr;
                     }
@@ -63,6 +91,20 @@ class NullableCompare extends CompilerPass {
         }
     }
     
+    static function isDynamic(t: HxbType): Bool {
+        return t != null && t.match(TDynamic(_) | TDynamicAny);
+    }
+
+    function valueOf(e: HxbTypedExpr, boxed: Bool): HxbTypedExpr {
+        if (!boxed) {
+            return hx2go.normaliser.ExprCopy.copy(e);
+        }
+
+        var value = ExprHelper.createUntyped("({0}).Value", [hx2go.normaliser.ExprCopy.copy(e)]);
+        value.t = Semantics.getNullableType(context, e.t) ?? TDynamicAny;
+        return value;
+    }
+
     // <, <=, >, >= against null are false, unless both sides are null and the op allows equality
     function executeRelational(expr: HxbTypedExpr, op: HxbBinop, left: HxbTypedExpr, right: HxbTypedExpr): Void {
         var eq = op.match(OpGte | OpLte);
@@ -78,16 +120,29 @@ class NullableCompare extends CompilerPass {
             var leftBoxed = Semantics.isNullableExpr(context, left);
             var rightBoxed = Semantics.isNullableExpr(context, right);
 
+            var pre = [];
+            hoist(left, pre);
+            hoist(right, pre);
+
             var leftValid = leftBoxed ? "({0}).Valid" : "true";
             var rightValid = rightBoxed ? "({1}).Valid" : "true";
-            var leftValue = leftBoxed ? "({0}).Value" : "{0}";
-            var rightValue = rightBoxed ? "({1}).Value" : "{1}";
+            var args = [hx2go.normaliser.ExprCopy.copy(left), hx2go.normaliser.ExprCopy.copy(right)];
+
+            var comparison = if (isDynamic(left.t) || isDynamic(right.t)) {
+                args.push(new HxbTypedExpr(TBinop(op, valueOf(left, leftBoxed), valueOf(right, rightBoxed)), TBool, expr.pos));
+                "{2}";
+            } else {
+                var leftValue = leftBoxed ? "({0}).Value" : "{0}";
+                var rightValue = rightBoxed ? "({1}).Value" : "{1}";
+                '($leftValue $opStr $rightValue)';
+            }
 
             expr.expr = raw(
-                '($leftValid && $rightValid && ($leftValue $opStr $rightValue)'
+                '($leftValid && $rightValid && $comparison'
                     + (eq ? ' || (!$leftValid && !$rightValid)' : '') + ')',
-                [hx2go.normaliser.ExprCopy.copy(left), hx2go.normaliser.ExprCopy.copy(right)]
+                args
             );
+            withPre(expr, pre);
         }
 
         expr.t = TBool;
@@ -118,6 +173,9 @@ class NullableCompare extends CompilerPass {
         if (!left.expr.match(TConst(_)) && !right.expr.match(TConst(_))
             && Semantics.isNullableExpr(context, left) && Semantics.isNullableExpr(context, right)) {
             var eq = op == OpEq;
+            var pre = [];
+            hoist(left, pre);
+            hoist(right, pre);
             var valid = e -> {
                 var v = ExprHelper.createUntyped("({0}).Valid", [hx2go.normaliser.ExprCopy.copy(e)]);
                 v.t = TBool;
@@ -135,6 +193,37 @@ class NullableCompare extends CompilerPass {
                 )
             ));
             expr.t = TBool;
+            withPre(expr, pre);
+
+            context.submitNode(expr, true, 1);
+            return;
+        }
+
+        var leftBoxed = Semantics.isNullableExpr(context, left);
+        var rightBoxed = Semantics.isNullableExpr(context, right);
+        if (leftBoxed != rightBoxed && !TypeHelper.isNullConst(left) && !TypeHelper.isNullConst(right)) {
+            var eq = op == OpEq;
+            var pre = [];
+            hoist(leftBoxed ? left : right, pre);
+            var valid = ExprHelper.createUntyped("({0}).Valid", [hx2go.normaliser.ExprCopy.copy(leftBoxed ? left : right)]);
+            valid.t = TBool;
+
+            var inner = hx2go.normaliser.ExprCopy.copy(expr);
+            switch inner.expr {
+                case TBinop(_, l, r):
+                    executeSide(l, r);
+                    executeSide(r, l);
+                case _:
+            }
+
+            var bin = (o: HxbBinop, l, r) -> new HxbTypedExpr(TBinop(o, l, r), TBool, expr.pos);
+            expr.expr = TParenthesis(bin(
+                eq ? OpBoolAnd : OpBoolOr,
+                bin(OpEq, valid, new HxbTypedExpr(TConst(TBool(eq)), TBool, expr.pos)),
+                inner
+            ));
+            expr.t = TBool;
+            withPre(expr, pre);
 
             context.submitNode(expr, true, 1);
             return;

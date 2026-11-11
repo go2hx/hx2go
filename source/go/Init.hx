@@ -202,8 +202,14 @@ class Init {
 				FileSystem.createDirectory(sourceOutput);
 			}
 
+			var goPackage = Context.definedValue("go-package") ?? "main";
+			if (goPackage == "1" || goPackage == "") {
+				fail("-D go-package needs a package name, e.g. -D go-package=mypackage");
+			}
+			var noEntry = Context.defined("go-no-entry");
+
 			if (!FileSystem.exists(goModOutput)) {
-				var ps = new Process("go", ["-C", sourceOutput, "mod", "init", "main"]);
+				var ps = new Process("go", ["-C", sourceOutput, "mod", "init", goPackage]);
 				ps.exitCode(true);
 				ps.close();
 				// set version
@@ -251,13 +257,13 @@ class Init {
 							fail('bootstrap failed, $bin might be stale');
 						Sys.setCwd(root);
 					}
-					var args = [archiveOutput, sourceOutput, mainClassName, singleFile ? "1" : "0", sourcelineComments ? "1" : "0", res, times ? "1" : "0", codegenVersion, disableIncrementalCache ? "1" : "0", sourcemaps ? "1" : "0"];
+					var args = [archiveOutput, sourceOutput, mainClassName, singleFile ? "1" : "0", sourcelineComments ? "1" : "0", res, times ? "1" : "0", codegenVersion, disableIncrementalCache ? "1" : "0", sourcemaps ? "1" : "0", goPackage, noEntry ? "1" : "0"];
 					var code = Sys.command(bin, args);
 					if (code != 0)
 						fail("compiler failed");
 				} else {
 					final bin = Path.join(["Compile-eval.hxml"]);
-					var args = [bin, archiveOutput, sourceOutput, mainClassName, singleFile ? "1" : "0", sourcelineComments ? "1" : "0", res, times ? "1" : "0", codegenVersion, disableIncrementalCache ? "1" : "0", sourcemaps ? "1" : "0"];
+					var args = [bin, archiveOutput, sourceOutput, mainClassName, singleFile ? "1" : "0", sourcelineComments ? "1" : "0", res, times ? "1" : "0", codegenVersion, disableIncrementalCache ? "1" : "0", sourcemaps ? "1" : "0", goPackage, noEntry ? "1" : "0"];
 					var oldCwd = Sys.getCwd();
 					Sys.setCwd(path);
 					var code = Sys.command("haxe", args);
@@ -307,6 +313,16 @@ class Init {
 		Compiler.registerCustomDefine({
 			define: "go-no-cache",
 			doc: "disables the incremental cache",
+			platforms: [CustomTarget("go")],
+		});
+		Compiler.registerCustomDefine({
+			define: "go-package=",
+			doc: "name of the generated Go package (and go.mod module), instead of main",
+			platforms: [CustomTarget("go")],
+		});
+		Compiler.registerCustomDefine({
+			define: "go-no-entry",
+			doc: "do not emit func main(); the package boots itself with func init()",
 			platforms: [CustomTarget("go")],
 		});
 		// register custom metadata

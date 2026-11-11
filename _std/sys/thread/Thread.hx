@@ -94,6 +94,7 @@ class Thread {
         this.impl = impl;
         if( impl != null ) this.name = ThreadImpl.getName(impl);
         callbacks = new ThreadCallbackManager();
+        messages = new Deque();
     }
 
     function set_name(n) {
@@ -107,11 +108,6 @@ class Thread {
     }
 
     public function sendMessage( msg : Dynamic ) {
-        if( messages == null ) {
-            mutex.acquire();
-            if( messages == null ) messages = new Deque();
-            mutex.release();
-        }
         messages.add(msg);
     }
 
@@ -130,11 +126,6 @@ class Thread {
 
     public static function readMessage( blocking : Bool ) : Null<Dynamic> {
         var t = current();
-        if( t.messages == null ) {
-            mutex.acquire();
-            if( t.messages == null ) t.messages = new Deque();
-            mutex.release();
-        }
         return t.messages.pop(blocking);
     }
 

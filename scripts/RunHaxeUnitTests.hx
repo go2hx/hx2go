@@ -51,7 +51,7 @@ function runTestSuite(args:Array<String>, run:Bool=true) {
     var code = Sys.command('haxe', args);
     if (run) {
         if (code == 0) {
-            code = Sys.command("go run -C ./bin/go/main -gcflags=all=-e .");
+            code = Sys.command("go run -C ./bin/go/main -gcflags=all=-e -race .");
         }
         Sys.exit(code);
     }else if (code != 0) {

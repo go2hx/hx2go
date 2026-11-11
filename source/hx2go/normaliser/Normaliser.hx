@@ -136,7 +136,7 @@ class Normaliser {
                     removeDynamicCastCall(ExprCopy.copy(left)),
                     new HxbTypedExpr(TBinop(
                         op,
-                        {expr: TCast(left, null), pos: left.pos, t: right.t},
+                        ExprHelper.createCast(left, right.t),
                         right
                     ), expr.t, null)
                 );

@@ -1,4 +1,4 @@
 -L hx2go
 --main Client
 --custom-target go=output/client
---cmd GOOS=wasip1 GOARCH=wasm go -C ./output/client/main build -o ../../plugin.wasm .
+--cmd haxe --run BuildClient

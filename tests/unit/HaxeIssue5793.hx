@@ -1,4 +1,5 @@
 package unit;
+
 function main() {
 	function foo<T>(expected:Array<T>, a:T) {
 		assert(expected[0] == a);
@@ -28,7 +29,7 @@ function main() {
 	cov([3 => 3], 3);
 }
 
-class Foo<T> {
+private class Foo<T> {
 	public var value:T;
 	public function new(value) {
 		this.value = value;

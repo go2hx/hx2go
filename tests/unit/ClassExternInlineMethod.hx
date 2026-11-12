@@ -5,7 +5,7 @@ function main() {
 }
 
 
-class Foo {
+private class Foo {
    public function new() {}
    extern inline function bar() {
 		return 0;

@@ -1,0 +1,6 @@
+-cp examples/ollama
+-m Main
+-L hx2go
+-D go-lib=github.com/ollama/ollama/api
+--custom-target go=output/examples/ollama
+--cmd go -C output/examples/ollama/main run .

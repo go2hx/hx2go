@@ -18,6 +18,10 @@
       <sourceFolder url="file://$MODULE_DIR$/haxe/tests/unit/bin" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/output/testbed/libs" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/hxb-parser" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/output/examples/bluetooth/libs" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/output/examples/goja/libs" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/output/examples/ollama/libs" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/output/examples/ssh_client/libs" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/haxe" />
       <excludeFolder url="file://$MODULE_DIR$/hx2go-extern/output" />
     </content>

@@ -1,0 +1,6 @@
+-cp examples/bluetooth
+-m Main
+-L hx2go
+-D go-lib=tinygo.org/x/bluetooth
+--custom-target go=output/examples/bluetooth
+--cmd go -C output/examples/bluetooth/main run .

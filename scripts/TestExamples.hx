@@ -2,7 +2,7 @@ function main() {
 	for (dir in sys.FileSystem.readDirectory("examples")) {
 		// skip for CI
 		switch dir {
-			case "miqt", "gtk", "http_fileserver", "ebiten", "ssh_client":
+			case "miqt", "gtk", "http_fileserver", "ebiten", "ssh_client", "bluetooth":
 				continue;
 			default:
 		}

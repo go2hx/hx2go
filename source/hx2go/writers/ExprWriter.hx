@@ -165,6 +165,13 @@ class ExprWriter extends WriterImpl {
             return buf;
         }
 
+        if (e.expr.match(TConst(TNull))) {
+            buf.addInline('((');
+            buf.addBufferInline(writer.types.writeHxbType(e.t));
+            buf.addInline(')(nil)).Hx_Field_enumIndex()');
+            return buf;
+        }
+
         buf.addBufferInline(writeExpr(e));
         buf.addInline('.Hx_Field_enumIndex()');
 

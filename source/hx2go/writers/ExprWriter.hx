@@ -622,6 +622,12 @@ class ExprWriter extends WriterImpl {
                     && !isRawGoCodeInjection(e)) {
                     // needs type assertion: any.(T)
                     buf.addInline(fromAny(expr.t, writeExpr(e).toString()));
+                } else if (e.expr.match(TConst(TNull))) {
+                    // @:fromNull = allows implicit use of null
+                    // "static targets will convert it to the default value"
+                    buf.addInline('HxDefault[');
+                    buf.addBufferInline(writer.types.writeHxbType(expr.t));
+                    buf.addInline(']()');
                 } else {
                     buf.addInline('(');
                     buf.addInline('(');

@@ -1,0 +1,11 @@
+-cp examples/ssh_client
+-m Main
+-L hx2go
+-D go-lib=fyne.io/fyne/v2
+-D go-lib=fyne.io/fyne/v2/app
+-D go-lib=fyne.io/fyne/v2/widget
+-D go-lib=fyne.io/fyne/v2/container
+-D go-lib=golang.org/x/crypto/ssh
+-D go-lib=github.com/fyne-io/terminal
+--custom-target go=output/examples/ssh_client
+--cmd go -C output/examples/ssh_client/main run .

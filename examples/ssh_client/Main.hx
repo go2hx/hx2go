@@ -51,11 +51,6 @@ class FixEscapes {
 }
 
 function main() {
-    if (Sys.getEnv("CI") != null) {
-        trace('SSH Demo for CI is compile-only');
-        return;
-    }
-
     var window = App._new().newWindow('hx2go ssh');
 
     var host = Widget.newEntry();

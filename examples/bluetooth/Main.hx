@@ -22,7 +22,7 @@ function main() {
         seen[address] = true;
 
         var name: String = device.localName();
-        trace('${device.RSSI} strength at $address  ${name == "" ? "(no name)" : name}');
+        trace('${device.RSSI} strength at $address ${name == "" ? "(no name)" : name}');
     });
 
     trace('found ${Lambda.count(seen)} devices');

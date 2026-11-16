@@ -1,9 +1,7 @@
 package unit;
 function main() {
 	final emptyOnData:(String)->Void = null;
-	var onData = (s:String) -> {
-		assert(s);
-	}
+	var onData = (s:String) -> {}
 	assert(Reflect.compareMethods(emptyOnData, onData) == false);
 }
 

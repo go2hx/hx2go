@@ -43,8 +43,8 @@ class CastNullableFrom extends CompilerPass {
 
                 o.t = type;
 
-                var toString = Semantics.isStringType(context, expr.t) && !Semantics.isStringType(context, type);
-                if (expr.t.match(TDynamic(_) | TDynamicAny) || toString) {
+                var isString = Semantics.isStringType(context, expr.t) && !Semantics.isStringType(context, type);
+                if (expr.t.match(TDynamic(_) | TDynamicAny) || isString) {
                     var tmp = new HxbVar(
                         -1,
                         'hx_nullable_f${nullableId++}',
@@ -63,7 +63,7 @@ class CastNullableFrom extends CompilerPass {
 
                     var value = ExprHelper.createUntyped('({0}).Value', [tmp_local]);
                     var fallback = new HxbTypedExpr(TConst(TNull), expr.t, expr.pos);
-                    if (toString) {
+                    if (isString) {
                         value.t = type;
                         value = ExprHelper.createCast(value, expr.t);
                         context.submitNode(value, true);

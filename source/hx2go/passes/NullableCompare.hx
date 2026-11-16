@@ -181,14 +181,14 @@ class NullableCompare extends CompilerPass {
                 v.t = TBool;
                 v;
             };
-            var bin = (o: HxbBinop, l, r) -> new HxbTypedExpr(TBinop(o, l, r), TBool, expr.pos);
 
-            expr.expr = TParenthesis(bin(
+            var binop = (o: HxbBinop, l: HxbTypedExpr, r: HxbTypedExpr) -> new HxbTypedExpr(TBinop(o, l, r), TBool, expr.pos);
+            expr.expr = TParenthesis(binop(
                 eq ? OpBoolAnd : OpBoolOr,
-                bin(op, valid(left), valid(right)),
-                bin(
+                binop(op, valid(left), valid(right)),
+                binop(
                     eq ? OpBoolOr : OpBoolAnd,
-                    bin(OpEq, valid(left), new HxbTypedExpr(TConst(TBool(!eq)), TBool, expr.pos)),
+                    binop(OpEq, valid(left), new HxbTypedExpr(TConst(TBool(!eq)), TBool, expr.pos)),
                     hx2go.normaliser.ExprCopy.copy(expr)
                 )
             ));
@@ -216,10 +216,10 @@ class NullableCompare extends CompilerPass {
                 case _:
             }
 
-            var bin = (o: HxbBinop, l, r) -> new HxbTypedExpr(TBinop(o, l, r), TBool, expr.pos);
-            expr.expr = TParenthesis(bin(
+            var binop = (o: HxbBinop, l: HxbTypedExpr, r: HxbTypedExpr) -> new HxbTypedExpr(TBinop(o, l, r), TBool, expr.pos);
+            expr.expr = TParenthesis(binop(
                 eq ? OpBoolAnd : OpBoolOr,
-                bin(OpEq, valid, new HxbTypedExpr(TConst(TBool(eq)), TBool, expr.pos)),
+                binop(OpEq, valid, new HxbTypedExpr(TConst(TBool(eq)), TBool, expr.pos)),
                 inner
             ));
             expr.t = TBool;

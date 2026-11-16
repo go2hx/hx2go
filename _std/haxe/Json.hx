@@ -45,7 +45,25 @@ class Json {
     }
 
     static function kindOf(raw:Dynamic):JsonValueKind {
-        return Syntax.code("func() int32 { switch {0}.(type) { case map[string]any: return 1; case []any: return 2; case json.Number: return 3 }; return 0 }()", raw);
+        var ret = null;
+
+        Syntax.typeSwitch(
+            raw,
+            TypeSwitch.typeCase((_: go.Map<String, Dynamic>) -> {
+                ret = JsonValueKind.Object;
+            }),
+            TypeSwitch.typeCase((_: go.Slice<Dynamic>) -> {
+                ret = JsonValueKind.Array;
+            }),
+            TypeSwitch.typeCase((_: JsonNumber) -> {
+                ret = JsonValueKind.Number;
+            }),
+            TypeSwitch.defaultCase(_ -> {
+                ret = JsonValueKind.Other;
+            })
+        );
+
+        return ret;
     }
 
     static function convert(raw:Dynamic):Dynamic {

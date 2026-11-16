@@ -207,7 +207,11 @@ class Type {
 
 	public static function enumEq<T:EnumValue>(a:T, b:T):Bool {
 		final fast:Int = go.Syntax.code("HxEnumEqFast({0}, {1})", a, b);
-		return fast >= 0 ? fast == 1 : HxDynamic.equals(a, b);
+		if (fast == -1) {
+			return HxDynamic.equals(a, b);
+		}
+
+		return fast == 1;
 	}
 
 	public static function enumConstructor(e:EnumValue):String {

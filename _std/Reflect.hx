@@ -101,7 +101,7 @@ class Reflect {
         if (f1 == null || f2 == null) {
             return false;
         }
-        return f1 == f2;
+        return go.Reflect.deepEqual(f1, f2);
     }
 
     public static function isObject(v: Dynamic): Bool {

@@ -74,7 +74,7 @@ jobs:
         
       - name: Install utest
         run: haxelib git utest https://github.com/PXshadow/utest go-target
-        
+
       - name: Run bootstrap
         run: haxe Bootstrap.hxml
 
@@ -96,7 +96,9 @@ jobs:
       - name: Extern tests
         run: cd hx2go-extern && haxe Testbed.hxml
       - name: Install libraries for examples
-        run: haxelib git wisdom https://github.com/jeremyfa/wisdom
+        run: |
+          haxelib git wisdom https://github.com/jeremyfa/wisdom
+          haxelib git hscript https://github.com/HaxeFoundation/hscript
       - name: Test examples
         run: haxe scripts/test_examples.hxml
       

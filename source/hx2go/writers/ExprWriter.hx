@@ -680,22 +680,21 @@ class ExprWriter extends WriterImpl {
         var buf = new OutputBuffer();
         buf.add('func() {');
 
-        // defers runs LIFO
+        buf.add('defer func() {', 1);
+        buf.add('if _hx_ex := Hx_Field_haxe__exception_exception_fields__checkException(recover()); _hx_ex != nil {', 2, true);
         for (i in 0...catches.length) {
-            var c = catches[catches.length - 1 - i];
-            buf.add('defer func() {', 1);
+            var c = catches[i];
             var catchName = Context.sanitiseString(c.v.name);
-            buf.add('if _hx_ex := Hx_Field_haxe__exception_exception_fields__checkException(recover()); _hx_ex != nil {', 2, true);
-
             var goType = c.v.type == null ? "any" : writer.types.writeHxbType(c.v.type).toString();
-            buf.add('if $catchName, _hx_ok := Hx_Field_haxe_exception_catchValue(_hx_ex, "$goType").($goType); _hx_ok {', 2, true);
+            var prefix = i == 0 ? '' : '} else ';
+            buf.add('${prefix}if $catchName, _hx_ok := Hx_Field_haxe_exception_catchValue(_hx_ex, "$goType").($goType); _hx_ok {', 2, true);
             buf.add('_ = $catchName');
             buf.addBuffer(writeExpr(c.expr), 2);
-            buf.add('} else { panic(_hx_ex) }', 1, true); // not ours, let an outer catch have it
-            buf.add('}', 1, true);
-            buf.add('}()', 1, false);
-            buf.add('');
         }
+        buf.add('} else { panic(_hx_ex) }', 1, true); // not ours, let an outer catch have it
+        buf.add('}', 1, true);
+        buf.add('}()', 1, false);
+        buf.add('');
         
         buf.addBuffer(writeExpr(e), 1);
         buf.addInline('}()');

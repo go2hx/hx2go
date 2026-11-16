@@ -54,6 +54,10 @@ class FieldAccessArrayOrString extends CompilerPass {
                     case _: return;
                 }
 
+                if (tp.pack.length != 0 || (tp.name != 'Array' && tp.name != 'String')) {
+                    return;
+                }
+
                 if (cls.flags & HxbClassFlag.CExtern == 0) {
                     return;
                 }

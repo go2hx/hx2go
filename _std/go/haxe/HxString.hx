@@ -13,6 +13,10 @@ class HxString {
         return Strings.toLower(s);
     }
 
+    public static inline function concat(a:String, b:String):String {
+        return go.Syntax.code("HxStringConcat({0},{1})", a, b);
+    }
+
     public static function charAt(s: String, index:Int): String {
         var v = charCodeAt(s, index);
         if (v == null) {

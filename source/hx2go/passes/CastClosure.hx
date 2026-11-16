@@ -52,8 +52,8 @@ class CastClosure extends CompilerPass {
                 for (i in 0...params.length) {
                     var new_p = params[i];
                     var old_p = e_params[i];
-                    
-                    new_p.name = (new_p.name == null || new_p.name == "") ? '_hx_carg$i' : new_p.name;
+
+                    new_p.name = (new_p.name == null || new_p.name == "") ? '_hx_carg$i' : Context.sanitiseString(new_p.name);
 
                     var v: HxbVar = new HxbVar(
                         -1,
@@ -143,7 +143,8 @@ class CastClosure extends CompilerPass {
 
                 for (i in 0...params.length) {
                     var p = params[i];
-                    var pname = (p.name == null || p.name == "") ? '_hx_carg$i' : p.name;
+                    var pname = (p.name == null || p.name == "") ? '_hx_carg$i' : Context.sanitiseString(p.name);
+                    p.name = pname;
 
                     var v = new HxbVar(-1, pname, VUser(TVOArgument), 0, [], null, p.t);
                     new_params.push(v);

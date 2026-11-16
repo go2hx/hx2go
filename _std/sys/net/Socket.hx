@@ -38,12 +38,12 @@ class Socket {
     }
 
     private function addr(): String {
-        var h = _host == null ? "" : _host.host;
+        var h = _host == null ? "" : "" + _host.ip;
         return h + ":" + _port;
     }
 
     static inline function zeroTime(): go.time.Time {
-        return Syntax.code("time.Time{}");
+        return {};
     }
 
     public function close(): Void {

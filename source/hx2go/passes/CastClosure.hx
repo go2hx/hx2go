@@ -52,7 +52,8 @@ class CastClosure extends CompilerPass {
                 for (i in 0...params.length) {
                     var new_p = params[i];
                     var old_p = e_params[i];
-                    new_p.name = (old_p.name == null || old_p.name == "") ? '_hx_carg$i' : old_p.name;
+                    
+                    new_p.name = (new_p.name == null || new_p.name == "") ? '_hx_carg$i' : new_p.name;
 
                     var v: HxbVar = new HxbVar(
                         -1,

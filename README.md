@@ -40,7 +40,8 @@ Add the target flags to your `.hxml`:
 
 ```hxml
 -L hx2go
---xml output/target.xml # needed if using haxe.rtti
+# optional: --xml is needed if using haxe.rtti
+--xml output/target.xml
 --custom-target go=output
 --cmd go -C output/main run . # builds and runs the outputted Go code
 ```

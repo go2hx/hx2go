@@ -1,6 +1,8 @@
 package hx2go.passes;
 
 import hxb.Typed.HxbTypedExpr;
+import hxb.Typed.HxbTypedExprDef;
+import hxb.HxbType;
 import hx2go.util.TypeHelper;
 import hx2go.util.ExprHelper;
 import hx2go.passes.FieldAccessExtern.ExternKind;
@@ -16,47 +18,63 @@ class TypeNormaliserCallReturn extends CompilerPass {
 
     public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
         switch expr.expr {
-            case TCall({ t: TFun(params, ret), expr: f }, args): {
-                var ext = FieldAccessExtern.getExternInfo(context, new HxbTypedExpr(f, TFun(params, ret), expr.pos));
-                var wanted = expr.t;
-                if (!TypeHelper.compare(expr.t, ret)) {
-                    if (ext.field?.type != null) {
-                        var v = switch ext.field.type {
-                            case TFun(_, x): x;
-                            case _: ext.field.type;
-                        }
+            case TCall({ t: ct, expr: f }, _):
+                switch TypeHelper.follow(context, ct) {
+                    case TFun(params, ret): normCall(expr, f, params, ret);
+                    case _:
+                }
 
-                        if (TypeHelper.compare(ret, v)) {
-                            if (isNonExternField(ext) && TypeHelper.goEraseType(v).match(TDynamicAny | TDynamic(_))) {
-                                var castExpr = TypeHelper.reconcile(wanted, expr, v);
-                                if (castExpr != null) {
-                                    expr.expr = castExpr.expr;
-                                    context.submitNode(expr, true, 1);
-                                    return;
-                                }
-                            }
+            default:
+        }
+    }
 
-                            // the return type reported is wrong
-                            expr.t = ret;
+    function normCall(expr: HxbTypedExpr, f: HxbTypedExprDef, params: Array<HxbFunArg>, ret: HxbType): Void {
+        var ext = FieldAccessExtern.getExternInfo(context, new HxbTypedExpr(f, TFun(params, ret), expr.pos));
+        var wanted = expr.t;
+        if (!TypeHelper.compare(expr.t, ret)) {
+            if (ext.field?.type != null) {
+                var v = switch ext.field.type {
+                    case TFun(_, x): x;
+                    case _: ext.field.type;
+                }
+
+                if (TypeHelper.compare(ret, v)) {
+                    if (isNonExternField(ext) && TypeHelper.goEraseType(v).match(TDynamicAny | TDynamic(_))) {
+                        var castExpr = TypeHelper.reconcile(wanted, expr, v);
+                        if (castExpr != null) {
+                            expr.expr = castExpr.expr;
+                            context.submitNode(expr, true, 1);
                             return;
                         }
                     }
 
-                    var o = ExprHelper.createCast(expr, ret);
-                    expr.expr = o.expr;
-                    expr.t = o.t;
-                    context.submitNode(expr, true, 1);
+                    // the return type reported is wrong
+                    expr.t = ret;
                     return;
                 }
+            }
 
-                var castExpr = TypeHelper.reconcile(expr.t, expr, declaredReturn(f, ext));
+            if (TypeHelper.goEraseType(ret).match(TDynamicAny | TDynamic(_))
+                && !TypeHelper.goEraseType(wanted).match(TDynamicAny | TDynamic(_))) {
+                var castExpr = TypeHelper.reconcile(wanted, expr, ret);
                 if (castExpr != null) {
                     expr.expr = castExpr.expr;
                     context.submitNode(expr, true, 1);
+                    return;
                 }
-            };
+            }
 
-            case _: null;
+            var o = ExprHelper.createCast(expr, ret);
+            expr.expr = o.expr;
+            expr.t = o.t;
+            context.submitNode(expr, true, 1);
+            return;
+        }
+
+        var castExpr = TypeHelper.reconcile(expr.t, expr, declaredReturn(f, ext));
+        if (castExpr != null) {
+            expr.expr = castExpr.expr;
+            context.submitNode(expr, true, 1);
         }
     }
 

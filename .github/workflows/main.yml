@@ -17,7 +17,7 @@ permissions:
 jobs:
   test:
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 10
+    timeout-minutes: 15
     env:
       # Workaround for Go runtime GC bug (golang/go#80188) causing intermittent
       # "s.allocCount != s.nelems" crashes. Remove once Go 1.26.6+ is stable.

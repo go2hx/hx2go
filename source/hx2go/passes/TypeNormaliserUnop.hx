@@ -15,6 +15,7 @@ import hx2go.util.ObjectFieldHelper;
 import hxb.HxbType;
 import haxe.runtime.Copy;
 import hx2go.util.TypeHelper;
+import hx2go.normaliser.Semantics;
 
 class TypeNormaliserUnop extends CompilerPass {
 
@@ -27,16 +28,26 @@ class TypeNormaliserUnop extends CompilerPass {
 
     public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
         switch expr.expr {
-            case TUnop(_, _, e): {
-                if (!TypeHelper.compare(e.t, expr.t)) {
-                    var o = ExprHelper.createCast(e, expr.t);
-                    e.expr = o.expr;
-                    e.t = o.t;
-
-                    context.submitNode(e, true);
-                }
-
-            }
+			case TUnop(op, _, e):
+				if (!TypeHelper.compare(e.t, expr.t)) {
+					switch op {
+						case OpNeg, OpNot, OpNegBits:
+							var o = ExprHelper.createCast(e, expr.t);
+							e.expr = o.expr;
+							e.t = o.t;
+							context.submitNode(e, true);
+						case OpIncrement, OpDecrement:
+							// can't cast a normal Go value before an increment/decrement operation
+							// but do need to cast nullable types
+							if (Semantics.isNullableType(context, e.t)) {
+								var o = ExprHelper.createCast(e, expr.t);
+								e.expr = o.expr;
+								e.t = o.t;
+								context.submitNode(e, true);
+							}
+						case _:
+					}
+				}
             case _: null;
         }
     }

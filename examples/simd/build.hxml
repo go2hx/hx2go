@@ -1,0 +1,5 @@
+-cp examples/simd
+-m Main
+-L hx2go
+--custom-target go=output/examples/simd
+--cmd go -C output/examples/simd/main run .

@@ -1,0 +1,6 @@
+-cp examples/bubbletea
+-m Main
+-L hx2go
+-D go-lib=charm.land/bubbletea/v2
+--custom-target go=output/examples/bubbletea
+--cmd go -C output/examples/bubbletea/main run .

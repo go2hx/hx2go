@@ -1,0 +1,6 @@
+--next
+--cwd examples/wasm
+Client.hxml
+--next
+--cwd examples/wasm
+Host.hxml

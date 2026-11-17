@@ -165,6 +165,13 @@ class ExprWriter extends WriterImpl {
             return buf;
         }
 
+        if (e.expr.match(TConst(TNull))) {
+            buf.addInline('((');
+            buf.addBufferInline(writer.types.writeHxbType(e.t));
+            buf.addInline(')(nil)).Hx_Field_enumIndex()');
+            return buf;
+        }
+
         buf.addBufferInline(writeExpr(e));
         buf.addInline('.Hx_Field_enumIndex()');
 
@@ -622,6 +629,12 @@ class ExprWriter extends WriterImpl {
                     && !isRawGoCodeInjection(e)) {
                     // needs type assertion: any.(T)
                     buf.addInline(fromAny(expr.t, writeExpr(e).toString()));
+                } else if (e.expr.match(TConst(TNull))) {
+                    // @:fromNull = allows implicit use of null
+                    // "static targets will convert it to the default value"
+                    buf.addInline('HxDefault[');
+                    buf.addBufferInline(writer.types.writeHxbType(expr.t));
+                    buf.addInline(']()');
                 } else {
                     buf.addInline('(');
                     buf.addInline('(');
@@ -680,22 +693,21 @@ class ExprWriter extends WriterImpl {
         var buf = new OutputBuffer();
         buf.add('func() {');
 
-        // defers runs LIFO
+        buf.add('defer func() {', 1);
+        buf.add('if _hx_ex := Hx_Field_haxe__exception_exception_fields__checkException(recover()); _hx_ex != nil {', 2, true);
         for (i in 0...catches.length) {
-            var c = catches[catches.length - 1 - i];
-            buf.add('defer func() {', 1);
+            var c = catches[i];
             var catchName = Context.sanitiseString(c.v.name);
-            buf.add('if _hx_ex := Hx_Field_haxe__exception_exception_fields__checkException(recover()); _hx_ex != nil {', 2, true);
-
             var goType = c.v.type == null ? "any" : writer.types.writeHxbType(c.v.type).toString();
-            buf.add('if $catchName, _hx_ok := Hx_Field_haxe_exception_catchValue(_hx_ex, "$goType").($goType); _hx_ok {', 2, true);
+            var prefix = i == 0 ? '' : '} else ';
+            buf.add('${prefix}if $catchName, _hx_ok := Hx_Field_haxe_exception_catchValue(_hx_ex, "$goType").($goType); _hx_ok {', 2, true);
             buf.add('_ = $catchName');
             buf.addBuffer(writeExpr(c.expr), 2);
-            buf.add('} else { panic(_hx_ex) }', 1, true); // not ours, let an outer catch have it
-            buf.add('}', 1, true);
-            buf.add('}()', 1, false);
-            buf.add('');
         }
+        buf.add('} else { panic(_hx_ex) }', 1, true); // not ours, let an outer catch have it
+        buf.add('}', 1, true);
+        buf.add('}()', 1, false);
+        buf.add('');
         
         buf.addBuffer(writeExpr(e), 1);
         buf.addInline('}()');
@@ -920,7 +932,7 @@ class ExprWriter extends WriterImpl {
                 case _: "nil";
             }
             case TThis: "this";
-            case TSuper: "super";
+            case TSuper: "this";
             case TBool(v): Std.string(v);
             case TInt(v): Std.string(v);
             case TFloat(v): 'float64($v)';

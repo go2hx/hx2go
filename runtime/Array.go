@@ -357,7 +357,7 @@ func (this *HxArrayImpl[T]) Pop() HxNullable[T] {
 	length := int32(len(this.data))
 
 	if length == 0 {
-		return HxNullable[T]{}
+		return HxDefault[HxNullable[T]]()
 	}
 
 	item := this.data[length-1]
@@ -392,7 +392,7 @@ func (this *HxArrayImpl[T]) Shift() HxNullable[T] {
 	length := int32(len(this.data))
 
 	if length == 0 {
-		return HxNullable[T]{}
+		return HxDefault[HxNullable[T]]()
 	}
 
 	item := this.data[0]

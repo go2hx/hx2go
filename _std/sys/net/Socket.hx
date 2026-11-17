@@ -69,8 +69,9 @@ class Socket {
 
     public function listen(connections: Int): Void {
         serverMode = true;
-        var laddr = Net.resolveTCPAddr("tcp", addr()).sure();
-        ln = Net.listenTCP("tcp", laddr).sure();
+        var tmp = Net.listen("tcp", addr()).sure();
+        // TODO remove with type assertion later
+        ln = go.Syntax.code("{0}.(*net.TCPListener)", tmp);
         var s = ln.addr().string();
         var index = s.lastIndexOf(":") + 1;
         _port = Std.parseInt(s.substr(index));

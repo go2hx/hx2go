@@ -1,8 +1,11 @@
 function main() {
 	for (dir in sys.FileSystem.readDirectory("examples")) {
+		// env vars
+		Sys.putEnv("GOEXPERIMENT", "simd"); // note: may be emulated on some platforms (e.g. apple silicon)
+
 		// skip for CI
 		switch dir {
-			case "miqt", "gtk", "http_fileserver", "ebiten":
+			case "miqt", "gtk", "http_fileserver", "ebiten", "ssh_client", "bluetooth", "ollama", "tsnet":
 				continue;
 			default:
 		}

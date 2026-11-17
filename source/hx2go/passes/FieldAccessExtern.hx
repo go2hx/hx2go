@@ -163,7 +163,7 @@ class FieldAccessExtern extends CompilerPass {
                         ExprHelper.createUntyped((topLevel ? '' : '$typeName.') + fieldName, []).expr;
                     }
 
-                    case TField(e, FInstance(_) | FAnon(_)): ExprHelper.createUntyped((topLevel ? '' : '{0}.') + fieldName, [e]).expr;
+                    case TField(e, FInstance(_) | FClosureInstance(_) | FAnon(_)): ExprHelper.createUntyped((topLevel ? '' : '{0}.') + fieldName, [e]).expr;
                     case _: expr.expr;
                 }
             }

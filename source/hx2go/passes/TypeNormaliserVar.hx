@@ -24,6 +24,19 @@ class TypeNormaliserVar extends CompilerPass {
                     e.expr = ExprHelper.createUntyped('({0}).Value', [hx2go.normaliser.ExprCopy.copy(e)]).expr;
                     return;
                 }
+
+                var emitted = switch e.expr {
+                    case TLocal(lv) if (lv.type != null): lv.type;
+                    case _: e.t;
+                }
+                var castExpr = TypeHelper.reconcile(v.type, e, emitted);
+                if (castExpr != null) {
+                    e.expr = castExpr.expr;
+                    e.t = castExpr.t;
+                    context.submitNode(e, true);
+                    return;
+                }
+
                 if (TypeHelper.compare(v.type, e.t)) {
                     return;
                 }

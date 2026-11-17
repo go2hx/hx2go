@@ -37,10 +37,11 @@ class TypeNormaliserBinop extends CompilerPass {
         }
 
         switch [op, left.expr] {
-            case [OpAssign | OpAssignOp(_), TCast(inner, _)] if (inner.t.match(TDynamicAny | TDynamic(_) | TFun(_))):
-                left.expr = inner.expr;
-                left.t = inner.t;
-
+			case [OpAssign | OpAssignOp(_), TCast(inner, _)] if (inner.t.match(TDynamicAny | TDynamic(_) | TFun(_))):
+				left.expr = inner.expr;
+				left.t = inner.t;
+                context.submitNode(left, true);
+                
             case _:
         }
 
@@ -95,6 +96,11 @@ class TypeNormaliserBinop extends CompilerPass {
             expr.t = Semantics.getNullableType(context, expr.t);
         }
 
+        var nullableResult = !op.match(OpAssign | OpAssignOp(_)) && Semantics.isNullableType(context, expr.t) ? expr.t : null;
+        if (nullableResult != null) {
+            expr.t = Semantics.getNullableType(context, expr.t);
+        }
+
         var castLeft = !TypeHelper.compare(left.t, expr.t) && switch op {
             case OpAssign: false;
             case OpAssignOp(_): Semantics.isNullableType(context, left.t);
@@ -123,6 +129,13 @@ class TypeNormaliserBinop extends CompilerPass {
             var inner = new HxbTypedExpr(expr.expr, expr.t, expr.pos);
             expr.expr = TCast(inner, null);
             expr.t = TFloat;
+            context.submitNode(expr, true, 1);
+        }
+
+        if (nullableResult != null) {
+            var inner = new HxbTypedExpr(expr.expr, expr.t, expr.pos);
+            expr.expr = TCast(inner, null);
+            expr.t = nullableResult;
             context.submitNode(expr, true, 1);
         }
     }

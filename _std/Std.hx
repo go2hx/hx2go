@@ -225,6 +225,10 @@ class Std {
             return "null";
         }
 
+        if (kind == Reflect.float64 || kind == Reflect.float32) {
+            return Syntax.code("HxFloatToString({0}.Float())", value);
+        }
+
         return Fmt.sprintf("%v", value._interface());
     }
 

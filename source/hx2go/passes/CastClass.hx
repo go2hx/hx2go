@@ -83,7 +83,7 @@ class CastClass extends CompilerPass {
                     var tmp = new HxbVar(-1, 'hx_dyncast_${castId++}', VUser(TVOLocalVariable), 0, [], e.pos, callExpr.t);
                     var tmp_local = new HxbTypedExpr(TLocal(tmp), callExpr.t, e.pos);
 
-                    var castedVal = ExprHelper.createUntyped('{0}.(*$name)', [tmp_local]);
+                    var castedVal = ExprHelper.createUntyped(cls.flags & HxbClassFlag.CInterface != 0 ? '{0}.(*$name)' : '{0}.(interface{ Hx_As_$name() *$name }).Hx_As_$name()', [tmp_local]);
                     castedVal.t = expr.t;
 
                     var o = new HxbTypedExpr(TBlock([
@@ -120,7 +120,7 @@ class CastClass extends CompilerPass {
                             '(func() *$name { _hx_up := {0}; if _hx_up != nil { return &_hx_up.$name }; return nil })()',
                             [e]).expr;
                     } else {
-                        expr.expr = ExprHelper.createUntyped('{0}.VTable.(*$name)', [e]).expr;
+                        expr.expr = ExprHelper.createUntyped('{0}.VTable.(interface{ Hx_As_$name() *$name }).Hx_As_$name()', [e]).expr;
                     }
                 }
 

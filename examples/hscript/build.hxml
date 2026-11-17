@@ -1,0 +1,6 @@
+-cp examples/hscript
+-L hx2go
+-main Main
+-L hscript
+--custom-target go=output/examples/hscript
+--cmd go -C output/examples/hscript/main run .

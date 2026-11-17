@@ -34,7 +34,11 @@ class OptimiseEnumParameter extends CompilerPass {
 
                 switch ctor.type {
                     case TFun(params, _):
-                        var access = ExprHelper.createUntyped('{0}.(${StringConversions.typePathEnumName(enm.path)}_${ctor.name}).${StringConversions.nameToFieldName(params[index].name)}', [e]);
+                        var enumName = StringConversions.typePathEnumName(enm.path);
+                        var param = ExprHelper.createUntyped('(($enumName)({0}))', [e]);
+
+                        var access = ExprHelper.createUntyped('{0}.(${enumName}_${ctor.name}).${StringConversions.nameToFieldName(params[index].name)}', [param]);
+                        
                         var reconciled = hx2go.util.TypeHelper.reconcile(expr.t, access, params[index].t);
                         expr.expr = (reconciled != null ? reconciled : access).expr;
 

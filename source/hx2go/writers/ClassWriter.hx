@@ -199,7 +199,7 @@ class ClassWriter extends WriterImpl {
 
                 var vBuf = new OutputBuffer();
                 var fTypes = writeFunctionArgs(f.type,f);
-
+                
                 vBuf.addInline('${StringConversions.nameToFieldName(f.name)}(');
                 vBuf.addBufferInline(fTypes.buf);
                 vBuf.addInline(')');
@@ -420,6 +420,12 @@ class ClassWriter extends WriterImpl {
             buf.add('return ${StringConversions.typePathClassInstanceName(cls.path)}_RTTI', 1);
             buf.add('}');
 
+            var instanceName = StringConversions.typePathClassInstanceName(cls.path);
+            buf.add('');
+            buf.add('func (this *$instanceName) Hx_As_$instanceName() *$instanceName {');
+            buf.add('return this', 1);
+            buf.add('}');
+
             for (f in cls.fields.filter(f -> f.kind.match(KMethod(_)))) {
                 var res = writeMemberClassField(f, cls);
                 if (res.isEmpty()) {
@@ -515,7 +521,7 @@ class ClassWriter extends WriterImpl {
     }
 
     public function writeStaticClassField(field: HxbClassField, cls: HxbClass): OutputBuffer {
-        if (field.flags & HxbClassFieldFlag.CfExtern != 0) {
+        if (field.flags & HxbClassFieldFlag.CfExtern != 0 && metaStrings(field, ":go.WasmImport") == null) {
             return new OutputBuffer();
         }
 
@@ -616,7 +622,7 @@ class ClassWriter extends WriterImpl {
                                         wrapperStart.addInline('\nif (${warg.name} != nil) {\n ');
                                         wrapperStart.addInline('    ${oarg.name} = HxConvert[${writer.types.writeHxbType(oarg.t)}](${warg.name})\n');
                                         wrapperStart.addInline('} else {\n');
-                                        if (tf.args[idx].value != null) {
+                                        if (tf.args[idx]?.value != null) {
                                             var rhs = writer.exprs.writeExpr(tf.args[idx].value, false).toString();
                                             wrapperStart.addInline('${handleDefaultAssignment(oarg.name, rhs, oarg.t, tf.args[idx].value)}\n');
                                         }
@@ -670,6 +676,21 @@ class ClassWriter extends WriterImpl {
     public function writeStaticClassFunction(field: HxbClassField, kind: HxbMethodKind, cls: HxbClass): OutputBuffer {
         var buf = new OutputBuffer();
         var fTypes = writeFunctionArgs(field.type,field);
+        var name = StringConversions.typePathStaticFieldName(field.name, cls.path);
+
+        var wasmImport = metaStrings(field, ":go.WasmImport");
+        if (wasmImport != null) {
+            buf.add("");
+            buf.add('//go:wasmimport ${wasmImport.join(" ")}');
+            buf.addInline('func $name(');
+            buf.addBufferInline(fTypes.buf);
+            buf.addInline(')');
+            if (fTypes.returnType != TVoid) {
+                buf.addInline(' ');
+                buf.addBufferInline(writer.types.writeHxbType(fTypes.returnType));
+            }
+            return buf;
+        }
 
         if (field.flags & HxbClassFieldFlag.CfExtern != 0 || (cls.flags & HxbClassFlag.CExtern != 0)) {
             return buf;
@@ -681,11 +702,17 @@ class ClassWriter extends WriterImpl {
 
         buf.add("");
 
+        var wasmExport = metaStrings(field, ":go.WasmExport");
+        if (wasmExport != null) {
+            buf.add('//go:wasmexport ${wasmExport[0]}');
+        }
+        
         if (kind == MethDynamic) {
             buf.addInline('var ${StringConversions.typePathStaticFieldName(field.name, cls.path)} = func (');
             buf.addBufferInline(fTypes.buf);
             buf.addInline(') ');
         } else {
+            shouldGoPragma(field, buf);
             buf.addInline('func ${StringConversions.typePathStaticFieldName(field.name, cls.path)}(');
             buf.addBufferInline(fTypes.buf);
             buf.addInline(') ');
@@ -708,6 +735,21 @@ class ClassWriter extends WriterImpl {
         return buf;
     }
 
+    public function shouldGoPragma(field:HxbClassField, buf:OutputBuffer) {
+        var list = field.meta.filter(m -> m.name == ":go.Pragma");
+        if (list.length == 0) {
+            return;
+        }
+        for (m in list) {
+            for (param in m.params) {
+                switch param.expr {
+                    case EConst(CString(s, _)): buf.add('//go:$s');
+                    case _: throw "@:go.Pragma parameters must be String constants";
+                }
+            }
+        }
+    }
+
     public function shouldGenVar(field: HxbClassField): Bool {
         return switch field.kind {
             case KVar(AccCall, AccNormal | AccNo) | KVar(AccNormal | AccNo, AccCall): true;
@@ -724,6 +766,16 @@ class ClassWriter extends WriterImpl {
         && shouldGenVar(f);
     }
 
+    function metaStrings(field: HxbClassField, metaName: String): Null<Array<String>> {
+        var meta = field.meta.filter(m -> m.name == metaName)[0];
+        if (meta == null) return null;
+
+        return [for (e in meta.params) switch e.expr {
+            case EConst(CString(s, _)): s;
+            case _: throw '$metaName parameters must be strings';
+        }];
+    }
+    
     public function writeStaticClassVar(field: HxbClassField, read: HxbVarAccess, write: HxbVarAccess, cls: HxbClass): OutputBuffer {
         var buf = new OutputBuffer();
         if (!isEmittedStaticVar(field, cls)) {

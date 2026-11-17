@@ -15,6 +15,7 @@ import hx2go.util.ObjectFieldHelper;
 import hxb.HxbType;
 import haxe.runtime.Copy;
 import hx2go.util.TypeHelper;
+import hx2go.normaliser.Semantics;
 
 class TypeNormaliserUnop extends CompilerPass {
 
@@ -36,7 +37,14 @@ class TypeNormaliserUnop extends CompilerPass {
 							e.t = o.t;
 							context.submitNode(e, true);
 						case OpIncrement, OpDecrement:
-							// can't cast a value before an increment/decrement operation
+							// can't cast a normal Go value before an increment/decrement operation
+							// but do need to cast nullable types
+							if (Semantics.isNullableType(context, e.t)) {
+								var o = ExprHelper.createCast(e, expr.t);
+								e.expr = o.expr;
+								e.t = o.t;
+								context.submitNode(e, true);
+							}
 						case _:
 					}
 				}

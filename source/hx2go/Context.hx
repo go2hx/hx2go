@@ -80,19 +80,21 @@ class Context {
     private var normalizingAbstracts: Array<String> = [];
     private var recursiveAbstracts: Map<String, Bool> = [];
     private var initOrder: Map<String, Int> = [];
+    private var noEntry:Bool = false;
 
     // paths of @:generic base class templates (KGeneric) that have at least one
     // KGenericInstance specialisation
     private var specialisedGenericBases: Map<String, Bool> = [];
 
-    public function new(archive: HxbArchive, outputDirectory: String, sourcelineComments:Bool, times:hx2go.util.Times, codegenVersion:String, disableIncrementalCache:Bool, sourcemaps:Bool = true) {
+    public function new(archive: HxbArchive, outputDirectory: String, sourcelineComments:Bool, times:hx2go.util.Times, codegenVersion:String, disableIncrementalCache:Bool, sourcemaps:Bool = true, ?goPackage:String, noEntry:Bool = false) {
         this.sourcelineComments = sourcelineComments;
         this.sourcemaps = sourcemaps;
         this.times = times;
         this.types = new Map();
         this.imports = new Map();
         this.outputDirectory = outputDirectory;
-        this.topLevelPackage = Path.normalize(outputDirectory).split("/").pop();
+        this.topLevelPackage = goPackage ?? Path.normalize(outputDirectory).split("/").pop();
+        this.noEntry = noEntry;
         this.passes = createPasses();
         this.writer = new Writer(this);
         this.contextStack = [];
@@ -119,7 +121,6 @@ class Context {
             new hx2go.passes.RewriteGoUIntNegativeConst(this),
             new hx2go.passes.TypeNormaliserCall(this), // TODO: c2
             new hx2go.passes.TypeNormaliserNew(this),
-            new hx2go.passes.NullableCompareValid(this),
             new hx2go.passes.NullableCompare(this),
             new hx2go.passes.NullableConst(this),
             new hx2go.passes.NullableFieldAccess(this),
@@ -366,14 +367,20 @@ class Context {
         buf.add('');
         var profileStart = StringConversions.typePathStaticFieldName("start", profileType);
         var profileStop = StringConversions.typePathStaticFieldName("stop", profileType);
-        buf.add('func main() {');
-        buf.add('Hx_Boot()', 1);
-        // profileStart must run after Hx_Boot, whose class inits reset HxProfile's static state
-        buf.add('$profileStart()', 1);
-        buf.add('${StringConversions.typePathStaticFieldName("main", StringConversions.pathToLossyTypePath(mainClass))}()', 1);
-        buf.add('Hx_Loop()', 1);
-        buf.add('$profileStop()', 1);
-        buf.add('}');
+        if (!noEntry) {
+            buf.add('func main() {');
+            buf.add('Hx_Boot()', 1);
+            // profileStart must run after Hx_Boot, whose class inits reset HxProfile's static state
+            buf.add('$profileStart()', 1);
+            buf.add('${StringConversions.typePathStaticFieldName("main", StringConversions.pathToLossyTypePath(mainClass))}()', 1);
+            buf.add('Hx_Loop()', 1);
+            buf.add('$profileStop()', 1);
+            buf.add('}');
+        } else {
+            buf.add('func init() {');
+            buf.add('Hx_Boot()', 1);
+            buf.add('}');
+        }
 
         classInits.sort((a, b) -> {
             final oa: Int = initOrder[a.path.dotPath()] ?? 9999999;
@@ -1125,7 +1132,11 @@ class Context {
         for (entry in runtimeFiles) {
             var src = Path.join([ runtimePath, entry ]);
             var dst = Path.join([ outputDirectory, entry ]);
-            File.saveContent(dst, File.getContent(src));
+            var content = File.getContent(src);
+            if (StringTools.startsWith(content, "package main\n")) {
+                content = 'package $topLevelPackage\n' + content.substr("package main\n".length);
+            }
+            File.saveContent(dst, content);
         }
     }
 

@@ -89,7 +89,8 @@ class TypeHelper {
 
         var assertFromAny = emittedGo.match(TDynamicAny | TDynamic(_)) && !wantedGo.match(TDynamicAny | TDynamic(_));
         var adaptClosure = emittedGo.match(TFun(_)) && wantedGo.match(TFun(_));
-        return assertFromAny || adaptClosure;
+        var adaptArray = emittedGo.match(TInst({ name: "Array", pack: [] }, _)) && wantedGo.match(TInst({ name: "Array", pack: [] }, _));
+        return assertFromAny || adaptClosure || adaptArray;
     }
 
     public static function follow(context: Context, type: HxbType, getNullElem:Bool=true): HxbType {

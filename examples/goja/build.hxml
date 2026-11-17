@@ -1,0 +1,6 @@
+-cp examples/goja
+-m Main
+-L hx2go
+-D go-lib=github.com/dop251/goja
+--custom-target go=output/examples/goja
+--cmd go -C output/examples/goja/main run .

@@ -200,9 +200,11 @@ class Context {
     public function isGenericTemplate(def: hxb.HxbModuleType.HxbClass): Bool {
         if (!def.kind.match(KGeneric)) 
             return false;
+
         if (Lambda.exists(def.params, p -> Lambda.exists(p.meta, m -> m.name == ":const"))) 
             return true;
-        return specialisedGenericBases.exists(genericBaseKey(def.path));
+
+        return false;
     }
     
     static function genericBaseKey(tp: TypePath): String {
@@ -755,6 +757,7 @@ class Context {
                 if (normalizingTypedefs.exists(key)) {
                     return t;
                 }
+
                 normalizingTypedefs.set(key, true);
                 var fwd = TypeHelper.followToDef(this, t, true);
                 var fwdNorm = normalize(fwd);
@@ -969,6 +972,16 @@ class Context {
         writer.types.importTarget = moduleKey;
 
         for (f in roots) {
+            switch [f.type, f.expr?.expr?.expr] {
+                case [TFun(fArgs, _), TFunction(tf)] if (f.kind.match(KMethod(_)) && fArgs.length == tf.args.length):
+                    f.type = TFun([for (i in 0...fArgs.length) {
+                        name: fArgs[i].name,
+                        opt: fArgs[i].opt,
+                        t: tf.args[i].v.type
+                    }], tf.t);
+                case _:
+            }
+
             if (baseInstFields.exists(f.name)) {
                 var base = baseInstFields.get(f.name);
                 var assign: Array<HxbTypedExpr> = [];

@@ -267,7 +267,7 @@ class ClassWriter extends WriterImpl {
             var fRes: { name: String, type: HxbType } = switch f.kind {
                 case _ if (!shouldGenVar(f)): continue;
                 case KVar(_): { name: StringConversions.nameToFieldName(f.name), type: f.type };
-                case KMethod(MethDynamic): { name: StringConversions.nameToFieldName(f.name) + "_Dyn", type: appendThis(f.type, cls) };
+                case KMethod(MethDynamic): { name: StringConversions.nameToFieldName(f.name) + "_Dyn", type: f.type };
                 case _: continue;
             }
 
@@ -333,9 +333,9 @@ class ClassWriter extends WriterImpl {
                     continue;
                 }
 
-                var signature = writeFunctionArgs(appendThis(f.field.type, f.inst), f.field);
+                var signature = writeFunctionArgs(f.field.type, f.field);
                 var ret = signature.returnType == TVoid ? "" : writer.types.writeHxbType(signature.returnType).toString();
-                buf.add('obj.${StringConversions.nameToFieldName(f.field.name)}_Dyn = func(${signature.buf}) $ret ${writer.exprs.writeExpr(f.field.expr.expr, true)}', 1);
+                buf.add('obj.${StringConversions.nameToFieldName(f.field.name)}_Dyn = func(${signature.buf}) $ret { this := obj; _ = this; ${writer.exprs.writeExpr(f.field.expr.expr, true)} }', 1);
             }
 
             for (v in vtables) {
@@ -820,7 +820,7 @@ class ClassWriter extends WriterImpl {
         if (kind == MethDynamic) {
             buf.add('{');
             if (fTypes.returnType != TVoid) buf.add("return ", 1, false);
-            buf.add('this.${StringConversions.nameToFieldName(field.name)}_Dyn(${["this"].concat(fTypes.args.map(a -> a.name)).join(", ")})', fTypes.returnType != TVoid ? 0 : 1);
+            buf.add('this.${StringConversions.nameToFieldName(field.name)}_Dyn(${fTypes.args.map(a -> a.name).join(", ")})', fTypes.returnType != TVoid ? 0 : 1);
             buf.addInline('}');
         } else {
             if (field.expr?.expr != null) {

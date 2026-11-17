@@ -61,17 +61,6 @@ class RewriteMethodAssign extends CompilerPass {
                     ),
                     ae
                 );
-
-                ae.t = context.getWriter().classes.appendThis(ae.t, current);
-
-                switch ae.expr {
-                    case TFunction(tfunc):
-                        tfunc.args.unshift({
-                            value: null,
-                            v: new HxbVar(-1, "this", VUser(TVOLocalVariable), 0, [], ae.pos, TInst(current.path, [])),
-                        });
-                    case _:
-                }
             };
 
             case _: null;

@@ -48,6 +48,13 @@ class DynamicInstFunctionAssign extends CompilerPass {
                     return;
                 }
 
+                if (hx2go.util.TypeHelper.compare(
+                    hx2go.util.TypeHelper.follow(context, value.t),
+                    hx2go.util.TypeHelper.follow(context, field.type)
+                )) {
+                    return;
+                }
+                
                 var args = switch field.type {
                     case TFun(args, _): args;
                     case _: return;

@@ -755,6 +755,7 @@ class Context {
                 if (normalizingTypedefs.exists(key)) {
                     return t;
                 }
+
                 normalizingTypedefs.set(key, true);
                 var fwd = TypeHelper.followToDef(this, t, true);
                 var fwdNorm = normalize(fwd);

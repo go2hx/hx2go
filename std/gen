@@ -1,4 +1,4 @@
-go1.27.3
+go1.27.4
 bufio
 bytes
 crypto/md5
@@ -191,6 +191,7 @@ internal/buildcfg
 internal/bytealg
 internal/byteorder
 internal/cfg
+internal/cgrouptest
 internal/chacha8rand
 internal/copyright
 internal/coverage
@@ -251,7 +252,7 @@ internal/runtime/math
 internal/runtime/pprof/label
 internal/runtime/startlinetest
 internal/runtime/sys
-internal/runtime/syscall/windows
+internal/runtime/syscall/linux
 internal/runtime/wasitest
 internal/saferio
 internal/singleflight
@@ -261,9 +262,6 @@ internal/sync
 internal/synctest
 internal/syscall/execenv
 internal/syscall/unix
-internal/syscall/windows
-internal/syscall/windows/registry
-internal/syscall/windows/sysdll
 internal/sysinfo
 internal/syslist
 internal/testenv

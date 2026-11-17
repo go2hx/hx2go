@@ -389,8 +389,8 @@ class Context {
         });
 
         buf.add('func Hx_Boot() {');
-        for (ci in classInits) if (!isGenericTemplate(ci.def)) buf.add('Hx_ClassInit_${ci.name}()', 1);
-        for (ci in classInits) if (!isGenericTemplate(ci.def)) buf.add('Hx_StaticInit_${ci.name}()', 1);
+        for (ci in classInits) buf.add('Hx_ClassInit_${ci.name}()', 1);
+        for (ci in classInits) buf.add('Hx_StaticInit_${ci.name}()', 1);
         buf.add('}');
 
         buf.add('func Hx_Loop() {');

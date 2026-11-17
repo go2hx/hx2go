@@ -46,10 +46,6 @@ class ClassWriter extends WriterImpl {
 
         var buf = new OutputBuffer();
 
-        if (writer.context.isGenericTemplate(cls)) {
-            return buf;
-        }
-
         if (cls.flags & HxbClassFlag.CExtern != 0) {
             // write RTTI
             buf.add('');

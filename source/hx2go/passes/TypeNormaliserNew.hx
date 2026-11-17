@@ -26,6 +26,7 @@ class TypeNormaliserNew extends CompilerPass {
     }
 
     public function execute(expr: HxbTypedExpr, frame: ContextFrame): Void {
+        trace(expr);
         switch expr.expr {
             case TNew(tp, typeParams, el): {
                 var mt = context.resolve(tp);

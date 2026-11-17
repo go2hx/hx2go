@@ -23,11 +23,11 @@ extern class Zip {
     /**
         Compression methods.
     **/
-    @:native("Deflate") static var deflate: go.UInt16;
+    @:native("Deflate") static final deflate: go.UInt16;
     /**
         Compression methods.
     **/
-    @:native("Store") static var store: go.UInt16;
+    @:native("Store") static final store: go.UInt16;
 
     /**
         FileInfoHeader creates a partially-populated [FileHeader] from an

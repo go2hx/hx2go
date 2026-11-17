@@ -8,10 +8,10 @@ package go.image;
 @:go.Type({ name: "png", instanceName: "png.png", imports: ["image/png"] })
 extern class Png {
 
-    @:native("BestCompression") static var bestCompression: go.image.png.CompressionLevel;
-    @:native("BestSpeed") static var bestSpeed: go.image.png.CompressionLevel;
-    @:native("DefaultCompression") static var defaultCompression: go.image.png.CompressionLevel;
-    @:native("NoCompression") static var noCompression: go.image.png.CompressionLevel;
+    @:native("BestCompression") static final bestCompression: go.image.png.CompressionLevel;
+    @:native("BestSpeed") static final bestSpeed: go.image.png.CompressionLevel;
+    @:native("DefaultCompression") static final defaultCompression: go.image.png.CompressionLevel;
+    @:native("NoCompression") static final noCompression: go.image.png.CompressionLevel;
 
     /**
         Decode reads a PNG image from r and returns it as an [image.Image].

@@ -15,15 +15,15 @@ extern class Gif {
     /**
         Disposal Methods.
     **/
-    @:native("DisposalBackground") static var disposalBackground: go.GoInt;
+    @:native("DisposalBackground") static final disposalBackground: go.GoInt;
     /**
         Disposal Methods.
     **/
-    @:native("DisposalNone") static var disposalNone: go.GoInt;
+    @:native("DisposalNone") static final disposalNone: go.GoInt;
     /**
         Disposal Methods.
     **/
-    @:native("DisposalPrevious") static var disposalPrevious: go.GoInt;
+    @:native("DisposalPrevious") static final disposalPrevious: go.GoInt;
 
     /**
         Decode reads a GIF image from r and returns the first embedded

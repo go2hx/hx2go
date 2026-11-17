@@ -40,12 +40,12 @@ package go;
 @:go.Type({ name: "image", instanceName: "image.image", imports: ["image"] })
 extern class Image {
 
-    @:native("YCbCrSubsampleRatio410") static var yCbCrSubsampleRatio410: go.image.YCbCrSubsampleRatio;
-    @:native("YCbCrSubsampleRatio411") static var yCbCrSubsampleRatio411: go.image.YCbCrSubsampleRatio;
-    @:native("YCbCrSubsampleRatio420") static var yCbCrSubsampleRatio420: go.image.YCbCrSubsampleRatio;
-    @:native("YCbCrSubsampleRatio422") static var yCbCrSubsampleRatio422: go.image.YCbCrSubsampleRatio;
-    @:native("YCbCrSubsampleRatio440") static var yCbCrSubsampleRatio440: go.image.YCbCrSubsampleRatio;
-    @:native("YCbCrSubsampleRatio444") static var yCbCrSubsampleRatio444: go.image.YCbCrSubsampleRatio;
+    @:native("YCbCrSubsampleRatio410") static final yCbCrSubsampleRatio410: go.image.YCbCrSubsampleRatio;
+    @:native("YCbCrSubsampleRatio411") static final yCbCrSubsampleRatio411: go.image.YCbCrSubsampleRatio;
+    @:native("YCbCrSubsampleRatio420") static final yCbCrSubsampleRatio420: go.image.YCbCrSubsampleRatio;
+    @:native("YCbCrSubsampleRatio422") static final yCbCrSubsampleRatio422: go.image.YCbCrSubsampleRatio;
+    @:native("YCbCrSubsampleRatio440") static final yCbCrSubsampleRatio440: go.image.YCbCrSubsampleRatio;
+    @:native("YCbCrSubsampleRatio444") static final yCbCrSubsampleRatio444: go.image.YCbCrSubsampleRatio;
 
     @:native("Black") static var black: go.Pointer<go.image.Uniform>;
     @:native("Opaque") static var opaque: go.Pointer<go.image.Uniform>;

@@ -11,7 +11,7 @@ package go.hash.maphash;
 **/
 @:structInit
 @:go.Type({ name: "ComparableHasher", instanceName: "maphash.ComparableHasher", imports: ["hash/maphash"] })
-extern class ComparableHasher<T: go.Comparable> {
+extern class ComparableHasher<T> {
 
     @:native("Equal") function equal(x: T, y: T): (Bool);
     @:native("Hash") function hash(h: go.Pointer<go.hash.maphash.Hash>, v: T): Void;

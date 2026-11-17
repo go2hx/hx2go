@@ -35,95 +35,95 @@ package go.go;
 @:go.Type({ name: "types", instanceName: "types.types", imports: ["go/types"] })
 extern class Types {
 
-    @:native("Bool") static var bool: go.go.types.BasicKind;
-    @:native("Byte") static var byte: go.go.types.BasicKind;
-    @:native("Complex128") static var complex128: go.go.types.BasicKind;
-    @:native("Complex64") static var complex64: go.go.types.BasicKind;
-    @:native("FieldVal") static var fieldVal: go.go.types.SelectionKind;
-    @:native("FieldVar") static var fieldVar: go.go.types.VarKind;
-    @:native("Float32") static var float32: go.go.types.BasicKind;
-    @:native("Float64") static var float64: go.go.types.BasicKind;
-    @:native("Int") static var int: go.go.types.BasicKind;
-    @:native("Int16") static var int16: go.go.types.BasicKind;
-    @:native("Int32") static var int32: go.go.types.BasicKind;
-    @:native("Int64") static var int64: go.go.types.BasicKind;
-    @:native("Int8") static var int8: go.go.types.BasicKind;
-    @:native("Invalid") static var invalid: go.go.types.BasicKind;
+    @:native("Bool") static final bool: go.go.types.BasicKind;
+    @:native("Byte") static final byte: go.go.types.BasicKind;
+    @:native("Complex128") static final complex128: go.go.types.BasicKind;
+    @:native("Complex64") static final complex64: go.go.types.BasicKind;
+    @:native("FieldVal") static final fieldVal: go.go.types.SelectionKind;
+    @:native("FieldVar") static final fieldVar: go.go.types.VarKind;
+    @:native("Float32") static final float32: go.go.types.BasicKind;
+    @:native("Float64") static final float64: go.go.types.BasicKind;
+    @:native("Int") static final int: go.go.types.BasicKind;
+    @:native("Int16") static final int16: go.go.types.BasicKind;
+    @:native("Int32") static final int32: go.go.types.BasicKind;
+    @:native("Int64") static final int64: go.go.types.BasicKind;
+    @:native("Int8") static final int8: go.go.types.BasicKind;
+    @:native("Invalid") static final invalid: go.go.types.BasicKind;
     /**
         Properties of basic types.
     **/
-    @:native("IsBoolean") static var isBoolean: go.go.types.BasicInfo;
+    @:native("IsBoolean") static final isBoolean: go.go.types.BasicInfo;
     /**
         Properties of basic types.
     **/
-    @:native("IsComplex") static var isComplex: go.go.types.BasicInfo;
+    @:native("IsComplex") static final isComplex: go.go.types.BasicInfo;
     /**
         Properties of basic types.
     **/
-    @:native("IsConstType") static var isConstType: go.go.types.BasicInfo;
+    @:native("IsConstType") static final isConstType: go.go.types.BasicInfo;
     /**
         Properties of basic types.
     **/
-    @:native("IsFloat") static var isFloat: go.go.types.BasicInfo;
+    @:native("IsFloat") static final isFloat: go.go.types.BasicInfo;
     /**
         Properties of basic types.
     **/
-    @:native("IsInteger") static var isInteger: go.go.types.BasicInfo;
+    @:native("IsInteger") static final isInteger: go.go.types.BasicInfo;
     /**
         Properties of basic types.
     **/
-    @:native("IsNumeric") static var isNumeric: go.go.types.BasicInfo;
+    @:native("IsNumeric") static final isNumeric: go.go.types.BasicInfo;
     /**
         Properties of basic types.
     **/
-    @:native("IsOrdered") static var isOrdered: go.go.types.BasicInfo;
+    @:native("IsOrdered") static final isOrdered: go.go.types.BasicInfo;
     /**
         Properties of basic types.
     **/
-    @:native("IsString") static var isString: go.go.types.BasicInfo;
+    @:native("IsString") static final isString: go.go.types.BasicInfo;
     /**
         Properties of basic types.
     **/
-    @:native("IsUnsigned") static var isUnsigned: go.go.types.BasicInfo;
+    @:native("IsUnsigned") static final isUnsigned: go.go.types.BasicInfo;
     /**
         Properties of basic types.
     **/
-    @:native("IsUntyped") static var isUntyped: go.go.types.BasicInfo;
-    @:native("LocalVar") static var localVar: go.go.types.VarKind;
-    @:native("MethodExpr") static var methodExpr: go.go.types.SelectionKind;
-    @:native("MethodVal") static var methodVal: go.go.types.SelectionKind;
-    @:native("PackageVar") static var packageVar: go.go.types.VarKind;
-    @:native("ParamVar") static var paramVar: go.go.types.VarKind;
+    @:native("IsUntyped") static final isUntyped: go.go.types.BasicInfo;
+    @:native("LocalVar") static final localVar: go.go.types.VarKind;
+    @:native("MethodExpr") static final methodExpr: go.go.types.SelectionKind;
+    @:native("MethodVal") static final methodVal: go.go.types.SelectionKind;
+    @:native("PackageVar") static final packageVar: go.go.types.VarKind;
+    @:native("ParamVar") static final paramVar: go.go.types.VarKind;
     /**
         The direction of a channel is indicated by one of these constants.
     **/
-    @:native("RecvOnly") static var recvOnly: go.go.types.ChanDir;
-    @:native("RecvVar") static var recvVar: go.go.types.VarKind;
-    @:native("ResultVar") static var resultVar: go.go.types.VarKind;
-    @:native("Rune") static var rune: go.go.types.BasicKind;
+    @:native("RecvOnly") static final recvOnly: go.go.types.ChanDir;
+    @:native("RecvVar") static final recvVar: go.go.types.VarKind;
+    @:native("ResultVar") static final resultVar: go.go.types.VarKind;
+    @:native("Rune") static final rune: go.go.types.BasicKind;
     /**
         The direction of a channel is indicated by one of these constants.
     **/
-    @:native("SendOnly") static var sendOnly: go.go.types.ChanDir;
+    @:native("SendOnly") static final sendOnly: go.go.types.ChanDir;
     /**
         The direction of a channel is indicated by one of these constants.
     **/
-    @:native("SendRecv") static var sendRecv: go.go.types.ChanDir;
-    @:native("String") static var string: go.go.types.BasicKind;
-    @:native("Uint") static var uint: go.go.types.BasicKind;
-    @:native("Uint16") static var uint16: go.go.types.BasicKind;
-    @:native("Uint32") static var uint32: go.go.types.BasicKind;
-    @:native("Uint64") static var uint64: go.go.types.BasicKind;
-    @:native("Uint8") static var uint8: go.go.types.BasicKind;
-    @:native("Uintptr") static var uintptr: go.go.types.BasicKind;
-    @:native("UnsafePointer") static var unsafePointer: go.go.types.BasicKind;
-    @:native("UntypedBool") static var untypedBool: go.go.types.BasicKind;
-    @:native("UntypedComplex") static var untypedComplex: go.go.types.BasicKind;
-    @:native("UntypedFloat") static var untypedFloat: go.go.types.BasicKind;
-    @:native("UntypedInt") static var untypedInt: go.go.types.BasicKind;
-    @:native("UntypedNil") static var untypedNil: go.go.types.BasicKind;
-    @:native("UntypedRune") static var untypedRune: go.go.types.BasicKind;
-    @:native("UntypedString") static var untypedString: go.go.types.BasicKind;
+    @:native("SendRecv") static final sendRecv: go.go.types.ChanDir;
+    @:native("String") static final string: go.go.types.BasicKind;
+    @:native("Uint") static final uint: go.go.types.BasicKind;
+    @:native("Uint16") static final uint16: go.go.types.BasicKind;
+    @:native("Uint32") static final uint32: go.go.types.BasicKind;
+    @:native("Uint64") static final uint64: go.go.types.BasicKind;
+    @:native("Uint8") static final uint8: go.go.types.BasicKind;
+    @:native("Uintptr") static final uintptr: go.go.types.BasicKind;
+    @:native("UnsafePointer") static final unsafePointer: go.go.types.BasicKind;
+    @:native("UntypedBool") static final untypedBool: go.go.types.BasicKind;
+    @:native("UntypedComplex") static final untypedComplex: go.go.types.BasicKind;
+    @:native("UntypedFloat") static final untypedFloat: go.go.types.BasicKind;
+    @:native("UntypedInt") static final untypedInt: go.go.types.BasicKind;
+    @:native("UntypedNil") static final untypedNil: go.go.types.BasicKind;
+    @:native("UntypedRune") static final untypedRune: go.go.types.BasicKind;
+    @:native("UntypedString") static final untypedString: go.go.types.BasicKind;
 
     /**
         Typ contains the predeclared *Basic types indexed by their

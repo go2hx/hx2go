@@ -11,131 +11,131 @@ extern class Math {
     /**
         Mathematical constants.
     **/
-    @:native("E") static var E: Float;
+    @:native("E") static final E: Float;
     /**
         Mathematical constants.
     **/
-    @:native("Ln10") static var ln10: Float;
+    @:native("Ln10") static final ln10: Float;
     /**
         Mathematical constants.
     **/
-    @:native("Ln2") static var ln2: Float;
+    @:native("Ln2") static final ln2: Float;
     /**
         Mathematical constants.
     **/
-    @:native("Log10E") static var log10E: Float;
+    @:native("Log10E") static final log10E: Float;
     /**
         Mathematical constants.
     **/
-    @:native("Log2E") static var log2E: Float;
+    @:native("Log2E") static final log2E: Float;
     /**
         Floating-point limit values.
         Max is the largest finite value representable by the type.
         SmallestNonzero is the smallest positive, non-zero value representable by the type.
     **/
-    @:native("MaxFloat32") static var maxFloat32: Float;
+    @:native("MaxFloat32") static final maxFloat32: Float;
     /**
         Floating-point limit values.
         Max is the largest finite value representable by the type.
         SmallestNonzero is the smallest positive, non-zero value representable by the type.
     **/
-    @:native("MaxFloat64") static var maxFloat64: Float;
+    @:native("MaxFloat64") static final maxFloat64: Float;
     /**
         Integer limit values.
     **/
-    @:native("MaxInt") static var maxInt: go.GoInt;
+    @:native("MaxInt") static final maxInt: go.GoInt;
     /**
         Integer limit values.
     **/
-    @:native("MaxInt16") static var maxInt16: go.GoInt;
+    @:native("MaxInt16") static final maxInt16: go.GoInt;
     /**
         Integer limit values.
     **/
-    @:native("MaxInt32") static var maxInt32: go.GoInt;
+    @:native("MaxInt32") static final maxInt32: go.GoInt;
     /**
         Integer limit values.
     **/
-    @:native("MaxInt64") static var maxInt64: go.GoInt;
+    @:native("MaxInt64") static final maxInt64: go.GoInt;
     /**
         Integer limit values.
     **/
-    @:native("MaxInt8") static var maxInt8: go.GoInt;
+    @:native("MaxInt8") static final maxInt8: go.GoInt;
     /**
         Integer limit values.
     **/
-    @:native("MaxUint") static var maxUint: go.GoInt;
+    @:native("MaxUint") static final maxUint: go.GoInt;
     /**
         Integer limit values.
     **/
-    @:native("MaxUint16") static var maxUint16: go.GoInt;
+    @:native("MaxUint16") static final maxUint16: go.GoInt;
     /**
         Integer limit values.
     **/
-    @:native("MaxUint32") static var maxUint32: go.GoInt;
+    @:native("MaxUint32") static final maxUint32: go.GoInt;
     /**
         Integer limit values.
     **/
-    @:native("MaxUint64") static var maxUint64: go.GoInt;
+    @:native("MaxUint64") static final maxUint64: go.GoInt;
     /**
         Integer limit values.
     **/
-    @:native("MaxUint8") static var maxUint8: go.GoInt;
+    @:native("MaxUint8") static final maxUint8: go.GoInt;
     /**
         Integer limit values.
     **/
-    @:native("MinInt") static var minInt: go.GoInt;
+    @:native("MinInt") static final minInt: go.GoInt;
     /**
         Integer limit values.
     **/
-    @:native("MinInt16") static var minInt16: go.GoInt;
+    @:native("MinInt16") static final minInt16: go.GoInt;
     /**
         Integer limit values.
     **/
-    @:native("MinInt32") static var minInt32: go.GoInt;
+    @:native("MinInt32") static final minInt32: go.GoInt;
     /**
         Integer limit values.
     **/
-    @:native("MinInt64") static var minInt64: go.GoInt;
+    @:native("MinInt64") static final minInt64: go.GoInt;
     /**
         Integer limit values.
     **/
-    @:native("MinInt8") static var minInt8: go.GoInt;
+    @:native("MinInt8") static final minInt8: go.GoInt;
     /**
         Mathematical constants.
     **/
-    @:native("Phi") static var phi: Float;
+    @:native("Phi") static final phi: Float;
     /**
         Mathematical constants.
     **/
-    @:native("Pi") static var pi: Float;
+    @:native("Pi") static final pi: Float;
     /**
         Floating-point limit values.
         Max is the largest finite value representable by the type.
         SmallestNonzero is the smallest positive, non-zero value representable by the type.
     **/
-    @:native("SmallestNonzeroFloat32") static var smallestNonzeroFloat32: Float;
+    @:native("SmallestNonzeroFloat32") static final smallestNonzeroFloat32: Float;
     /**
         Floating-point limit values.
         Max is the largest finite value representable by the type.
         SmallestNonzero is the smallest positive, non-zero value representable by the type.
     **/
-    @:native("SmallestNonzeroFloat64") static var smallestNonzeroFloat64: Float;
+    @:native("SmallestNonzeroFloat64") static final smallestNonzeroFloat64: Float;
     /**
         Mathematical constants.
     **/
-    @:native("Sqrt2") static var sqrt2: Float;
+    @:native("Sqrt2") static final sqrt2: Float;
     /**
         Mathematical constants.
     **/
-    @:native("SqrtE") static var sqrtE: Float;
+    @:native("SqrtE") static final sqrtE: Float;
     /**
         Mathematical constants.
     **/
-    @:native("SqrtPhi") static var sqrtPhi: Float;
+    @:native("SqrtPhi") static final sqrtPhi: Float;
     /**
         Mathematical constants.
     **/
-    @:native("SqrtPi") static var sqrtPi: Float;
+    @:native("SqrtPi") static final sqrtPi: Float;
 
     /**
         Abs returns the absolute value of x.

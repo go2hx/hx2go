@@ -16,43 +16,43 @@ package go;
 @:go.Type({ name: "reflect", instanceName: "reflect.reflect", imports: ["reflect"] })
 extern class Reflect {
 
-    @:native("Array") static var array: go.reflect.Kind;
-    @:native("Bool") static var bool: go.reflect.Kind;
-    @:native("BothDir") static var bothDir: go.reflect.ChanDir;
-    @:native("Chan") static var chan: go.reflect.Kind;
-    @:native("Complex128") static var complex128: go.reflect.Kind;
-    @:native("Complex64") static var complex64: go.reflect.Kind;
-    @:native("Float32") static var float32: go.reflect.Kind;
-    @:native("Float64") static var float64: go.reflect.Kind;
-    @:native("Func") static var func: go.reflect.Kind;
-    @:native("Int") static var int: go.reflect.Kind;
-    @:native("Int16") static var int16: go.reflect.Kind;
-    @:native("Int32") static var int32: go.reflect.Kind;
-    @:native("Int64") static var int64: go.reflect.Kind;
-    @:native("Int8") static var int8: go.reflect.Kind;
-    @:native("Interface") static var _interface: go.reflect.Kind;
-    @:native("Invalid") static var invalid: go.reflect.Kind;
-    @:native("Map") static var map: go.reflect.Kind;
-    @:native("Pointer") static var pointer: go.reflect.Kind;
+    @:native("Array") static final array: go.reflect.Kind;
+    @:native("Bool") static final bool: go.reflect.Kind;
+    @:native("BothDir") static final bothDir: go.reflect.ChanDir;
+    @:native("Chan") static final chan: go.reflect.Kind;
+    @:native("Complex128") static final complex128: go.reflect.Kind;
+    @:native("Complex64") static final complex64: go.reflect.Kind;
+    @:native("Float32") static final float32: go.reflect.Kind;
+    @:native("Float64") static final float64: go.reflect.Kind;
+    @:native("Func") static final func: go.reflect.Kind;
+    @:native("Int") static final int: go.reflect.Kind;
+    @:native("Int16") static final int16: go.reflect.Kind;
+    @:native("Int32") static final int32: go.reflect.Kind;
+    @:native("Int64") static final int64: go.reflect.Kind;
+    @:native("Int8") static final int8: go.reflect.Kind;
+    @:native("Interface") static final _interface: go.reflect.Kind;
+    @:native("Invalid") static final invalid: go.reflect.Kind;
+    @:native("Map") static final map: go.reflect.Kind;
+    @:native("Pointer") static final pointer: go.reflect.Kind;
     /**
         Ptr is the old name for the [Pointer] kind.
     **/
-    @:native("Ptr") static var ptr: go.reflect.Kind;
-    @:native("RecvDir") static var recvDir: go.reflect.ChanDir;
-    @:native("SelectDefault") static var selectDefault: go.reflect.SelectDir;
-    @:native("SelectRecv") static var selectRecv: go.reflect.SelectDir;
-    @:native("SelectSend") static var selectSend: go.reflect.SelectDir;
-    @:native("SendDir") static var sendDir: go.reflect.ChanDir;
-    @:native("Slice") static var slice: go.reflect.Kind;
-    @:native("String") static var string: go.reflect.Kind;
-    @:native("Struct") static var struct: go.reflect.Kind;
-    @:native("Uint") static var uint: go.reflect.Kind;
-    @:native("Uint16") static var uint16: go.reflect.Kind;
-    @:native("Uint32") static var uint32: go.reflect.Kind;
-    @:native("Uint64") static var uint64: go.reflect.Kind;
-    @:native("Uint8") static var uint8: go.reflect.Kind;
-    @:native("Uintptr") static var uintptr: go.reflect.Kind;
-    @:native("UnsafePointer") static var unsafePointer: go.reflect.Kind;
+    @:native("Ptr") static final ptr: go.reflect.Kind;
+    @:native("RecvDir") static final recvDir: go.reflect.ChanDir;
+    @:native("SelectDefault") static final selectDefault: go.reflect.SelectDir;
+    @:native("SelectRecv") static final selectRecv: go.reflect.SelectDir;
+    @:native("SelectSend") static final selectSend: go.reflect.SelectDir;
+    @:native("SendDir") static final sendDir: go.reflect.ChanDir;
+    @:native("Slice") static final slice: go.reflect.Kind;
+    @:native("String") static final string: go.reflect.Kind;
+    @:native("Struct") static final struct: go.reflect.Kind;
+    @:native("Uint") static final uint: go.reflect.Kind;
+    @:native("Uint16") static final uint16: go.reflect.Kind;
+    @:native("Uint32") static final uint32: go.reflect.Kind;
+    @:native("Uint64") static final uint64: go.reflect.Kind;
+    @:native("Uint8") static final uint8: go.reflect.Kind;
+    @:native("Uintptr") static final uintptr: go.reflect.Kind;
+    @:native("UnsafePointer") static final unsafePointer: go.reflect.Kind;
 
     /**
         Append appends the values x to a slice s and returns the resulting slice.
@@ -292,11 +292,11 @@ extern class Reflect {
             For example, when T is an interface type and v holds a value whose
             concrete type implements T.
     **/
-    @:go.Tuple("p0", "p1") @:native("TypeAssert") static function typeAssert<T: Dynamic>(v: go.reflect.Value): (go.Tuple<{ p0: T, p1: Bool }>);
+    @:go.Tuple("p0", "p1") @:native("TypeAssert") static function typeAssert<T>(v: go.reflect.Value): (go.Tuple<{ p0: T, p1: Bool }>);
     /**
         TypeFor returns the [Type] that represents the type argument T.
     **/
-    @:native("TypeFor") static function typeFor<T: Dynamic>(): (go.reflect.Type);
+    @:native("TypeFor") static function typeFor<T>(): (go.reflect.Type);
     /**
         TypeOf returns the reflection [Type] that represents the dynamic type of i.
         If i is a nil interface value, TypeOf returns nil.

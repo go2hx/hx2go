@@ -13,7 +13,7 @@ extern class Bytes {
         what is required to hold the contents of r, [Buffer.ReadFrom] will not grow the
         underlying buffer.
     **/
-    @:native("MinRead") static var minRead: go.GoInt;
+    @:native("MinRead") static final minRead: go.GoInt;
 
     /**
         Clone returns a copy of b[:len(b)].

@@ -7,4 +7,4 @@ package go.iter;
     See the [iter] package documentation for more details.
 **/
 @:go.Type({ name: "Seq", instanceName: "iter.Seq", imports: ["iter"] })
-extern typedef Seq<V: Dynamic> = (yield: (p0: V) -> (Bool)) -> Void
+extern typedef Seq<V> = (yield: (p0: V) -> (Bool)) -> Void

@@ -55,7 +55,7 @@ extern class Json {
         [MarshalToFunc] and [UnmarshalFromFunc] functions.
         In such cases, the presence bit should generally be ignored.
     **/
-    @:go.Tuple("p0", "p1") @:native("GetOption") static function getOption<T: Dynamic>(opts: go.encoding.json.v2.Options, setter: (p0: T) -> (go.encoding.json.v2.Options)): (go.Tuple<{ p0: T, p1: Bool }>);
+    @:go.Tuple("p0", "p1") @:native("GetOption") static function getOption<T>(opts: go.encoding.json.v2.Options, setter: (p0: T) -> (go.encoding.json.v2.Options)): (go.Tuple<{ p0: T, p1: Bool }>);
     /**
         JoinMarshalers constructs a flattened list of marshal functions.
         If multiple functions in the list are applicable for a value of a given type,
@@ -210,7 +210,7 @@ extern class Json {
         
         Implementations must not retain the value of T.
     **/
-    @:native("MarshalFunc") static function marshalFunc<T: Dynamic>(fn: (p0: T) -> (go.Result<go.Slice<go.Byte>>)): (go.Pointer<go.encoding.json.v2.Marshalers>);
+    @:native("MarshalFunc") static function marshalFunc<T>(fn: (p0: T) -> (go.Result<go.Slice<go.Byte>>)): (go.Pointer<go.encoding.json.v2.Marshalers>);
     /**
         MarshalToFunc constructs a type-specific marshaler that
         specifies how to marshal values of type T.
@@ -223,7 +223,7 @@ extern class Json {
         Implementations must not retain the pointer to [jsontext.Encoder] or the
         value of T.
     **/
-    @:native("MarshalToFunc") static function marshalToFunc<T: Dynamic>(fn: (p0: go.Pointer<go.encoding.json.jsontext.Encoder>, p1: T) -> (go.Error)): (go.Pointer<go.encoding.json.v2.Marshalers>);
+    @:native("MarshalToFunc") static function marshalToFunc<T>(fn: (p0: go.Pointer<go.encoding.json.jsontext.Encoder>, p1: T) -> (go.Error)): (go.Pointer<go.encoding.json.v2.Marshalers>);
     /**
         MarshalWrite serializes a Go value into an [io.Writer] according to the provided
         marshal and encode options (while ignoring unmarshal or decode options).
@@ -459,7 +459,7 @@ extern class Json {
         Implementations must not retain the pointer to [jsontext.Decoder] or the
         value of T.
     **/
-    @:native("UnmarshalFromFunc") static function unmarshalFromFunc<T: Dynamic>(fn: (p0: go.Pointer<go.encoding.json.jsontext.Decoder>, p1: T) -> (go.Error)): (go.Pointer<go.encoding.json.v2.Unmarshalers>);
+    @:native("UnmarshalFromFunc") static function unmarshalFromFunc<T>(fn: (p0: go.Pointer<go.encoding.json.jsontext.Decoder>, p1: T) -> (go.Error)): (go.Pointer<go.encoding.json.v2.Unmarshalers>);
     /**
         UnmarshalFunc constructs a type-specific unmarshaler that
         specifies how to unmarshal values of type T.
@@ -470,7 +470,7 @@ extern class Json {
         
         Implementations must not retain the value of T.
     **/
-    @:native("UnmarshalFunc") static function unmarshalFunc<T: Dynamic>(fn: (p0: go.Slice<go.Byte>, p1: T) -> (go.Error)): (go.Pointer<go.encoding.json.v2.Unmarshalers>);
+    @:native("UnmarshalFunc") static function unmarshalFunc<T>(fn: (p0: go.Slice<go.Byte>, p1: T) -> (go.Error)): (go.Pointer<go.encoding.json.v2.Unmarshalers>);
     /**
         UnmarshalRead deserializes a Go value from an [io.Reader] according to the
         provided unmarshal and decode options (while ignoring marshal or encode options).

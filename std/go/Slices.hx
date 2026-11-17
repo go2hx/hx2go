@@ -10,18 +10,18 @@ extern class Slices {
         All returns an iterator over index-value pairs in the slice
         in the usual order.
     **/
-    @:native("All") static function all<Slice, E: Dynamic>(s: go.Slice<E>): (go.iter.Seq2<go.GoInt, E>);
+    @:native("All") static function all<Slice, E>(s: go.Slice<E>): (go.iter.Seq2<go.GoInt, E>);
     /**
         AppendSeq appends the values from seq to the slice and
         returns the extended slice.
         If seq is empty, the result preserves the nilness of s.
     **/
-    @:native("AppendSeq") static function appendSeq<Slice, E: Dynamic>(s: go.Slice<E>, seq: go.iter.Seq<E>): (go.Slice<E>);
+    @:native("AppendSeq") static function appendSeq<Slice, E>(s: go.Slice<E>, seq: go.iter.Seq<E>): (go.Slice<E>);
     /**
         Backward returns an iterator over index-value pairs in the slice,
         traversing it backward with descending indices.
     **/
-    @:native("Backward") static function backward<Slice, E: Dynamic>(s: go.Slice<E>): (go.iter.Seq2<go.GoInt, E>);
+    @:native("Backward") static function backward<Slice, E>(s: go.Slice<E>): (go.iter.Seq2<go.GoInt, E>);
     /**
         BinarySearch searches for target in a sorted slice and returns the earliest
         position where target is found, or the position where target would appear
@@ -38,7 +38,7 @@ extern class Slices {
         cmp must implement the same ordering as the slice, such that if
         cmp(a, t) < 0 and cmp(b, t) >= 0, then a must precede b in the slice.
     **/
-    @:go.Tuple("p0", "p1") @:native("BinarySearchFunc") static function binarySearchFunc<S, E: Dynamic, T: Dynamic>(x: go.Slice<E>, target: T, cmp: (p0: E, p1: T) -> (go.GoInt)): (go.Tuple<{ p0: go.GoInt, p1: Bool }>);
+    @:go.Tuple("p0", "p1") @:native("BinarySearchFunc") static function binarySearchFunc<S, E, T>(x: go.Slice<E>, target: T, cmp: (p0: E, p1: T) -> (go.GoInt)): (go.Tuple<{ p0: go.GoInt, p1: Bool }>);
     /**
         Chunk returns an iterator over consecutive sub-slices of up to n elements of s.
         All but the last sub-slice will have size n.
@@ -46,24 +46,24 @@ extern class Slices {
         If s is empty, the sequence is empty: there is no empty slice in the sequence.
         Chunk panics if n is less than 1.
     **/
-    @:native("Chunk") static function chunk<Slice, E: Dynamic>(s: go.Slice<E>, n: go.GoInt): (go.iter.Seq<go.Slice<E>>);
+    @:native("Chunk") static function chunk<Slice, E>(s: go.Slice<E>, n: go.GoInt): (go.iter.Seq<go.Slice<E>>);
     /**
         Clip removes unused capacity from the slice, returning s[:len(s):len(s)].
         The result preserves the nilness of s.
     **/
-    @:native("Clip") static function clip<S, E: Dynamic>(s: go.Slice<E>): (go.Slice<E>);
+    @:native("Clip") static function clip<S, E>(s: go.Slice<E>): (go.Slice<E>);
     /**
         Clone returns a copy of the slice.
         The elements are copied using assignment, so this is a shallow clone.
         The result may have additional unused capacity.
         The result preserves the nilness of s.
     **/
-    @:native("Clone") static function clone<S, E: Dynamic>(s: go.Slice<E>): (go.Slice<E>);
+    @:native("Clone") static function clone<S, E>(s: go.Slice<E>): (go.Slice<E>);
     /**
         Collect collects values from seq into a new slice and returns it.
         If seq is empty, the result is nil.
     **/
-    @:native("Collect") static function collect<E: Dynamic>(seq: go.iter.Seq<E>): (go.Slice<E>);
+    @:native("Collect") static function collect<E>(seq: go.iter.Seq<E>): (go.Slice<E>);
     /**
         Compact replaces consecutive runs of equal elements with a single copy.
         This is like the uniq command found on Unix.
@@ -72,14 +72,14 @@ extern class Slices {
         Compact zeroes the elements between the new length and the original length.
         The result preserves the nilness of s.
     **/
-    @:native("Compact") static function compact<S, E: go.Comparable>(s: go.Slice<E>): (go.Slice<E>);
+    @:native("Compact") static function compact<S, E>(s: go.Slice<E>): (go.Slice<E>);
     /**
         CompactFunc is like [Compact] but uses an equality function to compare elements.
         For runs of elements that compare equal, CompactFunc keeps the first one.
         CompactFunc zeroes the elements between the new length and the original length.
         The result preserves the nilness of s.
     **/
-    @:native("CompactFunc") static function compactFunc<S, E: Dynamic>(s: go.Slice<E>, eq: (p0: E, p1: E) -> (Bool)): (go.Slice<E>);
+    @:native("CompactFunc") static function compactFunc<S, E>(s: go.Slice<E>, eq: (p0: E, p1: E) -> (Bool)): (go.Slice<E>);
     /**
         Compare compares the elements of s1 and s2, using [cmp.Compare] on each pair
         of elements. The elements are compared sequentially, starting at index 0,
@@ -97,22 +97,22 @@ extern class Slices {
         returns 0 the result is 0 if len(s1) == len(s2), -1 if len(s1) < len(s2),
         and +1 if len(s1) > len(s2).
     **/
-    @:native("CompareFunc") static function compareFunc<S1, S2, E1: Dynamic, E2: Dynamic>(s1: go.Slice<E1>, s2: go.Slice<E2>, cmp: (p0: E1, p1: E2) -> (go.GoInt)): (go.GoInt);
+    @:native("CompareFunc") static function compareFunc<S1, S2, E1, E2>(s1: go.Slice<E1>, s2: go.Slice<E2>, cmp: (p0: E1, p1: E2) -> (go.GoInt)): (go.GoInt);
     /**
         Concat returns a new slice concatenating the passed in slices.
         If the concatenation is empty, the result is nil.
     **/
-    @:native("Concat") static function concat<S, E: Dynamic>(slices: haxe.Rest<go.Slice<E>>): (go.Slice<E>);
+    @:native("Concat") static function concat<S, E>(slices: haxe.Rest<go.Slice<E>>): (go.Slice<E>);
     /**
         Contains reports whether v is present in s.
     **/
-    @:native("Contains") static function contains<S, E: go.Comparable>(s: go.Slice<E>, v: E): (Bool);
+    @:native("Contains") static function contains<S, E>(s: go.Slice<E>, v: E): (Bool);
     /**
         ContainsFunc reports whether at least one
         element e of s satisfies f(e).
         It stops as soon as a call to f returns true.
     **/
-    @:native("ContainsFunc") static function containsFunc<S, E: Dynamic>(s: go.Slice<E>, f: (p0: E) -> (Bool)): (Bool);
+    @:native("ContainsFunc") static function containsFunc<S, E>(s: go.Slice<E>, f: (p0: E) -> (Bool)): (Bool);
     /**
         Delete modifies s in place by removing the elements s[i:j],
         and returns the modified slice.
@@ -122,14 +122,14 @@ extern class Slices {
         Delete zeroes the elements s[len(s)-(j-i):len(s)].
         If the result is empty, it has the same nilness as s.
     **/
-    @:native("Delete") static function delete<S, E: Dynamic>(s: go.Slice<E>, i: go.GoInt, j: go.GoInt): (go.Slice<E>);
+    @:native("Delete") static function delete<S, E>(s: go.Slice<E>, i: go.GoInt, j: go.GoInt): (go.Slice<E>);
     /**
         DeleteFunc modifies s in place by removing any elements for which del returns true,
         and returns the modified slice.
         DeleteFunc zeroes the elements between the new length and the original length.
         If the result is empty, it has the same nilness as s.
     **/
-    @:native("DeleteFunc") static function deleteFunc<S, E: Dynamic>(s: go.Slice<E>, del: (p0: E) -> (Bool)): (go.Slice<E>);
+    @:native("DeleteFunc") static function deleteFunc<S, E>(s: go.Slice<E>, del: (p0: E) -> (Bool)): (go.Slice<E>);
     /**
         Equal reports whether two slices are equal: the same length and all
         elements equal. If the lengths are different, Equal returns false.
@@ -138,7 +138,7 @@ extern class Slices {
         Empty and nil slices are considered equal.
         Floating point NaNs are not considered equal.
     **/
-    @:native("Equal") static function equal<S, E: go.Comparable>(s1: go.Slice<E>, s2: go.Slice<E>): (Bool);
+    @:native("Equal") static function equal<S, E>(s1: go.Slice<E>, s2: go.Slice<E>): (Bool);
     /**
         EqualFunc reports whether two slices are equal using an equality
         function on each pair of elements. If the lengths are different,
@@ -146,7 +146,7 @@ extern class Slices {
         increasing index order, and the comparison stops at the first index
         for which eq returns false.
     **/
-    @:native("EqualFunc") static function equalFunc<S1, S2, E1: Dynamic, E2: Dynamic>(s1: go.Slice<E1>, s2: go.Slice<E2>, eq: (p0: E1, p1: E2) -> (Bool)): (Bool);
+    @:native("EqualFunc") static function equalFunc<S1, S2, E1, E2>(s1: go.Slice<E1>, s2: go.Slice<E2>, eq: (p0: E1, p1: E2) -> (Bool)): (Bool);
     /**
         Grow increases the slice's capacity, if necessary, to guarantee space for
         another n elements. After Grow(n), at least n elements can be appended
@@ -154,17 +154,17 @@ extern class Slices {
         allocate the memory, Grow panics.
         The result preserves the nilness of s.
     **/
-    @:native("Grow") static function grow<S, E: Dynamic>(s: go.Slice<E>, n: go.GoInt): (go.Slice<E>);
+    @:native("Grow") static function grow<S, E>(s: go.Slice<E>, n: go.GoInt): (go.Slice<E>);
     /**
         Index returns the index of the first occurrence of v in s,
         or -1 if not present.
     **/
-    @:native("Index") static function index<S, E: go.Comparable>(s: go.Slice<E>, v: E): (go.GoInt);
+    @:native("Index") static function index<S, E>(s: go.Slice<E>, v: E): (go.GoInt);
     /**
         IndexFunc returns the first index i satisfying f(s[i]),
         or -1 if none do.
     **/
-    @:native("IndexFunc") static function indexFunc<S, E: Dynamic>(s: go.Slice<E>, f: (p0: E) -> (Bool)): (go.GoInt);
+    @:native("IndexFunc") static function indexFunc<S, E>(s: go.Slice<E>, f: (p0: E) -> (Bool)): (go.GoInt);
     /**
         Insert modifies s in place by inserting the values v... at index i,
         and returns the modified slice.
@@ -175,7 +175,7 @@ extern class Slices {
         This function is O(len(s) + len(v)).
         If the result is empty, it has the same nilness as s.
     **/
-    @:native("Insert") static function insert<S, E: Dynamic>(s: go.Slice<E>, i: go.GoInt, v: haxe.Rest<E>): (go.Slice<E>);
+    @:native("Insert") static function insert<S, E>(s: go.Slice<E>, i: go.GoInt, v: haxe.Rest<E>): (go.Slice<E>);
     /**
         IsSorted reports whether x is sorted in ascending order.
     **/
@@ -184,7 +184,7 @@ extern class Slices {
         IsSortedFunc reports whether x is sorted in ascending order, with cmp as the
         comparison function as defined by [SortFunc].
     **/
-    @:native("IsSortedFunc") static function isSortedFunc<S, E: Dynamic>(x: go.Slice<E>, cmp: (a: E, b: E) -> (go.GoInt)): (Bool);
+    @:native("IsSortedFunc") static function isSortedFunc<S, E>(x: go.Slice<E>, cmp: (a: E, b: E) -> (go.GoInt)): (Bool);
     /**
         Max returns the maximal value in x. It panics if x is empty.
         For floating-point E, Max propagates NaNs (any NaN value in x
@@ -196,7 +196,7 @@ extern class Slices {
         It panics if x is empty. If there is more than one maximal element
         according to the cmp function, MaxFunc returns the first one.
     **/
-    @:native("MaxFunc") static function maxFunc<S, E: Dynamic>(x: go.Slice<E>, cmp: (a: E, b: E) -> (go.GoInt)): (E);
+    @:native("MaxFunc") static function maxFunc<S, E>(x: go.Slice<E>, cmp: (a: E, b: E) -> (go.GoInt)): (E);
     /**
         Min returns the minimal value in x. It panics if x is empty.
         For floating-point numbers, Min propagates NaNs (any NaN value in x
@@ -208,7 +208,7 @@ extern class Slices {
         It panics if x is empty. If there is more than one minimal element
         according to the cmp function, MinFunc returns the first one.
     **/
-    @:native("MinFunc") static function minFunc<S, E: Dynamic>(x: go.Slice<E>, cmp: (a: E, b: E) -> (go.GoInt)): (E);
+    @:native("MinFunc") static function minFunc<S, E>(x: go.Slice<E>, cmp: (a: E, b: E) -> (go.GoInt)): (E);
     /**
         Repeat returns a new slice that repeats the provided slice the given number of times.
         The result has length and capacity (len(x) * count).
@@ -216,7 +216,7 @@ extern class Slices {
         Repeat panics if count is negative or if the result of (len(x) * count)
         overflows.
     **/
-    @:native("Repeat") static function repeat<S, E: Dynamic>(x: go.Slice<E>, count: go.GoInt): (go.Slice<E>);
+    @:native("Repeat") static function repeat<S, E>(x: go.Slice<E>, count: go.GoInt): (go.Slice<E>);
     /**
         Replace modifies s in place by replacing the elements s[i:j] with the given v,
         and returns the modified slice.
@@ -224,11 +224,11 @@ extern class Slices {
         When len(v) < (j-i), Replace zeroes the elements between the new length and the original length.
         If the result is empty, it has the same nilness as s.
     **/
-    @:native("Replace") static function replace<S, E: Dynamic>(s: go.Slice<E>, i: go.GoInt, j: go.GoInt, v: haxe.Rest<E>): (go.Slice<E>);
+    @:native("Replace") static function replace<S, E>(s: go.Slice<E>, i: go.GoInt, j: go.GoInt, v: haxe.Rest<E>): (go.Slice<E>);
     /**
         Reverse reverses the elements of the slice in place.
     **/
-    @:native("Reverse") static function reverse<S, E: Dynamic>(s: go.Slice<E>): Void;
+    @:native("Reverse") static function reverse<S, E>(s: go.Slice<E>): Void;
     /**
         Sort sorts a slice of any ordered type in ascending order.
         When sorting floating-point numbers, NaNs are ordered before other values.
@@ -245,12 +245,12 @@ extern class Slices {
         See https://en.wikipedia.org/wiki/Weak_ordering#Strict_weak_orderings.
         The function should return 0 for incomparable items.
     **/
-    @:native("SortFunc") static function sortFunc<S, E: Dynamic>(x: go.Slice<E>, cmp: (a: E, b: E) -> (go.GoInt)): Void;
+    @:native("SortFunc") static function sortFunc<S, E>(x: go.Slice<E>, cmp: (a: E, b: E) -> (go.GoInt)): Void;
     /**
         SortStableFunc sorts the slice x while keeping the original order of equal
         elements, using cmp to compare elements in the same way as [SortFunc].
     **/
-    @:native("SortStableFunc") static function sortStableFunc<S, E: Dynamic>(x: go.Slice<E>, cmp: (a: E, b: E) -> (go.GoInt)): Void;
+    @:native("SortStableFunc") static function sortStableFunc<S, E>(x: go.Slice<E>, cmp: (a: E, b: E) -> (go.GoInt)): Void;
     /**
         Sorted collects values from seq into a new slice, sorts the slice,
         and returns it.
@@ -262,7 +262,7 @@ extern class Slices {
         using the comparison function, and returns it.
         If seq is empty, the result is nil.
     **/
-    @:native("SortedFunc") static function sortedFunc<E: Dynamic>(seq: go.iter.Seq<E>, cmp: (p0: E, p1: E) -> (go.GoInt)): (go.Slice<E>);
+    @:native("SortedFunc") static function sortedFunc<E>(seq: go.iter.Seq<E>, cmp: (p0: E, p1: E) -> (go.GoInt)): (go.Slice<E>);
     /**
         SortedStableFunc collects values from seq into a new slice.
         It then sorts the slice while keeping the original order of equal elements,
@@ -270,10 +270,10 @@ extern class Slices {
         It returns the new slice.
         If seq is empty, the result is nil.
     **/
-    @:native("SortedStableFunc") static function sortedStableFunc<E: Dynamic>(seq: go.iter.Seq<E>, cmp: (p0: E, p1: E) -> (go.GoInt)): (go.Slice<E>);
+    @:native("SortedStableFunc") static function sortedStableFunc<E>(seq: go.iter.Seq<E>, cmp: (p0: E, p1: E) -> (go.GoInt)): (go.Slice<E>);
     /**
         Values returns an iterator that yields the slice elements in order.
     **/
-    @:native("Values") static function values<Slice, E: Dynamic>(s: go.Slice<E>): (go.iter.Seq<E>);
+    @:native("Values") static function values<Slice, E>(s: go.Slice<E>): (go.iter.Seq<E>);
 
 }

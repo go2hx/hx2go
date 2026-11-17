@@ -320,16 +320,16 @@ package go.log;
 @:go.Type({ name: "slog", instanceName: "slog.slog", imports: ["log/slog"] })
 extern class Slog {
 
-    @:native("KindAny") static var kindAny: go.log.slog.Kind;
-    @:native("KindBool") static var kindBool: go.log.slog.Kind;
-    @:native("KindDuration") static var kindDuration: go.log.slog.Kind;
-    @:native("KindFloat64") static var kindFloat64: go.log.slog.Kind;
-    @:native("KindGroup") static var kindGroup: go.log.slog.Kind;
-    @:native("KindInt64") static var kindInt64: go.log.slog.Kind;
-    @:native("KindLogValuer") static var kindLogValuer: go.log.slog.Kind;
-    @:native("KindString") static var kindString: go.log.slog.Kind;
-    @:native("KindTime") static var kindTime: go.log.slog.Kind;
-    @:native("KindUint64") static var kindUint64: go.log.slog.Kind;
+    @:native("KindAny") static final kindAny: go.log.slog.Kind;
+    @:native("KindBool") static final kindBool: go.log.slog.Kind;
+    @:native("KindDuration") static final kindDuration: go.log.slog.Kind;
+    @:native("KindFloat64") static final kindFloat64: go.log.slog.Kind;
+    @:native("KindGroup") static final kindGroup: go.log.slog.Kind;
+    @:native("KindInt64") static final kindInt64: go.log.slog.Kind;
+    @:native("KindLogValuer") static final kindLogValuer: go.log.slog.Kind;
+    @:native("KindString") static final kindString: go.log.slog.Kind;
+    @:native("KindTime") static final kindTime: go.log.slog.Kind;
+    @:native("KindUint64") static final kindUint64: go.log.slog.Kind;
     /**
         Names for common levels.
         
@@ -356,7 +356,7 @@ extern class Slog {
         does not. But those OpenTelemetry levels can still be represented as slog
         Levels by using the appropriate integers.
     **/
-    @:native("LevelDebug") static var levelDebug: go.log.slog.Level;
+    @:native("LevelDebug") static final levelDebug: go.log.slog.Level;
     /**
         Names for common levels.
         
@@ -383,7 +383,7 @@ extern class Slog {
         does not. But those OpenTelemetry levels can still be represented as slog
         Levels by using the appropriate integers.
     **/
-    @:native("LevelError") static var levelError: go.log.slog.Level;
+    @:native("LevelError") static final levelError: go.log.slog.Level;
     /**
         Names for common levels.
         
@@ -410,11 +410,11 @@ extern class Slog {
         does not. But those OpenTelemetry levels can still be represented as slog
         Levels by using the appropriate integers.
     **/
-    @:native("LevelInfo") static var levelInfo: go.log.slog.Level;
+    @:native("LevelInfo") static final levelInfo: go.log.slog.Level;
     /**
         Keys for "built-in" attributes.
     **/
-    @:native("LevelKey") static var levelKey: std.String;
+    @:native("LevelKey") static final levelKey: std.String;
     /**
         Names for common levels.
         
@@ -441,19 +441,19 @@ extern class Slog {
         does not. But those OpenTelemetry levels can still be represented as slog
         Levels by using the appropriate integers.
     **/
-    @:native("LevelWarn") static var levelWarn: go.log.slog.Level;
+    @:native("LevelWarn") static final levelWarn: go.log.slog.Level;
     /**
         Keys for "built-in" attributes.
     **/
-    @:native("MessageKey") static var messageKey: std.String;
+    @:native("MessageKey") static final messageKey: std.String;
     /**
         Keys for "built-in" attributes.
     **/
-    @:native("SourceKey") static var sourceKey: std.String;
+    @:native("SourceKey") static final sourceKey: std.String;
     /**
         Keys for "built-in" attributes.
     **/
-    @:native("TimeKey") static var timeKey: std.String;
+    @:native("TimeKey") static final timeKey: std.String;
 
     /**
         DiscardHandler discards all log output.

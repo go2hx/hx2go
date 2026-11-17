@@ -31,7 +31,7 @@ extern class Fs {
         may be used in wire protocols or disk representations: they must not be
         changed, although new bits might be added.
     **/
-    @:native("ModeAppend") static var modeAppend: go.io.fs.FileMode;
+    @:native("ModeAppend") static final modeAppend: go.io.fs.FileMode;
     /**
         The defined file mode bits are the most significant bits of the [FileMode].
         The nine least-significant bits are the standard Unix rwxrwxrwx permissions.
@@ -39,7 +39,7 @@ extern class Fs {
         may be used in wire protocols or disk representations: they must not be
         changed, although new bits might be added.
     **/
-    @:native("ModeCharDevice") static var modeCharDevice: go.io.fs.FileMode;
+    @:native("ModeCharDevice") static final modeCharDevice: go.io.fs.FileMode;
     /**
         The defined file mode bits are the most significant bits of the [FileMode].
         The nine least-significant bits are the standard Unix rwxrwxrwx permissions.
@@ -47,7 +47,7 @@ extern class Fs {
         may be used in wire protocols or disk representations: they must not be
         changed, although new bits might be added.
     **/
-    @:native("ModeDevice") static var modeDevice: go.io.fs.FileMode;
+    @:native("ModeDevice") static final modeDevice: go.io.fs.FileMode;
     /**
         The defined file mode bits are the most significant bits of the [FileMode].
         The nine least-significant bits are the standard Unix rwxrwxrwx permissions.
@@ -55,7 +55,7 @@ extern class Fs {
         may be used in wire protocols or disk representations: they must not be
         changed, although new bits might be added.
     **/
-    @:native("ModeDir") static var modeDir: go.io.fs.FileMode;
+    @:native("ModeDir") static final modeDir: go.io.fs.FileMode;
     /**
         The defined file mode bits are the most significant bits of the [FileMode].
         The nine least-significant bits are the standard Unix rwxrwxrwx permissions.
@@ -63,7 +63,7 @@ extern class Fs {
         may be used in wire protocols or disk representations: they must not be
         changed, although new bits might be added.
     **/
-    @:native("ModeExclusive") static var modeExclusive: go.io.fs.FileMode;
+    @:native("ModeExclusive") static final modeExclusive: go.io.fs.FileMode;
     /**
         The defined file mode bits are the most significant bits of the [FileMode].
         The nine least-significant bits are the standard Unix rwxrwxrwx permissions.
@@ -71,7 +71,7 @@ extern class Fs {
         may be used in wire protocols or disk representations: they must not be
         changed, although new bits might be added.
     **/
-    @:native("ModeIrregular") static var modeIrregular: go.io.fs.FileMode;
+    @:native("ModeIrregular") static final modeIrregular: go.io.fs.FileMode;
     /**
         The defined file mode bits are the most significant bits of the [FileMode].
         The nine least-significant bits are the standard Unix rwxrwxrwx permissions.
@@ -79,7 +79,7 @@ extern class Fs {
         may be used in wire protocols or disk representations: they must not be
         changed, although new bits might be added.
     **/
-    @:native("ModeNamedPipe") static var modeNamedPipe: go.io.fs.FileMode;
+    @:native("ModeNamedPipe") static final modeNamedPipe: go.io.fs.FileMode;
     /**
         The defined file mode bits are the most significant bits of the [FileMode].
         The nine least-significant bits are the standard Unix rwxrwxrwx permissions.
@@ -87,7 +87,7 @@ extern class Fs {
         may be used in wire protocols or disk representations: they must not be
         changed, although new bits might be added.
     **/
-    @:native("ModePerm") static var modePerm: go.io.fs.FileMode;
+    @:native("ModePerm") static final modePerm: go.io.fs.FileMode;
     /**
         The defined file mode bits are the most significant bits of the [FileMode].
         The nine least-significant bits are the standard Unix rwxrwxrwx permissions.
@@ -95,7 +95,7 @@ extern class Fs {
         may be used in wire protocols or disk representations: they must not be
         changed, although new bits might be added.
     **/
-    @:native("ModeSetgid") static var modeSetgid: go.io.fs.FileMode;
+    @:native("ModeSetgid") static final modeSetgid: go.io.fs.FileMode;
     /**
         The defined file mode bits are the most significant bits of the [FileMode].
         The nine least-significant bits are the standard Unix rwxrwxrwx permissions.
@@ -103,7 +103,7 @@ extern class Fs {
         may be used in wire protocols or disk representations: they must not be
         changed, although new bits might be added.
     **/
-    @:native("ModeSetuid") static var modeSetuid: go.io.fs.FileMode;
+    @:native("ModeSetuid") static final modeSetuid: go.io.fs.FileMode;
     /**
         The defined file mode bits are the most significant bits of the [FileMode].
         The nine least-significant bits are the standard Unix rwxrwxrwx permissions.
@@ -111,7 +111,7 @@ extern class Fs {
         may be used in wire protocols or disk representations: they must not be
         changed, although new bits might be added.
     **/
-    @:native("ModeSocket") static var modeSocket: go.io.fs.FileMode;
+    @:native("ModeSocket") static final modeSocket: go.io.fs.FileMode;
     /**
         The defined file mode bits are the most significant bits of the [FileMode].
         The nine least-significant bits are the standard Unix rwxrwxrwx permissions.
@@ -119,7 +119,7 @@ extern class Fs {
         may be used in wire protocols or disk representations: they must not be
         changed, although new bits might be added.
     **/
-    @:native("ModeSticky") static var modeSticky: go.io.fs.FileMode;
+    @:native("ModeSticky") static final modeSticky: go.io.fs.FileMode;
     /**
         The defined file mode bits are the most significant bits of the [FileMode].
         The nine least-significant bits are the standard Unix rwxrwxrwx permissions.
@@ -127,7 +127,7 @@ extern class Fs {
         may be used in wire protocols or disk representations: they must not be
         changed, although new bits might be added.
     **/
-    @:native("ModeSymlink") static var modeSymlink: go.io.fs.FileMode;
+    @:native("ModeSymlink") static final modeSymlink: go.io.fs.FileMode;
     /**
         The defined file mode bits are the most significant bits of the [FileMode].
         The nine least-significant bits are the standard Unix rwxrwxrwx permissions.
@@ -135,7 +135,7 @@ extern class Fs {
         may be used in wire protocols or disk representations: they must not be
         changed, although new bits might be added.
     **/
-    @:native("ModeTemporary") static var modeTemporary: go.io.fs.FileMode;
+    @:native("ModeTemporary") static final modeTemporary: go.io.fs.FileMode;
     /**
         The defined file mode bits are the most significant bits of the [FileMode].
         The nine least-significant bits are the standard Unix rwxrwxrwx permissions.
@@ -143,7 +143,7 @@ extern class Fs {
         may be used in wire protocols or disk representations: they must not be
         changed, although new bits might be added.
     **/
-    @:native("ModeType") static var modeType: go.io.fs.FileMode;
+    @:native("ModeType") static final modeType: go.io.fs.FileMode;
 
     /**
         FileInfoToDirEntry returns a [DirEntry] that returns information from info.

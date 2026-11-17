@@ -14,10 +14,10 @@ package go.crypto;
 @:go.Type({ name: "dsa", instanceName: "dsa.dsa", imports: ["crypto/dsa"] })
 extern class Dsa {
 
-    @:native("L1024N160") static var L1024N160: go.crypto.dsa.ParameterSizes;
-    @:native("L2048N224") static var L2048N224: go.crypto.dsa.ParameterSizes;
-    @:native("L2048N256") static var L2048N256: go.crypto.dsa.ParameterSizes;
-    @:native("L3072N256") static var L3072N256: go.crypto.dsa.ParameterSizes;
+    @:native("L1024N160") static final L1024N160: go.crypto.dsa.ParameterSizes;
+    @:native("L2048N224") static final L2048N224: go.crypto.dsa.ParameterSizes;
+    @:native("L2048N256") static final L2048N256: go.crypto.dsa.ParameterSizes;
+    @:native("L3072N256") static final L3072N256: go.crypto.dsa.ParameterSizes;
 
     /**
         GenerateKey generates a public&private key pair. The Parameters of the

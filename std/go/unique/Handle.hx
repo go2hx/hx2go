@@ -9,7 +9,7 @@ package go.unique;
 **/
 @:structInit
 @:go.Type({ name: "Handle", instanceName: "unique.Handle", imports: ["unique"] })
-extern class Handle<T: go.Comparable> {
+extern class Handle<T> {
 
     /**
         Value returns a shallow copy of the T value that produced the Handle.

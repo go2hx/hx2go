@@ -259,7 +259,7 @@ extern class Template {
         	If the data comes from a trusted source, use content types to exempt it
         	from filtering: URL(`javascript:...`).
     **/
-    @:native("ErrAmbigContext") static var errAmbigContext: go.html.template.ErrorCode;
+    @:native("ErrAmbigContext") static final errAmbigContext: go.html.template.ErrorCode;
     /**
         We define codes for each error that manifests while escaping templates, but
         escaped templates may also fail at runtime.
@@ -278,7 +278,7 @@ extern class Template {
         	If the data comes from a trusted source, use content types to exempt it
         	from filtering: URL(`javascript:...`).
     **/
-    @:native("ErrBadHTML") static var errBadHTML: go.html.template.ErrorCode;
+    @:native("ErrBadHTML") static final errBadHTML: go.html.template.ErrorCode;
     /**
         We define codes for each error that manifests while escaping templates, but
         escaped templates may also fail at runtime.
@@ -297,7 +297,7 @@ extern class Template {
         	If the data comes from a trusted source, use content types to exempt it
         	from filtering: URL(`javascript:...`).
     **/
-    @:native("ErrBranchEnd") static var errBranchEnd: go.html.template.ErrorCode;
+    @:native("ErrBranchEnd") static final errBranchEnd: go.html.template.ErrorCode;
     /**
         We define codes for each error that manifests while escaping templates, but
         escaped templates may also fail at runtime.
@@ -316,7 +316,7 @@ extern class Template {
         	If the data comes from a trusted source, use content types to exempt it
         	from filtering: URL(`javascript:...`).
     **/
-    @:native("ErrEndContext") static var errEndContext: go.html.template.ErrorCode;
+    @:native("ErrEndContext") static final errEndContext: go.html.template.ErrorCode;
     /**
         We define codes for each error that manifests while escaping templates, but
         escaped templates may also fail at runtime.
@@ -335,7 +335,7 @@ extern class Template {
         	If the data comes from a trusted source, use content types to exempt it
         	from filtering: URL(`javascript:...`).
     **/
-    @:native("ErrJSTemplate") static var errJSTemplate: go.html.template.ErrorCode;
+    @:native("ErrJSTemplate") static final errJSTemplate: go.html.template.ErrorCode;
     /**
         We define codes for each error that manifests while escaping templates, but
         escaped templates may also fail at runtime.
@@ -354,7 +354,7 @@ extern class Template {
         	If the data comes from a trusted source, use content types to exempt it
         	from filtering: URL(`javascript:...`).
     **/
-    @:native("ErrNoSuchTemplate") static var errNoSuchTemplate: go.html.template.ErrorCode;
+    @:native("ErrNoSuchTemplate") static final errNoSuchTemplate: go.html.template.ErrorCode;
     /**
         We define codes for each error that manifests while escaping templates, but
         escaped templates may also fail at runtime.
@@ -373,7 +373,7 @@ extern class Template {
         	If the data comes from a trusted source, use content types to exempt it
         	from filtering: URL(`javascript:...`).
     **/
-    @:native("ErrOutputContext") static var errOutputContext: go.html.template.ErrorCode;
+    @:native("ErrOutputContext") static final errOutputContext: go.html.template.ErrorCode;
     /**
         We define codes for each error that manifests while escaping templates, but
         escaped templates may also fail at runtime.
@@ -392,7 +392,7 @@ extern class Template {
         	If the data comes from a trusted source, use content types to exempt it
         	from filtering: URL(`javascript:...`).
     **/
-    @:native("ErrPartialCharset") static var errPartialCharset: go.html.template.ErrorCode;
+    @:native("ErrPartialCharset") static final errPartialCharset: go.html.template.ErrorCode;
     /**
         We define codes for each error that manifests while escaping templates, but
         escaped templates may also fail at runtime.
@@ -411,7 +411,7 @@ extern class Template {
         	If the data comes from a trusted source, use content types to exempt it
         	from filtering: URL(`javascript:...`).
     **/
-    @:native("ErrPartialEscape") static var errPartialEscape: go.html.template.ErrorCode;
+    @:native("ErrPartialEscape") static final errPartialEscape: go.html.template.ErrorCode;
     /**
         We define codes for each error that manifests while escaping templates, but
         escaped templates may also fail at runtime.
@@ -430,7 +430,7 @@ extern class Template {
         	If the data comes from a trusted source, use content types to exempt it
         	from filtering: URL(`javascript:...`).
     **/
-    @:native("ErrPredefinedEscaper") static var errPredefinedEscaper: go.html.template.ErrorCode;
+    @:native("ErrPredefinedEscaper") static final errPredefinedEscaper: go.html.template.ErrorCode;
     /**
         We define codes for each error that manifests while escaping templates, but
         escaped templates may also fail at runtime.
@@ -449,7 +449,7 @@ extern class Template {
         	If the data comes from a trusted source, use content types to exempt it
         	from filtering: URL(`javascript:...`).
     **/
-    @:native("ErrRangeLoopReentry") static var errRangeLoopReentry: go.html.template.ErrorCode;
+    @:native("ErrRangeLoopReentry") static final errRangeLoopReentry: go.html.template.ErrorCode;
     /**
         We define codes for each error that manifests while escaping templates, but
         escaped templates may also fail at runtime.
@@ -468,7 +468,7 @@ extern class Template {
         	If the data comes from a trusted source, use content types to exempt it
         	from filtering: URL(`javascript:...`).
     **/
-    @:native("ErrSlashAmbig") static var errSlashAmbig: go.html.template.ErrorCode;
+    @:native("ErrSlashAmbig") static final errSlashAmbig: go.html.template.ErrorCode;
     /**
         We define codes for each error that manifests while escaping templates, but
         escaped templates may also fail at runtime.
@@ -487,7 +487,7 @@ extern class Template {
         	If the data comes from a trusted source, use content types to exempt it
         	from filtering: URL(`javascript:...`).
     **/
-    @:native("OK") static var OK: go.html.template.ErrorCode;
+    @:native("OK") static final OK: go.html.template.ErrorCode;
 
     /**
         HTMLEscape writes to w the escaped HTML equivalent of the plain text data b.

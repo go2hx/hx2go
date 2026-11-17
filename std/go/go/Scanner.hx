@@ -8,7 +8,7 @@ package go.go;
 @:go.Type({ name: "scanner", instanceName: "scanner.scanner", imports: ["go/scanner"] })
 extern class Scanner {
 
-    @:native("ScanComments") static var scanComments: go.go.scanner.Mode;
+    @:native("ScanComments") static final scanComments: go.go.scanner.Mode;
 
     /**
         PrintError is a utility function that prints a list of errors to w,

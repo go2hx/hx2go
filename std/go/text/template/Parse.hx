@@ -9,29 +9,29 @@ package go.text.template;
 @:go.Type({ name: "parse", instanceName: "parse.parse", imports: ["text/template/parse"] })
 extern class Parse {
 
-    @:native("NodeAction") static var nodeAction: go.text.template.parse.NodeType;
-    @:native("NodeBool") static var nodeBool: go.text.template.parse.NodeType;
-    @:native("NodeBreak") static var nodeBreak: go.text.template.parse.NodeType;
-    @:native("NodeChain") static var nodeChain: go.text.template.parse.NodeType;
-    @:native("NodeCommand") static var nodeCommand: go.text.template.parse.NodeType;
-    @:native("NodeComment") static var nodeComment: go.text.template.parse.NodeType;
-    @:native("NodeContinue") static var nodeContinue: go.text.template.parse.NodeType;
-    @:native("NodeDot") static var nodeDot: go.text.template.parse.NodeType;
-    @:native("NodeField") static var nodeField: go.text.template.parse.NodeType;
-    @:native("NodeIdentifier") static var nodeIdentifier: go.text.template.parse.NodeType;
-    @:native("NodeIf") static var nodeIf: go.text.template.parse.NodeType;
-    @:native("NodeList") static var nodeList: go.text.template.parse.NodeType;
-    @:native("NodeNil") static var nodeNil: go.text.template.parse.NodeType;
-    @:native("NodeNumber") static var nodeNumber: go.text.template.parse.NodeType;
-    @:native("NodePipe") static var nodePipe: go.text.template.parse.NodeType;
-    @:native("NodeRange") static var nodeRange: go.text.template.parse.NodeType;
-    @:native("NodeString") static var nodeString: go.text.template.parse.NodeType;
-    @:native("NodeTemplate") static var nodeTemplate: go.text.template.parse.NodeType;
-    @:native("NodeText") static var nodeText: go.text.template.parse.NodeType;
-    @:native("NodeVariable") static var nodeVariable: go.text.template.parse.NodeType;
-    @:native("NodeWith") static var nodeWith: go.text.template.parse.NodeType;
-    @:native("ParseComments") static var parseComments: go.text.template.parse.Mode;
-    @:native("SkipFuncCheck") static var skipFuncCheck: go.text.template.parse.Mode;
+    @:native("NodeAction") static final nodeAction: go.text.template.parse.NodeType;
+    @:native("NodeBool") static final nodeBool: go.text.template.parse.NodeType;
+    @:native("NodeBreak") static final nodeBreak: go.text.template.parse.NodeType;
+    @:native("NodeChain") static final nodeChain: go.text.template.parse.NodeType;
+    @:native("NodeCommand") static final nodeCommand: go.text.template.parse.NodeType;
+    @:native("NodeComment") static final nodeComment: go.text.template.parse.NodeType;
+    @:native("NodeContinue") static final nodeContinue: go.text.template.parse.NodeType;
+    @:native("NodeDot") static final nodeDot: go.text.template.parse.NodeType;
+    @:native("NodeField") static final nodeField: go.text.template.parse.NodeType;
+    @:native("NodeIdentifier") static final nodeIdentifier: go.text.template.parse.NodeType;
+    @:native("NodeIf") static final nodeIf: go.text.template.parse.NodeType;
+    @:native("NodeList") static final nodeList: go.text.template.parse.NodeType;
+    @:native("NodeNil") static final nodeNil: go.text.template.parse.NodeType;
+    @:native("NodeNumber") static final nodeNumber: go.text.template.parse.NodeType;
+    @:native("NodePipe") static final nodePipe: go.text.template.parse.NodeType;
+    @:native("NodeRange") static final nodeRange: go.text.template.parse.NodeType;
+    @:native("NodeString") static final nodeString: go.text.template.parse.NodeType;
+    @:native("NodeTemplate") static final nodeTemplate: go.text.template.parse.NodeType;
+    @:native("NodeText") static final nodeText: go.text.template.parse.NodeType;
+    @:native("NodeVariable") static final nodeVariable: go.text.template.parse.NodeType;
+    @:native("NodeWith") static final nodeWith: go.text.template.parse.NodeType;
+    @:native("ParseComments") static final parseComments: go.text.template.parse.Mode;
+    @:native("SkipFuncCheck") static final skipFuncCheck: go.text.template.parse.Mode;
 
     /**
         IsEmptyTree reports whether this tree (node) is empty of everything but space or comments.

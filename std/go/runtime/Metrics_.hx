@@ -591,10 +591,10 @@ package go.runtime;
 @:go.Type({ name: "metrics", instanceName: "metrics.metrics", imports: ["runtime/metrics"] })
 extern class Metrics_ {
 
-    @:native("KindBad") static var kindBad: go.runtime.metrics.ValueKind;
-    @:native("KindFloat64") static var kindFloat64: go.runtime.metrics.ValueKind;
-    @:native("KindFloat64Histogram") static var kindFloat64Histogram: go.runtime.metrics.ValueKind;
-    @:native("KindUint64") static var kindUint64: go.runtime.metrics.ValueKind;
+    @:native("KindBad") static final kindBad: go.runtime.metrics.ValueKind;
+    @:native("KindFloat64") static final kindFloat64: go.runtime.metrics.ValueKind;
+    @:native("KindFloat64Histogram") static final kindFloat64Histogram: go.runtime.metrics.ValueKind;
+    @:native("KindUint64") static final kindUint64: go.runtime.metrics.ValueKind;
 
     /**
         All returns a slice of containing metric descriptions for all supported metrics.

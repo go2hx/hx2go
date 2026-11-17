@@ -14,13 +14,13 @@ package go.crypto;
 @:go.Type({ name: "mldsa", instanceName: "mldsa.mldsa", imports: ["crypto/mldsa"] })
 extern class Mldsa {
 
-    @:native("MLDSA44PublicKeySize") static var mLDSA44PublicKeySize: go.GoInt;
-    @:native("MLDSA44SignatureSize") static var mLDSA44SignatureSize: go.GoInt;
-    @:native("MLDSA65PublicKeySize") static var mLDSA65PublicKeySize: go.GoInt;
-    @:native("MLDSA65SignatureSize") static var mLDSA65SignatureSize: go.GoInt;
-    @:native("MLDSA87PublicKeySize") static var mLDSA87PublicKeySize: go.GoInt;
-    @:native("MLDSA87SignatureSize") static var mLDSA87SignatureSize: go.GoInt;
-    @:native("PrivateKeySize") static var privateKeySize: go.GoInt;
+    @:native("MLDSA44PublicKeySize") static final mLDSA44PublicKeySize: go.GoInt;
+    @:native("MLDSA44SignatureSize") static final mLDSA44SignatureSize: go.GoInt;
+    @:native("MLDSA65PublicKeySize") static final mLDSA65PublicKeySize: go.GoInt;
+    @:native("MLDSA65SignatureSize") static final mLDSA65SignatureSize: go.GoInt;
+    @:native("MLDSA87PublicKeySize") static final mLDSA87PublicKeySize: go.GoInt;
+    @:native("MLDSA87SignatureSize") static final mLDSA87SignatureSize: go.GoInt;
+    @:native("PrivateKeySize") static final privateKeySize: go.GoInt;
 
     /**
         GenerateKey generates a new random ML-DSA private key.

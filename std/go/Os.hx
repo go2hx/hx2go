@@ -48,7 +48,7 @@ extern class Os {
         DevNull is the name of the operating system's “null device.”
         On Unix-like systems, it is "/dev/null"; on Windows, "NUL".
     **/
-    @:native("DevNull") static var devNull: String;
+    @:native("DevNull") static final devNull: String;
     /**
         The defined file mode bits are the most significant bits of the [FileMode].
         The nine least-significant bits are the standard Unix rwxrwxrwx permissions.
@@ -56,7 +56,7 @@ extern class Os {
         may be used in wire protocols or disk representations: they must not be
         changed, although new bits might be added.
     **/
-    @:native("ModeAppend") static var modeAppend: go.io.fs.FileMode;
+    @:native("ModeAppend") static final modeAppend: go.io.fs.FileMode;
     /**
         The defined file mode bits are the most significant bits of the [FileMode].
         The nine least-significant bits are the standard Unix rwxrwxrwx permissions.
@@ -64,7 +64,7 @@ extern class Os {
         may be used in wire protocols or disk representations: they must not be
         changed, although new bits might be added.
     **/
-    @:native("ModeCharDevice") static var modeCharDevice: go.io.fs.FileMode;
+    @:native("ModeCharDevice") static final modeCharDevice: go.io.fs.FileMode;
     /**
         The defined file mode bits are the most significant bits of the [FileMode].
         The nine least-significant bits are the standard Unix rwxrwxrwx permissions.
@@ -72,7 +72,7 @@ extern class Os {
         may be used in wire protocols or disk representations: they must not be
         changed, although new bits might be added.
     **/
-    @:native("ModeDevice") static var modeDevice: go.io.fs.FileMode;
+    @:native("ModeDevice") static final modeDevice: go.io.fs.FileMode;
     /**
         The defined file mode bits are the most significant bits of the [FileMode].
         The nine least-significant bits are the standard Unix rwxrwxrwx permissions.
@@ -80,7 +80,7 @@ extern class Os {
         may be used in wire protocols or disk representations: they must not be
         changed, although new bits might be added.
     **/
-    @:native("ModeDir") static var modeDir: go.io.fs.FileMode;
+    @:native("ModeDir") static final modeDir: go.io.fs.FileMode;
     /**
         The defined file mode bits are the most significant bits of the [FileMode].
         The nine least-significant bits are the standard Unix rwxrwxrwx permissions.
@@ -88,7 +88,7 @@ extern class Os {
         may be used in wire protocols or disk representations: they must not be
         changed, although new bits might be added.
     **/
-    @:native("ModeExclusive") static var modeExclusive: go.io.fs.FileMode;
+    @:native("ModeExclusive") static final modeExclusive: go.io.fs.FileMode;
     /**
         The defined file mode bits are the most significant bits of the [FileMode].
         The nine least-significant bits are the standard Unix rwxrwxrwx permissions.
@@ -96,7 +96,7 @@ extern class Os {
         may be used in wire protocols or disk representations: they must not be
         changed, although new bits might be added.
     **/
-    @:native("ModeIrregular") static var modeIrregular: go.io.fs.FileMode;
+    @:native("ModeIrregular") static final modeIrregular: go.io.fs.FileMode;
     /**
         The defined file mode bits are the most significant bits of the [FileMode].
         The nine least-significant bits are the standard Unix rwxrwxrwx permissions.
@@ -104,7 +104,7 @@ extern class Os {
         may be used in wire protocols or disk representations: they must not be
         changed, although new bits might be added.
     **/
-    @:native("ModeNamedPipe") static var modeNamedPipe: go.io.fs.FileMode;
+    @:native("ModeNamedPipe") static final modeNamedPipe: go.io.fs.FileMode;
     /**
         The defined file mode bits are the most significant bits of the [FileMode].
         The nine least-significant bits are the standard Unix rwxrwxrwx permissions.
@@ -112,7 +112,7 @@ extern class Os {
         may be used in wire protocols or disk representations: they must not be
         changed, although new bits might be added.
     **/
-    @:native("ModePerm") static var modePerm: go.io.fs.FileMode;
+    @:native("ModePerm") static final modePerm: go.io.fs.FileMode;
     /**
         The defined file mode bits are the most significant bits of the [FileMode].
         The nine least-significant bits are the standard Unix rwxrwxrwx permissions.
@@ -120,7 +120,7 @@ extern class Os {
         may be used in wire protocols or disk representations: they must not be
         changed, although new bits might be added.
     **/
-    @:native("ModeSetgid") static var modeSetgid: go.io.fs.FileMode;
+    @:native("ModeSetgid") static final modeSetgid: go.io.fs.FileMode;
     /**
         The defined file mode bits are the most significant bits of the [FileMode].
         The nine least-significant bits are the standard Unix rwxrwxrwx permissions.
@@ -128,7 +128,7 @@ extern class Os {
         may be used in wire protocols or disk representations: they must not be
         changed, although new bits might be added.
     **/
-    @:native("ModeSetuid") static var modeSetuid: go.io.fs.FileMode;
+    @:native("ModeSetuid") static final modeSetuid: go.io.fs.FileMode;
     /**
         The defined file mode bits are the most significant bits of the [FileMode].
         The nine least-significant bits are the standard Unix rwxrwxrwx permissions.
@@ -136,7 +136,7 @@ extern class Os {
         may be used in wire protocols or disk representations: they must not be
         changed, although new bits might be added.
     **/
-    @:native("ModeSocket") static var modeSocket: go.io.fs.FileMode;
+    @:native("ModeSocket") static final modeSocket: go.io.fs.FileMode;
     /**
         The defined file mode bits are the most significant bits of the [FileMode].
         The nine least-significant bits are the standard Unix rwxrwxrwx permissions.
@@ -144,7 +144,7 @@ extern class Os {
         may be used in wire protocols or disk representations: they must not be
         changed, although new bits might be added.
     **/
-    @:native("ModeSticky") static var modeSticky: go.io.fs.FileMode;
+    @:native("ModeSticky") static final modeSticky: go.io.fs.FileMode;
     /**
         The defined file mode bits are the most significant bits of the [FileMode].
         The nine least-significant bits are the standard Unix rwxrwxrwx permissions.
@@ -152,7 +152,7 @@ extern class Os {
         may be used in wire protocols or disk representations: they must not be
         changed, although new bits might be added.
     **/
-    @:native("ModeSymlink") static var modeSymlink: go.io.fs.FileMode;
+    @:native("ModeSymlink") static final modeSymlink: go.io.fs.FileMode;
     /**
         The defined file mode bits are the most significant bits of the [FileMode].
         The nine least-significant bits are the standard Unix rwxrwxrwx permissions.
@@ -160,7 +160,7 @@ extern class Os {
         may be used in wire protocols or disk representations: they must not be
         changed, although new bits might be added.
     **/
-    @:native("ModeTemporary") static var modeTemporary: go.io.fs.FileMode;
+    @:native("ModeTemporary") static final modeTemporary: go.io.fs.FileMode;
     /**
         The defined file mode bits are the most significant bits of the [FileMode].
         The nine least-significant bits are the standard Unix rwxrwxrwx permissions.
@@ -168,67 +168,67 @@ extern class Os {
         may be used in wire protocols or disk representations: they must not be
         changed, although new bits might be added.
     **/
-    @:native("ModeType") static var modeType: go.io.fs.FileMode;
+    @:native("ModeType") static final modeType: go.io.fs.FileMode;
     /**
         Flags to OpenFile wrapping those of the underlying system. Not all
         flags may be implemented on a given system.
     **/
-    @:native("O_APPEND") static var O_APPEND: go.GoInt;
+    @:native("O_APPEND") static final O_APPEND: go.GoInt;
     /**
         Flags to OpenFile wrapping those of the underlying system. Not all
         flags may be implemented on a given system.
     **/
-    @:native("O_CREATE") static var O_CREATE: go.GoInt;
+    @:native("O_CREATE") static final O_CREATE: go.GoInt;
     /**
         Flags to OpenFile wrapping those of the underlying system. Not all
         flags may be implemented on a given system.
     **/
-    @:native("O_EXCL") static var O_EXCL: go.GoInt;
+    @:native("O_EXCL") static final O_EXCL: go.GoInt;
     /**
         Flags to OpenFile wrapping those of the underlying system. Not all
         flags may be implemented on a given system.
     **/
-    @:native("O_RDONLY") static var O_RDONLY: go.GoInt;
+    @:native("O_RDONLY") static final O_RDONLY: go.GoInt;
     /**
         Flags to OpenFile wrapping those of the underlying system. Not all
         flags may be implemented on a given system.
     **/
-    @:native("O_RDWR") static var O_RDWR: go.GoInt;
+    @:native("O_RDWR") static final O_RDWR: go.GoInt;
     /**
         Flags to OpenFile wrapping those of the underlying system. Not all
         flags may be implemented on a given system.
     **/
-    @:native("O_SYNC") static var O_SYNC: go.GoInt;
+    @:native("O_SYNC") static final O_SYNC: go.GoInt;
     /**
         Flags to OpenFile wrapping those of the underlying system. Not all
         flags may be implemented on a given system.
     **/
-    @:native("O_TRUNC") static var O_TRUNC: go.GoInt;
+    @:native("O_TRUNC") static final O_TRUNC: go.GoInt;
     /**
         Flags to OpenFile wrapping those of the underlying system. Not all
         flags may be implemented on a given system.
     **/
-    @:native("O_WRONLY") static var O_WRONLY: go.GoInt;
-    @:native("PathListSeparator") static var pathListSeparator: go.Rune;
-    @:native("PathSeparator") static var pathSeparator: go.Rune;
+    @:native("O_WRONLY") static final O_WRONLY: go.GoInt;
+    @:native("PathListSeparator") static final pathListSeparator: go.Rune;
+    @:native("PathSeparator") static final pathSeparator: go.Rune;
     /**
         Seek whence values.
         
         Deprecated: Use io.SeekStart, io.SeekCurrent, and io.SeekEnd.
     **/
-    @:native("SEEK_CUR") static var SEEK_CUR: go.GoInt;
+    @:native("SEEK_CUR") static final SEEK_CUR: go.GoInt;
     /**
         Seek whence values.
         
         Deprecated: Use io.SeekStart, io.SeekCurrent, and io.SeekEnd.
     **/
-    @:native("SEEK_END") static var SEEK_END: go.GoInt;
+    @:native("SEEK_END") static final SEEK_END: go.GoInt;
     /**
         Seek whence values.
         
         Deprecated: Use io.SeekStart, io.SeekCurrent, and io.SeekEnd.
     **/
-    @:native("SEEK_SET") static var SEEK_SET: go.GoInt;
+    @:native("SEEK_SET") static final SEEK_SET: go.GoInt;
 
     /**
         Args hold the command-line arguments, starting with the program name.
@@ -664,8 +664,7 @@ extern class Os {
     @:native("OpenRoot") static function openRoot(name: String): (go.Result<go.Pointer<go.os.Root>>);
     /**
         Pipe returns a connected pair of Files; reads from r return bytes written to w.
-        It returns the files and an error, if any. The Windows handles underlying
-        the returned files are marked as inheritable by child processes.
+        It returns the files and an error, if any.
     **/
     @:go.Tuple("r", "w", "err") @:native("Pipe") static function pipe(): (go.Tuple<{ r: go.Pointer<go.os.File>, w: go.Pointer<go.os.File>, err: go.Error }>);
     /**
@@ -693,7 +692,7 @@ extern class Os {
     **/
     @:native("Readlink") static function readlink(name: String): (go.Result<String>);
     /**
-        Remove removes the named file or directory.
+        Remove removes the named file or (empty) directory.
         If there is an error, it will be of type [*PathError].
     **/
     @:native("Remove") static function remove(name: String): (go.Error);
@@ -771,6 +770,7 @@ extern class Os {
     /**
         Truncate changes the size of the named file.
         If the file is a symbolic link, it changes the size of the link's target.
+        If there is an error, it will be of type [*PathError].
     **/
     @:native("Truncate") static function truncate(name: String, size: go.Int64): (go.Error);
     /**

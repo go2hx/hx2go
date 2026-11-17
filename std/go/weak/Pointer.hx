@@ -51,7 +51,7 @@ package go.weak;
 **/
 @:structInit
 @:go.Type({ name: "Pointer", instanceName: "weak.Pointer", imports: ["weak"] })
-extern class Pointer<T: Dynamic> {
+extern class Pointer<T> {
 
     /**
         Value returns the original pointer used to create the weak pointer.

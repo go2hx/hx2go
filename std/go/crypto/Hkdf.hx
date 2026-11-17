@@ -20,7 +20,7 @@ extern class Hkdf {
         random or pseudorandom cryptographically strong key. See RFC 5869, Section
         3.3. Most common scenarios will want to use [Key] instead.
     **/
-    @:native("Expand") static function expand<H: go.hash.Hash>(h: () -> (H), pseudorandomKey: go.Slice<go.Byte>, info: String, keyLength: go.GoInt): (go.Result<go.Slice<go.Byte>>);
+    @:native("Expand") static function expand<H>(h: () -> (H), pseudorandomKey: go.Slice<go.Byte>, info: String, keyLength: go.GoInt): (go.Result<go.Slice<go.Byte>>);
     /**
         Extract generates a pseudorandom key for use with [Expand] from an input
         secret and an optional independent salt.
@@ -29,12 +29,12 @@ extern class Hkdf {
         Expand invocations and different context values. Most common scenarios,
         including the generation of multiple keys, should use [Key] instead.
     **/
-    @:native("Extract") static function extract<H: go.hash.Hash>(h: () -> (H), secret: go.Slice<go.Byte>, salt: go.Slice<go.Byte>): (go.Result<go.Slice<go.Byte>>);
+    @:native("Extract") static function extract<H>(h: () -> (H), secret: go.Slice<go.Byte>, salt: go.Slice<go.Byte>): (go.Result<go.Slice<go.Byte>>);
     /**
         Key derives a key from the given hash, secret, salt and context info,
         returning a []byte of length keyLength that can be used as cryptographic key.
         Salt and info can be nil.
     **/
-    @:native("Key") static function key<Hash: go.hash.Hash>(h: () -> (Hash), secret: go.Slice<go.Byte>, salt: go.Slice<go.Byte>, info: String, keyLength: go.GoInt): (go.Result<go.Slice<go.Byte>>);
+    @:native("Key") static function key<Hash>(h: () -> (Hash), secret: go.Slice<go.Byte>, salt: go.Slice<go.Byte>, info: String, keyLength: go.GoInt): (go.Result<go.Slice<go.Byte>>);
 
 }

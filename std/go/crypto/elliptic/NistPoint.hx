@@ -1,7 +1,7 @@
 package go.crypto.elliptic;
 
 @:go.Type({ name: "nistPoint", instanceName: "elliptic.nistPoint", imports: ["crypto/elliptic"] })
-extern typedef NistPoint<T: Dynamic> = {
+extern typedef NistPoint<T> = {
 
     @:native("Add") function add(p0: T, p1: T): (T);
     @:native("Bytes") function bytes(): (go.Slice<go.Byte>);

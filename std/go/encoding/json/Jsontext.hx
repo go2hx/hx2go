@@ -103,16 +103,16 @@ package go.encoding.json;
 @:go.Type({ name: "jsontext", instanceName: "jsontext.jsontext", imports: ["encoding/json/jsontext"] })
 extern class Jsontext {
 
-    @:native("KindBeginArray") static var kindBeginArray: go.encoding.json.jsontext.Kind;
-    @:native("KindBeginObject") static var kindBeginObject: go.encoding.json.jsontext.Kind;
-    @:native("KindEndArray") static var kindEndArray: go.encoding.json.jsontext.Kind;
-    @:native("KindEndObject") static var kindEndObject: go.encoding.json.jsontext.Kind;
-    @:native("KindFalse") static var kindFalse: go.encoding.json.jsontext.Kind;
-    @:native("KindInvalid") static var kindInvalid: go.encoding.json.jsontext.Kind;
-    @:native("KindNull") static var kindNull: go.encoding.json.jsontext.Kind;
-    @:native("KindNumber") static var kindNumber: go.encoding.json.jsontext.Kind;
-    @:native("KindString") static var kindString: go.encoding.json.jsontext.Kind;
-    @:native("KindTrue") static var kindTrue: go.encoding.json.jsontext.Kind;
+    @:native("KindBeginArray") static final kindBeginArray: go.encoding.json.jsontext.Kind;
+    @:native("KindBeginObject") static final kindBeginObject: go.encoding.json.jsontext.Kind;
+    @:native("KindEndArray") static final kindEndArray: go.encoding.json.jsontext.Kind;
+    @:native("KindEndObject") static final kindEndObject: go.encoding.json.jsontext.Kind;
+    @:native("KindFalse") static final kindFalse: go.encoding.json.jsontext.Kind;
+    @:native("KindInvalid") static final kindInvalid: go.encoding.json.jsontext.Kind;
+    @:native("KindNull") static final kindNull: go.encoding.json.jsontext.Kind;
+    @:native("KindNumber") static final kindNumber: go.encoding.json.jsontext.Kind;
+    @:native("KindString") static final kindString: go.encoding.json.jsontext.Kind;
+    @:native("KindTrue") static final kindTrue: go.encoding.json.jsontext.Kind;
 
     @:native("BeginArray") static var beginArray: go.encoding.json.jsontext.Token;
     @:native("BeginObject") static var beginObject: go.encoding.json.jsontext.Token;

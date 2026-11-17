@@ -10,33 +10,33 @@ extern class Unicode {
     /**
         Indices into the Delta arrays inside CaseRanges for case mapping.
     **/
-    @:native("LowerCase") static var lowerCase: go.GoInt;
-    @:native("MaxASCII") static var maxASCII: go.Rune;
+    @:native("LowerCase") static final lowerCase: go.GoInt;
+    @:native("MaxASCII") static final maxASCII: go.Rune;
     /**
         Indices into the Delta arrays inside CaseRanges for case mapping.
     **/
-    @:native("MaxCase") static var maxCase: go.GoInt;
-    @:native("MaxLatin1") static var maxLatin1: go.Rune;
-    @:native("MaxRune") static var maxRune: go.Rune;
-    @:native("ReplacementChar") static var replacementChar: go.Rune;
+    @:native("MaxCase") static final maxCase: go.GoInt;
+    @:native("MaxLatin1") static final maxLatin1: go.Rune;
+    @:native("MaxRune") static final maxRune: go.Rune;
+    @:native("ReplacementChar") static final replacementChar: go.Rune;
     /**
         Indices into the Delta arrays inside CaseRanges for case mapping.
     **/
-    @:native("TitleCase") static var titleCase: go.GoInt;
+    @:native("TitleCase") static final titleCase: go.GoInt;
     /**
         Indices into the Delta arrays inside CaseRanges for case mapping.
     **/
-    @:native("UpperCase") static var upperCase: go.GoInt;
+    @:native("UpperCase") static final upperCase: go.GoInt;
     /**
         If the Delta field of a [CaseRange] is UpperLower, it means
         this CaseRange represents a sequence of the form (say)
         [Upper] [Lower] [Upper] [Lower].
     **/
-    @:native("UpperLower") static var upperLower: go.Rune;
+    @:native("UpperLower") static final upperLower: go.Rune;
     /**
         Version is the Unicode edition from which the tables are derived.
     **/
-    @:native("Version") static var version: String;
+    @:native("Version") static final version: String;
 
     /**
         These variables have type *RangeTable.

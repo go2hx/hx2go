@@ -12,8 +12,8 @@ package go.path;
 @:go.Type({ name: "filepath", instanceName: "filepath.filepath", imports: ["path/filepath"] })
 extern class Filepath {
 
-    @:native("ListSeparator") static var listSeparator: go.Rune;
-    @:native("Separator") static var separator: go.Rune;
+    @:native("ListSeparator") static final listSeparator: go.Rune;
+    @:native("Separator") static final separator: go.Rune;
 
     /**
         Abs returns an absolute representation of path.

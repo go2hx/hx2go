@@ -127,8 +127,8 @@ package go.net;
 @:go.Type({ name: "rpc", instanceName: "rpc.rpc", imports: ["net/rpc"] })
 extern class Rpc {
 
-    @:native("DefaultDebugPath") static var defaultDebugPath: String;
-    @:native("DefaultRPCPath") static var defaultRPCPath: String;
+    @:native("DefaultDebugPath") static final defaultDebugPath: String;
+    @:native("DefaultRPCPath") static final defaultRPCPath: String;
 
     /**
         DefaultServer is the default instance of [*Server].

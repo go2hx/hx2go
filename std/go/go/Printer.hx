@@ -7,10 +7,10 @@ package go.go;
 @:go.Type({ name: "printer", instanceName: "printer.printer", imports: ["go/printer"] })
 extern class Printer {
 
-    @:native("RawFormat") static var rawFormat: go.go.printer.Mode;
-    @:native("SourcePos") static var sourcePos: go.go.printer.Mode;
-    @:native("TabIndent") static var tabIndent: go.go.printer.Mode;
-    @:native("UseSpaces") static var useSpaces: go.go.printer.Mode;
+    @:native("RawFormat") static final rawFormat: go.go.printer.Mode;
+    @:native("SourcePos") static final sourcePos: go.go.printer.Mode;
+    @:native("TabIndent") static final tabIndent: go.go.printer.Mode;
+    @:native("UseSpaces") static final useSpaces: go.go.printer.Mode;
 
     @:native("Config") var config: go.go.printer.Config;
     @:native("Mode") var mode: go.go.printer.Mode;

@@ -14,10 +14,10 @@ package go.debug;
 @:go.Type({ name: "plan9obj", instanceName: "plan9obj.plan9obj", imports: ["debug/plan9obj"] })
 extern class Plan9obj {
 
-    @:native("Magic386") static var magic386: go.GoInt;
-    @:native("Magic64") static var magic64: go.GoInt;
-    @:native("MagicAMD64") static var magicAMD64: go.GoInt;
-    @:native("MagicARM") static var magicARM: go.GoInt;
+    @:native("Magic386") static final magic386: go.GoInt;
+    @:native("Magic64") static final magic64: go.GoInt;
+    @:native("MagicAMD64") static final magicAMD64: go.GoInt;
+    @:native("MagicARM") static final magicARM: go.GoInt;
 
     /**
         NewFile creates a new [File] for accessing a Plan 9 binary in an underlying reader.

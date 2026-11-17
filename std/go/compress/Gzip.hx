@@ -11,27 +11,27 @@ extern class Gzip {
         These constants are copied from the [flate] package, so that code that imports
         [compress/gzip] does not also have to import [compress/flate].
     **/
-    @:native("BestCompression") static var bestCompression: go.GoInt;
+    @:native("BestCompression") static final bestCompression: go.GoInt;
     /**
         These constants are copied from the [flate] package, so that code that imports
         [compress/gzip] does not also have to import [compress/flate].
     **/
-    @:native("BestSpeed") static var bestSpeed: go.GoInt;
+    @:native("BestSpeed") static final bestSpeed: go.GoInt;
     /**
         These constants are copied from the [flate] package, so that code that imports
         [compress/gzip] does not also have to import [compress/flate].
     **/
-    @:native("DefaultCompression") static var defaultCompression: go.GoInt;
+    @:native("DefaultCompression") static final defaultCompression: go.GoInt;
     /**
         These constants are copied from the [flate] package, so that code that imports
         [compress/gzip] does not also have to import [compress/flate].
     **/
-    @:native("HuffmanOnly") static var huffmanOnly: go.GoInt;
+    @:native("HuffmanOnly") static final huffmanOnly: go.GoInt;
     /**
         These constants are copied from the [flate] package, so that code that imports
         [compress/gzip] does not also have to import [compress/flate].
     **/
-    @:native("NoCompression") static var noCompression: go.GoInt;
+    @:native("NoCompression") static final noCompression: go.GoInt;
 
     /**
         NewReader creates a new [Reader] reading the given reader.

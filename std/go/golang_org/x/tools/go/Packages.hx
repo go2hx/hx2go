@@ -110,31 +110,31 @@ package go.golang_org.x.tools.go;
 @:go.Type({ name: "packages", instanceName: "packages.packages", imports: ["golang.org/x/tools/go/packages"] })
 extern class Packages {
 
-    @:native("ListError") static var listError: go.golang_org.x.tools.go.packages.ErrorKind;
-    @:native("LoadAllSyntax") static var loadAllSyntax: go.golang_org.x.tools.go.packages.LoadMode;
-    @:native("LoadFiles") static var loadFiles: go.golang_org.x.tools.go.packages.LoadMode;
-    @:native("LoadImports") static var loadImports: go.golang_org.x.tools.go.packages.LoadMode;
-    @:native("LoadSyntax") static var loadSyntax: go.golang_org.x.tools.go.packages.LoadMode;
-    @:native("LoadTypes") static var loadTypes: go.golang_org.x.tools.go.packages.LoadMode;
-    @:native("NeedCompiledGoFiles") static var needCompiledGoFiles: go.golang_org.x.tools.go.packages.LoadMode;
-    @:native("NeedDeps") static var needDeps: go.golang_org.x.tools.go.packages.LoadMode;
-    @:native("NeedEmbedFiles") static var needEmbedFiles: go.golang_org.x.tools.go.packages.LoadMode;
-    @:native("NeedEmbedPatterns") static var needEmbedPatterns: go.golang_org.x.tools.go.packages.LoadMode;
-    @:native("NeedExportFile") static var needExportFile: go.golang_org.x.tools.go.packages.LoadMode;
-    @:native("NeedExportsFile") static var needExportsFile: go.golang_org.x.tools.go.packages.LoadMode;
-    @:native("NeedFiles") static var needFiles: go.golang_org.x.tools.go.packages.LoadMode;
-    @:native("NeedForTest") static var needForTest: go.golang_org.x.tools.go.packages.LoadMode;
-    @:native("NeedImports") static var needImports: go.golang_org.x.tools.go.packages.LoadMode;
-    @:native("NeedModule") static var needModule: go.golang_org.x.tools.go.packages.LoadMode;
-    @:native("NeedName") static var needName: go.golang_org.x.tools.go.packages.LoadMode;
-    @:native("NeedSyntax") static var needSyntax: go.golang_org.x.tools.go.packages.LoadMode;
-    @:native("NeedTarget") static var needTarget: go.golang_org.x.tools.go.packages.LoadMode;
-    @:native("NeedTypes") static var needTypes: go.golang_org.x.tools.go.packages.LoadMode;
-    @:native("NeedTypesInfo") static var needTypesInfo: go.golang_org.x.tools.go.packages.LoadMode;
-    @:native("NeedTypesSizes") static var needTypesSizes: go.golang_org.x.tools.go.packages.LoadMode;
-    @:native("ParseError") static var parseError: go.golang_org.x.tools.go.packages.ErrorKind;
-    @:native("TypeError") static var typeError: go.golang_org.x.tools.go.packages.ErrorKind;
-    @:native("UnknownError") static var unknownError: go.golang_org.x.tools.go.packages.ErrorKind;
+    @:native("ListError") static final listError: go.golang_org.x.tools.go.packages.ErrorKind;
+    @:native("LoadAllSyntax") static final loadAllSyntax: go.golang_org.x.tools.go.packages.LoadMode;
+    @:native("LoadFiles") static final loadFiles: go.golang_org.x.tools.go.packages.LoadMode;
+    @:native("LoadImports") static final loadImports: go.golang_org.x.tools.go.packages.LoadMode;
+    @:native("LoadSyntax") static final loadSyntax: go.golang_org.x.tools.go.packages.LoadMode;
+    @:native("LoadTypes") static final loadTypes: go.golang_org.x.tools.go.packages.LoadMode;
+    @:native("NeedCompiledGoFiles") static final needCompiledGoFiles: go.golang_org.x.tools.go.packages.LoadMode;
+    @:native("NeedDeps") static final needDeps: go.golang_org.x.tools.go.packages.LoadMode;
+    @:native("NeedEmbedFiles") static final needEmbedFiles: go.golang_org.x.tools.go.packages.LoadMode;
+    @:native("NeedEmbedPatterns") static final needEmbedPatterns: go.golang_org.x.tools.go.packages.LoadMode;
+    @:native("NeedExportFile") static final needExportFile: go.golang_org.x.tools.go.packages.LoadMode;
+    @:native("NeedExportsFile") static final needExportsFile: go.golang_org.x.tools.go.packages.LoadMode;
+    @:native("NeedFiles") static final needFiles: go.golang_org.x.tools.go.packages.LoadMode;
+    @:native("NeedForTest") static final needForTest: go.golang_org.x.tools.go.packages.LoadMode;
+    @:native("NeedImports") static final needImports: go.golang_org.x.tools.go.packages.LoadMode;
+    @:native("NeedModule") static final needModule: go.golang_org.x.tools.go.packages.LoadMode;
+    @:native("NeedName") static final needName: go.golang_org.x.tools.go.packages.LoadMode;
+    @:native("NeedSyntax") static final needSyntax: go.golang_org.x.tools.go.packages.LoadMode;
+    @:native("NeedTarget") static final needTarget: go.golang_org.x.tools.go.packages.LoadMode;
+    @:native("NeedTypes") static final needTypes: go.golang_org.x.tools.go.packages.LoadMode;
+    @:native("NeedTypesInfo") static final needTypesInfo: go.golang_org.x.tools.go.packages.LoadMode;
+    @:native("NeedTypesSizes") static final needTypesSizes: go.golang_org.x.tools.go.packages.LoadMode;
+    @:native("ParseError") static final parseError: go.golang_org.x.tools.go.packages.ErrorKind;
+    @:native("TypeError") static final typeError: go.golang_org.x.tools.go.packages.ErrorKind;
+    @:native("UnknownError") static final unknownError: go.golang_org.x.tools.go.packages.ErrorKind;
 
     /**
         Load loads and returns the Go packages named by the given patterns.

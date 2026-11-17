@@ -32,6 +32,6 @@ extern class Pbkdf2 {
         keyLength must be a positive integer between 1 and (2^32 - 1) * h.Size().
         Setting keyLength to a value outside of this range will result in an error.
     **/
-    @:native("Key") static function key<Hash: go.hash.Hash>(h: () -> (Hash), password: String, salt: go.Slice<go.Byte>, iter: go.GoInt, keyLength: go.GoInt): (go.Result<go.Slice<go.Byte>>);
+    @:native("Key") static function key<Hash>(h: () -> (Hash), password: String, salt: go.Slice<go.Byte>, iter: go.GoInt, keyLength: go.GoInt): (go.Result<go.Slice<go.Byte>>);
 
 }

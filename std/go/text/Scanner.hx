@@ -18,19 +18,19 @@ extern class Scanner {
     /**
         The result of Scan is one of these tokens or a Unicode character.
     **/
-    @:native("Char") static var char: go.GoInt;
+    @:native("Char") static final char: go.GoInt;
     /**
         The result of Scan is one of these tokens or a Unicode character.
     **/
-    @:native("Comment") static var comment: go.GoInt;
+    @:native("Comment") static final comment: go.GoInt;
     /**
         The result of Scan is one of these tokens or a Unicode character.
     **/
-    @:native("EOF") static var EOF: go.GoInt;
+    @:native("EOF") static final EOF: go.GoInt;
     /**
         The result of Scan is one of these tokens or a Unicode character.
     **/
-    @:native("Float") static var float: go.GoInt;
+    @:native("Float") static final float: go.GoInt;
     /**
         Predefined mode bits to control recognition of tokens. For instance,
         to configure a [Scanner] such that it only recognizes (Go) identifiers,
@@ -47,24 +47,24 @@ extern class Scanner {
         Use GoTokens to configure the Scanner such that it accepts all Go
         literal tokens including Go identifiers. Comments will be skipped.
     **/
-    @:native("GoTokens") static var goTokens: go.GoInt;
+    @:native("GoTokens") static final goTokens: go.GoInt;
     /**
         GoWhitespace is the default value for the [Scanner]'s Whitespace field.
         Its value selects Go's white space characters.
     **/
-    @:native("GoWhitespace") static var goWhitespace: go.GoInt;
+    @:native("GoWhitespace") static final goWhitespace: go.GoInt;
     /**
         The result of Scan is one of these tokens or a Unicode character.
     **/
-    @:native("Ident") static var ident: go.GoInt;
+    @:native("Ident") static final ident: go.GoInt;
     /**
         The result of Scan is one of these tokens or a Unicode character.
     **/
-    @:native("Int") static var int: go.GoInt;
+    @:native("Int") static final int: go.GoInt;
     /**
         The result of Scan is one of these tokens or a Unicode character.
     **/
-    @:native("RawString") static var rawString: go.GoInt;
+    @:native("RawString") static final rawString: go.GoInt;
     /**
         Predefined mode bits to control recognition of tokens. For instance,
         to configure a [Scanner] such that it only recognizes (Go) identifiers,
@@ -81,7 +81,7 @@ extern class Scanner {
         Use GoTokens to configure the Scanner such that it accepts all Go
         literal tokens including Go identifiers. Comments will be skipped.
     **/
-    @:native("ScanChars") static var scanChars: go.GoInt;
+    @:native("ScanChars") static final scanChars: go.GoInt;
     /**
         Predefined mode bits to control recognition of tokens. For instance,
         to configure a [Scanner] such that it only recognizes (Go) identifiers,
@@ -98,7 +98,7 @@ extern class Scanner {
         Use GoTokens to configure the Scanner such that it accepts all Go
         literal tokens including Go identifiers. Comments will be skipped.
     **/
-    @:native("ScanComments") static var scanComments: go.GoInt;
+    @:native("ScanComments") static final scanComments: go.GoInt;
     /**
         Predefined mode bits to control recognition of tokens. For instance,
         to configure a [Scanner] such that it only recognizes (Go) identifiers,
@@ -115,7 +115,7 @@ extern class Scanner {
         Use GoTokens to configure the Scanner such that it accepts all Go
         literal tokens including Go identifiers. Comments will be skipped.
     **/
-    @:native("ScanFloats") static var scanFloats: go.GoInt;
+    @:native("ScanFloats") static final scanFloats: go.GoInt;
     /**
         Predefined mode bits to control recognition of tokens. For instance,
         to configure a [Scanner] such that it only recognizes (Go) identifiers,
@@ -132,7 +132,7 @@ extern class Scanner {
         Use GoTokens to configure the Scanner such that it accepts all Go
         literal tokens including Go identifiers. Comments will be skipped.
     **/
-    @:native("ScanIdents") static var scanIdents: go.GoInt;
+    @:native("ScanIdents") static final scanIdents: go.GoInt;
     /**
         Predefined mode bits to control recognition of tokens. For instance,
         to configure a [Scanner] such that it only recognizes (Go) identifiers,
@@ -149,7 +149,7 @@ extern class Scanner {
         Use GoTokens to configure the Scanner such that it accepts all Go
         literal tokens including Go identifiers. Comments will be skipped.
     **/
-    @:native("ScanInts") static var scanInts: go.GoInt;
+    @:native("ScanInts") static final scanInts: go.GoInt;
     /**
         Predefined mode bits to control recognition of tokens. For instance,
         to configure a [Scanner] such that it only recognizes (Go) identifiers,
@@ -166,7 +166,7 @@ extern class Scanner {
         Use GoTokens to configure the Scanner such that it accepts all Go
         literal tokens including Go identifiers. Comments will be skipped.
     **/
-    @:native("ScanRawStrings") static var scanRawStrings: go.GoInt;
+    @:native("ScanRawStrings") static final scanRawStrings: go.GoInt;
     /**
         Predefined mode bits to control recognition of tokens. For instance,
         to configure a [Scanner] such that it only recognizes (Go) identifiers,
@@ -183,7 +183,7 @@ extern class Scanner {
         Use GoTokens to configure the Scanner such that it accepts all Go
         literal tokens including Go identifiers. Comments will be skipped.
     **/
-    @:native("ScanStrings") static var scanStrings: go.GoInt;
+    @:native("ScanStrings") static final scanStrings: go.GoInt;
     /**
         Predefined mode bits to control recognition of tokens. For instance,
         to configure a [Scanner] such that it only recognizes (Go) identifiers,
@@ -200,11 +200,11 @@ extern class Scanner {
         Use GoTokens to configure the Scanner such that it accepts all Go
         literal tokens including Go identifiers. Comments will be skipped.
     **/
-    @:native("SkipComments") static var skipComments: go.GoInt;
+    @:native("SkipComments") static final skipComments: go.GoInt;
     /**
         The result of Scan is one of these tokens or a Unicode character.
     **/
-    @:native("String") static var string: go.GoInt;
+    @:native("String") static final string: go.GoInt;
 
     /**
         TokenString returns a printable string for a token or Unicode character.

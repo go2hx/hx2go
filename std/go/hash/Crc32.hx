@@ -16,19 +16,19 @@ extern class Crc32 {
     /**
         Predefined polynomials.
     **/
-    @:native("Castagnoli") static var castagnoli: go.GoInt;
+    @:native("Castagnoli") static final castagnoli: go.GoInt;
     /**
         Predefined polynomials.
     **/
-    @:native("IEEE") static var IEEE: go.GoInt;
+    @:native("IEEE") static final IEEE: go.GoInt;
     /**
         Predefined polynomials.
     **/
-    @:native("Koopman") static var koopman: go.GoInt;
+    @:native("Koopman") static final koopman: go.GoInt;
     /**
         The size of a CRC-32 checksum in bytes.
     **/
-    @:native("Size") static var size: go.GoInt;
+    @:native("Size") static final size: go.GoInt;
 
     /**
         IEEETable is the table for the [IEEE] polynomial.

@@ -11,19 +11,19 @@ extern class Utf8 {
     /**
         Numbers fundamental to the encoding.
     **/
-    @:native("MaxRune") static var maxRune: go.Rune;
+    @:native("MaxRune") static final maxRune: go.Rune;
     /**
         Numbers fundamental to the encoding.
     **/
-    @:native("RuneError") static var runeError: go.Rune;
+    @:native("RuneError") static final runeError: go.Rune;
     /**
         Numbers fundamental to the encoding.
     **/
-    @:native("RuneSelf") static var runeSelf: go.GoInt;
+    @:native("RuneSelf") static final runeSelf: go.GoInt;
     /**
         Numbers fundamental to the encoding.
     **/
-    @:native("UTFMax") static var uTFMax: go.GoInt;
+    @:native("UTFMax") static final uTFMax: go.GoInt;
 
     /**
         AppendRune appends the UTF-8 encoding of r to the end of p and

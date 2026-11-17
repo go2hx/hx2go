@@ -17,7 +17,7 @@ extern class Adler32 {
     /**
         The size of an Adler-32 checksum in bytes.
     **/
-    @:native("Size") static var size: go.GoInt;
+    @:native("Size") static final size: go.GoInt;
 
     /**
         Checksum returns the Adler-32 checksum of data.

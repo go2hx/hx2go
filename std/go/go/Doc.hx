@@ -6,9 +6,9 @@ package go.go;
 @:go.Type({ name: "doc", instanceName: "doc.doc", imports: ["go/doc"] })
 extern class Doc {
 
-    @:native("AllDecls") static var allDecls: go.go.doc.Mode;
-    @:native("AllMethods") static var allMethods: go.go.doc.Mode;
-    @:native("PreserveAST") static var preserveAST: go.go.doc.Mode;
+    @:native("AllDecls") static final allDecls: go.go.doc.Mode;
+    @:native("AllMethods") static final allMethods: go.go.doc.Mode;
+    @:native("PreserveAST") static final preserveAST: go.go.doc.Mode;
 
     /**
         IllegalPrefixes is a list of lower-case prefixes that identify

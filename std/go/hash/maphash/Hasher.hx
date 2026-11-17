@@ -118,7 +118,7 @@ package go.hash.maphash;
     not a random one.
 **/
 @:go.Type({ name: "Hasher", instanceName: "maphash.Hasher", imports: ["hash/maphash"] })
-extern typedef Hasher<T: Dynamic> = {
+extern typedef Hasher<T> = {
 
     @:native("Equal") function equal(x: T, y: T): (Bool);
     @:native("Hash") function hash(p0: go.Pointer<go.hash.maphash.Hash>, p1: T): Void;

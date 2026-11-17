@@ -8,11 +8,11 @@ package go.compress;
 @:go.Type({ name: "flate", instanceName: "flate.flate", imports: ["compress/flate"] })
 extern class Flate {
 
-    @:native("BestCompression") static var bestCompression: go.GoInt;
-    @:native("BestSpeed") static var bestSpeed: go.GoInt;
-    @:native("DefaultCompression") static var defaultCompression: go.GoInt;
-    @:native("HuffmanOnly") static var huffmanOnly: go.GoInt;
-    @:native("NoCompression") static var noCompression: go.GoInt;
+    @:native("BestCompression") static final bestCompression: go.GoInt;
+    @:native("BestSpeed") static final bestSpeed: go.GoInt;
+    @:native("DefaultCompression") static final defaultCompression: go.GoInt;
+    @:native("HuffmanOnly") static final huffmanOnly: go.GoInt;
+    @:native("NoCompression") static final noCompression: go.GoInt;
 
     /**
         NewReader returns a new ReadCloser that can be used

@@ -28,13 +28,13 @@ extern class Sync {
         
         If f panics, the returned function will panic with the same value on every call.
     **/
-    @:native("OnceValue") static function onceValue<T: Dynamic>(f: () -> (T)): (() -> (T));
+    @:native("OnceValue") static function onceValue<T>(f: () -> (T)): (() -> (T));
     /**
         OnceValues returns a function that invokes f only once and returns the values
         returned by f. The returned function may be called concurrently.
         
         If f panics, the returned function will panic with the same value on every call.
     **/
-    @:native("OnceValues") static function onceValues<T1: Dynamic, T2: Dynamic>(f: () -> (go.Tuple<{ p0: T1, p1: T2 }>)): (() -> (go.Tuple<{ p0: T1, p1: T2 }>));
+    @:native("OnceValues") static function onceValues<T1, T2>(f: () -> (go.Tuple<{ p0: T1, p1: T2 }>)): (() -> (go.Tuple<{ p0: T1, p1: T2 }>));
 
 }

@@ -10,135 +10,135 @@ extern class Token {
     /**
         The list of tokens.
     **/
-    @:native("ADD") static var ADD: go.go.token.Token;
+    @:native("ADD") static final ADD: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("ADD_ASSIGN") static var ADD_ASSIGN: go.go.token.Token;
+    @:native("ADD_ASSIGN") static final ADD_ASSIGN: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("AND") static var AND: go.go.token.Token;
+    @:native("AND") static final AND: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("AND_ASSIGN") static var AND_ASSIGN: go.go.token.Token;
+    @:native("AND_ASSIGN") static final AND_ASSIGN: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("AND_NOT") static var AND_NOT: go.go.token.Token;
+    @:native("AND_NOT") static final AND_NOT: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("AND_NOT_ASSIGN") static var AND_NOT_ASSIGN: go.go.token.Token;
+    @:native("AND_NOT_ASSIGN") static final AND_NOT_ASSIGN: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("ARROW") static var ARROW: go.go.token.Token;
+    @:native("ARROW") static final ARROW: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("ASSIGN") static var ASSIGN: go.go.token.Token;
+    @:native("ASSIGN") static final ASSIGN: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("BREAK") static var BREAK: go.go.token.Token;
+    @:native("BREAK") static final BREAK: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("CASE") static var CASE: go.go.token.Token;
+    @:native("CASE") static final CASE: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("CHAN") static var CHAN: go.go.token.Token;
+    @:native("CHAN") static final CHAN: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("CHAR") static var CHAR: go.go.token.Token;
+    @:native("CHAR") static final CHAR: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("COLON") static var COLON: go.go.token.Token;
+    @:native("COLON") static final COLON: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("COMMA") static var COMMA: go.go.token.Token;
+    @:native("COMMA") static final COMMA: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("COMMENT") static var COMMENT: go.go.token.Token;
+    @:native("COMMENT") static final COMMENT: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("CONST") static var CONST: go.go.token.Token;
+    @:native("CONST") static final CONST: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("CONTINUE") static var CONTINUE: go.go.token.Token;
+    @:native("CONTINUE") static final CONTINUE: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("DEC") static var DEC: go.go.token.Token;
+    @:native("DEC") static final DEC: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("DEFAULT") static var DEFAULT: go.go.token.Token;
+    @:native("DEFAULT") static final DEFAULT: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("DEFER") static var DEFER: go.go.token.Token;
+    @:native("DEFER") static final DEFER: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("DEFINE") static var DEFINE: go.go.token.Token;
+    @:native("DEFINE") static final DEFINE: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("ELLIPSIS") static var ELLIPSIS: go.go.token.Token;
+    @:native("ELLIPSIS") static final ELLIPSIS: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("ELSE") static var ELSE: go.go.token.Token;
+    @:native("ELSE") static final ELSE: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("EOF") static var EOF: go.go.token.Token;
+    @:native("EOF") static final EOF: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("EQL") static var EQL: go.go.token.Token;
+    @:native("EQL") static final EQL: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("FALLTHROUGH") static var FALLTHROUGH: go.go.token.Token;
+    @:native("FALLTHROUGH") static final FALLTHROUGH: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("FLOAT") static var FLOAT: go.go.token.Token;
+    @:native("FLOAT") static final FLOAT: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("FOR") static var FOR: go.go.token.Token;
+    @:native("FOR") static final FOR: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("FUNC") static var FUNC: go.go.token.Token;
+    @:native("FUNC") static final FUNC: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("GEQ") static var GEQ: go.go.token.Token;
+    @:native("GEQ") static final GEQ: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("GO") static var GO: go.go.token.Token;
+    @:native("GO") static final GO: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("GOTO") static var GOTO: go.go.token.Token;
+    @:native("GOTO") static final GOTO: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("GTR") static var GTR: go.go.token.Token;
+    @:native("GTR") static final GTR: go.go.token.Token;
     /**
         A set of constants for precedence-based expression parsing.
         Non-operators have lowest precedence, followed by operators
@@ -146,67 +146,67 @@ extern class Token {
         precedence serves as "catch-all" precedence for selector,
         indexing, and other operator and delimiter tokens.
     **/
-    @:native("HighestPrec") static var highestPrec: go.GoInt;
+    @:native("HighestPrec") static final highestPrec: go.GoInt;
     /**
         The list of tokens.
     **/
-    @:native("IDENT") static var IDENT: go.go.token.Token;
+    @:native("IDENT") static final IDENT: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("IF") static var IF: go.go.token.Token;
+    @:native("IF") static final IF: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("ILLEGAL") static var ILLEGAL: go.go.token.Token;
+    @:native("ILLEGAL") static final ILLEGAL: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("IMAG") static var IMAG: go.go.token.Token;
+    @:native("IMAG") static final IMAG: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("IMPORT") static var IMPORT: go.go.token.Token;
+    @:native("IMPORT") static final IMPORT: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("INC") static var INC: go.go.token.Token;
+    @:native("INC") static final INC: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("INT") static var INT: go.go.token.Token;
+    @:native("INT") static final INT: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("INTERFACE") static var INTERFACE: go.go.token.Token;
+    @:native("INTERFACE") static final INTERFACE: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("LAND") static var LAND: go.go.token.Token;
+    @:native("LAND") static final LAND: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("LBRACE") static var LBRACE: go.go.token.Token;
+    @:native("LBRACE") static final LBRACE: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("LBRACK") static var LBRACK: go.go.token.Token;
+    @:native("LBRACK") static final LBRACK: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("LEQ") static var LEQ: go.go.token.Token;
+    @:native("LEQ") static final LEQ: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("LOR") static var LOR: go.go.token.Token;
+    @:native("LOR") static final LOR: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("LPAREN") static var LPAREN: go.go.token.Token;
+    @:native("LPAREN") static final LPAREN: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("LSS") static var LSS: go.go.token.Token;
+    @:native("LSS") static final LSS: go.go.token.Token;
     /**
         A set of constants for precedence-based expression parsing.
         Non-operators have lowest precedence, followed by operators
@@ -214,138 +214,138 @@ extern class Token {
         precedence serves as "catch-all" precedence for selector,
         indexing, and other operator and delimiter tokens.
     **/
-    @:native("LowestPrec") static var lowestPrec: go.GoInt;
+    @:native("LowestPrec") static final lowestPrec: go.GoInt;
     /**
         The list of tokens.
     **/
-    @:native("MAP") static var MAP: go.go.token.Token;
+    @:native("MAP") static final MAP: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("MUL") static var MUL: go.go.token.Token;
+    @:native("MUL") static final MUL: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("MUL_ASSIGN") static var MUL_ASSIGN: go.go.token.Token;
+    @:native("MUL_ASSIGN") static final MUL_ASSIGN: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("NEQ") static var NEQ: go.go.token.Token;
+    @:native("NEQ") static final NEQ: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("NOT") static var NOT: go.go.token.Token;
+    @:native("NOT") static final NOT: go.go.token.Token;
     /**
         The zero value for [Pos] is NoPos; there is no file and line information
         associated with it, and NoPos.IsValid() is false. NoPos is always
         smaller than any other [Pos] value. The corresponding [Position] value
         for NoPos is the zero value for [Position].
     **/
-    @:native("NoPos") static var noPos: go.go.token.Pos;
+    @:native("NoPos") static final noPos: go.go.token.Pos;
     /**
         The list of tokens.
     **/
-    @:native("OR") static var OR: go.go.token.Token;
+    @:native("OR") static final OR: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("OR_ASSIGN") static var OR_ASSIGN: go.go.token.Token;
+    @:native("OR_ASSIGN") static final OR_ASSIGN: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("PACKAGE") static var PACKAGE: go.go.token.Token;
+    @:native("PACKAGE") static final PACKAGE: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("PERIOD") static var PERIOD: go.go.token.Token;
+    @:native("PERIOD") static final PERIOD: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("QUO") static var QUO: go.go.token.Token;
+    @:native("QUO") static final QUO: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("QUO_ASSIGN") static var QUO_ASSIGN: go.go.token.Token;
+    @:native("QUO_ASSIGN") static final QUO_ASSIGN: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("RANGE") static var RANGE: go.go.token.Token;
+    @:native("RANGE") static final RANGE: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("RBRACE") static var RBRACE: go.go.token.Token;
+    @:native("RBRACE") static final RBRACE: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("RBRACK") static var RBRACK: go.go.token.Token;
+    @:native("RBRACK") static final RBRACK: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("REM") static var REM: go.go.token.Token;
+    @:native("REM") static final REM: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("REM_ASSIGN") static var REM_ASSIGN: go.go.token.Token;
+    @:native("REM_ASSIGN") static final REM_ASSIGN: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("RETURN") static var RETURN: go.go.token.Token;
+    @:native("RETURN") static final RETURN: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("RPAREN") static var RPAREN: go.go.token.Token;
+    @:native("RPAREN") static final RPAREN: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("SELECT") static var SELECT: go.go.token.Token;
+    @:native("SELECT") static final SELECT: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("SEMICOLON") static var SEMICOLON: go.go.token.Token;
+    @:native("SEMICOLON") static final SEMICOLON: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("SHL") static var SHL: go.go.token.Token;
+    @:native("SHL") static final SHL: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("SHL_ASSIGN") static var SHL_ASSIGN: go.go.token.Token;
+    @:native("SHL_ASSIGN") static final SHL_ASSIGN: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("SHR") static var SHR: go.go.token.Token;
+    @:native("SHR") static final SHR: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("SHR_ASSIGN") static var SHR_ASSIGN: go.go.token.Token;
+    @:native("SHR_ASSIGN") static final SHR_ASSIGN: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("STRING") static var STRING: go.go.token.Token;
+    @:native("STRING") static final STRING: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("STRUCT") static var STRUCT: go.go.token.Token;
+    @:native("STRUCT") static final STRUCT: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("SUB") static var SUB: go.go.token.Token;
+    @:native("SUB") static final SUB: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("SUB_ASSIGN") static var SUB_ASSIGN: go.go.token.Token;
+    @:native("SUB_ASSIGN") static final SUB_ASSIGN: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("SWITCH") static var SWITCH: go.go.token.Token;
+    @:native("SWITCH") static final SWITCH: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("TILDE") static var TILDE: go.go.token.Token;
+    @:native("TILDE") static final TILDE: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("TYPE") static var TYPE: go.go.token.Token;
+    @:native("TYPE") static final TYPE: go.go.token.Token;
     /**
         A set of constants for precedence-based expression parsing.
         Non-operators have lowest precedence, followed by operators
@@ -353,19 +353,19 @@ extern class Token {
         precedence serves as "catch-all" precedence for selector,
         indexing, and other operator and delimiter tokens.
     **/
-    @:native("UnaryPrec") static var unaryPrec: go.GoInt;
+    @:native("UnaryPrec") static final unaryPrec: go.GoInt;
     /**
         The list of tokens.
     **/
-    @:native("VAR") static var VAR: go.go.token.Token;
+    @:native("VAR") static final VAR: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("XOR") static var XOR: go.go.token.Token;
+    @:native("XOR") static final XOR: go.go.token.Token;
     /**
         The list of tokens.
     **/
-    @:native("XOR_ASSIGN") static var XOR_ASSIGN: go.go.token.Token;
+    @:native("XOR_ASSIGN") static final XOR_ASSIGN: go.go.token.Token;
 
     /**
         IsExported reports whether name starts with an upper-case letter.

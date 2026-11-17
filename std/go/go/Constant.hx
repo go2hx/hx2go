@@ -12,12 +12,12 @@ package go.go;
 @:go.Type({ name: "constant", instanceName: "constant.constant", imports: ["go/constant"] })
 extern class Constant {
 
-    @:native("Bool") static var bool: go.go.constant.Kind;
-    @:native("Complex") static var complex: go.go.constant.Kind;
-    @:native("Float") static var float: go.go.constant.Kind;
-    @:native("Int") static var int: go.go.constant.Kind;
-    @:native("String") static var string: go.go.constant.Kind;
-    @:native("Unknown") static var unknown: go.go.constant.Kind;
+    @:native("Bool") static final bool: go.go.constant.Kind;
+    @:native("Complex") static final complex: go.go.constant.Kind;
+    @:native("Float") static final float: go.go.constant.Kind;
+    @:native("Int") static final int: go.go.constant.Kind;
+    @:native("String") static final string: go.go.constant.Kind;
+    @:native("Unknown") static final unknown: go.go.constant.Kind;
 
     /**
         BinaryOp returns the result of the binary expression x op y.

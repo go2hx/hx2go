@@ -7,7 +7,7 @@ package go.sync.atomic;
 **/
 @:structInit
 @:go.Type({ name: "Pointer", instanceName: "atomic.Pointer", imports: ["sync/atomic"] })
-extern class Pointer<T: Dynamic> {
+extern class Pointer<T> {
 
     /**
         CompareAndSwap executes the compare-and-swap operation for x.

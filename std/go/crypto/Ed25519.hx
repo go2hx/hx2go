@@ -16,10 +16,10 @@ package go.crypto;
 @:go.Type({ name: "ed25519", instanceName: "ed25519.ed25519", imports: ["crypto/ed25519"] })
 extern class Ed25519 {
 
-    @:native("PrivateKeySize") static var privateKeySize: go.GoInt;
-    @:native("PublicKeySize") static var publicKeySize: go.GoInt;
-    @:native("SeedSize") static var seedSize: go.GoInt;
-    @:native("SignatureSize") static var signatureSize: go.GoInt;
+    @:native("PrivateKeySize") static final privateKeySize: go.GoInt;
+    @:native("PublicKeySize") static final publicKeySize: go.GoInt;
+    @:native("SeedSize") static final seedSize: go.GoInt;
+    @:native("SignatureSize") static final signatureSize: go.GoInt;
 
     /**
         GenerateKey generates a public/private key pair using entropy from random.

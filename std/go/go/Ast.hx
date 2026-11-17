@@ -14,48 +14,48 @@ extern class Ast {
     /**
         The list of possible [Object] kinds.
     **/
-    @:native("Bad") static var bad: go.go.ast.ObjKind;
+    @:native("Bad") static final bad: go.go.ast.ObjKind;
     /**
         The list of possible [Object] kinds.
     **/
-    @:native("Con") static var con: go.go.ast.ObjKind;
+    @:native("Con") static final con: go.go.ast.ObjKind;
     /**
         Deprecated: use the type checker [go/types] instead of [Package];
         see [Object].
     **/
-    @:native("FilterFuncDuplicates") static var filterFuncDuplicates: go.go.ast.MergeMode;
+    @:native("FilterFuncDuplicates") static final filterFuncDuplicates: go.go.ast.MergeMode;
     /**
         Deprecated: use the type checker [go/types] instead of [Package];
         see [Object].
     **/
-    @:native("FilterImportDuplicates") static var filterImportDuplicates: go.go.ast.MergeMode;
+    @:native("FilterImportDuplicates") static final filterImportDuplicates: go.go.ast.MergeMode;
     /**
         Deprecated: use the type checker [go/types] instead of [Package];
         see [Object].
     **/
-    @:native("FilterUnassociatedComments") static var filterUnassociatedComments: go.go.ast.MergeMode;
+    @:native("FilterUnassociatedComments") static final filterUnassociatedComments: go.go.ast.MergeMode;
     /**
         The list of possible [Object] kinds.
     **/
-    @:native("Fun") static var fun: go.go.ast.ObjKind;
+    @:native("Fun") static final fun: go.go.ast.ObjKind;
     /**
         The list of possible [Object] kinds.
     **/
-    @:native("Lbl") static var lbl: go.go.ast.ObjKind;
+    @:native("Lbl") static final lbl: go.go.ast.ObjKind;
     /**
         The list of possible [Object] kinds.
     **/
-    @:native("Pkg") static var pkg: go.go.ast.ObjKind;
-    @:native("RECV") static var RECV: go.go.ast.ChanDir;
-    @:native("SEND") static var SEND: go.go.ast.ChanDir;
+    @:native("Pkg") static final pkg: go.go.ast.ObjKind;
+    @:native("RECV") static final RECV: go.go.ast.ChanDir;
+    @:native("SEND") static final SEND: go.go.ast.ChanDir;
     /**
         The list of possible [Object] kinds.
     **/
-    @:native("Typ") static var typ: go.go.ast.ObjKind;
+    @:native("Typ") static final typ: go.go.ast.ObjKind;
     /**
         The list of possible [Object] kinds.
     **/
-    @:native("Var") static var _var: go.go.ast.ObjKind;
+    @:native("Var") static final _var: go.go.ast.ObjKind;
 
     /**
         FileExports trims the AST for a Go source file in place such that

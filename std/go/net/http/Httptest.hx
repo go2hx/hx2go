@@ -10,7 +10,7 @@ extern class Httptest {
         DefaultRemoteAddr is the default remote address to return in RemoteAddr if
         an explicit DefaultRemoteAddr isn't set on [ResponseRecorder].
     **/
-    @:native("DefaultRemoteAddr") static var defaultRemoteAddr: String;
+    @:native("DefaultRemoteAddr") static final defaultRemoteAddr: String;
 
     /**
         NewRecorder returns an initialized [ResponseRecorder].

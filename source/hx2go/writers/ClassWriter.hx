@@ -45,6 +45,9 @@ class ClassWriter extends WriterImpl {
         writer.context.resolve({ pack: ['go', 'haxe'], name: "HxClass", moduleName: "HxClass" });
 
         var buf = new OutputBuffer();
+        if (writer.context.isGenericTemplate(cls)) {
+            return buf;
+        }
 
         if (cls.flags & HxbClassFlag.CExtern != 0) {
             // write RTTI

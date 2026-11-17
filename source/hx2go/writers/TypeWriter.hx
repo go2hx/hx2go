@@ -107,11 +107,9 @@ class TypeWriter extends WriterImpl {
 
         // skip generating typedefs for @:generic classes
         switch norm {
-            case TInst(tp, params): {
-                if (switch writer.context.resolve(tp) {
-                    case MClass(cls): writer.context.isGenericTemplate(cls);
-                    case _: false;
-                }) return buf;
+            case TInst(tp, params): switch writer.context.resolve(tp) {
+                case MClass(cls) if (writer.context.isGenericTemplate(cls)): return buf;
+                case _: null;
             }
 
             case _: null;

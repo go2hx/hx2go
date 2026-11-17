@@ -82,10 +82,6 @@ class Context {
     private var initOrder: Map<String, Int> = [];
     private var noEntry:Bool = false;
 
-    // paths of @:generic base class templates (KGeneric) that have at least one
-    // KGenericInstance specialisation
-    private var specialisedGenericBases: Map<String, Bool> = [];
-
     public function new(archive: HxbArchive, outputDirectory: String, sourcelineComments:Bool, times:hx2go.util.Times, codegenVersion:String, disableIncrementalCache:Bool, sourcemaps:Bool = true, ?goPackage:String, noEntry:Bool = false) {
         this.sourcelineComments = sourcelineComments;
         this.sourcemaps = sourcemaps;
@@ -206,27 +202,8 @@ class Context {
 
         return false;
     }
-    
-    static function genericBaseKey(tp: TypePath): String {
-        var pack = tp.pack.copy();
-        if (pack.length > 0) {
-            var last = pack[pack.length - 1];
-            if (last.charAt(0) == "_") pack[pack.length - 1] = last.substr(1);
-        }
-        var m = pack.length == 0 ? tp.moduleName : pack.join(".") + "." + tp.moduleName;
-        return tp.name == tp.moduleName ? m : m + "." + tp.name;
-    }
 
     public function buildType(t: HxbModuleType, ref: ModuleRef): Void {
-        switch t {
-            case MClass(def):
-                switch def.kind {
-                    case KGenericInstance(c, _):
-                        specialisedGenericBases.set(genericBaseKey(c), true);
-                    case _:
-                }
-            case _:
-        }
         var infos = switch t {
             case MClass(def): {
                 path: def.path

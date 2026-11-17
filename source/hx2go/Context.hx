@@ -972,6 +972,16 @@ class Context {
         writer.types.importTarget = moduleKey;
 
         for (f in roots) {
+            switch [f.type, f.expr?.expr?.expr] {
+                case [TFun(fArgs, _), TFunction(tf)] if (f.kind.match(KMethod(_)) && fArgs.length == tf.args.length):
+                    f.type = TFun([for (i in 0...fArgs.length) {
+                        name: fArgs[i].name,
+                        opt: fArgs[i].opt,
+                        t: tf.args[i].v.type
+                    }], tf.t);
+                case _:
+            }
+
             if (baseInstFields.exists(f.name)) {
                 var base = baseInstFields.get(f.name);
                 var assign: Array<HxbTypedExpr> = [];

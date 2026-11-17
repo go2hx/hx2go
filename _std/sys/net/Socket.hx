@@ -10,6 +10,7 @@ import go.Net;
 import go.Time;
 import go.Go;
 import go.Syntax;
+import go.net.IP;
 
 class Socket {
 
@@ -38,8 +39,14 @@ class Socket {
     }
 
     private function addr(): String {
-        var h = _host == null ? "" : "" + _host.ip;
-        return h + ":" + _port;
+        if (_host == null) {
+            return Net.joinHostPort('', Std.string(_port));
+        }
+
+        var ip: Int = _host.ip;
+        var goIp: IP = Net.iPv4((ip >>> 24) & 0xFF, (ip >>> 16) & 0xFF, (ip >>> 8) & 0xFF, ip & 0xFF);
+
+        return Net.joinHostPort(goIp.string(), Std.string(_port));
     }
 
     static inline function zeroTime(): go.time.Time {

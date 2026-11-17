@@ -11,7 +11,7 @@ extern class Jpeg {
     /**
         DefaultQuality is the default quality encoding parameter.
     **/
-    @:native("DefaultQuality") static var defaultQuality: go.GoInt;
+    @:native("DefaultQuality") static final defaultQuality: go.GoInt;
 
     /**
         Decode reads a JPEG image from r and returns it as an [image.Image].

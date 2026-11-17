@@ -22,70 +22,57 @@ extern class Sql {
         
         See https://en.wikipedia.org/wiki/Isolation_(database_systems)#Isolation_levels.
     **/
-    @:native("LevelDefault") static var levelDefault: go.database.sql.IsolationLevel;
+    @:native("LevelDefault") static final levelDefault: go.database.sql.IsolationLevel;
     /**
         Various isolation levels that drivers may support in [DB.BeginTx].
         If a driver does not support a given isolation level an error may be returned.
         
         See https://en.wikipedia.org/wiki/Isolation_(database_systems)#Isolation_levels.
     **/
-    @:native("LevelLinearizable") static var levelLinearizable: go.database.sql.IsolationLevel;
+    @:native("LevelLinearizable") static final levelLinearizable: go.database.sql.IsolationLevel;
     /**
         Various isolation levels that drivers may support in [DB.BeginTx].
         If a driver does not support a given isolation level an error may be returned.
         
         See https://en.wikipedia.org/wiki/Isolation_(database_systems)#Isolation_levels.
     **/
-    @:native("LevelReadCommitted") static var levelReadCommitted: go.database.sql.IsolationLevel;
+    @:native("LevelReadCommitted") static final levelReadCommitted: go.database.sql.IsolationLevel;
     /**
         Various isolation levels that drivers may support in [DB.BeginTx].
         If a driver does not support a given isolation level an error may be returned.
         
         See https://en.wikipedia.org/wiki/Isolation_(database_systems)#Isolation_levels.
     **/
-    @:native("LevelReadUncommitted") static var levelReadUncommitted: go.database.sql.IsolationLevel;
+    @:native("LevelReadUncommitted") static final levelReadUncommitted: go.database.sql.IsolationLevel;
     /**
         Various isolation levels that drivers may support in [DB.BeginTx].
         If a driver does not support a given isolation level an error may be returned.
         
         See https://en.wikipedia.org/wiki/Isolation_(database_systems)#Isolation_levels.
     **/
-    @:native("LevelRepeatableRead") static var levelRepeatableRead: go.database.sql.IsolationLevel;
+    @:native("LevelRepeatableRead") static final levelRepeatableRead: go.database.sql.IsolationLevel;
     /**
         Various isolation levels that drivers may support in [DB.BeginTx].
         If a driver does not support a given isolation level an error may be returned.
         
         See https://en.wikipedia.org/wiki/Isolation_(database_systems)#Isolation_levels.
     **/
-    @:native("LevelSerializable") static var levelSerializable: go.database.sql.IsolationLevel;
+    @:native("LevelSerializable") static final levelSerializable: go.database.sql.IsolationLevel;
     /**
         Various isolation levels that drivers may support in [DB.BeginTx].
         If a driver does not support a given isolation level an error may be returned.
         
         See https://en.wikipedia.org/wiki/Isolation_(database_systems)#Isolation_levels.
     **/
-    @:native("LevelSnapshot") static var levelSnapshot: go.database.sql.IsolationLevel;
+    @:native("LevelSnapshot") static final levelSnapshot: go.database.sql.IsolationLevel;
     /**
         Various isolation levels that drivers may support in [DB.BeginTx].
         If a driver does not support a given isolation level an error may be returned.
         
         See https://en.wikipedia.org/wiki/Isolation_(database_systems)#Isolation_levels.
     **/
-    @:native("LevelWriteCommitted") static var levelWriteCommitted: go.database.sql.IsolationLevel;
+    @:native("LevelWriteCommitted") static final levelWriteCommitted: go.database.sql.IsolationLevel;
 
-    /**
-        ConvertAssign copies the value in src to the value pointed at by dest.
-        See the documentation on [Rows.Scan] for details on conversions.
-        dest must be a pointer or must implement [Scanner].
-        
-        Implementations of [driver.RowsColumnScanner] should pass through
-        their [driver.ScanContext] parameter.
-        In other cases, pass driver.ScanContext{} as the context.
-        
-        ConvertAssign is intended for use by driver implementations.
-        Most users should not need to use it directly.
-    **/
-    @:native("ConvertAssign") static function convertAssign(scanCtx: go.database.sql.driver.ScanContext, dest: Dynamic, src: go.database.sql.driver.Value): (go.Error);
     /**
         Drivers returns a sorted list of the names of the registered drivers.
     **/

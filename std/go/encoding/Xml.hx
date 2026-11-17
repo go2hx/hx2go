@@ -7,7 +7,7 @@ package go.encoding;
 @:go.Type({ name: "xml", instanceName: "xml.xml", imports: ["encoding/xml"] })
 extern class Xml {
 
-    @:native("Header") static var header: String;
+    @:native("Header") static final header: String;
 
     /**
         HTMLAutoClose is the set of HTML elements that

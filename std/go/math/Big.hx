@@ -99,75 +99,55 @@ extern class Big {
     /**
         Constants describing the [Accuracy] of a [Float].
     **/
-    @:native("Above") static var above: go.math.big.Accuracy;
+    @:native("Above") static final above: go.math.big.Accuracy;
     /**
         These constants define supported rounding modes.
     **/
-    @:native("AwayFromZero") static var awayFromZero: go.math.big.RoundingMode;
+    @:native("AwayFromZero") static final awayFromZero: go.math.big.RoundingMode;
     /**
         Constants describing the [Accuracy] of a [Float].
     **/
-    @:native("Below") static var below: go.math.big.Accuracy;
-    /**
-        Rounding modes that determine how the integer quotient is adjusted in an integer division.
-        See Daan Leijen, “Division and Modulus for Computer Scientists”, for details.
-    **/
-    @:native("Ceil") static var ceil: go.math.big.RoundingMode;
+    @:native("Below") static final below: go.math.big.Accuracy;
     /**
         Constants describing the [Accuracy] of a [Float].
     **/
-    @:native("Exact") static var exact: go.math.big.Accuracy;
-    /**
-        Rounding modes that determine how the integer quotient is adjusted in an integer division.
-        See Daan Leijen, “Division and Modulus for Computer Scientists”, for details.
-    **/
-    @:native("Floor") static var floor: go.math.big.RoundingMode;
+    @:native("Exact") static final exact: go.math.big.Accuracy;
     /**
         MaxBase is the largest number base accepted for string conversions.
     **/
-    @:native("MaxBase") static var maxBase: go.Rune;
+    @:native("MaxBase") static final maxBase: go.Rune;
     /**
         Exponent and precision limits.
     **/
-    @:native("MaxExp") static var maxExp: go.GoInt;
+    @:native("MaxExp") static final maxExp: go.GoInt;
     /**
         Exponent and precision limits.
     **/
-    @:native("MaxPrec") static var maxPrec: go.GoInt;
+    @:native("MaxPrec") static final maxPrec: go.GoInt;
     /**
         Exponent and precision limits.
     **/
-    @:native("MinExp") static var minExp: go.GoInt;
-    /**
-        Rounding modes that determine how the integer quotient is adjusted in an integer division.
-        See Daan Leijen, “Division and Modulus for Computer Scientists”, for details.
-    **/
-    @:native("Round") static var round: go.math.big.RoundingMode;
+    @:native("MinExp") static final minExp: go.GoInt;
     /**
         These constants define supported rounding modes.
     **/
-    @:native("ToNearestAway") static var toNearestAway: go.math.big.RoundingMode;
+    @:native("ToNearestAway") static final toNearestAway: go.math.big.RoundingMode;
     /**
         These constants define supported rounding modes.
     **/
-    @:native("ToNearestEven") static var toNearestEven: go.math.big.RoundingMode;
+    @:native("ToNearestEven") static final toNearestEven: go.math.big.RoundingMode;
     /**
         These constants define supported rounding modes.
     **/
-    @:native("ToNegativeInf") static var toNegativeInf: go.math.big.RoundingMode;
+    @:native("ToNegativeInf") static final toNegativeInf: go.math.big.RoundingMode;
     /**
         These constants define supported rounding modes.
     **/
-    @:native("ToPositiveInf") static var toPositiveInf: go.math.big.RoundingMode;
+    @:native("ToPositiveInf") static final toPositiveInf: go.math.big.RoundingMode;
     /**
         These constants define supported rounding modes.
     **/
-    @:native("ToZero") static var toZero: go.math.big.RoundingMode;
-    /**
-        Rounding modes that determine how the integer quotient is adjusted in an integer division.
-        See Daan Leijen, “Division and Modulus for Computer Scientists”, for details.
-    **/
-    @:native("Trunc") static var trunc: go.math.big.RoundingMode;
+    @:native("ToZero") static final toZero: go.math.big.RoundingMode;
 
     /**
         Jacobi returns the Jacobi symbol (x/y), either +1, -1, or 0.

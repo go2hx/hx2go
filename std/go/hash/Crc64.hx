@@ -11,15 +11,15 @@ extern class Crc64 {
     /**
         Predefined polynomials.
     **/
-    @:native("ECMA") static var ECMA: go.GoInt;
+    @:native("ECMA") static final ECMA: go.GoInt;
     /**
         Predefined polynomials.
     **/
-    @:native("ISO") static var ISO: go.GoInt;
+    @:native("ISO") static final ISO: go.GoInt;
     /**
         The size of a CRC-64 checksum in bytes.
     **/
-    @:native("Size") static var size: go.GoInt;
+    @:native("Size") static final size: go.GoInt;
 
     /**
         Checksum returns the CRC-64 checksum of data

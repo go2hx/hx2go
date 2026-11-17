@@ -99,7 +99,7 @@ extern class Errors {
         returns true when target is a non-nil *E. In the latter case, the As
         method is responsible for setting target.
     **/
-    @:go.Tuple("p0", "p1") @:native("AsType") static function asType<E: go.Error>(err: go.Error): (go.Tuple<{ p0: E, p1: Bool }>);
+    @:go.Tuple("p0", "p1") @:native("AsType") static function asType<E>(err: go.Error): (go.Tuple<{ p0: E, p1: Bool }>);
     /**
         Is reports whether any error in err's tree matches target.
         The target must be comparable.

@@ -278,17 +278,15 @@ package go;
     determined by checking the issetugid syscall, and on AIX it is determined by
     checking if the uid/gid match the effective uid/gid.
     
-    When the runtime determines the binary is setuid/setgid-like, it does two main
+    When the runtime determines the binary is setuid/setgid-like, it does three main
     things:
+      - The standard input/output file descriptors (0, 1, 2) are checked to be open.
+        If any of them are closed, they are opened pointing at /dev/null.
       - The value of the GOTRACEBACK environment variable is set to 'none'.
       - When a signal is received that terminates the program, or the program
         encounters an unrecoverable panic that would otherwise override the value
         of GOTRACEBACK, the goroutine stack, registers, and other memory related
         information are omitted.
-    
-    Additinally on Unix platforms the Go runtime automatically checks whether
-    the standard input/output file descriptors (0, 1, 2) are open. If any of them are
-    closed, they are opened pointing at /dev/null.
     
     [Race Detector article]: https://go.dev/doc/articles/race_detector
 **/
@@ -302,18 +300,18 @@ extern class Runtime {
         	gc      Also known as cmd/compile.
         	gccgo   The gccgo front end, part of the GCC compiler suite.
     **/
-    @:native("Compiler") static var compiler: String;
+    @:native("Compiler") static final compiler: String;
     /**
         GOARCH is the running program's architecture target:
         one of 386, amd64, arm, s390x, and so on.
     **/
-    @:native("GOARCH") static var GOARCH: String;
+    @:native("GOARCH") static final GOARCH: String;
     /**
         GOOS is the running program's operating system target:
         one of darwin, freebsd, linux, and so on.
         To view possible combinations of GOOS and GOARCH, run "go tool dist list".
     **/
-    @:native("GOOS") static var GOOS: String;
+    @:native("GOOS") static final GOOS: String;
 
     /**
         MemProfileRate controls the fraction of memory allocations
@@ -392,7 +390,7 @@ extern class Runtime {
         pass the object to the [KeepAlive] function after the last point
         where the object must remain reachable.
     **/
-    @:native("AddCleanup") static function addCleanup<T: Dynamic, S: Dynamic>(ptr: go.Pointer<T>, cleanup: (p0: S) -> Void, arg: S): (go.runtime.Cleanup);
+    @:native("AddCleanup") static function addCleanup<T, S>(ptr: go.Pointer<T>, cleanup: (p0: S) -> Void, arg: S): (go.runtime.Cleanup);
     /**
         BlockProfile returns n, the number of records in the current blocking profile.
         If len(p) >= n, BlockProfile copies the profile into p and returns n, true.

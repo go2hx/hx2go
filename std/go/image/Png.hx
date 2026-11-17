@@ -8,10 +8,10 @@ package go.image;
 @:go.Type({ name: "png", instanceName: "png.png", imports: ["image/png"] })
 extern class Png {
 
-    @:native("BestCompression") static var bestCompression: go.image.png.CompressionLevel;
-    @:native("BestSpeed") static var bestSpeed: go.image.png.CompressionLevel;
-    @:native("DefaultCompression") static var defaultCompression: go.image.png.CompressionLevel;
-    @:native("NoCompression") static var noCompression: go.image.png.CompressionLevel;
+    @:native("BestCompression") static final bestCompression: go.image.png.CompressionLevel;
+    @:native("BestSpeed") static final bestSpeed: go.image.png.CompressionLevel;
+    @:native("DefaultCompression") static final defaultCompression: go.image.png.CompressionLevel;
+    @:native("NoCompression") static final noCompression: go.image.png.CompressionLevel;
 
     /**
         Decode reads a PNG image from r and returns it as an [image.Image].
@@ -26,10 +26,6 @@ extern class Png {
     /**
         Encode writes the Image m to w in PNG format. Any Image may be
         encoded, but images that are not [image.NRGBA] might be encoded lossily.
-        
-        Note that the exact bytes written to w are not covered by the Go 1
-        compatibility promise. Callers, including tests, should not depend on the
-        exact written bytes.
     **/
     @:native("Encode") static function encode(w: go.io.Writer, m: go.image.Image): (go.Error);
 

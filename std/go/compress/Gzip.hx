@@ -11,27 +11,27 @@ extern class Gzip {
         These constants are copied from the [flate] package, so that code that imports
         [compress/gzip] does not also have to import [compress/flate].
     **/
-    @:native("BestCompression") static var bestCompression: go.GoInt;
+    @:native("BestCompression") static final bestCompression: go.GoInt;
     /**
         These constants are copied from the [flate] package, so that code that imports
         [compress/gzip] does not also have to import [compress/flate].
     **/
-    @:native("BestSpeed") static var bestSpeed: go.GoInt;
+    @:native("BestSpeed") static final bestSpeed: go.GoInt;
     /**
         These constants are copied from the [flate] package, so that code that imports
         [compress/gzip] does not also have to import [compress/flate].
     **/
-    @:native("DefaultCompression") static var defaultCompression: go.GoInt;
+    @:native("DefaultCompression") static final defaultCompression: go.GoInt;
     /**
         These constants are copied from the [flate] package, so that code that imports
         [compress/gzip] does not also have to import [compress/flate].
     **/
-    @:native("HuffmanOnly") static var huffmanOnly: go.GoInt;
+    @:native("HuffmanOnly") static final huffmanOnly: go.GoInt;
     /**
         These constants are copied from the [flate] package, so that code that imports
         [compress/gzip] does not also have to import [compress/flate].
     **/
-    @:native("NoCompression") static var noCompression: go.GoInt;
+    @:native("NoCompression") static final noCompression: go.GoInt;
 
     /**
         NewReader creates a new [Reader] reading the given reader.
@@ -52,10 +52,6 @@ extern class Gzip {
         
         Callers that wish to set the fields in Writer.[Header] must do so before
         the first call to Write, Flush, or Close.
-        
-        Note that the exact bytes written to w are not covered by the Go 1
-        compatibility promise. Callers, including tests, should not depend on the
-        exact written bytes.
     **/
     @:native("NewWriter") static function newWriter(w: go.io.Writer): (go.Pointer<go.compress.gzip.Writer>);
     /**
@@ -65,10 +61,6 @@ extern class Gzip {
         The compression level can be [DefaultCompression], [NoCompression], [HuffmanOnly]
         or any integer value between [BestSpeed] and [BestCompression] inclusive.
         The error returned will be nil if the level is valid.
-        
-        Note that the exact bytes written to w are not covered by the Go 1
-        compatibility promise. Callers, including tests, should not depend on the
-        exact written bytes.
     **/
     @:native("NewWriterLevel") static function newWriterLevel(w: go.io.Writer, level: go.GoInt): (go.Result<go.Pointer<go.compress.gzip.Writer>>);
 

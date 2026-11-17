@@ -13,11 +13,9 @@ extern class UnmarshalTypeError {
     @:native("Offset") var offset: go.Int64;
     @:native("Struct") var struct: String;
     @:native("Field") var field: String;
-    @:native("Err") var err: go.Error;
 
-    function new(value: String="", type: go.reflect.Type=null, offset: go.Int64=0, struct: String="", field: String="", err: go.Error=null);
+    function new(value: String="", type: go.reflect.Type=null, offset: go.Int64=0, struct: String="", field: String="");
 
     @:native("Error") function error(): (String);
-    @:native("Unwrap") function unwrap(): (go.Error);
 
 }

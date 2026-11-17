@@ -40,12 +40,12 @@ package go;
 @:go.Type({ name: "image", instanceName: "image.image", imports: ["image"] })
 extern class Image {
 
-    @:native("YCbCrSubsampleRatio410") static var yCbCrSubsampleRatio410: go.image.YCbCrSubsampleRatio;
-    @:native("YCbCrSubsampleRatio411") static var yCbCrSubsampleRatio411: go.image.YCbCrSubsampleRatio;
-    @:native("YCbCrSubsampleRatio420") static var yCbCrSubsampleRatio420: go.image.YCbCrSubsampleRatio;
-    @:native("YCbCrSubsampleRatio422") static var yCbCrSubsampleRatio422: go.image.YCbCrSubsampleRatio;
-    @:native("YCbCrSubsampleRatio440") static var yCbCrSubsampleRatio440: go.image.YCbCrSubsampleRatio;
-    @:native("YCbCrSubsampleRatio444") static var yCbCrSubsampleRatio444: go.image.YCbCrSubsampleRatio;
+    @:native("YCbCrSubsampleRatio410") static final yCbCrSubsampleRatio410: go.image.YCbCrSubsampleRatio;
+    @:native("YCbCrSubsampleRatio411") static final yCbCrSubsampleRatio411: go.image.YCbCrSubsampleRatio;
+    @:native("YCbCrSubsampleRatio420") static final yCbCrSubsampleRatio420: go.image.YCbCrSubsampleRatio;
+    @:native("YCbCrSubsampleRatio422") static final yCbCrSubsampleRatio422: go.image.YCbCrSubsampleRatio;
+    @:native("YCbCrSubsampleRatio440") static final yCbCrSubsampleRatio440: go.image.YCbCrSubsampleRatio;
+    @:native("YCbCrSubsampleRatio444") static final yCbCrSubsampleRatio444: go.image.YCbCrSubsampleRatio;
 
     @:native("Black") static var black: go.Pointer<go.image.Uniform>;
     @:native("Opaque") static var opaque: go.Pointer<go.image.Uniform>;
@@ -69,12 +69,6 @@ extern class Image {
         The string returned is the format name used during format registration.
         Format registration is typically done by an init function in the codec-
         specific package.
-        
-        Decoding may allocate memory proportional to the width and height in the
-        image header before all pixel data is consumed or validated. When
-        decoding untrusted input, call [DecodeConfig] first to inspect dimensions
-        and reject images that would exceed resource limits; see the "Security
-        Considerations" section in the [image] package documentation.
     **/
     @:go.Tuple("p0", "p1", "p2") @:native("Decode") static function decode(r: go.io.Reader): (go.Tuple<{ p0: go.image.Image, p1: String, p2: go.Error }>);
     /**
@@ -82,9 +76,6 @@ extern class Image {
         been encoded in a registered format. The string returned is the format name
         used during format registration. Format registration is typically done by
         an init function in the codec-specific package.
-        
-        DecodeConfig reads only format headers and does not allocate a full-size
-        pixel buffer, so it can be used to check dimensions before calling [Decode].
     **/
     @:go.Tuple("p0", "p1", "p2") @:native("DecodeConfig") static function decodeConfig(r: go.io.Reader): (go.Tuple<{ p0: go.image.Config, p1: String, p2: go.Error }>);
     /**

@@ -14,75 +14,75 @@ extern class Tar {
     /**
         Constants to identify various tar formats.
     **/
-    @:native("FormatGNU") static var formatGNU: go.archive.tar.Format;
+    @:native("FormatGNU") static final formatGNU: go.archive.tar.Format;
     /**
         Constants to identify various tar formats.
     **/
-    @:native("FormatPAX") static var formatPAX: go.archive.tar.Format;
+    @:native("FormatPAX") static final formatPAX: go.archive.tar.Format;
     /**
         Constants to identify various tar formats.
     **/
-    @:native("FormatUSTAR") static var formatUSTAR: go.archive.tar.Format;
+    @:native("FormatUSTAR") static final formatUSTAR: go.archive.tar.Format;
     /**
         Constants to identify various tar formats.
     **/
-    @:native("FormatUnknown") static var formatUnknown: go.archive.tar.Format;
+    @:native("FormatUnknown") static final formatUnknown: go.archive.tar.Format;
     /**
         Type flags for Header.Typeflag.
     **/
-    @:native("TypeBlock") static var typeBlock: go.Rune;
+    @:native("TypeBlock") static final typeBlock: go.Rune;
     /**
         Type flags for Header.Typeflag.
     **/
-    @:native("TypeChar") static var typeChar: go.Rune;
+    @:native("TypeChar") static final typeChar: go.Rune;
     /**
         Type flags for Header.Typeflag.
     **/
-    @:native("TypeCont") static var typeCont: go.Rune;
+    @:native("TypeCont") static final typeCont: go.Rune;
     /**
         Type flags for Header.Typeflag.
     **/
-    @:native("TypeDir") static var typeDir: go.Rune;
+    @:native("TypeDir") static final typeDir: go.Rune;
     /**
         Type flags for Header.Typeflag.
     **/
-    @:native("TypeFifo") static var typeFifo: go.Rune;
+    @:native("TypeFifo") static final typeFifo: go.Rune;
     /**
         Type flags for Header.Typeflag.
     **/
-    @:native("TypeGNULongLink") static var typeGNULongLink: go.Rune;
+    @:native("TypeGNULongLink") static final typeGNULongLink: go.Rune;
     /**
         Type flags for Header.Typeflag.
     **/
-    @:native("TypeGNULongName") static var typeGNULongName: go.Rune;
+    @:native("TypeGNULongName") static final typeGNULongName: go.Rune;
     /**
         Type flags for Header.Typeflag.
     **/
-    @:native("TypeGNUSparse") static var typeGNUSparse: go.Rune;
+    @:native("TypeGNUSparse") static final typeGNUSparse: go.Rune;
     /**
         Type flags for Header.Typeflag.
     **/
-    @:native("TypeLink") static var typeLink: go.Rune;
+    @:native("TypeLink") static final typeLink: go.Rune;
     /**
         Type flags for Header.Typeflag.
     **/
-    @:native("TypeReg") static var typeReg: go.Rune;
+    @:native("TypeReg") static final typeReg: go.Rune;
     /**
         Type flags for Header.Typeflag.
     **/
-    @:native("TypeRegA") static var typeRegA: go.Rune;
+    @:native("TypeRegA") static final typeRegA: go.Rune;
     /**
         Type flags for Header.Typeflag.
     **/
-    @:native("TypeSymlink") static var typeSymlink: go.Rune;
+    @:native("TypeSymlink") static final typeSymlink: go.Rune;
     /**
         Type flags for Header.Typeflag.
     **/
-    @:native("TypeXGlobalHeader") static var typeXGlobalHeader: go.Rune;
+    @:native("TypeXGlobalHeader") static final typeXGlobalHeader: go.Rune;
     /**
         Type flags for Header.Typeflag.
     **/
-    @:native("TypeXHeader") static var typeXHeader: go.Rune;
+    @:native("TypeXHeader") static final typeXHeader: go.Rune;
 
     /**
         FileInfoHeader creates a partially-populated [Header] from fi.

@@ -2,13 +2,9 @@ package go.hash;
 
 /**
     Package maphash provides hash functions on byte sequences and comparable values.
-    It also defines [Hasher], the interface between a hash function and a hash table.
-    
-    These hash functions are intended to be used to implement hash
-    tables, Bloom filters, and other data structures that need to map
-    arbitrary strings or byte sequences to a uniform distribution on
-    unsigned 64-bit integers.
-    
+    These hash functions are intended to be used to implement hash tables or
+    other data structures that need to map arbitrary strings or byte
+    sequences to a uniform distribution on unsigned 64-bit integers.
     Each different instance of a hash table or data structure should use its own [Seed].
     
     The hash functions are not cryptographically secure.
@@ -33,7 +29,7 @@ extern class Maphash {
         such that Comparable(s, v1) == Comparable(s, v2) if v1 == v2.
         If v != v, then the resulting hash is randomly distributed.
     **/
-    @:native("Comparable") static function comparable<T: go.Comparable>(seed: go.hash.maphash.Seed, v: T): (go.UInt64);
+    @:native("Comparable") static function comparable<T>(seed: go.hash.maphash.Seed, v: T): (go.UInt64);
     /**
         MakeSeed returns a new random seed.
     **/
@@ -52,6 +48,6 @@ extern class Maphash {
     /**
         WriteComparable adds x to the data hashed by h.
     **/
-    @:native("WriteComparable") static function writeComparable<T: go.Comparable>(h: go.Pointer<go.hash.maphash.Hash>, x: T): Void;
+    @:native("WriteComparable") static function writeComparable<T>(h: go.Pointer<go.hash.maphash.Hash>, x: T): Void;
 
 }

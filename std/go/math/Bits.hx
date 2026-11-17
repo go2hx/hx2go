@@ -16,7 +16,7 @@ extern class Bits {
     /**
         UintSize is the size of a uint in bits.
     **/
-    @:native("UintSize") static var uintSize: go.GoInt;
+    @:native("UintSize") static final uintSize: go.GoInt;
 
     /**
         Add returns the sum with carry of x, y and carry: sum = x + y + carry.

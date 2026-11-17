@@ -42,8 +42,8 @@ package go.crypto;
 @:go.Type({ name: "rsa", instanceName: "rsa.rsa", imports: ["crypto/rsa"] })
 extern class Rsa {
 
-    @:native("PSSSaltLengthAuto") static var pSSSaltLengthAuto: go.GoInt;
-    @:native("PSSSaltLengthEqualsHash") static var pSSSaltLengthEqualsHash: go.GoInt;
+    @:native("PSSSaltLengthAuto") static final pSSSaltLengthAuto: go.GoInt;
+    @:native("PSSSaltLengthEqualsHash") static final pSSSaltLengthEqualsHash: go.GoInt;
 
     /**
         DecryptOAEP decrypts ciphertext using RSA-OAEP.

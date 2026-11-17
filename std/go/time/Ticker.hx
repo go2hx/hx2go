@@ -20,9 +20,8 @@ extern class Ticker {
     @:native("Reset") function reset(d: go.time.Duration): Void;
     /**
         Stop turns off a ticker. After Stop, no more ticks will be sent.
-        Stop does not close the channel, to permit calling [Ticker.Reset],
-        and to prevent a concurrent goroutine reading from the channel
-        from seeing an erroneous "tick".
+        Stop does not close the channel, to prevent a concurrent goroutine
+        reading from the channel from seeing an erroneous "tick".
     **/
     @:native("Stop") function stop(): Void;
 

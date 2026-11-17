@@ -12,12 +12,12 @@ package go.go;
 @:go.Type({ name: "constant", instanceName: "constant.constant", imports: ["go/constant"] })
 extern class Constant {
 
-    @:native("Bool") static var bool: go.go.constant.Kind;
-    @:native("Complex") static var complex: go.go.constant.Kind;
-    @:native("Float") static var float: go.go.constant.Kind;
-    @:native("Int") static var int: go.go.constant.Kind;
-    @:native("String") static var string: go.go.constant.Kind;
-    @:native("Unknown") static var unknown: go.go.constant.Kind;
+    @:native("Bool") static final bool: go.go.constant.Kind;
+    @:native("Complex") static final complex: go.go.constant.Kind;
+    @:native("Float") static final float: go.go.constant.Kind;
+    @:native("Int") static final int: go.go.constant.Kind;
+    @:native("String") static final string: go.go.constant.Kind;
+    @:native("Unknown") static final unknown: go.go.constant.Kind;
 
     /**
         BinaryOp returns the result of the binary expression x op y.
@@ -166,12 +166,6 @@ extern class Constant {
         otherwise it is != 0. If x is [Unknown], the result is 1.
     **/
     @:native("Sign") static function sign(x: go.go.constant.Value): (go.GoInt);
-    /**
-        StringLen returns the length of x if x is a [String].
-        If x is [Unknown], the result is 0.
-        In all other cases, the function panics.
-    **/
-    @:native("StringLen") static function stringLen(x: go.go.constant.Value): (go.Int64);
     /**
         StringVal returns the Go string value of x, which must be a [String] or an [Unknown].
         If x is [Unknown], the result is "".

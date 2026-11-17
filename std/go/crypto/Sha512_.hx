@@ -11,11 +11,11 @@ package go.crypto;
 @:go.Type({ name: "sha512", instanceName: "sha512.sha512", imports: ["crypto/sha512"] })
 extern class Sha512_ {
 
-    @:native("BlockSize") static var blockSize: go.GoInt;
-    @:native("Size") static var size: go.GoInt;
-    @:native("Size224") static var size224: go.GoInt;
-    @:native("Size256") static var size256: go.GoInt;
-    @:native("Size384") static var size384: go.GoInt;
+    @:native("BlockSize") static final blockSize: go.GoInt;
+    @:native("Size") static final size: go.GoInt;
+    @:native("Size224") static final size224: go.GoInt;
+    @:native("Size256") static final size256: go.GoInt;
+    @:native("Size384") static final size384: go.GoInt;
 
     /**
         New returns a new [hash.Hash] computing the SHA-512 checksum. The Hash

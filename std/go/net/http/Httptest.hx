@@ -10,7 +10,7 @@ extern class Httptest {
         DefaultRemoteAddr is the default remote address to return in RemoteAddr if
         an explicit DefaultRemoteAddr isn't set on [ResponseRecorder].
     **/
-    @:native("DefaultRemoteAddr") static var defaultRemoteAddr: String;
+    @:native("DefaultRemoteAddr") static final defaultRemoteAddr: String;
 
     /**
         NewRecorder returns an initialized [ResponseRecorder].
@@ -47,48 +47,22 @@ extern class Httptest {
     **/
     @:native("NewRequestWithContext") static function newRequestWithContext(ctx: go.context.Context, method: String, target: String, body: go.io.Reader): (go.Pointer<go.net.http.Request>);
     /**
-        NewServer starts and returns a new [Server] listening on a
-        local network loopback interface.
-        This is equivalent to calling [NewUnstartedServer] followed by [Server.Start].
-        
-        The caller should call [Server.Close] when finished, to shut it down.
-        
-        Most users should use [NewTestServer] instead.
-        See the [Server] documentation for details.
+        NewServer starts and returns a new [Server].
+        The caller should call Close when finished, to shut it down.
     **/
     @:native("NewServer") static function newServer(handler: go.net.http.Handler): (go.Pointer<go.net.http.httptest.Server>);
     /**
-        NewTLSServer starts and returns a new [Server] using TLS and listening on a
-        local network loopback interface.
-        This is equivalent to calling [NewUnstartedServer] followed by [Server.StartTLS].
-        
-        The caller should call [Server.Close] when finished, to shut it down.
-        
-        Most users should use [NewTestServer] instead.
-        See the [Server] documentation for details.
+        NewTLSServer starts and returns a new [Server] using TLS.
+        The caller should call Close when finished, to shut it down.
     **/
     @:native("NewTLSServer") static function newTLSServer(handler: go.net.http.Handler): (go.Pointer<go.net.http.httptest.Server>);
     /**
-        NewTestServer returns a new [Server] for a test.
-        The server will use an in-memory network implementation by default.
+        NewUnstartedServer returns a new [Server] but doesn't start it.
         
-        If the handler is nil, the server will serve 500 responses to all requests.
-        It will not use [http.DefaultServeMux].
+        After changing its configuration, the caller should call Start or
+        StartTLS.
         
-        See the [Server] documentation for more details.
-    **/
-    @:native("NewTestServer") static function newTestServer(t: go.testing.TB, handler: go.net.http.Handler): (go.Pointer<go.net.http.httptest.Server>);
-    /**
-        NewUnstartedServer returns a new [Server] listening on a
-        local network loopback interface. It does not start the server.
-        
-        After changing the server's configuration, the caller should
-        call [Server.Start] or [Server.StartTLS].
-        
-        The caller should call [Server.Close] when finished, to shut it down.
-        
-        Most users should use [NewTestServer] instead.
-        See the [Server] documentation for details.
+        The caller should call Close when finished, to shut it down.
     **/
     @:native("NewUnstartedServer") static function newUnstartedServer(handler: go.net.http.Handler): (go.Pointer<go.net.http.httptest.Server>);
 

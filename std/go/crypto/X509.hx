@@ -21,86 +21,82 @@ package go.crypto;
 @:go.Type({ name: "x509", instanceName: "x509.x509", imports: ["crypto/x509"] })
 extern class X509 {
 
-    @:native("CANotAuthorizedForExtKeyUsage") static var cANotAuthorizedForExtKeyUsage: go.crypto.x509.InvalidReason;
-    @:native("CANotAuthorizedForThisName") static var cANotAuthorizedForThisName: go.crypto.x509.InvalidReason;
-    @:native("DSA") static var DSA: go.crypto.x509.PublicKeyAlgorithm;
-    @:native("DSAWithSHA1") static var dSAWithSHA1: go.crypto.x509.SignatureAlgorithm;
-    @:native("DSAWithSHA256") static var dSAWithSHA256: go.crypto.x509.SignatureAlgorithm;
-    @:native("ECDSA") static var ECDSA: go.crypto.x509.PublicKeyAlgorithm;
-    @:native("ECDSAWithSHA1") static var eCDSAWithSHA1: go.crypto.x509.SignatureAlgorithm;
-    @:native("ECDSAWithSHA256") static var eCDSAWithSHA256: go.crypto.x509.SignatureAlgorithm;
-    @:native("ECDSAWithSHA384") static var eCDSAWithSHA384: go.crypto.x509.SignatureAlgorithm;
-    @:native("ECDSAWithSHA512") static var eCDSAWithSHA512: go.crypto.x509.SignatureAlgorithm;
-    @:native("Ed25519") static var ed25519: go.crypto.x509.PublicKeyAlgorithm;
-    @:native("Expired") static var expired: go.crypto.x509.InvalidReason;
-    @:native("ExtKeyUsageAny") static var extKeyUsageAny: go.crypto.x509.ExtKeyUsage;
-    @:native("ExtKeyUsageClientAuth") static var extKeyUsageClientAuth: go.crypto.x509.ExtKeyUsage;
-    @:native("ExtKeyUsageCodeSigning") static var extKeyUsageCodeSigning: go.crypto.x509.ExtKeyUsage;
-    @:native("ExtKeyUsageEmailProtection") static var extKeyUsageEmailProtection: go.crypto.x509.ExtKeyUsage;
-    @:native("ExtKeyUsageIPSECEndSystem") static var extKeyUsageIPSECEndSystem: go.crypto.x509.ExtKeyUsage;
-    @:native("ExtKeyUsageIPSECTunnel") static var extKeyUsageIPSECTunnel: go.crypto.x509.ExtKeyUsage;
-    @:native("ExtKeyUsageIPSECUser") static var extKeyUsageIPSECUser: go.crypto.x509.ExtKeyUsage;
-    @:native("ExtKeyUsageMicrosoftCommercialCodeSigning") static var extKeyUsageMicrosoftCommercialCodeSigning: go.crypto.x509.ExtKeyUsage;
-    @:native("ExtKeyUsageMicrosoftKernelCodeSigning") static var extKeyUsageMicrosoftKernelCodeSigning: go.crypto.x509.ExtKeyUsage;
-    @:native("ExtKeyUsageMicrosoftServerGatedCrypto") static var extKeyUsageMicrosoftServerGatedCrypto: go.crypto.x509.ExtKeyUsage;
-    @:native("ExtKeyUsageNetscapeServerGatedCrypto") static var extKeyUsageNetscapeServerGatedCrypto: go.crypto.x509.ExtKeyUsage;
-    @:native("ExtKeyUsageOCSPSigning") static var extKeyUsageOCSPSigning: go.crypto.x509.ExtKeyUsage;
-    @:native("ExtKeyUsageServerAuth") static var extKeyUsageServerAuth: go.crypto.x509.ExtKeyUsage;
-    @:native("ExtKeyUsageTimeStamping") static var extKeyUsageTimeStamping: go.crypto.x509.ExtKeyUsage;
-    @:native("IncompatibleUsage") static var incompatibleUsage: go.crypto.x509.InvalidReason;
-    @:native("KeyUsageCRLSign") static var keyUsageCRLSign: go.crypto.x509.KeyUsage;
-    @:native("KeyUsageCertSign") static var keyUsageCertSign: go.crypto.x509.KeyUsage;
-    @:native("KeyUsageContentCommitment") static var keyUsageContentCommitment: go.crypto.x509.KeyUsage;
-    @:native("KeyUsageDataEncipherment") static var keyUsageDataEncipherment: go.crypto.x509.KeyUsage;
-    @:native("KeyUsageDecipherOnly") static var keyUsageDecipherOnly: go.crypto.x509.KeyUsage;
-    @:native("KeyUsageDigitalSignature") static var keyUsageDigitalSignature: go.crypto.x509.KeyUsage;
-    @:native("KeyUsageEncipherOnly") static var keyUsageEncipherOnly: go.crypto.x509.KeyUsage;
-    @:native("KeyUsageKeyAgreement") static var keyUsageKeyAgreement: go.crypto.x509.KeyUsage;
-    @:native("KeyUsageKeyEncipherment") static var keyUsageKeyEncipherment: go.crypto.x509.KeyUsage;
-    @:native("MD2WithRSA") static var mD2WithRSA: go.crypto.x509.SignatureAlgorithm;
-    @:native("MD5WithRSA") static var mD5WithRSA: go.crypto.x509.SignatureAlgorithm;
-    @:native("MLDSA") static var MLDSA: go.crypto.x509.PublicKeyAlgorithm;
-    @:native("MLDSA44") static var MLDSA44: go.crypto.x509.SignatureAlgorithm;
-    @:native("MLDSA65") static var MLDSA65: go.crypto.x509.SignatureAlgorithm;
-    @:native("MLDSA87") static var MLDSA87: go.crypto.x509.SignatureAlgorithm;
-    @:native("NameConstraintsWithoutSANs") static var nameConstraintsWithoutSANs: go.crypto.x509.InvalidReason;
-    @:native("NameMismatch") static var nameMismatch: go.crypto.x509.InvalidReason;
-    @:native("NoValidChains") static var noValidChains: go.crypto.x509.InvalidReason;
-    @:native("NotAuthorizedToSign") static var notAuthorizedToSign: go.crypto.x509.InvalidReason;
+    @:native("CANotAuthorizedForExtKeyUsage") static final cANotAuthorizedForExtKeyUsage: go.crypto.x509.InvalidReason;
+    @:native("CANotAuthorizedForThisName") static final cANotAuthorizedForThisName: go.crypto.x509.InvalidReason;
+    @:native("DSA") static final DSA: go.crypto.x509.PublicKeyAlgorithm;
+    @:native("DSAWithSHA1") static final dSAWithSHA1: go.crypto.x509.SignatureAlgorithm;
+    @:native("DSAWithSHA256") static final dSAWithSHA256: go.crypto.x509.SignatureAlgorithm;
+    @:native("ECDSA") static final ECDSA: go.crypto.x509.PublicKeyAlgorithm;
+    @:native("ECDSAWithSHA1") static final eCDSAWithSHA1: go.crypto.x509.SignatureAlgorithm;
+    @:native("ECDSAWithSHA256") static final eCDSAWithSHA256: go.crypto.x509.SignatureAlgorithm;
+    @:native("ECDSAWithSHA384") static final eCDSAWithSHA384: go.crypto.x509.SignatureAlgorithm;
+    @:native("ECDSAWithSHA512") static final eCDSAWithSHA512: go.crypto.x509.SignatureAlgorithm;
+    @:native("Ed25519") static final ed25519: go.crypto.x509.PublicKeyAlgorithm;
+    @:native("Expired") static final expired: go.crypto.x509.InvalidReason;
+    @:native("ExtKeyUsageAny") static final extKeyUsageAny: go.crypto.x509.ExtKeyUsage;
+    @:native("ExtKeyUsageClientAuth") static final extKeyUsageClientAuth: go.crypto.x509.ExtKeyUsage;
+    @:native("ExtKeyUsageCodeSigning") static final extKeyUsageCodeSigning: go.crypto.x509.ExtKeyUsage;
+    @:native("ExtKeyUsageEmailProtection") static final extKeyUsageEmailProtection: go.crypto.x509.ExtKeyUsage;
+    @:native("ExtKeyUsageIPSECEndSystem") static final extKeyUsageIPSECEndSystem: go.crypto.x509.ExtKeyUsage;
+    @:native("ExtKeyUsageIPSECTunnel") static final extKeyUsageIPSECTunnel: go.crypto.x509.ExtKeyUsage;
+    @:native("ExtKeyUsageIPSECUser") static final extKeyUsageIPSECUser: go.crypto.x509.ExtKeyUsage;
+    @:native("ExtKeyUsageMicrosoftCommercialCodeSigning") static final extKeyUsageMicrosoftCommercialCodeSigning: go.crypto.x509.ExtKeyUsage;
+    @:native("ExtKeyUsageMicrosoftKernelCodeSigning") static final extKeyUsageMicrosoftKernelCodeSigning: go.crypto.x509.ExtKeyUsage;
+    @:native("ExtKeyUsageMicrosoftServerGatedCrypto") static final extKeyUsageMicrosoftServerGatedCrypto: go.crypto.x509.ExtKeyUsage;
+    @:native("ExtKeyUsageNetscapeServerGatedCrypto") static final extKeyUsageNetscapeServerGatedCrypto: go.crypto.x509.ExtKeyUsage;
+    @:native("ExtKeyUsageOCSPSigning") static final extKeyUsageOCSPSigning: go.crypto.x509.ExtKeyUsage;
+    @:native("ExtKeyUsageServerAuth") static final extKeyUsageServerAuth: go.crypto.x509.ExtKeyUsage;
+    @:native("ExtKeyUsageTimeStamping") static final extKeyUsageTimeStamping: go.crypto.x509.ExtKeyUsage;
+    @:native("IncompatibleUsage") static final incompatibleUsage: go.crypto.x509.InvalidReason;
+    @:native("KeyUsageCRLSign") static final keyUsageCRLSign: go.crypto.x509.KeyUsage;
+    @:native("KeyUsageCertSign") static final keyUsageCertSign: go.crypto.x509.KeyUsage;
+    @:native("KeyUsageContentCommitment") static final keyUsageContentCommitment: go.crypto.x509.KeyUsage;
+    @:native("KeyUsageDataEncipherment") static final keyUsageDataEncipherment: go.crypto.x509.KeyUsage;
+    @:native("KeyUsageDecipherOnly") static final keyUsageDecipherOnly: go.crypto.x509.KeyUsage;
+    @:native("KeyUsageDigitalSignature") static final keyUsageDigitalSignature: go.crypto.x509.KeyUsage;
+    @:native("KeyUsageEncipherOnly") static final keyUsageEncipherOnly: go.crypto.x509.KeyUsage;
+    @:native("KeyUsageKeyAgreement") static final keyUsageKeyAgreement: go.crypto.x509.KeyUsage;
+    @:native("KeyUsageKeyEncipherment") static final keyUsageKeyEncipherment: go.crypto.x509.KeyUsage;
+    @:native("MD2WithRSA") static final mD2WithRSA: go.crypto.x509.SignatureAlgorithm;
+    @:native("MD5WithRSA") static final mD5WithRSA: go.crypto.x509.SignatureAlgorithm;
+    @:native("NameConstraintsWithoutSANs") static final nameConstraintsWithoutSANs: go.crypto.x509.InvalidReason;
+    @:native("NameMismatch") static final nameMismatch: go.crypto.x509.InvalidReason;
+    @:native("NoValidChains") static final noValidChains: go.crypto.x509.InvalidReason;
+    @:native("NotAuthorizedToSign") static final notAuthorizedToSign: go.crypto.x509.InvalidReason;
     /**
         Possible values for the EncryptPEMBlock encryption algorithm.
     **/
-    @:native("PEMCipher3DES") static var pEMCipher3DES: go.crypto.x509.PEMCipher;
+    @:native("PEMCipher3DES") static final pEMCipher3DES: go.crypto.x509.PEMCipher;
     /**
         Possible values for the EncryptPEMBlock encryption algorithm.
     **/
-    @:native("PEMCipherAES128") static var pEMCipherAES128: go.crypto.x509.PEMCipher;
+    @:native("PEMCipherAES128") static final pEMCipherAES128: go.crypto.x509.PEMCipher;
     /**
         Possible values for the EncryptPEMBlock encryption algorithm.
     **/
-    @:native("PEMCipherAES192") static var pEMCipherAES192: go.crypto.x509.PEMCipher;
+    @:native("PEMCipherAES192") static final pEMCipherAES192: go.crypto.x509.PEMCipher;
     /**
         Possible values for the EncryptPEMBlock encryption algorithm.
     **/
-    @:native("PEMCipherAES256") static var pEMCipherAES256: go.crypto.x509.PEMCipher;
+    @:native("PEMCipherAES256") static final pEMCipherAES256: go.crypto.x509.PEMCipher;
     /**
         Possible values for the EncryptPEMBlock encryption algorithm.
     **/
-    @:native("PEMCipherDES") static var pEMCipherDES: go.crypto.x509.PEMCipher;
-    @:native("PureEd25519") static var pureEd25519: go.crypto.x509.SignatureAlgorithm;
-    @:native("RSA") static var RSA: go.crypto.x509.PublicKeyAlgorithm;
-    @:native("SHA1WithRSA") static var sHA1WithRSA: go.crypto.x509.SignatureAlgorithm;
-    @:native("SHA256WithRSA") static var sHA256WithRSA: go.crypto.x509.SignatureAlgorithm;
-    @:native("SHA256WithRSAPSS") static var sHA256WithRSAPSS: go.crypto.x509.SignatureAlgorithm;
-    @:native("SHA384WithRSA") static var sHA384WithRSA: go.crypto.x509.SignatureAlgorithm;
-    @:native("SHA384WithRSAPSS") static var sHA384WithRSAPSS: go.crypto.x509.SignatureAlgorithm;
-    @:native("SHA512WithRSA") static var sHA512WithRSA: go.crypto.x509.SignatureAlgorithm;
-    @:native("SHA512WithRSAPSS") static var sHA512WithRSAPSS: go.crypto.x509.SignatureAlgorithm;
-    @:native("TooManyConstraints") static var tooManyConstraints: go.crypto.x509.InvalidReason;
-    @:native("TooManyIntermediates") static var tooManyIntermediates: go.crypto.x509.InvalidReason;
-    @:native("UnconstrainedName") static var unconstrainedName: go.crypto.x509.InvalidReason;
-    @:native("UnknownPublicKeyAlgorithm") static var unknownPublicKeyAlgorithm: go.crypto.x509.PublicKeyAlgorithm;
-    @:native("UnknownSignatureAlgorithm") static var unknownSignatureAlgorithm: go.crypto.x509.SignatureAlgorithm;
+    @:native("PEMCipherDES") static final pEMCipherDES: go.crypto.x509.PEMCipher;
+    @:native("PureEd25519") static final pureEd25519: go.crypto.x509.SignatureAlgorithm;
+    @:native("RSA") static final RSA: go.crypto.x509.PublicKeyAlgorithm;
+    @:native("SHA1WithRSA") static final sHA1WithRSA: go.crypto.x509.SignatureAlgorithm;
+    @:native("SHA256WithRSA") static final sHA256WithRSA: go.crypto.x509.SignatureAlgorithm;
+    @:native("SHA256WithRSAPSS") static final sHA256WithRSAPSS: go.crypto.x509.SignatureAlgorithm;
+    @:native("SHA384WithRSA") static final sHA384WithRSA: go.crypto.x509.SignatureAlgorithm;
+    @:native("SHA384WithRSAPSS") static final sHA384WithRSAPSS: go.crypto.x509.SignatureAlgorithm;
+    @:native("SHA512WithRSA") static final sHA512WithRSA: go.crypto.x509.SignatureAlgorithm;
+    @:native("SHA512WithRSAPSS") static final sHA512WithRSAPSS: go.crypto.x509.SignatureAlgorithm;
+    @:native("TooManyConstraints") static final tooManyConstraints: go.crypto.x509.InvalidReason;
+    @:native("TooManyIntermediates") static final tooManyIntermediates: go.crypto.x509.InvalidReason;
+    @:native("UnconstrainedName") static final unconstrainedName: go.crypto.x509.InvalidReason;
+    @:native("UnknownPublicKeyAlgorithm") static final unknownPublicKeyAlgorithm: go.crypto.x509.PublicKeyAlgorithm;
+    @:native("UnknownSignatureAlgorithm") static final unknownSignatureAlgorithm: go.crypto.x509.SignatureAlgorithm;
 
     /**
         CreateCertificate creates a new X.509 v3 certificate based on a template.
@@ -146,10 +142,9 @@ extern class X509 {
         
         The returned slice is the certificate in DER encoding.
         
-        The currently supported key types are *rsa.PublicKey, *ecdsa.PublicKey,
-        ed25519.PublicKey, and *mldsa.PublicKey. pub must be a supported key type,
-        and priv must be a crypto.Signer or crypto.MessageSigner with a supported
-        public key.
+        The currently supported key types are *rsa.PublicKey, *ecdsa.PublicKey and
+        ed25519.PublicKey. pub must be a supported key type, and priv must be a
+        crypto.Signer or crypto.MessageSigner with a supported public key.
         
         The AuthorityKeyId will be taken from the SubjectKeyId of parent, if any,
         unless the resulting certificate is self-signed. Otherwise the value from
@@ -167,9 +162,6 @@ extern class X509 {
         be marshaled instead of the Policies field. This changed in Go 1.24. The Policies field can
         be used to marshal policy OIDs which have components that are larger than 31
         bits.
-        
-        IP addresses in IPAddresses which are in their IPv4-mapped IPv6 form will always be encoded
-        in their IPv4 form.
     **/
     @:native("CreateCertificate") static function createCertificate(rand: go.io.Reader, template: go.Pointer<go.crypto.x509.Certificate>, parent: go.Pointer<go.crypto.x509.Certificate>, pub: Dynamic, priv: Dynamic): (go.Result<go.Slice<go.Byte>>);
     /**
@@ -188,9 +180,8 @@ extern class X509 {
         priv is the private key to sign the CSR with, and the corresponding public
         key will be included in the CSR. It must implement crypto.Signer or
         crypto.MessageSigner and its Public() method must return a *rsa.PublicKey or
-        a *ecdsa.PublicKey or a ed25519.PublicKey or a *mldsa.PublicKey.
-        (A *rsa.PrivateKey, *ecdsa.PrivateKey or ed25519.PrivateKey or
-        *mldsa.PrivateKey satisfies this.)
+        a *ecdsa.PublicKey or a ed25519.PublicKey. (A *rsa.PrivateKey,
+        *ecdsa.PrivateKey or ed25519.PrivateKey satisfies this.)
         
         The returned slice is the certificate request in DER encoding.
     **/
@@ -275,8 +266,8 @@ extern class X509 {
         MarshalPKCS8PrivateKey converts a private key to PKCS #8, ASN.1 DER form.
         
         The following key types are currently supported: *[rsa.PrivateKey],
-        *[ecdsa.PrivateKey], [ed25519.PrivateKey] (not a pointer), *[mldsa.PrivateKey],
-        and *[ecdh.PrivateKey]. Unsupported key types result in an error.
+        *[ecdsa.PrivateKey], [ed25519.PrivateKey] (not a pointer), and *[ecdh.PrivateKey].
+        Unsupported key types result in an error.
         
         This kind of key is commonly encoded in PEM blocks of type "PRIVATE KEY".
         
@@ -289,8 +280,8 @@ extern class X509 {
         (see RFC 5280, Section 4.1).
         
         The following key types are currently supported: *[rsa.PublicKey],
-        *[ecdsa.PublicKey], [ed25519.PublicKey] (not a pointer), *[mldsa.PublicKey],
-        and *[ecdh.PublicKey]. Unsupported key types result in an error.
+        *[ecdsa.PublicKey], [ed25519.PublicKey] (not a pointer), and *[ecdh.PublicKey].
+        Unsupported key types result in an error.
         
         This kind of key is commonly encoded in PEM blocks of type "PUBLIC KEY".
     **/
@@ -369,8 +360,8 @@ extern class X509 {
         ParsePKCS8PrivateKey parses an unencrypted private key in PKCS #8, ASN.1 DER form.
         
         It returns a *[rsa.PrivateKey], an *[ecdsa.PrivateKey], an [ed25519.PrivateKey] (not
-        a pointer), a *[mldsa.PrivateKey], or an *[ecdh.PrivateKey] (for X25519).
-        More types might be supported in the future.
+        a pointer), or an *[ecdh.PrivateKey] (for X25519). More types might be supported
+        in the future.
         
         This kind of key is commonly encoded in PEM blocks of type "PRIVATE KEY".
         
@@ -383,8 +374,8 @@ extern class X509 {
         public key is a SubjectPublicKeyInfo structure (see RFC 5280, Section 4.1).
         
         It returns a *[rsa.PublicKey], *[dsa.PublicKey], *[ecdsa.PublicKey],
-        [ed25519.PublicKey] (not a pointer), *[mldsa.PublicKey], or *[ecdh.PublicKey]
-        (for X25519). More types might be supported in the future.
+        [ed25519.PublicKey] (not a pointer), or *[ecdh.PublicKey] (for X25519).
+        More types might be supported in the future.
         
         This kind of key is commonly encoded in PEM blocks of type "PUBLIC KEY".
     **/
@@ -413,14 +404,10 @@ extern class X509 {
     /**
         SystemCertPool returns a copy of the system cert pool.
         
-        The environment variables SSL_CERT_FILE and SSL_CERT_DIR can be used to
-        override the system default locations for the SSL certificate file and SSL
-        certificate files directory, respectively. The latter can be a
-        colon-separated list, or a semicolon-separated list on Windows. On platforms
-        which have system APIs for certificate verification (macOS and Windows),
-        setting SSL_CERT_FILE or SSL_CERT_DIR will prevent those APIs from being
-        used, unless the x509sslcertoverrideplatform=0 GODEBUG setting is used. (This
-        changed in Go 1.27.)
+        On Unix systems other than macOS the environment variables SSL_CERT_FILE and
+        SSL_CERT_DIR can be used to override the system default locations for the SSL
+        certificate file and SSL certificate files directory, respectively. The
+        latter can be a colon-separated list.
         
         Any mutations to the returned pool are not written to disk and do not affect
         any other pool returned by SystemCertPool.

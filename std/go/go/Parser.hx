@@ -26,14 +26,14 @@ package go.go;
 @:go.Type({ name: "parser", instanceName: "parser.parser", imports: ["go/parser"] })
 extern class Parser {
 
-    @:native("AllErrors") static var allErrors: go.go.parser.Mode;
-    @:native("DeclarationErrors") static var declarationErrors: go.go.parser.Mode;
-    @:native("ImportsOnly") static var importsOnly: go.go.parser.Mode;
-    @:native("PackageClauseOnly") static var packageClauseOnly: go.go.parser.Mode;
-    @:native("ParseComments") static var parseComments: go.go.parser.Mode;
-    @:native("SkipObjectResolution") static var skipObjectResolution: go.go.parser.Mode;
-    @:native("SpuriousErrors") static var spuriousErrors: go.go.parser.Mode;
-    @:native("Trace") static var trace: go.go.parser.Mode;
+    @:native("AllErrors") static final allErrors: go.go.parser.Mode;
+    @:native("DeclarationErrors") static final declarationErrors: go.go.parser.Mode;
+    @:native("ImportsOnly") static final importsOnly: go.go.parser.Mode;
+    @:native("PackageClauseOnly") static final packageClauseOnly: go.go.parser.Mode;
+    @:native("ParseComments") static final parseComments: go.go.parser.Mode;
+    @:native("SkipObjectResolution") static final skipObjectResolution: go.go.parser.Mode;
+    @:native("SpuriousErrors") static final spuriousErrors: go.go.parser.Mode;
+    @:native("Trace") static final trace: go.go.parser.Mode;
 
     /**
         ParseDir calls [ParseFile] for all files with names ending in ".go" in the

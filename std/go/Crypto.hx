@@ -6,26 +6,25 @@ package go;
 @:go.Type({ name: "crypto", instanceName: "crypto.crypto", imports: ["crypto"] })
 extern class Crypto {
 
-    @:native("BLAKE2b_256") static var bLAKE2b_256: go.crypto.Hash;
-    @:native("BLAKE2b_384") static var bLAKE2b_384: go.crypto.Hash;
-    @:native("BLAKE2b_512") static var bLAKE2b_512: go.crypto.Hash;
-    @:native("BLAKE2s_256") static var bLAKE2s_256: go.crypto.Hash;
-    @:native("MD4") static var MD4: go.crypto.Hash;
-    @:native("MD5") static var MD5: go.crypto.Hash;
-    @:native("MD5SHA1") static var MD5SHA1: go.crypto.Hash;
-    @:native("MLDSAMu") static var mLDSAMu: go.crypto.Hash;
-    @:native("RIPEMD160") static var RIPEMD160: go.crypto.Hash;
-    @:native("SHA1") static var SHA1: go.crypto.Hash;
-    @:native("SHA224") static var SHA224: go.crypto.Hash;
-    @:native("SHA256") static var SHA256: go.crypto.Hash;
-    @:native("SHA384") static var SHA384: go.crypto.Hash;
-    @:native("SHA3_224") static var SHA3_224: go.crypto.Hash;
-    @:native("SHA3_256") static var SHA3_256: go.crypto.Hash;
-    @:native("SHA3_384") static var SHA3_384: go.crypto.Hash;
-    @:native("SHA3_512") static var SHA3_512: go.crypto.Hash;
-    @:native("SHA512") static var SHA512: go.crypto.Hash;
-    @:native("SHA512_224") static var SHA512_224: go.crypto.Hash;
-    @:native("SHA512_256") static var SHA512_256: go.crypto.Hash;
+    @:native("BLAKE2b_256") static final bLAKE2b_256: go.crypto.Hash;
+    @:native("BLAKE2b_384") static final bLAKE2b_384: go.crypto.Hash;
+    @:native("BLAKE2b_512") static final bLAKE2b_512: go.crypto.Hash;
+    @:native("BLAKE2s_256") static final bLAKE2s_256: go.crypto.Hash;
+    @:native("MD4") static final MD4: go.crypto.Hash;
+    @:native("MD5") static final MD5: go.crypto.Hash;
+    @:native("MD5SHA1") static final MD5SHA1: go.crypto.Hash;
+    @:native("RIPEMD160") static final RIPEMD160: go.crypto.Hash;
+    @:native("SHA1") static final SHA1: go.crypto.Hash;
+    @:native("SHA224") static final SHA224: go.crypto.Hash;
+    @:native("SHA256") static final SHA256: go.crypto.Hash;
+    @:native("SHA384") static final SHA384: go.crypto.Hash;
+    @:native("SHA3_224") static final SHA3_224: go.crypto.Hash;
+    @:native("SHA3_256") static final SHA3_256: go.crypto.Hash;
+    @:native("SHA3_384") static final SHA3_384: go.crypto.Hash;
+    @:native("SHA3_512") static final SHA3_512: go.crypto.Hash;
+    @:native("SHA512") static final SHA512: go.crypto.Hash;
+    @:native("SHA512_224") static final SHA512_224: go.crypto.Hash;
+    @:native("SHA512_256") static final SHA512_256: go.crypto.Hash;
 
     /**
         RegisterHash registers a function that returns a new instance of the given

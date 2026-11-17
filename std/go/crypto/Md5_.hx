@@ -12,11 +12,11 @@ extern class Md5_ {
     /**
         The blocksize of MD5 in bytes.
     **/
-    @:native("BlockSize") static var blockSize: go.GoInt;
+    @:native("BlockSize") static final blockSize: go.GoInt;
     /**
         The size of an MD5 checksum in bytes.
     **/
-    @:native("Size") static var size: go.GoInt;
+    @:native("Size") static final size: go.GoInt;
 
     /**
         New returns a new [hash.Hash] computing the MD5 checksum. The Hash

@@ -13,91 +13,91 @@ extern class Asn1 {
     /**
         ASN.1 class types represent the namespace of the tag.
     **/
-    @:native("ClassApplication") static var classApplication: go.GoInt;
+    @:native("ClassApplication") static final classApplication: go.GoInt;
     /**
         ASN.1 class types represent the namespace of the tag.
     **/
-    @:native("ClassContextSpecific") static var classContextSpecific: go.GoInt;
+    @:native("ClassContextSpecific") static final classContextSpecific: go.GoInt;
     /**
         ASN.1 class types represent the namespace of the tag.
     **/
-    @:native("ClassPrivate") static var classPrivate: go.GoInt;
+    @:native("ClassPrivate") static final classPrivate: go.GoInt;
     /**
         ASN.1 class types represent the namespace of the tag.
     **/
-    @:native("ClassUniversal") static var classUniversal: go.GoInt;
+    @:native("ClassUniversal") static final classUniversal: go.GoInt;
     /**
         ASN.1 tags represent the type of the following object.
     **/
-    @:native("TagBMPString") static var tagBMPString: go.GoInt;
+    @:native("TagBMPString") static final tagBMPString: go.GoInt;
     /**
         ASN.1 tags represent the type of the following object.
     **/
-    @:native("TagBitString") static var tagBitString: go.GoInt;
+    @:native("TagBitString") static final tagBitString: go.GoInt;
     /**
         ASN.1 tags represent the type of the following object.
     **/
-    @:native("TagBoolean") static var tagBoolean: go.GoInt;
+    @:native("TagBoolean") static final tagBoolean: go.GoInt;
     /**
         ASN.1 tags represent the type of the following object.
     **/
-    @:native("TagEnum") static var tagEnum: go.GoInt;
+    @:native("TagEnum") static final tagEnum: go.GoInt;
     /**
         ASN.1 tags represent the type of the following object.
     **/
-    @:native("TagGeneralString") static var tagGeneralString: go.GoInt;
+    @:native("TagGeneralString") static final tagGeneralString: go.GoInt;
     /**
         ASN.1 tags represent the type of the following object.
     **/
-    @:native("TagGeneralizedTime") static var tagGeneralizedTime: go.GoInt;
+    @:native("TagGeneralizedTime") static final tagGeneralizedTime: go.GoInt;
     /**
         ASN.1 tags represent the type of the following object.
     **/
-    @:native("TagIA5String") static var tagIA5String: go.GoInt;
+    @:native("TagIA5String") static final tagIA5String: go.GoInt;
     /**
         ASN.1 tags represent the type of the following object.
     **/
-    @:native("TagInteger") static var tagInteger: go.GoInt;
+    @:native("TagInteger") static final tagInteger: go.GoInt;
     /**
         ASN.1 tags represent the type of the following object.
     **/
-    @:native("TagNull") static var tagNull: go.GoInt;
+    @:native("TagNull") static final tagNull: go.GoInt;
     /**
         ASN.1 tags represent the type of the following object.
     **/
-    @:native("TagNumericString") static var tagNumericString: go.GoInt;
+    @:native("TagNumericString") static final tagNumericString: go.GoInt;
     /**
         ASN.1 tags represent the type of the following object.
     **/
-    @:native("TagOID") static var tagOID: go.GoInt;
+    @:native("TagOID") static final tagOID: go.GoInt;
     /**
         ASN.1 tags represent the type of the following object.
     **/
-    @:native("TagOctetString") static var tagOctetString: go.GoInt;
+    @:native("TagOctetString") static final tagOctetString: go.GoInt;
     /**
         ASN.1 tags represent the type of the following object.
     **/
-    @:native("TagPrintableString") static var tagPrintableString: go.GoInt;
+    @:native("TagPrintableString") static final tagPrintableString: go.GoInt;
     /**
         ASN.1 tags represent the type of the following object.
     **/
-    @:native("TagSequence") static var tagSequence: go.GoInt;
+    @:native("TagSequence") static final tagSequence: go.GoInt;
     /**
         ASN.1 tags represent the type of the following object.
     **/
-    @:native("TagSet") static var tagSet: go.GoInt;
+    @:native("TagSet") static final tagSet: go.GoInt;
     /**
         ASN.1 tags represent the type of the following object.
     **/
-    @:native("TagT61String") static var tagT61String: go.GoInt;
+    @:native("TagT61String") static final tagT61String: go.GoInt;
     /**
         ASN.1 tags represent the type of the following object.
     **/
-    @:native("TagUTCTime") static var tagUTCTime: go.GoInt;
+    @:native("TagUTCTime") static final tagUTCTime: go.GoInt;
     /**
         ASN.1 tags represent the type of the following object.
     **/
-    @:native("TagUTF8String") static var tagUTF8String: go.GoInt;
+    @:native("TagUTF8String") static final tagUTF8String: go.GoInt;
 
     /**
         NullBytes contains bytes representing the DER-encoded ASN.1 NULL type.

@@ -10,15 +10,15 @@ extern class Sha256_ {
     /**
         The blocksize of SHA256 and SHA224 in bytes.
     **/
-    @:native("BlockSize") static var blockSize: go.GoInt;
+    @:native("BlockSize") static final blockSize: go.GoInt;
     /**
         The size of a SHA256 checksum in bytes.
     **/
-    @:native("Size") static var size: go.GoInt;
+    @:native("Size") static final size: go.GoInt;
     /**
         The size of a SHA224 checksum in bytes.
     **/
-    @:native("Size224") static var size224: go.GoInt;
+    @:native("Size224") static final size224: go.GoInt;
 
     /**
         New returns a new [hash.Hash] computing the SHA256 checksum. The Hash

@@ -12,8 +12,8 @@ package go.path;
 @:go.Type({ name: "filepath", instanceName: "filepath.filepath", imports: ["path/filepath"] })
 extern class Filepath {
 
-    @:native("ListSeparator") static var listSeparator: go.Rune;
-    @:native("Separator") static var separator: go.Rune;
+    @:native("ListSeparator") static final listSeparator: go.Rune;
+    @:native("Separator") static final separator: go.Rune;
 
     /**
         Abs returns an absolute representation of path.
@@ -67,10 +67,6 @@ extern class Filepath {
         If the path is empty, Dir returns ".".
         If the path consists entirely of separators, Dir returns a single separator.
         The returned path does not end in a separator unless it is the root directory.
-        
-        On Windows, given a volume-only name such as "C:", Dir returns "C:.",
-        the current directory on drive C. To obtain the drive's root "C:\",
-        use [VolumeName] combined with a separator.
     **/
     @:native("Dir") static function dir(path: String): (String);
     /**

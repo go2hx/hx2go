@@ -9,8 +9,8 @@ package go.image;
 @:go.Type({ name: "draw", instanceName: "draw.draw", imports: ["image/draw"] })
 extern class Draw {
 
-    @:native("Over") static var over: go.image.draw.Op;
-    @:native("Src") static var src: go.image.draw.Op;
+    @:native("Over") static final over: go.image.draw.Op;
+    @:native("Src") static final src: go.image.draw.Op;
 
     /**
         FloydSteinberg is a [Drawer] that is the [Src] [Op] with Floyd-Steinberg error

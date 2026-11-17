@@ -16,15 +16,15 @@ extern class Io {
     /**
         Seek whence values.
     **/
-    @:native("SeekCurrent") static var seekCurrent: go.GoInt;
+    @:native("SeekCurrent") static final seekCurrent: go.GoInt;
     /**
         Seek whence values.
     **/
-    @:native("SeekEnd") static var seekEnd: go.GoInt;
+    @:native("SeekEnd") static final seekEnd: go.GoInt;
     /**
         Seek whence values.
     **/
-    @:native("SeekStart") static var seekStart: go.GoInt;
+    @:native("SeekStart") static final seekStart: go.GoInt;
 
     /**
         Discard is a [Writer] on which all Write calls succeed

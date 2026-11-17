@@ -1,10 +1,5 @@
 package go.net;
 
-/**
-    OpError is the error type usually returned by functions in the net
-    package. It describes the operation, network type, and address of
-    an error.
-**/
 @:structInit
 @:go.Type({ name: "OpError", instanceName: "net.OpError", imports: ["net"] })
 extern class OpError {

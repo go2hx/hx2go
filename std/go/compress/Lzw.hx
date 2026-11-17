@@ -16,8 +16,8 @@ package go.compress;
 @:go.Type({ name: "lzw", instanceName: "lzw.lzw", imports: ["compress/lzw"] })
 extern class Lzw {
 
-    @:native("LSB") static var LSB: go.compress.lzw.Order;
-    @:native("MSB") static var MSB: go.compress.lzw.Order;
+    @:native("LSB") static final LSB: go.compress.lzw.Order;
+    @:native("MSB") static final MSB: go.compress.lzw.Order;
 
     /**
         NewReader creates a new [io.ReadCloser].

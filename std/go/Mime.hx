@@ -6,8 +6,8 @@ package go;
 @:go.Type({ name: "mime", instanceName: "mime.mime", imports: ["mime"] })
 extern class Mime {
 
-    @:native("BEncoding") static var bEncoding: go.mime.WordEncoder;
-    @:native("QEncoding") static var qEncoding: go.mime.WordEncoder;
+    @:native("BEncoding") static final bEncoding: go.mime.WordEncoder;
+    @:native("QEncoding") static final qEncoding: go.mime.WordEncoder;
 
     /**
         AddExtensionType sets the MIME type associated with

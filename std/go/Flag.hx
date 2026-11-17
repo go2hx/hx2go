@@ -84,15 +84,15 @@ extern class Flag {
     /**
         These constants cause [FlagSet.Parse] to behave as described if the parse fails.
     **/
-    @:native("ContinueOnError") static var continueOnError: go.flag.ErrorHandling;
+    @:native("ContinueOnError") static final continueOnError: go.flag.ErrorHandling;
     /**
         These constants cause [FlagSet.Parse] to behave as described if the parse fails.
     **/
-    @:native("ExitOnError") static var exitOnError: go.flag.ErrorHandling;
+    @:native("ExitOnError") static final exitOnError: go.flag.ErrorHandling;
     /**
         These constants cause [FlagSet.Parse] to behave as described if the parse fails.
     **/
-    @:native("PanicOnError") static var panicOnError: go.flag.ErrorHandling;
+    @:native("PanicOnError") static final panicOnError: go.flag.ErrorHandling;
 
     /**
         CommandLine is the default set of command-line flags, parsed from [os.Args].

@@ -189,9 +189,9 @@ extern class Time {
         Some valid layouts are invalid time values for time.Parse, due to formats
         such as _ for space padding and Z for zone information.
     **/
-    @:native("ANSIC") static var ANSIC: String;
-    @:native("April") static var april: go.time.Month;
-    @:native("August") static var august: go.time.Month;
+    @:native("ANSIC") static final ANSIC: String;
+    @:native("April") static final april: go.time.Month;
+    @:native("August") static final august: go.time.Month;
     /**
         These are predefined layouts for use in [Time.Format] and [time.Parse].
         The reference time used in these layouts is the specific time stamp:
@@ -290,7 +290,7 @@ extern class Time {
         Some valid layouts are invalid time values for time.Parse, due to formats
         such as _ for space padding and Z for zone information.
     **/
-    @:native("DateOnly") static var dateOnly: String;
+    @:native("DateOnly") static final dateOnly: String;
     /**
         These are predefined layouts for use in [Time.Format] and [time.Parse].
         The reference time used in these layouts is the specific time stamp:
@@ -389,10 +389,10 @@ extern class Time {
         Some valid layouts are invalid time values for time.Parse, due to formats
         such as _ for space padding and Z for zone information.
     **/
-    @:native("DateTime") static var dateTime: String;
-    @:native("December") static var december: go.time.Month;
-    @:native("February") static var february: go.time.Month;
-    @:native("Friday") static var friday: go.time.Weekday;
+    @:native("DateTime") static final dateTime: String;
+    @:native("December") static final december: go.time.Month;
+    @:native("February") static final february: go.time.Month;
+    @:native("Friday") static final friday: go.time.Weekday;
     /**
         Common durations. There is no definition for units of Day or larger
         to avoid confusion across daylight savings time zone transitions.
@@ -407,10 +407,10 @@ extern class Time {
         	seconds := 10
         	fmt.Print(time.Duration(seconds)*time.Second) // prints 10s
     **/
-    @:native("Hour") static var hour: go.time.Duration;
-    @:native("January") static var january: go.time.Month;
-    @:native("July") static var july: go.time.Month;
-    @:native("June") static var june: go.time.Month;
+    @:native("Hour") static final hour: go.time.Duration;
+    @:native("January") static final january: go.time.Month;
+    @:native("July") static final july: go.time.Month;
+    @:native("June") static final june: go.time.Month;
     /**
         These are predefined layouts for use in [Time.Format] and [time.Parse].
         The reference time used in these layouts is the specific time stamp:
@@ -509,7 +509,7 @@ extern class Time {
         Some valid layouts are invalid time values for time.Parse, due to formats
         such as _ for space padding and Z for zone information.
     **/
-    @:native("Kitchen") static var kitchen: String;
+    @:native("Kitchen") static final kitchen: String;
     /**
         These are predefined layouts for use in [Time.Format] and [time.Parse].
         The reference time used in these layouts is the specific time stamp:
@@ -608,9 +608,9 @@ extern class Time {
         Some valid layouts are invalid time values for time.Parse, due to formats
         such as _ for space padding and Z for zone information.
     **/
-    @:native("Layout") static var layout: String;
-    @:native("March") static var march: go.time.Month;
-    @:native("May") static var may: go.time.Month;
+    @:native("Layout") static final layout: String;
+    @:native("March") static final march: go.time.Month;
+    @:native("May") static final may: go.time.Month;
     /**
         Common durations. There is no definition for units of Day or larger
         to avoid confusion across daylight savings time zone transitions.
@@ -625,7 +625,7 @@ extern class Time {
         	seconds := 10
         	fmt.Print(time.Duration(seconds)*time.Second) // prints 10s
     **/
-    @:native("Microsecond") static var microsecond: go.time.Duration;
+    @:native("Microsecond") static final microsecond: go.time.Duration;
     /**
         Common durations. There is no definition for units of Day or larger
         to avoid confusion across daylight savings time zone transitions.
@@ -640,7 +640,7 @@ extern class Time {
         	seconds := 10
         	fmt.Print(time.Duration(seconds)*time.Second) // prints 10s
     **/
-    @:native("Millisecond") static var millisecond: go.time.Duration;
+    @:native("Millisecond") static final millisecond: go.time.Duration;
     /**
         Common durations. There is no definition for units of Day or larger
         to avoid confusion across daylight savings time zone transitions.
@@ -655,8 +655,8 @@ extern class Time {
         	seconds := 10
         	fmt.Print(time.Duration(seconds)*time.Second) // prints 10s
     **/
-    @:native("Minute") static var minute: go.time.Duration;
-    @:native("Monday") static var monday: go.time.Weekday;
+    @:native("Minute") static final minute: go.time.Duration;
+    @:native("Monday") static final monday: go.time.Weekday;
     /**
         Common durations. There is no definition for units of Day or larger
         to avoid confusion across daylight savings time zone transitions.
@@ -671,9 +671,9 @@ extern class Time {
         	seconds := 10
         	fmt.Print(time.Duration(seconds)*time.Second) // prints 10s
     **/
-    @:native("Nanosecond") static var nanosecond: go.time.Duration;
-    @:native("November") static var november: go.time.Month;
-    @:native("October") static var october: go.time.Month;
+    @:native("Nanosecond") static final nanosecond: go.time.Duration;
+    @:native("November") static final november: go.time.Month;
+    @:native("October") static final october: go.time.Month;
     /**
         These are predefined layouts for use in [Time.Format] and [time.Parse].
         The reference time used in these layouts is the specific time stamp:
@@ -772,7 +772,7 @@ extern class Time {
         Some valid layouts are invalid time values for time.Parse, due to formats
         such as _ for space padding and Z for zone information.
     **/
-    @:native("RFC1123") static var RFC1123: String;
+    @:native("RFC1123") static final RFC1123: String;
     /**
         These are predefined layouts for use in [Time.Format] and [time.Parse].
         The reference time used in these layouts is the specific time stamp:
@@ -871,7 +871,7 @@ extern class Time {
         Some valid layouts are invalid time values for time.Parse, due to formats
         such as _ for space padding and Z for zone information.
     **/
-    @:native("RFC1123Z") static var RFC1123Z: String;
+    @:native("RFC1123Z") static final RFC1123Z: String;
     /**
         These are predefined layouts for use in [Time.Format] and [time.Parse].
         The reference time used in these layouts is the specific time stamp:
@@ -970,7 +970,7 @@ extern class Time {
         Some valid layouts are invalid time values for time.Parse, due to formats
         such as _ for space padding and Z for zone information.
     **/
-    @:native("RFC3339") static var RFC3339: String;
+    @:native("RFC3339") static final RFC3339: String;
     /**
         These are predefined layouts for use in [Time.Format] and [time.Parse].
         The reference time used in these layouts is the specific time stamp:
@@ -1069,7 +1069,7 @@ extern class Time {
         Some valid layouts are invalid time values for time.Parse, due to formats
         such as _ for space padding and Z for zone information.
     **/
-    @:native("RFC3339Nano") static var rFC3339Nano: String;
+    @:native("RFC3339Nano") static final rFC3339Nano: String;
     /**
         These are predefined layouts for use in [Time.Format] and [time.Parse].
         The reference time used in these layouts is the specific time stamp:
@@ -1168,7 +1168,7 @@ extern class Time {
         Some valid layouts are invalid time values for time.Parse, due to formats
         such as _ for space padding and Z for zone information.
     **/
-    @:native("RFC822") static var RFC822: String;
+    @:native("RFC822") static final RFC822: String;
     /**
         These are predefined layouts for use in [Time.Format] and [time.Parse].
         The reference time used in these layouts is the specific time stamp:
@@ -1267,7 +1267,7 @@ extern class Time {
         Some valid layouts are invalid time values for time.Parse, due to formats
         such as _ for space padding and Z for zone information.
     **/
-    @:native("RFC822Z") static var RFC822Z: String;
+    @:native("RFC822Z") static final RFC822Z: String;
     /**
         These are predefined layouts for use in [Time.Format] and [time.Parse].
         The reference time used in these layouts is the specific time stamp:
@@ -1366,7 +1366,7 @@ extern class Time {
         Some valid layouts are invalid time values for time.Parse, due to formats
         such as _ for space padding and Z for zone information.
     **/
-    @:native("RFC850") static var RFC850: String;
+    @:native("RFC850") static final RFC850: String;
     /**
         These are predefined layouts for use in [Time.Format] and [time.Parse].
         The reference time used in these layouts is the specific time stamp:
@@ -1465,8 +1465,8 @@ extern class Time {
         Some valid layouts are invalid time values for time.Parse, due to formats
         such as _ for space padding and Z for zone information.
     **/
-    @:native("RubyDate") static var rubyDate: String;
-    @:native("Saturday") static var saturday: go.time.Weekday;
+    @:native("RubyDate") static final rubyDate: String;
+    @:native("Saturday") static final saturday: go.time.Weekday;
     /**
         Common durations. There is no definition for units of Day or larger
         to avoid confusion across daylight savings time zone transitions.
@@ -1481,8 +1481,8 @@ extern class Time {
         	seconds := 10
         	fmt.Print(time.Duration(seconds)*time.Second) // prints 10s
     **/
-    @:native("Second") static var second: go.time.Duration;
-    @:native("September") static var september: go.time.Month;
+    @:native("Second") static final second: go.time.Duration;
+    @:native("September") static final september: go.time.Month;
     /**
         These are predefined layouts for use in [Time.Format] and [time.Parse].
         The reference time used in these layouts is the specific time stamp:
@@ -1581,7 +1581,7 @@ extern class Time {
         Some valid layouts are invalid time values for time.Parse, due to formats
         such as _ for space padding and Z for zone information.
     **/
-    @:native("Stamp") static var stamp: String;
+    @:native("Stamp") static final stamp: String;
     /**
         These are predefined layouts for use in [Time.Format] and [time.Parse].
         The reference time used in these layouts is the specific time stamp:
@@ -1680,7 +1680,7 @@ extern class Time {
         Some valid layouts are invalid time values for time.Parse, due to formats
         such as _ for space padding and Z for zone information.
     **/
-    @:native("StampMicro") static var stampMicro: String;
+    @:native("StampMicro") static final stampMicro: String;
     /**
         These are predefined layouts for use in [Time.Format] and [time.Parse].
         The reference time used in these layouts is the specific time stamp:
@@ -1779,7 +1779,7 @@ extern class Time {
         Some valid layouts are invalid time values for time.Parse, due to formats
         such as _ for space padding and Z for zone information.
     **/
-    @:native("StampMilli") static var stampMilli: String;
+    @:native("StampMilli") static final stampMilli: String;
     /**
         These are predefined layouts for use in [Time.Format] and [time.Parse].
         The reference time used in these layouts is the specific time stamp:
@@ -1878,9 +1878,9 @@ extern class Time {
         Some valid layouts are invalid time values for time.Parse, due to formats
         such as _ for space padding and Z for zone information.
     **/
-    @:native("StampNano") static var stampNano: String;
-    @:native("Sunday") static var sunday: go.time.Weekday;
-    @:native("Thursday") static var thursday: go.time.Weekday;
+    @:native("StampNano") static final stampNano: String;
+    @:native("Sunday") static final sunday: go.time.Weekday;
+    @:native("Thursday") static final thursday: go.time.Weekday;
     /**
         These are predefined layouts for use in [Time.Format] and [time.Parse].
         The reference time used in these layouts is the specific time stamp:
@@ -1979,8 +1979,8 @@ extern class Time {
         Some valid layouts are invalid time values for time.Parse, due to formats
         such as _ for space padding and Z for zone information.
     **/
-    @:native("TimeOnly") static var timeOnly: String;
-    @:native("Tuesday") static var tuesday: go.time.Weekday;
+    @:native("TimeOnly") static final timeOnly: String;
+    @:native("Tuesday") static final tuesday: go.time.Weekday;
     /**
         These are predefined layouts for use in [Time.Format] and [time.Parse].
         The reference time used in these layouts is the specific time stamp:
@@ -2079,8 +2079,8 @@ extern class Time {
         Some valid layouts are invalid time values for time.Parse, due to formats
         such as _ for space padding and Z for zone information.
     **/
-    @:native("UnixDate") static var unixDate: String;
-    @:native("Wednesday") static var wednesday: go.time.Weekday;
+    @:native("UnixDate") static final unixDate: String;
+    @:native("Wednesday") static final wednesday: go.time.Weekday;
 
     /**
         Local represents the system's local time zone.
@@ -2143,13 +2143,12 @@ extern class Time {
     **/
     @:native("FixedZone") static function fixedZone(name: String, offset: go.GoInt): (go.Pointer<go.time.Location>);
     /**
-        LoadLocation returns a [Location] with the given name.
+        LoadLocation returns the Location with the given name.
         
-        If the name is "" or "UTC", LoadLocation returns [UTC].
-        If the name is "Local", LoadLocation returns [Local].
+        If the name is "" or "UTC", LoadLocation returns UTC.
+        If the name is "Local", LoadLocation returns Local.
         
-        Otherwise, a new [Location] is created where the name is taken
-        to be a location name corresponding to a file
+        Otherwise, the name is taken to be a location name corresponding to a file
         in the IANA Time Zone database, such as "America/New_York".
         
         LoadLocation looks for the IANA Time Zone database in the following
@@ -2162,7 +2161,7 @@ extern class Time {
     **/
     @:native("LoadLocation") static function loadLocation(name: String): (go.Result<go.Pointer<go.time.Location>>);
     /**
-        LoadLocationFromTZData returns a new [Location] with the given name
+        LoadLocationFromTZData returns a Location with the given name
         initialized from the IANA Time Zone database-formatted data.
         The data should be in the format of a standard IANA time zone file
         (for example, the content of /etc/localtime on Unix systems).
@@ -2205,6 +2204,11 @@ extern class Time {
         or [Timer.Reset] returned.
         As of Go 1.23, the channel is synchronous (unbuffered, capacity 0),
         eliminating the possibility of those stale values.
+        
+        The GODEBUG setting asynctimerchan=1 restores both pre-Go 1.23
+        behaviors: when set, unexpired timers won't be garbage collected, and
+        channels will have buffered capacity. This setting may be removed
+        in Go 1.27 or later.
     **/
     @:native("NewTimer") static function newTimer(d: go.time.Duration): (go.Pointer<go.time.Timer>);
     /**
@@ -2235,9 +2239,6 @@ extern class Time {
         
         For layouts specifying the two-digit year 06, a value NN >= 69 will be treated
         as 19NN and a value NN < 69 will be treated as 20NN.
-        
-        Timestamps representing leap seconds (second 60) cannot be parsed.
-        These are not representable by [Time].
         
         The remainder of this comment describes the handling of time zones.
         

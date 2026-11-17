@@ -17,7 +17,7 @@ extern class Aes {
     /**
         The AES block size in bytes.
     **/
-    @:native("BlockSize") static var blockSize: go.GoInt;
+    @:native("BlockSize") static final blockSize: go.GoInt;
 
     /**
         NewCipher creates and returns a new [cipher.Block].

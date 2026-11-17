@@ -233,7 +233,7 @@ extern class Iter {
         If the iterator panics during a call to next (or stop),
         then next (or stop) itself panics with the same value.
     **/
-    @:go.Tuple("next", "stop") @:native("Pull") static function pull<V: Dynamic>(seq: go.iter.Seq<V>): (go.Tuple<{ next: () -> (go.Tuple<{ p0: V, p1: Bool }>), stop: () -> Void }>);
+    @:go.Tuple("next", "stop") @:native("Pull") static function pull<V>(seq: go.iter.Seq<V>): (go.Tuple<{ next: () -> (go.Tuple<{ p0: V, p1: Bool }>), stop: () -> Void }>);
     /**
         Pull2 converts the “push-style” iterator sequence seq
         into a “pull-style” iterator accessed by the two functions
@@ -258,6 +258,6 @@ extern class Iter {
         If the iterator panics during a call to next (or stop),
         then next (or stop) itself panics with the same value.
     **/
-    @:go.Tuple("next", "stop") @:native("Pull2") static function pull2<K: Dynamic, V: Dynamic>(seq: go.iter.Seq2<K, V>): (go.Tuple<{ next: () -> (go.Tuple<{ p0: K, p1: V, p2: Bool }>), stop: () -> Void }>);
+    @:go.Tuple("next", "stop") @:native("Pull2") static function pull2<K, V>(seq: go.iter.Seq2<K, V>): (go.Tuple<{ next: () -> (go.Tuple<{ p0: K, p1: V, p2: Bool }>), stop: () -> Void }>);
 
 }

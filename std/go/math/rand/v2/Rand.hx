@@ -53,12 +53,6 @@ extern class Rand {
     **/
     @:native("IntN") function intN(n: go.GoInt): (go.GoInt);
     /**
-        N returns a pseudo-random number in the half-open interval [0,n).
-        The type parameter Int can be any integer type.
-        It panics if n <= 0.
-    **/
-    @:native("N") function N<Int>(n: Int): (Int);
-    /**
         NormFloat64 returns a normally distributed float64 in
         the range -math.MaxFloat64 through +math.MaxFloat64 inclusive,
         with standard normal distribution (mean = 0, stddev = 1).

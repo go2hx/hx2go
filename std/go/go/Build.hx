@@ -98,10 +98,10 @@ package go.go;
 @:go.Type({ name: "build", instanceName: "build.build", imports: ["go/build"] })
 extern class Build {
 
-    @:native("AllowBinary") static var allowBinary: go.go.build.ImportMode;
-    @:native("FindOnly") static var findOnly: go.go.build.ImportMode;
-    @:native("IgnoreVendor") static var ignoreVendor: go.go.build.ImportMode;
-    @:native("ImportComment") static var importComment: go.go.build.ImportMode;
+    @:native("AllowBinary") static final allowBinary: go.go.build.ImportMode;
+    @:native("FindOnly") static final findOnly: go.go.build.ImportMode;
+    @:native("IgnoreVendor") static final ignoreVendor: go.go.build.ImportMode;
+    @:native("ImportComment") static final importComment: go.go.build.ImportMode;
 
     /**
         Default is the default Context for builds.

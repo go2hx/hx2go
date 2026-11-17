@@ -111,391 +111,385 @@ extern class Http {
         in an HTTP request.
         This can be overridden by setting [Server.MaxHeaderBytes].
     **/
-    @:native("DefaultMaxHeaderBytes") static var defaultMaxHeaderBytes: go.GoInt;
-    /**
-        DefaultMaxHeaderValueCount is the maximum permitted number of
-        header values in an HTTP request.
-        This can be overridden by setting [Server.MaxHeaderValueCount].
-    **/
-    @:native("DefaultMaxHeaderValueCount") static var defaultMaxHeaderValueCount: go.GoInt;
+    @:native("DefaultMaxHeaderBytes") static final defaultMaxHeaderBytes: go.GoInt;
     /**
         DefaultMaxIdleConnsPerHost is the default value of [Transport]'s
         MaxIdleConnsPerHost.
     **/
-    @:native("DefaultMaxIdleConnsPerHost") static var defaultMaxIdleConnsPerHost: go.GoInt;
+    @:native("DefaultMaxIdleConnsPerHost") static final defaultMaxIdleConnsPerHost: go.GoInt;
     /**
         Common HTTP methods.
         
         Unless otherwise noted, these are defined in RFC 7231 section 4.3.
     **/
-    @:native("MethodConnect") static var methodConnect: String;
+    @:native("MethodConnect") static final methodConnect: String;
     /**
         Common HTTP methods.
         
         Unless otherwise noted, these are defined in RFC 7231 section 4.3.
     **/
-    @:native("MethodDelete") static var methodDelete: String;
+    @:native("MethodDelete") static final methodDelete: String;
     /**
         Common HTTP methods.
         
         Unless otherwise noted, these are defined in RFC 7231 section 4.3.
     **/
-    @:native("MethodGet") static var methodGet: String;
+    @:native("MethodGet") static final methodGet: String;
     /**
         Common HTTP methods.
         
         Unless otherwise noted, these are defined in RFC 7231 section 4.3.
     **/
-    @:native("MethodHead") static var methodHead: String;
+    @:native("MethodHead") static final methodHead: String;
     /**
         Common HTTP methods.
         
         Unless otherwise noted, these are defined in RFC 7231 section 4.3.
     **/
-    @:native("MethodOptions") static var methodOptions: String;
+    @:native("MethodOptions") static final methodOptions: String;
     /**
         Common HTTP methods.
         
         Unless otherwise noted, these are defined in RFC 7231 section 4.3.
     **/
-    @:native("MethodPatch") static var methodPatch: String;
+    @:native("MethodPatch") static final methodPatch: String;
     /**
         Common HTTP methods.
         
         Unless otherwise noted, these are defined in RFC 7231 section 4.3.
     **/
-    @:native("MethodPost") static var methodPost: String;
+    @:native("MethodPost") static final methodPost: String;
     /**
         Common HTTP methods.
         
         Unless otherwise noted, these are defined in RFC 7231 section 4.3.
     **/
-    @:native("MethodPut") static var methodPut: String;
+    @:native("MethodPut") static final methodPut: String;
     /**
         Common HTTP methods.
         
         Unless otherwise noted, these are defined in RFC 7231 section 4.3.
     **/
-    @:native("MethodTrace") static var methodTrace: String;
-    @:native("SameSiteDefaultMode") static var sameSiteDefaultMode: go.net.http.SameSite;
-    @:native("SameSiteLaxMode") static var sameSiteLaxMode: go.net.http.SameSite;
-    @:native("SameSiteNoneMode") static var sameSiteNoneMode: go.net.http.SameSite;
-    @:native("SameSiteStrictMode") static var sameSiteStrictMode: go.net.http.SameSite;
-    @:native("StateActive") static var stateActive: go.net.http.ConnState;
-    @:native("StateClosed") static var stateClosed: go.net.http.ConnState;
-    @:native("StateHijacked") static var stateHijacked: go.net.http.ConnState;
-    @:native("StateIdle") static var stateIdle: go.net.http.ConnState;
-    @:native("StateNew") static var stateNew: go.net.http.ConnState;
+    @:native("MethodTrace") static final methodTrace: String;
+    @:native("SameSiteDefaultMode") static final sameSiteDefaultMode: go.net.http.SameSite;
+    @:native("SameSiteLaxMode") static final sameSiteLaxMode: go.net.http.SameSite;
+    @:native("SameSiteNoneMode") static final sameSiteNoneMode: go.net.http.SameSite;
+    @:native("SameSiteStrictMode") static final sameSiteStrictMode: go.net.http.SameSite;
+    @:native("StateActive") static final stateActive: go.net.http.ConnState;
+    @:native("StateClosed") static final stateClosed: go.net.http.ConnState;
+    @:native("StateHijacked") static final stateHijacked: go.net.http.ConnState;
+    @:native("StateIdle") static final stateIdle: go.net.http.ConnState;
+    @:native("StateNew") static final stateNew: go.net.http.ConnState;
     /**
         HTTP status codes as registered with IANA.
         See: https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
     **/
-    @:native("StatusAccepted") static var statusAccepted: go.GoInt;
+    @:native("StatusAccepted") static final statusAccepted: go.GoInt;
     /**
         HTTP status codes as registered with IANA.
         See: https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
     **/
-    @:native("StatusAlreadyReported") static var statusAlreadyReported: go.GoInt;
+    @:native("StatusAlreadyReported") static final statusAlreadyReported: go.GoInt;
     /**
         HTTP status codes as registered with IANA.
         See: https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
     **/
-    @:native("StatusBadGateway") static var statusBadGateway: go.GoInt;
+    @:native("StatusBadGateway") static final statusBadGateway: go.GoInt;
     /**
         HTTP status codes as registered with IANA.
         See: https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
     **/
-    @:native("StatusBadRequest") static var statusBadRequest: go.GoInt;
+    @:native("StatusBadRequest") static final statusBadRequest: go.GoInt;
     /**
         HTTP status codes as registered with IANA.
         See: https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
     **/
-    @:native("StatusConflict") static var statusConflict: go.GoInt;
+    @:native("StatusConflict") static final statusConflict: go.GoInt;
     /**
         HTTP status codes as registered with IANA.
         See: https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
     **/
-    @:native("StatusContinue") static var statusContinue: go.GoInt;
+    @:native("StatusContinue") static final statusContinue: go.GoInt;
     /**
         HTTP status codes as registered with IANA.
         See: https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
     **/
-    @:native("StatusCreated") static var statusCreated: go.GoInt;
+    @:native("StatusCreated") static final statusCreated: go.GoInt;
     /**
         HTTP status codes as registered with IANA.
         See: https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
     **/
-    @:native("StatusEarlyHints") static var statusEarlyHints: go.GoInt;
+    @:native("StatusEarlyHints") static final statusEarlyHints: go.GoInt;
     /**
         HTTP status codes as registered with IANA.
         See: https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
     **/
-    @:native("StatusExpectationFailed") static var statusExpectationFailed: go.GoInt;
+    @:native("StatusExpectationFailed") static final statusExpectationFailed: go.GoInt;
     /**
         HTTP status codes as registered with IANA.
         See: https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
     **/
-    @:native("StatusFailedDependency") static var statusFailedDependency: go.GoInt;
+    @:native("StatusFailedDependency") static final statusFailedDependency: go.GoInt;
     /**
         HTTP status codes as registered with IANA.
         See: https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
     **/
-    @:native("StatusForbidden") static var statusForbidden: go.GoInt;
+    @:native("StatusForbidden") static final statusForbidden: go.GoInt;
     /**
         HTTP status codes as registered with IANA.
         See: https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
     **/
-    @:native("StatusFound") static var statusFound: go.GoInt;
+    @:native("StatusFound") static final statusFound: go.GoInt;
     /**
         HTTP status codes as registered with IANA.
         See: https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
     **/
-    @:native("StatusGatewayTimeout") static var statusGatewayTimeout: go.GoInt;
+    @:native("StatusGatewayTimeout") static final statusGatewayTimeout: go.GoInt;
     /**
         HTTP status codes as registered with IANA.
         See: https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
     **/
-    @:native("StatusGone") static var statusGone: go.GoInt;
+    @:native("StatusGone") static final statusGone: go.GoInt;
     /**
         HTTP status codes as registered with IANA.
         See: https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
     **/
-    @:native("StatusHTTPVersionNotSupported") static var statusHTTPVersionNotSupported: go.GoInt;
+    @:native("StatusHTTPVersionNotSupported") static final statusHTTPVersionNotSupported: go.GoInt;
     /**
         HTTP status codes as registered with IANA.
         See: https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
     **/
-    @:native("StatusIMUsed") static var statusIMUsed: go.GoInt;
+    @:native("StatusIMUsed") static final statusIMUsed: go.GoInt;
     /**
         HTTP status codes as registered with IANA.
         See: https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
     **/
-    @:native("StatusInsufficientStorage") static var statusInsufficientStorage: go.GoInt;
+    @:native("StatusInsufficientStorage") static final statusInsufficientStorage: go.GoInt;
     /**
         HTTP status codes as registered with IANA.
         See: https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
     **/
-    @:native("StatusInternalServerError") static var statusInternalServerError: go.GoInt;
+    @:native("StatusInternalServerError") static final statusInternalServerError: go.GoInt;
     /**
         HTTP status codes as registered with IANA.
         See: https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
     **/
-    @:native("StatusLengthRequired") static var statusLengthRequired: go.GoInt;
+    @:native("StatusLengthRequired") static final statusLengthRequired: go.GoInt;
     /**
         HTTP status codes as registered with IANA.
         See: https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
     **/
-    @:native("StatusLocked") static var statusLocked: go.GoInt;
+    @:native("StatusLocked") static final statusLocked: go.GoInt;
     /**
         HTTP status codes as registered with IANA.
         See: https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
     **/
-    @:native("StatusLoopDetected") static var statusLoopDetected: go.GoInt;
+    @:native("StatusLoopDetected") static final statusLoopDetected: go.GoInt;
     /**
         HTTP status codes as registered with IANA.
         See: https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
     **/
-    @:native("StatusMethodNotAllowed") static var statusMethodNotAllowed: go.GoInt;
+    @:native("StatusMethodNotAllowed") static final statusMethodNotAllowed: go.GoInt;
     /**
         HTTP status codes as registered with IANA.
         See: https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
     **/
-    @:native("StatusMisdirectedRequest") static var statusMisdirectedRequest: go.GoInt;
+    @:native("StatusMisdirectedRequest") static final statusMisdirectedRequest: go.GoInt;
     /**
         HTTP status codes as registered with IANA.
         See: https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
     **/
-    @:native("StatusMovedPermanently") static var statusMovedPermanently: go.GoInt;
+    @:native("StatusMovedPermanently") static final statusMovedPermanently: go.GoInt;
     /**
         HTTP status codes as registered with IANA.
         See: https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
     **/
-    @:native("StatusMultiStatus") static var statusMultiStatus: go.GoInt;
+    @:native("StatusMultiStatus") static final statusMultiStatus: go.GoInt;
     /**
         HTTP status codes as registered with IANA.
         See: https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
     **/
-    @:native("StatusMultipleChoices") static var statusMultipleChoices: go.GoInt;
+    @:native("StatusMultipleChoices") static final statusMultipleChoices: go.GoInt;
     /**
         HTTP status codes as registered with IANA.
         See: https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
     **/
-    @:native("StatusNetworkAuthenticationRequired") static var statusNetworkAuthenticationRequired: go.GoInt;
+    @:native("StatusNetworkAuthenticationRequired") static final statusNetworkAuthenticationRequired: go.GoInt;
     /**
         HTTP status codes as registered with IANA.
         See: https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
     **/
-    @:native("StatusNoContent") static var statusNoContent: go.GoInt;
+    @:native("StatusNoContent") static final statusNoContent: go.GoInt;
     /**
         HTTP status codes as registered with IANA.
         See: https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
     **/
-    @:native("StatusNonAuthoritativeInfo") static var statusNonAuthoritativeInfo: go.GoInt;
+    @:native("StatusNonAuthoritativeInfo") static final statusNonAuthoritativeInfo: go.GoInt;
     /**
         HTTP status codes as registered with IANA.
         See: https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
     **/
-    @:native("StatusNotAcceptable") static var statusNotAcceptable: go.GoInt;
+    @:native("StatusNotAcceptable") static final statusNotAcceptable: go.GoInt;
     /**
         HTTP status codes as registered with IANA.
         See: https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
     **/
-    @:native("StatusNotExtended") static var statusNotExtended: go.GoInt;
+    @:native("StatusNotExtended") static final statusNotExtended: go.GoInt;
     /**
         HTTP status codes as registered with IANA.
         See: https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
     **/
-    @:native("StatusNotFound") static var statusNotFound: go.GoInt;
+    @:native("StatusNotFound") static final statusNotFound: go.GoInt;
     /**
         HTTP status codes as registered with IANA.
         See: https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
     **/
-    @:native("StatusNotImplemented") static var statusNotImplemented: go.GoInt;
+    @:native("StatusNotImplemented") static final statusNotImplemented: go.GoInt;
     /**
         HTTP status codes as registered with IANA.
         See: https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
     **/
-    @:native("StatusNotModified") static var statusNotModified: go.GoInt;
+    @:native("StatusNotModified") static final statusNotModified: go.GoInt;
     /**
         HTTP status codes as registered with IANA.
         See: https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
     **/
-    @:native("StatusOK") static var statusOK: go.GoInt;
+    @:native("StatusOK") static final statusOK: go.GoInt;
     /**
         HTTP status codes as registered with IANA.
         See: https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
     **/
-    @:native("StatusPartialContent") static var statusPartialContent: go.GoInt;
+    @:native("StatusPartialContent") static final statusPartialContent: go.GoInt;
     /**
         HTTP status codes as registered with IANA.
         See: https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
     **/
-    @:native("StatusPaymentRequired") static var statusPaymentRequired: go.GoInt;
+    @:native("StatusPaymentRequired") static final statusPaymentRequired: go.GoInt;
     /**
         HTTP status codes as registered with IANA.
         See: https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
     **/
-    @:native("StatusPermanentRedirect") static var statusPermanentRedirect: go.GoInt;
+    @:native("StatusPermanentRedirect") static final statusPermanentRedirect: go.GoInt;
     /**
         HTTP status codes as registered with IANA.
         See: https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
     **/
-    @:native("StatusPreconditionFailed") static var statusPreconditionFailed: go.GoInt;
+    @:native("StatusPreconditionFailed") static final statusPreconditionFailed: go.GoInt;
     /**
         HTTP status codes as registered with IANA.
         See: https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
     **/
-    @:native("StatusPreconditionRequired") static var statusPreconditionRequired: go.GoInt;
+    @:native("StatusPreconditionRequired") static final statusPreconditionRequired: go.GoInt;
     /**
         HTTP status codes as registered with IANA.
         See: https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
     **/
-    @:native("StatusProcessing") static var statusProcessing: go.GoInt;
+    @:native("StatusProcessing") static final statusProcessing: go.GoInt;
     /**
         HTTP status codes as registered with IANA.
         See: https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
     **/
-    @:native("StatusProxyAuthRequired") static var statusProxyAuthRequired: go.GoInt;
+    @:native("StatusProxyAuthRequired") static final statusProxyAuthRequired: go.GoInt;
     /**
         HTTP status codes as registered with IANA.
         See: https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
     **/
-    @:native("StatusRequestEntityTooLarge") static var statusRequestEntityTooLarge: go.GoInt;
+    @:native("StatusRequestEntityTooLarge") static final statusRequestEntityTooLarge: go.GoInt;
     /**
         HTTP status codes as registered with IANA.
         See: https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
     **/
-    @:native("StatusRequestHeaderFieldsTooLarge") static var statusRequestHeaderFieldsTooLarge: go.GoInt;
+    @:native("StatusRequestHeaderFieldsTooLarge") static final statusRequestHeaderFieldsTooLarge: go.GoInt;
     /**
         HTTP status codes as registered with IANA.
         See: https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
     **/
-    @:native("StatusRequestTimeout") static var statusRequestTimeout: go.GoInt;
+    @:native("StatusRequestTimeout") static final statusRequestTimeout: go.GoInt;
     /**
         HTTP status codes as registered with IANA.
         See: https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
     **/
-    @:native("StatusRequestURITooLong") static var statusRequestURITooLong: go.GoInt;
+    @:native("StatusRequestURITooLong") static final statusRequestURITooLong: go.GoInt;
     /**
         HTTP status codes as registered with IANA.
         See: https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
     **/
-    @:native("StatusRequestedRangeNotSatisfiable") static var statusRequestedRangeNotSatisfiable: go.GoInt;
+    @:native("StatusRequestedRangeNotSatisfiable") static final statusRequestedRangeNotSatisfiable: go.GoInt;
     /**
         HTTP status codes as registered with IANA.
         See: https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
     **/
-    @:native("StatusResetContent") static var statusResetContent: go.GoInt;
+    @:native("StatusResetContent") static final statusResetContent: go.GoInt;
     /**
         HTTP status codes as registered with IANA.
         See: https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
     **/
-    @:native("StatusSeeOther") static var statusSeeOther: go.GoInt;
+    @:native("StatusSeeOther") static final statusSeeOther: go.GoInt;
     /**
         HTTP status codes as registered with IANA.
         See: https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
     **/
-    @:native("StatusServiceUnavailable") static var statusServiceUnavailable: go.GoInt;
+    @:native("StatusServiceUnavailable") static final statusServiceUnavailable: go.GoInt;
     /**
         HTTP status codes as registered with IANA.
         See: https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
     **/
-    @:native("StatusSwitchingProtocols") static var statusSwitchingProtocols: go.GoInt;
+    @:native("StatusSwitchingProtocols") static final statusSwitchingProtocols: go.GoInt;
     /**
         HTTP status codes as registered with IANA.
         See: https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
     **/
-    @:native("StatusTeapot") static var statusTeapot: go.GoInt;
+    @:native("StatusTeapot") static final statusTeapot: go.GoInt;
     /**
         HTTP status codes as registered with IANA.
         See: https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
     **/
-    @:native("StatusTemporaryRedirect") static var statusTemporaryRedirect: go.GoInt;
+    @:native("StatusTemporaryRedirect") static final statusTemporaryRedirect: go.GoInt;
     /**
         HTTP status codes as registered with IANA.
         See: https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
     **/
-    @:native("StatusTooEarly") static var statusTooEarly: go.GoInt;
+    @:native("StatusTooEarly") static final statusTooEarly: go.GoInt;
     /**
         HTTP status codes as registered with IANA.
         See: https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
     **/
-    @:native("StatusTooManyRequests") static var statusTooManyRequests: go.GoInt;
+    @:native("StatusTooManyRequests") static final statusTooManyRequests: go.GoInt;
     /**
         HTTP status codes as registered with IANA.
         See: https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
     **/
-    @:native("StatusUnauthorized") static var statusUnauthorized: go.GoInt;
+    @:native("StatusUnauthorized") static final statusUnauthorized: go.GoInt;
     /**
         HTTP status codes as registered with IANA.
         See: https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
     **/
-    @:native("StatusUnavailableForLegalReasons") static var statusUnavailableForLegalReasons: go.GoInt;
+    @:native("StatusUnavailableForLegalReasons") static final statusUnavailableForLegalReasons: go.GoInt;
     /**
         HTTP status codes as registered with IANA.
         See: https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
     **/
-    @:native("StatusUnprocessableEntity") static var statusUnprocessableEntity: go.GoInt;
+    @:native("StatusUnprocessableEntity") static final statusUnprocessableEntity: go.GoInt;
     /**
         HTTP status codes as registered with IANA.
         See: https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
     **/
-    @:native("StatusUnsupportedMediaType") static var statusUnsupportedMediaType: go.GoInt;
+    @:native("StatusUnsupportedMediaType") static final statusUnsupportedMediaType: go.GoInt;
     /**
         HTTP status codes as registered with IANA.
         See: https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
     **/
-    @:native("StatusUpgradeRequired") static var statusUpgradeRequired: go.GoInt;
+    @:native("StatusUpgradeRequired") static final statusUpgradeRequired: go.GoInt;
     /**
         HTTP status codes as registered with IANA.
         See: https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
     **/
-    @:native("StatusUseProxy") static var statusUseProxy: go.GoInt;
+    @:native("StatusUseProxy") static final statusUseProxy: go.GoInt;
     /**
         HTTP status codes as registered with IANA.
         See: https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
     **/
-    @:native("StatusVariantAlsoNegotiates") static var statusVariantAlsoNegotiates: go.GoInt;
+    @:native("StatusVariantAlsoNegotiates") static final statusVariantAlsoNegotiates: go.GoInt;
     /**
         TimeFormat is the time format to use when generating times in HTTP
         headers. It is like [time.RFC1123] but hard-codes GMT as the time
@@ -504,7 +498,7 @@ extern class Http {
         
         For parsing this time format, see [ParseTime].
     **/
-    @:native("TimeFormat") static var timeFormat: String;
+    @:native("TimeFormat") static final timeFormat: String;
     /**
         TrailerPrefix is a magic prefix for [ResponseWriter.Header] map keys
         that, if present, signals that the map entry is actually for
@@ -520,7 +514,7 @@ extern class Http {
         	https://pkg.go.dev/net/http#ResponseWriter
         	https://pkg.go.dev/net/http#example-ResponseWriter-Trailers
     **/
-    @:native("TrailerPrefix") static var trailerPrefix: String;
+    @:native("TrailerPrefix") static final trailerPrefix: String;
 
     /**
         DefaultClient is the default [Client] and is used by [Get], [Head], and [Post].
@@ -958,9 +952,8 @@ extern class Http {
         The handler is typically nil, in which case [DefaultServeMux] is used.
         
         HTTP/2 support is only enabled if the Listener returns [*tls.Conn]
-        connections or connections which implement the same ConnectionState
-        method as *tls.Conn, and the connection state indicates that the "h2"
-        protocol was negotiated by ALPN.
+        connections and they were configured with "h2" in the TLS
+        Config.NextProtos.
         
         Serve always returns a non-nil error.
     **/

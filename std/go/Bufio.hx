@@ -8,7 +8,7 @@ package go;
 @:go.Type({ name: "bufio", instanceName: "bufio.bufio", imports: ["bufio"] })
 extern class Bufio {
 
-    @:native("MaxScanTokenSize") static var maxScanTokenSize: go.GoInt;
+    @:native("MaxScanTokenSize") static final maxScanTokenSize: go.GoInt;
 
     /**
         NewReadWriter allocates a new [ReadWriter] that dispatches to r and w.

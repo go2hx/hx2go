@@ -6,8 +6,8 @@ package go.encoding;
 @:go.Type({ name: "base32", instanceName: "base32.base32", imports: ["encoding/base32"] })
 extern class Base32 {
 
-    @:native("NoPadding") static var noPadding: go.Rune;
-    @:native("StdPadding") static var stdPadding: go.Rune;
+    @:native("NoPadding") static final noPadding: go.Rune;
+    @:native("StdPadding") static final stdPadding: go.Rune;
 
     /**
         HexEncoding is the “Extended Hex Alphabet” defined in RFC 4648.

@@ -59,7 +59,7 @@ extern class Strconv {
     /**
         IntSize is the size in bits of an int or uint value.
     **/
-    @:native("IntSize") static var intSize: go.GoInt;
+    @:native("IntSize") static final intSize: go.GoInt;
 
     /**
         AppendBool appends "true" or "false", according to the value of b,

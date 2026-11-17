@@ -6,8 +6,8 @@ package go.encoding;
 @:go.Type({ name: "base64", instanceName: "base64.base64", imports: ["encoding/base64"] })
 extern class Base64 {
 
-    @:native("NoPadding") static var noPadding: go.Rune;
-    @:native("StdPadding") static var stdPadding: go.Rune;
+    @:native("NoPadding") static final noPadding: go.Rune;
+    @:native("StdPadding") static final stdPadding: go.Rune;
 
     /**
         RawStdEncoding is the standard raw, unpadded base64 encoding,

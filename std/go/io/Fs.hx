@@ -31,7 +31,7 @@ extern class Fs {
         may be used in wire protocols or disk representations: they must not be
         changed, although new bits might be added.
     **/
-    @:native("ModeAppend") static var modeAppend: go.io.fs.FileMode;
+    @:native("ModeAppend") static final modeAppend: go.io.fs.FileMode;
     /**
         The defined file mode bits are the most significant bits of the [FileMode].
         The nine least-significant bits are the standard Unix rwxrwxrwx permissions.
@@ -39,7 +39,7 @@ extern class Fs {
         may be used in wire protocols or disk representations: they must not be
         changed, although new bits might be added.
     **/
-    @:native("ModeCharDevice") static var modeCharDevice: go.io.fs.FileMode;
+    @:native("ModeCharDevice") static final modeCharDevice: go.io.fs.FileMode;
     /**
         The defined file mode bits are the most significant bits of the [FileMode].
         The nine least-significant bits are the standard Unix rwxrwxrwx permissions.
@@ -47,7 +47,7 @@ extern class Fs {
         may be used in wire protocols or disk representations: they must not be
         changed, although new bits might be added.
     **/
-    @:native("ModeDevice") static var modeDevice: go.io.fs.FileMode;
+    @:native("ModeDevice") static final modeDevice: go.io.fs.FileMode;
     /**
         The defined file mode bits are the most significant bits of the [FileMode].
         The nine least-significant bits are the standard Unix rwxrwxrwx permissions.
@@ -55,7 +55,7 @@ extern class Fs {
         may be used in wire protocols or disk representations: they must not be
         changed, although new bits might be added.
     **/
-    @:native("ModeDir") static var modeDir: go.io.fs.FileMode;
+    @:native("ModeDir") static final modeDir: go.io.fs.FileMode;
     /**
         The defined file mode bits are the most significant bits of the [FileMode].
         The nine least-significant bits are the standard Unix rwxrwxrwx permissions.
@@ -63,7 +63,7 @@ extern class Fs {
         may be used in wire protocols or disk representations: they must not be
         changed, although new bits might be added.
     **/
-    @:native("ModeExclusive") static var modeExclusive: go.io.fs.FileMode;
+    @:native("ModeExclusive") static final modeExclusive: go.io.fs.FileMode;
     /**
         The defined file mode bits are the most significant bits of the [FileMode].
         The nine least-significant bits are the standard Unix rwxrwxrwx permissions.
@@ -71,7 +71,7 @@ extern class Fs {
         may be used in wire protocols or disk representations: they must not be
         changed, although new bits might be added.
     **/
-    @:native("ModeIrregular") static var modeIrregular: go.io.fs.FileMode;
+    @:native("ModeIrregular") static final modeIrregular: go.io.fs.FileMode;
     /**
         The defined file mode bits are the most significant bits of the [FileMode].
         The nine least-significant bits are the standard Unix rwxrwxrwx permissions.
@@ -79,7 +79,7 @@ extern class Fs {
         may be used in wire protocols or disk representations: they must not be
         changed, although new bits might be added.
     **/
-    @:native("ModeNamedPipe") static var modeNamedPipe: go.io.fs.FileMode;
+    @:native("ModeNamedPipe") static final modeNamedPipe: go.io.fs.FileMode;
     /**
         The defined file mode bits are the most significant bits of the [FileMode].
         The nine least-significant bits are the standard Unix rwxrwxrwx permissions.
@@ -87,7 +87,7 @@ extern class Fs {
         may be used in wire protocols or disk representations: they must not be
         changed, although new bits might be added.
     **/
-    @:native("ModePerm") static var modePerm: go.io.fs.FileMode;
+    @:native("ModePerm") static final modePerm: go.io.fs.FileMode;
     /**
         The defined file mode bits are the most significant bits of the [FileMode].
         The nine least-significant bits are the standard Unix rwxrwxrwx permissions.
@@ -95,7 +95,7 @@ extern class Fs {
         may be used in wire protocols or disk representations: they must not be
         changed, although new bits might be added.
     **/
-    @:native("ModeSetgid") static var modeSetgid: go.io.fs.FileMode;
+    @:native("ModeSetgid") static final modeSetgid: go.io.fs.FileMode;
     /**
         The defined file mode bits are the most significant bits of the [FileMode].
         The nine least-significant bits are the standard Unix rwxrwxrwx permissions.
@@ -103,7 +103,7 @@ extern class Fs {
         may be used in wire protocols or disk representations: they must not be
         changed, although new bits might be added.
     **/
-    @:native("ModeSetuid") static var modeSetuid: go.io.fs.FileMode;
+    @:native("ModeSetuid") static final modeSetuid: go.io.fs.FileMode;
     /**
         The defined file mode bits are the most significant bits of the [FileMode].
         The nine least-significant bits are the standard Unix rwxrwxrwx permissions.
@@ -111,7 +111,7 @@ extern class Fs {
         may be used in wire protocols or disk representations: they must not be
         changed, although new bits might be added.
     **/
-    @:native("ModeSocket") static var modeSocket: go.io.fs.FileMode;
+    @:native("ModeSocket") static final modeSocket: go.io.fs.FileMode;
     /**
         The defined file mode bits are the most significant bits of the [FileMode].
         The nine least-significant bits are the standard Unix rwxrwxrwx permissions.
@@ -119,7 +119,7 @@ extern class Fs {
         may be used in wire protocols or disk representations: they must not be
         changed, although new bits might be added.
     **/
-    @:native("ModeSticky") static var modeSticky: go.io.fs.FileMode;
+    @:native("ModeSticky") static final modeSticky: go.io.fs.FileMode;
     /**
         The defined file mode bits are the most significant bits of the [FileMode].
         The nine least-significant bits are the standard Unix rwxrwxrwx permissions.
@@ -127,7 +127,7 @@ extern class Fs {
         may be used in wire protocols or disk representations: they must not be
         changed, although new bits might be added.
     **/
-    @:native("ModeSymlink") static var modeSymlink: go.io.fs.FileMode;
+    @:native("ModeSymlink") static final modeSymlink: go.io.fs.FileMode;
     /**
         The defined file mode bits are the most significant bits of the [FileMode].
         The nine least-significant bits are the standard Unix rwxrwxrwx permissions.
@@ -135,7 +135,7 @@ extern class Fs {
         may be used in wire protocols or disk representations: they must not be
         changed, although new bits might be added.
     **/
-    @:native("ModeTemporary") static var modeTemporary: go.io.fs.FileMode;
+    @:native("ModeTemporary") static final modeTemporary: go.io.fs.FileMode;
     /**
         The defined file mode bits are the most significant bits of the [FileMode].
         The nine least-significant bits are the standard Unix rwxrwxrwx permissions.
@@ -143,7 +143,7 @@ extern class Fs {
         may be used in wire protocols or disk representations: they must not be
         changed, although new bits might be added.
     **/
-    @:native("ModeType") static var modeType: go.io.fs.FileMode;
+    @:native("ModeType") static final modeType: go.io.fs.FileMode;
 
     /**
         FileInfoToDirEntry returns a [DirEntry] that returns information from info.
@@ -178,7 +178,7 @@ extern class Fs {
         The only possible returned error is [path.ErrBadPattern], reporting that
         the pattern is malformed.
         
-        If fsys implements [GlobFS], Glob calls fsys.Glob.
+        If fs implements [GlobFS], Glob calls fs.Glob.
         Otherwise, Glob uses [ReadDir] to traverse the directory tree
         and look for matches for the pattern.
     **/
@@ -195,19 +195,19 @@ extern class Fs {
         ReadDir reads the named directory
         and returns a list of directory entries sorted by filename.
         
-        If fsys implements [ReadDirFS], ReadDir calls fsys.ReadDir.
-        Otherwise ReadDir calls fsys.Open and uses ReadDir and Close
-        on the returned [ReadDirFile].
+        If fs implements [ReadDirFS], ReadDir calls fs.ReadDir.
+        Otherwise ReadDir calls fs.Open and uses ReadDir and Close
+        on the returned file.
     **/
     @:native("ReadDir") static function readDir(fsys: go.io.fs.FS, name: String): (go.Result<go.Slice<go.io.fs.DirEntry>>);
     /**
-        ReadFile reads the named file from the file system fsys and returns its contents.
+        ReadFile reads the named file from the file system fs and returns its contents.
         A successful call returns a nil error, not [io.EOF].
         (Because ReadFile reads the whole file, the expected EOF
         from the final Read is not treated as an error to be reported.)
         
-        If fsys implements [ReadFileFS], ReadFile calls fsys.ReadFile.
-        Otherwise ReadFile calls fsys.Open and uses Read and Close
+        If fs implements [ReadFileFS], ReadFile calls fs.ReadFile.
+        Otherwise ReadFile calls fs.Open and uses Read and Close
         on the returned [File].
     **/
     @:native("ReadFile") static function readFile(fsys: go.io.fs.FS, name: String): (go.Result<go.Slice<go.Byte>>);
@@ -220,7 +220,7 @@ extern class Fs {
     /**
         Stat returns a [FileInfo] describing the named file from the file system.
         
-        If fsys implements [StatFS], Stat calls fsys.Stat.
+        If fs implements [StatFS], Stat calls fs.Stat.
         Otherwise, Stat opens the [File] to stat it.
     **/
     @:native("Stat") static function stat(fsys: go.io.fs.FS, name: String): (go.Result<go.io.fs.FileInfo>);
@@ -228,12 +228,11 @@ extern class Fs {
         Sub returns an [FS] corresponding to the subtree rooted at fsys's dir.
         
         If dir is ".", Sub returns fsys unchanged.
-        Otherwise, if fsys implements [SubFS], Sub returns fsys.Sub(dir).
+        Otherwise, if fs implements [SubFS], Sub returns fsys.Sub(dir).
         Otherwise, Sub returns a new [FS] implementation sub that,
         in effect, implements sub.Open(name) as fsys.Open(path.Join(dir, name)).
         The implementation also translates calls to ReadDir, ReadFile,
-        ReadLink, Lstat, and Glob appropriately. Sub does not check if the
-        directory currently exists.
+        ReadLink, Lstat, and Glob appropriately.
         
         Note that Sub(os.DirFS("/"), "prefix") is equivalent to os.DirFS("/prefix")
         and that neither of them guarantees to avoid operating system
@@ -241,7 +240,6 @@ extern class Fs {
         does not check for symbolic links inside "/prefix" that point to
         other directories. That is, [os.DirFS] is not a general substitute for a
         chroot-style security mechanism, and Sub does not change that fact.
-        Use [os.Root] to constrain access to particular directory trees.
     **/
     @:native("Sub") static function sub(fsys: go.io.fs.FS, dir: String): (go.Result<go.io.fs.FS>);
     /**

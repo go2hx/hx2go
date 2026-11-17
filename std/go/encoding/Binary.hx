@@ -25,15 +25,15 @@ extern class Binary {
     /**
         MaxVarintLenN is the maximum length of a varint-encoded N-bit integer.
     **/
-    @:native("MaxVarintLen16") static var maxVarintLen16: go.GoInt;
+    @:native("MaxVarintLen16") static final maxVarintLen16: go.GoInt;
     /**
         MaxVarintLenN is the maximum length of a varint-encoded N-bit integer.
     **/
-    @:native("MaxVarintLen32") static var maxVarintLen32: go.GoInt;
+    @:native("MaxVarintLen32") static final maxVarintLen32: go.GoInt;
     /**
         MaxVarintLenN is the maximum length of a varint-encoded N-bit integer.
     **/
-    @:native("MaxVarintLen64") static var maxVarintLen64: go.GoInt;
+    @:native("MaxVarintLen64") static final maxVarintLen64: go.GoInt;
 
     /**
         BigEndian is the big-endian implementation of [ByteOrder] and [AppendByteOrder].

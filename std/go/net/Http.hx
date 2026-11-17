@@ -113,6 +113,12 @@ extern class Http {
     **/
     @:native("DefaultMaxHeaderBytes") static final defaultMaxHeaderBytes: go.GoInt;
     /**
+        DefaultMaxHeaderValueCount is the maximum permitted number of
+        header values in an HTTP request.
+        This can be overridden by setting [Server.MaxHeaderValueCount].
+    **/
+    @:native("DefaultMaxHeaderValueCount") static final defaultMaxHeaderValueCount: go.GoInt;
+    /**
         DefaultMaxIdleConnsPerHost is the default value of [Transport]'s
         MaxIdleConnsPerHost.
     **/
@@ -952,8 +958,9 @@ extern class Http {
         The handler is typically nil, in which case [DefaultServeMux] is used.
         
         HTTP/2 support is only enabled if the Listener returns [*tls.Conn]
-        connections and they were configured with "h2" in the TLS
-        Config.NextProtos.
+        connections or connections which implement the same ConnectionState
+        method as *tls.Conn, and the connection state indicates that the "h2"
+        protocol was negotiated by ALPN.
         
         Serve always returns a non-nil error.
     **/

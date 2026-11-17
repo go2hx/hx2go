@@ -15,7 +15,7 @@ extern class Netip {
     /**
         AddrFrom16 returns the IPv6 address given by the bytes in addr.
         An IPv4-mapped IPv6 address is left as an IPv6 address.
-        (Use Unmap to convert them if needed.)
+        (Use [Addr.Unmap] to convert them if needed.)
     **/
     @:native("AddrFrom16") static function addrFrom16(addr: go.GoArray<go.Byte, 16>): (go.net.netip.Addr);
     /**

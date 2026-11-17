@@ -15,6 +15,10 @@ extern class Values {
     **/
     @:native("Add") function add(key: String, value: String): Void;
     /**
+        Clone creates a deep copy of the subject [Values].
+    **/
+    @:native("Clone") function clone(): (go.net.url.Values);
+    /**
         Del deletes the values associated with key.
     **/
     @:native("Del") function del(key: String): Void;

@@ -2143,12 +2143,13 @@ extern class Time {
     **/
     @:native("FixedZone") static function fixedZone(name: String, offset: go.GoInt): (go.Pointer<go.time.Location>);
     /**
-        LoadLocation returns the Location with the given name.
+        LoadLocation returns a [Location] with the given name.
         
-        If the name is "" or "UTC", LoadLocation returns UTC.
-        If the name is "Local", LoadLocation returns Local.
+        If the name is "" or "UTC", LoadLocation returns [UTC].
+        If the name is "Local", LoadLocation returns [Local].
         
-        Otherwise, the name is taken to be a location name corresponding to a file
+        Otherwise, a new [Location] is created where the name is taken
+        to be a location name corresponding to a file
         in the IANA Time Zone database, such as "America/New_York".
         
         LoadLocation looks for the IANA Time Zone database in the following
@@ -2161,7 +2162,7 @@ extern class Time {
     **/
     @:native("LoadLocation") static function loadLocation(name: String): (go.Result<go.Pointer<go.time.Location>>);
     /**
-        LoadLocationFromTZData returns a Location with the given name
+        LoadLocationFromTZData returns a new [Location] with the given name
         initialized from the IANA Time Zone database-formatted data.
         The data should be in the format of a standard IANA time zone file
         (for example, the content of /etc/localtime on Unix systems).
@@ -2204,11 +2205,6 @@ extern class Time {
         or [Timer.Reset] returned.
         As of Go 1.23, the channel is synchronous (unbuffered, capacity 0),
         eliminating the possibility of those stale values.
-        
-        The GODEBUG setting asynctimerchan=1 restores both pre-Go 1.23
-        behaviors: when set, unexpired timers won't be garbage collected, and
-        channels will have buffered capacity. This setting may be removed
-        in Go 1.27 or later.
     **/
     @:native("NewTimer") static function newTimer(d: go.time.Duration): (go.Pointer<go.time.Timer>);
     /**
@@ -2239,6 +2235,9 @@ extern class Time {
         
         For layouts specifying the two-digit year 06, a value NN >= 69 will be treated
         as 19NN and a value NN < 69 will be treated as 20NN.
+        
+        Timestamps representing leap seconds (second 60) cannot be parsed.
+        These are not representable by [Time].
         
         The remainder of this comment describes the handling of time zones.
         

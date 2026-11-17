@@ -494,6 +494,8 @@ extern class Slog {
     @:native("BoolValue") static function boolValue(v: Bool): (go.log.slog.Value);
     /**
         Debug calls [Logger.Debug] on the default logger.
+        It uses [context.Background] internally; to specify the context, use
+        [DebugContext].
     **/
     @:native("Debug") static function debug(msg: std.String, args: haxe.Rest<Dynamic>): Void;
     /**
@@ -514,6 +516,8 @@ extern class Slog {
     @:native("DurationValue") static function durationValue(v: go.time.Duration): (go.log.slog.Value);
     /**
         Error calls [Logger.Error] on the default logger.
+        It uses [context.Background] internally; to specify the context, use
+        [ErrorContext].
     **/
     @:native("Error") static function error(msg: std.String, args: haxe.Rest<Dynamic>): Void;
     /**
@@ -553,6 +557,8 @@ extern class Slog {
     @:native("GroupValue") static function groupValue(as: haxe.Rest<go.log.slog.Attr>): (go.log.slog.Value);
     /**
         Info calls [Logger.Info] on the default logger.
+        It uses [context.Background] internally; to specify the context, use
+        [InfoContext].
     **/
     @:native("Info") static function info(msg: std.String, args: haxe.Rest<Dynamic>): Void;
     /**
@@ -679,6 +685,8 @@ extern class Slog {
     @:native("Uint64Value") static function uint64Value(v: go.UInt64): (go.log.slog.Value);
     /**
         Warn calls [Logger.Warn] on the default logger.
+        It uses [context.Background] internally; to specify the context, use
+        [WarnContext].
     **/
     @:native("Warn") static function warn(msg: std.String, args: haxe.Rest<Dynamic>): Void;
     /**

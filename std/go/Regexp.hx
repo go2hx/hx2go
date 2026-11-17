@@ -20,41 +20,38 @@ package go;
     Following [utf8.DecodeRune], each byte of an invalid UTF-8 sequence
     is treated as if it encoded utf8.RuneError (U+FFFD).
     
-    There are 16 methods of [Regexp] that match a regular expression and identify
+    There are 24 methods of [Regexp] that match a regular expression and identify
     the matched text. Their names are matched by this regular expression:
     
-    	Find(All)?(String)?(Submatch)?(Index)?
+    	(All|Find|FindAll)(String)?(Submatch)?(Index)?
     
-    If 'All' is present, the routine matches successive non-overlapping
-    matches of the entire expression. Empty matches abutting a preceding
-    match are ignored. The return value is a slice containing the successive
-    return values of the corresponding non-'All' routine. These routines take
-    an extra integer argument, n. If n >= 0, the function returns at most n
-    matches/submatches; otherwise, it returns all of them.
+    The ‘All’ variants return an iterator over successive non-overlapping
+    matches of the entire expression. The ‘FindAll’ variants return a slice
+    of those matches instead. Empty matches abutting a preceding
+    match are ignored. The ‘FindAll’ variants take an extra integer argument, n.
+    If n >= 0, the function returns at most n matches/submatches;
+    otherwise, it returns all of them.
     
-    If 'String' is present, the argument is a string; otherwise it is a slice
-    of bytes; return values are adjusted as appropriate.
+    The ‘Find’ variants return only the first match that All or FindAll would return.
     
-    If 'Submatch' is present, the return value is a slice identifying the
-    successive submatches of the expression. Submatches are matches of
-    parenthesized subexpressions (also known as capturing groups) within the
-    regular expression, numbered from left to right in order of opening
+    If ‘String’ is present, the argument is a string; otherwise it is a []byte.
+    
+    By default, each returned match is denoted by the substring matching the
+    regular expression, of type string or []byte according to the type of the argument.
+    If ‘Submatch’ is present, each match is represented instead by a slice of
+    the substrings matching the regular expression's parenthesized subexpressions
+    (also known as capturing groups), numbered from left to right in order of opening
     parenthesis. Submatch 0 is the match of the entire expression, submatch 1 is
     the match of the first parenthesized subexpression, and so on.
-    
-    If 'Index' is present, matches and submatches are identified by byte index
-    pairs within the input string: result[2*n:2*n+2] identifies the indexes of
-    the nth submatch. The pair for n==0 identifies the match of the entire
-    expression. If 'Index' is not present, the match is identified by the text
-    of the match/submatch. If an index is negative or text is nil, it means that
-    subexpression did not match any string in the input. For 'String' versions
+    If ‘Index’ is present, each substring is instead denoted by a pair of byte indexes
+    within the input string. If an index is negative or substring is nil, it means that
+    the subexpression did not match any string in the input. For ‘String’ versions,
     an empty string means either no match or an empty match.
     
     There is also a subset of the methods that can be applied to text read from
     an [io.RuneReader]: [Regexp.MatchReader], [Regexp.FindReaderIndex],
     [Regexp.FindReaderSubmatchIndex].
-    
-    This set may grow. Note that regular expression matches may need to
+    Note that regular expression matches may need to
     examine text beyond the text returned by a match, so the methods that
     match text from an [io.RuneReader] may read arbitrarily far into the input
     before returning.

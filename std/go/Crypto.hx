@@ -13,6 +13,7 @@ extern class Crypto {
     @:native("MD4") static final MD4: go.crypto.Hash;
     @:native("MD5") static final MD5: go.crypto.Hash;
     @:native("MD5SHA1") static final MD5SHA1: go.crypto.Hash;
+    @:native("MLDSAMu") static final mLDSAMu: go.crypto.Hash;
     @:native("RIPEMD160") static final RIPEMD160: go.crypto.Hash;
     @:native("SHA1") static final SHA1: go.crypto.Hash;
     @:native("SHA224") static final SHA224: go.crypto.Hash;

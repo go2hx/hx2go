@@ -263,7 +263,7 @@ extern class Types {
     @:native("Implements") static function _implements(V: go.go.types.Type, T: go.Pointer<go.go.types.Interface>): (Bool);
     /**
         Instantiate instantiates the type orig with the given type arguments targs.
-        orig must be an *Alias, *Named, or *Signature type. If there is no error,
+        orig must be a generic *Alias, *Named, or *Signature type. If there is no error,
         the resulting Type is an instantiated type of the same kind (*Alias, *Named
         or *Signature, respectively).
         
@@ -278,16 +278,16 @@ extern class Types {
         signatures will yield different instances. The use of a shared context does
         not guarantee that identical instances are deduplicated in all cases.
         
-        If validate is set, Instantiate verifies that the number of type arguments
-        and parameters match, and that the type arguments satisfy their respective
-        type constraints. If verification fails, the resulting error may wrap an
-        *ArgumentError indicating which type argument did not satisfy its type parameter
-        constraint, and why.
+        If validate is set, Instantiate verifies that the type orig is in fact generic,
+        that the number of type arguments and parameters match, and that the type arguments
+        satisfy their respective type constraints.
+        If verification fails, the resulting error may wrap an *ArgumentError indicating
+        which type argument did not satisfy its type parameter constraint, and why.
         
-        If validate is not set, Instantiate does not verify the type argument count
-        or whether the type arguments satisfy their constraints. Instantiate is
-        guaranteed to not return an error, but may panic. Specifically, for
-        *Signature types, Instantiate will panic immediately if the type argument
+        If validate is not set, Instantiate does not check if orig is generic, verify the
+        type argument count, or check whether the type arguments satisfy their constraints.
+        Instantiate is guaranteed to not return an error, but may panic. Specifically,
+        for *Signature types, Instantiate will panic immediately if the type argument
         count is incorrect; for *Named types, a panic may occur later inside the
         *Named API.
     **/
@@ -488,8 +488,7 @@ extern class Types {
         type set. It may even be a named []byte slice type resulting from
         instantiation of such a type parameter.
         
-        If recv is non-nil, typeParams must be empty. If recvTypeParams is
-        non-empty, recv must be non-nil.
+        If recvTypeParams is non-empty, recv must be non-nil.
     **/
     @:native("NewSignatureType") static function newSignatureType(recv: go.Pointer<go.go.types.Var>, recvTypeParams: go.Slice<go.Pointer<go.go.types.TypeParam>>, typeParams: go.Slice<go.Pointer<go.go.types.TypeParam>>, params: go.Pointer<go.go.types.Tuple>, results: go.Pointer<go.go.types.Tuple>, variadic: Bool): (go.Pointer<go.go.types.Signature>);
     /**

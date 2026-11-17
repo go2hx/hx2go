@@ -178,7 +178,7 @@ extern class Fs {
         The only possible returned error is [path.ErrBadPattern], reporting that
         the pattern is malformed.
         
-        If fs implements [GlobFS], Glob calls fs.Glob.
+        If fsys implements [GlobFS], Glob calls fsys.Glob.
         Otherwise, Glob uses [ReadDir] to traverse the directory tree
         and look for matches for the pattern.
     **/
@@ -195,19 +195,19 @@ extern class Fs {
         ReadDir reads the named directory
         and returns a list of directory entries sorted by filename.
         
-        If fs implements [ReadDirFS], ReadDir calls fs.ReadDir.
-        Otherwise ReadDir calls fs.Open and uses ReadDir and Close
-        on the returned file.
+        If fsys implements [ReadDirFS], ReadDir calls fsys.ReadDir.
+        Otherwise ReadDir calls fsys.Open and uses ReadDir and Close
+        on the returned [ReadDirFile].
     **/
     @:native("ReadDir") static function readDir(fsys: go.io.fs.FS, name: String): (go.Result<go.Slice<go.io.fs.DirEntry>>);
     /**
-        ReadFile reads the named file from the file system fs and returns its contents.
+        ReadFile reads the named file from the file system fsys and returns its contents.
         A successful call returns a nil error, not [io.EOF].
         (Because ReadFile reads the whole file, the expected EOF
         from the final Read is not treated as an error to be reported.)
         
-        If fs implements [ReadFileFS], ReadFile calls fs.ReadFile.
-        Otherwise ReadFile calls fs.Open and uses Read and Close
+        If fsys implements [ReadFileFS], ReadFile calls fsys.ReadFile.
+        Otherwise ReadFile calls fsys.Open and uses Read and Close
         on the returned [File].
     **/
     @:native("ReadFile") static function readFile(fsys: go.io.fs.FS, name: String): (go.Result<go.Slice<go.Byte>>);
@@ -220,7 +220,7 @@ extern class Fs {
     /**
         Stat returns a [FileInfo] describing the named file from the file system.
         
-        If fs implements [StatFS], Stat calls fs.Stat.
+        If fsys implements [StatFS], Stat calls fsys.Stat.
         Otherwise, Stat opens the [File] to stat it.
     **/
     @:native("Stat") static function stat(fsys: go.io.fs.FS, name: String): (go.Result<go.io.fs.FileInfo>);
@@ -228,11 +228,12 @@ extern class Fs {
         Sub returns an [FS] corresponding to the subtree rooted at fsys's dir.
         
         If dir is ".", Sub returns fsys unchanged.
-        Otherwise, if fs implements [SubFS], Sub returns fsys.Sub(dir).
+        Otherwise, if fsys implements [SubFS], Sub returns fsys.Sub(dir).
         Otherwise, Sub returns a new [FS] implementation sub that,
         in effect, implements sub.Open(name) as fsys.Open(path.Join(dir, name)).
         The implementation also translates calls to ReadDir, ReadFile,
-        ReadLink, Lstat, and Glob appropriately.
+        ReadLink, Lstat, and Glob appropriately. Sub does not check if the
+        directory currently exists.
         
         Note that Sub(os.DirFS("/"), "prefix") is equivalent to os.DirFS("/prefix")
         and that neither of them guarantees to avoid operating system
@@ -240,6 +241,7 @@ extern class Fs {
         does not check for symbolic links inside "/prefix" that point to
         other directories. That is, [os.DirFS] is not a general substitute for a
         chroot-style security mechanism, and Sub does not change that fact.
+        Use [os.Root] to constrain access to particular directory trees.
     **/
     @:native("Sub") static function sub(fsys: go.io.fs.FS, dir: String): (go.Result<go.io.fs.FS>);
     /**

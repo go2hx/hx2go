@@ -27,9 +27,13 @@ extern class Named {
     /**
         Method returns the i'th method of named type t for 0 <= i < t.NumMethods().
         
-        For an ordinary or instantiated type t, the receiver base type of this
-        method is the named type t. For an uninstantiated generic type t, each
-        method receiver is instantiated with its receiver type parameters.
+        For an ordinary or instantiated type t, the receiver base type of this method
+        is the named type t. The returned Func's Signature will not have receiver
+        type parameters.
+        
+        For an uninstantiated generic type t, each method receiver is instantiated with
+        its receiver type parameters. The returned Func's Signature will have the
+        receiver type parameters used to instantiate the receiver.
         
         Methods are numbered deterministically: given the same list of source files
         presented to the type checker, or the same sequence of NewMethod and AddMethod

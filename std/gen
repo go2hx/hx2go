@@ -1,4 +1,4 @@
-go1.26.5
+go1.27.4
 bufio
 bytes
 crypto/md5
@@ -54,6 +54,8 @@ crypto/internal/boring/bcache
 crypto/internal/boring/sig
 crypto/internal/constanttime
 crypto/internal/cryptotest
+crypto/internal/cryptotest/wycheproof
+crypto/internal/cryptotest/x509limbo
 crypto/internal/entropy
 crypto/internal/entropy/v1.0.0
 crypto/internal/fips140
@@ -98,6 +100,7 @@ crypto/internal/rand
 crypto/internal/randutil
 crypto/internal/sysrand
 crypto/internal/sysrand/internal/seccomp
+crypto/mldsa
 crypto/mlkem
 crypto/mlkem/mlkemtest
 crypto/pbkdf2
@@ -115,6 +118,7 @@ crypto/x509
 crypto/x509/pkix
 database/sql
 database/sql/driver
+database/sql/internal
 debug/buildinfo
 debug/dwarf
 debug/elf
@@ -134,6 +138,13 @@ encoding/csv
 encoding/gob
 encoding/hex
 encoding/json
+encoding/json/internal
+encoding/json/internal/jsonflags
+encoding/json/internal/jsonopts
+encoding/json/internal/jsontest
+encoding/json/internal/jsonwire
+encoding/json/jsontext
+encoding/json/v2
 encoding/pem
 encoding/xml
 errors
@@ -149,7 +160,6 @@ go/format
 go/importer
 go/internal/gccgoimporter
 go/internal/gcimporter
-go/internal/scannerhooks
 go/internal/srcimporter
 go/parser
 go/printer
@@ -207,6 +217,7 @@ internal/exportdata
 internal/filepathlite
 internal/fmtsort
 internal/fuzz
+internal/gate
 internal/goarch
 internal/godebug
 internal/godebugs
@@ -218,6 +229,7 @@ internal/goversion
 internal/lazyregexp
 internal/lazytemplate
 internal/msan
+internal/nettest
 internal/nettrace
 internal/obscuretestdata
 internal/oserror
@@ -299,7 +311,9 @@ net/http/httptrace
 net/http/httputil
 net/http/internal
 net/http/internal/ascii
+net/http/internal/http2
 net/http/internal/httpcommon
+net/http/internal/httpsfv
 net/http/internal/testcert
 net/http/pprof
 net/internal/cgotest
@@ -344,18 +358,25 @@ time/tzdata
 unicode
 unicode/utf16
 unique
+uuid
 vendor/golang.org/x/crypto/chacha20
 vendor/golang.org/x/crypto/chacha20poly1305
 vendor/golang.org/x/crypto/cryptobyte
 vendor/golang.org/x/crypto/cryptobyte/asn1
+vendor/golang.org/x/crypto/hkdf
 vendor/golang.org/x/crypto/internal/alias
 vendor/golang.org/x/crypto/internal/poly1305
 vendor/golang.org/x/net/dns/dnsmessage
 vendor/golang.org/x/net/http/httpguts
 vendor/golang.org/x/net/http/httpproxy
 vendor/golang.org/x/net/http2/hpack
+vendor/golang.org/x/net/http3
 vendor/golang.org/x/net/idna
+vendor/golang.org/x/net/internal/http3
+vendor/golang.org/x/net/internal/httpcommon
+vendor/golang.org/x/net/internal/quic/quicwire
 vendor/golang.org/x/net/nettest
+vendor/golang.org/x/net/quic
 vendor/golang.org/x/sys/cpu
 vendor/golang.org/x/text/secure/bidirule
 vendor/golang.org/x/text/transform

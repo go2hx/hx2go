@@ -38,8 +38,10 @@ extern class Cond {
     /**
         Broadcast wakes all goroutines waiting on c.
         
-        It is allowed but not required for the caller to hold c.L
-        during the call.
+        It is allowed but not required for the caller to hold c.L during the call.
+        The time it takes to run Broadcast is proportional to the number of waiting goroutines;
+        be aware that holding the lock across a call to Broadcast
+        will extend the amount of time that the lock is held.
     **/
     @:native("Broadcast") function broadcast(): Void;
     /**

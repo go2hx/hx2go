@@ -26,7 +26,7 @@ extern class Writer {
     @:native("Flush") function flush(): (go.Error);
     /**
         Reset discards the writer's state and makes it equivalent to
-        the result of [NewWriter] or [NewWriterDict] called with dst
+        the result of NewWriter or NewWriterDict called with dst
         and w's level and dictionary.
     **/
     @:native("Reset") function reset(dst: go.io.Writer): Void;

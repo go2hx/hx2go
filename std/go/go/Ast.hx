@@ -5,8 +5,8 @@ package go.go;
     packages.
     
     Syntax trees may be constructed directly, but they are typically
-    produced from Go source code by the parser; see the ParseFile
-    function in package [go/parser].
+    produced from Go source code by the parser; see the
+    [go/parser.ParseFile] function.
 **/
 @:go.Type({ name: "ast", instanceName: "ast.ast", imports: ["go/ast"] })
 extern class Ast {
@@ -137,10 +137,10 @@ extern class Ast {
         not handwritten, by detecting the special comment described
         at https://go.dev/s/generatedcode.
         
-        The syntax tree must have been parsed with the [parser.ParseComments] flag.
+        The syntax tree must have been parsed with the [go/parser.ParseComments] flag.
         Example:
         
-        	f, err := parser.ParseFile(fset, filename, src, parser.ParseComments|parser.PackageClauseOnly)
+        	f, err := parser.ParseFile(fset, filename, src, parser.ParseComments|parser.PackageClauseOnly|parser.SkipObjectResolution)
         	if err != nil { ... }
         	gen := ast.IsGenerated(f)
     **/

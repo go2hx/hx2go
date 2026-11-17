@@ -46,9 +46,10 @@ extern class Importer {
         it is assumed that the translation to canonical import paths is being
         done by the client of the importer.
         
-        A lookup function must be provided for correct module-aware operation.
-        Deprecated: If lookup is nil, for backwards-compatibility, the importer
-        will attempt to resolve imports in the $GOPATH workspace.
+        A lookup function must be provided for correct module-aware
+        operation. Providing a nil value for lookup is deprecated but, for
+        backwards-compatibility, the importer will in this case attempt to
+        resolve imports in the $GOPATH workspace.
     **/
     @:native("ForCompiler") static function forCompiler(fset: go.Pointer<go.go.token.FileSet>, compiler: String, lookup: go.go.importer.Lookup): (go.go.types.Importer);
 

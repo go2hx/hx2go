@@ -114,6 +114,19 @@ extern class Int {
     **/
     @:go.Tuple("p0", "p1") @:native("DivMod") function divMod(x: go.Pointer<go.math.big.Int>, y: go.Pointer<go.math.big.Int>, m: go.Pointer<go.math.big.Int>): (go.Tuple<{ p0: go.Pointer<go.math.big.Int>, p1: go.Pointer<go.math.big.Int> }>);
     /**
+        Divide computes the integer quotient q and remainder r such that
+        
+        	q = f(x/y)
+        	r = x - y*q
+        
+        where f is described by the rounding mode,
+        which must be one of [Trunc], [Floor], [Round] or [Ceil].
+        Divide sets z to q if z != nil, updates r if r != nil,
+        and returns the pair (z, r) if y != 0.
+        If y == 0, a division-by-zero run-time panic occurs.
+    **/
+    @:go.Tuple("p0", "p1") @:native("Divide") function divide(x: go.Pointer<go.math.big.Int>, y: go.Pointer<go.math.big.Int>, r: go.Pointer<go.math.big.Int>, mode: go.math.big.RoundingMode): (go.Tuple<{ p0: go.Pointer<go.math.big.Int>, p1: go.Pointer<go.math.big.Int> }>);
+    /**
         Exp sets z = x**y mod |m| (i.e. the sign of m is ignored), and returns z.
         If m == nil or m == 0, z = x**y unless y <= 0 then z = 1. If m != 0, y < 0,
         and x and m are not relatively prime, z is unchanged and nil is returned.

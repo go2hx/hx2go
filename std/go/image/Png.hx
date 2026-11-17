@@ -26,6 +26,10 @@ extern class Png {
     /**
         Encode writes the Image m to w in PNG format. Any Image may be
         encoded, but images that are not [image.NRGBA] might be encoded lossily.
+        
+        Note that the exact bytes written to w are not covered by the Go 1
+        compatibility promise. Callers, including tests, should not depend on the
+        exact written bytes.
     **/
     @:native("Encode") static function encode(w: go.io.Writer, m: go.image.Image): (go.Error);
 

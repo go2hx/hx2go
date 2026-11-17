@@ -56,135 +56,129 @@ extern class Regexp {
     **/
     @:native("ExpandString") function expandString(dst: go.Slice<go.Byte>, template: String, src: String, match: go.Slice<go.GoInt>): (go.Slice<go.Byte>);
     /**
-        Find returns a slice holding the text of the leftmost match in b of the regular expression.
-        A return value of nil indicates no match.
+        Find returns the text of the leftmost match for re in b.
+        The return value is nil for no match.
     **/
     @:native("Find") function find(b: go.Slice<go.Byte>): (go.Slice<go.Byte>);
     /**
-        FindAll is the 'All' version of [Regexp.Find]; it returns a slice of all successive
-        matches of the expression, as defined by the 'All' description in the
-        package comment.
-        A return value of nil indicates no match.
+        FindAll returns all the matches for re in b.
+        If n >= 0, FindAll returns no more than n matches.
+        See [Regexp.All] for the equivalent iterator form.
     **/
     @:native("FindAll") function findAll(b: go.Slice<go.Byte>, n: go.GoInt): (go.Slice<go.Slice<go.Byte>>);
     /**
-        FindAllIndex is the 'All' version of [Regexp.FindIndex]; it returns a slice of all
-        successive matches of the expression, as defined by the 'All' description
-        in the package comment.
-        A return value of nil indicates no match.
+        FindAllIndex returns the locations of all matches for re in b.
+        If n >= 0, FindAllIndex returns no more than n matches.
+        See [Regexp.AllIndex] for the equivalent iterator form.
     **/
     @:native("FindAllIndex") function findAllIndex(b: go.Slice<go.Byte>, n: go.GoInt): (go.Slice<go.Slice<go.GoInt>>);
     /**
-        FindAllString is the 'All' version of [Regexp.FindString]; it returns a slice of all
-        successive matches of the expression, as defined by the 'All' description
-        in the package comment.
-        A return value of nil indicates no match.
+        FindAllString returns all the matches for re in s.
+        If n >= 0, FindAllString returns no more than n matches.
+        See [Regexp.AllString] for the equivalent iterator form.
     **/
     @:native("FindAllString") function findAllString(s: String, n: go.GoInt): (go.Slice<String>);
     /**
-        FindAllStringIndex is the 'All' version of [Regexp.FindStringIndex]; it returns a
-        slice of all successive matches of the expression, as defined by the 'All'
-        description in the package comment.
-        A return value of nil indicates no match.
+        FindAllStringIndex returns the locations of all matches for re in s.
+        If n >= 0, FindAllStringIndex returns no more than n matches.
+        See [Regexp.AllStringIndex] for the equivalent iterator form.
     **/
     @:native("FindAllStringIndex") function findAllStringIndex(s: String, n: go.GoInt): (go.Slice<go.Slice<go.GoInt>>);
     /**
-        FindAllStringSubmatch is the 'All' version of [Regexp.FindStringSubmatch]; it
-        returns a slice of all successive matches of the expression, as defined by
-        the 'All' description in the package comment.
-        A return value of nil indicates no match.
+        FindAllStringSubmatch returns the locations of all matches for re in s,
+        including submatch locations.
+        In each returned match m, m[0] is the overall match,
+        m[1] is the first submatch, and so on.
+        If n >= 0, FindAllStringSubmatch returns no more than n matches.
+        See [Regexp.AllStringSubmatch] for the equivalent iterator form.
     **/
     @:native("FindAllStringSubmatch") function findAllStringSubmatch(s: String, n: go.GoInt): (go.Slice<go.Slice<String>>);
     /**
-        FindAllStringSubmatchIndex is the 'All' version of
-        [Regexp.FindStringSubmatchIndex]; it returns a slice of all successive matches of
-        the expression, as defined by the 'All' description in the package
-        comment.
-        A return value of nil indicates no match.
+        FindAllStringSubmatchIndex returns the locations of all matches for re in s,
+        including submatch locations.
+        In each returned match m, the overall match is s[m[0]:m[1]],
+        the first submatch is s[m[2]:m[3]], and so on.
+        If n >= 0, FindAllStringSubmatchIndex returns no more than n matches.
+        See [Regexp.AllStringSubmatchIndex] for the equivalent iterator form.
     **/
     @:native("FindAllStringSubmatchIndex") function findAllStringSubmatchIndex(s: String, n: go.GoInt): (go.Slice<go.Slice<go.GoInt>>);
     /**
-        FindAllSubmatch is the 'All' version of [Regexp.FindSubmatch]; it returns a slice
-        of all successive matches of the expression, as defined by the 'All'
-        description in the package comment.
-        A return value of nil indicates no match.
+        FindAllSubmatch returns the locations of all matches for re in b,
+        including submatch locations.
+        In each returned match m, the overall match is m[0],
+        the first submatch is m[1], and so on.
+        If n >= 0, FindAllSubmatch returns no more than n matches.
+        See [Regexp.AllSubmatch] for the equivalent iterator form.
     **/
     @:native("FindAllSubmatch") function findAllSubmatch(b: go.Slice<go.Byte>, n: go.GoInt): (go.Slice<go.Slice<go.Slice<go.Byte>>>);
     /**
-        FindAllSubmatchIndex is the 'All' version of [Regexp.FindSubmatchIndex]; it returns
-        a slice of all successive matches of the expression, as defined by the
-        'All' description in the package comment.
-        A return value of nil indicates no match.
+        FindAllSubmatchIndex returns the locations of all matches for re in b,
+        including submatch locations.
+        In each returned match m, the overall match is b[m[0]:m[1]],
+        the first submatch is b[m[2]:m[3]], and so on.
+        If n >= 0, FindAllSubmatchIndex returns no more than n matches.
+        See [Regexp.AllSubmatchIndex] for the equivalent iterator form.
     **/
     @:native("FindAllSubmatchIndex") function findAllSubmatchIndex(b: go.Slice<go.Byte>, n: go.GoInt): (go.Slice<go.Slice<go.GoInt>>);
     /**
-        FindIndex returns a two-element slice of integers defining the location of
-        the leftmost match in b of the regular expression. The match itself is at
-        b[loc[0]:loc[1]].
-        A return value of nil indicates no match.
+        FindIndex returns the location of the leftmost match for re in b.
+        The match itself is at b[m[0]:m[1]].
+        The return value is nil for no match.
     **/
     @:native("FindIndex") function findIndex(b: go.Slice<go.Byte>): (go.Slice<go.GoInt>);
     /**
-        FindReaderIndex returns a two-element slice of integers defining the
-        location of the leftmost match of the regular expression in text read from
-        the [io.RuneReader]. The match text was found in the input stream at
-        byte offset loc[0] through loc[1]-1.
-        A return value of nil indicates no match.
+        FindReaderIndex returns the location of the leftmost match for re in r.
+        The match starts at byte index m[0] and ends just before byte index m[1].
+        The return value is nil for no match.
+        
+        FindReaderIndex may read arbitrarily far from r,
+        including reading beyond the returned match.
     **/
     @:native("FindReaderIndex") function findReaderIndex(r: go.io.RuneReader): (go.Slice<go.GoInt>);
     /**
-        FindReaderSubmatchIndex returns a slice holding the index pairs
-        identifying the leftmost match of the regular expression of text read by
-        the [io.RuneReader], and the matches, if any, of its subexpressions, as defined
-        by the 'Submatch' and 'Index' descriptions in the package comment. A
-        return value of nil indicates no match.
+        FindReaderSubmatchIndex returns the first match for re in r, including submatches.
+        The overall match is at byte index m[0] up to m[1],
+        the first submatch is at byte index m[2] up to m[3], and so on.
+        The return value is nil for no match.
+        
+        FindReaderSubmatchIndex may read arbitrarily far from r,
+        including reading beyond the returned match.
     **/
     @:native("FindReaderSubmatchIndex") function findReaderSubmatchIndex(r: go.io.RuneReader): (go.Slice<go.GoInt>);
     /**
-        FindString returns a string holding the text of the leftmost match in s of the regular
-        expression. If there is no match, the return value is an empty string,
-        but it will also be empty if the regular expression successfully matches
-        an empty string. Use [Regexp.FindStringIndex] or [Regexp.FindStringSubmatch] if it is
-        necessary to distinguish these cases.
+        FindString returns the text of the leftmost match for re in s.
+        The return value is the empty string both for an empty match and for no match.
+        To distinguish those two cases, use [Regexp.FindStringIndex] or [Regexp.FindStringSubmatch].
     **/
     @:native("FindString") function findString(s: String): (String);
     /**
-        FindStringIndex returns a two-element slice of integers defining the
-        location of the leftmost match in s of the regular expression. The match
-        itself is at s[loc[0]:loc[1]].
-        A return value of nil indicates no match.
+        FindStringIndex returns the location of the leftmost match for re in s.
+        The match itself is at s[m[0]:m[1]].
+        The return value is nil for no match.
     **/
     @:native("FindStringIndex") function findStringIndex(s: String): (go.Slice<go.GoInt>);
     /**
-        FindStringSubmatch returns a slice of strings holding the text of the
-        leftmost match of the regular expression in s and the matches, if any, of
-        its subexpressions, as defined by the 'Submatch' description in the
-        package comment.
-        A return value of nil indicates no match.
+        FindStringSubmatch returns the first match for re in s, including submatches.
+        The overall match is s[0], the first submatch is s[1], and so on.
+        The return value is nil for no match.
     **/
     @:native("FindStringSubmatch") function findStringSubmatch(s: String): (go.Slice<String>);
     /**
-        FindStringSubmatchIndex returns a slice holding the index pairs
-        identifying the leftmost match of the regular expression in s and the
-        matches, if any, of its subexpressions, as defined by the 'Submatch' and
-        'Index' descriptions in the package comment.
-        A return value of nil indicates no match.
+        FindStringSubmatchIndex returns the first match for re in s, including submatches.
+        The overall match is s[m[0]:m[1]], the first submatch is s[m[2]:m[3]], and so on.
+        The return value is nil for no match.
     **/
     @:native("FindStringSubmatchIndex") function findStringSubmatchIndex(s: String): (go.Slice<go.GoInt>);
     /**
-        FindSubmatch returns a slice of slices holding the text of the leftmost
-        match of the regular expression in b and the matches, if any, of its
-        subexpressions, as defined by the 'Submatch' descriptions in the package
-        comment.
-        A return value of nil indicates no match.
+        FindSubmatch returns the first match for re in b, including submatches.
+        The overall match is m[0], the first submatch is m[1], and so on.
+        The return value is nil for no match.
     **/
     @:native("FindSubmatch") function findSubmatch(b: go.Slice<go.Byte>): (go.Slice<go.Slice<go.Byte>>);
     /**
-        FindSubmatchIndex returns a slice holding the index pairs identifying the
-        leftmost match of the regular expression in b and the matches, if any, of
-        its subexpressions, as defined by the 'Submatch' and 'Index' descriptions
-        in the package comment.
-        A return value of nil indicates no match.
+        FindSubmatchIndex returns the first match for re in b, including submatches.
+        The overall match is b[m[0]:m[1]], the first submatch is b[m[2]:m[3]], and so on.
+        The return value is nil for no match.
     **/
     @:native("FindSubmatchIndex") function findSubmatchIndex(b: go.Slice<go.Byte>): (go.Slice<go.GoInt>);
     /**

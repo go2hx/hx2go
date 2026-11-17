@@ -8,8 +8,4 @@ package go.encoding.json;
     if it wishes to retain the data after returning.
 **/
 @:go.Type({ name: "Unmarshaler", instanceName: "json.Unmarshaler", imports: ["encoding/json"] })
-extern typedef Unmarshaler = {
-
-    @:native("UnmarshalJSON") function unmarshalJSON(p0: go.Slice<go.Byte>): (go.Error);
-
-}
+extern typedef Unmarshaler = go.encoding.json.v2.Unmarshaler

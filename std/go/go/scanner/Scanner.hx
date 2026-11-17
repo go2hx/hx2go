@@ -14,6 +14,11 @@ extern class Scanner {
     function new(errorCount: go.GoInt=0);
 
     /**
+        End returns the position immediately after the last scanned token.
+        If [Scanner.Scan] has not been called yet, End returns [token.NoPos].
+    **/
+    @:native("End") function end(): (go.go.token.Pos);
+    /**
         Init prepares the scanner s to tokenize the text src by setting the
         scanner at the beginning of src. The scanner uses the file set file
         for position information and it adds line information for each line.
@@ -44,7 +49,9 @@ extern class Scanner {
         If the returned token is [token.SEMICOLON], the corresponding
         literal string is ";" if the semicolon was present in the source,
         and "\n" if the semicolon was inserted because of a newline or
-        at EOF.
+        at EOF. If the newline is within a /*...* / comment, the SEMICOLON token
+        is synthesized immediately after the COMMENT token; its position is that
+        of the actual newline within the comment.
         
         If the returned token is [token.ILLEGAL], the literal string is the
         offending character.

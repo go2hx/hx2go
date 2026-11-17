@@ -16,6 +16,7 @@ extern class TypeParamList {
         It is safe to call on a nil receiver.
     **/
     @:native("Len") function len(): (go.GoInt);
+    @:native("String") function string(): (std.String);
     /**
         TypeParams returns a go1.23 iterator over a list of type parameters.
         

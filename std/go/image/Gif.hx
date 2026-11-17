@@ -4,6 +4,10 @@ package go.image;
     Package gif implements a GIF image decoder and encoder.
     
     The GIF specification is at https://www.w3.org/Graphics/GIF/spec-gif89a.txt.
+    
+    When decoding untrusted input, read dimensions with [DecodeConfig] before
+    calling [Decode] or [DecodeAll]; see those functions and the "Security
+    Considerations" section in the [image] package documentation.
 **/
 @:go.Type({ name: "gif", instanceName: "gif.gif", imports: ["image/gif"] })
 extern class Gif {
@@ -24,16 +28,30 @@ extern class Gif {
     /**
         Decode reads a GIF image from r and returns the first embedded
         image as an [image.Image].
+        
+        When decoding images from untrusted sources, it is safest to
+        first call DecodeConfig and check the image size so
+        that unexpectedly large memory allocations may be safely
+        avoided.
     **/
     @:native("Decode") static function decode(r: go.io.Reader): (go.Result<go.image.Image>);
     /**
         DecodeAll reads a GIF image from r and returns the sequential frames
         and timing information.
+        
+        Like [Decode], this allocates a paletted buffer per frame from width and
+        height in the image descriptors. [DecodeAll] retains every decoded frame in
+        memory. For untrusted input, call [DecodeConfig] first to verify the
+        logical screen size and reject inputs that would require excessive memory.
     **/
     @:native("DecodeAll") static function decodeAll(r: go.io.Reader): (go.Result<go.Pointer<go.image.gif.GIF>>);
     /**
         DecodeConfig returns the global color model and dimensions of a GIF image
         without decoding the entire image.
+        
+        It reads the logical screen descriptor and global color table only; it does
+        not allocate pixel buffers for frames. Use it to check width and height
+        before calling [Decode] or [DecodeAll].
     **/
     @:native("DecodeConfig") static function decodeConfig(r: go.io.Reader): (go.Result<go.image.Config>);
     /**

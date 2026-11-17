@@ -1,7 +1,7 @@
 package go.net.http.cookiejar;
 
 /**
-    Jar implements the http.CookieJar interface from the net/http package.
+    Jar implements the [net/http.CookieJar] interface.
 **/
 @:structInit
 @:go.Type({ name: "Jar", instanceName: "cookiejar.Jar", imports: ["net/http/cookiejar"] })

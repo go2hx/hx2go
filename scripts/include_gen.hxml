@@ -1,4 +1,4 @@
- -cp testbed
+-cp testbed
 -m Main
 -L hx2go
 --macro include("go")

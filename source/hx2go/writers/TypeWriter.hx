@@ -93,16 +93,28 @@ class TypeWriter extends WriterImpl {
 
     public function writeTypedef(t: HxbTypedef): OutputBuffer {
         var buf = new OutputBuffer();
-
         for (m in t.meta) {
             if (m.name == ":go.Type") return buf; // skip externs
         }
 
         buf.add("");
+
         // required as otherwise an internal Go compiler error occurs
         // by an alias forcing an eager underlying resolution returning nil
-        var isFunc = writer.context.normalize(t.type).match(TFun(_, _));
+        var norm = writer.context.normalize(t.type);
+        var isFunc = norm.match(TFun(_, _));
         var eq = isFunc ? "" : "= ";
+
+        // skip generating typedefs for @:generic classes
+        switch norm {
+            case TInst(tp, params): switch writer.context.resolve(tp) {
+                case MClass(cls) if (writer.context.isGenericTemplate(cls)): return buf;
+                case _: null;
+            }
+
+            case _: null;
+        }
+
         buf.add('type ${StringConversions.typePathTypedefName(t.path)} ${eq}${writeHxbType(t.type)}');
 
         return buf;

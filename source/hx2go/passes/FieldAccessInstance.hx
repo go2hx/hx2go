@@ -65,6 +65,17 @@ class FieldAccessInstance extends CompilerPass {
                 }
 
                 switch field.kind {
+                    case KMethod(MethDynamic): {
+                        expr.expr = TField(e, FInstance(tp, params, {
+                            name: StringConversions.nameToFieldName(cf.name) + "_Dyn",
+                            owner: cf.owner,
+                            kind: cf.kind,
+                            depth: cf.depth
+                        }));
+
+                        return;
+                    }
+
                     case KMethod(_) if (!context.omitVTable(cls)): {
                         e.expr = TField(hx2go.normaliser.ExprCopy.copy(e), FInstance(tp, params, {
                             name: 'VTable',

@@ -77,4 +77,12 @@ extern abstract Slice<T> {
         return Syntax.code("string({0})", s);
     }
 
+    @:to public static inline function toBytes(s: Slice<Byte>): haxe.io.Bytes {
+        var b = haxe.io.Bytes.alloc(s.length);
+        for (i in 0...s.length) {
+            b.set(i, s[i]);
+        }
+        return b;
+    }
+
 }

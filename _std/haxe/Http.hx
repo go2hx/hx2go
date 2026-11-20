@@ -1,3 +1,3 @@
-package _std.haxe.http;
+package haxe;
 
 typedef Http = haxe.http.HttpGo;

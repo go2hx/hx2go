@@ -7,7 +7,7 @@ import go.net.http.Client;
 import go.io.Reader;
 import go.net.http.Request;
 
-class HttpNodeGo extends haxe.http.HttpBase {
+class HttpGo extends haxe.http.HttpBase {
 	public var responseHeaders:Map<String, String>;
     public var req:Request;
     var ctx:Context;

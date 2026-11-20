@@ -1,5 +1,27 @@
 package go;
+
 import haxe.iterators.ArrayIterator;
+
+private class GoMapKeyValueIterator<K, V> {
+
+    var keys: Iterator<K>;
+    var getFunc: K -> V;
+
+    public inline function new(keys: Iterator<K>, getFunc: K -> V) {
+        this.keys = keys;
+        this.getFunc = getFunc;
+    }
+
+    public inline function hasNext():Bool {
+        return keys.hasNext();
+    }
+
+    public inline function next():{key:K, value:V} {
+        var key = keys.next();
+        return {value: @:nullSafety(Off) (getFunc(key) : V), key: key};
+    }
+
+}
 
 @:coreType
 @:runtimeValue
@@ -56,6 +78,10 @@ abstract Map<K, V> {
     }
     public inline extern function iterator(): ArrayIterator<V> {
         return new ArrayIterator(this.values().toArray());
+    }
+
+    public inline extern function keyValueIterator(): GoMapKeyValueIterator<K, V> {
+        return new GoMapKeyValueIterator(this.keys().iterator(), get);
     }
 
     public inline extern function clear(): Void {

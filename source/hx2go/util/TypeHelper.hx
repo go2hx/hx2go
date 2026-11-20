@@ -1,6 +1,7 @@
 package hx2go.util;
 
 import hxb.HxbType;
+import hxb.HxbClassField;
 import hxb.TypePath;
 import hxb.Typed.HxbModuleTypeRef;
 import hxb.Typed.HxbTypedExpr;
@@ -15,6 +16,18 @@ class TypeHelper {
             case TConst(TNull): true;
             case TParenthesis(inner) | TMeta(_, inner) | TCast(inner, _): isNullConst(inner);
             case _: false;
+        }
+    }
+    public static function tupleFields(anon: HxbAnon): Array<HxbClassField> {
+        var fields = anon.fields.copy();
+        fields.sort((a, b) -> a.pos.min - b.pos.min);
+        return fields;
+    }
+
+    public static function asTupleAnon(context: Context, t: HxbType): Null<HxbAnon> {
+        return switch t {
+            case TType({ name: 'Tuple', pack: ['go'] }, [TAnon(anon)]): anon;
+            case _: null;
         }
     }
 

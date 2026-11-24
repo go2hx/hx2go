@@ -17,11 +17,8 @@ class HelloComponent extends Compo {
         return App.div().body(
             App.H1().body(
                 App.text("Hello, "),
-                App._if(this.name != "", function() {
-                    return App.text(this.name);
-                })._else(function() {
-                    return App.text("World!");
-                })
+                App._if(this.name != "", App.text.bind(this.name))
+                   ._else(App.text.bind("World!"))
             ),
             App.input()
                 .type("text")

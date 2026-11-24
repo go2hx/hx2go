@@ -7,6 +7,7 @@ import hxb.HxbType;
 import hx2go.util.ExprHelper;
 import haxe.runtime.Copy;
 import hx2go.util.StringConversions;
+import hxb.flags.HxbClassFlag;
 
 class SuperCtor extends CompilerPass {
 
@@ -30,6 +31,15 @@ class SuperCtor extends CompilerPass {
                     case _: null;
                 }
 
+                if (base == null) {
+                    return;
+                }
+
+                if (base.flags & HxbClassFlag.CExtern != 0) {
+                    expr.expr = TBlock([]);
+                    return;
+                }
+                
                 expr.expr = TCall(ExprHelper.createUntyped('{0}.${StringConversions.typePathClassInstanceName(base.path)}.Hx_New', [
                     new HxbTypedExpr(TConst(TThis), null, null),
                 ]), params);

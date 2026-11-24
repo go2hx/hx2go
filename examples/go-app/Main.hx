@@ -1,9 +1,9 @@
+import go.github_com.maxence_charriere.go_app.v11.pkg.app.Handler;
 import go.github_com.maxence_charriere.go_app.v11.pkg.app.Compo;
 import go.github_com.maxence_charriere.go_app.v11.pkg.app.UI;
 import go.github_com.maxence_charriere.go_app.v11.pkg.App;
-import go.Pointer;
 import go.net.Http;
-import go.github_com.maxence_charriere.go_app.v11.pkg.app.Handler;
+import go.Pointer;
 
 class HelloComponent extends Compo {
 

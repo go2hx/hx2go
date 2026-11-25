@@ -7,6 +7,7 @@ import hxb.Typed.HxbVarKind;
 import hxb.Typed.HxbVarOrigin;
 import hxb.flags.HxbClassFlag;
 import hxb.HxbType;
+import hx2go.util.ExprHelper;
 
 class FieldAccessArrayClosure extends CompilerPass {
 
@@ -71,12 +72,15 @@ class FieldAccessArrayClosure extends CompilerPass {
                     t: sig.ret,
                 }), funType, null);
 
+                var cached = ExprHelper.createUntyped('HxFuncAs(Hx_Array_Closure({0}, "${cf.name}"), {1})', [new HxbTypedExpr(TLocal(srcVar), e.t, null), closure]);
+                cached.t = funType;
+
                 var decl = new HxbTypedExpr(TVar(srcVar, e), null, null);
                 var iife = new HxbTypedExpr(TFunction({
                     args: [],
                     expr: new HxbTypedExpr(TBlock([
                         decl,
-                        new HxbTypedExpr(TReturn(closure), null, null)
+                        new HxbTypedExpr(TReturn(cached), null, null)
                     ]), null, null),
                     t: funType,
                 }), TFun([], funType), null);

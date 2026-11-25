@@ -35,6 +35,7 @@ extern class HxDynamicArray {
     @:native("Underlying_Dyn") function underlying(): Slice<Dynamic>;
     @:native("ElemType") function elemType(): Type;
     @:native("Len") function len(): Int;
+    @:native("Closure_Dyn") function closure(name: String): Dynamic;
 }
 
 @:keep
@@ -954,31 +955,9 @@ class HxDynamic {
 
         var arr = tryDynamicArray(dyn);
         if (arr != null) {
-            switch (fieldName) {
-                case "length": return arr.len();
-                case "iterator": return HxArray.iterator.bind(dyn);
-                case "keyValueIterator": return HxArray.keyValueIterator.bind(dyn);
-                case "push": return HxArray.push.bind(dyn);
-                case "pop": return HxArray.pop.bind(dyn);
-                case "shift": return HxArray.shift.bind(dyn);
-                case "unshift": return HxArray.unshift.bind(dyn);
-                case "insert": return HxArray.insert.bind(dyn);
-                case "remove": return HxArray.remove.bind(dyn);
-                case "contains": return HxArray.contains.bind(dyn);
-                case "indexOf": return HxArray.indexOf.bind(dyn);
-                case "lastIndexOf": return HxArray.lastIndexOf.bind(dyn);
-                case "concat": return HxArray.concat.bind(dyn);
-                case "copy": return HxArray.copy.bind(dyn);
-                case "slice": return HxArray.slice.bind(dyn);
-                case "splice": return HxArray.splice.bind(dyn);
-                case "reverse": return HxArray.reverse.bind(dyn);
-                case "sort": return HxArray.sort.bind(dyn);
-                case "map": return HxArray.map.bind(dyn);
-                case "filter": return HxArray.filter.bind(dyn);
-                case "resize": return HxArray.resize.bind(dyn);
-                case "join": return HxArray.join.bind(dyn);
-                case "toString": return HxArray.toString.bind(dyn);
-                default: return null;
+            return switch (fieldName) {
+                case "length": arr.len();
+                case _: arr.closure(fieldName); // returns null if doesn't exist
             }
         }
 

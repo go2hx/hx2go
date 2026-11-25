@@ -38,5 +38,5 @@ function main() {
     App.runWhenOnBrowser();
 
     Http.handle("/", new Handler("Hello World", null, null));
-    Http.listenAndServe(":8000", null).sure();
+    Http.listenAndServe(":8080", null).sure();
 }

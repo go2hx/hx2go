@@ -81,12 +81,12 @@ class ClassWriter extends WriterImpl {
         var isInterface = cls.flags & HxbClassFlag.CInterface != 0;
         var fieldNames: Array<String> = [];
         var firstSuper: Null<HxbClass> = null;
-        var externFields: Map<String, Bool> = [];
+        var externFields: Map<String, String> = [];
 
         while (current != null) {
             for (f in current.fields) {
-                if (current.flags & HxbClassFlag.CExtern != 0) {
-                    externFields.set(f.name, true);
+                if (current.flags & HxbClassFlag.CExtern != 0 && !externFields.exists(f.name)) {
+                    externFields.set(f.name, nativeName(f) ?? f.name);
                 }
 
                 if (fields.exists(f.name)) {
@@ -446,7 +446,7 @@ class ClassWriter extends WriterImpl {
             buf.add('}');
 
             for (f in cls.fields.filter(f -> f.kind.match(KMethod(_)))) {
-                var res = writeMemberClassField(f, cls, externFields.exists(f.name));
+                var res = writeMemberClassField(f, cls, externFields.get(f.name));
                 if (res.isEmpty()) {
                     continue;
                 }
@@ -554,13 +554,13 @@ class ClassWriter extends WriterImpl {
         }
     }
 
-    public function writeMemberClassField(field: HxbClassField, cls: HxbClass, ?externOverride: Bool = false): OutputBuffer {
+    public function writeMemberClassField(field: HxbClassField, cls: HxbClass, ?externName: String): OutputBuffer {
         if (field.flags & HxbClassFieldFlag.CfGeneric != 0) {
             return new OutputBuffer();
         }
 
         return switch field.kind {
-            case KMethod(kind): writeMemberClassFunction(field, kind, cls, externOverride);
+            case KMethod(kind): writeMemberClassFunction(field, kind, cls, externName);
             case KVar(read, write): writeMemberClassVar(field, read, write, cls);
         }
     }
@@ -820,7 +820,7 @@ class ClassWriter extends WriterImpl {
         return buf;
     }
 
-    public function writeMemberClassFunction(field: HxbClassField, kind: HxbMethodKind, cls: HxbClass, ?externOverride: Bool = false): OutputBuffer {
+    public function writeMemberClassFunction(field: HxbClassField, kind: HxbMethodKind, cls: HxbClass, ?externName: String): OutputBuffer {
         var buf = new OutputBuffer();
         var fTypes = writeFunctionArgs(field.type, field);
 
@@ -829,7 +829,7 @@ class ClassWriter extends WriterImpl {
         }
 
         buf.add("");
-        buf.addInline('func (this *${StringConversions.typePathClassInstanceName(cls.path)}) ${externOverride ? field.name : StringConversions.nameToFieldName(field.name)}(');
+        buf.addInline('func (this *${StringConversions.typePathClassInstanceName(cls.path)}) ${externName ?? StringConversions.nameToFieldName(field.name)}(');
         buf.addBufferInline(fTypes.buf);
         buf.addInline(') ');
 
@@ -917,6 +917,11 @@ class ClassWriter extends WriterImpl {
         }
 
         return buf;
+    }
+
+    function nativeName(field: HxbClassField): Null<String> {
+        var m = metaStrings(field, ":native");
+        return m == null || m.length == 0 ? null : m[0];
     }
 
     public function writeMemberClassVar(field: HxbClassField, read: HxbVarAccess, write: HxbVarAccess, cls: HxbClass): OutputBuffer {

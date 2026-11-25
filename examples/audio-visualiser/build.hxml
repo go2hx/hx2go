@@ -1,0 +1,7 @@
+-cp examples/audio-visualiser
+-m Main
+-L hx2go
+-D go-lib=github.com/gen2brain/raylib-go/raylib
+-D go-lib=github.com/madelynnblue/go-dsp/spectral
+--custom-target go=output/examples/audio-visualiser
+--cmd go -C output/examples/audio-visualiser/main run .

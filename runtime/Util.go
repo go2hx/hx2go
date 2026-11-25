@@ -2,6 +2,15 @@ package main
 
 import "reflect"
 
+func HxOptionalArg[T any](v any) HxNullable[T] {
+	if v == nil {
+		return HxDefault[HxNullable[T]]()
+	}
+
+	return HxConvert[HxNullable[T]](v)
+}
+
+
 func HxDefault[T any]() T {
 	var v T
 	switch any(v).(type) {
@@ -11,6 +20,14 @@ func HxDefault[T any]() T {
 		return any(HxNullable[string]{Value: HxStringNull, Valid: false}).(T)
 	}
 	return v
+}
+
+func HxFuncAs[F any](v any, fallback F) F {
+	if f, ok := v.(F); ok {
+		return f
+	}
+
+	return fallback
 }
 
 func HxConvert[T any](from any) T {

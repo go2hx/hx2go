@@ -46,6 +46,7 @@ type HxArrayDyn interface {
 	Unshift_Dyn(val any)
 	Remove_Dyn(val any) bool
 	Underlying_Dyn() []any
+	Closure_Dyn(name string) any
 	ElemType() reflect.Type
 	Grow(elements int32)
 	Len() int32
@@ -69,14 +70,93 @@ type HxArray[T any] interface {
 
 type HxArrayImpl[T any] struct {
 	data []T
+	closures map[string]any
 }
 
 func HxMakeArray[T any](items ...T) HxArray[T] {
 	local := make([]T, len(items))
 	copy(local, items)
-	return &HxArrayImpl[T]{local}
+	return &HxArrayImpl[T]{data: local}
 }
 
+func Hx_Array_Closure(arr HxArrayDyn, name string) any {
+	if arr == nil {
+		return nil
+	}
+
+	return arr.Closure_Dyn(name)
+}
+
+func (this *HxArrayImpl[T]) Closure_Dyn(name string) any {
+	if f, ok := this.closures[name]; ok {
+		return f
+	}
+
+	var recv HxArray[T] = this
+	var f any
+
+	switch name {
+		case "push":
+			f = func(x T) int32 { return Hx_Array_Push(recv, x) }
+		case "pop":
+			f = func() HxNullable[T] { return Hx_Array_Pop(recv) }
+		case "shift":
+			f = func() HxNullable[T] { return Hx_Array_Shift(recv) }
+		case "unshift":
+			f = func(x T) { Hx_Array_Unshift(recv, x) }
+		case "insert":
+			f = func(pos int32, x T) { Hx_Array_Insert(recv, pos, x) }
+		case "remove":
+			f = func(x T) bool { return Hx_Array_Remove(recv, x) }
+		case "contains":
+			f = func(x T) bool { return Hx_Array_Contains(recv, x) }
+		case "indexOf":
+			f = func(x T, fromIndex any) int32 { return Hx_Array_IndexOf(recv, x, HxOptionalArg[int32](fromIndex)) }
+		case "lastIndexOf":
+			f = func(x T, fromIndex any) int32 { return Hx_Array_LastIndexOf(recv, x, HxOptionalArg[int32](fromIndex)) }
+		case "concat":
+			f = func(a HxArray[T]) HxArray[T] { return Hx_Array_Concat(recv, a) }
+		case "copy":
+			f = func() HxArray[T] { return Hx_Array_Copy(recv) }
+		case "slice":
+			f = func(pos int32, end any) HxArray[T] { return Hx_Array_Slice(recv, pos, HxOptionalArg[int32](end)) }
+		case "splice":
+			f = func(pos int32, count int32) HxArray[T] { return Hx_Array_Splice(recv, pos, count) }
+		case "reverse":
+			f = func() { Hx_Array_Reverse(recv) }
+		case "sort":
+			f = func(cmp func(a T, b T) int32) { Hx_Array_Sort(recv, cmp) }
+		case "filter":
+			f = func(pred func(x T) bool) HxArray[T] { return Hx_Array_Filter(recv, pred) }
+		case "map":
+			f = func(fn func(x T) any) HxArray[any] { return Hx_Array_Map(recv, fn) }
+		case "resize":
+			f = func(size int32) { Hx_Array_Resize(recv, size) }
+		case "join":
+			f = func(sep string) string { return Hx_Array_Join(recv, sep) }
+		case "toString":
+			f = func() string { return Hx_Array_ToString(recv) }
+		case "iterator":
+			f = func() *Hx_Obj_haxe_iterators_arrayiterator { return Hx_Array_Iterator(recv) }
+		case "keyValueIterator":
+			f = func() *Hx_Obj_haxe_iterators_arraykeyvalueiterator { return Hx_Array_KeyValueIterator(recv) }
+		default:
+			return nil
+	}
+
+	if this.closures == nil {
+		this.closures = make(map[string]any)
+	}
+
+	this.closures[name] = f
+
+	return f
+}
+
+func (this HxArrayView[T]) Closure_Dyn(name string) any {
+	return this.source.Closure_Dyn(name)
+}
+	
 func (this *HxArrayImpl[T]) Grow(elements int32) {
 	oldLen := int32(len(this.data))
 	oldCap := int32(cap(this.data))
@@ -624,7 +704,7 @@ func Hx_Array_Slice[T any](this HxArray[T], pos int32, end HxNullable[int32]) Hx
 	if arr, ok := this.(*HxArrayImpl[T]); ok {
 		out := make([]T, e-pos)
 		copy(out, arr.data[pos:e])
-		return &HxArrayImpl[T]{out}
+		return &HxArrayImpl[T]{data: out}
 	}
 
 	out := HxMakeArray[T]()
@@ -660,7 +740,7 @@ func Hx_Array_Splice[T any](this HxArray[T], pos int32, count int32) HxArray[T] 
 		removed := make([]T, count)
 		copy(removed, arr.data[pos:pos+count])
 		arr.data = append(arr.data[:pos], arr.data[pos+count:]...)
-		return &HxArrayImpl[T]{removed}
+		return &HxArrayImpl[T]{data: removed}
 	}
 
 	removed := HxMakeArray[T]()

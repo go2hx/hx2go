@@ -5,7 +5,7 @@ function main() {
 
 		// skip for CI
 		switch dir {
-			case "miqt", "gtk", "http_fileserver", "ebiten", "ssh_client", "bluetooth", "ollama", "tsnet":
+			case "miqt", "gtk", "http_fileserver", "ebiten", "ssh_client", "bluetooth", "ollama", "tsnet", "audio-visualiser":
 				continue;
 			default:
 		}

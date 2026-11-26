@@ -8,6 +8,10 @@ abstract Pointer<T>(T) {
 
     public var value(get, set): T;
 
+    public static extern inline function nullPtr<T>(): Pointer<T> {
+        return Syntax.code("nil");
+    }
+
     @:from
     @:pure public static extern inline function addressOf<T>(x: T): Pointer<T> { // TODO: add AsVar<T>
         return cast x;

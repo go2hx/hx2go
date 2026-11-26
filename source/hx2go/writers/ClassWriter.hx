@@ -81,15 +81,20 @@ class ClassWriter extends WriterImpl {
         var isInterface = cls.flags & HxbClassFlag.CInterface != 0;
         var fieldNames: Array<String> = [];
         var firstSuper: Null<HxbClass> = null;
+        var externFields: Map<String, String> = [];
 
         while (current != null) {
             for (f in current.fields) {
+                if (current.flags & HxbClassFlag.CExtern != 0 && !externFields.exists(f.name)) {
+                    externFields.set(f.name, nativeName(f) ?? f.name);
+                }
+
                 if (fields.exists(f.name)) {
                     continue;
                 }
 
                 if (shouldGenVar(f) && !fieldNames.contains(f.name)) {
-                        fieldNames.push(f.name);
+                    fieldNames.push(f.name);
                 }
 
                 if (!f.kind.match(KMethod(_))) {
@@ -118,6 +123,8 @@ class ClassWriter extends WriterImpl {
                 break;
             }
 
+            var isExtern = (current.flags & HxbClassFlag.CExtern) != 0;
+
             if (firstSuper == null) {
                 firstSuper = current;
             }
@@ -144,7 +151,9 @@ class ClassWriter extends WriterImpl {
                 vtables.push('obj.${StringConversions.typePathClassInstanceName(current.path)}.${writer.context.resolvedInstanceName(iface.t)}.VTable = obj');
             }
 
-            vtables.push('obj.${StringConversions.typePathClassInstanceName(current.path)}.VTable = obj');
+            if (!isExtern) {
+                vtables.push('obj.${StringConversions.typePathClassInstanceName(current.path)}.VTable = obj');
+            }
         }
 
         var vt = StringConversions.typePathClassVTableName(cls.path);
@@ -192,7 +201,7 @@ class ClassWriter extends WriterImpl {
             }
 
             for (f in fields) {
-                if (f.flags & (HxbClassFieldFlag.CfExtern | HxbClassFieldFlag.CfGeneric) != 0) {
+                if (f.flags & (HxbClassFieldFlag.CfExtern | HxbClassFieldFlag.CfGeneric) != 0 || externFields.exists(f.name)) {
                     continue;
                 }
 
@@ -220,7 +229,7 @@ class ClassWriter extends WriterImpl {
         buf.add('type ${StringConversions.typePathClassInstanceName(cls.path)} struct {');
 
         if (cls.superClass != null) {
-            buf.add(writer.context.resolvedInstanceName(cls.superClass.t), 1);
+            buf.add(writer.types.writeModuleType(cls.superClass.t, cls.superClass.params, true), 1);
         }
 
         var queue =  cls.interfaces.filter(i -> !hasInterfaces.exists(i.t.dotPath()));
@@ -240,6 +249,7 @@ class ClassWriter extends WriterImpl {
             }
 
             buf.add(ifName, 1);
+
             vtables.push('obj.${ifName}.VTable = obj');
         }
 
@@ -320,7 +330,16 @@ class ClassWriter extends WriterImpl {
             buf.add('obj := &${StringConversions.typePathClassInstanceName(cls.path)}{}', 1);
 
             if (cls.superClass != null) {
-                buf.add('obj.${writer.context.resolvedInstanceName(cls.superClass.t)} = *${writer.context.resolvedInstanceName(cls.superClass.t)}_CreateEmptyInstance()', 1);
+                var superClassMod = writer.context.resolve(cls.superClass.t);
+                if (superClassMod != null) {
+                    switch superClassMod {
+                        case MClass(x):
+                            if (x.flags & HxbClassFlag.CExtern == 0) {
+                                buf.add('obj.${writer.context.resolvedInstanceName(cls.superClass.t)} = *${writer.context.resolvedInstanceName(cls.superClass.t)}_CreateEmptyInstance()', 1);
+                            }
+                        case _:
+                    }
+                }
             }
 
             if (!canOmitVTable) {
@@ -385,6 +404,7 @@ class ClassWriter extends WriterImpl {
                     buf.addBuffer(writer.exprs.writeExpr(cls.constructor.expr.expr, true), 1);
                     buf.add('');
                 }
+
                 buf.addBufferInline(ctor.wrapperEnd);
                 buf.add('}');
             }
@@ -426,7 +446,7 @@ class ClassWriter extends WriterImpl {
             buf.add('}');
 
             for (f in cls.fields.filter(f -> f.kind.match(KMethod(_)))) {
-                var res = writeMemberClassField(f, cls);
+                var res = writeMemberClassField(f, cls, externFields.get(f.name));
                 if (res.isEmpty()) {
                     continue;
                 }
@@ -534,12 +554,13 @@ class ClassWriter extends WriterImpl {
         }
     }
 
-    public function writeMemberClassField(field: HxbClassField, cls: HxbClass): OutputBuffer {
+    public function writeMemberClassField(field: HxbClassField, cls: HxbClass, ?externName: String): OutputBuffer {
         if (field.flags & HxbClassFieldFlag.CfGeneric != 0) {
             return new OutputBuffer();
         }
+
         return switch field.kind {
-            case KMethod(kind): writeMemberClassFunction(field, kind, cls);
+            case KMethod(kind): writeMemberClassFunction(field, kind, cls, externName);
             case KVar(read, write): writeMemberClassVar(field, read, write, cls);
         }
     }
@@ -799,7 +820,7 @@ class ClassWriter extends WriterImpl {
         return buf;
     }
 
-    public function writeMemberClassFunction(field: HxbClassField, kind: HxbMethodKind, cls: HxbClass): OutputBuffer {
+    public function writeMemberClassFunction(field: HxbClassField, kind: HxbMethodKind, cls: HxbClass, ?externName: String): OutputBuffer {
         var buf = new OutputBuffer();
         var fTypes = writeFunctionArgs(field.type, field);
 
@@ -808,7 +829,7 @@ class ClassWriter extends WriterImpl {
         }
 
         buf.add("");
-        buf.addInline('func (this *${StringConversions.typePathClassInstanceName(cls.path)}) ${StringConversions.nameToFieldName(field.name)}(');
+        buf.addInline('func (this *${StringConversions.typePathClassInstanceName(cls.path)}) ${externName ?? StringConversions.nameToFieldName(field.name)}(');
         buf.addBufferInline(fTypes.buf);
         buf.addInline(') ');
 
@@ -896,6 +917,11 @@ class ClassWriter extends WriterImpl {
         }
 
         return buf;
+    }
+
+    function nativeName(field: HxbClassField): Null<String> {
+        var m = metaStrings(field, ":native");
+        return m == null || m.length == 0 ? null : m[0];
     }
 
     public function writeMemberClassVar(field: HxbClassField, read: HxbVarAccess, write: HxbVarAccess, cls: HxbClass): OutputBuffer {

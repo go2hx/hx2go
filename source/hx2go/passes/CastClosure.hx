@@ -72,7 +72,7 @@ class CastClosure extends CompilerPass {
                     var maybeNullArg: HxbTypedExpr = null;
                     if (TypeHelper.compare(new_p.t, old_p.t)) maybeNullArg = e;
                     else maybeNullArg = ExprHelper.createCast(e, old_p.t);
-                    
+
                     if (old_p.opt && new_p.opt) {
                         // handle propagation of optional argument nullability
                         var optArgName = new_p.name + hx2go.writers.ClassWriter.defaultArgSuffix;
@@ -189,12 +189,15 @@ class CastClosure extends CompilerPass {
                     t: ret,
                 }), to, null);
 
+                var unwrapped = ExprHelper.createUntyped('HxFuncAs({0}, {1})', [new HxbTypedExpr(TLocal(srcVar), e.t, null), closure]);
+                unwrapped.t = to;
+
                 var decl = new HxbTypedExpr(TVar(srcVar, e), null, null);
                 var iife = new HxbTypedExpr(TFunction({
                     args: [],
                     expr: new HxbTypedExpr(TBlock([
                         decl,
-                        new HxbTypedExpr(TReturn(closure), null, null)
+                        new HxbTypedExpr(TReturn(unwrapped), null, null)
                     ]), null, null),
                     t: expr.t,
                 }), TFun([], expr.t), null);

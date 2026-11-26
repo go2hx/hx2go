@@ -1,0 +1,6 @@
+-cp examples/go-app
+-m Main
+-L hx2go
+-D go-lib=github.com/maxence-charriere/go-app/v11/pkg/app
+--custom-target go=output/examples/go-app
+--cmd haxe --cwd examples/go-app --run Build

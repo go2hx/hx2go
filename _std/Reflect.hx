@@ -111,7 +111,7 @@ class Reflect {
             return false;
         }
 
-        if (v == null || isEnumValue(value)) {
+        if (v == null || isEnumValue(v)) {
             return false;
         }
 

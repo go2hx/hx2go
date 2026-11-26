@@ -115,6 +115,7 @@ crypto/subtle
 crypto/tls
 crypto/tls/internal/fips140tls
 crypto/x509
+crypto/x509/internal/macos
 crypto/x509/pkix
 database/sql
 database/sql/driver
@@ -191,7 +192,6 @@ internal/buildcfg
 internal/bytealg
 internal/byteorder
 internal/cfg
-internal/cgrouptest
 internal/chacha8rand
 internal/copyright
 internal/coverage
@@ -240,6 +240,7 @@ internal/profile
 internal/profilerecord
 internal/race
 internal/reflectlite
+internal/routebsd
 internal/runtime/atomic
 internal/runtime/cgobench
 internal/runtime/cgroup
@@ -250,9 +251,7 @@ internal/runtime/gc/scan
 internal/runtime/maps
 internal/runtime/math
 internal/runtime/pprof/label
-internal/runtime/startlinetest
 internal/runtime/sys
-internal/runtime/syscall/linux
 internal/runtime/wasitest
 internal/saferio
 internal/singleflight
@@ -337,7 +336,6 @@ runtime/coverage
 runtime/debug
 runtime/metrics
 runtime/race
-runtime/race/internal/amd64v1
 runtime/trace
 sort
 structs

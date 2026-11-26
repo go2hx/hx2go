@@ -1,5 +1,10 @@
 package go.net;
 
+/**
+    A Listener is a generic network listener for stream-oriented protocols.
+    
+    Multiple goroutines may invoke methods on a Listener simultaneously.
+**/
 @:go.Type({ name: "Listener", instanceName: "net.Listener", imports: ["net"] })
 extern typedef Listener = {
 

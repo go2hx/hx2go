@@ -231,6 +231,24 @@ extern class Cursor {
     **/
     @:native("String") function string(): (String);
     /**
+        Unparen returns the cursor for an expression with any
+        enclosing parentheses removed, similar to [ast.Unparen].
+        It is often prudent to call this before switching on the
+        type of c.Node().
+        
+        See also [Cursor.UnparenEnclosing].
+    **/
+    @:native("Unparen") function unparen(): (go.golang_org.x.tools.go.ast.inspector.Cursor);
+    /**
+        UnparenEnclosing returns the first element of
+        the [Cursor.Enclosing] sequence that is not itself enclosed
+        in parens. It is often prudent to call this before switching on
+        c.ParentEdge().
+        
+        See also [Cursor.Unparen].
+    **/
+    @:native("UnparenEnclosing") function unparenEnclosing(): (go.golang_org.x.tools.go.ast.inspector.Cursor);
+    /**
         Valid reports whether the cursor is valid.
         The zero value of cursor is invalid.
         Unless otherwise documented, it is not safe to call

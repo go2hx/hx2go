@@ -1,5 +1,8 @@
 package go.net;
 
+/**
+    An SRV represents a single DNS SRV record.
+**/
 @:structInit
 @:go.Type({ name: "SRV", instanceName: "net.SRV", imports: ["net"] })
 extern class SRV {

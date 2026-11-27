@@ -16,7 +16,7 @@ function main() {
         });
 
         var err = server.serve(listener);
-        // TODO: missing Http.errServerClosed in the extern
+        // TODO: after the next std regen PR use Http.errServerClosed directly from the extern
         if (err.error() != "http: Server closed") {
             throw err;
         }

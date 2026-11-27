@@ -31,9 +31,7 @@ class Init {
 		var pathstd = Path.join([ path, 'std' ]);
 		Compiler.addClassPath(pathstd);
 
-		var relativeOutput = Compiler.getOutput();
-		var root = Sys.getCwd();
-		var absoluteOutput = Path.join([ root, relativeOutput ]);
+		var absoluteOutput = FileSystem.absolutePath(Compiler.getOutput());
 
 		var librariesOutput = Path.join([ absoluteOutput, "libs" ]);
 		if (!FileSystem.exists(librariesOutput)) {
@@ -149,9 +147,8 @@ class Init {
 			supportsAtomics: true
 		};
 
-		var relativeOutput = Compiler.getOutput();
 		var root = Sys.getCwd();
-		var absoluteOutput = Path.join([ root, relativeOutput ]);
+		var absoluteOutput = FileSystem.absolutePath(Compiler.getOutput());
 
 		var archiveOutput = Path.join([ absoluteOutput, "target.hxb" ]);
 		var resOutput = Path.join([ absoluteOutput, "resources" ]);

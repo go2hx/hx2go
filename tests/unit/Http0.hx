@@ -42,9 +42,8 @@ function testClient(client:haxe.http.HttpBase, requestUrl:String->String) {
     assert(responseData == "ok");
 
     var responseHeaders:Map<String,String> = (client : Dynamic).responseHeaders;
-    assert(responseHeaders.get("h") == "h0");
-    assert(responseHeaders.get("content-type") == "2");
-    assert(responseHeaders.get("connection") == "close");
+    assert(responseHeaders.get("H") == "h1");
+    assert(responseHeaders.get("Content-Type") == "text/plain; charset=utf-8");
 }
 
 var port = ":3000";

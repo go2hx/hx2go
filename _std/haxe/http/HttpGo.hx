@@ -55,7 +55,7 @@ class HttpGo extends haxe.http.HttpBase {
                 responseHeaders = [];
                 var m:go.Map<String,Slice<String>> = cast r.header;
                 for (name => value in m.keyValueIterator()) {
-                    responseHeaders.set(name, value[0]);
+                    responseHeaders.set(name, value[value.length - 1]);
                 }
                 if (s >= 200 && s < 400) {
 					success(responseBytes);

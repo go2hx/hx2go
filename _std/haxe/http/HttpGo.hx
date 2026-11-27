@@ -1,7 +1,9 @@
 package haxe.http;
 
+import go.Slice;
 import go.context.CancelFunc;
 import go.Context;
+import go.context.Context as ContextType;
 import go.Io;
 import go.net.http.Client;
 import go.io.Reader;
@@ -10,11 +12,11 @@ import go.net.http.Request;
 class HttpGo extends haxe.http.HttpBase {
 	public var responseHeaders:Map<String, String>;
     public var req:Request;
-    var ctx:Context;
+    var ctx:ContextType;
     var cancelFunc:CancelFunc;
 
 	public function new(url:String) {
-		super(url);
+        super(url);
         var tmp = Context.withCancel(Context.background());
         ctx = tmp.ctx;
         cancelFunc = tmp.cancel;
@@ -50,8 +52,10 @@ class HttpGo extends haxe.http.HttpBase {
                 onStatus(s);
                 var body = Io.readAll(r.body).sure();
                 responseBytes = body;
-                for (name => value in (cast r.header : Map<String,String>)) {
-                    responseHeaders.set(name, value);
+                responseHeaders = [];
+                var m:go.Map<String,Slice<String>> = cast r.header;
+                for (name => value in m.keyValueIterator()) {
+                    responseHeaders.set(name, value[0]);
                 }
                 if (s >= 200 && s < 400) {
 					success(responseBytes);
@@ -61,5 +65,18 @@ class HttpGo extends haxe.http.HttpBase {
             case Err(e):
                 onError(e.error());
         }
+	}
+
+    public static function requestUrl(url:String):String {
+		var h = new Http(url);
+		var r = null;
+		h.onData = function(d) {
+			r = d;
+		}
+		h.onError = function(e) {
+			throw e;
+		}
+		h.request(false);
+		return r;
 	}
 }

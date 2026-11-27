@@ -71,14 +71,13 @@ class Int64Map<T> implements haxe.Constraints.IMap<Int64, T> {
 	public function toString():String {
 		var s = new StringBuf();
 		var keys = h.keys();
-		var values = h.values();
 		s.addChar("[".code);
 		for (i in 0...keys.length) {
 			if (i > 0)
 				s.add(", ");
 			s.add(keys[i]);
 			s.add(" => ");
-			s.add(values[i]);
+			s.add(h.get(keys[i]));
 		}
 		s.addChar("]".code);
 		return s.toString();

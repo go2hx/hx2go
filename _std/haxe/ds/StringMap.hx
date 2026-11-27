@@ -99,7 +99,6 @@ class StringMap<T> implements haxe.Constraints.IMap<String, T> {
 	public function toString():String {
 		var s = new StringBuf();
 		var keys = h.keys();
-		var values = h.values();
 		s.addChar("[".code);
 		for (i in 0...keys.length) {
 			if (i > 0)
@@ -107,7 +106,7 @@ class StringMap<T> implements haxe.Constraints.IMap<String, T> {
 			var k = keys[i];
             s.add(k);
 			s.add(" => ");
-			s.add(values[i]);
+			s.add(h.get(k));
 		}
 		s.addChar("]".code);
 		return s.toString();

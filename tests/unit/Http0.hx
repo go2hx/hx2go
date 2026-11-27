@@ -7,6 +7,7 @@ import go.net.Http;
 
 function main() {
     var server = new Server();
+    var listener = go.Net.listen("tcp", port).sure();
     Syntax.go(() -> {
         Http.handleFunc("/", (resp, req) -> {
             resp.header().add("h", "h0");
@@ -14,8 +15,7 @@ function main() {
             resp.write("ok");
         });
 
-        server.addr = port;
-        var err = server.listenAndServe();
+        var err = server.serve(listener);
         // TODO: missing Http.errServerClosed in the extern
         if (err.error() != "http: Server closed") {
             throw err;
